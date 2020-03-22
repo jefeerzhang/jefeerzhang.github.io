@@ -289,6 +289,21 @@ paste(&quot;小票息债券的久其是:&quot;,dur_1)</code></pre>
   re_dur = dur/(1+y)
   return(re_dur)
 }</code></pre>
+<div id="使用jrvfiance包计算现金流的久期债券价格ytm久期" class="section level3">
+<h3>使用JrvFiance包计算现金流的久期、债券价格、ytm、久期。</h3>
+<pre class="r"><code>library(jrvFinance)
+# jrvFiance包中的duration函数可以计算现金流的久期
+mac_d &lt;- duration(cf = c(200,300,10000),rate = 5e-2) # 麦考利久期
+md_d &lt;- duration(cf = c(200,300,10000),rate = 5e-2,modified = T) #修正久期
+md_d == mac_d/(1+5e-2)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>print(list(mac_d,md_d))</code></pre>
+<pre><code>## [[1]]
+## [1] 2.928243
+## 
+## [[2]]
+## [1] 2.788802</code></pre>
+</div>
 </div>
 
 </main>
