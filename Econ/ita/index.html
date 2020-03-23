@@ -43,12 +43,14 @@
 </div>
 <div id="当只有一个研究组无对照组时标准itsa回归模型采用以下形式" class="section level3">
 <h3>当只有一个研究组（无对照组）时，标准ITSA回归模型采用以下形式</h3>
-<p><span class="math display">\[Y_{t}=\beta_{0}+\beta_{1} T_{t}+\beta_{2} X_{t}+\beta_{3} X_{t} T_{t}+\epsilon_{t}\]</span>
-- 其中<span class="math inline">\(Y_t\)</span>为每个等距时间点t上测量的结果变量
-- <span class="math inline">\(T_t\)</span>是从研究开始的时间趋势
-- <span class="math inline">\(X_t\)</span>是一个虚拟变量去衡量政策干预(intervention)(干预之前为0，干预之后为1)
-- <span class="math inline">\(X_tT_t\)</span>是交互项，用来表示干预后的趋势 我们在这里假设模型服从AR(1)
-使用使用<a href="https://en.wikipedia.org/wiki/1988_California_Proposition_99">1988 California Proposition 99</a>,烟草税与健康保护法为例，先实现ITSA方法以及使用谷歌开发的CausalImpact测试<a href="https://google.github.io/CausalImpact/CausalImpact.html">Bayesian structural time-series models</a></p>
+<p><span class="math display">\[Y_{t}=\beta_{0}+\beta_{1} T_{t}+\beta_{2} X_{t}+\beta_{3} X_{t} T_{t}+\epsilon_{t}\]</span></p>
+<ul>
+<li>其中<span class="math inline">\(Y_t\)</span>为每个等距时间点t上测量的结果变量</li>
+<li><span class="math inline">\(T_t\)</span>是从研究开始的时间趋势</li>
+<li><span class="math inline">\(X_t\)</span>是一个虚拟变量去衡量政策干预(intervention)(干预之前为0，干预之后为1)</li>
+<li><span class="math inline">\(X_tT_t\)</span>是交互项，用来表示干预后的趋势 我们在这里假设模型服从AR(1)</li>
+</ul>
+<p>我们使用<a href="https://en.wikipedia.org/wiki/1988_California_Proposition_99">1988 California Proposition 99</a>,烟草税与健康保护法为例，先实现ITSA方法以及使用谷歌开发的CausalImpact测试<a href="https://google.github.io/CausalImpact/CausalImpact.html">Bayesian structural time-series models</a></p>
 <p>调包侠开始表演</p>
 <pre class="r"><code>library(tidyverse)
 library(sandwich)
@@ -172,14 +174,14 @@ impact &lt;- CausalImpact(cig_c_Cas, pre.period ,post.period)</code></pre>
 ## 
 ##                          Average        Cumulative  
 ## Actual                   62             683         
-## Prediction (s.d.)        90 (3.9)       985 (43.0)  
-## 95% CI                   [82, 97]       [903, 1069] 
+## Prediction (s.d.)        90 (4)         985 (44)    
+## 95% CI                   [82, 98]       [903, 1076] 
 ##                                                     
-## Absolute effect (s.d.)   -27 (3.9)      -302 (43.0) 
-## 95% CI                   [-35, -20]     [-386, -220]
+## Absolute effect (s.d.)   -27 (4)        -302 (44)   
+## 95% CI                   [-36, -20]     [-393, -220]
 ##                                                     
-## Relative effect (s.d.)   -31% (4.4%)    -31% (4.4%) 
-## 95% CI                   [-39%, -22%]   [-39%, -22%]
+## Relative effect (s.d.)   -31% (4.5%)    -31% (4.5%) 
+## 95% CI                   [-40%, -22%]   [-40%, -22%]
 ## 
 ## Posterior tail-area probability p:   0.001
 ## Posterior prob. of a causal effect:  99.9%
@@ -336,17 +338,17 @@ impact &lt;- CausalImpact(data, pre.period ,post.period)</code></pre>
 ## 
 ##                          Average         Cumulative   
 ## Actual                   62              683          
-## Prediction (s.d.)        76 (4.3)        833 (46.9)   
-## 95% CI                   [67, 84]        [734, 929]   
+## Prediction (s.d.)        76 (4.2)        833 (46.5)   
+## 95% CI                   [67, 84]        [739, 919]   
 ##                                                       
-## Absolute effect (s.d.)   -14 (4.3)       -151 (46.9)  
-## 95% CI                   [-22, -4.6]     [-246, -51.0]
+## Absolute effect (s.d.)   -14 (4.2)       -151 (46.5)  
+## 95% CI                   [-21, -5.1]     [-236, -56.5]
 ##                                                       
 ## Relative effect (s.d.)   -18% (5.6%)     -18% (5.6%)  
-## 95% CI                   [-30%, -6.1%]   [-30%, -6.1%]
+## 95% CI                   [-28%, -6.8%]   [-28%, -6.8%]
 ## 
-## Posterior tail-area probability p:   0.002
-## Posterior prob. of a causal effect:  99.7996%
+## Posterior tail-area probability p:   0.001
+## Posterior prob. of a causal effect:  99.8998%
 ## 
 ## For more details, type: summary(impact, &quot;report&quot;)</code></pre>
 </div>
@@ -396,17 +398,17 @@ impact &lt;- CausalImpact(data, pre.period ,post.period)</code></pre>
 ## 
 ##                          Average       Cumulative 
 ## Actual                   62            683        
-## Prediction (s.d.)        68 (14)       746 (157)  
-## 95% CI                   [39, 98]      [431, 1078]
+## Prediction (s.d.)        68 (14)       746 (156)  
+## 95% CI                   [39, 98]      [432, 1080]
 ##                                                   
-## Absolute effect (s.d.)   -5.7 (14)     -63.2 (157)
-## 95% CI                   [-36, 23]     [-395, 251]
+## Absolute effect (s.d.)   -5.7 (14)     -63.2 (156)
+## 95% CI                   [-36, 23]     [-397, 251]
 ##                                                   
 ## Relative effect (s.d.)   -8.5% (21%)   -8.5% (21%)
 ## 95% CI                   [-53%, 34%]   [-53%, 34%]
 ## 
-## Posterior tail-area probability p:   0.32961
-## Posterior prob. of a causal effect:  67%
+## Posterior tail-area probability p:   0.3357
+## Posterior prob. of a causal effect:  66%
 ## 
 ## For more details, type: summary(impact, &quot;report&quot;)</code></pre>
 <div id="如果加入了香烟价格可能法案就没有什么效果了不过这样的分析可能是有问题的因为估计法令就是直接作用与retprice的" class="section level3">
