@@ -1,43 +1,0 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Forecast on Zhang Jian&#39;s Homepage</title>
-    <link>/tags/forecast/</link>
-    <description>Recent content in Forecast on Zhang Jian&#39;s Homepage</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>zh</language>
-    <lastBuildDate>Sun, 22 Mar 2020 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="/tags/forecast/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>市场需求与预测之实战作业</title>
-      <link>/post/2020/03/22/2020-03-22forecast/</link>
-      <pubDate>Sun, 22 Mar 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/post/2020/03/22/2020-03-22forecast/</guid>
-      <description>项目评估与管理——市场预测小组练习题本次题目我们使用全球最大的数据建模和数据分析竞赛平台kaggle为资料来源。具体使用2017年kaggle发布的一个Hourse price比赛项目作为我们的训练项目。截止提交日期 5月22日按照小组进行，使用方法不限。Learn What You Need！Test What You want to test！评分以小组为单位，重点考察大家分析数据、数据可视化、报告撰写等能力。每小组最终报告中推荐两名成员作为主要贡献者，进行加分。最后祝大家学习顺利！</description>
-    </item>
-    
-    <item>
-      <title>一些时间序列</title>
-      <link>/post/2020/03/21/%E4%B8%80%E4%BA%9B%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97/</link>
-      <pubDate>Sat, 21 Mar 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/post/2020/03/21/%E4%B8%80%E4%BA%9B%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97/</guid>
-      <description>一些直观的时间序列library(tidyverse)library(forecast)library(fpp2)library(ggfortify)library(ggthemes)autoplot(ausbeer,ts.colour = &amp;quot;blue&amp;quot;,main = &amp;quot;啤酒销量&amp;quot;,xlab = &amp;quot;时间&amp;quot;)+theme_clean()autoplot(AirPassengers,ts.colour = &amp;quot;red&amp;quot;,main=&amp;quot;乘客数量&amp;quot;,xlab = &amp;quot;时间&amp;quot;) +theme_clean()autoplot(melsyd[,&amp;quot;Economy.Class&amp;quot;]) +ggtitle(&amp;quot;墨尔本 - 悉尼经济舱乘客客流量&amp;quot;) +theme_clean() +xlab(&amp;quot;年份&amp;quot;) +ylab(&amp;quot;千&amp;quot;)+theme(text = element_text(family = &amp;quot;STHeiti&amp;quot;))+theme(plot.title = element_text(hjust = 0.5))中国股市开户数的一个趋势setwd(&amp;quot;C:/Users/jefee/Desktop&amp;quot;)data &amp;lt;- read_csv(&amp;#39;data2.csv&amp;#39;)pt&amp;lt;-ts(data$`信用账户新增开户投资者数:合计`,frequency=12,start=c(2011,1),end = c(2020,2))dec_data &amp;lt;- decompose(pt,type=&amp;#39;additive&amp;#39;)autoplot(dec_data) +theme_clean()时间序列的模式趋势季节性周期性autoplot(AirPassengers )+theme_clean()autoplot(arrivals, facets = TRUE)+theme_clean()autoplot(arrivals, facets = TRUE) +theme_clean() +geom_smooth() +labs(title =&amp;quot;到澳大利亚旅客人数&amp;quot;,y = &amp;quot;Arrivals (in thousands)&amp;quot;,x = NULL)## 季节性</description>
-    </item>
-    
-    <item>
-      <title>时间序列分析1</title>
-      <link>/post/2020/03/21/%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E5%88%86%E6%9E%901/</link>
-      <pubDate>Sat, 21 Mar 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/post/2020/03/21/%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E5%88%86%E6%9E%901/</guid>
-      <description>时间序列最简单的预测方法均值法\[\hat{y}_{T+h | T}=\left(y_{1}+\cdots+y_{T}\right) / T\]
-一个例子library(tidyverse)## -- Attaching packages ---------------------------------------------------- tidyverse 1.3.0 --## √ ggplot2 3.3.0 √ purrr 0.3.3## √ tibble 2.1.3 √ dplyr 0.8.5## √ tidyr 1.0.2 √ stringr 1.4.0## √ readr 1.3.1 √ forcats 0.5.0## -- Conflicts ------------------------------------------------------- tidyverse_conflicts() --## x dplyr::filter() masks stats::filter()## x dplyr::lag() masks stats::lag()library(forecast)## Registered S3 method overwritten by &amp;#39;quantmod&amp;#39;:## method from## as.</description>
-    </item>
-    
-  </channel>
-</rss>
