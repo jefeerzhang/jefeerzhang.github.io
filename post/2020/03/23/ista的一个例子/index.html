@@ -35,7 +35,6 @@
 
 <main>
 
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <div id="interrupted-time-series-analysisitsa-中断时间序列分析" class="section level3">
@@ -57,18 +56,18 @@ library(sandwich)
 library(stargazer)
 library(lmtest)
 library(ggthemes)
-cig &lt;- read_csv(&quot;~/我的坚果云/外链/cigsales_2.csv&quot;) #提前设置工作目录
+cig &lt;- read_csv(&quot;~/website/content/post/data/cigsales_2.csv&quot;) #提前设置工作目录
 head(cig)</code></pre>
 <pre><code>## # A tibble: 6 x 15
 ##     uid  year state cigsale lnincome  beer age15to24 retprice  time california
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;
-## 1     1  1970 Alab~    89.8    NA       NA     0.179     39.6     0          0
-## 2     2  1971 Alab~    95.4    NA       NA     0.180     42.7     1          0
-## 3     3  1972 Alab~   101.      9.50    NA     0.181     42.3     2          0
-## 4     4  1973 Alab~   103.      9.55    NA     0.182     42.1     3          0
-## 5     5  1974 Alab~   108.      9.54    NA     0.183     43.1     4          0
-## 6     6  1975 Alab~   112.      9.54    NA     0.184     46.6     5          0
-## # ... with 5 more variables: cal_trend &lt;dbl&gt;, tax_dummy &lt;dbl&gt;, tax_trend &lt;dbl&gt;,
+## 1     1  1970 Alab…    89.8    NA       NA     0.179     39.6     0          0
+## 2     2  1971 Alab…    95.4    NA       NA     0.180     42.7     1          0
+## 3     3  1972 Alab…   101.      9.50    NA     0.181     42.3     2          0
+## 4     4  1973 Alab…   103.      9.55    NA     0.182     42.1     3          0
+## 5     5  1974 Alab…   108.      9.54    NA     0.183     43.1     4          0
+## 6     6  1975 Alab…   112.      9.54    NA     0.184     46.6     5          0
+## # … with 5 more variables: cal_trend &lt;dbl&gt;, tax_dummy &lt;dbl&gt;, tax_trend &lt;dbl&gt;,
 ## #   cal_tax_dummy &lt;dbl&gt;, cal_tax_trend &lt;dbl&gt;</code></pre>
 <pre class="r"><code>names(cig)</code></pre>
 <pre><code>##  [1] &quot;uid&quot;           &quot;year&quot;          &quot;state&quot;         &quot;cigsale&quot;      
@@ -122,7 +121,7 @@ stargazer(mod1,type = &#39;text&#39;)</code></pre>
   geom_smooth(data=subset(cig_c,year&gt;1989),method = &#39;lm&#39;,se=F)+
  geom_vline(xintercept = 1989,linetype=&#39;dashed&#39;) + theme_calc()+
   labs(title = &quot;1989年加州烟草税对香烟销量的影响&quot;)</code></pre>
-<p><img src="/post/2020-03-23-ista的一个例子_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p><img src="/post/2020-03-23-ista%E7%9A%84%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 </div>
 <div id="接下来使用causalimpact进行测试" class="section level2">
 <h2>接下来使用CausalImpact进行测试</h2>
@@ -168,23 +167,23 @@ impact &lt;- CausalImpact(cig_c_Cas, pre.period ,post.period)</code></pre>
 <pre><code>## Warning in FormatInputPrePostPeriod(pre.period, post.period, data): Setting
 ## pre.period[1] to start of data: 1</code></pre>
 <pre class="r"><code>plot(impact)</code></pre>
-<p><img src="/post/2020-03-23-ista的一个例子_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="/post/2020-03-23-ista%E7%9A%84%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <pre class="r"><code>summary(impact)</code></pre>
 <pre><code>## Posterior inference {CausalImpact}
 ## 
 ##                          Average        Cumulative  
 ## Actual                   62             683         
-## Prediction (s.d.)        90 (3.9)       985 (43.0)  
-## 95% CI                   [82, 97]       [906, 1072] 
+## Prediction (s.d.)        89 (4)         983 (44)    
+## 95% CI                   [82, 98]       [903, 1077] 
 ##                                                     
-## Absolute effect (s.d.)   -27 (3.9)      -302 (43.0) 
-## 95% CI                   [-35, -20]     [-389, -223]
+## Absolute effect (s.d.)   -27 (4)        -301 (44)   
+## 95% CI                   [-36, -20]     [-395, -221]
 ##                                                     
-## Relative effect (s.d.)   -31% (4.4%)    -31% (4.4%) 
-## 95% CI                   [-39%, -23%]   [-39%, -23%]
+## Relative effect (s.d.)   -31% (4.5%)    -31% (4.5%) 
+## 95% CI                   [-40%, -22%]   [-40%, -22%]
 ## 
-## Posterior tail-area probability p:   0.001
-## Posterior prob. of a causal effect:  99.9%
+## Posterior tail-area probability p:   0.00102
+## Posterior prob. of a causal effect:  99.89775%
 ## 
 ## For more details, type: summary(impact, &quot;report&quot;)</code></pre>
 </div>
@@ -198,7 +197,7 @@ impact &lt;- CausalImpact(cig_c_Cas, pre.period ,post.period)</code></pre>
 </ul>
 <div id="图示如下" class="section level3">
 <h3>图示如下</h3>
-<p><img src="/Econ/2020-03-23-ita_files/itsa1.png" /></p>
+<p><img src="/post/2020-03-23-ista的一个例子_files/itsa1.png" /></p>
 <ul>
 <li><span class="math inline">\(\beta_0\)</span>和<span class="math inline">\(\beta_3\)</span>代表了控制组</li>
 <li><span class="math inline">\(\beta_4\)</span>和<span class="math inline">\(\beta_7\)</span>代表了处理组</li>
@@ -294,7 +293,7 @@ str(aggdata)</code></pre>
   geom_smooth(data = subset(aggdata,Group.2 &lt;= 1989), method = &quot;lm&quot;,se=F)+
   geom_smooth(data = subset(aggdata,Group.2 &gt; 1989), method = &quot;lm&quot;,se=F) +
   ggtitle(&#39;1989年加州香烟法令对销量的影响&#39;) + xlab(&#39;年份&#39;) + ylab(&quot;香烟销量&quot;)</code></pre>
-<p><img src="/post/2020-03-23-ista的一个例子_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="/post/2020-03-23-ista%E7%9A%84%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 </div>
 </div>
 <div id="接下来继续使用causalimpact进行测试在其中加入其他州的均值作为解释变量" class="section level2">
@@ -332,23 +331,23 @@ impact &lt;- CausalImpact(data, pre.period ,post.period)</code></pre>
 <pre><code>## Warning in FormatInputPrePostPeriod(pre.period, post.period, data): Setting
 ## pre.period[1] to start of data: 1</code></pre>
 <pre class="r"><code>plot(impact)</code></pre>
-<p><img src="/post/2020-03-23-ista的一个例子_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="/post/2020-03-23-ista%E7%9A%84%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <pre class="r"><code>summary(impact)</code></pre>
 <pre><code>## Posterior inference {CausalImpact}
 ## 
 ##                          Average         Cumulative   
 ## Actual                   62              683          
-## Prediction (s.d.)        76 (4.2)        833 (45.7)   
-## 95% CI                   [67, 84]        [738, 919]   
+## Prediction (s.d.)        76 (4.3)        832 (46.9)   
+## 95% CI                   [67, 84]        [740, 920]   
 ##                                                       
-## Absolute effect (s.d.)   -14 (4.2)       -151 (45.7)  
-## 95% CI                   [-22, -5]       [-237, -55]  
+## Absolute effect (s.d.)   -14 (4.3)       -150 (46.9)  
+## 95% CI                   [-22, -5.2]     [-238, -56.9]
 ##                                                       
-## Relative effect (s.d.)   -18% (5.5%)     -18% (5.5%)  
-## 95% CI                   [-28%, -6.6%]   [-28%, -6.6%]
+## Relative effect (s.d.)   -18% (5.6%)     -18% (5.6%)  
+## 95% CI                   [-29%, -6.8%]   [-29%, -6.8%]
 ## 
-## Posterior tail-area probability p:   0.001
-## Posterior prob. of a causal effect:  99.8998%
+## Posterior tail-area probability p:   0.00203
+## Posterior prob. of a causal effect:  99.79737%
 ## 
 ## For more details, type: summary(impact, &quot;report&quot;)</code></pre>
 </div>
@@ -392,23 +391,23 @@ impact &lt;- CausalImpact(data, pre.period ,post.period)</code></pre>
 <pre><code>## Warning in FormatInputPrePostPeriod(pre.period, post.period, data): Setting
 ## pre.period[1] to start of data: 1</code></pre>
 <pre class="r"><code>plot(impact)</code></pre>
-<p><img src="/post/2020-03-23-ista的一个例子_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="/post/2020-03-23-ista%E7%9A%84%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <pre class="r"><code>summary(impact)</code></pre>
 <pre><code>## Posterior inference {CausalImpact}
 ## 
 ##                          Average       Cumulative 
 ## Actual                   62            683        
-## Prediction (s.d.)        68 (14)       746 (156)  
-## 95% CI                   [39, 98]      [431, 1074]
+## Prediction (s.d.)        68 (15)       746 (160)  
+## 95% CI                   [38, 96]      [414, 1060]
 ##                                                   
-## Absolute effect (s.d.)   -5.7 (14)     -63.2 (156)
-## 95% CI                   [-36, 23]     [-392, 252]
+## Absolute effect (s.d.)   -5.8 (15)     -63.5 (160)
+## 95% CI                   [-34, 24]     [-377, 269]
 ##                                                   
 ## Relative effect (s.d.)   -8.5% (21%)   -8.5% (21%)
-## 95% CI                   [-53%, 34%]   [-53%, 34%]
+## 95% CI                   [-51%, 36%]   [-51%, 36%]
 ## 
-## Posterior tail-area probability p:   0.33164
-## Posterior prob. of a causal effect:  67%
+## Posterior tail-area probability p:   0.3507
+## Posterior prob. of a causal effect:  65%
 ## 
 ## For more details, type: summary(impact, &quot;report&quot;)</code></pre>
 <div id="如果加入了香烟价格可能法案就没有什么效果了不过这样的分析可能是有问题的因为估计法令就是直接作用与retprice的" class="section level3">
