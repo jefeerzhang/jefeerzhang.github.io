@@ -120,7 +120,8 @@ stargazer(mod1,type = &#39;text&#39;)</code></pre>
   geom_smooth(data=subset(cig_c,year&lt;=1989),method = &#39;lm&#39;,se=F)+
   geom_smooth(data=subset(cig_c,year&gt;1989),method = &#39;lm&#39;,se=F)+
  geom_vline(xintercept = 1989,linetype=&#39;dashed&#39;) + theme_calc()+
-  labs(title = &quot;1989年加州烟草税对香烟销量的影响&quot;)</code></pre>
+  labs(title = &quot;1989年加州烟草税对香烟销量的影响&quot;)+
+  theme(text = element_text(family=&#39;Kai&#39;))</code></pre>
 <p><img src="/post/2020-03-23-ista%E7%9A%84%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 </div>
 <div id="接下来使用causalimpact进行测试" class="section level2">
@@ -174,10 +175,10 @@ impact &lt;- CausalImpact(cig_c_Cas, pre.period ,post.period)</code></pre>
 ##                          Average        Cumulative  
 ## Actual                   62             683         
 ## Prediction (s.d.)        89 (4)         983 (44)    
-## 95% CI                   [82, 98]       [903, 1077] 
+## 95% CI                   [82, 98]       [901, 1080] 
 ##                                                     
 ## Absolute effect (s.d.)   -27 (4)        -301 (44)   
-## 95% CI                   [-36, -20]     [-395, -221]
+## 95% CI                   [-36, -20]     [-397, -219]
 ##                                                     
 ## Relative effect (s.d.)   -31% (4.5%)    -31% (4.5%) 
 ## 95% CI                   [-40%, -22%]   [-40%, -22%]
@@ -292,7 +293,8 @@ str(aggdata)</code></pre>
   geom_point(size=1.5)+geom_vline(xintercept = 1989,linetype=&#39;dashed&#39;) +theme_clean()+
   geom_smooth(data = subset(aggdata,Group.2 &lt;= 1989), method = &quot;lm&quot;,se=F)+
   geom_smooth(data = subset(aggdata,Group.2 &gt; 1989), method = &quot;lm&quot;,se=F) +
-  ggtitle(&#39;1989年加州香烟法令对销量的影响&#39;) + xlab(&#39;年份&#39;) + ylab(&quot;香烟销量&quot;)</code></pre>
+  ggtitle(&#39;1989年加州香烟法令对销量的影响&#39;) + xlab(&#39;年份&#39;) + ylab(&quot;香烟销量&quot;)+
+  theme(text = element_text(family=&#39;Kai&#39;))</code></pre>
 <p><img src="/post/2020-03-23-ista%E7%9A%84%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 </div>
 </div>
@@ -337,14 +339,14 @@ impact &lt;- CausalImpact(data, pre.period ,post.period)</code></pre>
 ## 
 ##                          Average         Cumulative   
 ## Actual                   62              683          
-## Prediction (s.d.)        76 (4.3)        832 (46.9)   
-## 95% CI                   [67, 84]        [740, 920]   
+## Prediction (s.d.)        76 (4.2)        832 (46.6)   
+## 95% CI                   [67, 84]        [740, 925]   
 ##                                                       
-## Absolute effect (s.d.)   -14 (4.3)       -150 (46.9)  
-## 95% CI                   [-22, -5.2]     [-238, -56.9]
+## Absolute effect (s.d.)   -14 (4.2)       -150 (46.6)  
+## 95% CI                   [-22, -5.2]     [-242, -57.6]
 ##                                                       
 ## Relative effect (s.d.)   -18% (5.6%)     -18% (5.6%)  
-## 95% CI                   [-29%, -6.8%]   [-29%, -6.8%]
+## 95% CI                   [-29%, -6.9%]   [-29%, -6.9%]
 ## 
 ## Posterior tail-area probability p:   0.00203
 ## Posterior prob. of a causal effect:  99.79737%
@@ -398,15 +400,15 @@ impact &lt;- CausalImpact(data, pre.period ,post.period)</code></pre>
 ##                          Average       Cumulative 
 ## Actual                   62            683        
 ## Prediction (s.d.)        68 (15)       746 (160)  
-## 95% CI                   [38, 96]      [414, 1060]
+## 95% CI                   [38, 97]      [417, 1065]
 ##                                                   
 ## Absolute effect (s.d.)   -5.8 (15)     -63.5 (160)
-## 95% CI                   [-34, 24]     [-377, 269]
+## 95% CI                   [-35, 24]     [-383, 265]
 ##                                                   
 ## Relative effect (s.d.)   -8.5% (21%)   -8.5% (21%)
 ## 95% CI                   [-51%, 36%]   [-51%, 36%]
 ## 
-## Posterior tail-area probability p:   0.3507
+## Posterior tail-area probability p:   0.3497
 ## Posterior prob. of a causal effect:  65%
 ## 
 ## For more details, type: summary(impact, &quot;report&quot;)</code></pre>
