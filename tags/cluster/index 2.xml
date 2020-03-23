@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cluster on Zhang Jian&#39;s Homepage</title>
+    <link>/tags/cluster/</link>
+    <description>Recent content in Cluster on Zhang Jian&#39;s Homepage</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Sat, 21 Mar 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/cluster/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>聚类分析</title>
+      <link>/post/2020/03/21/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90/</link>
+      <pubDate>Sat, 21 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/03/21/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90/</guid>
+      <description>什么是聚类？？一个简单的例子 探索性数据分析（EDA）的一种形式,将样本通过特征划分成具有共同特征的有意义的族群。  聚类分析的全部流程图 流程
+   定义距离和相似性 \[距离 = 1-相似性\]
+距离的直观定义
+ \[距离=\sqrt{\left(\mathbf{X}_{\text {red }}-\mathbf{X}_{\text {blue }}\right)^{2}+\left(\mathbf{Y}_{\text {red }}-\mathbf{Y}_{\text {blue }}\right)^{2}}\]
+library(tidyverse) library(ggthemes) library(ggfortify) library(DT) two_person &amp;lt;- tribble(~x, ~y, 0,0, 9,12) ggplot(two_person, aes(x = x, y = y)) + geom_point() + lims(x = c(-30,30), y = c(-20, 20)) + theme_clean()+ggtitle(&amp;quot;原始数据&amp;quot;) dist(two_person,method = &amp;quot;euclidean&amp;quot;) ## 1 ## 2 15 多余两个人时
+three_p &amp;lt;- tribble(~x, ~y, 0,0, 9,12, -2,9) ggplot(three_p, aes(x = x, y = y)) + geom_point() + lims(x = c(-30,30), y = c(-20, 20)) + theme_clean() dist(three_p,method = &amp;quot;euclidean&amp;quot;) ## 1 2 ## 2 15.</description>
+    </item>
+    
+  </channel>
+</rss>
