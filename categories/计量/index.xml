@@ -17,10 +17,10 @@
       <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/post/2020/03/23/ista%E7%9A%84%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90/</guid>
-      <description>Interrupted Time-series Analysis(ITSA) 中断时间序列分析  当只有一个研究组（无对照组）时，标准ITSA回归模型采用以下形式 数据链接 \[Y_{t}=\beta_{0}+\beta_{1} T_{t}+\beta_{2} X_{t}+\beta_{3} X_{t} T_{t}+\epsilon_{t}\]
- 其中\(Y_t\)为每个等距时间点t上测量的结果变量 \(T_t\)是从研究开始的时间趋势 \(X_t\)是一个虚拟变量去衡量政策干预(intervention)(干预之前为0，干预之后为1) \(X_tT_t\)是交互项，用来表示干预后的趋势 我们在这里假设模型服从AR(1)  我们使用1988 California Proposition 99,烟草税与健康保护法为例，先实现ITSA方法以及使用谷歌开发的CausalImpact测试Bayesian structural time-series models
+      <description>Interrupted Time-series Analysis(ITSA) 中断时间序列分析当只有一个研究组（无对照组）时，标准ITSA回归模型采用以下形式数据链接\[Y_{t}=\beta_{0}+\beta_{1} T_{t}+\beta_{2} X_{t}+\beta_{3} X_{t} T_{t}+\epsilon_{t}\]
+其中\(Y_t\)为每个等距时间点t上测量的结果变量\(T_t\)是从研究开始的时间趋势\(X_t\)是一个虚拟变量去衡量政策干预(intervention)(干预之前为0，干预之后为1)\(X_tT_t\)是交互项，用来表示干预后的趋势 我们在这里假设模型服从AR(1)我们使用1988 California Proposition 99,烟草税与健康保护法为例，先实现ITSA方法以及使用谷歌开发的CausalImpact测试Bayesian structural time-series models
 调包侠开始表演
-library(tidyverse) library(sandwich) library(stargazer) library(lmtest) library(ggthemes) cig &amp;lt;- read_csv(&amp;quot;~/jefeerzhang/content/post/data/cigsales_2.csv&amp;quot;) #提前设置工作目录 head(cig) ## # A tibble: 6 x 15 ## uid year state cigsale lnincome beer age15to24 retprice time california ## &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; ## 1 1 1970 Alab… 89.</description>
+library(tidyverse)library(sandwich)library(stargazer)library(lmtest)library(ggthemes)cig &amp;lt;- read_csv(&amp;quot;~/jefeerzhang/content/post/data/cigsales_2.csv&amp;quot;) #提前设置工作目录head(cig)## # A tibble: 6 x 15## uid year state cigsale lnincome beer age15to24 retprice time california## &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;## 1 1 1970 Alab… 89.</description>
     </item>
     
   </channel>
