@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>一些时间序列 | Zhang Jian&#39;s Homepage</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">首页</a></li>
+      
+      <li><a href="/cv/">CV</a></li>
+      
+      <li><a href="/categories/">分类</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/index.xml">订阅</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">一些时间序列</span></h1>
+<h2 class="author">张剑</h2>
+<h2 class="date">2020/03/21</h2>
+</div>
+
+<main>
+
+
+
+<div id="一些直观的时间序列" class="section level3">
+<h3>一些直观的时间序列</h3>
+<pre class="r"><code>library(tidyverse)
+library(forecast)
+library(fpp2)
+library(ggfortify)
+library(ggthemes)
+autoplot(ausbeer,ts.colour = &quot;blue&quot;,main = &quot;啤酒销量&quot;,xlab = &quot;时间&quot;)+theme_clean()</code></pre>
+<p><img src="/post/2020-03-21-一些时间序列_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<pre class="r"><code>autoplot(AirPassengers,ts.colour = &quot;red&quot;,main=&quot;乘客数量&quot;,xlab = &quot;时间&quot;) +theme_clean()</code></pre>
+<p><img src="/post/2020-03-21-一些时间序列_files/figure-html/unnamed-chunk-1-2.png" width="672" /></p>
+<pre class="r"><code>autoplot(melsyd[,&quot;Economy.Class&quot;]) +
+  ggtitle(&quot;墨尔本 - 悉尼经济舱乘客客流量&quot;) +
+  theme_clean() +
+  xlab(&quot;年份&quot;) +
+  ylab(&quot;千&quot;)+
+  theme(text = element_text(family = &quot;STHeiti&quot;))+
+  theme(plot.title = element_text(hjust = 0.5))</code></pre>
+<p><img src="/post/2020-03-21-一些时间序列_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+</div>
+<div id="中国股市开户数的一个趋势" class="section level3">
+<h3>中国股市开户数的一个趋势</h3>
+<pre class="r"><code>setwd(&quot;C:/Users/jefee/Desktop&quot;)
+data &lt;- read_csv(&#39;data2.csv&#39;)
+pt&lt;-ts(data$`信用账户新增开户投资者数:合计`,frequency=12,start=c(2011,1),end = c(2020,2))
+dec_data &lt;- decompose(pt,type=&#39;additive&#39;)
+autoplot(dec_data) +theme_clean()</code></pre>
+<p><img src="/post/2020-03-21-一些时间序列_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="时间序列的模式" class="section level2">
+<h2>时间序列的模式</h2>
+<div id="趋势" class="section level3">
+<h3>趋势</h3>
+</div>
+<div id="季节性" class="section level3">
+<h3>季节性</h3>
+</div>
+<div id="周期性" class="section level3">
+<h3>周期性</h3>
+<pre class="r"><code>autoplot(AirPassengers )+theme_clean()</code></pre>
+<p><img src="/post/2020-03-21-一些时间序列_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>autoplot(arrivals, facets = TRUE)+theme_clean()</code></pre>
+<p><img src="/post/2020-03-21-一些时间序列_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<pre class="r"><code>autoplot(arrivals, facets = TRUE) +
+  theme_clean() +
+  geom_smooth() +
+  labs(title =&quot;到澳大利亚旅客人数&quot;,
+       y = &quot;Arrivals (in thousands)&quot;,
+       x = NULL)</code></pre>
+<p><img src="/post/2020-03-21-一些时间序列_files/figure-html/unnamed-chunk-4-3.png" width="672" />
+## 季节性</p>
+<pre class="r"><code>ggseasonplot(a10, year.labels=TRUE, year.labels.left=TRUE) +
+  xlab(&quot;月份&quot;)+
+  ylab(&quot;百万（美元）&quot;) +
+  ggtitle(&quot;季节图：降糖药物销量&quot;)+
+  theme(text = element_text(family = &quot;STHeiti&quot;))+
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme_clean()</code></pre>
+<p><img src="/post/2020-03-21-一些时间序列_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>ggseasonplot(a10, polar=TRUE) +
+  xlab(&quot;月份&quot;)+
+  ylab(&quot;百万（美元）&quot;) +
+  ggtitle(&quot;极坐标季节图：降糖药物销量&quot;)+
+  theme(text = element_text(family = &quot;STHeiti&quot;))+
+  theme(plot.title = element_text(hjust = 0.5))+
+  theme_clean()</code></pre>
+<p><img src="/post/2020-03-21-一些时间序列_files/figure-html/unnamed-chunk-5-2.png" width="672" /></p>
+<pre class="r"><code>library(stats)
+autoplot(stl(AirPassengers, s.window = &#39;periodic&#39;), ts.colour = &#39;blue&#39;)+
+  theme_clean()</code></pre>
+<p><img src="/post/2020-03-21-一些时间序列_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+</div>
+<div id="时间序列的模式-1" class="section level2">
+<h2>时间序列的模式</h2>
+<div id="趋势-1" class="section level3">
+<h3>趋势</h3>
+</div>
+<div id="季节性-1" class="section level3">
+<h3>季节性</h3>
+</div>
+<div id="周期性-1" class="section level3">
+<h3>周期性</h3>
+<pre class="r"><code>decompose_beer  &lt;- decompose(ausbeer,type = &quot;additive&quot;)
+autoplot(decompose_beer,ts.colour = &#39;blue&#39;,main = &quot;啤酒销量的加法分解&quot;)+theme_clean()</code></pre>
+<p><img src="/post/2020-03-21-一些时间序列_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>decompose_as &lt;- decompose(AirPassengers,type= &quot;multiplicative&quot;)
+autoplot(decompose_as,ts.colour = &#39;red&#39;,main = &quot;乘客数量的乘法分解&quot;)+theme_clean()</code></pre>
+<p><img src="/post/2020-03-21-一些时间序列_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
+</div>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+  
+  <hr/>
+  © <a href="https://jjxy.sicau.edu.cn/content.jsp?urltype=news.NewsContentUrl&amp;wbtreeid=1022&amp;wbnewsid=3019">张剑</a>  2018 &ndash; 2020 | <a href="https://gitee.com/jefeerzhang">Gitee</a>
+  
+  </footer>
+  </body>
+</html>
+
