@@ -12,6 +12,15 @@
     
     
     <item>
+      <title>Cluster</title>
+      <link>/tags/cluster/</link>
+      <pubDate>Wed, 25 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/cluster/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>R</title>
       <link>/tags/r/</link>
       <pubDate>Wed, 25 Mar 2020 00:00:00 +0000</pubDate>
@@ -35,15 +44,6 @@
       <pubDate>Sun, 22 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/forecast/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Cluster</title>
-      <link>/tags/cluster/</link>
-      <pubDate>Sat, 21 Mar 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/cluster/</guid>
       <description></description>
     </item>
     

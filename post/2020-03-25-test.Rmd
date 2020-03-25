@@ -1,0 +1,24 @@
+---
+title: 'test '
+author: 张剑
+date: '2020-03-25'
+slug: test
+categories:
+  - 计量
+tags:
+  - Cluster
+lastmod: '2020-03-25T23:02:37+08:00'
+output:
+  blogdown::html_page:
+    toc: true
+---
+
+
+## 一号
+### 二号
+
+### 三号
+
+#### 死
+
+$x_2$
