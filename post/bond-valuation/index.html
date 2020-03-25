@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Bond Valuation - 张剑的主页</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="张剑" /><meta name="description" content="债券估值基础 假设债券的现金流如下：投资面值为100元，票面利率为5％，到期日为5年的债券。 息票利率是您从持有债券中获得的利息，因此，在债券到" /><meta name="keywords" content="Hugo, R, Stata" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.67.1 with theme even" />
+
+
+<link rel="canonical" href="/post/bond-valuation/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Bond Valuation" />
+<meta property="og:description" content="债券估值基础 假设债券的现金流如下：投资面值为100元，票面利率为5％，到期日为5年的债券。 息票利率是您从持有债券中获得的利息，因此，在债券到" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/post/bond-valuation/" />
+<meta property="article:published_time" content="2020-03-21T00:00:00+00:00" />
+<meta property="article:modified_time" content="2020-03-21T00:00:00+00:00" />
+<meta itemprop="name" content="Bond Valuation">
+<meta itemprop="description" content="债券估值基础 假设债券的现金流如下：投资面值为100元，票面利率为5％，到期日为5年的债券。 息票利率是您从持有债券中获得的利息，因此，在债券到">
+<meta itemprop="datePublished" content="2020-03-21T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2020-03-21T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="2832">
+
+
+
+<meta itemprop="keywords" content="R," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Bond Valuation"/>
+<meta name="twitter:description" content="债券估值基础 假设债券的现金流如下：投资面值为100元，票面利率为5％，到期日为5年的债券。 息票利率是您从持有债券中获得的利息，因此，在债券到"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">张剑的主页</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">CV</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">张剑的主页</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">CV</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Bond Valuation</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-03-21 </span>
+        <div class="post-category">
+            <a href="/categories/%E6%8A%95%E8%B5%84%E5%AD%A6/"> 投资学 </a>
+            </div>
+          <span class="more-meta"> 约 2832 字 </span>
+          <span class="more-meta"> 预计阅读 6 分钟 </span>
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    
+  </div>
+</div>
+    <div class="post-content">
+      
+
+
+<div id="债券估值基础" class="section level2">
+<h2>债券估值基础</h2>
+<div id="假设债券的现金流如下投资面值为100元票面利率为5到期日为5年的债券" class="section level3">
+<h3>假设债券的现金流如下：投资面值为100元，票面利率为5％，到期日为5年的债券。</h3>
+</div>
+<div id="息票利率是您从持有债券中获得的利息因此在债券到期之前每年将获得5美元的息票付款到期时您还将获得100的面值返还" class="section level3">
+<h3>息票利率是您从持有债券中获得的利息，因此，在债券到期之前，每年将获得5美元的息票付款。到期时，您还将获得100的面值返还。</h3>
+<p>计算每个现金流量的现值</p>
+<p>计算债券的价值</p>
+<p>假设我们给定该债券的到期收益率为6%</p>
+<pre class="r"><code># 先调入包
+library(tidyverse)
+library(ggthemes) # ggplot2的主题包
+library(ggfortify)
+
+cf &lt;- c(5,5,5,5,105)
+cf_df &lt;- as_tibble(cf)</code></pre>
+<pre><code>## Warning: Calling `as_tibble()` on a vector is discouraged, because the behavior is likely to change in the future. Use `tibble::enframe(name = NULL)` instead.
+## This warning is displayed once per session.</code></pre>
+<pre class="r"><code># 生成一个时间序列
+cf_df &lt;- cf_df %&gt;%
+  mutate(year = as.numeric(rownames(cf_df))) %&gt;%
+  rename(cf = value)
+cf_df</code></pre>
+<pre><code>## # A tibble: 5 x 2
+##      cf  year
+##   &lt;dbl&gt; &lt;dbl&gt;
+## 1     5     1
+## 2     5     2
+## 3     5     3
+## 4     5     4
+## 5   105     5</code></pre>
+<pre class="r"><code># 继续生成一个每一期的现金流的现值
+cf_df &lt;- cf_df %&gt;%
+  mutate(pv = cf/(1+0.06)^year)
+cf_df</code></pre>
+<pre><code>## # A tibble: 5 x 3
+##      cf  year    pv
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     5     1  4.72
+## 2     5     2  4.45
+## 3     5     3  4.20
+## 4     5     4  3.96
+## 5   105     5 78.5</code></pre>
+<pre class="r"><code>sum(cf_df$pv)</code></pre>
+<pre><code>## [1] 95.78764</code></pre>
+</div>
+<div id="以上是我们分步计算得到的结果接下来我们尝试把上面的内容写成一个函数" class="section level3">
+<h3>以上是我们分步计算得到的结果，接下来我们尝试把上面的内容写成一个函数</h3>
+<div id="一个函数需要给定一些参数" class="section level4">
+<h4>一个函数需要给定一些参数：</h4>
+<ul>
+<li>p —— 面值</li>
+<li>r —— coupon rate（票息率）</li>
+<li>t —— 到期时间 time to maturity</li>
+<li>y —— 该债券的到期收益率</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="最基本的债券定价" class="section level2">
+<h2>最基本的债券定价</h2>
+<pre class="r"><code>bond_val &lt;- function(p=100,r,t,y) {
+  cf &lt;- c(rep(p*r,t-1),p*(1+r))
+  cf_df &lt;- as_tibble(cf)
+  cf_df &lt;- cf_df %&gt;%
+  mutate(year = as.numeric(rownames(cf_df))) %&gt;%
+  rename(cf = value)
+  cf_df &lt;- cf_df %&gt;%
+  mutate(pv = cf/(1+y)^year)
+  return(sum(cf_df$pv))
+}
+bond_val(r=0.01,t=10,y=0.03)</code></pre>
+<pre><code>## [1] 82.93959</code></pre>
+</div>
+<div id="模拟" class="section level2">
+<h2>模拟</h2>
+<div id="展示保持其他因素不变只改变rty中一个债券价格变化" class="section level3">
+<h3>展示保持其他因素不变，只改变r,t,y中一个，债券价格变化</h3>
+<pre class="r"><code># 首先保持其他不变只改变息票率，其他的类似
+sim_bond &lt;- NULL
+for (i in seq(0,1,by=0.05)){
+  sim_bond &lt;- c(sim_bond,bond_val(r=i,t=10,y=0.03))
+}
+df &lt;- tibble(bond_v = sim_bond,r=seq(0,1,by=0.05))
+ggplot(df,mapping = aes(x=r,y=bond_v))+  geom_point()+
+         geom_line() + theme_clean()+ggtitle(&#39;只改变息票率r其他因素保持不变&#39;)+
+  xlab(&quot;债券的息票率&quot;) + ylab(&#39;债券价格&#39;)+theme(text = element_text(family=&#39;Kai&#39;))</code></pre>
+<p><img src="/post/bond-valuation_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code>#依葫芦画瓢
+sim_bond &lt;- NULL
+for (i in seq(0,1,by=0.05)){
+  sim_bond &lt;- c(sim_bond,bond_val(r=0.05,t=10,y=i))
+}
+df &lt;- tibble(bond_v = sim_bond,y=seq(0,1,by=0.05))
+ggplot(df,mapping = aes(x=y,y=bond_v))+ geom_point()+
+         geom_line() + theme_clean()+ggtitle(&#39;只改变到期收益率y其他因素保持不变&#39;)+
+  xlab(&quot;债券的到期收益率&quot;) + ylab(&#39;债券价格&#39;)+theme(text = element_text(family=&#39;Kai&#39;))</code></pre>
+<p><img src="/post/bond-valuation_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>#依葫芦画瓢2
+sim_bond &lt;- NULL
+for (i in seq(1,30,by=1)){
+  sim_bond &lt;- c(sim_bond,bond_val(r=0.05,t=i,y=0.03))
+}
+df &lt;- tibble(bond_v = sim_bond,t=seq(1,30,by=1))
+ggplot(df,mapping = aes(x=t,y=bond_v))+ geom_point()+
+         geom_line() + theme_clean()+ggtitle(&#39;只改变到期时间t其他因素保持不变&#39;)+
+  xlab(&quot;债券的到期时间&quot;) + ylab(&#39;债券到期时间&#39;)+theme(text = element_text(family=&#39;Kai&#39;))</code></pre>
+<p><img src="/post/bond-valuation_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+</div>
+<div id="什么决定了债券的yield" class="section level2">
+<h2>什么决定了债券的yield？</h2>
+<ul>
+<li>真实利率 The real rate of interest</li>
+<li>预期通胀率 Expected future inflation</li>
+<li>利率风险 Interest rate risk</li>
+<li>违约风险溢价 Default risk premium</li>
+<li>流动性溢价 Liquidity premium</li>
+</ul>
+<hr />
+</div>
+<div id="各种因素对债券价格的影响" class="section level2">
+<h2>各种因素对债券价格的影响</h2>
+<div id="到期收益率变化对债券价格的影响" class="section level3">
+<h3>到期收益率变化对债券价格的影响</h3>
+</div>
+<div id="微小的变化上升或下降对债券价格的影响是对称的" class="section level3">
+<h3>微小的变化（上升、或下降）对债券价格的影响是对称的</h3>
+</div>
+<div id="如果比较大的yield变化对债券价格的影响是非对称的" class="section level3">
+<h3>如果比较大的yield变化对债券价格的影响是非对称的</h3>
+<pre class="r"><code># 继续利用我们上面写的函数进行演示
+c_1 &lt;- bond_val(r=0.1,t=10,y=0.101)/bond_val(r=0.1,t=10,y=0.1)-1
+c_2 &lt;- bond_val(r=0.1,t=10,y=0.099)/bond_val(r=0.1,t=10,y=0.1)-1
+paste(&quot;到期收益率上涨时价格变化%&quot;,c_1)</code></pre>
+<pre><code>## [1] &quot;到期收益率上涨时价格变化% -0.00611825929117416&quot;</code></pre>
+<pre class="r"><code>paste(&quot;到期收益率下降时价格变化%&quot;,c_2)</code></pre>
+<pre><code>## [1] &quot;到期收益率下降时价格变化% 0.00617105235319015&quot;</code></pre>
+<pre class="r"><code>#当到期收益率变化较大时
+c_3 &lt;- bond_val(r=0.1,t=10,y=0.14)/bond_val(r=0.1,t=10,y=0.1)-1
+c_4 &lt;- bond_val(r=0.1,t=10,y=0.06)/bond_val(r=0.1,t=10,y=0.1)-1
+paste(&quot;到期收益率上涨时价格变化%&quot;,c_3)</code></pre>
+<pre><code>## [1] &quot;到期收益率上涨时价格变化% -0.208644625851743&quot;</code></pre>
+<pre class="r"><code>paste(&quot;到期收益率下降时价格变化%&quot;,c_4)</code></pre>
+<pre><code>## [1] &quot;到期收益率下降时价格变化% 0.294403482056588&quot;</code></pre>
+</div>
+<div id="票息率越低债券变异性更大敏感性越强受到到期收益率的影响越大" class="section level3">
+<h3>票息率越低，债券变异性更大（敏感性越强），受到到期收益率的影响越大</h3>
+<pre class="r"><code>c_5 &lt;- bond_val(r=0.1,t=20,y=0.08)/bond_val(r=0.1,t=20,y=0.1)-1
+c_6 &lt;- bond_val(r=0.05,t=20,y=0.08)/bond_val(r=0.05,t=20,y=0.1)-1
+c_7 &lt;- bond_val(r=0,t=20,y=0.08)/bond_val(r=0,t=20,y=0.1)-1
+paste(&quot;大票息债券的变化%&quot;,c_5)</code></pre>
+<pre><code>## [1] &quot;大票息债券的变化% 0.196362948148986&quot;</code></pre>
+<pre class="r"><code>paste(&quot;小票息债券的变化%&quot;,c_6)</code></pre>
+<pre><code>## [1] &quot;小票息债券的变化% 0.228328021964517&quot;</code></pre>
+<pre class="r"><code>paste(&quot;零息债券的变化%&quot;,c_7)</code></pre>
+<pre><code>## [1] &quot;零息债券的变化% 0.44337305443869&quot;</code></pre>
+<pre class="r"><code>#依葫芦画瓢
+sim_bond &lt;- NULL
+for (i in seq(0,1,by=0.05)){
+  sim_bond &lt;- c(sim_bond,bond_val(r=0.05,t=10,y=i))
+}
+sim_bond_2 &lt;- NULL
+for (i in seq(0,1,by=0.05)){
+  sim_bond_2 &lt;- c(sim_bond_2,bond_val(r=0.2,t=10,y=i))
+}
+
+
+df &lt;- tibble(littlec = sim_bond,morec=sim_bond_2, y=seq(0,1,by=0.05)) %&gt;%
+  gather(key = &#39;key&#39;,value=&#39;value&#39;,-y)
+
+ggplot(df,aes(x=y,y=value,color=key),size=1.1,alpha=0.7) +
+  geom_line(size=1.1,alpha=0.7)+ggtitle(&#39;大票息vs小票息&#39;)+
+  xlab(&quot;债券的到期收益率&quot;) + ylab(&#39;债券价格&#39;)+theme_clean()+
+  theme(text = element_text(family=&#39;Kai&#39;))</code></pre>
+<p><img src="/post/bond-valuation_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="更长的到期时间债券变异性更大敏感性越强收到到期收益率的影响越大" class="section level3">
+<h3>更长的到期时间，债券变异性更大（敏感性越强），收到到期收益率的影响越大</h3>
+<pre class="r"><code>bond_val(r=0.1,t=20,y=0.08)/bond_val(r=0.1,t=20,y=0.1)-1</code></pre>
+<pre><code>## [1] 0.1963629</code></pre>
+<pre class="r"><code>bond_val(r=0.1,t=10,y=0.08)/bond_val(r=0.1,t=10,y=0.1)-1</code></pre>
+<pre><code>## [1] 0.1342016</code></pre>
+<pre class="r"><code>#依葫芦画瓢3
+short &lt;- NULL
+for (i in seq(0,1,by=0.05)){
+  short &lt;- c(short,bond_val(r=0.05,t=10,y=i))
+}
+long &lt;- NULL
+for (i in seq(0,1,by=0.05)){
+  long &lt;- c(long,bond_val(r=0.05,t=20,y=i))
+}
+
+
+df &lt;- tibble(short = short,long=long, y=seq(0,1,by=0.05)) %&gt;%
+  gather(key = &#39;key&#39;,value=&#39;value&#39;,-y)
+
+ggplot(df,aes(x=y,y=value,color=key),size=1.2,alpha=0.7) +
+  geom_line(size=1.2,alpha=0.7)+ggtitle(&#39;长到期时间VS短到期时间&#39;)+
+  xlab(&quot;债券的到期收益率&quot;) + ylab(&#39;债券价格&#39;)+theme_clean()+
+  theme(text = element_text(family=&#39;Kai&#39;))</code></pre>
+<p><img src="/post/bond-valuation_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+</div>
+<div id="债券的久其" class="section level2">
+<h2>债券的久其</h2>
+<p>公式和定义ppt上已经写好了，我们直接来写function</p>
+<pre class="r"><code>mac_dur &lt;- function(p=100,r,t,y) {
+  cf &lt;- c(rep(p*r,t-1),p*(1+r))
+  
+  cf_df &lt;- as_tibble(cf)
+  
+  cf_df &lt;- cf_df %&gt;%
+  mutate(year = as.numeric(rownames(cf_df))) %&gt;%
+  rename(cf = value)
+  
+  cf_df &lt;- cf_df %&gt;%
+  mutate(pv = cf/(1+y)^year) %&gt;%
+    mutate(total_pv = year*cf/(1+y)^year)
+  
+  return(sum(cf_df$total_pv)/sum(cf_df$pv))
+}
+
+dur_1 &lt;-mac_dur(r=0.1,t=20,y=0.08)
+dur_2 &lt;- mac_dur(r=0.3,t=10,y=0.06)
+
+paste(&quot;小票息债券的久其是:&quot;,dur_1)</code></pre>
+<pre><code>## [1] &quot;小票息债券的久其是: 10.1823263432589&quot;</code></pre>
+<pre class="r"><code>paste(&quot;大票息债券的久其是:&quot;,dur_2)</code></pre>
+<pre><code>## [1] &quot;大票息债券的久其是: 6.02680175748431&quot;</code></pre>
+<pre class="r"><code>if (dur_2&lt;dur_1){
+  print(&#39;dur_2债券的易变性（敏感性）更弱&#39;)
+}else(print(&#39;dur_2债券的易变性更强&#39;))</code></pre>
+<pre><code>## [1] &quot;dur_2债券的易变性（敏感性）更弱&quot;</code></pre>
+<p>继续构建修正久其，修正久其就是在麦考利久其的基础上除以(1+y)</p>
+<pre class="r"><code>re_dur &lt;- function(p=100,r,t,y) {
+  cf &lt;- c(rep(p*r,t-1),p*(1+r))
+  
+  cf_df &lt;- as_tibble(cf)
+  
+  cf_df &lt;- cf_df %&gt;%
+  mutate(year = as.numeric(rownames(cf_df))) %&gt;%
+  rename(cf = value)
+  
+  cf_df &lt;- cf_df %&gt;%
+  mutate(pv = cf/(1+y)^year) %&gt;%
+    mutate(total_pv = year*cf/(1+y)^year)
+  
+  dur = sum(cf_df$total_pv)/sum(cf_df$pv)
+  
+  re_dur = dur/(1+y)
+  return(re_dur)
+}</code></pre>
+<div id="使用jrvfiance包计算现金流的久期债券价格" class="section level3">
+<h3>使用JrvFiance包计算现金流的久期、债券价格</h3>
+<pre class="r"><code>library(jrvFinance)
+library(tidyverse)
+# jrvFiance包中的duration函数可以计算现金流的久期
+mac_d &lt;- duration(cf = c(200,300,10000),rate = 5e-2) # 麦考利久期
+md_d &lt;- duration(cf = c(200,300,10000),rate = 5e-2,modified = T) #修正久期
+md_d == mac_d/(1+5e-2) #检验一下修正久期是否等于麦考利久期除以（1+y)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>print(list(mac_d,md_d))</code></pre>
+<pre><code>## [[1]]
+## [1] 2.928243
+## 
+## [[2]]
+## [1] 2.788802</code></pre>
+<pre class="r"><code>## 接下来计算债券价格，之前我们写了自己的函数，现在我们直接使用包里的函数
+#该函数为bond.price() settle 结算日 mature 到期日，注意这两个一定要用字符串，或者日期型格式
+#coupon和yield大家可以理解
+bond.price(settle=&quot;2018-03-15&quot;, mature=&quot;2023-03-15&quot;, coupon=5e-2,
+           yield=6e-2)</code></pre>
+<pre><code>## [1] 95.7349</code></pre>
+<pre class="r"><code>bond.price(settle=&quot;2018-03-15&quot;, mature=&quot;2023-03-15&quot;, coupon=0,
+           yield=6e-2)</code></pre>
+<pre><code>## [1] 74.40939</code></pre>
+<pre class="r"><code># freq控制coupon支付频率1是年支付，2是半年一次，12是月度
+bond.price(settle=&quot;2012-04-15&quot;, mature=&quot;2022-01-01&quot;, coupon=5e-2,
+           yield=6e-2, freq=12)</code></pre>
+<pre><code>## [1] 92.65338</code></pre>
+<pre class="r"><code>#comp.freq 复利的频率方法还是同上
+bond.price(settle=&quot;2012-04-15&quot;, mature=&quot;2022-01-01&quot;, coupon=5e-2,
+           yield=6e-2, freq=12, comp.freq = 2)</code></pre>
+<pre><code>## [1] 93.17233</code></pre>
+</div>
+<div id="使用jrvfiance包计算债券duration" class="section level3">
+<h3>使用JrvFiance包计算债券duration</h3>
+<pre class="r"><code>library(ggfortify)
+ggthemr:: ggthemr(&#39;dust&#39;) #这也是一种调用包里面函数的方法，我这里调用了ggthemr颜色包里面的dust色板
+
+bond.duration(settle=&quot;2018-03-15&quot;, mature=&quot;2023-03-15&quot;, coupon=5e-2,
+           yield=6e-2)</code></pre>
+<pre><code>## [1] 4.471679</code></pre>
+<pre class="r"><code>bond.duration(settle=&quot;2018-03-15&quot;, mature=&quot;2023-03-15&quot;, coupon=3e-2,
+           yield=6e-2)</code></pre>
+<pre><code>## [1] 4.652</code></pre>
+<pre class="r"><code>sim_dur &lt;- NULL
+for (i in seq(0,0.2,by=0.01)){
+sim_dur &lt;- c(sim_dur,duration= bond.duration(settle=&quot;2018-03-15&quot;, mature=&quot;2023-03-15&quot;, coupon=i,
+           yield=6e-2,modified = T))
+}
+
+df &lt;- tibble(coup =seq(0,0.2,by=0.01),sim_dur=sim_dur )
+ggplot(df,aes(x=coup,y=sim_dur)) +
+  geom_line(size=1.3,alpha=0.5)+geom_point()+
+  ggtitle(&#39;票息和久期的关系&#39;) + xlab(&#39;票息率&#39;)+ylab(&#39;修正久期&#39;)+theme(text = element_text(family=&#39;Kai&#39;))</code></pre>
+<p><img src="/post/bond-valuation_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+</div>
+<div id="使用jrvfiance包计算债券ytm" class="section level3">
+<h3>使用JrvFiance包计算债券ytm</h3>
+<pre class="r"><code># yield参数结算日，到期日，票息率，当前价格
+bond.yield(settle=&#39;2018-01-01&#39;, mature=&#39;2023-01-01&#39;, coupon=5e-2, price=101)</code></pre>
+<pre><code>## [1] 0.04772823</code></pre>
+<pre class="r"><code>#如果需要一次计算很多债券的ytm，可以参考下面的例子
+bond.yields(settle=&quot;2012-01-01&quot;, mature=c(&quot;2022-01-01&quot;, &quot;2032-01-01&quot;),
+            coupon=c(0.09, 0.08,0.07,0.06),
+            price=c(94, 83, 81, 65))</code></pre>
+<pre><code>## [1] 0.09961336 0.09978548 0.10056533 0.10110332</code></pre>
+</div>
+</div>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">张剑</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-03-21
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/r/">R</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/2020-03-22forecast/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">市场需求与预测之实战作业</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/%E4%B8%80%E4%BA%9B%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97/">
+            <span class="next-text nav-default">一些时间序列</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:zhangjian@sicau.edu.cn" class="iconfont icon-email" title="email"></a>
+      <a href="https://gitee.com/jefeerzhang/" class="iconfont icon-github" title="github"></a>
+  <a href="/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2018 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">张剑</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  <script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/timeago.js@3.0.2/dist/timeago.min.js" integrity="sha256-jwCP0NAdCBloaIWTWHmW4i3snUNMHUNO+jr9rYd2iOI=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/timeago.js@3.0.2/dist/timeago.locales.min.js" integrity="sha256-ZwofwC1Lf/faQCzN7nZtfijVV6hSwxjQMwXL4gn9qU8=" crossorigin="anonymous"></script>
+  <script><!-- NOTE: timeago.js uses the language code format like "zh_CN" (underscore and case sensitive) -->
+    var languageCode = "en".replace(/-/g, '_').replace(/_(.*)/, function ($0, $1) {return $0.replace($1, $1.toUpperCase());});
+    timeago().render(document.querySelectorAll('.timeago'), languageCode);
+    timeago.cancel();  
+  </script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+  <script type="text/javascript">
+    window.MathJax = {
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      showProcessingMessages: false,
+      messageStyle: 'none'
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"  integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

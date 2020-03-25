@@ -1,0 +1,141 @@
+---
+title: ista的一个例子
+author: 张剑
+date: '2020-03-23'
+slug: ista的一个例子
+categories:
+  - 计量
+tags:
+  - 时间序列
+---
+
+
+### Interrupted Time-series Analysis(ITSA) 中断时间序列分析
+### 当只有一个研究组（无对照组）时，标准ITSA回归模型采用以下形式
+#### [数据链接](https://gitee.com/jefeerzhang/jefeerzhang/raw/master/content/post/data/cigsales_2.csv)
+$$Y_{t}=\beta_{0}+\beta_{1} T_{t}+\beta_{2} X_{t}+\beta_{3} X_{t} T_{t}+\epsilon_{t}$$
+
+- 其中$Y_t$为每个等距时间点t上测量的结果变量
+- $T_t$是从研究开始的时间趋势
+- $X_t$是一个虚拟变量去衡量政策干预(intervention)(干预之前为0，干预之后为1)
+- $X_tT_t$是交互项，用来表示干预后的趋势 我们在这里假设模型服从AR(1)
+
+我们使用[1988 California Proposition 99](https://en.wikipedia.org/wiki/1988_California_Proposition_99),烟草税与健康保护法为例，先实现ITSA方法以及使用谷歌开发的CausalImpact测试[Bayesian structural time-series models](https://google.github.io/CausalImpact/CausalImpact.html)
+
+调包侠开始表演
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(sandwich)
+library(stargazer)
+library(lmtest)
+library(ggthemes)
+cig <- read_csv("~/jefeerzhang/content/post/data/cigsales_2.csv") #提前设置工作目录
+head(cig)
+names(cig)
+cig_c <- cig %>%
+  filter(state == "California")
+mod1 <- lm(cigsale ~ time + tax_dummy + tax_trend,data=cig_c)
+stargazer(mod1,type = 'text')
+coeftest(mod1,vcov=NeweyWest(mod1,lag = 1, prewhite = 0,adjust = T))
+ggplot(cig_c,aes(x=year,y=cigsale)) + 
+  geom_point(size=1.4)+
+  geom_smooth(data=subset(cig_c,year<=1989),method = 'lm',se=F)+
+  geom_smooth(data=subset(cig_c,year>1989),method = 'lm',se=F)+
+ geom_vline(xintercept = 1989,linetype='dashed') + theme_calc()+
+  labs(title = "1989年加州烟草税对香烟销量的影响")+
+  theme(text = element_text(family='Kai'))
+```
+
+## 接下来使用CausalImpact进行测试
+
+```{r}
+library(CausalImpact)
+library(tidyverse)
+library(zoo)
+library(anytime)
+cig_c_Cas <- cig_c %>% dplyr::select(cigsale,time) 
+pre.period <- c(0, 19)
+post.period <- c(20, 30)
+
+impact <- CausalImpact(cig_c_Cas, pre.period ,post.period)
+plot(impact)
+summary(impact)
+```
+## 使用其他非加州的地区作为控制组，将加州作为控制组,使用如下模型
+$$Y_{t}=\beta_{0}+\beta_{1} T_{t}+\beta_{2} X_{t}+\beta_{3} X_{t} T_{t}+\beta_{4} Z+\beta_{5} Z T_{t}+\beta_{6} Z X_{t}+\beta_{7} Z X_{t} T_{t}+\epsilon_{t}$$
+其中:
+
+- Z为虚拟变量，加州为1，控制州为0
+
+- $ZT_T$和$Z_tT_t$和$ZX_tT_t$为虚拟变量与其他变量的交互项
+
+### 图示如下
+![](/post/2020-03-23-ista的一个例子_files/itsa1.png)
+
+- $\beta_0$和$\beta_3$代表了控制组
+- $\beta_4$和$\beta_7$代表了处理组
+- $\beta_4$代表了控制组与处理组在干预（政策）之前的差异
+- $\beta_5$代表了干预之后的差异
+- $\beta_6$反应了当干预发生时(即刻)处理组和控制组的差异
+- $\beta_7$反应了干预之后处理组和控制组之间的差异 我们在这里同样假设模型服从AR(1)
+
+```{r message=FALSE, warning=FALSE}
+mod2 <- lm(cigsale ~ time + california +cal_trend +tax_trend + tax_dummy + cal_tax_dummy +
+             cal_tax_trend,data=cig)
+stargazer(mod2,type = 'text')
+coeftest(mod2,vcov = NeweyWest(mod2,lag =1 ,prewhite = 0,adjust=T) )
+# 作图
+# 先把数据整合一下，处理组一个均值，当然处理组就一个，控制组一个均值，控制组有很多
+aggdata <- aggregate(cig,by=list(cig$california,cig$year), FUN = mean,na.rm=T)
+str(aggdata)
+table(aggdata$Group.1)
+ggplot(aggdata,aes(x=Group.2,y=cigsale,color=as.factor(Group.1 ))) +
+  geom_point(size=1.5)+geom_vline(xintercept = 1989,linetype='dashed') +theme_clean()+
+  geom_smooth(data = subset(aggdata,Group.2 <= 1989), method = "lm",se=F)+
+  geom_smooth(data = subset(aggdata,Group.2 > 1989), method = "lm",se=F) +
+  ggtitle('1989年加州香烟法令对销量的影响') + xlab('年份') + ylab("香烟销量")+
+  theme(text = element_text(family='Kai'))
+```
+
+## 接下来继续使用CausalImpact进行测试，在其中加入其他州的均值作为解释变量
+```{r}
+library(CausalImpact)
+library(tidyverse)
+library(zoo)
+library(anytime)
+str(aggdata) 
+cont_cig <- aggdata  %>% filter( `Group.1`== 0) %>% dplyr::select(cigsale,time)
+data <- left_join(x = cig_c_Cas,y = cont_cig,by="time")
+#这里我将其他地区的香烟销量作为预测加州销量的解释变量
+pre.period <- c(0, 19)
+post.period <- c(20, 30)
+
+impact <- CausalImpact(data, pre.period ,post.period)
+plot(impact)
+summary(impact)
+```
+## 还有一种思路，我们选一些和加州最像的州来作为CausalImpact的解释变量，或者加入更多外部解释变量，比如我们加入加州香烟价格
+
+```{r}
+library(CausalImpact)
+library(tidyverse)
+library(zoo)
+library(anytime)
+str(aggdata) 
+#在前面的基础上，继续加入加州本身的香烟价格
+cig_c_Cas <- cig_c %>% dplyr::select(cigsale,time,retprice) 
+
+cont_cig <- aggdata  %>% filter( `Group.1`== 0) %>% dplyr::select(cigsale,time)
+data <- left_join(x = cig_c_Cas,y = cont_cig,by="time")
+#这里我将其他地区的香烟销量作为预测加州销量的解释变量
+
+
+pre.period <- c(0, 19)
+post.period <- c(20, 30)
+
+impact <- CausalImpact(data, pre.period ,post.period)
+plot(impact)
+summary(impact)
+```
+### 如果加入了香烟价格，可能法案就没有什么效果了，不过这样的分析可能是有问题的，因为估计法令就是直接作用与retprice的。
+CausalImpact包估计用来分析股票，可能有点意思，一些重大事件的影响。

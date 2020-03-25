@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cluster on 张剑的主页</title>
+    <link>/tags/cluster/</link>
+    <description>Recent content in Cluster on 张剑的主页</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 21 Mar 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/cluster/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>聚类分析</title>
+      <link>/post/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90/</link>
+      <pubDate>Sat, 21 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90/</guid>
+      <description>什么是聚类？？一个简单的例子 探索性数据分析（EDA）的一种形式,将样本通过特征划分成具有共同特征的有意义的族群。 聚类分析的全部流程图 流程 定义</description>
+    </item>
+    
+  </channel>
+</rss>

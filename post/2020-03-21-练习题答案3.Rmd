@@ -1,0 +1,53 @@
+---
+title: 练习题答案3
+author: 张剑
+date: '2020-03-21'
+slug: 练习题答案3
+categories:
+  - 投资学
+tags:
+  - 投资
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### 题目1：给定三种债券当前价格、未来现金流和到期收益率，求第四种债券价格。
+
+**思路**:通过已知的三个债券，计算即期利率s1，s2，s3，利用即期利率来求未知的第四只债券的价格
+$$925.53 = \frac{c_1}{1+s_1}+\frac{1000}{1+s_1}$$
+$$991.26 = \frac{c_2}{1+s_1}+\frac{c_2}{(1+s_2)^2}+\frac{1000}{(1+s_2)^2} $$
+$$1004.99 =\frac{c_3}{1+s_1}+ \frac{c_3}{(1+s_2)^2}+\frac{c_3}{(1+s_3)^3}+\frac{1000}{(1+s3)^3}$$
+
+显然上面的$c_1$,$c_2$,$c_3$也是已知的，我们可以求解s1，s2，s3.
+
+#### 我就直给第一题的答案了，第二题和之前内容类似
+
+```{r}
+# 第一个函数进行票息分离
+get_zero_coupon<-function(coupons=c(0,90,100),BondPrices=c(925.53,991.26,1004.99),nominal_value=1000){
+  price_matrix <- matrix(0,nrow=length(coupons),ncol=length(coupons))
+  
+  for(i in 1:length(coupons)){
+    price_matrix[i,1:i] <- coupons[i]
+  }
+  
+  diag(price_matrix) <- diag(price_matrix) + nominal_value #大家思考一下这一步在干什么
+  zero_coupon_prices<-solve(price_matrix,BondPrices) #这一步是矩阵求解
+  return(zero_coupon_prices)
+}
+
+# 另一个函数
+c<-get_zero_coupon()
+
+
+get_price <- function(c_r, t , s_p , f =1000) {
+  cf = matrix(c(rep(f*c_r,t)),nr=1)
+  cf[t] = cf[t]+f
+  return(cf%*%s_p)
+}
+#运用函数
+get_price(c_r = 0.11,t=3,s_p = c)
+get_price(c_r = 0.095,t=3,s_p = c)

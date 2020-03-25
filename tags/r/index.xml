@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>R on 张剑的主页</title>
+    <link>/tags/r/</link>
+    <description>Recent content in R on 张剑的主页</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 25 Mar 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>主成分分析PCA</title>
+      <link>/post/%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90pca/</link>
+      <pubDate>Wed, 25 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90pca/</guid>
+      <description>What —— 主成分分析的基本思想 Why —— 为什么我们需要主成分分析 一个多维特征的例子 主成分的另一种解释 How——如何进行PCA？ 先做一个Scale和不</description>
+    </item>
+    
+    <item>
+      <title>Bond Valuation</title>
+      <link>/post/bond-valuation/</link>
+      <pubDate>Sat, 21 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/bond-valuation/</guid>
+      <description>债券估值基础 假设债券的现金流如下：投资面值为100元，票面利率为5％，到期日为5年的债券。 息票利率是您从持有债券中获得的利息，因此，在债券到</description>
+    </item>
+    
+    <item>
+      <title>利率作业</title>
+      <link>/post/%E5%88%A9%E7%8E%87%E4%BD%9C%E4%B8%9A/</link>
+      <pubDate>Sat, 21 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E5%88%A9%E7%8E%87%E4%BD%9C%E4%B8%9A/</guid>
+      <description>介绍如果安装和调用包 介绍如何计算NPV和IRR 简单展示画图——非完美版 1. R或python之所以强大是应为包多，包多干的事就多。安装和调用包非</description>
+    </item>
+    
+    <item>
+      <title>投资学作业答案</title>
+      <link>/post/%E6%8A%95%E8%B5%84%E5%AD%A6%E4%BD%9C%E4%B8%9A%E7%AD%94%E6%A1%88/</link>
+      <pubDate>Sat, 21 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E6%8A%95%E8%B5%84%E5%AD%A6%E4%BD%9C%E4%B8%9A%E7%AD%94%E6%A1%88/</guid>
+      <description>小张打算给自己刚出生的孩子购买保险产品，该产品规定从0岁起投保人每年年初支付保险费6000元，共10次。 从支付保险费的次年起，保险公司每2年</description>
+    </item>
+    
+    <item>
+      <title>时间序列分析1</title>
+      <link>/post/%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E5%88%86%E6%9E%901/</link>
+      <pubDate>Sat, 21 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E5%88%86%E6%9E%901/</guid>
+      <description>时间序列最简单的预测方法 均值法 \[\hat{y}_{T+h | T}=\left(y_{1}+\cdots+y_{T}\right) / T\] 一个例子 library(tidyverse) ## -- Attaching packages ---------------------------------------------------- tidyverse 1.3.0 -- ## √ ggplot2 3.3.0 √ purrr 0.3.3 ## √ tibble 2.1.3 √ dplyr 0.8.5 ## √ tidyr 1.0.2 √ stringr 1.4.0 ## √ readr 1.3.1 √ forcats 0.5.0 ## -- Conflicts ------------------------------------------------------- tidyverse_conflicts() -- ## x dplyr::filter()</description>
+    </item>
+    
+  </channel>
+</rss>

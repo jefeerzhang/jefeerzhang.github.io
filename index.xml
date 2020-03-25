@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>张剑的主页</title>
+    <link>/</link>
+    <description>Recent content on 张剑的主页</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 20 Aug 2017 21:38:52 +0800</lastBuildDate>
+    
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>CV</title>
+      <link>/about/</link>
+      <pubDate>Sun, 20 Aug 2017 21:38:52 +0800</pubDate>
+      
+      <guid>/about/</guid>
+      <description>一、教育经历 2014年毕业于西南财经大学，获西方经济学专业博士学位； 2008年毕业于西南财经大学，获保险学硕士学位； 2005年毕业于西南财经</description>
+    </item>
+    
+    <item>
+      <title>主成分分析PCA</title>
+      <link>/post/%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90pca/</link>
+      <pubDate>Wed, 25 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90pca/</guid>
+      <description>What —— 主成分分析的基本思想 Why —— 为什么我们需要主成分分析 一个多维特征的例子 主成分的另一种解释 How——如何进行PCA？ 先做一个Scale和不</description>
+    </item>
+    
+    <item>
+      <title>ista的一个例子</title>
+      <link>/post/ista%E7%9A%84%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90/</link>
+      <pubDate>Mon, 23 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/ista%E7%9A%84%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90/</guid>
+      <description>Interrupted Time-series Analysis(ITSA) 中断时间序列分析 当只有一个研究组（无对照组）时，标准ITSA回归模型采用以下形式 数据链接 \[Y_{t}=\beta_{0}+\beta_{1} T_{t}+\beta_{2} X_{t}+\beta_{3} X_{t} T_{t}+\epsilon_{t}\] 其中\(Y_t\)为每个等距时间点t</description>
+    </item>
+    
+    <item>
+      <title>市场需求与预测之实战作业</title>
+      <link>/post/2020-03-22forecast/</link>
+      <pubDate>Sun, 22 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020-03-22forecast/</guid>
+      <description>项目评估与管理——市场预测小组练习题 本次题目我们使用全球最大的数据建模和数据分析竞赛平台kaggle为资料来源。 具体使用2017年kaggl</description>
+    </item>
+    
+    <item>
+      <title>Bond Valuation</title>
+      <link>/post/bond-valuation/</link>
+      <pubDate>Sat, 21 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/bond-valuation/</guid>
+      <description>债券估值基础 假设债券的现金流如下：投资面值为100元，票面利率为5％，到期日为5年的债券。 息票利率是您从持有债券中获得的利息，因此，在债券到</description>
+    </item>
+    
+    <item>
+      <title>一些时间序列</title>
+      <link>/post/%E4%B8%80%E4%BA%9B%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97/</link>
+      <pubDate>Sat, 21 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E4%B8%80%E4%BA%9B%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97/</guid>
+      <description>一些直观的时间序列 library(tidyverse) library(forecast) library(fpp2) library(ggfortify) library(ggthemes) autoplot(ausbeer,ts.colour = &amp;quot;blue&amp;quot;,main = &amp;quot;啤酒销量&amp;quot;,xlab = &amp;quot;时间&amp;quot;)+theme_clean() autoplot(AirPassengers,ts.colour</description>
+    </item>
+    
+    <item>
+      <title>利率作业</title>
+      <link>/post/%E5%88%A9%E7%8E%87%E4%BD%9C%E4%B8%9A/</link>
+      <pubDate>Sat, 21 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E5%88%A9%E7%8E%87%E4%BD%9C%E4%B8%9A/</guid>
+      <description>介绍如果安装和调用包 介绍如何计算NPV和IRR 简单展示画图——非完美版 1. R或python之所以强大是应为包多，包多干的事就多。安装和调用包非</description>
+    </item>
+    
+    <item>
+      <title>投资学作业答案</title>
+      <link>/post/%E6%8A%95%E8%B5%84%E5%AD%A6%E4%BD%9C%E4%B8%9A%E7%AD%94%E6%A1%88/</link>
+      <pubDate>Sat, 21 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E6%8A%95%E8%B5%84%E5%AD%A6%E4%BD%9C%E4%B8%9A%E7%AD%94%E6%A1%88/</guid>
+      <description>小张打算给自己刚出生的孩子购买保险产品，该产品规定从0岁起投保人每年年初支付保险费6000元，共10次。 从支付保险费的次年起，保险公司每2年</description>
+    </item>
+    
+    <item>
+      <title>时间序列分析1</title>
+      <link>/post/%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E5%88%86%E6%9E%901/</link>
+      <pubDate>Sat, 21 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E5%88%86%E6%9E%901/</guid>
+      <description>时间序列最简单的预测方法 均值法 \[\hat{y}_{T+h | T}=\left(y_{1}+\cdots+y_{T}\right) / T\] 一个例子 library(tidyverse) ## -- Attaching packages ---------------------------------------------------- tidyverse 1.3.0 -- ## √ ggplot2 3.3.0 √ purrr 0.3.3 ## √ tibble 2.1.3 √ dplyr 0.8.5 ## √ tidyr 1.0.2 √ stringr 1.4.0 ## √ readr 1.3.1 √ forcats 0.5.0 ## -- Conflicts ------------------------------------------------------- tidyverse_conflicts() -- ## x dplyr::filter()</description>
+    </item>
+    
+    <item>
+      <title>练习题答案3</title>
+      <link>/post/%E7%BB%83%E4%B9%A0%E9%A2%98%E7%AD%94%E6%A1%883/</link>
+      <pubDate>Sat, 21 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E7%BB%83%E4%B9%A0%E9%A2%98%E7%AD%94%E6%A1%883/</guid>
+      <description>题目1：给定三种债券当前价格、未来现金流和到期收益率，求第四种债券价格。 思路:通过已知的三个债券，计算即期利率s1，s2，s3，利用即期利率</description>
+    </item>
+    
+    <item>
+      <title>聚类分析</title>
+      <link>/post/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90/</link>
+      <pubDate>Sat, 21 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90/</guid>
+      <description>什么是聚类？？一个简单的例子 探索性数据分析（EDA）的一种形式,将样本通过特征划分成具有共同特征的有意义的族群。 聚类分析的全部流程图 流程 定义</description>
+    </item>
+    
+    <item>
+      <title>利率练习2</title>
+      <link>/post/%E5%88%A9%E7%8E%87%E7%BB%83%E4%B9%A02/</link>
+      <pubDate>Mon, 16 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/%E5%88%A9%E7%8E%87%E7%BB%83%E4%B9%A02/</guid>
+      <description>题目背景 你面临如下投资决策，现在支出70000万，投资期限为5年，每年的回报率为1万，现在的利率为5%，5年后投资结束，回收45000元，请</description>
+    </item>
+    
+  </channel>
+</rss>
