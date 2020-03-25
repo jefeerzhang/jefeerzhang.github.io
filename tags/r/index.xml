@@ -6,10 +6,21 @@
     <description>Recent content in R on Zhang Jian&#39;s Homepage</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Sat, 21 Mar 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 25 Mar 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>主成分分析PCA</title>
+      <link>/post/2020/03/25/%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90pca/</link>
+      <pubDate>Wed, 25 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/03/25/%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90pca/</guid>
+      <description>What —— 主成分分析的基本思想Why —— 为什么我们需要主成分分析一个多维特征的例子主成分的另一种解释How——如何进行PCA？先做一个Scale和不Scale的对比碎石图，选几个主成分What —— 主成分分析的基本思想利用降维（线性变换)的思想，在损失很少信息的前提下把多个特征转化为几个不相关的综合特征（主成分),即每个主成分都是原始特征变量的线性组合,且各个主成分之间互不相关,使得主成分比原始变量具有某些更优越的性能（主成分必须保留原始特征尽可能多的信息），从而达到简化系统结构，抓住问题实质的目的。
+Why —— 为什么我们需要主成分分析假设我们的研究对象——消费者，我们拥有消费者非常全面的特征，如果要将这p个特征\(x_1,x_2,...,x_p\)个特征可视化，实际上是相对繁琐的，人们对于太多维度的变量处理起来不够符合人类的直觉思维。
+一个多维特征的例子library(corrplot)library(DT)library(tidyverse)library(GGally)library(gtsummary)mtcars[1:7] %&amp;gt;% datatable(){&#34;x&#34;:{&#34;filter&#34;:&#34;none&#34;,&#34;data&#34;:[[&#34;Mazda RX4&#34;,&#34;Mazda RX4 Wag&#34;,&#34;Datsun 710&#34;,&#34;Hornet 4 Drive&#34;,&#34;Hornet Sportabout&#34;,&#34;Valiant&#34;,&#34;Duster 360&#34;,&#34;Merc 240D&#34;,&#34;Merc 230&#34;,&#34;Merc 280&#34;,&#34;Merc 280C&#34;,&#34;Merc 450SE&#34;,&#34;Merc 450SL&#34;,&#34;Merc 450SLC&#34;,&#34;Cadillac Fleetwood&#34;,&#34;Lincoln Continental&#34;,&#34;Chrysler Imperial&#34;,&#34;Fiat 128&#34;,&#34;Honda Civic&#34;,&#34;Toyota Corolla&#34;,&#34;Toyota Corona&#34;,&#34;Dodge Challenger&#34;,&#34;AMC Javelin&#34;,&#34;Camaro Z28&#34;,&#34;Pontiac Firebird&#34;,&#34;Fiat X1-9&#34;,&#34;Porsche 914-2&#34;,&#34;Lotus Europa&#34;,&#34;Ford Pantera L&#34;</description>
+    </item>
     
     <item>
       <title>Bond Valuation</title>
