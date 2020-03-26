@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>主成分分析PCA | Zhang Jian&#39;s Homepage</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">首页</a></li>
+      
+      <li><a href="/cv/">CV</a></li>
+      
+      <li><a href="/categories/">分类</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/index.xml">订阅</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">主成分分析PCA</span></h1>
+<h2 class="author">张剑</h2>
+<h2 class="date">2020/03/25</h2>
+
+<p class="terms">
+    
+    
+    Categories:
+    
+    <a href='/categories/%E9%A1%B9%E7%9B%AE%E8%AF%84%E4%BC%B0'>项目评估</a>
+    
+    
+    
+    
+    Tags:
+    
+    <a href='/tags/r'>R</a>
+    
+    
+    
+  </p>
+
+</div>
+
+<main>
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/jquery/jquery.min.js"></script>
+<link href="/rmarkdown-libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/datatables-binding/datatables.js"></script>
+<link href="/rmarkdown-libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="/rmarkdown-libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/dt-core/js/jquery.dataTables.min.js"></script>
+<link href="/rmarkdown-libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/crosstalk/js/crosstalk.min.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#what-主成分分析的基本思想">What —— 主成分分析的基本思想</a></li>
+<li><a href="#why-为什么我们需要主成分分析">Why —— 为什么我们需要主成分分析</a></li>
+<li><a href="#一个多维特征的例子">一个多维特征的例子</a></li>
+<li><a href="#主成分的另一种解释">主成分的另一种解释</a></li>
+<li><a href="#how如何进行pca">How——如何进行PCA？</a></li>
+<li><a href="#先做一个scale和不scale的对比">先做一个Scale和不Scale的对比</a></li>
+<li><a href="#碎石图选几个主成分">碎石图，选几个主成分</a></li>
+<li><a href="#因子分析和主成分分析">因子分析和主成分分析</a></li>
+</ul>
+</div>
+
+<div id="what-主成分分析的基本思想" class="section level3">
+<h3>What —— 主成分分析的基本思想</h3>
+<p>利用降维（线性变换)的思想，在损失很少信息的前提下把多个特征转化为几个不相关的综合特征（主成分),即每个主成分都是原始特征变量的线性组合,且各个主成分之间互不相关,使得主成分比原始变量具有某些更优越的性能（主成分必须保留原始特征尽可能多的信息），从而达到简化系统结构，抓住问题实质的目的。</p>
+</div>
+<div id="why-为什么我们需要主成分分析" class="section level3">
+<h3>Why —— 为什么我们需要主成分分析</h3>
+<p>假设我们的研究对象——消费者，我们拥有消费者非常全面的特征，如果要将这p个特征<span class="math inline">\(x_1,x_2,...,x_p\)</span>个特征可视化，实际上是相对繁琐的，人们对于太多维度的变量处理起来不够符合人类的直觉思维。</p>
+</div>
+<div id="一个多维特征的例子" class="section level3">
+<h3>一个多维特征的例子</h3>
+<pre class="r"><code>library(corrplot)
+library(DT)
+library(tidyverse)
+library(GGally)
+library(gtsummary)
+mtcars[,1:7] %&gt;% datatable()</code></pre>
+<div id="htmlwidget-1" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"filter":"none","data":[["Mazda RX4","Mazda RX4 Wag","Datsun 710","Hornet 4 Drive","Hornet Sportabout","Valiant","Duster 360","Merc 240D","Merc 230","Merc 280","Merc 280C","Merc 450SE","Merc 450SL","Merc 450SLC","Cadillac Fleetwood","Lincoln Continental","Chrysler Imperial","Fiat 128","Honda Civic","Toyota Corolla","Toyota Corona","Dodge Challenger","AMC Javelin","Camaro Z28","Pontiac Firebird","Fiat X1-9","Porsche 914-2","Lotus Europa","Ford Pantera L","Ferrari Dino","Maserati Bora","Volvo 142E"],[21,21,22.8,21.4,18.7,18.1,14.3,24.4,22.8,19.2,17.8,16.4,17.3,15.2,10.4,10.4,14.7,32.4,30.4,33.9,21.5,15.5,15.2,13.3,19.2,27.3,26,30.4,15.8,19.7,15,21.4],[6,6,4,6,8,6,8,4,4,6,6,8,8,8,8,8,8,4,4,4,4,8,8,8,8,4,4,4,8,6,8,4],[160,160,108,258,360,225,360,146.7,140.8,167.6,167.6,275.8,275.8,275.8,472,460,440,78.7,75.7,71.1,120.1,318,304,350,400,79,120.3,95.1,351,145,301,121],[110,110,93,110,175,105,245,62,95,123,123,180,180,180,205,215,230,66,52,65,97,150,150,245,175,66,91,113,264,175,335,109],[3.9,3.9,3.85,3.08,3.15,2.76,3.21,3.69,3.92,3.92,3.92,3.07,3.07,3.07,2.93,3,3.23,4.08,4.93,4.22,3.7,2.76,3.15,3.73,3.08,4.08,4.43,3.77,4.22,3.62,3.54,4.11],[2.62,2.875,2.32,3.215,3.44,3.46,3.57,3.19,3.15,3.44,3.44,4.07,3.73,3.78,5.25,5.424,5.345,2.2,1.615,1.835,2.465,3.52,3.435,3.84,3.845,1.935,2.14,1.513,3.17,2.77,3.57,2.78],[16.46,17.02,18.61,19.44,17.02,20.22,15.84,20,22.9,18.3,18.9,17.4,17.6,18,17.98,17.82,17.42,19.47,18.52,19.9,20.01,16.87,17.3,15.41,17.05,18.9,16.7,16.9,14.5,15.5,14.6,18.6]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mpg<\/th>\n      <th>cyl<\/th>\n      <th>disp<\/th>\n      <th>hp<\/th>\n      <th>drat<\/th>\n      <th>wt<\/th>\n      <th>qsec<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>ggpairs(mtcars[,1:7]) +  theme_bw() </code></pre>
+<p><img src="/post/2020-03-25-主成分分析pca_files/figure-html/unnamed-chunk-1-2.png" width="672" /></p>
+<pre class="r"><code>res1 &lt;- cor.mtest(mtcars[,1:7], conf.level = .95)
+corrplot(corr=cor(mtcars[,1:7]),order = &quot;AOE&quot;,type=&quot;upper&quot;,method=&#39;pie&#39;,tl.pos = &quot;d&quot;, p.mat = res1$p, sig.level = .1)
+corrplot(corr = cor(mtcars[,1:7]),add=TRUE, type=&quot;lower&quot;, method=&quot;number&quot;,order=&quot;AOE&quot;,diag=FALSE,tl.pos=&quot;n&quot;, cl.pos=&quot;n&quot;,col=&quot;black&quot;)</code></pre>
+<p><img src="/post/2020-03-25-主成分分析pca_files/figure-html/unnamed-chunk-1-3.png" width="672" /></p>
+<p>实际上这么多变量对人类进行直观分析是不友好的，虽然图画的比较漂亮，但是很可能没有图是有价值的，因为每个图或者每个特征只包含了极少的信息。很显然，如果我们研究对象的特征变得更多的时候，<strong>需要寻求一个更好的方法来可视化特征</strong>。</p>
+<div id="需要一种对数据的低纬表示而这些表示可以尽可能多的包含特征的信息比如得到一个二维表示来获取数据中的大部分信息那么就可以在这个低维空间中绘制出观测图像" class="section level4">
+<h4>需要一种对数据的低纬表示，而这些表示可以尽可能多的包含特征的信息。比如，得到一个二维表示来获取数据中的大部分信息，那么就可以在这个低维空间中绘制出观测图像。</h4>
+<p><img src="/post/2020-03-25-主成分分析pca_files/1.png" /></p>
+</div>
+<div id="绿色实线代表数据的第一主成分方向在这个方向上数据的波动性最大垂直于这条线的方向的蓝色线" class="section level4">
+<h4>绿色实线代表数据的第一主成分方向，在这个方向上数据的波动性最大，垂直于这条线的方向的蓝色线。</h4>
+<p><span class="math display">\[Z_{1}=0.839 \times(\mathrm{pop}-\overline{\mathrm{pop}})+0.544 \times(\mathrm{ad}-\overline{\mathrm{ad}})\]</span>
+<span class="math inline">\(\phi_{11}=0.839, \phi_{21}=0.544\)</span>是主成分载荷，定义了主成分的方向。在满足<span class="math inline">\(\phi_{11}^2+\phi_{21}^2=1\)</span>的约束下所有可能的pop和ad的组合里，是的这个组合的方差最大。方差大解释的变异也就越，本质上这里的目标是
+<span class="math display">\[MAX:\operatorname{Var}\left(\phi_{11} \times(\operatorname{pop}-\overline{\mathrm{pop}})+\phi_{21} \times(\mathrm{ad}-\overline{\mathrm{ad}})\right)\]</span>
+当观测值100个的时候，pop和ad也有对应的100，那么每个观测值都有一个对应的主成分：
+<span class="math display">\[Z_{i1}=0.839 \times(\mathrm{pop_i}-\overline{\mathrm{pop_i}})+0.544 \times(\mathrm{ad_i}-\overline{\mathrm{ad_i}})\]</span>
+### 这些对应的<span class="math inline">\(z_{i1},z_{i2}\)</span>被称为主成得分(principal component scores),下图表征了主成分得分的图例.</p>
+<p><img src="/post/2020-03-25-主成分分析pca_files/2.png" /></p>
+</div>
+</div>
+<div id="主成分的另一种解释" class="section level3">
+<h3>主成分的另一种解释</h3>
+<p>第一主成分向量定义了与数据最接近的那条线，第一主成分线使得所有点到该线的垂直距离平方和最小。第一主成分的选择使得投影得到的观测与原始观测最为接近。</p>
+<hr />
+<div id="主成分z_i可以看作为在每个对应位置上对pop和ad数值的汇总如果某个观测值的zi是小于0的表示这个观测值的两个维度ad和pop特征是低于平均水平的那么我就做到了使用一个特征变量来指代两个特征变量的目标" class="section level4">
+<h4>主成分<span class="math inline">\(z_i\)</span>可以看作为在每个对应位置上对pop和ad数值的汇总。如果某个观测值的<span class="math inline">\(zi\)</span>是小于0的，表示这个观测值的两个维度ad和pop特征是低于平均水平的。那么我就做到了使用一个特征变量来指代两个特征变量的目标。</h4>
+<p>当然如果需要分析的对象有多个维度，我们还可以构造更多的主成分，目标就是使得这些主成分的方差最大，并满足不相关(垂直)条件。</p>
+</div>
+</div>
+<div id="how如何进行pca" class="section level3">
+<h3>How——如何进行PCA？</h3>
+<ol style="list-style-type: decimal">
+<li>Scale Your Feature</li>
+<li>Missing Value: 删除</li>
+<li>Categorical Data</li>
+</ol>
+</div>
+<div id="先做一个scale和不scale的对比" class="section level3">
+<h3>先做一个Scale和不Scale的对比</h3>
+<pre class="r"><code>library(ggplot2)
+data(&quot;USArrests&quot;)
+USArrests %&gt;% tbl_summary(statistic = list(all_continuous() ~ &quot;均值：{mean} 方差：{sd}，最大值:{max},最小值:{min}&quot;))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"><strong>Characteristic</strong></th>
+<th align="left"><strong>N = 50</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Murder</td>
+<td align="left">均值：7.8 方差：4.4，最大值:17.4,最小值:0.8</td>
+</tr>
+<tr class="even">
+<td align="left">Assault</td>
+<td align="left">均值：171 方差：83，最大值:337,最小值:45</td>
+</tr>
+<tr class="odd">
+<td align="left">UrbanPop</td>
+<td align="left">均值：66 方差：14，最大值:91,最小值:32</td>
+</tr>
+<tr class="even">
+<td align="left">Rape</td>
+<td align="left">均值：21 方差：9，最大值:46,最小值:7</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>pr.withoutsc &lt;- prcomp(USArrests,scale =F )
+pr.withsc &lt;- prcomp(USArrests,scale =T,)
+
+biplot(pr.withoutsc)</code></pre>
+<p><img src="/post/2020-03-25-主成分分析pca_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code>biplot(pr.withsc)</code></pre>
+<p><img src="/post/2020-03-25-主成分分析pca_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
+<pre class="r"><code>names(pr.withsc)</code></pre>
+<pre><code>## [1] &quot;sdev&quot;     &quot;rotation&quot; &quot;center&quot;   &quot;scale&quot;    &quot;x&quot;</code></pre>
+<pre class="r"><code>pr.withsc$center</code></pre>
+<pre><code>##   Murder  Assault UrbanPop     Rape 
+##    7.788  170.760   65.540   21.232</code></pre>
+<pre class="r"><code>pr.withsc$scale</code></pre>
+<pre><code>##    Murder   Assault  UrbanPop      Rape 
+##  4.355510 83.337661 14.474763  9.366385</code></pre>
+<pre class="r"><code>#rotation矩阵提供了主成分的载荷信息
+pr.withsc$rotation</code></pre>
+<pre><code>##                 PC1        PC2        PC3         PC4
+## Murder   -0.5358995  0.4181809 -0.3412327  0.64922780
+## Assault  -0.5831836  0.1879856 -0.2681484 -0.74340748
+## UrbanPop -0.2781909 -0.8728062 -0.3780158  0.13387773
+## Rape     -0.5434321 -0.1673186  0.8177779  0.08902432</code></pre>
+<div id="如果希望观察每个观测值或者说周的某个主成分得分比如pc1第一个主成分得分" class="section level4">
+<h4>如果希望观察每个观测值或者说周的某个主成分得分比如PC1第一个主成分得分</h4>
+<pre class="r"><code>head(pr.withsc$x)</code></pre>
+<pre><code>##                   PC1        PC2         PC3          PC4
+## Alabama    -0.9756604  1.1220012 -0.43980366  0.154696581
+## Alaska     -1.9305379  1.0624269  2.01950027 -0.434175454
+## Arizona    -1.7454429 -0.7384595  0.05423025 -0.826264240
+## Arkansas    0.1399989  1.1085423  0.11342217 -0.180973554
+## California -2.4986128 -1.5274267  0.59254100 -0.338559240
+## Colorado   -1.4993407 -0.9776297  1.08400162  0.001450164</code></pre>
+<pre class="r"><code>as.data.frame(pr.withsc$x) %&gt;% select(PC1,PC2) %&gt;% datatable()</code></pre>
+<div id="htmlwidget-2" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"filter":"none","data":[["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],[-0.975660448333605,-1.93053787851368,-1.7454428533906,0.139998944348595,-2.49861284825858,-1.49934073746552,1.34499236494685,-0.0472298063468948,-2.98275966985053,-1.62280741822275,0.903484479467486,1.62331903335491,-1.36505197344764,0.500381218467362,2.23099578556003,0.788872062457507,0.743312560502576,-1.54909076342142,2.37274013811147,-1.74564663331427,0.481280070041076,-2.08725024890209,1.67566950509684,-0.986479185336293,-0.689784263994372,1.17353751396927,1.25291625304513,-2.84550541798477,2.35995585210981,-0.179741278311773,-1.96012351316822,-1.66566662172248,-1.1120880825676,2.96215223250691,0.223694355497657,0.308649279454715,-0.0585278699811304,0.879486795199492,0.855090717007698,-1.30744986085371,1.96779669368699,-0.989693774325593,-1.34151838166781,0.545031802555006,2.77325613354972,0.0953666966000219,0.214723389834347,2.08739305667661,2.05881198847966,0.623100606853615],[1.12200121043341,1.06242691953445,-0.738459537284998,1.10854225950591,-1.52742672082479,-0.977629656524983,-1.07798361522603,-0.322088902660565,0.0388342468594005,1.26608838405527,-1.5546760937372,0.208852532733397,-0.674988339762984,-0.15003926151727,-0.103008276406122,-0.26744941274229,0.948807476193182,0.862300114746539,0.372608650017808,0.423357040829031,-1.45967706049893,-0.153835002114751,-0.625906704885262,2.36973712490675,-0.260707941347262,0.531478512267081,-0.192004396467082,-0.767805021353822,-0.0179005535270807,-1.43493744559758,0.141413077722027,-0.814910724517094,2.20561081445927,0.593097376917541,-0.734778367024732,-0.284961125167963,-0.535969994536816,-0.565360504607016,-1.47698328409526,1.91397296672008,0.815068224564379,0.851605343482672,-0.408335177969947,-1.45671524192276,1.38819435019003,0.197727848353299,-0.96037394381938,1.41052627218446,-0.605125065136858,0.317786624600862]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>PC1<\/th>\n      <th>PC2<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div id="碎石图选几个主成分" class="section level3">
+<h3>碎石图，选几个主成分</h3>
+<div id="接下来画一个碎石图观察主成分个数增加对特征向量解释力度的变化" class="section level4">
+<h4>接下来画一个碎石图，观察主成分个数增加对特征向量解释力度的变化</h4>
+<pre class="r"><code>pr.var &lt;- (pr.withsc$sdev)^2
+pve &lt;- pr.var / sum(pr.var)
+df &lt;- tibble(x=seq(1,4,by=1),y=pve)
+ggplot(df,aes(x=x,y=y))+
+  geom_point()+geom_line() +theme_bw() +ggtitle(&quot;碎石图&quot;)+
+  xlab(&#39;主成分个数&#39;) + ylab(&#39;每个主成分解释的变异&#39;)</code></pre>
+<p><img src="/post/2020-03-25-主成分分析pca_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="通常可以通过看碎石图来决定所需的主成分数量我们选择满足要求的最少数量的主成分来解释数据中的绝大部分变异" class="section level4">
+<h4>通常可以通过看碎石图来决定所需的主成分数量。我们选择满足要求的最少数量的主成分来解释数据中的绝大部分变异。</h4>
+</div>
+<div id="通过观察碎石图可以找到一个点在这个点上主成分解释的方差比例突然减少" class="section level4">
+<h4>通过观察碎石图，可以找到一个点，在这个点上，主成分解释的方差比例突然减少。</h4>
+</div>
+<div id="这个点就被视为肘elbow选择肘出现的个数作为主成分分析的个数" class="section level4">
+<h4>这个点就被视为肘(elbow),选择肘出现的个数作为主成分分析的个数。</h4>
+<blockquote>
+<p>这种可视化分析感觉有些随意。遗憾的是，没有一个被广泛认可的客观方法来决定多少主成分才够用。事实上，多少个主成分才够用这个提法就比较欠妥，这个问题取决于特定的应用领域和特定的数据集。</p>
+</blockquote>
+<hr />
+<blockquote>
+<p>在实践中，往往通过看前几个主成分来寻找数据中有价值的模式。如果在前几个主成分中都找不到有价值的模式，那更多的主成分也不太可能会有价值。相反，如果前几个主成分有价值，那通常会继续观察随后的主成分，直到找不到更多有价值的模式为止。</p>
+</blockquote>
+</div>
+</div>
+<div id="因子分析和主成分分析" class="section level3">
+<h3>因子分析和主成分分析</h3>
+<div id="主成分分析就是你有一堆的特征变量x1x2x3.它们可以通过添加不同的权重组合成一些个主成分f1f2f3.可以理解为观测变量是因主成分是果" class="section level4">
+<h4>主成分分析就是你有一堆的特征变量X1,X2,x3,….它们可以通过添加不同的权重组合成一些个主成分F1，F2，F3….，<strong>可以理解为观测变量是因，主成分是果</strong>。</h4>
+</div>
+<div id="因子分析就是你有一堆的观测变量x1x2x3.同时你有一些个未知的因子f1f2f3这些因子可以通过添加不同的权重组合成那些个观测变量可以理解为因子是因观测变量是果" class="section level4">
+<h4>因子分析就是你有一堆的观测变量X1，X2，X3….，同时你有一些个未知的因子F1，F2，F3…，这些因子可以通过添加不同的权重组合成那些个观测变量，<strong>可以理解为因子是因，观测变量是果</strong>。</h4>
+</div>
+<div id="因子分析仅举个例子不展开讲细节" class="section level4">
+<h4>因子分析仅举个例子，不展开讲细节</h4>
+<pre class="r"><code>pacman::p_load(psych,tidyverse,DT,corrplot,GPArotation)
+data(bfi)
+bfi &lt;- bfi[,1:23]
+bfi &lt;- drop_na(bfi)
+corrplot(corr=cor(bfi[,1:7]),order = &quot;AOE&quot;,type=&quot;upper&quot;,method=&#39;pie&#39;,tl.pos = &quot;d&quot;, p.mat = res1$p, sig.level = .1)
+corrplot(corr = cor(bfi[,1:7]),add=TRUE, type=&quot;lower&quot;, method=&quot;number&quot;,order=&quot;AOE&quot;,diag=FALSE,tl.pos=&quot;n&quot;, cl.pos=&quot;n&quot;,col=&quot;black&quot;)</code></pre>
+<p><img src="/post/2020-03-25-主成分分析pca_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>fa.parallel(cor(bfi), n.obs=112, fa=&quot;fa&quot;, n.iter=100) </code></pre>
+<p><img src="/post/2020-03-25-主成分分析pca_files/figure-html/unnamed-chunk-5-2.png" width="672" /></p>
+<pre><code>## Parallel analysis suggests that the number of factors =  5  and the number of components =  NA</code></pre>
+<pre class="r"><code># 建议我们选5个公因子，那就选5个
+fa_model &lt;- fa(cor(bfi),nfactors = 5,rotate = &#39;none&#39;,fm=&#39;pa&#39;)
+fa_model</code></pre>
+<pre><code>## Factor Analysis using method =  pa
+## Call: fa(r = cor(bfi), nfactors = 5, rotate = &quot;none&quot;, fm = &quot;pa&quot;)
+## Standardized loadings (pattern matrix) based upon correlation matrix
+##      PA1   PA2   PA3   PA4   PA5   h2   u2 com
+## A1 -0.22  0.00  0.15 -0.25 -0.21 0.18 0.82 3.6
+## A2  0.47  0.28 -0.14  0.34  0.16 0.46 0.54 3.1
+## A3  0.54  0.31 -0.22  0.29  0.18 0.55 0.45 2.9
+## A4  0.42  0.13 -0.03  0.33  0.00 0.30 0.70 2.1
+## A5  0.59  0.18 -0.24  0.16  0.10 0.47 0.53 1.8
+## C1  0.34  0.11  0.47 -0.03  0.03 0.35 0.65 2.0
+## C2  0.33  0.19  0.55  0.11  0.03 0.46 0.54 2.0
+## C3  0.32  0.05  0.43  0.17 -0.05 0.32 0.68 2.3
+## C4 -0.46  0.12 -0.49 -0.09  0.09 0.48 0.52 2.3
+## C5 -0.49  0.14 -0.36 -0.10  0.17 0.43 0.57 2.4
+## E1 -0.41 -0.20  0.27  0.17  0.24 0.36 0.64 3.4
+## E2 -0.62 -0.06  0.21  0.18  0.29 0.55 0.45 1.9
+## E3  0.53  0.32 -0.15 -0.21  0.06 0.45 0.55 2.2
+## E4  0.61  0.19 -0.26  0.01 -0.24 0.53 0.47 1.9
+## E5  0.51  0.29  0.11 -0.19 -0.12 0.41 0.59 2.2
+## N1 -0.44  0.65  0.09 -0.07 -0.23 0.68 0.32 2.1
+## N2 -0.42  0.63  0.12 -0.07 -0.17 0.62 0.38 2.1
+## N3 -0.40  0.61  0.06  0.03  0.00 0.54 0.46 1.8
+## N4 -0.53  0.40  0.06  0.07  0.26 0.52 0.48 2.4
+## N5 -0.34  0.42  0.04  0.23  0.02 0.35 0.65 2.6
+## O1  0.32  0.18  0.09 -0.36  0.28 0.35 0.65 3.6
+## O2 -0.18  0.10 -0.16  0.30 -0.23 0.21 0.79 3.5
+## O3  0.40  0.27  0.03 -0.41  0.32 0.50 0.50 3.7
+## 
+##                        PA1  PA2  PA3  PA4  PA5
+## SS loadings           4.55 2.22 1.50 1.04 0.75
+## Proportion Var        0.20 0.10 0.07 0.05 0.03
+## Cumulative Var        0.20 0.29 0.36 0.40 0.44
+## Proportion Explained  0.45 0.22 0.15 0.10 0.07
+## Cumulative Proportion 0.45 0.67 0.82 0.93 1.00
+## 
+## Mean item complexity =  2.5
+## Test of the hypothesis that 5 factors are sufficient.
+## 
+## The degrees of freedom for the null model are  253  and the objective function was  7.03
+## The degrees of freedom for the model are 148  and the objective function was  0.54 
+## 
+## The root mean square of the residuals (RMSR) is  0.03 
+## The df corrected root mean square of the residuals is  0.04 
+## 
+## Fit based upon off diagonal values = 0.98
+## Measures of factor score adequacy             
+##                                                    PA1  PA2  PA3  PA4  PA5
+## Correlation of (regression) scores with factors   0.95 0.91 0.85 0.80 0.77
+## Multiple R square of scores with factors          0.90 0.83 0.73 0.64 0.59
+## Minimum correlation of possible factor scores     0.80 0.67 0.45 0.28 0.19</code></pre>
+</div>
+<div id="结果显示五个因子解释了原始23个变量的44的方差有点低啊" class="section level4">
+<h4>结果显示，五个因子解释了原始23个变量的44%的方差，有点低啊</h4>
+</div>
+<div id="整个因子分析的结构图如下" class="section level4">
+<h4>整个因子分析的结构图如下</h4>
+<pre class="r"><code>fa.diagram(fa_model)</code></pre>
+<p><img src="/post/2020-03-25-主成分分析pca_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+  
+  <hr/>
+  © <a href="https://jjxy.sicau.edu.cn/content.jsp?urltype=news.NewsContentUrl&amp;wbtreeid=1022&amp;wbnewsid=3019">张剑</a>  2018 &ndash; 2020 | <a href="https://gitee.com/jefeerzhang">Gitee</a>
+  
+  </footer>
+  </body>
+</html>
+
