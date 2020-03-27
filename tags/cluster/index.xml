@@ -21,7 +21,7 @@
 定义距离和相似性\[距离 = 1-相似性\]
 距离的直观定义
 \[距离=\sqrt{\left(\mathbf{X}_{\text {red }}-\mathbf{X}_{\text {blue }}\right)^{2}+\left(\mathbf{Y}_{\text {red }}-\mathbf{Y}_{\text {blue }}\right)^{2}}\]
-library(tidyverse)library(ggthemes)library(ggfortify)library(DT)two_person &amp;lt;- tribble(~x, ~y,0,0,9,12)ggplot(two_person, aes(x = x, y = y)) + geom_point() +lims(x = c(-30,30), y = c(-20, 20)) + theme_clean()+ggtitle(&amp;quot;原始数据&amp;quot;)dist(two_person,method = &amp;quot;euclidean&amp;quot;)## 1## 2 15多余两个人时
+pacman::p_load(tidyverse,ggthemes,ggfortify,DT)two_person &amp;lt;- tribble(~x, ~y,0,0,9,12)ggplot(two_person, aes(x = x, y = y)) + geom_point() +lims(x = c(-30,30), y = c(-20, 20)) + theme_clean()+ggtitle(&amp;quot;原始数据&amp;quot;)dist(two_person,method = &amp;quot;euclidean&amp;quot;)## 1## 2 15多余两个人时
 three_p &amp;lt;- tribble(~x, ~y,0,0,9,12,-2,9)ggplot(three_p, aes(x = x, y = y)) + geom_point() +lims(x = c(-30,30), y = c(-20, 20)) + theme_clean()dist(three_p,method = &amp;quot;euclidean&amp;quot;)## 1 2## 2 15.</description>
     </item>
     

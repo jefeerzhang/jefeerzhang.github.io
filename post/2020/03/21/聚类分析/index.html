@@ -54,6 +54,7 @@
 
 <main>
 
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 <script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
 <script src="/rmarkdown-libs/jquery/jquery.min.js"></script>
 <link href="/rmarkdown-libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
@@ -74,7 +75,7 @@
 <div id="聚类分析的全部流程图" class="section level3">
 <h3>聚类分析的全部流程图</h3>
 <div class="figure">
-<img src="https://gitee.com/jefeerzhang/forcast/raw/master/image/2.png" alt="流程" />
+<img src="https://gitee.com/jefeerzhang/forcast/raw/master/image/2.png" alt="" />
 <p class="caption">流程</p>
 </div>
 </div>
@@ -83,14 +84,12 @@
 <h2>定义距离和相似性</h2>
 <p><span class="math display">\[距离 = 1-相似性\]</span></p>
 <div class="figure">
-<img src="https://gitee.com/jefeerzhang/forcast/raw/master/image/3.png" alt="距离的直观定义" />
+<img src="https://gitee.com/jefeerzhang/forcast/raw/master/image/3.png" alt="" />
 <p class="caption">距离的直观定义</p>
 </div>
 <p><span class="math display">\[距离=\sqrt{\left(\mathbf{X}_{\text {red }}-\mathbf{X}_{\text {blue }}\right)^{2}+\left(\mathbf{Y}_{\text {red }}-\mathbf{Y}_{\text {blue }}\right)^{2}}\]</span></p>
-<pre class="r"><code>library(tidyverse)
-library(ggthemes)
-library(ggfortify)
-library(DT)
+<pre class="r"><code>pacman::p_load(tidyverse,ggthemes,ggfortify,DT)
+
 two_person &lt;- tribble(~x, ~y,
                       0,0,
                       9,12)
