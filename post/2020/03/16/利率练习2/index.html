@@ -54,7 +54,6 @@
 
 <main>
 
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 <script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
 <script src="/rmarkdown-libs/jquery/jquery.min.js"></script>
 <link href="/rmarkdown-libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
@@ -71,8 +70,8 @@
 <div id="你面临如下投资决策现在支出70000万投资期限为5年每年的回报率为1万现在的利率为55年后投资结束回收45000元请问你是否应该参与这项投资" class="section level4">
 <h4>你面临如下投资决策，现在支出70000万，投资期限为5年，每年的回报率为1万，现在的利率为5%，5年后投资结束，回收45000元，请问你是否应该参与这项投资？</h4>
 <pre class="r"><code>#首先加载包
-pacman::p_load(tidyverse,DT,ggforce,ggthemes)
-
+library(tidyverse)
+library(DT)
 #建立现金流
 cf &lt;- tribble(~year, ~cf,
               0,-70000,
@@ -158,7 +157,11 @@ pmt(r=0.06/12,pv=-100000,n = 60,fv=0)</code></pre>
 <h3>另一个简单的例子</h3>
 <div id="张和李两个年轻人两人都是20岁张决定20到40岁存钱李决定50-70岁存钱假设70岁退休利率给定6展示两人的累计财富" class="section level4">
 <h4>张和李两个年轻人，两人都是20岁，张决定20到40岁存钱，李决定50-70岁存钱，假设70岁退休，利率给定6%，展示两人的累计财富。</h4>
-<pre class="r"><code>r &lt;-0.06
+<pre class="r"><code>library(tidyverse)
+library(DT)
+library(ggthemes)
+library(ggforce)
+r &lt;-0.06
 cf &lt;- tibble(period= 1:50,zhang=0,li=0,zhang_t=0,li_t=0)
 cf &lt;- cf %&gt;%
   mutate(zhang=if_else(period %in% seq(1,20,by=1),5000,0)) %&gt;%
