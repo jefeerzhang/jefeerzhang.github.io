@@ -54,6 +54,7 @@
 
 <main>
 
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 <script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
 <script src="/rmarkdown-libs/jquery/jquery.min.js"></script>
 <link href="/rmarkdown-libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
@@ -71,9 +72,8 @@
 <div id="从支付保险费的次年起保险公司每2年年末返还一次收益每次3000元在孩子60岁时再一次性支付200000元养老费请计算这笔保险的irr并给出自己的判断和理解" class="section level4">
 <h4>从支付保险费的次年起，保险公司每2年年末返还一次收益，每次3000元。在孩子60岁时再一次性支付200000元养老费。请计算这笔保险的IRR，并给出自己的判断和理解</h4>
 <pre class="r"><code>#调用两个包
-library(tidyverse)
-library(jrvFinance)
-library(DT)
+pacman::p_load(tidyverse,jrvFinance,DT)
+
 # 建立一个dataframe，利用tidyverse进行数据清理
 cf &lt;- tibble(period= 0:60,exp = 0)
 cf &lt;- cf %&gt;%
