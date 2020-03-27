@@ -212,33 +212,6 @@ ggplot(df,aes(x=x,y=y))+
   xlab(&#39;主成分个数&#39;) + ylab(&#39;每个主成分解释的变异&#39;)</code></pre>
 <p><img src="/post/2020-03-25-主成分分析pca_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <pre class="r"><code>fa.parallel(cor(USArrests), n.obs=112, fa=&#39;both&#39;, n.iter=100) </code></pre>
-<pre><code>## Warning in fa.stats(r = r, f = f, phi = phi, n.obs = n.obs, np.obs = np.obs, :
-## The estimated weights for the factor scores are probably incorrect. Try a
-## different factor score estimation method.
-
-## Warning in fa.stats(r = r, f = f, phi = phi, n.obs = n.obs, np.obs = np.obs, :
-## The estimated weights for the factor scores are probably incorrect. Try a
-## different factor score estimation method.</code></pre>
-<pre><code>## Warning in fac(r = r, nfactors = nfactors, n.obs = n.obs, rotate = rotate, : An
-## ultra-Heywood case was detected. Examine the results carefully</code></pre>
-<pre><code>## Warning in fa.stats(r = r, f = f, phi = phi, n.obs = n.obs, np.obs = np.obs, :
-## The estimated weights for the factor scores are probably incorrect. Try a
-## different factor score estimation method.
-
-## Warning in fa.stats(r = r, f = f, phi = phi, n.obs = n.obs, np.obs = np.obs, :
-## The estimated weights for the factor scores are probably incorrect. Try a
-## different factor score estimation method.</code></pre>
-<pre><code>## Warning in fac(r = r, nfactors = nfactors, n.obs = n.obs, rotate = rotate, : An
-## ultra-Heywood case was detected. Examine the results carefully</code></pre>
-<pre><code>## Warning in fa.stats(r = r, f = f, phi = phi, n.obs = n.obs, np.obs = np.obs, :
-## The estimated weights for the factor scores are probably incorrect. Try a
-## different factor score estimation method.
-
-## Warning in fa.stats(r = r, f = f, phi = phi, n.obs = n.obs, np.obs = np.obs, :
-## The estimated weights for the factor scores are probably incorrect. Try a
-## different factor score estimation method.</code></pre>
-<pre><code>## Warning in fac(r = r, nfactors = nfactors, n.obs = n.obs, rotate = rotate, : An
-## ultra-Heywood case was detected. Examine the results carefully</code></pre>
 <p><img src="/post/2020-03-25-主成分分析pca_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
 <pre><code>## Parallel analysis suggests that the number of factors =  2  and the number of components =  1</code></pre>
 <pre class="r"><code>dim(USArrests)</code></pre>
@@ -278,9 +251,6 @@ corrplot(corr=cor(bfi[,1:7]),order = &quot;AOE&quot;,type=&quot;upper&quot;,meth
 corrplot(corr = cor(bfi[,1:7]),add=TRUE, type=&quot;lower&quot;, method=&quot;number&quot;,order=&quot;AOE&quot;,diag=FALSE,tl.pos=&quot;n&quot;, cl.pos=&quot;n&quot;,col=&quot;black&quot;)</code></pre>
 <p><img src="/post/2020-03-25-主成分分析pca_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <pre class="r"><code>fa.parallel(cor(bfi), n.obs=112, fa=&quot;fa&quot;, n.iter=100) </code></pre>
-<pre><code>## Warning in fa.stats(r = r, f = f, phi = phi, n.obs = n.obs, np.obs = np.obs, :
-## The estimated weights for the factor scores are probably incorrect. Try a
-## different factor score estimation method.</code></pre>
 <p><img src="/post/2020-03-25-主成分分析pca_files/figure-html/unnamed-chunk-5-2.png" width="672" /></p>
 <pre><code>## Parallel analysis suggests that the number of factors =  5  and the number of components =  NA</code></pre>
 <pre class="r"><code># 建议我们选5个公因子，那就选5个
