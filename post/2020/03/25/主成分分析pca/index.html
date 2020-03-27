@@ -88,7 +88,7 @@
 </div>
 <div id="一个多维特征的例子" class="section level3">
 <h3>一个多维特征的例子</h3>
-<pre class="r"><code>pacman::p_load(corrplot,DT,tidyverse,GGally,gtsummary)
+<pre class="r"><code>pacman::p_load(corrplot,DT,tidyverse,GGally,gtsummary,psych,GPArotation)
 
 mtcars[,1:7] %&gt;% datatable()</code></pre>
 <div id="htmlwidget-1" style="width:100%;height:auto;" class="datatables html-widget"></div>
@@ -134,7 +134,7 @@ corrplot(corr = cor(mtcars[,1:7]),add=TRUE, type=&quot;lower&quot;, method=&quot
 </div>
 <div id="先做一个scale和不scale的对比" class="section level3">
 <h3>先做一个Scale和不Scale的对比</h3>
-<pre class="r"><code>library(ggplot2)
+<pre class="r"><code>pacman::p_load(ggplot2,ggfortify)
 data(&quot;USArrests&quot;)
 USArrests %&gt;% tbl_summary(statistic = list(all_continuous() ~ &quot;均值：{mean} 方差：{sd}，最大值:{max},最小值:{min}&quot;))</code></pre>
 <table>
@@ -164,20 +164,20 @@ USArrests %&gt;% tbl_summary(statistic = list(all_continuous() ~ &quot;均值：
 </tbody>
 </table>
 <pre class="r"><code>pr.withoutsc &lt;- prcomp(USArrests,scale =F )
-pr.withsc &lt;- prcomp(USArrests,scale =T,)
+pr.withsc &lt;- prcomp(USArrests,scale =T)
 
 biplot(pr.withoutsc)</code></pre>
 <p><img src="/post/2020-03-25-主成分分析pca_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
-<pre class="r"><code>biplot(pr.withsc)</code></pre>
+<pre class="r"><code>autoplot(prcomp(USArrests,scale =T),data=USArrests,label =T,loadings = TRUE,loadings.label = TRUE,loadings.label.size = 3)+
+  ggthemes::theme_clean() +
+  ggtitle(&quot;标准化后的主成分&quot;)</code></pre>
 <p><img src="/post/2020-03-25-主成分分析pca_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
-<pre class="r"><code>names(pr.withsc)</code></pre>
-<pre><code>## [1] &quot;sdev&quot;     &quot;rotation&quot; &quot;center&quot;   &quot;scale&quot;    &quot;x&quot;</code></pre>
-<pre class="r"><code>pr.withsc$center</code></pre>
-<pre><code>##   Murder  Assault UrbanPop     Rape 
-##    7.788  170.760   65.540   21.232</code></pre>
-<pre class="r"><code>pr.withsc$scale</code></pre>
-<pre><code>##    Murder   Assault  UrbanPop      Rape 
-##  4.355510 83.337661 14.474763  9.366385</code></pre>
+<pre class="r"><code>summary(pr.withsc)</code></pre>
+<pre><code>## Importance of components:
+##                           PC1    PC2     PC3     PC4
+## Standard deviation     1.5749 0.9949 0.59713 0.41645
+## Proportion of Variance 0.6201 0.2474 0.08914 0.04336
+## Cumulative Proportion  0.6201 0.8675 0.95664 1.00000</code></pre>
 <pre class="r"><code>#rotation矩阵提供了主成分的载荷信息
 pr.withsc$rotation</code></pre>
 <pre><code>##                 PC1        PC2        PC3         PC4
@@ -211,6 +211,38 @@ ggplot(df,aes(x=x,y=y))+
   geom_point()+geom_line() +theme_bw() +ggtitle(&quot;碎石图&quot;)+
   xlab(&#39;主成分个数&#39;) + ylab(&#39;每个主成分解释的变异&#39;)</code></pre>
 <p><img src="/post/2020-03-25-主成分分析pca_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>fa.parallel(cor(USArrests), n.obs=112, fa=&#39;both&#39;, n.iter=100) </code></pre>
+<pre><code>## Warning in fa.stats(r = r, f = f, phi = phi, n.obs = n.obs, np.obs = np.obs, :
+## The estimated weights for the factor scores are probably incorrect. Try a
+## different factor score estimation method.
+
+## Warning in fa.stats(r = r, f = f, phi = phi, n.obs = n.obs, np.obs = np.obs, :
+## The estimated weights for the factor scores are probably incorrect. Try a
+## different factor score estimation method.</code></pre>
+<pre><code>## Warning in fac(r = r, nfactors = nfactors, n.obs = n.obs, rotate = rotate, : An
+## ultra-Heywood case was detected. Examine the results carefully</code></pre>
+<pre><code>## Warning in fa.stats(r = r, f = f, phi = phi, n.obs = n.obs, np.obs = np.obs, :
+## The estimated weights for the factor scores are probably incorrect. Try a
+## different factor score estimation method.
+
+## Warning in fa.stats(r = r, f = f, phi = phi, n.obs = n.obs, np.obs = np.obs, :
+## The estimated weights for the factor scores are probably incorrect. Try a
+## different factor score estimation method.</code></pre>
+<pre><code>## Warning in fac(r = r, nfactors = nfactors, n.obs = n.obs, rotate = rotate, : An
+## ultra-Heywood case was detected. Examine the results carefully</code></pre>
+<pre><code>## Warning in fa.stats(r = r, f = f, phi = phi, n.obs = n.obs, np.obs = np.obs, :
+## The estimated weights for the factor scores are probably incorrect. Try a
+## different factor score estimation method.
+
+## Warning in fa.stats(r = r, f = f, phi = phi, n.obs = n.obs, np.obs = np.obs, :
+## The estimated weights for the factor scores are probably incorrect. Try a
+## different factor score estimation method.</code></pre>
+<pre><code>## Warning in fac(r = r, nfactors = nfactors, n.obs = n.obs, rotate = rotate, : An
+## ultra-Heywood case was detected. Examine the results carefully</code></pre>
+<p><img src="/post/2020-03-25-主成分分析pca_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<pre><code>## Parallel analysis suggests that the number of factors =  2  and the number of components =  1</code></pre>
+<pre class="r"><code>dim(USArrests)</code></pre>
+<pre><code>## [1] 50  4</code></pre>
 </div>
 <div id="通常可以通过看碎石图来决定所需的主成分数量我们选择满足要求的最少数量的主成分来解释数据中的绝大部分变异" class="section level4">
 <h4>通常可以通过看碎石图来决定所需的主成分数量。我们选择满足要求的最少数量的主成分来解释数据中的绝大部分变异。</h4>
@@ -239,14 +271,16 @@ ggplot(df,aes(x=x,y=y))+
 </div>
 <div id="因子分析仅举个例子不展开讲细节" class="section level4">
 <h4>因子分析仅举个例子，不展开讲细节</h4>
-<pre class="r"><code>pacman::p_load(psych,tidyverse,DT,corrplot,GPArotation)
-data(bfi)
+<pre class="r"><code>data(bfi)
 bfi &lt;- bfi[,1:23]
 bfi &lt;- drop_na(bfi)
 corrplot(corr=cor(bfi[,1:7]),order = &quot;AOE&quot;,type=&quot;upper&quot;,method=&#39;pie&#39;,tl.pos = &quot;d&quot;, p.mat = res1$p, sig.level = .1)
 corrplot(corr = cor(bfi[,1:7]),add=TRUE, type=&quot;lower&quot;, method=&quot;number&quot;,order=&quot;AOE&quot;,diag=FALSE,tl.pos=&quot;n&quot;, cl.pos=&quot;n&quot;,col=&quot;black&quot;)</code></pre>
 <p><img src="/post/2020-03-25-主成分分析pca_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <pre class="r"><code>fa.parallel(cor(bfi), n.obs=112, fa=&quot;fa&quot;, n.iter=100) </code></pre>
+<pre><code>## Warning in fa.stats(r = r, f = f, phi = phi, n.obs = n.obs, np.obs = np.obs, :
+## The estimated weights for the factor scores are probably incorrect. Try a
+## different factor score estimation method.</code></pre>
 <p><img src="/post/2020-03-25-主成分分析pca_files/figure-html/unnamed-chunk-5-2.png" width="672" /></p>
 <pre><code>## Parallel analysis suggests that the number of factors =  5  and the number of components =  NA</code></pre>
 <pre class="r"><code># 建议我们选5个公因子，那就选5个
