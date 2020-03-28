@@ -6,10 +6,24 @@
     <description>Recent content in R on Zhang Jian&#39;s Homepage</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
-    <lastBuildDate>Wed, 25 Mar 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 28 Mar 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>使用矩阵对ols进行估计</title>
+      <link>/post/2020/03/28/ols-in-matrix/</link>
+      <pubDate>Sat, 28 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/03/28/ols-in-matrix/</guid>
+      <description>矩阵形式计算多元OLS估计系数，标准误等使用计量经济学导论的一个例子进行验证矩阵形式计算多元OLS估计系数，标准误等显然我们有：\[\hat{\boldsymbol{\beta}}=\left(\mathbf{X}^{\prime} \mathbf{X}\right)^{-1} \mathbf{X}^{\prime} \mathbf{y}\]
+同时我们有：\[\hat{\mathbf{u}}=\mathbf{y}-\mathbf{X} \hat{\boldsymbol{\beta}}\]
+于是乎我们又有：\[\hat{\sigma}^{2}=\frac{1}{n-k-1} \hat{\mathbf{u}}^{\prime} \hat{\mathbf{u}}\]
+最后我们有；\[\widehat{\operatorname{Var}(\hat{\boldsymbol{\beta}})}=\hat{\sigma}^{2}\left(\mathbf{X}^{\prime} \mathbf{X}\right)^{-1}\]
+然后就可以sqrt得到se了使用计量经济学导论的一个例子进行验证模型：\[lwage_i=\beta_0+\beta_1educ_i+\beta_2exper_i+\beta_3tenure+\mu_i\]
+pacman::p_load(tidyverse,wooldridge,stargazer,equatiomatic)wage1 &amp;lt;- wooldridge::wage1res1 &amp;lt;- lm(lwage~educ+exper+tenure,data=wage1)stargazer(res1,type = &amp;#39;text&amp;#39;)## ## ===============================================## Dependent variable: ## ---------------------------## lwage ## -----------------------------------------------## educ 0.092*** ## (0.007) ## ## exper 0.004** ## (0.002) ## ## tenure 0.022*** ## (0.</description>
+    </item>
     
     <item>
       <title>主成分分析PCA</title>
