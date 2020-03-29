@@ -120,6 +120,33 @@ stargazer(res1,type = &#39;text&#39;)</code></pre>
 ## F Statistic           80.391*** (df = 3; 522)  
 ## ===============================================
 ## Note:               *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
+<pre class="r"><code>stargazer(res1,type=&#39;text&#39;)</code></pre>
+<pre><code>## 
+## ===============================================
+##                         Dependent variable:    
+##                     ---------------------------
+##                                lwage           
+## -----------------------------------------------
+## educ                         0.092***          
+##                               (0.007)          
+##                                                
+## exper                         0.004**          
+##                               (0.002)          
+##                                                
+## tenure                       0.022***          
+##                               (0.003)          
+##                                                
+## Constant                     0.284***          
+##                               (0.104)          
+##                                                
+## -----------------------------------------------
+## Observations                    526            
+## R2                             0.316           
+## Adjusted R2                    0.312           
+## Residual Std. Error      0.441 (df = 522)      
+## F Statistic           80.391*** (df = 3; 522)  
+## ===============================================
+## Note:               *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
 <div id="接下来矩阵形式计算" class="section level4">
 <h4>接下来矩阵形式计算</h4>
 <pre class="r"><code>df &lt;- wage1 %&gt;% select(lwage,educ,exper,tenure) %&gt;% drop_na()

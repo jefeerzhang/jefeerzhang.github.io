@@ -6,10 +6,28 @@
     <description>Recent content in 投资 on Zhang Jian&#39;s Homepage</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
-    <lastBuildDate>Sat, 21 Mar 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 29 Mar 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/%E6%8A%95%E8%B5%84/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>股票估值</title>
+      <link>/post/2020/03/29/%E8%82%A1%E7%A5%A8%E4%BC%B0%E5%80%BC/</link>
+      <pubDate>Sun, 29 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/03/29/%E8%82%A1%E7%A5%A8%E4%BC%B0%E5%80%BC/</guid>
+      <description>股利折现模型DDM简单的推导1.戈登增长模型2.横截性条件(TVC)3. 股票市盈率3.市盈率相关的投资策略徐高老师给出的相关中国的数据 我更新的一些数据：下载一些关于PE投资策略的拇指法则相关作业课程相关投资艺术书籍推荐及下载链接(勿用于商用)股利折现模型DDM简单的推导1.戈登增长模型\(D_t\): divivdend
+\(S_t\): ex-dividend price
+\(r\): discount rate
+那么有：\[\begin{aligned}S_{0} &amp;amp;=\frac{D_{1}+S_{1}}{1+r}=\frac{D_{1}+\frac{D_{2}+S_{2}}{1+r}}{1+r} \\&amp;amp;=\frac{D_{1}}{1+r}+\frac{D_{2}}{\left(1+n^{2}\right.}+\frac{S_{2}}{(1+r)^{2}} \\&amp;amp;= ...\end{aligned}\]
+\[S_0=\sum_{t=1}^{\infty} \frac{D_{t}}{(1+r)^{t}}\]
+依据DDM模型当前的股价依赖于未来(预期的)现金股利，注意这里强调预期的
+假设我们有 \(D_t = D_1\times(1+g)^{t-1}\)
+其中g为现金股利的增长速度，那么我们可以得到:\[\begin{aligned}S_{0} &amp;amp;=\sum_{t=1}^{\infty} \frac{D_t}{(1+r)^{t}}=\sum_{t=1}^{n} \frac{D_{1}(1+g)^{t-1}}{(1+r)^{t}} \\&amp;amp;=\frac{D_{1}}{1+g} \sum_{t=1}^{\infty}\left(\frac{1+g}{1+r}\right)^t\end{aligned}\]
+其中：\[ \sum_{t=1}^{\infty}\left(\frac{1+g}{1+r}\right)^t=\frac{\frac{1+g}{1+r}}{1-\frac{1+g}{1+r}} = \frac{1+g}{r-g}\]&amp;gt; 这里我们要求或者假设 \(g&amp;lt;r\) 市场将现金股利贴现回来的贴现率r应该高于 g，以获取风险补偿
+那么：\[S_0 = \frac{D_1}{r-g}\]</description>
+    </item>
     
     <item>
       <title>练习题答案3</title>
