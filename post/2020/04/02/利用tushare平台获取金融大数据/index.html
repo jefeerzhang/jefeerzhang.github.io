@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>利用Tushare平台获取金融大数据 | Zhang Jian&#39;s Homepage</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">首页</a></li>
+      
+      <li><a href="/cv/">CV</a></li>
+      
+      <li><a href="/categories/">分类</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/index.xml">订阅</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">利用Tushare平台获取金融大数据</span></h1>
+<h2 class="author">张剑</h2>
+<h2 class="date">2020/04/02</h2>
+
+<p class="terms">
+    
+    
+    Categories:
+    
+    <a href='/categories/%E6%8A%95%E8%B5%84%E5%AD%A6'>投资学</a>
+    
+    
+    
+    
+    Tags:
+    
+    <a href='/tags/%E6%8A%95%E8%B5%84'>投资</a>
+    
+    <a href='/tags/r'>R</a>
+    
+    
+    
+  </p>
+
+</div>
+
+<main>
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/jquery/jquery.min.js"></script>
+<link href="/rmarkdown-libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/datatables-binding/datatables.js"></script>
+<link href="/rmarkdown-libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="/rmarkdown-libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/dt-core/js/jquery.dataTables.min.js"></script>
+<link href="/rmarkdown-libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/crosstalk/js/crosstalk.min.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#tushare平台简介">Tushare平台简介</a>
+<ul>
+<li><a href="#与本课程有关的主要功能简介">与本课程有关的主要功能简介</a></li>
+</ul></li>
+<li><a href="#如何使用r获取数据">如何使用R获取数据</a>
+<ul>
+<li><a href="#注册账号获取接口token">注册账号，获取接口TOKEN</a></li>
+<li><a href="#股票基本信息获取">股票基本信息获取</a></li>
+<li><a href="#行情数据获取">行情数据获取</a></li>
+<li><a href="#获取分红情况">获取分红情况</a></li>
+<li><a href="#关于分红的一点说明">关于分红的一点说明</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="tushare平台简介" class="section level2">
+<h2>Tushare平台简介</h2>
+<p>Tushare免费为高校师生提供金融金融大数据接口，可以说是国内最好的免费金融数据接口，可以使用我们常用的Python或R进行数据导入，是各位同学在校及就业后的一个好的数据入口。</p>
+<blockquote>
+<p><a href="https://www.waditu.com/document/2">链接在此</a></p>
+</blockquote>
+<div id="与本课程有关的主要功能简介" class="section level3">
+<h3>与本课程有关的主要功能简介</h3>
+<ol style="list-style-type: decimal">
+<li>上市公司基础数据、财务数据与日历行情数据</li>
+<li>指数数据，作为资本资产定价模型的重要变量</li>
+<li>宏观经济数据，主要是利率数据，作为我们无风险利率、贴现率参考</li>
+<li>债券数据，特别是收益率曲线数据，作为固定收益课程的参考</li>
+</ol>
+<hr />
+<blockquote>
+<p>该平台的其他数据可以作为同学们后续科研、练手的资源。更多的内容大家可以自行查阅数据接口</p>
+</blockquote>
+</div>
+</div>
+<div id="如何使用r获取数据" class="section level2">
+<h2>如何使用R获取数据</h2>
+<p>该平台早期使用python，相对数据接口案例均以python为主，这里我简单介绍一些R调用数据接口的方法，供大家参考。</p>
+<div id="注册账号获取接口token" class="section level3">
+<h3>注册账号，获取接口TOKEN</h3>
+<p>该网站存在一定的推广驱动，因此采用积分制，利用积分限制不同数据接口等级。但是高校师生可以获得全部权限，故而大家可以放心使用。</p>
+<hr />
+<p>注册后可以在个人账号处获得TOKEN，从而激活两个api，来调取数据。具体方法见代码：</p>
+<pre class="r"><code>#安装包，建议使用pacman
+pacman::p_load(Tushare,tidyverse,DT)
+api &lt;- pro_api(token = &#39;5adce34e8c81bf7085828754a8e09590c3630032d0f61aad6483eaaa&#39;)
+bar &lt;- pro_bar(token = &#39;5adce34e8c81bf7085828754a8e09590c3630032d0f61aad6483eaaa&#39;)
+# 上面那一串数字就是我的token，如果同学们要用，也可以直接粘贴过去，建议最好自己申请一个全不权限的</code></pre>
+</div>
+<div id="股票基本信息获取" class="section level3">
+<h3>股票基本信息获取</h3>
+<pre class="r"><code>pingan &lt;-api(api_name = &#39;stock_company&#39;, ts_code=&#39;601318.SH&#39;)
+str(pingan)</code></pre>
+<pre><code>##  NULL</code></pre>
+<pre class="r"><code>pingan_2 &lt;- api(api_name = &#39;stock_company&#39;,ts_code=&#39;601318.SH&#39;)
+str(pingan_2)</code></pre>
+<pre><code>##  NULL</code></pre>
+<pre class="r"><code>pingan_3 &lt;- api(api_name = &quot;stk_managers&quot;,ts_code=&#39;601318.SH&#39;)</code></pre>
+<pre><code>## Warning in data.table::rbindlist(items): Column 11 [&#39;&#39;] of item 1 is length 0.
+## This (and 106 others like it) has been filled with NA (NULL for list columns) to
+## make each item uniform.</code></pre>
+<pre class="r"><code>str(pingan_3)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    209 obs. of  11 variables:
+##  $ ts_code   : chr  &quot;601318.SH&quot; &quot;601318.SH&quot; &quot;601318.SH&quot; &quot;601318.SH&quot; ...
+##  $ ann_date  : chr  &quot;20190727&quot; &quot;20190727&quot; &quot;20190727&quot; &quot;20190727&quot; ...
+##  $ name      : chr  &quot;刘宏&quot; &quot;刘宏&quot; &quot;刘宏&quot; &quot;储一昀&quot; ...
+##  $ gender    : chr  &quot;M&quot; &quot;M&quot; &quot;M&quot; &quot;M&quot; ...
+##  $ lev       : chr  &quot;委员会成员&quot; &quot;委员会成员&quot; &quot;委员会成员&quot; &quot;委员会成员&quot; ...
+##  $ title     : chr  &quot;战略委员会委员&quot; &quot;投资委员会委员&quot; &quot;提名委员会委员&quot; &quot;审计委员会委员&quot; ...
+##  $ edu       : chr  &quot;博士&quot; &quot;博士&quot; &quot;博士&quot; &quot;博士&quot; ...
+##  $ national  : chr  &quot;中国&quot; &quot;中国&quot; &quot;中国&quot; &quot;中国&quot; ...
+##  $ birthday  : chr  &quot;1967&quot; &quot;1967&quot; &quot;1967&quot; &quot;1964&quot; ...
+##  $ begin_date: chr  &quot;20190726&quot; &quot;20190726&quot; &quot;20190726&quot; &quot;20190726&quot; ...
+##  $ end_date  : chr  NA NA NA NA ...</code></pre>
+</div>
+<div id="行情数据获取" class="section level3">
+<h3>行情数据获取</h3>
+<pre class="r"><code>pingan_4 &lt;- api(api_name = &quot;daily&quot;,ts_code=&#39;601318.SH&#39;,start_date=&quot;20200101&quot;,end_date=&#39;20200401&#39;)
+pingan_4 &lt;- pingan_4 %&gt;% mutate(trade_date = as.Date(trade_date,format=&quot;%Y%m%d&quot;)) %&gt;%
+  select(ts_code,trade_date,close,pct_chg) 
+pingan_4 %&gt;% datatable()</code></pre>
+<div id="htmlwidget-1" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59"],["601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH"],["2020-04-01","2020-03-31","2020-03-30","2020-03-27","2020-03-26","2020-03-25","2020-03-24","2020-03-23","2020-03-20","2020-03-19","2020-03-18","2020-03-17","2020-03-16","2020-03-13","2020-03-12","2020-03-11","2020-03-10","2020-03-09","2020-03-06","2020-03-05","2020-03-04","2020-03-03","2020-03-02","2020-02-28","2020-02-27","2020-02-26","2020-02-25","2020-02-24","2020-02-21","2020-02-20","2020-02-19","2020-02-18","2020-02-17","2020-02-14","2020-02-13","2020-02-12","2020-02-11","2020-02-10","2020-02-07","2020-02-06","2020-02-05","2020-02-04","2020-02-03","2020-01-23","2020-01-22","2020-01-21","2020-01-20","2020-01-17","2020-01-16","2020-01-15","2020-01-14","2020-01-13","2020-01-10","2020-01-09","2020-01-08","2020-01-07","2020-01-06","2020-01-03","2020-01-02"],[69.32,69.17,69.15,69.72,70.19,70.35,68.95,66.76,69,67.81,69.87,72.14,72,74.71,76.65,78.15,79.18,78.14,80.91,82.45,80.58,79.49,79.58,77.72,79.79,79.83,80.19,80.72,82.38,83.28,81.7,81.55,82.39,81,80.45,81.2,81.13,80.3,81.03,81.52,80.38,80.43,77.71,83.49,85.22,85.6,87.6,86.25,85.55,85.81,86.83,86.45,84.78,85.04,85,86.15,85.6,86.2,86.12],[0.2169,0.0289,-0.8176,-0.6696,-0.2274,2.0305,3.2804,-3.2464,1.7549,-2.9483,-3.1467,0.1944,-3.6274,-2.531,-1.9194,-1.3008,1.3309,-3.4236,-1.8678,2.3207,1.3712,-0.1131,2.3932,-2.5943,-0.0501,-0.4489,-0.6566,-2.0151,-1.0807,1.9339,0.1839,-1.0195,1.716,0.6837,-0.9236,0.0863,1.0336,-0.9009,-0.6011,1.4183,-0.0622,3.5002,-6.923,-2.03,-0.4439,-2.2831,1.5652,0.8182,-0.303,-1.1747,0.4396,1.9698,-0.3057,0.0471,-1.3349,0.6425,-0.6961,0.0929,0.7723]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ts_code<\/th>\n      <th>trade_date<\/th>\n      <th>close<\/th>\n      <th>pct_chg<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="注意使用这种方式获得的回报率是没有复权的我们使用刚才创建的另一个接口获取复权数据同时还需要大家注意的是这里的日期是字符形式最好将其转换为日期形式注意我的format参数" class="section level4">
+<h4>注意使用这种方式获得的回报率是没有复权的，我们使用刚才创建的另一个接口获取复权数据,同时还需要大家注意的是这里的日期是字符形式，最好将其转换为日期形式，注意我的format参数</h4>
+<hr />
+</div>
+<div id="复权的简单介绍链接" class="section level4">
+<h4>复权的简单介绍：<a href="https://baike.baidu.com/item/%E8%82%A1%E7%A5%A8%E5%A4%8D%E6%9D%83/2433275?fr=aladdin">链接</a></h4>
+<ol style="list-style-type: decimal">
+<li>向前复权，就是保持现有价位不变，将以前的价格缩减</li>
+<li>向后复权，就是保持先前的价格不变，而将以后的价格增加。</li>
+</ol>
+<pre class="r"><code>pingan_5 &lt;- bar(ts_code=&#39;601318.SH&#39;,start_date=&quot;20200101&quot;,end_date=&#39;20200401&#39;,adj=&quot;hfq&quot;)
+pingan_6 &lt;- bar(ts_code=&#39;601318.SH&#39;,start_date=&quot;20200101&quot;,end_date=&#39;20200401&#39;,adj=&quot;qfq&quot;)
+pingan_5 %&gt;% select(trade_date,close) %&gt;% datatable()</code></pre>
+<div id="htmlwidget-2" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59"],["20200401","20200331","20200330","20200327","20200326","20200325","20200324","20200323","20200320","20200319","20200318","20200317","20200316","20200313","20200312","20200311","20200310","20200309","20200306","20200305","20200304","20200303","20200302","20200228","20200227","20200226","20200225","20200224","20200221","20200220","20200219","20200218","20200217","20200214","20200213","20200212","20200211","20200210","20200207","20200206","20200205","20200204","20200203","20200123","20200122","20200121","20200120","20200117","20200116","20200115","20200114","20200113","20200110","20200109","20200108","20200107","20200106","20200103","20200102"],[166.71,166.35,166.31,167.68,168.81,169.19,165.82,160.56,165.94,163.08,168.04,173.5,173.16,179.68,184.34,187.95,190.43,187.93,194.59,198.29,193.79,191.17,191.39,186.92,191.89,191.99,192.86,194.13,198.12,200.29,196.49,196.13,198.15,194.8,193.48,195.29,195.12,193.12,194.88,196.06,193.31,193.43,186.89,200.79,204.95,205.87,210.68,207.43,205.75,206.37,208.83,207.91,203.9,204.52,204.42,207.19,205.87,207.31,207.12]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>trade_date<\/th>\n      <th>close<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>pingan_6 %&gt;% select(trade_date,close) %&gt;% datatable()</code></pre>
+<div id="htmlwidget-3" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59"],["20200401","20200331","20200330","20200327","20200326","20200325","20200324","20200323","20200320","20200319","20200318","20200317","20200316","20200313","20200312","20200311","20200310","20200309","20200306","20200305","20200304","20200303","20200302","20200228","20200227","20200226","20200225","20200224","20200221","20200220","20200219","20200218","20200217","20200214","20200213","20200212","20200211","20200210","20200207","20200206","20200205","20200204","20200203","20200123","20200122","20200121","20200120","20200117","20200116","20200115","20200114","20200113","20200110","20200109","20200108","20200107","20200106","20200103","20200102"],[69.32,69.17,69.15,69.72,70.19,70.35,68.95,66.76,69,67.81,69.87,72.14,72,74.71,76.65,78.15,79.18,78.14,80.91,82.45,80.58,79.49,79.58,77.72,79.79,79.83,80.19,80.72,82.38,83.28,81.7,81.55,82.39,81,80.45,81.2,81.13,80.3,81.03,81.52,80.38,80.43,77.71,83.49,85.22,85.6,87.6,86.25,85.55,85.81,86.83,86.45,84.78,85.04,85,86.15,85.6,86.2,86.12]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>trade_date<\/th>\n      <th>close<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div id="获取分红情况" class="section level3">
+<h3>获取分红情况</h3>
+<pre class="r"><code>pingan_div &lt;- api(api_name = &quot;dividend&quot;,ts_code=&#39;601318.SH&#39;)  %&gt;%  filter(div_proc==&quot;实施&quot;) %&gt;%
+  select(ts_code,end_date,cash_div_tax,record_date,ex_date) %&gt;% distinct()
+pingan_div  %&gt;% datatable()</code></pre>
+<div id="htmlwidget-4" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25"],["601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH","601318.SH"],["20190630","20181231","20180630","20171231","20170630","20161231","20160630","20151231","20150630","20141231","20140630","20131231","20130630","20121231","20120630","20111231","20110630","20101231","20100630","20091231","20090630","20080630","20071231","20070630","20061231"],[0.75,1.1,0.62,1.2,0.5,0.55,0.2,0.35,0.18,0.5,0.25,0.45,0.2,0.3,0.15,0.25,0.15,0.4,0.15,0.3,0.15,0.2,0.5,0.2,0.22],["20190903","20190522","20180905","20180606","20170901","20170710","20160902","20160704","20150908","20150724","20140911","20140626","20130909","20130517","20120925","20120713","20110901","20110720","20100908","20100712","20090831","20080926","20080522","20070831","20070621"],["20190904","20190523","20180906","20180607","20170904","20170711","20160905","20160705","20150909","20150727","20140912","20140627","20130910","20130520","20120926","20120716","20110902","20110721","20100909","20100713","20090901","20081006","20080523","20070903","20070622"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ts_code<\/th>\n      <th>end_date<\/th>\n      <th>cash_div_tax<\/th>\n      <th>record_date<\/th>\n      <th>ex_date<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":3},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="关于分红的一点说明" class="section level3">
+<h3>关于分红的一点说明</h3>
+<ol style="list-style-type: decimal">
+<li>股权登记日(date of record)是指董事会规定的登记有权领取股利的股东名单的截止日期，股权登记日通常在股利宣告日的两周以后，在股权登记日拥有公司股票的人能够分得股利。</li>
+</ol>
+<blockquote>
+<p>如果4月2号是股权登记日,请问在4月2号当天才买入的股票能分红吗?<br />
+股权登记日之前持有的股票，就能得到赠送的分红。股权登记日收盘后，假如第二天卖掉了，也能得到赠送的分红。总之，只要你在股权登记日收盘的时刻拥有该公司的股票，你就能被券商系统登记，在次日就可以得到分红。</p>
+</blockquote>
+<hr />
+<ol start="2" style="list-style-type: decimal">
+<li>除权除息日即股权登记日下一个交易日。在股票的除权除息日，证券交易所都要计算出股票的除权除息价，以作为股民在除权除息日开盘的参考。其意义是股票股利分配给股东的日期。</li>
+</ol>
+<blockquote>
+<p>除权除息日买进的股票不再享有送配公告中所登载的各种权利。如果在股权登记日已拥有该股票，在除权除息日将该股票卖出，仍然享有现金红利，送红股及配股权利</p>
+</blockquote>
+</div>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+  
+  <hr/>
+  © <a href="https://jjxy.sicau.edu.cn/content.jsp?urltype=news.NewsContentUrl&amp;wbtreeid=1022&amp;wbnewsid=3019">张剑</a>  2018 &ndash; 2020 | <a href="https://gitee.com/jefeerzhang">Gitee</a>
+  
+  </footer>
+  </body>
+</html>
+
