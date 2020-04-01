@@ -54,7 +54,6 @@
 
 <main>
 
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 <script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
 <script src="/rmarkdown-libs/jquery/jquery.min.js"></script>
 <link href="/rmarkdown-libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
@@ -110,8 +109,10 @@ corrplot(corr = cor(mtcars[,1:7]),add=TRUE, type=&quot;lower&quot;, method=&quot
 <span class="math inline">\(\phi_{11}=0.839, \phi_{21}=0.544\)</span>是主成分载荷，定义了主成分的方向。在满足<span class="math inline">\(\phi_{11}^2+\phi_{21}^2=1\)</span>的约束下所有可能的pop和ad的组合里，是的这个组合的方差最大。方差大解释的变异也就越，本质上这里的目标是
 <span class="math display">\[MAX:\operatorname{Var}\left(\phi_{11} \times(\operatorname{pop}-\overline{\mathrm{pop}})+\phi_{21} \times(\mathrm{ad}-\overline{\mathrm{ad}})\right)\]</span>
 当观测值100个的时候，pop和ad也有对应的100，那么每个观测值都有一个对应的主成分：
-<span class="math display">\[Z_{i1}=0.839 \times(\mathrm{pop_i}-\overline{\mathrm{pop_i}})+0.544 \times(\mathrm{ad_i}-\overline{\mathrm{ad_i}})\]</span>
-### 这些对应的<span class="math inline">\(z_{i1},z_{i2}\)</span>被称为主成得分(principal component scores),下图表征了主成分得分的图例.</p>
+<span class="math display">\[Z_{i1}=0.839 \times(\mathrm{pop_i}-\overline{\mathrm{pop_i}})+0.544 \times(\mathrm{ad_i}-\overline{\mathrm{ad_i}})\]</span></p>
+</div>
+<div id="这些对应的z_i1z_i2被称为主成得分principal-component-scores下图表征了主成分得分的图例." class="section level4">
+<h4>这些对应的<span class="math inline">\(z_{i1},z_{i2}\)</span>被称为主成得分(principal component scores),下图表征了主成分得分的图例.</h4>
 <p><img src="/post/2020-03-25-主成分分析pca_files/2.png" /></p>
 </div>
 </div>
