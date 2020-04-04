@@ -56,7 +56,6 @@
 
 <main>
 
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 <script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
 <script src="/rmarkdown-libs/jquery/jquery.min.js"></script>
 <link href="/rmarkdown-libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
@@ -69,24 +68,23 @@
 
 <div id="TOC">
 <ul>
-<li><a href="#tushare平台简介">Tushare平台简介</a>
-<ul>
+<li><a href="#tushare平台简介">Tushare平台简介 <img src="https://img.shields.io/badge/Tushare-%E5%85%8D%E8%B4%B9%E6%8E%A5%E5%8F%A3-green" /></a><ul>
 <li><a href="#与本课程有关的主要功能简介">与本课程有关的主要功能简介</a></li>
 </ul></li>
-<li><a href="#如何使用r获取数据">如何使用R获取数据</a>
-<ul>
+<li><a href="#如何使用r获取数据">如何使用R获取数据</a><ul>
 <li><a href="#注册账号获取接口token">注册账号，获取接口TOKEN</a></li>
 <li><a href="#股票基本信息获取">股票基本信息获取</a></li>
 <li><a href="#行情数据获取">行情数据获取</a></li>
 <li><a href="#获取分红情况">获取分红情况</a></li>
 <li><a href="#关于分红的一点说明">关于分红的一点说明</a></li>
+<li><a href="#指数数据下载">指数数据下载</a></li>
 </ul></li>
 </ul>
 </div>
 
 <div id="tushare平台简介" class="section level2">
-<h2>Tushare平台简介</h2>
-<p>Tushare免费为高校师生提供金融金融大数据接口，可以说是国内最好的免费金融数据接口，可以使用我们常用的Python或R进行数据导入，是各位同学在校及就业后的一个好的数据入口。</p>
+<h2>Tushare平台简介 <img src="https://img.shields.io/badge/Tushare-%E5%85%8D%E8%B4%B9%E6%8E%A5%E5%8F%A3-green" /></h2>
+<p>Tushare免费为高校师生提供金融金融大数据接口，可以说是国内最好的免费金融数据接口，可以使用我们常用的Python或R进行数据导入，是各位同学在校及今后工作的一个数据入口。</p>
 <blockquote>
 <p><a href="https://www.waditu.com/document/2">链接在此</a></p>
 </blockquote>
@@ -122,10 +120,34 @@ bar &lt;- pro_bar(token = &#39;5adce34e8c81bf7085828754a8e09590c3630032d0f61aad6
 <h3>股票基本信息获取</h3>
 <pre class="r"><code>pingan &lt;-api(api_name = &#39;stock_company&#39;, ts_code=&#39;601318.SH&#39;)
 str(pingan)</code></pre>
-<pre><code>##  NULL</code></pre>
+<pre><code>## &#39;data.frame&#39;:    1 obs. of  12 variables:
+##  $ ts_code    : chr &quot;601318.SH&quot;
+##  $ exchange   : chr &quot;SSE&quot;
+##  $ chairman   : chr &quot;马明哲&quot;
+##  $ manager    : chr &quot;谢永林&quot;
+##  $ secretary  : chr &quot;盛瑞生&quot;
+##  $ reg_capital: num 1828024
+##  $ setup_date : chr &quot;19880321&quot;
+##  $ province   : chr &quot;广东&quot;
+##  $ city       : chr &quot;深圳市&quot;
+##  $ website    : chr &quot;www.pingan.cn&quot;
+##  $ email      : chr &quot;pr@pingan.com.cn;ir@pingan.com.cn&quot;
+##  $ employees  : int 372194</code></pre>
 <pre class="r"><code>pingan_2 &lt;- api(api_name = &#39;stock_company&#39;,ts_code=&#39;601318.SH&#39;)
 str(pingan_2)</code></pre>
-<pre><code>##  NULL</code></pre>
+<pre><code>## &#39;data.frame&#39;:    1 obs. of  12 variables:
+##  $ ts_code    : chr &quot;601318.SH&quot;
+##  $ exchange   : chr &quot;SSE&quot;
+##  $ chairman   : chr &quot;马明哲&quot;
+##  $ manager    : chr &quot;谢永林&quot;
+##  $ secretary  : chr &quot;盛瑞生&quot;
+##  $ reg_capital: num 1828024
+##  $ setup_date : chr &quot;19880321&quot;
+##  $ province   : chr &quot;广东&quot;
+##  $ city       : chr &quot;深圳市&quot;
+##  $ website    : chr &quot;www.pingan.cn&quot;
+##  $ email      : chr &quot;pr@pingan.com.cn;ir@pingan.com.cn&quot;
+##  $ employees  : int 372194</code></pre>
 <pre class="r"><code>pingan_3 &lt;- api(api_name = &quot;stk_managers&quot;,ts_code=&#39;601318.SH&#39;)</code></pre>
 <pre><code>## Warning in data.table::rbindlist(items): Column 11 [&#39;&#39;] of item 1 is length 0.
 ## This (and 106 others like it) has been filled with NA (NULL for list columns) to
@@ -146,7 +168,8 @@ str(pingan_2)</code></pre>
 </div>
 <div id="行情数据获取" class="section level3">
 <h3>行情数据获取</h3>
-<pre class="r"><code>pingan_4 &lt;- api(api_name = &quot;daily&quot;,ts_code=&#39;601318.SH&#39;,start_date=&quot;20200101&quot;,end_date=&#39;20200401&#39;)
+<pre class="r"><code>library(DT)
+pingan_4 &lt;- api(api_name = &quot;daily&quot;,ts_code=&#39;601318.SH&#39;,start_date=&quot;20200101&quot;,end_date=&#39;20200401&#39;)
 pingan_4 &lt;- pingan_4 %&gt;% mutate(trade_date = as.Date(trade_date,format=&quot;%Y%m%d&quot;)) %&gt;%
   select(ts_code,trade_date,close,pct_chg) 
 pingan_4 %&gt;% datatable()</code></pre>
@@ -196,6 +219,51 @@ pingan_div  %&gt;% datatable()</code></pre>
 <blockquote>
 <p>除权除息日买进的股票不再享有送配公告中所登载的各种权利。如果在股权登记日已拥有该股票，在除权除息日将该股票卖出，仍然享有现金红利，送红股及配股权利</p>
 </blockquote>
+</div>
+<div id="指数数据下载" class="section level3">
+<h3>指数数据下载</h3>
+<p>ts_code一次只能传入一个指数或者股票代码，因此如果希望一次下载多个股票，可能需要使用循环或者利用apply函数</p>
+<pre class="r"><code>sz_ind &lt;- api(api_name = &#39;index_basic&#39;,market=&quot;SSE&quot;)
+glimpse(sz_ind)</code></pre>
+<pre><code>## Observations: 590
+## Variables: 8
+## $ ts_code    &lt;chr&gt; &quot;000001.SH&quot;, &quot;000002.SH&quot;, &quot;000003.SH&quot;, &quot;000004.SH&quot;, &quot;000...
+## $ name       &lt;chr&gt; &quot;上证综指&quot;, &quot;上证A指&quot;, &quot;上证B指&quot;, &quot;上证工业类指数&quot;, &quot;上证商业类指数&quot;, &quot;上证房地产指数&quot;,...
+## $ market     &lt;chr&gt; &quot;SSE&quot;, &quot;SSE&quot;, &quot;SSE&quot;, &quot;SSE&quot;, &quot;SSE&quot;, &quot;SSE&quot;, &quot;SSE&quot;, &quot;SSE&quot;, ...
+## $ publisher  &lt;chr&gt; &quot;中证公司&quot;, &quot;中证公司&quot;, &quot;中证公司&quot;, &quot;中证公司&quot;, &quot;中证公司&quot;, &quot;中证公司&quot;, &quot;中证公司&quot;, ...
+## $ category   &lt;chr&gt; &quot;综合指数&quot;, &quot;综合指数&quot;, &quot;综合指数&quot;, &quot;综合指数&quot;, &quot;综合指数&quot;, &quot;综合指数&quot;, &quot;综合指数&quot;, ...
+## $ base_date  &lt;chr&gt; &quot;19901219&quot;, &quot;19901219&quot;, &quot;19920221&quot;, &quot;19930430&quot;, &quot;1993043...
+## $ base_point &lt;dbl&gt; 100.00, 100.00, 100.00, 1358.78, 1358.78, 1358.78, 1358....
+## $ list_date  &lt;chr&gt; &quot;19910715&quot;, &quot;19920221&quot;, &quot;19920221&quot;, &quot;19930503&quot;, &quot;1993050...</code></pre>
+<pre class="r"><code>hs300 &lt;- api(api_name = &quot;index_daily&quot;,ts_code=&#39;399300.SZ&#39;,start_date=&#39;20200101&#39;, end_date=&#39;20200401&#39;)
+sz_1 &lt;- api(api_name = &quot;index_daily&quot;,ts_code=&#39;000001.SH&#39;,start_date=&#39;20200101&#39;, end_date=&#39;20200401&#39;)
+glimpse(sz_1)</code></pre>
+<pre><code>## Observations: 59
+## Variables: 11
+## $ ts_code    &lt;chr&gt; &quot;000001.SH&quot;, &quot;000001.SH&quot;, &quot;000001.SH&quot;, &quot;000001.SH&quot;, &quot;000...
+## $ trade_date &lt;chr&gt; &quot;20200401&quot;, &quot;20200331&quot;, &quot;20200330&quot;, &quot;20200327&quot;, &quot;2020032...
+## $ close      &lt;dbl&gt; 2734.521, 2750.296, 2747.214, 2772.203, 2764.911, 2781.5...
+## $ open       &lt;dbl&gt; 2743.541, 2767.307, 2739.719, 2792.984, 2761.896, 2775.3...
+## $ high       &lt;dbl&gt; 2773.364, 2771.168, 2759.099, 2805.548, 2788.504, 2788.6...
+## $ low        &lt;dbl&gt; 2731.079, 2743.115, 2723.054, 2771.756, 2753.428, 2757.8...
+## $ pre_close  &lt;dbl&gt; 2750.296, 2747.214, 2772.203, 2764.911, 2781.591, 2722.4...
+## $ change     &lt;dbl&gt; -15.7747, 3.0824, -24.9895, 7.2924, -16.6804, 59.1532, 6...
+## $ pct_chg    &lt;dbl&gt; -0.5736, 0.1122, -0.9014, 0.2637, -0.5997, 2.1728, 2.340...
+## $ vol        &lt;dbl&gt; 217253427, 218598674, 239706604, 240764066, 234084022, 2...
+## $ amount     &lt;dbl&gt; 225624647, 224271062, 250687144, 253630726, 248279785, 2...</code></pre>
+<pre class="r"><code>str(hs300)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    59 obs. of  11 variables:
+##  $ ts_code   : chr  &quot;399300.SZ&quot; &quot;399300.SZ&quot; &quot;399300.SZ&quot; &quot;399300.SZ&quot; ...
+##  $ trade_date: chr  &quot;20200401&quot; &quot;20200331&quot; &quot;20200330&quot; &quot;20200327&quot; ...
+##  $ close     : num  3675 3686 3674 3710 3698 ...
+##  $ open      : num  3682 3708 3657 3746 3693 ...
+##  $ high      : num  3732 3716 3691 3759 3736 ...
+##  $ low       : num  3671 3676 3638 3710 3681 ...
+##  $ pre_close : num  3686 3674 3710 3698 3723 ...
+##  $ change    : num  -11.1 12 -35.9 12 -24.5 ...
+##  $ pct_chg   : num  -0.301 0.328 -0.969 0.325 -0.657 ...
+##  $ vol       : num  1.19e+08 1.11e+08 1.27e+08 1.24e+08 1.12e+08 ...
+##  $ amount    : num  1.70e+08 1.62e+08 1.81e+08 1.86e+08 1.69e+08 ...</code></pre>
 </div>
 </div>
 
