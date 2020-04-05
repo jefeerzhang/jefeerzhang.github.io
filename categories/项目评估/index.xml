@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>项目评估 on Zhang Jian&#39;s Homepage</title>
+    <link>/categories/%E9%A1%B9%E7%9B%AE%E8%AF%84%E4%BC%B0/</link>
+    <description>Recent content in 项目评估 on Zhang Jian&#39;s Homepage</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh_CN</language>
+    <lastBuildDate>Wed, 25 Mar 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/%E9%A1%B9%E7%9B%AE%E8%AF%84%E4%BC%B0/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>主成分分析PCA</title>
+      <link>/post/2020/03/25/%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90pca/</link>
+      <pubDate>Wed, 25 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/03/25/%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90pca/</guid>
+      <description>What —— 主成分分析的基本思想 Why —— 为什么我们需要主成分分析 一个多维特征的例子 主成分的另一种解释 How——如何进行PCA？ 先做一个Scale和不Scale的对比 碎石图，选几个主成分 因子分析和主成分分析   What —— 主成分分析的基本思想 利用降维（线性变换)的思想，在损失很少信息的前提下把多个特征转化为几个不相关的综合特征（主成分),即每个主成分都是原始特征变量的线性组合,且各个主成分之间互不相关,使得主成分比原始变量具有某些更优越的性能（主成分必须保留原始特征尽可能多的信息），从而达到简化系统结构，抓住问题实质的目的。
+ Why —— 为什么我们需要主成分分析 假设我们的研究对象——消费者，我们拥有消费者非常全面的特征，如果要将这p个特征\(x_1,x_2,...,x_p\)个特征可视化，实际上是相对繁琐的，人们对于太多维度的变量处理起来不够符合人类的直觉思维。
+ 一个多维特征的例子 pacman::p_load(corrplot,DT,tidyverse,GGally,gtsummary,psych,GPArotation) mtcars[,1:7] %&amp;gt;% datatable()  {&#34;x&#34;:{&#34;filter&#34;:&#34;none&#34;,&#34;data&#34;:[[&#34;Mazda RX4&#34;,&#34;Mazda RX4 Wag&#34;,&#34;Datsun 710&#34;,&#34;Hornet 4 Drive&#34;,&#34;Hornet Sportabout&#34;,&#34;Valiant&#34;,&#34;Duster 360&#34;,&#34;Merc 240D&#34;,&#34;Merc 230&#34;,&#34;Merc 280&#34;,&#34;Merc 280C&#34;,&#34;Merc 450SE&#34;,&#34;Merc 450SL&#34;,&#34;Merc 450SLC&#34;,&#34;Cadillac Fleetwood&#34;,&#34;Lincoln Continental&#34;,&#34;Chrysler Imperial&#34;,&#34;Fiat 128&#34;,&#34;Honda Civic&#34;,&#34;Toyota Corolla&#34;,&#34;Toyota Corona&#34;,&#34;Dodge Challenger&#34;,&#34;AMC Javelin&#34;,&#34;Camaro Z28&#34;,&#34;Pontiac Firebird&#34;,&#34;Fiat X1-9&#34;,&#34;Porsche 914-2&#34;,&#34;Lotus Europa&#34;,&#34;Ford Pantera L&#34;,&#34;Ferrari Dino&#34;,&#34;Maserati Bora&#34;</description>
+    </item>
+    
+    <item>
+      <title>市场需求与预测之实战作业</title>
+      <link>/post/2020/03/22/2020-03-22forecast/</link>
+      <pubDate>Sun, 22 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/03/22/2020-03-22forecast/</guid>
+      <description> 项目评估与管理——市场预测小组练习题 本次题目我们使用全球最大的数据建模和数据分析竞赛平台kaggle为资料来源。  具体使用2017年kaggle发布的一个Hourse price比赛项目作为我们的训练项目。    截止提交日期 5月22日  按照小组进行，使用方法不限。Learn What You Need！Test What You want to test！  评分以小组为单位，重点考察大家分析数据、数据可视化、报告撰写等能力。  每小组最终报告中推荐两名成员作为主要贡献者，进行加分。  最后祝大家学习顺利！   </description>
+    </item>
+    
+    <item>
+      <title>一些时间序列</title>
+      <link>/post/2020/03/21/%E4%B8%80%E4%BA%9B%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97/</link>
+      <pubDate>Sat, 21 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/03/21/%E4%B8%80%E4%BA%9B%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97/</guid>
+      <description>一些直观的时间序列 library(tidyverse) library(forecast) library(fpp2) library(ggfortify) library(ggthemes) autoplot(ausbeer,ts.colour = &amp;quot;blue&amp;quot;,main = &amp;quot;啤酒销量&amp;quot;,xlab = &amp;quot;时间&amp;quot;)+theme_clean() autoplot(AirPassengers,ts.colour = &amp;quot;red&amp;quot;,main=&amp;quot;乘客数量&amp;quot;,xlab = &amp;quot;时间&amp;quot;) +theme_clean() autoplot(melsyd[,&amp;quot;Economy.Class&amp;quot;]) + ggtitle(&amp;quot;墨尔本 - 悉尼经济舱乘客客流量&amp;quot;) + theme_clean() + xlab(&amp;quot;年份&amp;quot;) + ylab(&amp;quot;千&amp;quot;)+ theme(text = element_text(family = &amp;quot;STHeiti&amp;quot;))+ theme(plot.title = element_text(hjust = 0.5))  中国股市开户数的一个趋势 setwd(&amp;quot;C:/Users/jefee/Desktop&amp;quot;) data &amp;lt;- read_csv(&amp;#39;data2.csv&amp;#39;) pt&amp;lt;-ts(data$`信用账户新增开户投资者数:合计`,frequency=12,start=c(2011,1),end = c(2020,2)) dec_data &amp;lt;- decompose(pt,type=&amp;#39;additive&amp;#39;) autoplot(dec_data) +theme_clean()  时间序列的模式 趋势  季节性  周期性 autoplot(AirPassengers )+theme_clean() autoplot(arrivals, facets = TRUE)+theme_clean() autoplot(arrivals, facets = TRUE) + theme_clean() + geom_smooth() + labs(title =&amp;quot;到澳大利亚旅客人数&amp;quot;, y = &amp;quot;Arrivals (in thousands)&amp;quot;, x = NULL) ## 季节性</description>
+    </item>
+    
+    <item>
+      <title>时间序列分析1</title>
+      <link>/post/2020/03/21/%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E5%88%86%E6%9E%901/</link>
+      <pubDate>Sat, 21 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/03/21/%E6%97%B6%E9%97%B4%E5%BA%8F%E5%88%97%E5%88%86%E6%9E%901/</guid>
+      <description>时间序列最简单的预测方法 均值法 \[\hat{y}_{T+h | T}=\left(y_{1}+\cdots+y_{T}\right) / T\]
+  一个例子 library(tidyverse) ## -- Attaching packages ---------------------------------------------------- tidyverse 1.3.0 -- ## √ ggplot2 3.3.0 √ purrr 0.3.3 ## √ tibble 2.1.3 √ dplyr 0.8.5 ## √ tidyr 1.0.2 √ stringr 1.4.0 ## √ readr 1.3.1 √ forcats 0.5.0 ## -- Conflicts ------------------------------------------------------- tidyverse_conflicts() -- ## x dplyr::filter() masks stats::filter() ## x dplyr::lag() masks stats::lag() library(forecast) ## Registered S3 method overwritten by &amp;#39;quantmod&amp;#39;: ## method from ## as.</description>
+    </item>
+    
+    <item>
+      <title>聚类分析</title>
+      <link>/post/2020/03/21/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90/</link>
+      <pubDate>Sat, 21 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/03/21/%E8%81%9A%E7%B1%BB%E5%88%86%E6%9E%90/</guid>
+      <description>什么是聚类？？一个简单的例子 探索性数据分析（EDA）的一种形式,将样本通过特征划分成具有共同特征的有意义的族群。  聚类分析的全部流程图 流程
+   定义距离和相似性 \[距离 = 1-相似性\]
+距离的直观定义
+ \[距离=\sqrt{\left(\mathbf{X}_{\text {red }}-\mathbf{X}_{\text {blue }}\right)^{2}+\left(\mathbf{Y}_{\text {red }}-\mathbf{Y}_{\text {blue }}\right)^{2}}\]
+pacman::p_load(tidyverse,ggthemes,ggfortify,DT) two_person &amp;lt;- tribble(~x, ~y, 0,0, 9,12) ggplot(two_person, aes(x = x, y = y)) + geom_point() + lims(x = c(-30,30), y = c(-20, 20)) + theme_clean()+ggtitle(&amp;quot;原始数据&amp;quot;) dist(two_person,method = &amp;quot;euclidean&amp;quot;) ## 1 ## 2 15 多余两个人时
+three_p &amp;lt;- tribble(~x, ~y, 0,0, 9,12, -2,9) ggplot(three_p, aes(x = x, y = y)) + geom_point() + lims(x = c(-30,30), y = c(-20, 20)) + theme_clean() dist(three_p,method = &amp;quot;euclidean&amp;quot;) ## 1 2 ## 2 15.</description>
+    </item>
+    
+  </channel>
+</rss>
