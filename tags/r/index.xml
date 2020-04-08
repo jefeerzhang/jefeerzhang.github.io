@@ -6,10 +6,45 @@
     <description>Recent content in R on Zhang Jian&#39;s Homepage</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
-    <lastBuildDate>Sat, 04 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 09 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>投资组合联合线模拟</title>
+      <link>/post/2020/04/09/%E6%8A%95%E8%B5%84%E7%BB%84%E5%90%88%E8%81%94%E5%90%88%E7%BA%BF%E6%A8%A1%E6%8B%9F/</link>
+      <pubDate>Thu, 09 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/04/09/%E6%8A%95%E8%B5%84%E7%BB%84%E5%90%88%E8%81%94%E5%90%88%E7%BA%BF%E6%A8%A1%E6%8B%9F/</guid>
+      <description>参考我们ppt上案例，使用软件对两个不同的相关性程度进联合线模拟使用tidyver包绘图，DT包展示数据
+参考ppt给出我们想画的两个资产默认的均值、标准差，同时两资产默认相关系数为0可以自行调整函数参数函数编好，大家也可以自行测试pacman::p_load(tidyverse,DT)sqx &amp;lt;- function(w,r_a=0.1,r_b=0.04,sd_a=0.05,sd_b=0.1,rho=0){risk = sqrt(w^2*sd_a^2+(1-w)^2*sd_b^2+2*w*(1-w)*rho*sd_a*sd_b)mean = w*r_a+(1-w)*r_bres = tibble(mean=mean,risk=risk) return(res)}sqx(1.5)## # A tibble: 1 x 2## mean risk## &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;## 1 0.13 0.0901res_1 &amp;lt;- NULLfor (i in seq(-0.5,1.5,by=0.1)){res_1 = rbind(res_1,sqx(i))}res_1 %&amp;gt;% datatable(){&#34;x&#34;:{&#34;filter&#34;:&#34;none&#34;,&#34;data&#34;:[[&#34;1&#34;,&#34;2&#34;,&#34;3&#34;,&#34;4&#34;,&#34;5&#34;,&#34;6&#34;,&#34;7&#34;,&#34;8&#34;,&#34;9&#34;,&#34;10&#34;,&#34;11&#34;,&#34;12&#34;,&#34;13&#34;,&#34;14&#34;,&#34;15&#34;,&#34;16&#34;,&#34;17&#34;,&#34;18&#34;,&#34;19&#34;,&#34;20&#34;,&#34;21&#34;],[0.01,0.016,0.022,0.028,0.034,0.04,0.046,0.052,0.058,0.064,0.07,0.076,0.082,0.088,0.094,0.1,0.106,0.112,0.118,0.124,0.13],[0.152069063257456,0.14142135623731,0.130862523283024,0.120415945787923,0.110113577727726,0.1,0.0901387818865997,0.0806225774829855,0.0715891053163818,0.0632455532033676,0.0559016994374947,0.05,0.0460977222864644,0.0447213595499958,0.0460977222864645,0.05,0.0559016994374948,0.0632455532033676,0.0715891053163818,0.0806225774829855,0.0901387818865997]],&#34;container&#34;:&#34;\n \n \n  \n mean\n risk\n \n \n&#34;</description>
+    </item>
+    
+    <item>
+      <title>收益率和方差</title>
+      <link>/post/2020/04/09/%E8%82%A1%E7%A5%A8/</link>
+      <pubDate>Thu, 09 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/04/09/%E8%82%A1%E7%A5%A8/</guid>
+      <description>股票收益率、方差和相关性股价转换为日收益率画一下三个股票的价格趋势日收益率、月收益率计算计算所谓的收益率的均值计算累计收益率三个公司的年度收益率均值计算多个股票的方差-协方差矩阵股票收益率、方差和相关性股价转换为日收益率使用Tushare接口进行股价下载，此次我们选取三只保险类股票进行演示
+中国平安(601318.SH)中国人寿(601628.SH)中国太保(601601.SH)使用通用接口下载后复权的股票日数据,使用tidyverse，Tushare，tidyquant，DT包进行数据处理。
+pacman::p_load(Tushare,tidyverse,tidyquant,DT,anytime)api &amp;lt;- pro_api(token = &amp;#39;5adce34e8c81bf7085828754a8e09590c3630032d0f61aad6483eaaa&amp;#39;)bar &amp;lt;- pro_bar(token = &amp;#39;5adce34e8c81bf7085828754a8e09590c3630032d0f61aad6483eaaa&amp;#39;)调入api后，我们使用通用pro_bar接口读取三只股票的日数据，
+pingan &amp;lt;- bar(ts_code=&amp;#39;601318.SH&amp;#39;,start_date=&amp;quot;20140101&amp;quot;,end_date=&amp;#39;20200407&amp;#39;,adj=&amp;quot;qfq&amp;quot;)zgrs &amp;lt;- bar(ts_code=&amp;#39;601628.SH&amp;#39;,start_date=&amp;quot;20140101&amp;quot;,end_date=&amp;#39;20200407&amp;#39;,adj=&amp;quot;qfq&amp;quot;)zgtb &amp;lt;- bar(ts_code=&amp;#39;601601.SH&amp;#39;,start_date=&amp;quot;20140101&amp;quot;,end_date=&amp;#39;20200407&amp;#39;,adj=&amp;quot;qfq&amp;quot;)将三只股票日数据整理合并成一个数据集：这里使用rbind，进行所谓的行合并，类似于stata中的append，把表格变长
+df &amp;lt;- rbind(pingan,zgrs,zgtb)df &amp;lt;- df %&amp;gt;%select(ts_code, trade_date,close) %&amp;gt;% mutate(trade_date = as.Date(trade_date,format=&amp;quot;%Y%m%d&amp;quot;),close = as.</description>
+    </item>
+    
+    <item>
+      <title>Tidy Data到底是什么？能干什么？</title>
+      <link>/post/2020/04/08/tidy-data/</link>
+      <pubDate>Wed, 08 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/04/08/tidy-data/</guid>
+      <description>## 什么是所谓的“Tidy Data”Tidy data到底有什么用？Tidy Data才能进行画图## 什么是所谓的“Tidy Data”“Tidy” data is a standard way of mapping the meaning of a dataset to its structure. A dataset is messy or tidy depending on how rows, columns and tables are matched up with observations, variables and types.我就不翻译了，Tidy data的三个特征。
+每个变量（特征）是一列；
+每个观测值是一行；
+Each type of observational unit forms a table.</description>
+    </item>
     
     <item>
       <title>R基础循环练习题</title>
@@ -17,7 +52,8 @@
       <pubDate>Sat, 04 Apr 2020 00:00:00 +0000</pubDate>
       
       <guid>/post/2020/04/04/r/</guid>
-      <description>R循环的几个练习题1. Divisible by Ten2.Greetings3. Delete Starting Even Numbers4. Odd Indices5. ExponentsR循环的几个练习题有兴趣的同学可以把答案发给我。1. Divisible by TenCreate a function named first_func() that takes a list of numbers named nums as a parameter.Return the count of how many numbers in the list are divisible by 10.first_func(c(0, 25, 30, 35, 40) 测试输出2.GreetingsCreate a function named sec_func() which takes a list of strings named names as a parameter.</description>
+      <description>R循环的几个练习题1. Divisible by Ten2.Greetings3. Delete Starting Even Numbers4. Odd Indices5. ExponentsR循环的几个练习题有兴趣的同学可以把答案发给我。
+1. Divisible by TenCreate a function named first_func() that takes a list of numbers named nums as a parameter.Return the count of how many numbers in the list are divisible by 10.first_func(c(0, 25, 30, 35, 40) 测试输出first_func &amp;lt;- function(num){count = 0 # 初始化for (i in num ){if (i %% 10 == 0){count = count +1 }}return(count)}first_func(c(0, 25, 30, 35, 40))## [1] 32.</description>
     </item>
     
     <item>

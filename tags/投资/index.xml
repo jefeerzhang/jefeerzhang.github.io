@@ -6,10 +6,23 @@
     <description>Recent content in 投资 on Zhang Jian&#39;s Homepage</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
-    <lastBuildDate>Thu, 02 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 09 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/%E6%8A%95%E8%B5%84/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>收益率和方差</title>
+      <link>/post/2020/04/09/%E8%82%A1%E7%A5%A8/</link>
+      <pubDate>Thu, 09 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/04/09/%E8%82%A1%E7%A5%A8/</guid>
+      <description>股票收益率、方差和相关性股价转换为日收益率画一下三个股票的价格趋势日收益率、月收益率计算计算所谓的收益率的均值计算累计收益率三个公司的年度收益率均值计算多个股票的方差-协方差矩阵股票收益率、方差和相关性股价转换为日收益率使用Tushare接口进行股价下载，此次我们选取三只保险类股票进行演示
+中国平安(601318.SH)中国人寿(601628.SH)中国太保(601601.SH)使用通用接口下载后复权的股票日数据,使用tidyverse，Tushare，tidyquant，DT包进行数据处理。
+pacman::p_load(Tushare,tidyverse,tidyquant,DT,anytime)api &amp;lt;- pro_api(token = &amp;#39;5adce34e8c81bf7085828754a8e09590c3630032d0f61aad6483eaaa&amp;#39;)bar &amp;lt;- pro_bar(token = &amp;#39;5adce34e8c81bf7085828754a8e09590c3630032d0f61aad6483eaaa&amp;#39;)调入api后，我们使用通用pro_bar接口读取三只股票的日数据，
+pingan &amp;lt;- bar(ts_code=&amp;#39;601318.SH&amp;#39;,start_date=&amp;quot;20140101&amp;quot;,end_date=&amp;#39;20200407&amp;#39;,adj=&amp;quot;qfq&amp;quot;)zgrs &amp;lt;- bar(ts_code=&amp;#39;601628.SH&amp;#39;,start_date=&amp;quot;20140101&amp;quot;,end_date=&amp;#39;20200407&amp;#39;,adj=&amp;quot;qfq&amp;quot;)zgtb &amp;lt;- bar(ts_code=&amp;#39;601601.SH&amp;#39;,start_date=&amp;quot;20140101&amp;quot;,end_date=&amp;#39;20200407&amp;#39;,adj=&amp;quot;qfq&amp;quot;)将三只股票日数据整理合并成一个数据集：这里使用rbind，进行所谓的行合并，类似于stata中的append，把表格变长
+df &amp;lt;- rbind(pingan,zgrs,zgtb)df &amp;lt;- df %&amp;gt;%select(ts_code, trade_date,close) %&amp;gt;% mutate(trade_date = as.Date(trade_date,format=&amp;quot;%Y%m%d&amp;quot;),close = as.</description>
+    </item>
     
     <item>
       <title>利用Tushare平台获取金融大数据</title>
