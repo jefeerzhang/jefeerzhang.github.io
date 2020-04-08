@@ -77,6 +77,17 @@
 <li>Return the count of how many numbers in the list are divisible by 10.</li>
 <li>first_func(c(0, 25, 30, 35, 40) 测试输出</li>
 </ol>
+<pre class="r"><code>first_func &lt;- function(num){
+  count = 0  # 初始化
+  for (i in num ){
+    if (i %% 10 == 0){
+      count = count +1 
+    }
+  }
+  return(count)
+}
+first_func(c(0, 25, 30, 35, 40))</code></pre>
+<pre><code>## [1] 3</code></pre>
 <hr />
 </div>
 <div id="greetings" class="section level3">
@@ -87,18 +98,40 @@
 <li>Return the new list containing the greetings.</li>
 <li>测试输出 sec_func(c(‘张’,‘李’,‘王’))</li>
 </ol>
+<pre class="r"><code>sec_func &lt;- function(names){
+  kong = c()
+  for(i in names){
+    k = paste(&quot;Hello, &quot;,i)
+    kong = append(kong,k)
+  }
+  return(kong)
+}
+sec_func(c(&#39;张&#39;,&#39;李&#39;,&#39;王&#39;))</code></pre>
+<pre><code>## [1] &quot;Hello,  张&quot; &quot;Hello,  李&quot; &quot;Hello,  王&quot;</code></pre>
 <hr />
 </div>
 <div id="delete-starting-even-numbers" class="section level3">
 <h3>3. Delete Starting Even Numbers</h3>
 <ol style="list-style-type: decimal">
-<li>Write a function called thrid_func() that has a parameter named lst</li>
+<li><p>Write a function called thrid_func() that has a parameter named lst</p></li>
 <li><p>The function should remove elements from the front of lst until the front of the list is not even. The function should then return lst.</p></li>
 <li><p>For example if lst started as [4, 8, 10, 11, 12, 15], then delete_starting_evens(lst) should return [11, 12, 15].</p></li>
 <li><p>Make sure your function works even if every element in the list is even!</p></li>
 <li><p>测试输出third_func(c(4, 8, 10, 11, 12, 15))和third_func(c(4,8,10))</p></li>
 </ol>
 <hr />
+<pre class="r"><code>third_func &lt;- function(lst){
+  for (i in lst){
+    if (i %% 2 == 0){
+      lst = lst[-1]
+    } else {break}
+  }
+  return(lst)
+}
+third_func(c(4, 8, 10, 11, 12, 15))</code></pre>
+<pre><code>## [1] 11 12 15</code></pre>
+<pre class="r"><code>third_func(c(4,8,10))</code></pre>
+<pre><code>## numeric(0)</code></pre>
 </div>
 <div id="odd-indices" class="section level3">
 <h3>4. Odd Indices</h3>
@@ -108,6 +141,17 @@
 <li>For example, fourth_func(c(4, 3, 7, 10, 11, -2)) should return the list c(4, 7, 11).</li>
 </ol>
 <hr />
+<pre class="r"><code>fourth_func&lt;-function(lst){
+  new_list = c()
+  for (i in seq(1:length(lst))){
+    if (i %% 2 != 0 ){
+      new_list = append(new_list,lst[i])
+    }
+  }
+  return(new_list)
+}
+fourth_func(c(4, 3, 7, 10, 11, -2))</code></pre>
+<pre><code>## [1]  4  7 11</code></pre>
 </div>
 <div id="exponents" class="section level3">
 <h3>5. Exponents</h3>
@@ -117,6 +161,17 @@
 <li>结果应该展示(2, 4, 8, 3, 9, 27, 4, 16, 64)</li>
 <li>It would first add two to the first. Then two to the second. Then two to the third, and so on.</li>
 </ol>
+<pre class="r"><code>firth &lt;- function(bases,powers) {
+  res = c()
+  for (i in bases){
+    for (j in powers){
+      res = append(res,i**j)
+    }
+  }
+  return(res)
+}
+firth(c(2,3,4),c(1,2,3))</code></pre>
+<pre><code>## [1]  2  4  8  3  9 27  4 16 64</code></pre>
 </div>
 </div>
 
