@@ -6,19 +6,31 @@
     <description>Recent content in Posts on Zhang Jian&#39;s Homepage</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
-    <lastBuildDate>Thu, 09 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 11 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>投资组合联合线模拟</title>
+      <title>构建投资组合与再平衡策略的实现</title>
+      <link>/post/2020/04/11/%E6%8A%95%E8%B5%84%E7%BB%84%E5%90%88%E7%9A%84%E6%94%B6%E7%9B%8A%E4%B8%8E%E5%86%8D%E5%B9%B3%E8%A1%A1%E7%AD%96%E7%95%A5/</link>
+      <pubDate>Sat, 11 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/04/11/%E6%8A%95%E8%B5%84%E7%BB%84%E5%90%88%E7%9A%84%E6%94%B6%E7%9B%8A%E4%B8%8E%E5%86%8D%E5%B9%B3%E8%A1%A1%E7%AD%96%E7%95%A5/</guid>
+      <description>目标下载原始数据计算投资组合的收益率、组合的方差组合的累计收益率(Cumulative portfolio returns)50-50投资组合下的再平衡展示思路再平衡的核心逻辑目标本次主要实现投资组合收益、累计收益、标准差、夏普比率的计算与实现。同时使用介绍再平衡策略在投资组合中的简单应用。主要接口、包及流程：使用Tushare下载原始资产数据；利用tidyquant、tidyverse、timetk对原始资产数据进行加工，使其满足教材所需经典条件；实现50-50的再平衡策略，测试月度再平衡和季度在平衡策略；回归投资组合基本思路投资组合收益率1.日收盘价转换为日收益率\[R_{t 2}=\frac{P_{t 2}-P_{t 1}}{P_{t 1}}\]
+2.日收益率转换为年度收益率，假设一天有252个交易日。周收益率和日收益率同理可得\[\text {平均年化收收益率}= (1 + R_t)^{252}-1\]
+3. 投资组合的收益率与方差(两资产)\[E\left(r_{P}\right)=w_{A} \cdot E\left(r_{A}\right)+w_{B} \cdot E\left(r_{B}\right)\]\[w_A+w_B=1\]\(w_A\)和\(w_B\)分别是事前投资与A资产与B资产的权重，\(E(r_A)\)和\(E(r_B)\)分别是A与B标的资产的历史期望收益率。
+两种资产组合的方差为：\[\begin{aligned}\sigma^{2}\left(r_{P}\right)=&amp;amp; w_{A}^{2} \sigma^{2}\left(r_{A}\right)+w_{B}^{2} \sigma^{2}\left(r_{B}\right)+2 w_{A} w_{B} \operatorname{Cov}\left(r_{A}, r_{B}\right)\end{aligned}\]</description>
+    </item>
+    
+    <item>
+      <title>投资组合联合线模拟——两资产、三资产</title>
       <link>/post/2020/04/09/%E6%8A%95%E8%B5%84%E7%BB%84%E5%90%88%E8%81%94%E5%90%88%E7%BA%BF%E6%A8%A1%E6%8B%9F/</link>
       <pubDate>Thu, 09 Apr 2020 00:00:00 +0000</pubDate>
       
       <guid>/post/2020/04/09/%E6%8A%95%E8%B5%84%E7%BB%84%E5%90%88%E8%81%94%E5%90%88%E7%BA%BF%E6%A8%A1%E6%8B%9F/</guid>
-      <description>参考我们ppt上案例，使用软件对两个不同的相关性程度进联合线模拟使用tidyver包绘图，DT包展示数据
-参考ppt给出我们想画的两个资产默认的均值、标准差，同时两资产默认相关系数为0可以自行调整函数参数函数编好，大家也可以自行测试pacman::p_load(tidyverse,DT)sqx &amp;lt;- function(w,r_a=0.1,r_b=0.04,sd_a=0.05,sd_b=0.1,rho=0){risk = sqrt(w^2*sd_a^2+(1-w)^2*sd_b^2+2*w*(1-w)*rho*sd_a*sd_b)mean = w*r_a+(1-w)*r_bres = tibble(mean=mean,risk=risk) return(res)}sqx(1.5)## # A tibble: 1 x 2## mean risk## &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;## 1 0.13 0.0901res_1 &amp;lt;- NULLfor (i in seq(-0.5,1.5,by=0.1)){res_1 = rbind(res_1,sqx(i))}res_1 %&amp;gt;% datatable(){&#34;x&#34;:{&#34;filter&#34;:&#34;none&#34;,&#34;data&#34;:[[&#34;1&#34;,&#34;2&#34;,&#34;3&#34;,&#34;4&#34;,&#34;5&#34;,&#34;6&#34;,&#34;7&#34;,&#34;8&#34;,&#34;9&#34;,&#34;10&#34;,&#34;11&#34;,&#34;12&#34;,&#34;13&#34;,&#34;14&#34;,&#34;15&#34;,&#34;16&#34;,&#34;17&#34;,&#34;18&#34;,&#34;19&#34;,&#34;20&#34;,&#34;21&#34;],[0.01,0.016,0.022,0.028,0.034,0.04,0.046,0.052,0.058,0.064,0.07,0.076,0.082,0.088,0.094,0.1,0.106,0.112,0.118,0.124,0.13],[0.152069063257456,0.14142135623731,0.130862523283024,0.120415945787923,0.110113577727726,0.1,0.0901387818865997,0.0806225774829855,0.0715891053163818,0.0632455532033676,0.0559016994374947,0.05,0.0460977222864644,0.0447213595499958,0.0460977222864645,0.05,0.0559016994374948,0.0632455532033676,0.0715891053163818,0.0806225774829855,0.0901387818865997]],&#34;container&#34;:&#34;\n \n \n  \n mean\n risk\n \n \n&#34;</description>
+      <description>两个资产的联合线的拟合三个资产有效投资域的拟合三个资产的思路两个资产的联合线的拟合参考我们ppt上案例，使用软件对两个不同的相关性程度进联合线模拟使用tidyver包绘图，DT包展示数据
+参考ppt给出我们想画的两个资产默认的均值、标准差，同时两资产默认相关系数为0可以自行调整函数参数函数编好，大家也可以自行测试pacman::p_load(tidyverse,DT)sqx &amp;lt;- function(w,r_a=0.1,r_b=0.04,sd_a=0.05,sd_b=0.1,rho=0){risk = sqrt(w^2*sd_a^2+(1-w)^2*sd_b^2+2*w*(1-w)*rho*sd_a*sd_b)mean = w*r_a+(1-w)*r_bres = tibble(mean=mean,risk=risk) return(res)}sqx(1.5)## # A tibble: 1 x 2## mean risk## &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;## 1 0.13 0.0901res_1 &amp;lt;- NULLfor (i in seq(-0.5,1.5,by=0.1)){res_1 = rbind(res_1,sqx(i))}res_1 %&amp;gt;% datatable(){&#34;</description>
     </item>
     
     <item>
@@ -141,7 +153,7 @@ library(tidyverse)library(sandwich)library(stargazer)library(lmtest)library(
       <pubDate>Sun, 22 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/post/2020/03/22/2020-03-22forecast/</guid>
-      <description>项目评估与管理——市场预测小组练习题本次题目我们使用全球最大的数据建模和数据分析竞赛平台kaggle为资料来源。具体使用2017年kaggle发布的一个Hourse price比赛项目作为我们的训练项目。截止提交日期 5月22日按照小组进行，使用方法不限。Learn What You Need！Test What You want to test！评分以小组为单位，重点考察大家分析数据、数据可视化、报告撰写等能力。每小组最终报告中推荐两名成员作为主要贡献者，进行加分。最后祝大家学习顺利！</description>
+      <description>项目评估与管理——市场预测小组练习题本次题目我们使用全球最大的数据建模和数据分析竞赛平台kaggle为资料来源。具体使用2017年kaggle发布的一个Hourse price比赛项目作为我们的训练项目。截止提交日期 5月22日数据链接按照小组进行，使用方法不限。Learn What You Need！Test What You want to test！评分以小组为单位，重点考察大家分析数据、数据可视化、报告撰写等能力。每小组最终报告中推荐两名成员作为主要贡献者，进行加分。最后祝大家学习顺利！</description>
     </item>
     
     <item>
@@ -225,6 +237,25 @@ three_p &amp;lt;- tribble(~x, ~y,0,0,9,12,-2,9)ggplot(three_p, aes(x = x, y 
       
       <guid>/post/2020/03/16/%E5%88%A9%E7%8E%87%E7%BB%83%E4%B9%A02/</guid>
       <description>题目背景你面临如下投资决策，现在支出70000万，投资期限为5年，每年的回报率为1万，现在的利率为5%，5年后投资结束，回收45000元，请问你是否应该参与这项投资？#首先加载包pacman::p_load(tidyverse,DT,ggforce,ggthemes)#建立现金流cf &amp;lt;- tribble(~year, ~cf,0,-70000,1,10000,2,10000,3,10000,4,10000,5,55000)r &amp;lt;- 0.05cf %&amp;gt;%mutate(pv =cf/(1+r)^year) %&amp;gt;% datatable(rownames = F,caption = &amp;#39;这项投资的现金流表&amp;#39;,colnames = c(&amp;#39;年份&amp;#39;,&amp;#39;现金流&amp;#39;,&amp;#39;现值&amp;#39;)){&#34;x&#34;:{&#34;filter&#34;:&#34;none&#34;,&#34;caption&#34;:&#34;这项投资的现金流表&#34;,&#34;data&#34;:[[0,1,2,3,4,5],[-70000,10000,10000,10000,10000,55000],[-70000,9523.80952380952,9070.2947845805,8638.37598531476,8227.02474791882,43093.9391557652]],&#34;container&#34;:&#34;\n \n \n 年份\n 现金流\n 现值\n \n \n&#34;,&#34;options&#34;:{&#34;columnDefs&#34;:[{&#34;className&#34;:&#34;dt-right&#34;,&#34;targets&#34;:[0,1,2]}],&#34;order&#34;:[],&#34;autoWidth&#34;:false,&#34;orderClasses&#34;:false}},&#34;evals&#34;:[],&#34;jsHooks&#34;:[]}#计算npvnpv &amp;lt;- cf %&amp;gt;%mutate(pv =cf/(1+r)^year) %&amp;gt;% select(pv) %&amp;gt;%sum()if (npv&amp;gt;0){paste(&amp;quot;该项的npv为：&amp;quot;,npv,&amp;#39;,可行！&amp;#39;)}else {paste(&amp;quot;该项的npv为：&amp;quot;,npv,&amp;#39;,不可行！&amp;#39;)}## [1] &amp;quot;该项的npv为： 8553.44419738884 ,可行！&amp;quot;真实利率计算，名义利率为4%，计算半年计息，月度计息的真实利率,我们知道有一个公式\[(1+sr/n)^n=1+r\]</description>
+    </item>
+    
+    <item>
+      <title>是否应该购买保险——IRR的一个实例</title>
+      <link>/post/2020/03/11/%E6%98%AF%E5%90%A6%E5%BA%94%E8%AF%A5%E8%B4%AD%E4%B9%B0%E4%BF%9D%E9%99%A9-irr%E7%9A%84%E4%B8%80%E4%B8%AA%E5%AE%9E%E4%BE%8B/</link>
+      <pubDate>Wed, 11 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/03/11/%E6%98%AF%E5%90%A6%E5%BA%94%E8%AF%A5%E8%B4%AD%E4%B9%B0%E4%BF%9D%E9%99%A9-irr%E7%9A%84%E4%B8%80%E4%B8%AA%E5%AE%9E%E4%BE%8B/</guid>
+      <description>题目对结果的和代码的探讨题目小张打算给自己刚出生的孩子购买保险产品，该产品规定从0岁起投保人每年年初支付保险费6000元，共10次。从支付保险费的次年起，保险公司每2年年末返还一次收益，每次3000元。在孩子60岁时再一次性支付200000元养老费。请计算这笔保险的IRR，并给出自己的判断和理解。#调用两个包library(tidyverse)library(jrvFinance)library(DT)# 建立一个dataframe，利用tidyverse进行数据清理cf &amp;lt;- tibble(period= 0:60,exp = 0)cf &amp;lt;- cf %&amp;gt;%mutate(exp = if_else(period %in% seq(0,9),-6000,0)) %&amp;gt;%mutate(income = if_else(period %in% seq(3,60,by = 2),3000,0))cf[61,&amp;quot;income&amp;quot;] &amp;lt;- 200000#我是这么去给最后一期赋值的，如果同学们有更好的方法可以交流修改#展示一下现金流cf %&amp;gt;%mutate(pmt = exp+income) %&amp;gt;%datatable(rownames = F, caption = &amp;quot;该保险的现金流&amp;quot;,colnames = c(&amp;#39;年份&amp;#39;,&amp;#39;支出&amp;#39;,&amp;#39;收益&amp;#39;,&amp;#39;净收益&amp;#39;)){&#34;x&#34;:{&#34;filter&#34;:&#34;none&#34;,&#34;caption&#34;:&#34;该保险的现金流&#34;,&#34;data&#34;:[[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60],[-6000,-6000,-6000,-6000,-6000,-6000,-6000,-6000,-6000,-6000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,200000],[-6000,-6000,-6000,-3000,-6000,-3000,-6000,-3000,-6000,-3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,0,3000,200000]],&#34;container&#34;:&#34;\n \n \n 年份\n 支出\n 收益\n 净收益\n \n \n&#34;</description>
+    </item>
+    
+    <item>
+      <title>利率及中国常见利率展示</title>
+      <link>/post/2020/03/09/%E5%88%A9%E7%8E%87%E5%8F%8A%E4%B8%AD%E5%9B%BD%E5%B8%B8%E8%A7%81%E5%88%A9%E7%8E%87%E5%B1%95%E7%A4%BA/</link>
+      <pubDate>Mon, 09 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/03/09/%E5%88%A9%E7%8E%87%E5%8F%8A%E4%B8%AD%E5%9B%BD%E5%B8%B8%E8%A7%81%E5%88%A9%E7%8E%87%E5%B1%95%E7%A4%BA/</guid>
+      <description>R中安装包和调用包——jrvFinance介绍如何计算NPV和IRR中国重要利率的趋势图R中安装包和调用包——jrvFinance1. R或python之所以强大是应为包多，包多干的事就多。安装和调用包非常简单，在Rstudio里直接使用右边的Packages对包进行管理，用鼠标就能完成。使用代码安装install.packages(‘包的名字’)，不过我还是建议在Rstudio里直接点击安装。我们先安装一个现代R里最重要的一个套包，安装前请同学们调整好自己tools菜单，option选项里安装镜像站点的位置。调用包也非常简单，直接使用library()加包的名字，每次运行脚本时都需要把重要的包调用，首当其冲的肯定是tidyverse包,当然也可以使用pacman包对调用包进行集中管理。#install.packages(&amp;quot;tidyverse&amp;quot;)pacman::p_load(tidyverse)接下来我们可以安装一个和我们接下来课程相关的金融包,代码前我加了一个“#”代表这条被注释了，大家可以用快捷键ctrl+shift+c进行注释或取消注释。
+#install.packages(&amp;quot;jrvFinance&amp;quot;) pacman::p_load(jrvFinance)介绍如何计算NPV和IRR接下来先给大家展示一下jrvFinance包的简单用法,计算一系列现金流的PV，计算一个5年的现金流，贴现率为0.05，现金流分别为100,200,400，300,200#library(jrvFinance) #先调入包# 我们现在只做最基本的演示，其他包可以不用调入pv &amp;lt;- npv(cf = c(100,200,400,300,200),rate =0.05,immediate.start=T ) ## 注意最后这个参数，上课是讲一下paste(&amp;#39;我们要计算的现值是:&amp;#39;,pv)## [1] &amp;quot;我们要计算的现值是: 1076.97975637723&amp;quot;如果要计算IRR，也可以使用jrvFinance这个包，同样假设一系列现金流，0期支付200，后续每年回报80，持续4年，问这一组现金流的IRR是多少？#library(jrvFinance) #如果你前面一个框框里调入了jrvFinance，也没有必要再次调入了irr &amp;lt;- irr(cf=c(-200,80,80,80,80))paste(&amp;quot;我们要计算的IRR是：&amp;quot;,irr)## [1] &amp;quot;我们要计算的IRR是： 0.218622696098342&amp;quot;#嗯，确实非常简单如果不用包，如何计算npv？下面直接写一下，按照公式很简单的也能得到，我们将使用tribble函数建立一个DataFrame（数据框）后面有机会和大家详细讲一下数据框和所谓的tidy data。这里的语法大家可能有点困惑，不过熟悉以后就会觉得非常直观。#library(tidyverse)# 我们使用tribble函数cf &amp;lt;- tribble(~Year,~cash_flow,1,100,2,300,3,200,4,1000)cf## # A tibble: 4 x 2## Year cash_flow## &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;## 1 1 100## 2 2 300## 3 3 200## 4 4 1000# 给定贴现率r=0.</description>
     </item>
     
   </channel>
