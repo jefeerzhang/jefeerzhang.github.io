@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>使用矩阵对ols进行估计 | Zhang Jian&#39;s Homepage</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">首页</a></li>
+      
+      <li><a href="/cv/">CV</a></li>
+      
+      <li><a href="/categories/">分类</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/index.xml">订阅</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">使用矩阵对ols进行估计</span></h1>
+<h2 class="author">张剑</h2>
+<h2 class="date">2020/03/28</h2>
+
+<p class="terms">
+    
+    
+    Categories:
+    
+    <a href='/categories/%E8%AE%A1%E9%87%8F'>计量</a>
+    
+    
+    
+    
+    Tags:
+    
+    <a href='/tags/r'>R</a>
+    
+    
+    
+  </p>
+
+</div>
+
+<main>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#矩阵形式计算多元ols估计系数标准误等">矩阵形式计算多元OLS估计系数，标准误等</a></li>
+<li><a href="#使用计量经济学导论的一个例子进行验证">使用<span>计量经济学导论</span>的一个例子进行验证</a></li>
+</ul>
+</div>
+
+<div id="矩阵形式计算多元ols估计系数标准误等" class="section level3">
+<h3>矩阵形式计算多元OLS估计系数，标准误等</h3>
+<div id="显然我们有" class="section level4">
+<h4>显然我们有：</h4>
+<p><span class="math display">\[\hat{\boldsymbol{\beta}}=\left(\mathbf{X}^{\prime} \mathbf{X}\right)^{-1} \mathbf{X}^{\prime} \mathbf{y}\]</span></p>
+</div>
+<div id="同时我们有" class="section level4">
+<h4>同时我们有：</h4>
+<p><span class="math display">\[\hat{\mathbf{u}}=\mathbf{y}-\mathbf{X} \hat{\boldsymbol{\beta}}\]</span></p>
+</div>
+<div id="于是乎我们又有" class="section level4">
+<h4>于是乎我们又有：</h4>
+<p><span class="math display">\[\hat{\sigma}^{2}=\frac{1}{n-k-1} \hat{\mathbf{u}}^{\prime} \hat{\mathbf{u}}\]</span></p>
+</div>
+<div id="最后我们有" class="section level4">
+<h4>最后我们有；</h4>
+<p><span class="math display">\[\widehat{\operatorname{Var}(\hat{\boldsymbol{\beta}})}=\hat{\sigma}^{2}\left(\mathbf{X}^{\prime} \mathbf{X}\right)^{-1}\]</span></p>
+</div>
+<div id="然后就可以sqrt得到se了" class="section level4">
+<h4>然后就可以sqrt得到se了</h4>
+<hr />
+</div>
+</div>
+<div id="使用计量经济学导论的一个例子进行验证" class="section level3">
+<h3>使用<a href="https://item.jd.com/12440962.html">计量经济学导论</a>的一个例子进行验证</h3>
+<p>模型：
+<span class="math display">\[lwage_i=\beta_0+\beta_1educ_i+\beta_2exper_i+\beta_3tenure+\mu_i\]</span></p>
+<pre class="r"><code>pacman::p_load(tidyverse,wooldridge,stargazer,equatiomatic)
+wage1 &lt;- wooldridge::wage1
+res1 &lt;- lm(lwage~educ+exper+tenure,data=wage1)
+
+stargazer(res1,type = &#39;text&#39;)</code></pre>
+<pre><code>## 
+## ===============================================
+##                         Dependent variable:    
+##                     ---------------------------
+##                                lwage           
+## -----------------------------------------------
+## educ                         0.092***          
+##                               (0.007)          
+##                                                
+## exper                         0.004**          
+##                               (0.002)          
+##                                                
+## tenure                       0.022***          
+##                               (0.003)          
+##                                                
+## Constant                     0.284***          
+##                               (0.104)          
+##                                                
+## -----------------------------------------------
+## Observations                    526            
+## R2                             0.316           
+## Adjusted R2                    0.312           
+## Residual Std. Error      0.441 (df = 522)      
+## F Statistic           80.391*** (df = 3; 522)  
+## ===============================================
+## Note:               *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
+<pre class="r"><code>stargazer(res1,type=&#39;text&#39;)</code></pre>
+<pre><code>## 
+## ===============================================
+##                         Dependent variable:    
+##                     ---------------------------
+##                                lwage           
+## -----------------------------------------------
+## educ                         0.092***          
+##                               (0.007)          
+##                                                
+## exper                         0.004**          
+##                               (0.002)          
+##                                                
+## tenure                       0.022***          
+##                               (0.003)          
+##                                                
+## Constant                     0.284***          
+##                               (0.104)          
+##                                                
+## -----------------------------------------------
+## Observations                    526            
+## R2                             0.316           
+## Adjusted R2                    0.312           
+## Residual Std. Error      0.441 (df = 522)      
+## F Statistic           80.391*** (df = 3; 522)  
+## ===============================================
+## Note:               *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
+<div id="接下来矩阵形式计算" class="section level4">
+<h4>接下来矩阵形式计算</h4>
+<pre class="r"><code>df &lt;- wage1 %&gt;% select(lwage,educ,exper,tenure) %&gt;% drop_na()
+n &lt;- nrow(df)
+k &lt;- 3 # k是控制变量数量，就是为了计算n-k-1
+y &lt;- df$lwage
+x &lt;- cbind(1,df$educ,df$exper,df$tenure)
+bhat &lt;- solve(t(x) %*% x ) %*% t(x) %*% y
+bhat</code></pre>
+<pre><code>##             [,1]
+## [1,] 0.284359541
+## [2,] 0.092028988
+## [3,] 0.004121109
+## [4,] 0.022067218</code></pre>
+<pre class="r"><code>uhat &lt;- y - x %*% bhat
+head(uhat,5)</code></pre>
+<pre><code>##             [,1]
+## [1,] -0.17351850
+## [2,] -0.34793289
+## [3,] -0.20630832
+## [4,] -0.02804286
+## [5,]  0.20601725</code></pre>
+<pre class="r"><code>sigsqhat &lt;- as.numeric(t(uhat) %*% uhat/(n-k-1))
+vbetahat &lt;- sigsqhat * solve(t(x) %*% x)  
+se &lt;- sqrt(diag(vbetahat))
+se</code></pre>
+<pre><code>## [1] 0.104190379 0.007329923 0.001723277 0.003093649</code></pre>
+</div>
+<div id="结果是一致的" class="section level4">
+<h4>结果是一致的</h4>
+</div>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+  
+  <hr/>
+  © <a href="https://jjxy.sicau.edu.cn/content.jsp?urltype=news.NewsContentUrl&amp;wbtreeid=1022&amp;wbnewsid=3019">张剑</a>  2018 &ndash; 2020 | <a href="https://gitee.com/jefeerzhang">Gitee</a>
+  
+  </footer>
+  </body>
+</html>
+
