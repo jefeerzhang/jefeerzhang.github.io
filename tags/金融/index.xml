@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>金融 on Zhang Jian&#39;s Homepage</title>
+    <link>/tags/%E9%87%91%E8%9E%8D/</link>
+    <description>Recent content in 金融 on Zhang Jian&#39;s Homepage</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Sat, 21 Mar 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/%E9%87%91%E8%9E%8D/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>IRR,SPOT RATE AND YTM</title>
+      <link>/post/2020/03/21/irr-spot-rate-and-ytm/</link>
+      <pubDate>Sat, 21 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/03/21/irr-spot-rate-and-ytm/</guid>
+      <description>关于IRR,Spot Rate 和YTM的再解释目标：为一组现金流进行定价，即求其现值方法一：
+</description>
+    </item>
+    
+  </channel>
+</rss>

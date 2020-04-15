@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tidy Data到底是什么？能干什么？ | Zhang Jian&#39;s Homepage</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">首页</a></li>
+      
+      <li><a href="/cv/">CV</a></li>
+      
+      <li><a href="/categories/">分类</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/index.xml">订阅</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">Tidy Data到底是什么？能干什么？</span></h1>
+<h2 class="author">张剑</h2>
+<h2 class="date">2020/04/08</h2>
+
+<p class="terms">
+    
+    
+    Categories:
+    
+    <a href='/categories/%E6%8A%95%E8%B5%84%E5%AD%A6'>投资学</a>
+    
+    
+    
+    
+    Tags:
+    
+    <a href='/tags/r'>R</a>
+    
+    
+    
+  </p>
+
+</div>
+
+<main>
+
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/jquery/jquery.min.js"></script>
+<link href="/rmarkdown-libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/datatables-binding/datatables.js"></script>
+<link href="/rmarkdown-libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="/rmarkdown-libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/dt-core/js/jquery.dataTables.min.js"></script>
+<link href="/rmarkdown-libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/crosstalk/js/crosstalk.min.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#什么是所谓的tidy-data">## 什么是所谓的“Tidy Data”</a><ul>
+<li><a href="#tidy-data到底有什么用">Tidy data到底有什么用？</a></li>
+<li><a href="#tidy-data才能进行画图">Tidy Data才能进行画图</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="什么是所谓的tidy-data" class="section level2">
+<h2>## 什么是所谓的“Tidy Data”</h2>
+<p><img src="https://img.shields.io/badge/Tidy%20-Data-brightgreen" /></p>
+<div id="tidy-data-is-a-standard-way-of-mapping-the-meaning-of-a-dataset-to-its-structure.-a-dataset-is-messy-or-tidy-depending-on-how-rows-columns-and-tables-are-matched-up-with-observations-variables-and-types." class="section level4">
+<h4>“Tidy” data is a standard way of mapping the meaning of a dataset to its structure. A dataset is messy or tidy depending on how rows, columns and tables are matched up with observations, variables and types.</h4>
+<blockquote>
+<p>我就不翻译了，Tidy data的三个特征。</p>
+</blockquote>
+<ol style="list-style-type: decimal">
+<li><p>每个变量（特征）是一列；</p></li>
+<li><p>每个观测值是一行；</p></li>
+<li><p>Each type of observational unit forms a table.</p></li>
+</ol>
+<p><img src="/post/2020-04-08-tidy-data_files/Snipaste_2020-04-08_15-06-17.png" /></p>
+</div>
+<div id="tidy-data到底有什么用" class="section level3">
+<h3>Tidy data到底有什么用？</h3>
+<div id="一个具体的例子如果我有这样的数据希望画下面的图怎么实现" class="section level4">
+<h4>一个具体的例子，如果我有这样的数据，希望画下面的图，怎么实现？</h4>
+<pre class="r"><code>pacman::p_load(tidyverse,nycflights13,fivethirtyeight,DT)
+drinks_smaller &lt;- drinks %&gt;% 
+  filter(country %in% c(&quot;USA&quot;, &quot;China&quot;, &quot;Italy&quot;, &quot;Saudi Arabia&quot;)) %&gt;% 
+  select(-total_litres_of_pure_alcohol) %&gt;% 
+  rename(beer = beer_servings, spirit = spirit_servings, wine = wine_servings)
+drinks_smaller %&gt;% datatable()</code></pre>
+<div id="htmlwidget-1" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"filter":"none","data":[["1","2","3","4"],["China","Italy","Saudi Arabia","USA"],[79,85,0,249],[192,42,5,158],[8,237,0,84]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>country<\/th>\n      <th>beer<\/th>\n      <th>spirit<\/th>\n      <th>wine<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="如果我们使用刚才的数据结构能否画出下面的图呢" class="section level4">
+<h4>如果我们使用刚才的数据结构，能否画出下面的图呢？？</h4>
+<p><img src="/post/2020-04-08-tidy-data_files/Snipaste_2020-04-08_15-14-32.png" /></p>
+</div>
+<div id="显然使用drinks_smaller这个数据结构是没有办法画出这个图" class="section level4">
+<h4>显然使用drinks_smaller这个数据结构是没有办法画出这个图。</h4>
+<blockquote>
+<p>上面的数据结构不符Tidy Data的基本要求，Tidy Data的要求是每一行是一个观测值，显然这个数据一行包含了中国，啤酒、烈酒、红酒的消费数量。我们的想法是把数据转换为每一行是各个国家各类酒的消费量。</p>
+</blockquote>
+<blockquote>
+<p>我们进行转换，将数据转换为tidy data</p>
+</blockquote>
+<pre class="r"><code>drinks_smaller_tidy &lt;- drinks_smaller %&gt;% 
+  pivot_longer(names_to = &quot;type&quot;, 
+               values_to = &quot;servings&quot;, 
+               cols = -country)
+drinks_smaller_tidy %&gt;% datatable()</code></pre>
+<div id="htmlwidget-2" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12"],["China","China","China","Italy","Italy","Italy","Saudi Arabia","Saudi Arabia","Saudi Arabia","USA","USA","USA"],["beer","spirit","wine","beer","spirit","wine","beer","spirit","wine","beer","spirit","wine"],[79,192,8,85,42,237,0,5,0,249,158,84]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>country<\/th>\n      <th>type<\/th>\n      <th>servings<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":3},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div id="tidy-data才能进行画图" class="section level3">
+<h3>Tidy Data才能进行画图</h3>
+<div id="有了tidy-data我们就可以画出我们需要的图" class="section level4">
+<h4>有了tidy data我们就可以画出我们需要的图</h4>
+<pre class="r"><code>ggplot(drinks_smaller_tidy, aes(x = country, y = servings, fill = type)) +
+  geom_col(position = &quot;dodge&quot;)</code></pre>
+<p><img src="/post/2020-04-08-tidy-data_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="我们会经常使用长宽数据进行转换pivot命令的帮助链接" class="section level4">
+<h4>我们会经常使用长宽数据进行转换，pivot命令的帮助<a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">链接</a>。</h4>
+<p>这个命令有几个重要的参数：</p>
+<ol style="list-style-type: decimal">
+<li><p>data：指明是那个数据库。</p></li>
+<li><p>cols: 那些列要进行长宽转换看用选择也可以用“-”负号排除某些行，剩余行都是选进来的。</p></li>
+<li><p>names_to：转换后新的类型变量的名字，这里面实际上把原来的列变量的名字转换为了观测值的指标。</p></li>
+<li><p>values_to：转换后的值变量的名字，这下面是存储数值的。</p></li>
+</ol>
+</div>
+</div>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+  
+  <hr/>
+  © <a href="https://jjxy.sicau.edu.cn/content.jsp?urltype=news.NewsContentUrl&amp;wbtreeid=1022&amp;wbnewsid=3019">张剑</a>  2018 &ndash; 2020 | <a href="https://gitee.com/jefeerzhang">Gitee</a>
+  
+  </footer>
+  </body>
+</html>
+
