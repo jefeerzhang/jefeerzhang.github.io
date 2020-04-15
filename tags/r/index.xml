@@ -6,10 +6,22 @@
     <description>Recent content in R on Zhang Jian&#39;s Homepage</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
-    <lastBuildDate>Sat, 11 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 15 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>投资组合优化——以A股五个资产为例</title>
+      <link>/post/2020/04/15/%E6%8A%95%E8%B5%84%E7%BB%84%E5%90%88%E4%BC%98%E5%8C%96/</link>
+      <pubDate>Wed, 15 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/04/15/%E6%8A%95%E8%B5%84%E7%BB%84%E5%90%88%E4%BC%98%E5%8C%96/</guid>
+      <description>投资组合优化基本理论和思路A股数据模拟使用模拟方法寻找5个资产中的最小方差与最大夏普比率的投资组合投资组合优化基本理论和思路在均值方差分析框架下，投资组合优化的目标可以由一下两个等同(对偶)的目标进行描述给定一定的收益率，投资组合的方差（风险最小）给定一定的风险，投资组合的收益大如果是三个资产，上述过程可以用数学表示为：\[\begin{aligned}&amp;amp;\min _{w_{1}, w_{2}, m_{3}} w_{1}^{2} \sigma_{1}^{2}+w_{2}^{2} \sigma_{2}^{2}+w_{3}^{2} \sigma_{3}^{2}\\&amp;amp;\text { s.t. } \quad w_{1} \bar{r}_{1}+w_{2} \bar{r}_{2}+w_{3} \bar{r}_{3}=\bar{r}\\&amp;amp;w_{1}+w_{2}+w_{3}=1\end{aligned}\]
+给出拉格朗日函数及其一阶条件：\[L=w_{1}^{2} \sigma_{1}^{2}+w_{2}^{2} \sigma_{2}^{2}+w_{3}^{2} \sigma_{3}^{2}+\lambda\left[w_{1} \bar{r}_{1}+w_{2} \bar{r}_{2}+w_{3} \bar{r}_{3}-\bar{r}\right]+\mu\left[w_{1}+w_{2}+w_{3}-1\right]\]
+\[\frac{\partial \mathcal{L}}{\partial w_{i}}=0 \Rightarrow 2 \sigma_{i}^{2} w_{i}+\lambda \bar{r}_{i}+\mu=0\]
+我们可以对任意的 \(\bar r\) 计算出最优的组合权重，有了对应权重，我们可以计算出对应不同的\(\bar r\)最优的权重，以及最优权重对应的投资组合的收益和标准差。将这些最优的投资组合的收益——标准差(有了收益和标准差就有了一个点),将这些点连接成线，就可以得到投资组合的有效边界。这个问题由变成了一个数学优化问题，我们继续以A股5中资产，2014年1月1日至2020年4月7日的月度收益率为基准，演示一系列投资组合优化问题。</description>
+    </item>
     
     <item>
       <title>构建投资组合与再平衡策略的实现</title>
@@ -24,12 +36,12 @@
     </item>
     
     <item>
-      <title>投资组合联合线模拟——两资产、三资产</title>
+      <title>投资组合有效前沿——模拟与真实数据</title>
       <link>/post/2020/04/09/%E6%8A%95%E8%B5%84%E7%BB%84%E5%90%88%E8%81%94%E5%90%88%E7%BA%BF%E6%A8%A1%E6%8B%9F/</link>
       <pubDate>Thu, 09 Apr 2020 00:00:00 +0000</pubDate>
       
       <guid>/post/2020/04/09/%E6%8A%95%E8%B5%84%E7%BB%84%E5%90%88%E8%81%94%E5%90%88%E7%BA%BF%E6%A8%A1%E6%8B%9F/</guid>
-      <description>两个资产的联合线的拟合三个资产有效投资域的拟合三个资产的思路两个资产的联合线的拟合参考我们ppt上案例，使用软件对两个不同的相关性程度进联合线模拟使用tidyver包绘图，DT包展示数据
+      <description>两个资产的联合线的拟合三个资产有效投资域的拟合三个资产的思路利用真实A股数据，构建投资有效边界，利用真实数据时，注意剔除那些方差过大的数据，这里限制在1两个资产的联合线的拟合参考我们ppt上案例，使用软件对两个不同的相关性程度进联合线模拟使用tidyver包绘图，DT包展示数据
 参考ppt给出我们想画的两个资产默认的均值、标准差，同时两资产默认相关系数为0可以自行调整函数参数函数编好，大家也可以自行测试pacman::p_load(tidyverse,DT)sqx &amp;lt;- function(w,r_a=0.1,r_b=0.04,sd_a=0.05,sd_b=0.1,rho=0){risk = sqrt(w^2*sd_a^2+(1-w)^2*sd_b^2+2*w*(1-w)*rho*sd_a*sd_b)mean = w*r_a+(1-w)*r_bres = tibble(mean=mean,risk=risk) return(res)}sqx(1.5)## # A tibble: 1 x 2## mean risk## &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;## 1 0.13 0.0901res_1 &amp;lt;- NULLfor (i in seq(-0.5,1.5,by=0.1)){res_1 = rbind(res_1,sqx(i))}res_1 %&amp;gt;% datatable(){&#34;</description>
     </item>
     
