@@ -1,177 +1,205 @@
-library(Quandl)
-library(jrvFinance)
-duration(cf=c(100,250,300), rate=5e-2)
-duration(cf=c(100,250,300),rate = 3e-2,modified = T)
-bond.yield(settle="2012-04-15", mature="2022-01-01", coupon=8e-2,
-           price=95) 
-bond.duration(settle="2012-04-15", mature="2022-01-01", coupon=8e-2,
-              yield=8.8843e-2, modified=TRUE)
+library(stargazer)
+data(mtcars)
+lm1 <- lm(mpg ~ cyl, data = mtcars)
+lm2 <- lm(mpg ~ cyl + hp, data = mtcars)
 
-bond.prices(settle="2012-01-01", mature=c("2022-01-01", "2032-01-01"),
-            coupon=c(0.09, 0.08,0.07,0.06), yield=0.10)
-bond.yields(settle="2012-01-01", mature=c("2022-01-01", "2032-01-01"),
-            coupon=c(0.09, 0.08,0.07,0.06),
-            price=c(94, 83, 81, 65))
 
-pacman::p_load(tidyverse,tidyquant,ggfortify,plotly)
-baoxian <- tq_get(c('601318.ss','601628.ss'),get='stock.prices',from='2010-01-01')
+library(huxtable)
+library(magrittr)
+huxreg(lm1, lm2,
+       coefs=c('Cylinders' = 'cyl',
+               'Horsepower' = 'hp')) %>%
+  # We can send it to the screen to view it instantly
+  print_screen()
 
-baoxian <- baoxian  %>% pivot_wider(names_from = symbol,values_from = value)
 
-ggplot(baoxian) +
-  geom_point(aes(x=date,y=`601318.ss`,color='red'))+geom_line(aes(x=date,y=`601318.ss`,color='red'))+
-  geom_point(aes(x=date,y=`601628.ss`))+
-  theme_bw()
-
-p <- ggplot(pingan,aes(x=date,y=value))+geom_point()+geom_line(color='blue')+
-  theme_bw() + ggtitle('中国平安分红')
-fig <- ggplotly(p)
-fig
-
-pacman::p_load(tidyverse,wooldridge,broom,estimatr,stargazer,equatiomatic,performance)
-res1 <- lm(lwage~educ+exper+tenure,data=wage1)
-extract_eq(res1)
-check_model(res1)
-extract_eq(res1, use_coefs = TRUE)
-  tidy(res1)
-fit_2  <- lm_robust(lwage~educ+exper+tenure,data=wage1,se_type = 'stata')
-tidy(res2)
-stargazer(res1, se = starprep(res1, se_type = 'stata' ),type = 'text')
+huxreg(lm1, lm2,
+       coefs=c('Cylinders' = 'cyl',
+               'Horsepower' = 'hp')) %>%
+  # Let's make an HTML file
+  quick_html(file = 'my_reg_output.rtf')
 
 
 
-pacman::p_load(tidyverse,wooldridge,stargazer,equatiomatic)
-wage1 <- wooldridge::wage1
-res1 <- lm(lwage~educ+exper+tenure,data=wage1)
+pacman::p_load(tidyquant,tidyverse,timetk,Tushare,plotly,DT ) #掉包，使用pacman可以一次调完
 
-stargazer(res1,type = 'text')
-df <- wage1 %>% select(lwage,educ,exper,tenure) %>% drop_na()
-n <- nrow(df)
-k <- 3
-y <- df$lwage
-x <- cbind(1,df$educ,df$exper,df$tenure)
-bhat <- solve(t(x) %*% x ) %*% t(x) %*% y
-bhat
-uhat <- y - x %*% bhat
-head(uhat,5)
-sigsqhat <- as.numeric(t(uhat) %*% uhat/(n-k-1))
-vbetahat <- sigsqhat * solve(t(x) %*% x)  
-se <- sqrt(diag(vbetahat))
-se
+options(scipen = 100) 
+options(digits = 3) 
 
+api <- pro_api(token = '5adce34e8c81bf7085828754a8e09590c3630032d0f61aad6483eaaa')
+bar <- pro_bar(token = '5adce34e8c81bf7085828754a8e09590c3630032d0f61aad6483eaaa')
 
+ZS <- api(api_name = 'index_basic',market = 'SSE')
+ZS[str_which(ZS$ts_code,'000905'),]  # 找到000905的具体ts_code
 
+# 下面为读取数据
+zz500 <- api(api_name = 'index_daily',ts_code='000905.SH',start_date="20140101",
+             end_date='20200407') 
 
+pingan <- bar(ts_code='601318.SH',start_date="20140101",
+              end_date='20200407',adj="qfq")
+zgrs <- bar(ts_code='601628.SH',start_date="20140101",
+            end_date='20200407',adj="qfq")
+zgtb <- bar(ts_code='601601.SH',start_date="20140101",
+            end_date='20200407',adj="qfq")
+gsyh <- bar(ts_code='601398.SH',start_date="20140101",
+            end_date='20200407',adj="qfq")
 
+df <- rbind(pingan,zgrs,zgtb,gsyh,zz500) # 合并数据
 
-#测试一个动图命令
-pacman::p_load(fivethirtyeight,tidyverse,nycflights13,ggthemes,
-               gapminder,skimr,moderndive,scales)
+fun1 <- function(){
+stock_long <- df %>%  # 数据处理，选择三列，将交易日转换为时间类型，收盘价转换为数值型
+  select(ts_code, trade_date,close) %>% 
+  mutate(trade_date = as.Date(trade_date,format="%Y%m%d"),close = as.numeric(close))
+}
 
-gapminder_s <- gapminder %>%
-  select(lifeExp, continent, gdpPercap,year)
-gapminder_s %>% skim()
+library(tidyfst)
+fun2 <- function(){
+stock <- df %>% 
+  select_dt(ts_code, trade_date,close) %>%
+  mutate_dt(trade_date = as.Date(trade_date,format="%Y%m%d"),close = as.numeric(close))
+}
 
-# gapminder_s <- gapminder_s %>%
-#   group_by(continent,year) %>%
-#   summarise(mean_gdp = mean(gdpPercap),mean_life = mean(lifeExp))
-
-gapminder_s
-library(barRacer)
-
-bar_chart_race(gapminder_s,cat_col = continent,val_col = mean_life,time_col = year,fps=10,width=600,height=800,duration=10,title = "中文")
-
-gap_tidy <- gapminder_s %>%
-  mutate(lifeExp = scale(lifeExp),gdpPercap= scale(gdpPercap)) %>%
-  group_by(continent) %>%
-  summarise(avglife=mean(lifeExp),avggdp=mean(gdpPercap))%>%
-  pivot_longer(col=-continent,names_to = 'name',values_to = 'value')
-
-gap_tidy
+library(microbenchmark)
+res <-microbenchmark(fun1(),fun2(),times = 1000)
+res
+autoplot(res) + theme_bw() + ggtitle('性能差异')
+  
 
 
-p <- gap_tidy %>%
-  ggplot(aes(x=continent,y=value,fill=name))+geom_col( position = position_dodge2()) +
-  tidyquant::theme_tq() +tidyquant::scale_fill_tq()
-
-
-library(gganimate)
-aim <- p +
-  transition_states(continent,1,1,wrap = F) + ease_aes('cubic-in-out') +
-  ggtitle('2007年{closest_state}') + enter_fade() +exit_shrink()
-
-aim
-
-
-
-evals_ch6
-evals_ch6 %>% sample_n(size = 5)
-
-evals_ch6 %>% select(score, age, gender) %>% skim()
-library(wooldridge)
-data(affairs)
-affairs <- as_tibble(affairs)
-?affairs
-affairs %>% skim()
-affairs <- affairs %>%
-  select(affair,educ,occup,age,male,vryhap,hapavg,unhap) %>%
-  mutate(male= as.factor(male))
-affairs %>% get_correlation(formula = affair~educ)
-
-
-
-evals_ch6 <- evals %>%
-  select(ID, score, age, gender)
-
-p1<-ggplot(evals_ch6, aes(x = age, y = score, color = gender)) +
-  geom_point() +
-  labs(x = "Age", y = "Teaching Score", color = "Gender") +
-  geom_parallel_slopes(se = FALSE) + hrbrthemes::theme_ipsum()+ tidyquant::scale_color_tq()
-
-
-p2<-ggplot(evals_ch6, aes(x = age, y = score, color = gender)) +
-  geom_point() +
-  labs(x = "Age", y = "Teaching Score", color = "Gender") +
-  geom_smooth(method = 'lm',se=F)+ hrbrthemes::theme_ipsum()+ tidyquant::scale_color_tq()
-
-pacman::p_load(patchwork)
-
-p1 + p2
-
-pacman::p_load(ISLR)
-
-credit_ch6 <- Credit %>% as_tibble() %>% 
-  select(ID, debt = Balance, credit_limit = Limit, 
-         income = Income, credit_rating = Rating, age = Age)
-credit_ch6
-credit_ch6 %>% select(debt, credit_limit, income) %>% skim()
-credit_ch6 %>% get_correlation(debt ~ credit_limit)
-credit_ch6 %>% get_correlation(debt ~ income)
-credit_ch6 %>% 
-  select(debt, credit_limit, income) %>% 
-  cor()
-pacman::p_load(corrplot,DT,tidyverse,GGally,gtsummary,psych,GPArotation)
-ggpairs(credit_ch6 %>% select(debt, credit_limit, income)) + tidyquant::theme_tq
-
-
-ggplot(credit_ch6, aes(x = credit_limit, y = debt)) +
-  geom_point() +
-  labs(x = "Credit limit (in $)", y = "Credit card debt (in $)", 
-       title = "Debt and credit limit") +
-  geom_smooth(method = "lm", se = FALSE)
-
-ggplot(credit_ch6, aes(x = income, y = debt)) +
-  geom_point() +
-  labs(x = "Income (in $1000)", y = "Credit card debt (in $)", 
-       title = "Debt and income") +
-  geom_smooth(method = "lm", se = FALSE)
-
-tactile_prop_red
 
 library(tidyverse)
-library(moderndive)
-library(infer)
-pacman::p_load(effects,ggeffects,splines)
+library(tidyfst)
 
-res <- sample(20:2993,size = 1)
-print(res)
+fun1 <- function(){
+iris %>%
+  mutate_dt(group = Species,sl = Sepal.Length,sw = Sepal.Width) %>%
+  select_dt(group,sl,sw) %>%
+  filter_dt(sl > 5) %>%
+  arrange_dt(group,sl) %>%
+  summarise_dt(sw = max(sw),by = group)
+}
+
+fun2 <- function(){
+  iris %>%
+  mutate(group = Species,sl = Sepal.Length,sw = Sepal.Width) %>%
+  select(group,sl,sw) %>%
+  filter(sl > 5) %>%
+  arrange(group,sl) %>%
+  group_by(group) %>%
+  summarise(sw = max(sw))
+}
+
+res <-microbenchmark(fun1(),fun2(),times = 1000)
+res
+autoplot(res) + theme_bw() + ggtitle('性能差异')
+
+
+pacman::p_load(tidyverse,gganimate)
+df <- tibble(x= c(-100,30,60,40),y=2020:2023) %>% mutate(y = anytime::anydate(as.character(y)) )
+
+ 
+p <- ggplot(df,aes(x=y,y=x))+geom_col(fill='blue',alpha =0.4,width = 60) + tidyquant::theme_tq()+
+  tidyquant::scale_fill_tq() +geom_path() + geom_hline(yintercept = 0 ,color='red')+
+  labs( x = '时间', y = '现金流',title='一个简单的例子')+
+  geom_text(mapping = aes(label = x),size = 6, vjust =0, hjust=-0.5)+
+  theme(plot.title = element_text(size=22))+
+p
+gif <- p + transition_reveal(y)
+ 
+animate(gif,  duration=10)
+anim_save('2.gif')
+
+
+
+
+
+pacman::p_load(tidyverse,gganimate)
+x <-c() # 建立两个空集，用于存储循环数据
+y <-c()
+for ( i in seq(0,0.2,by = 0.0001)){ # 建立for循环，起点终点步长
+  npv = -100+ 30/(1+i)+60/(1+i)^2+40/(1+i)^3
+  x = append(x,i)
+  y = append(y,npv)
+}
+res <- tibble(irr=x,npv=y) #将循环数据存储为数据集
+#作图
+p2 <- ggplot(res,aes(x=irr,y=npv)) + geom_path(size=1.2)+
+  geom_hline(yintercept = 0 ,color='red',alpha=0.6,size=1.2) +
+  tidyquant::theme_tq() + xlab('贴现率')+ylab('对应NPV') +
+  ggtitle('2000次模拟后IRR的求解思路') +theme(plot.title = element_text(size=22))
+gif2 <- p2+ transition_reveal(npv)
+animate(gif2,  duration=15)
+anim_save('3.gif')
+
+
+
+t= seq.Date(from = as.Date("2020/04/01",format = "%Y/%m/%d"), by = "month", length.out = 13)
+cf <- tibble(cf=c(-50000,190,310,300,310,310,300,
+                  310,300,310,310,280,50310),
+             t=Date("2020/04/17",format = "%Y/%m/%d"), by = "month", length.out = 12)
+
+cf_2 <- tibble(cf = c(-50000,rep(4324.16,12)),t=t)
+
+
+p3 <- ggplot(cf_2,aes(x=t,y=cf)) + geom_path(size=1.1)+
+  geom_hline(yintercept = 0 ,color='red',alpha=0.6) +
+  tidyquant::theme_tq() + xlab('时间(月)')+ylab('现金流') +
+  ggtitle('2000次模拟后IRR的求解思路') +theme(plot.title = element_text(size=22))+
+annotate("text", x= , y= 250 )
+p3
+
+
+
+cf <- tibble(period= 0:65,exp = 0)
+cf <- cf %>%
+  mutate(exp = if_else(period %in% seq(0,9),-6000,0)) %>%
+  mutate(income  = if_else(period %in% seq(3,65,by = 2),2000,0))
+cf[66,"income"] <- 600000
+#上一行是为最后一期赋值
+
+#展示一下现金流
+cf<-cf %>%  mutate(pmt = exp+income) %>%
+  mutate(cum = cumsum(pmt)) 
+
+# cf %>% datatable(rownames = F, caption = "该保险的现金流",
+#                  colnames = c('年份','支出','收益','净收益','累计收益'))
+#计算净收益的irr
+irr <- cf %>%
+  select(pmt) %>% 
+  pull() %>%
+  irr()
+#利用jrv包进行计算，注意40行用了一个pull函数
+paste("该保险产品的IRR是：",irr)
+p<-ggplot(cf,aes(x=period,y=cum))+geom_path(size=1.1)+
+theme_bw()+geom_hline(yintercept = 0,color='red')+
+  xlab('时间')+ylab('累计收益')+ggtitle('该保险的非贴现的累计收益')+
+  theme(plot.title = element_text(size=20))
+p
+fig <- p+transition_reveal(period)
+animate(fig,  duration=14)
+anim_save('4.gif')
+
+
+
+pacman::p_load(tidyverse)
+cf1 <- tibble(cf1=c(-50000,190,310,300,310,310,300,
+                  310,300,310,310,280,50310),t=seq(0:12))
+
+cf2 <- tibble(cf2 = c(-50000,rep(4324.16,12)),t=seq(1,13))
+
+df <- cf1 %>% inner_join(cf2,by='t')
+df <- df %>%
+  pivot_longer(cols = -t,names_to = "group",values_to = "cf") 
+
+p<-ggplot(df,aes(x=t,y=cf,color=group))+geom_path(size = 1.1,alpha=0.6) +
+  tidyquant::theme_tq()  +
+  xlab("时间") +ylab('现金流')+ggtitle('支付宝借呗两种还款方式')+
+  theme(plot.title = element_text(size=20)) +
+  labs(color='借呗两种还款方式')+
+  scale_color_manual(labels = c("先利后本", "每月等额"), values = c("blue", "red"))
+library(gganimate)
+fig <- p+transition_reveal(t)
+animate(fig,  duration=12)
+anim_save('5.gif')                                                                
+                     
