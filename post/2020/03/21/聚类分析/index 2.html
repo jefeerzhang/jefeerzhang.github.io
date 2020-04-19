@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>聚类分析 | Zhang Jian&#39;s Homepage</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">首页</a></li>
+      
+      <li><a href="/cv/">CV</a></li>
+      
+      <li><a href="/categories/">分类</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/index.xml">订阅</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">聚类分析</span></h1>
+<h2 class="author">张剑</h2>
+<h2 class="date">2020/03/21</h2>
+
+<p class="terms">
+    
+    
+    Categories:
+    
+    <a href='/categories/%E9%A1%B9%E7%9B%AE%E8%AF%84%E4%BC%B0'>项目评估</a>
+    
+    
+    
+    
+    Tags:
+    
+    <a href='/tags/cluster'>Cluster</a>
+    
+    
+    
+  </p>
+
+</div>
+
+<main>
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/jquery/jquery.min.js"></script>
+<link href="/rmarkdown-libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/datatables-binding/datatables.js"></script>
+<link href="/rmarkdown-libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="/rmarkdown-libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/dt-core/js/jquery.dataTables.min.js"></script>
+<link href="/rmarkdown-libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/crosstalk/js/crosstalk.min.js"></script>
+
+
+<div id="什么是聚类一个简单的例子" class="section level2">
+<h2>什么是聚类？？一个简单的例子</h2>
+<p><img src="https://gitee.com/jefeerzhang/forcast/raw/master/image/1.png" /></p>
+<div id="探索性数据分析eda的一种形式将样本通过特征划分成具有共同特征的有意义的族群" class="section level3">
+<h3>探索性数据分析（EDA）的一种形式,将样本通过特征划分成具有共同特征的有意义的族群。</h3>
+</div>
+<div id="聚类分析的全部流程图" class="section level3">
+<h3>聚类分析的全部流程图</h3>
+<div class="figure">
+<img src="https://gitee.com/jefeerzhang/forcast/raw/master/image/2.png" alt="" />
+<p class="caption">流程</p>
+</div>
+</div>
+</div>
+<div id="定义距离和相似性" class="section level2">
+<h2>定义距离和相似性</h2>
+<p><span class="math display">\[距离 = 1-相似性\]</span></p>
+<div class="figure">
+<img src="https://gitee.com/jefeerzhang/forcast/raw/master/image/3.png" alt="" />
+<p class="caption">距离的直观定义</p>
+</div>
+<p><span class="math display">\[距离=\sqrt{\left(\mathbf{X}_{\text {red }}-\mathbf{X}_{\text {blue }}\right)^{2}+\left(\mathbf{Y}_{\text {red }}-\mathbf{Y}_{\text {blue }}\right)^{2}}\]</span></p>
+<pre class="r"><code>pacman::p_load(tidyverse,ggthemes,ggfortify,DT)
+
+two_person &lt;- tribble(~x, ~y,
+                      0,0,
+                      9,12)
+ggplot(two_person, aes(x = x, y = y)) + 
+  geom_point() +
+  lims(x = c(-30,30), y = c(-20, 20)) + theme_clean()+ggtitle(&quot;原始数据&quot;)</code></pre>
+<p><img src="/post/2020-03-21-聚类分析_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<pre class="r"><code>dist(two_person,method = &quot;euclidean&quot;)</code></pre>
+<pre><code>##    1
+## 2 15</code></pre>
+<p>多余两个人时</p>
+<pre class="r"><code>three_p &lt;- tribble(~x, ~y,
+                      0,0,
+                      9,12,
+                   -2,9)
+ggplot(three_p, aes(x = x, y = y)) + 
+  geom_point() +
+  lims(x = c(-30,30), y = c(-20, 20)) + theme_clean()</code></pre>
+<p><img src="/post/2020-03-21-聚类分析_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code>dist(three_p,method = &quot;euclidean&quot;)</code></pre>
+<pre><code>##           1         2
+## 2 15.000000          
+## 3  9.219544 11.401754</code></pre>
+<div id="大家思考一下-1和22和31和3哪个离得最近相近性最高" class="section level3">
+<h3>大家思考一下 1和2,2和3,1和3哪个离得最近（相近性）最高？</h3>
+<hr />
+</div>
+</div>
+<div id="数据尺度scale的影响" class="section level2">
+<h2>数据尺度(scale)的影响</h2>
+<p>我们在计算样本特征的相似度时，需要注意数据尺度的影响</p>
+<pre class="r"><code>three_person &lt;- tribble(~weight,~height,
+                      8.3,840,
+                      8.6,780,
+                      10.5,864)
+three_person %&gt;% datatable()</code></pre>
+<p><div id="htmlwidget-1" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"filter":"none","data":[["1","2","3"],[8.3,8.6,10.5],[840,780,864]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>weight<\/th>\n      <th>height<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<span class="math display">\[\text { height }_{\text {scaled}}=\frac{\text {height - mean(height)}}{\text {sd}(\text {height})}\]</span></p>
+<pre class="r"><code>dist(three_person)</code></pre>
+<pre><code>##          1        2
+## 2 60.00075         
+## 3 24.10062 84.02149</code></pre>
+<pre class="r"><code>scale(three_person)</code></pre>
+<pre><code>##          weight     height
+## [1,] -0.6984984  0.2773501
+## [2,] -0.4470390 -1.1094004
+## [3,]  1.1455375  0.8320503
+## attr(,&quot;scaled:center&quot;)
+##     weight     height 
+##   9.133333 828.000000 
+## attr(,&quot;scaled:scale&quot;)
+##    weight    height 
+##  1.193035 43.266615</code></pre>
+<pre class="r"><code>dist(scale(three_person))</code></pre>
+<pre><code>##          1        2
+## 2 1.409365         
+## 3 1.925659 2.511082</code></pre>
+<p>上面一个简单的例子，我们可以看出数据的尺度对我们计算距离有很大影响。</p>
+</div>
+<div id="如何计算类别变量categorical的距离" class="section level2">
+<h2>如何计算类别变量(categorical)的距离</h2>
+<p>我们还是看一个例子</p>
+<pre class="r"><code>kouwei &lt;- tribble(~la,~suan,~tian,~chou,
+                  T,T,F,F,
+                  F,T,T,T,
+                  T,T,F,T)
+kouwei %&gt;% datatable()</code></pre>
+<div id="htmlwidget-2" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"filter":"none","data":[["1","2","3"],[true,false,true],[true,true,true],[false,true,false],[false,true,true]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>la<\/th>\n      <th>suan<\/th>\n      <th>tian<\/th>\n      <th>chou<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
+<div id="如何计算上述口味例子的距离呢" class="section level3">
+<h3>如何计算上述口味例子的距离呢？</h3>
+<ul>
+<li>首先我们定义 <span class="math inline">\(J(A, B)=\frac{A \cap B}{A \cup B}\)</span>来计算类别型变量的相似度</li>
+<li>假设我们希望计算样本1和样本2的距离，根据上面的定义，我们有
+<span class="math display">\[J(1,2)=\frac{1 \cap 2}{1 \cup 2}=\frac{1}{4}\]</span>
+那么1和2的距离为<span class="math inline">\(1-J(1,2)=1-\frac{1}{4}=0.75\)</span>
+如果使用软件计算</li>
+</ul>
+<pre class="r"><code>dist(kouwei,method = &#39;binary&#39;)</code></pre>
+<pre><code>##           1         2
+## 2 0.7500000          
+## 3 0.3333333 0.5000000</code></pre>
+</div>
+<div id="如果类别变量多于两个如何计算距离与相似度如果你的数据如下如何处理" class="section level3">
+<h3>如果类别变量多于两个，如何计算距离与相似度？如果你的数据如下，如何处理？</h3>
+<pre class="r"><code>teacher_sat &lt;- tribble(~taidu,~fangfa,~renpin,
+                       &#39;high&#39;,&#39;low&#39;,&#39;high&#39;,
+                       &#39;low&#39;,&#39;high&#39;,&#39;mid&#39;,
+                       &#39;mid&#39;,&#39;mid&#39;,&#39;mid&#39;)
+teacher_sat %&gt;% datatable()</code></pre>
+<div id="htmlwidget-3" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3">{"x":{"filter":"none","data":[["1","2","3"],["high","low","mid"],["low","high","mid"],["high","mid","mid"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>taidu<\/th>\n      <th>fangfa<\/th>\n      <th>renpin<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="面对上述类型的数据我们需要将多种类型数据处理成虚拟变量才能进行距离和相似度的计算" class="section level3">
+<h3>面对上述类型的数据，我们需要将多种类型数据处理成虚拟变量，才能进行距离和相似度的计算</h3>
+<pre class="r"><code>library(dummies)
+teacher_sat_df &lt;- as.data.frame(teacher_sat) 
+teacher_sat_dum &lt;- dummy.data.frame(teacher_sat_df)
+teacher_sat_dum</code></pre>
+<pre><code>##   taiduhigh taidulow taidumid fangfahigh fangfalow fangfamid renpinhigh
+## 1         1        0        0          0         1         0          1
+## 2         0        1        0          1         0         0          0
+## 3         0        0        1          0         0         1          0
+##   renpinmid
+## 1         0
+## 2         1
+## 3         1</code></pre>
+<pre class="r"><code>dist(teacher_sat_dum,method = &#39;binary&#39;)</code></pre>
+<pre><code>##     1   2
+## 2 1.0    
+## 3 1.0 0.8</code></pre>
+<pre class="r"><code>teacher_sat</code></pre>
+<pre><code>## # A tibble: 3 x 3
+##   taidu fangfa renpin
+##   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; 
+## 1 high  low    high  
+## 2 low   high   mid   
+## 3 mid   mid    mid</code></pre>
+</div>
+<div id="如果我们有如下距离矩阵请思考以下问题" class="section level3">
+<h3>如果我们有如下距离矩阵，请思考以下问题：</h3>
+<table>
+<thead>
+<tr class="header">
+<th align="center"></th>
+<th align="center">1</th>
+<th align="center">2</th>
+<th align="center">3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">2</td>
+<td align="center">11.7</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr class="even">
+<td align="center">3</td>
+<td align="center">16.8</td>
+<td align="center">18</td>
+<td align="center"></td>
+</tr>
+<tr class="odd">
+<td align="center">4</td>
+<td align="center">10</td>
+<td align="center">20.6</td>
+<td align="center">15.8</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>首先可以肯定的是我们知道样本1和样本4的距离最近</p></li>
+<li><p>样本2离group 1,4更近？还是样本3离group 1,4更近？</p></li>
+<li><p>如何判断上述问题的距离？</p></li>
+</ul>
+<p>一种想法：<span class="math inline">\(\max (\mathrm{D}(2,1), \mathrm{D}(2,4))=20.6\)</span>，<span class="math inline">\(\max (\mathrm{D}(3,1), \mathrm{D}(3,4))=16.8\)</span>，那么3离group1,4比2更近一些。</p>
+</div>
+</div>
+<div id="图解层次聚类" class="section level2">
+<h2>图解层次聚类</h2>
+<p><img src="https://gitee.com/jefeerzhang/forcast/raw/master/image/4.png" />
+<img src="https://gitee.com/jefeerzhang/forcast/raw/master/image/5.png" />
+<img src="https://gitee.com/jefeerzhang/forcast/raw/master/image/6.png" />
+<img src="https://gitee.com/jefeerzhang/forcast/raw/master/image/7.png" />
+<img src="https://gitee.com/jefeerzhang/forcast/raw/master/image/8.png" />
+<img src="https://gitee.com/jefeerzhang/forcast/raw/master/image/9.png" />
+<img src="https://gitee.com/jefeerzhang/forcast/raw/master/image/10.png" />
+<img src="https://gitee.com/jefeerzhang/forcast/raw/master/image/11.png" /></p>
+<p>接下来我们扩展一下这个思路，再多放几个队员上场，假设我们现在有6个队员，他们的x坐标和y轴坐标为：</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">player</th>
+<th align="center">x</th>
+<th align="center">y</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">1</td>
+<td align="center">-1</td>
+<td align="center">1</td>
+</tr>
+<tr class="even">
+<td align="center">2</td>
+<td align="center">-2</td>
+<td align="center">-3</td>
+</tr>
+<tr class="odd">
+<td align="center">3</td>
+<td align="center">8</td>
+<td align="center">6</td>
+</tr>
+<tr class="even">
+<td align="center">4</td>
+<td align="center">7</td>
+<td align="center">-8</td>
+</tr>
+<tr class="odd">
+<td align="center">5</td>
+<td align="center">-12</td>
+<td align="center">8</td>
+</tr>
+<tr class="even">
+<td align="center">6</td>
+<td align="center">-15</td>
+<td align="center">0</td>
+</tr>
+</tbody>
+</table>
+<p>根据以上数据，我们对上面6个球员进行层次聚类Hierarchical clustering</p>
+<pre class="r"><code>player_6 &lt;- tribble(~x,~y,
+                    -1,1,
+                    -2,-3,
+                    8,6,
+                    7,-8,
+                    -12,8,
+                    -15,0
+                    )
+# 看一眼球员的位置
+ggplot(player_6,aes(x=x,y=y))+geom_point()+theme_clean()+ggtitle(&quot;原始数据&quot;)</code></pre>
+<p><img src="/post/2020-03-21-聚类分析_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre class="r"><code>dist_players &lt;- dist(player_6, method = &#39;euclidean&#39;)
+hc_players &lt;- hclust(dist_players, method = &#39;complete&#39;)
+#如果我们要将数据分成两组,用cuttree剪树枝，这里我手画一个图给大家理解
+cluster_assignments &lt;- cutree(hc_players, k = 2)
+# 把2组分类的标准装回数据框
+play_6_k2 &lt;- player_6 %&gt;%
+  mutate(group = cluster_assignments)
+
+ggplot(data = play_6_k2 ,aes(x=x,y=y,color=as.factor(group)))+geom_point(size=3)+theme_clean()+
+  ggtitle(&#39;分两组情况&#39;)</code></pre>
+<p><img src="/post/2020-03-21-聚类分析_files/figure-html/unnamed-chunk-9-2.png" width="672" /></p>
+<pre class="r"><code>cluster_assignments &lt;- cutree(hc_players, k = 3)
+# 把2组分类的标准装回数据框
+play_6_k2 &lt;- player_6 %&gt;%
+  mutate(group = cluster_assignments)
+
+ggplot(data = play_6_k2 ,aes(x=x,y=y,color=as.factor(group)))+geom_point(size=3)+theme_clean()+
+  ggtitle(&#39;分三组情况&#39;)</code></pre>
+<p><img src="/post/2020-03-21-聚类分析_files/figure-html/unnamed-chunk-9-3.png" width="672" /></p>
+</div>
+<div id="kmeans的思想" class="section level2">
+<h2>Kmeans的思想：</h2>
+<blockquote>
+<p>一个好的聚类算法，应该是能够使得类内的差异尽可能小。设<span class="math inline">\(W(C_k)\)</span>是第<span class="math inline">\(C_k\)</span>类中差异化的度量，因此我们的问题转化为：</p>
+</blockquote>
+<p><span class="math display">\[\min \left\{ {\sum\limits_{k = 1}^K {W({C_k})} } \right\}\]</span></p>
+<div id="使用平方欧式距离定界定类内差异" class="section level3">
+<h3>使用平方欧式距离定界定类内差异</h3>
+<p><span class="math display">\[W({C_k}) = \frac{1}{{\left| {{C_k}} \right|}}{\sum\limits_{i,i&#39; \in {C_k}} {\sum\limits_{j = 1}^p {({x_{ij}} - {x_{i&#39;j}})} } ^2}\]</span>
+<span class="math display">\[\min \left\{ {\sum\limits_{k = 1}^K {\frac{1}{{\left| {{C_k}} \right|}}{{\sum\limits_{i,i&#39; \in {C_k}} {\sum\limits_{j = 1}^p {({x_{ij}} - {x_{i&#39;j}})} } }^2}} } \right\}\]</span></p>
+</div>
+<div id="具体算法" class="section level3">
+<h3>具体算法：</h3>
+<blockquote>
+<p>1 随机为每个观测值分配一个1到K的数字</p>
+</blockquote>
+<blockquote>
+<p>2 遍历所有数据，将每个数据划分到最近的中心点中</p>
+</blockquote>
+<blockquote>
+<p>3 计算每个聚类的平均值，并作为新的中心点</p>
+</blockquote>
+<blockquote>
+<p>4 重复2-3，直到这k个中线点不再变化（收敛了），或执行了足够多的迭代</p>
+</blockquote>
+<p><img src="https://upload-images.jianshu.io/upload_images/8116044-80981f3cb8255a01.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" /></p>
+</div>
+<div id="上图展示了k3的kmeans聚类算法过程先给每个观测值随机分配1-3的数字然后算出这些1-3类的中心第一行第三个图展示了这个中心左下第一张图每个观测值被分配到了与之最接近的类中第二行第二列图重新计算不同类的中心第二行第三列反复迭代后的结果我们先虚拟一个项目" class="section level3">
+<h3>上图展示了K=3的Kmeans聚类算法过程，先给每个观测值随机分配1-3的数字，然后算出这些1-3类的中心，第一行第三个图展示了这个中心；左下第一张图，每个观测值被分配到了与之最接近的类中；第二行第二列图，重新计算不同类的中心；第二行第三列反复迭代后的结果。我们先虚拟一个项目</h3>
+<pre class="r"><code>set.seed(123)
+x &lt;- matrix(rnorm(500*2),ncol=2)
+x[1:250,1] &lt;- x[1:250,1]+10 #分别加10和减去10
+x[1:250,2] &lt;- x[1:250,2]-10
+x &lt;- as.tibble(x)
+ggplot(data = x ,aes(x=V1,y=V2))+geom_point()+theme_clean()</code></pre>
+<p><img src="/post/2020-03-21-聚类分析_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<pre class="r"><code>#看一眼数据
+km_out &lt;- kmeans(x,centers = 2)
+clust_km2 &lt;-km_out$cluster
+x_km2 &lt;- mutate(x,cluster = clust_km2)
+#再画一下数据
+ggplot(data=x_km2,aes(x=V1,y=V2,color=as.factor(clust_km2)))+geom_point()+theme_clean()</code></pre>
+<p><img src="/post/2020-03-21-聚类分析_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
+</div>
+<div id="如何选择k如果我们事前不知道k如何处理" class="section level3">
+<h3>如何选择k，如果我们事前不知道k如何处理？</h3>
+</div>
+<div id="先看个动图" class="section level3">
+<h3>先看个动图</h3>
+<p><img src="https://gitee.com/jefeerzhang/forcast/raw/master/image/aqi.gif" /></p>
+<pre class="r"><code>library(haven)
+library(factoextra)
+aqi &lt;- read_dta(&quot;data/data_0224.dta&quot;)
+aqi &lt;- aqi %&gt;%
+  select(city,aqi ,pm25,pm10,no2,o3,co,so2) %&gt;%
+  drop_na() 
+
+
+aqi_sum &lt;- aqi %&gt;% 
+  group_by(city) %&gt;%
+  summarise(pm25_m =mean(pm25),so2_m = mean(so2),pm10_m=mean(pm10),no2_m=mean(no2),co_m=mean(co))
+
+rownames(aqi_sum) &lt;- aqi_sum$city
+aqi_c &lt;- select(aqi_sum, - city)
+km_out &lt;- kmeans(aqi_c,centers = 2)
+
+
+fviz_cluster(km_out,data=aqi_c) +theme_clean() + ggtitle(&quot;k=2的聚类结果&quot;)</code></pre>
+<p><img src="/post/2020-03-21-聚类分析_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<pre class="r"><code>km_out3 &lt;- kmeans(aqi_c,centers = 3)
+fviz_cluster(km_out3,data=aqi_c) +theme_clean() + ggtitle(&quot;k=3的聚类结果&quot;)</code></pre>
+<p><img src="/post/2020-03-21-聚类分析_files/figure-html/unnamed-chunk-11-2.png" width="672" /></p>
+<pre class="r"><code>km_out4 &lt;- kmeans(aqi_c,centers = 4)
+fviz_cluster(km_out4,data=aqi_c) +theme_clean() + ggtitle(&quot;k=4的聚类结果&quot;)</code></pre>
+<p><img src="/post/2020-03-21-聚类分析_files/figure-html/unnamed-chunk-11-3.png" width="672" /></p>
+</div>
+</div>
+<div id="如何寻找最优的k" class="section level2">
+<h2>如何寻找最优的k？</h2>
+<div id="elbow-method" class="section level3">
+<h3>Elbow Method</h3>
+<p>kmean聚类背后的基本思想是定义集群，以使总集群内变化（称为总集群内变化或总集群内平方和）最小化：
+<span class="math display">\[\operatorname{minimize}\left(\sum_{k=1}^{k} W\left(C_{k}\right)\right)\]</span>
+<span class="math inline">\(C_{k}\)</span>是第<span class="math inline">\(k^{t h}\)</span>个集群<span class="math inline">\(W\left(C_{k}\right)\)</span>是集群内的变异。</p>
+</div>
+<div id="elbow-method-1" class="section level3">
+<h3>Elbow Method：</h3>
+<ol style="list-style-type: decimal">
+<li>针对k的不同值计算kmean。例如，kmean中选取1到10个集群参数</li>
+<li>对于每个k，计算群集内的总平方和（wss）</li>
+<li>根据聚类数k绘制wss曲线。</li>
+<li>曲线中拐点的位置通常被视为适当簇数的指标。
+***
+可以通过以下方法实现</li>
+</ol>
+<pre class="r"><code>set.seed(123)
+wss &lt;- function(k) {
+  kmeans(aqi_c, k, nstart = 10 )$tot.withinss
+}
+k_val &lt;- 1:10
+wss_values &lt;- map_dbl(k_val, wss)
+
+plot(k_val, wss_values,
+       type=&quot;b&quot;, pch = 19, frame = FALSE, 
+       xlab=&quot;Number of clusters K&quot;,
+       ylab=&quot;Total within-clusters sum of squares&quot;)</code></pre>
+<p><img src="/post/2020-03-21-聚类分析_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<pre class="r"><code>#或者直接用便好的函数
+
+fviz_nbclust(aqi_c, kmeans, method = &quot;wss&quot;) </code></pre>
+<p><img src="/post/2020-03-21-聚类分析_files/figure-html/unnamed-chunk-12-2.png" width="672" /></p>
+<pre class="r"><code>#可能选三是合适的</code></pre>
+</div>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+  
+  <hr/>
+  © <a href="https://jjxy.sicau.edu.cn/content.jsp?urltype=news.NewsContentUrl&amp;wbtreeid=1022&amp;wbnewsid=3019">张剑</a>  2018 &ndash; 2020 | <a href="https://gitee.com/jefeerzhang">Gitee</a>
+  
+  </footer>
+  </body>
+</html>
+
