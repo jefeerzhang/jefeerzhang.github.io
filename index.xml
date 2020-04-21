@@ -6,10 +6,26 @@
     <description>Recent content in 首页 on Zhang Jian&#39;s Homepage</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
-    <lastBuildDate>Wed, 15 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 18 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>CAPM模型的简单实现</title>
+      <link>/post/2020/04/18/capm/</link>
+      <pubDate>Sat, 18 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/04/18/capm/</guid>
+      <description>A股数据资本资产定价模型的演示基本模型回顾FAMA在2004年写了一个比较好的那文献CAPM模型资产组合构成及使用的包数据获取及清洗手动计算各资产和组合的betaA股数据资本资产定价模型的演示基本模型回顾FAMA在2004年写了一个比较好的那文献前面课程对均值方差模型进行了介绍，马科维茨(Markowitz)提出了投资组合选择理论，认为最佳投资组合应当是，风险厌恶的投资者的无差异曲线和资产组合的有效边界线的交点。
+如果存在市场组合和无风险组合，且投资不存在买空限制的情况下，不同风险偏好的投资者会再无风险资产与市场资产组合的有效边界的切点组成的射线上进行资产分配。如下所示：
+投资者在选择资产时会在收益和风险之间做出平衡：当风险一样时，会选择预期收益最高的资产；而预期收益一样时，会选择风险最低的资产。
+CAPM模型1964年，威廉-夏普(William Sharp)等则在马科维茨基础上提出的单指数模型，将市场组合引入均值-方差模型，极大地简化了计算，他们认为获得了市场任意资组合的收益与某个共同因素之间是有线性关系，最终将其发展为资本资产定价模型(Capital Asset Pricing Model, CAPM)。
+具体来说，在CAPM公式下，如果所有投资者都采用均值方-差分析来确定其最优组合，那么在理想的状况下，均衡时的不同资产的预期回报率之间会具有一种线性关系—— \(\beta\) 越高的资产期望回报率越高； \(\beta\) 越低的资产期望回报率越低。\[E\left(r_{i}\right)-r_{f}=\beta_{i}\left[E\left(r_{M}\right)-r_{f}\right]\]
+其中：\(E\left(r_{i}\right)\)是资产或资产组合i的期望收益率\(r_f\)是无风险资产的回报率\(E(r_{M})\)是市场组合的期望回报率资产组合构成及使用的包- 中证500(000905.SH)- 中国平安(601318.SH)- 国海证券(000750.SZ)- 东方园林(002310.SZ)- 申达股份(600626.SH)各个资产所占比例为20%，使用沪深300(000300.SH)作为市场组合，假设无风险利率为年化2%
+我们使用tidyverse,tidyquant,Tushare,timetk进行数据获取、清理、分析及可视化。
+数据获取及清洗pacman::p_load(tidyquant,tidyverse,timetk,Tushare,DT)api &amp;lt;- pro_api(token = &amp;#39;5adce34e8c81bf7085828754a8e09590c3630032d0f61aad6483eaaa&amp;#39;)bar &amp;lt;- pro_bar(token = &amp;#39;5adce34e8c81bf7085828754a8e09590c3630032d0f61aad6483eaaa&amp;#39;)zz500 &amp;lt;- api(api_name = &amp;#39;index_daily&amp;#39;,ts_code=&amp;#39;000905.</description>
+    </item>
     
     <item>
       <title>投资组合优化——以A股五个资产为例</title>

@@ -154,8 +154,8 @@ p3
 cf <- tibble(period= 0:65,exp = 0)
 cf <- cf %>%
   mutate(exp = if_else(period %in% seq(0,9),-6000,0)) %>%
-  mutate(income  = if_else(period %in% seq(3,65,by = 2),2000,0))
-cf[66,"income"] <- 600000
+  mutate(income  = if_else(period %in% seq(3,65,by = 2),3000,0))
+cf[66,"income"] <- 300000
 #上一行是为最后一期赋值
 
 #展示一下现金流
@@ -201,5 +201,11 @@ p<-ggplot(df,aes(x=t,y=cf,color=group))+geom_path(size = 1.1,alpha=0.6) +
 library(gganimate)
 fig <- p+transition_reveal(t)
 animate(fig,  duration=12)
-anim_save('5.gif')                                                                
+anim_save('5.gif')      
+
+
+
+
+
+
                      

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CAPM模型的简单实现 | Zhang Jian&#39;s Homepage</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/fonts.css" />
+    
+  </head>
+
+  <body>
+    <nav>
+    <ul class="menu">
+      
+      <li><a href="/">首页</a></li>
+      
+      <li><a href="/cv/">CV</a></li>
+      
+      <li><a href="/categories/">分类</a></li>
+      
+      <li><a href="/tags/">Tags</a></li>
+      
+      <li><a href="/index.xml">订阅</a></li>
+      
+    </ul>
+    <hr/>
+    </nav>
+
+<div class="article-meta">
+<h1><span class="title">CAPM模型的简单实现</span></h1>
+<h2 class="author">张剑</h2>
+<h2 class="date">2020/04/18</h2>
+
+<p class="terms">
+    
+    
+    Categories:
+    
+    <a href='/categories/%E6%8A%95%E8%B5%84%E5%AD%A6'>投资学</a>
+    
+    
+    
+    
+    Tags:
+    
+    <a href='/tags/%E6%8A%95%E8%B5%84'>投资</a>
+    
+    <a href='/tags/%E5%AE%9E%E7%8E%B0'>实现</a>
+    
+    
+    
+  </p>
+
+</div>
+
+<main>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#a股数据资本资产定价模型的演示">A股数据资本资产定价模型的演示</a><ul>
+<li><a href="#基本模型回顾">基本模型回顾</a></li>
+<li><a href="#fama在2004年写了一个比较好的那文献"><span>FAMA在2004年写了一个比较好的那文献</span></a></li>
+<li><a href="#capm模型">CAPM模型</a></li>
+<li><a href="#资产组合构成及使用的包">资产组合构成及使用的包</a></li>
+<li><a href="#数据获取及清洗">数据获取及清洗</a></li>
+<li><a href="#手动计算各资产和组合的beta">手动计算各资产和组合的beta</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="a股数据资本资产定价模型的演示" class="section level2">
+<h2>A股数据资本资产定价模型的演示</h2>
+<div id="基本模型回顾" class="section level3">
+<h3>基本模型回顾</h3>
+</div>
+<div id="fama在2004年写了一个比较好的那文献" class="section level3">
+<h3><a href="https://gitee.com/jefeerzhang/jefeerzhang/raw/master/static/JEP.FamaandFrench.pdf">FAMA在2004年写了一个比较好的那文献</a></h3>
+<p>前面课程对均值方差模型进行了介绍，马科维茨(Markowitz)提出了投资组合选择理论，认为最佳投资组合应当是，风险厌恶的投资者的无差异曲线和资产组合的有效边界线的交点。</p>
+<blockquote>
+<p>如果存在市场组合和无风险组合，且投资不存在买空限制的情况下，不同风险偏好的投资者会再无风险资产与市场资产组合的有效边界的切点组成的射线上进行资产分配。如下所示：</p>
+</blockquote>
+<p><img src="/post/2020-04-18-capm_files/cml.png" /></p>
+<blockquote>
+<p>投资者在选择资产时会在收益和风险之间做出平衡：当风险一样时，会选择预期收益最高的资产；而预期收益一样时，会选择风险最低的资产。</p>
+</blockquote>
+<hr />
+</div>
+<div id="capm模型" class="section level3">
+<h3>CAPM模型</h3>
+<p>1964年，威廉-夏普(William Sharp)等则在马科维茨基础上提出的单指数模型，将市场组合引入均值-方差模型，极大地简化了计算，他们认为获得了市场任意资组合的收益与某个共同因素之间是有线性关系，最终将其发展为资本资产定价模型(Capital Asset Pricing Model, CAPM)。</p>
+<div id="具体来说在capm公式下如果所有投资者都采用均值方-差分析来确定其最优组合那么在理想的状况下均衡时的不同资产的预期回报率之间会具有一种线性关系-beta-越高的资产期望回报率越高-beta-越低的资产期望回报率越低" class="section level4">
+<h4>具体来说，在CAPM公式下，如果所有投资者都采用均值方-差分析来确定其最优组合，那么在理想的状况下，均衡时的不同资产的预期回报率之间会具有一种线性关系—— <span class="math inline">\(\beta\)</span> 越高的资产期望回报率越高； <span class="math inline">\(\beta\)</span> 越低的资产期望回报率越低。</h4>
+<p><span class="math display">\[
+E\left(r_{i}\right)-r_{f}=\beta_{i}\left[E\left(r_{M}\right)-r_{f}\right]
+\]</span></p>
+</div>
+<div id="其中" class="section level4">
+<h4>其中：</h4>
+<ul>
+<li><span class="math inline">\(E\left(r_{i}\right)\)</span>是资产或资产组合i的期望收益率</li>
+<li><span class="math inline">\(r_f\)</span>是无风险资产的回报率</li>
+<li><span class="math inline">\(E(r_{M})\)</span>是市场组合的期望回报率</li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="资产组合构成及使用的包" class="section level3">
+<h3>资产组合构成及使用的包</h3>
+<div id="中证500000905.sh" class="section level4">
+<h4>- 中证500(000905.SH)</h4>
+</div>
+<div id="中国平安601318.sh" class="section level4">
+<h4>- 中国平安(601318.SH)</h4>
+</div>
+<div id="国海证券000750.sz" class="section level4">
+<h4>- 国海证券(000750.SZ)</h4>
+</div>
+<div id="东方园林002310.sz" class="section level4">
+<h4>- 东方园林(002310.SZ)</h4>
+</div>
+<div id="申达股份600626.sh" class="section level4">
+<h4>- 申达股份(600626.SH)</h4>
+<p>各个资产所占比例为20%，使用沪深300(000300.SH)作为市场组合，假设无风险利率为年化2%</p>
+<blockquote>
+<p>我们使用tidyverse,tidyquant,Tushare,timetk进行数据获取、清理、分析及可视化。</p>
+</blockquote>
+</div>
+</div>
+<div id="数据获取及清洗" class="section level3">
+<h3>数据获取及清洗</h3>
+<pre class="r"><code>pacman::p_load(tidyquant,tidyverse,timetk,Tushare,DT)
+
+api &lt;- pro_api(token = &#39;5adce34e8c81bf7085828754a8e09590c3630032d0f61aad6483eaaa&#39;)
+bar &lt;- pro_bar(token = &#39;5adce34e8c81bf7085828754a8e09590c3630032d0f61aad6483eaaa&#39;)
+
+zz500 &lt;- api(api_name = &#39;index_daily&#39;,ts_code=&#39;000905.SH&#39;,start_date=&quot;20140101&quot;,
+             end_date=&#39;20200407&#39;) 
+pingan &lt;- bar(ts_code=&#39;601318.SH&#39;,start_date=&quot;20140101&quot;,
+              end_date=&#39;20200407&#39;,adj=&quot;qfq&quot;)
+ghzq &lt;- bar(ts_code=&#39;000750.SZ&#39;,start_date=&quot;20140101&quot;,
+              end_date=&#39;20200407&#39;,adj=&quot;qfq&quot;)
+dfyl &lt;- bar(ts_code=&#39;002310.SZ&#39;,start_date=&quot;20140101&quot;,
+              end_date=&#39;20200407&#39;,adj=&quot;qfq&quot;)
+sdgf &lt;- bar(ts_code=&#39;600626.SH&#39;,start_date=&quot;20140101&quot;,
+              end_date=&#39;20200407&#39;,adj=&quot;qfq&quot;)
+base &lt;- api(api_name = &#39;index_daily&#39;,ts_code = &#39;000300.SH&#39;,
+             start_date=&#39;20140101&#39;, end_date = &#39;20200407&#39;)
+hs300 &lt;- api(api_name = &#39;index_daily&#39;,ts_code = &#39;000300.SH&#39;,
+             start_date=&#39;20140101&#39;, end_date = &#39;20200407&#39;)</code></pre>
+<div id="数据读取后观察一下数据行数发现东方园林只有1316行2014年1月1日到2020年4月7日所有交易日英国有1526各因此我们可以怀疑部分股票存在停牌问题" class="section level4">
+<h4>数据读取后，观察一下数据行数，发现东方园林只有1316行，2014年1月1日到2020年4月7日所有交易日英国有1526各，因此我们可以怀疑部分股票存在停牌问题。</h4>
+</div>
+<div id="为了处理缺失数据的一个思路是将缺失的日期全部删除只分析5个资产都具有数据的日期" class="section level4">
+<h4>为了处理缺失数据的一个思路是将缺失的日期全部删除，只分析5个资产都具有数据的日期</h4>
+</div>
+<div id="本文使用周频率进行演示使用tidyquant中的tq_transmute进行收益率计算" class="section level4">
+<h4>本文使用周频率进行演示。使用tidyquant中的tq_transmute进行收益率计算</h4>
+<pre class="r"><code>week_ret &lt;- function(x) {
+  name = x$ts_code[1]
+  df = x %&gt;%  dplyr::mutate(trade_date = as.Date(trade_date,format=&quot;%Y%m%d&quot;))
+  res = df %&gt;% tq_transmute(select = close,
+                 mutate_fun = periodReturn,
+                 period = &#39;weekly&#39;,
+               col_rename = name)
+  return(res)
+}
+
+zz500_r &lt;- week_ret(zz500)
+pingan_r &lt;- week_ret(pingan)
+ghzq_r &lt;- week_ret(ghzq)
+dfyl_r &lt;- week_ret(dfyl)
+sdgf_r &lt;- week_ret(sdgf)
+base_r &lt;- week_ret(base)
+hs300_r &lt;- week_ret(hs300)
+
+## 我们使用了一个自建函数，当然大家可以将之前的单个资产放到一个列表里，然后用 apply函数一次性处理这些转换过程
+
+# 数据还是有比较大的缺失，因此我们使用左合来处理缺失数据
+
+# 用交易日期作为key进行合并
+df &lt;- dfyl_r %&gt;% left_join(pingan_r,by=&#39;trade_date&#39; ) %&gt;% left_join(ghzq_r,by=&#39;trade_date&#39;) %&gt;% 
+  left_join(sdgf_r,by=&#39;trade_date&#39;) %&gt;% left_join(zz500_r) %&gt;%
+  left_join(hs300_r,by=&#39;trade_date&#39;)</code></pre>
+<pre><code>## Joining, by = &quot;trade_date&quot;</code></pre>
+<pre class="r"><code>df_t &lt;- na.omit(df) %&gt;% tk_xts(silent = T)
+# 将df转换为时间序列数据</code></pre>
+</div>
+</div>
+<div id="手动计算各资产和组合的beta" class="section level3">
+<h3>手动计算各资产和组合的beta</h3>
+<p>我们知道：
+<span class="math display">\[
+\hat{\beta}_{i}=\frac{\operatorname{cov}\left(\tilde{r}_{i}, \tilde{r}_{M}\right)}{\operatorname{var}\left(\tilde{r}_{M}\right)}=\frac{\sigma_{i M}}{\sigma_{M}^{2}}
+\]</span></p>
+<blockquote>
+<p>在计算中务必注意无风险利率中，年收益率转换到周收益率</p>
+</blockquote>
+<pre class="r"><code>week_f_return &lt;- (1+0.02)^(1/52)-1
+df_t &lt;- df_t - week_f_return #对于每个资产的回报率都减去无风险利率得到风险升水
+dfyl_beta &lt;- cov(df_t$`002310.SZ`,df_t$`000300.SH`)/var(df_t$`000300.SH`)
+pingan_beta &lt;- cov(df_t$`601318.SH`,df_t$`000300.SH`)/var(df_t$`000300.SH`)
+ghzq_beta &lt;- cov(df_t$`000750.SZ`,df_t$`000300.SH`)/var(df_t$`000300.SH`)
+sdgf_beta &lt;- cov(df_t$`600626.SH`,df_t$`000300.SH`)/var(df_t$`000300.SH`)
+zz500_beta &lt;-cov(df_t$`000905.SH`,df_t$`000300.SH`)/var(df_t$`000300.SH`)</code></pre>
+<div id="组合的beta等于各资产的beta与其权重的线性组合那么我们可以轻松的到组合的beta" class="section level4">
+<h4>组合的beta等于各资产的beta与其权重的线性组合，那么我们可以轻松的到组合的beta</h4>
+<pre class="r"><code>port_beta &lt;- t(matrix(rep(0.2,5),nrow=5)) %*% matrix(c(dfyl_beta,pingan_beta,ghzq_beta,sdgf_beta,zz500_beta),nrow = 5)
+print(paste(&quot;我们构建的投资组合的beta为：&quot;,port_beta))</code></pre>
+<pre><code>## [1] &quot;我们构建的投资组合的beta为： 1.07033846432365&quot;</code></pre>
+<pre class="r"><code>df_long &lt;- df %&gt;% select(-`000300.SH`) %&gt;%
+  pivot_longer(-trade_date,names_to = &quot;names&quot;,values_to = &quot;returns&quot;)
+
+m_return &lt;- df %&gt;% select(trade_date,`000300.SH`)
+df_long_beta &lt;- df_long %&gt;% left_join(m_return,by=&quot;trade_date&quot;) %&gt;%
+  rename(Rb = `000300.SH`) %&gt;% mutate(returns = returns-week_f_return)
+
+beta_builtin_tq &lt;- 
+  df_long_beta %&gt;% 
+  group_by(names) %&gt;%
+  tq_performance(Ra = returns, 
+                 Rb = Rb, 
+                 performance_fun = CAPM.beta
+                ) 
+beta_builtin_tq</code></pre>
+<pre><code>## # A tibble: 5 x 2
+## # Groups:   names [5]
+##   names     CAPM.beta.1
+##   &lt;chr&gt;           &lt;dbl&gt;
+## 1 002310.SZ       1.06 
+## 2 601318.SH       1.16 
+## 3 000750.SZ       1.28 
+## 4 600626.SH       0.933
+## 5 000905.SH       0.922</code></pre>
+<pre class="r"><code>port &lt;- t(matrix(rep(0.2,5),nrow=5)) %*%
+  as.matrix(beta_builtin_tq$CAPM.beta.1,nrow=5)
+port</code></pre>
+<pre><code>##          [,1]
+## [1,] 1.071526</code></pre>
+<blockquote>
+<p>手动计算出的组合beta为1.0703，tidyquant包计算出来的beta是1.071。基本差距不大</p>
+</blockquote>
+</div>
+</div>
+</div>
+
+</main>
+
+  <footer>
+  <script src="//yihui.name/js/math-code.js"></script>
+<script async src="//mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+<script async src="//yihui.name/js/center-img.js"></script>
+
+  
+  <hr/>
+  © <a href="https://jjxy.sicau.edu.cn/content.jsp?urltype=news.NewsContentUrl&amp;wbtreeid=1022&amp;wbnewsid=3019">张剑</a>  2018 &ndash; 2020 | <a href="https://gitee.com/jefeerzhang">Gitee</a>
+  
+  </footer>
+  </body>
+</html>
+
