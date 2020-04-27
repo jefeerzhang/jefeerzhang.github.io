@@ -151,3 +151,41 @@ head(wide_return_m)
 barplot(weight_m)
 
 
+sr <- c()
+w <- c()
+srr <- function(w){
+  res = (0.4/100+(0.3/100)*w)/
+    sqrt(w^2*(2.5/100)^2+(1-w)^2*(2/100)^2+(0.0625/100)*(w-w^2))
+}
+
+optimize(srr,c(-100,100),maximum = T)
+
+
+
+for (i in seq(-5,5,by = 0.0005)){ 
+  res = srr(i)
+  sr <- append(sr,res)
+  w <- append(w,i)
+}
+max(sr)
+library(tidyverse)
+df <- tibble(x=w,y=sr)
+
+ggplot(df,aes(x=x,y)) + geom_line()+ theme_bw()
+
+
+srr2 <- function(w){
+  res = -(0.04*w[1]+0.08*w[2])/
+    (sqrt(w[1]^2*(0.15)^2+w[2]^2*(0.2)^2+0.03*w[1]*w[2]))
+  return(res)
+}
+optim(par = c(-1,-1),fn=srr2)
+
+f <- function(w){
+  sr = -(0.08*w+(1-w)*0.12-0.04)/
+    (sqrt(w^2*0.15^2+(1-w)^2*0.2^2+2*w*(1-w)*0.15*0.2*0.5))
+  return(sr)
+}
+
+optimize(f,c(-5,5))
+

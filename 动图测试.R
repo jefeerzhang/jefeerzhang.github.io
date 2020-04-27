@@ -205,7 +205,28 @@ anim_save('5.gif')
 
 
 
+pacman::p_load(tidyverse)
+min_rank(runif(10))
+
+n_distinct(diamonds['carat'])
+           
 
 
+mod.pres <- lm(prestige ~ log(income, 10) + 
+                 poly(education, 3) + 
+                 poly(women, 2),
+               data=Prestige)    
 
-                     
+a <- ggeffects::ggeffect(mod.pres,terms = 'education')
+str(a)
+plot(a) + tidyquant::theme_tq() + xlab('教育')
+
+
+mod.cowles <- glm(volunteer ~ sex + 
+                    neuroticism + extraversion +
+                    neuroticism:extraversion,
+                  data=Cowles, family=binomial)
+
+a <- ggeffects::ggeffect(mod.cowles,terms = c("neuroticism","extraversion"))
+plot(a) + tidyquant::theme_tq()
+stargazer::stargazer(mod.cowles,type = 'text')

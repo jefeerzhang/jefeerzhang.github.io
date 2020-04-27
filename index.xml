@@ -6,10 +6,19 @@
     <description>Recent content in 首页 on Zhang Jian&#39;s Homepage</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh_CN</language>
-    <lastBuildDate>Sat, 18 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 22 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>第七章练习题</title>
+      <link>/post/2020/04/22/%E7%AC%AC%E4%B8%83%E7%AB%A0%E7%BB%83%E4%B9%A0%E9%A2%98/</link>
+      <pubDate>Wed, 22 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2020/04/22/%E7%AC%AC%E4%B8%83%E7%AB%A0%E7%BB%83%E4%B9%A0%E9%A2%98/</guid>
+      <description>第七章练习题第一题第二题第三题，请同学们自行练习，qq群作业提交，4月30日提交第七章练习题第一题上面的最大化目标函数接起来有点繁琐，我们使用R来求简单的极值吧sr &amp;lt;- c() # 先生成两个空容器，存储目标函数夏普比和对应的权重w &amp;lt;- c()# 写下目标函数srr &amp;lt;- function(w){res = (0.4/100+(0.3/100)*w)/sqrt(w^2*(2.5/100)^2+(1-w)^2*(2/100)^2+(0.0625/100)*(w-w^2))}#循环，存储对应值，画图for (i in seq(-5,5,by = 0.0005)){ res = srr(i)sr &amp;lt;- append(sr,res)w &amp;lt;- append(w,i)}max(sr)## [1] 0.2818255pacman::p_load(tidyverse)df &amp;lt;- tibble(x=w,y=sr)ggplot(df,aes(x,y)) + geom_line()+ theme_bw()+xlab(&amp;quot;在市场资产上的权重&amp;quot;)+ylab(&amp;quot;夏普比&amp;quot;)+ggtitle(&amp;quot;第一题&amp;quot;)optimize(srr,c(-100,100),maximum = T) #直接用包寻找最大化值，放入函数和取值范围## $maximum## [1] 0.8322294## ## $objective## [1] 0.</description>
+    </item>
     
     <item>
       <title>CAPM模型的简单实现</title>
@@ -17,7 +26,7 @@
       <pubDate>Sat, 18 Apr 2020 00:00:00 +0000</pubDate>
       
       <guid>/post/2020/04/18/capm/</guid>
-      <description>A股数据资本资产定价模型的演示基本模型回顾FAMA在2004年写了一个比较好的那文献CAPM模型资产组合构成及使用的包数据获取及清洗手动计算各资产和组合的betaA股数据资本资产定价模型的演示基本模型回顾FAMA在2004年写了一个比较好的那文献前面课程对均值方差模型进行了介绍，马科维茨(Markowitz)提出了投资组合选择理论，认为最佳投资组合应当是，风险厌恶的投资者的无差异曲线和资产组合的有效边界线的交点。
+      <description>A股数据资本资产定价模型的演示基本模型回顾FAMA在2004年写了一个比较好的文献CAPM模型资产组合构成及使用的包数据获取及清洗手动计算各资产和组合的betaA股数据资本资产定价模型的演示基本模型回顾FAMA在2004年写了一个比较好的文献前面课程对均值方差模型进行了介绍，马科维茨(Markowitz)提出了投资组合选择理论，认为最佳投资组合应当是，风险厌恶的投资者的无差异曲线和资产组合的有效边界线的交点。
 如果存在市场组合和无风险组合，且投资不存在买空限制的情况下，不同风险偏好的投资者会再无风险资产与市场资产组合的有效边界的切点组成的射线上进行资产分配。如下所示：
 投资者在选择资产时会在收益和风险之间做出平衡：当风险一样时，会选择预期收益最高的资产；而预期收益一样时，会选择风险最低的资产。
 CAPM模型1964年，威廉-夏普(William Sharp)等则在马科维茨基础上提出的单指数模型，将市场组合引入均值-方差模型，极大地简化了计算，他们认为获得了市场任意资组合的收益与某个共同因素之间是有线性关系，最终将其发展为资本资产定价模型(Capital Asset Pricing Model, CAPM)。
