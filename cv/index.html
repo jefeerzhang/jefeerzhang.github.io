@@ -1,243 +1,153 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>张剑 · 个人简历 (CV)</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --ink: #1c1b19;
-    --ink-soft: #57534e;
-    --ink-faint: #a8a29e;
-    --paper: #faf8f5;
-    --card: #ffffff;
-    --line: #e7e2da;
-    --accent: #2f5d50;
-    --accent-soft: #eef3f0;
-    --shadow: 0 1px 2px rgba(28,27,25,.04), 0 14px 32px -16px rgba(28,27,25,.16);
-    --ease: cubic-bezier(.22,.61,.36,1);
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    font-family: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: var(--paper); color: var(--ink); line-height: 1.75;
-    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
-    padding: clamp(40px, 6vw, 80px) 22px;
-  }
-  .wrap { max-width: 820px; margin: 0 auto; }
-
-  .back {
-    display: inline-flex; align-items: center; gap: 6px;
-    margin-bottom: 40px; color: var(--ink-soft); text-decoration: none; font-size: 13.5px;
-    transition: color .3s var(--ease), gap .3s var(--ease);
-  }
-  .back:hover { color: var(--accent); gap: 10px; }
-
-  header {
-    display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
-    gap: 22px; padding-bottom: 30px; margin-bottom: 16px;
-    border-bottom: 2px solid var(--ink);
-  }
-  .id .eyebrow { font-size: 12px; letter-spacing: .26em; text-transform: uppercase; color: var(--accent); font-weight: 500; margin-bottom: 12px; }
-  .id h1 {
-    font-family: "Noto Serif SC", serif; font-weight: 700;
-    font-size: clamp(40px, 8vw, 58px); line-height: 1.05; letter-spacing: -.02em;
-  }
-  .id .aff { color: var(--ink-soft); font-size: 15.5px; margin-top: 12px; }
-  .meta { text-align: right; font-size: 13px; color: var(--ink-soft); line-height: 1.9; }
-  .meta a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .3s var(--ease); }
-  .meta a:hover { border-color: var(--accent); }
-  .orcid {
-    display: inline-flex; align-items: center; gap: .55rem;
-    background: #A6CE39; color: #1a1a1a; padding: .6rem 1rem; border-radius: 999px;
-    font-family: "Inter", system-ui, sans-serif; font-weight: 600; font-size: 1.1rem;
-    letter-spacing: .4px; text-decoration: none; margin-top: .4rem;
-    box-shadow: 0 3px 12px rgba(166,206,57,.35);
-    transition: transform .25s var(--ease), box-shadow .25s var(--ease), background .25s var(--ease);
-  }
-  .orcid:hover { background: #9bc12e; transform: translateY(-1px); box-shadow: 0 7px 20px rgba(166,206,57,.45); }
-  .orcid-i { width: 1.25rem; height: 1.25rem; flex: 0 0 auto; }
-  .orcid-id { font-variant-numeric: tabular-nums; }
-  .orcid-cap { display: block; margin-top: .55rem; font-size: .74rem; color: var(--ink-faint); }
-
-  section { margin-top: 44px; }
-  section > h2 {
-    font-family: "Noto Serif SC", serif; font-weight: 600; font-size: 21px;
-    letter-spacing: -.005em; margin-bottom: 18px; padding-bottom: 11px;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .lead { font-size: 15px; color: var(--ink-soft); line-height: 2; max-width: 70ch; }
-  .lead strong { color: var(--ink); font-weight: 500; }
-
-  .stats {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 14px; margin-top: 22px;
-  }
-  .stat {
-    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
-    padding: 16px 18px; box-shadow: var(--shadow);
-  }
-  .stat .n { font-family: "Noto Serif SC", serif; font-size: 26px; font-weight: 700; color: var(--accent); line-height: 1.1; font-variant-numeric: tabular-nums; }
-  .stat .l { font-size: 12.5px; color: var(--ink-soft); margin-top: 6px; }
-
-  .grp { font-size: 12.5px; color: var(--ink-faint); margin: 28px 0 14px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; }
-
-  .pub {
-    display: grid; grid-template-columns: 60px 1fr; gap: 4px 14px;
-    margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--line);
-    font-size: 14.5px; color: var(--ink-soft); line-height: 1.7;
-  }
-  .pub:last-child { border-bottom: none; }
-  .pub .yr { color: var(--accent); font-weight: 600; font-variant-numeric: tabular-nums; padding-top: 2px; }
-  .pub .body em { font-style: italic; color: var(--ink); font-weight: 500; }
-  .pub a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .3s var(--ease); white-space: nowrap; }
-  .pub a:hover { border-color: var(--accent); }
-
-  .skill-box {
-    position: relative; background: var(--paper); border: 1px solid var(--line);
-    border-radius: 12px; padding: 24px 26px 24px 28px;
-  }
-  .skill-box::before {
-    content: ""; position: absolute; left: 0; top: 18px; bottom: 18px;
-    width: 3px; border-radius: 3px; background: var(--accent);
-  }
-  .skill-box p { font-size: 14.5px; color: #36403b; line-height: 1.95; }
-  .skill-box p + p { margin-top: 12px; }
-  .skill-box a { color: var(--accent); text-decoration: none; font-weight: 500; }
-  .skill-box a:hover { opacity: .8; }
-  .repo {
-    display: flex; align-items: center; gap: 10px; margin-top: 16px;
-    padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px;
-    background: #fff; font-size: 13px;
-  }
-  .repo .tag {
-    font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
-    color: var(--accent); border: 1px solid var(--line); border-radius: 4px;
-    padding: 2px 7px; white-space: nowrap;
-  }
-  .repo .url { font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace; color: var(--ink); font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .repo:hover { border-color: var(--accent); }
-  .skill-cta {
-    display: inline-flex; align-items: center; gap: 6px; margin-top: 18px;
-    color: var(--accent); border: 1px solid var(--accent); border-radius: 6px;
-    padding: 8px 16px; font-size: 13.5px; text-decoration: none; font-weight: 500;
-    transition: transform .25s var(--ease), background .25s var(--ease), color .25s var(--ease);
-  }
-  .skill-cta:hover { transform: translateX(3px); background: var(--accent); color: #fff; }
-
-  .note { color: var(--ink-faint); font-size: 13.5px; }
-  footer { margin-top: 60px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12.5px; letter-spacing: .02em; }
-
-  @media (max-width: 560px) {
-    header { flex-direction: column; align-items: flex-start; }
-    .meta { text-align: left; }
-    .pub { grid-template-columns: 48px 1fr; }
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>张剑 · 个人简历与发表论文</title>
+  <meta name="description" content="张剑，四川农业大学经济学院副教授、经济学博士、硕士研究生导师。个人情况、科研业绩、发表论文与开源学术技能。">
+  <link rel="canonical" href="https://jefeerzhang.github.io/cv/">
+  <meta property="og:title" content="张剑 · 个人简历与发表论文">
+  <meta property="og:description" content="四川农业大学经济学院张剑副教授的科研业绩、论文目录与开源学术技能。">
+  <meta property="og:type" content="profile">
+  <meta property="og:url" content="https://jefeerzhang.github.io/cv/">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%23245642'/%3E%3Ctext x='32' y='41' text-anchor='middle' font-family='serif' font-size='27' font-weight='700' fill='white'%3EJZ%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../assets/site.css">
 </head>
-<body>
-<div class="wrap">
-  <a class="back" href="../">&larr; 返回首页</a>
+<body class="cv-page">
+  <a class="skip-link" href="#main-content">跳至主要内容</a>
 
-  <header>
-    <div class="id">
-      <div class="eyebrow">Curriculum Vitae</div>
-      <h1>张剑</h1>
-      <div class="aff">四川农业大学经济学院 · 副教授</div>
-    </div>
-    <div class="meta">
-      <a class="orcid" href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener" aria-label="ORCID 0000-0002-8024-5483">
-        <svg class="orcid-i" viewBox="0 0 256 256" aria-hidden="true"><circle cx="128" cy="128" r="128" fill="#fff"/><g fill="#A6CE39"><path d="M256 128c0 70.7-57.3 128-128 128S0 198.7 0 128 57.3 0 128 0s128 57.3 128 128z"/><g fill="#fff"><path d="M86.3 186.2h36V100.3H86.3zM102.7 76.2c0 9.3-7.6 16.8-17 16.8s-17-7.5-17-16.8 7.6-16.7 17-16.7 17 7.4 17 16.7zM186.3 186.2h-36V138.6c0-8.9-3.2-15-11.1-15-6 0-9.6 4.1-11.2 8-1.2 2.8-1.5 6.7-1.5 10.6v47h-36V100.3h36v8.1c5-6.8 12.6-10.7 24.4-10.7 18.1 0 31.5 11.9 31.5 36.4z"/></g></g></svg>
-        <span class="orcid-id">0000-0002-8024-5483</span>
-      </a>
-      <span class="orcid-cap">经济学博士 · ORCID 学者主页</span>
-    </div>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+          <a href="../">首页</a>
+          <a href="./" aria-current="page">个人简历</a>
+          <a href="https://jefeerzhang.github.io/master-course/">硕士课程</a>
+          <a href="#skills">自定义技能</a>
+        </div>
+      </div>
+    </nav>
   </header>
 
-  <section>
-    <h2>个人情况</h2>
-    <p class="lead">张剑，经济学博士，现为四川农业大学经济学院副教授，兼任数字经济系主任、经济实验中心主任，硕士研究生导师，四川省数量经济学会理事。2014 年毕业于西南财经大学经济学院，获理论经济学博士学位。</p>
-  </section>
+  <main id="main-content">
+    <header class="container cv-hero">
+      <div class="cv-identity">
+        <p class="eyebrow">Curriculum Vitae</p>
+        <h1>张剑</h1>
+        <p class="cv-role">副教授 · 硕士研究生导师</p>
+        <p class="cv-affiliation">四川农业大学经济学院</p>
+      </div>
+      <div class="cv-scholar">
+        <a class="orcid-link" href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">0000-0002-8024-5483</a>
+        <span>经济学博士 · ORCID 学者主页</span>
+      </div>
+    </header>
 
-  <section>
-    <h2>科研业绩</h2>
-    <p class="lead">近五年主持省厅级课题 <strong>5 项</strong>，主研国家级和省部级课题 <strong>6 项</strong>；出版学术著作 <strong>3 部</strong>，主编部级以上教材 <strong>2 部</strong>（含规划教材 1 部），研究报告获省级以上领导批示 <strong>2 项</strong>。在《南开经济研究》《产业经济研究》《财经论丛》《Technology in Society》等 SSCI、CSSCI 期刊发表论文 <strong>20 余篇</strong>，累计影响因子 27.3，其中中科院 Top 期刊 3 篇、高被引论文 1 篇、人大复印资料全文转载 1 篇。获四川省教学成果二等奖 1 项（排名第五）、四川省哲学社会科学二等奖 1 项（排名第四），具备较强的理论分析与实证研究能力。</p>
-    <div class="stats">
-      <div class="stat"><div class="n">5</div><div class="l">主持省厅级课题</div></div>
-      <div class="stat"><div class="n">6</div><div class="l">主研国家级 / 省部级</div></div>
-      <div class="stat"><div class="n">20+</div><div class="l">发表论文</div></div>
-      <div class="stat"><div class="n">27.3</div><div class="l">累计影响因子</div></div>
-      <div class="stat"><div class="n">Top 1%</div><div class="l">中国知网高被引学者</div></div>
+    <div class="container cv-layout">
+      <aside class="section-nav" aria-label="简历章节">
+        <strong>本页目录</strong>
+        <div>
+          <a href="#profile">个人情况</a>
+          <a href="#research">科研业绩</a>
+          <a href="#publications">发表论文</a>
+          <a href="#skills">自定义技能</a>
+        </div>
+      </aside>
+
+      <div class="cv-content">
+        <section class="content-section" id="profile">
+          <h2>个人情况</h2>
+          <p class="lead">张剑，经济学博士，现为四川农业大学经济学院副教授，兼任数字经济系主任、经济实验中心主任，硕士研究生导师，四川省数量经济学会理事。2014 年毕业于西南财经大学经济学院，获理论经济学博士学位。</p>
+        </section>
+
+        <section class="content-section" id="research">
+          <h2>科研业绩</h2>
+          <p class="lead">近五年主持省厅级课题 <strong>5 项</strong>，主研国家级和省部级课题 <strong>6 项</strong>；出版学术著作 <strong>3 部</strong>，主编部级以上教材 <strong>2 部</strong>（含规划教材 1 部），研究报告获省级以上领导批示 <strong>2 项</strong>。在《南开经济研究》《产业经济研究》《财经论丛》《Technology in Society》等 SSCI、CSSCI 期刊发表论文 <strong>20 余篇</strong>，累计影响因子 27.3，其中中科院 Top 期刊 3 篇、高被引论文 1 篇、人大复印资料全文转载 1 篇。获四川省教学成果二等奖 1 项（排名第五）、四川省哲学社会科学二等奖 1 项（排名第四），具备较强的理论分析与实证研究能力。</p>
+          <div class="metric-band" aria-label="科研业绩概览">
+            <div class="metric"><span class="metric-value">5</span><span class="metric-label">主持省厅级课题</span></div>
+            <div class="metric"><span class="metric-value">6</span><span class="metric-label">主研国家级 / 省部级</span></div>
+            <div class="metric"><span class="metric-value">20+</span><span class="metric-label">发表论文</span></div>
+            <div class="metric"><span class="metric-value">27.3</span><span class="metric-label">累计影响因子</span></div>
+            <div class="metric"><span class="metric-value">Top 1%</span><span class="metric-label">中国知网高被引学者</span></div>
+          </div>
+        </section>
+
+        <section class="content-section" id="publications">
+          <h2>发表论文</h2>
+
+          <div class="publication-group">
+            <h3>中文（CSSCI / 北大核心）</h3>
+            <div class="publication-list">
+              <article class="publication"><time class="pub-year">[2026]</time><p class="pub-body">柏青云, 沈倩岭, 张剑, 等. 农户对气候灾害适应性技术的选择偏好及异质性来源——基于四川省粮农的选择实验分析[J/OL]. 中国农业资源与区划, 1-18. <a href="https://link.cnki.net/urlid/11.3513.s.20260409.1727.016" target="_blank" rel="noopener">[链接]</a></p></article>
+
+              <article class="publication"><time class="pub-year">[2025]</time><p class="pub-body">柏青云, 沈倩岭, 张剑, 等. "知天而作"：气象服务与农业经济增长[J]. 中国农业大学学报, 30(9): 217-231.</p></article>
+
+              <article class="publication"><time class="pub-year">[2024]</time><p class="pub-body">刘璐, 王家瑶, 张剑. 中国碳金融、绿色信贷与绿色保险关联性研究——基于绿色金融体系内部协调性的视角[J]. 财经论丛, (4): 46-59. DOI: <a href="https://doi.org/10.13762/j.cnki.cjlc.2024.04.006" target="_blank" rel="noopener">10.13762/j.cnki.cjlc.2024.04.006</a></p></article>
+
+              <article class="publication"><time class="pub-year">[2021]</time><p class="pub-body">张剑, 周小强, 肖诗顺. 从背井离乡到创新创业——兼论互联网使用对创业的作用[J]. 重庆大学学报(社会科学版), 27(3): 259-274.</p></article>
+
+              <article class="publication"><time class="pub-year">[2020]</time><p class="pub-body">杜连雄, 张剑. 主动环境行为与技术创新对企业绩效的影响[J]. 华东经济管理, 34(1): 121-128. DOI: <a href="https://doi.org/10.19629/j.cnki.34-1014/f.190508011" target="_blank" rel="noopener">10.19629/j.cnki.34-1014/f.190508011</a></p></article>
+
+              <article class="publication"><time class="pub-year">[2019]</time><p class="pub-body">张剑, 王玉峰, 周子琪. 最低工资制度对非正规就业的影响研究——来自中国省级动态面板数据的证据[J]. 财经论丛, (10): 12-20. DOI: <a href="https://doi.org/10.13762/j.cnki.cjlc.20181015.002" target="_blank" rel="noopener">10.13762/j.cnki.cjlc.20181015.002</a></p></article>
+
+              <article class="publication"><time class="pub-year">[2018]</time><p class="pub-body">李后建, 秦杰, 张剑. 最低工资标准如何影响企业雇佣结构[J]. 产业经济研究, (1): 90-103. DOI: <a href="https://doi.org/10.13269/j.cnki.ier.2018.01.008" target="_blank" rel="noopener">10.13269/j.cnki.ier.2018.01.008</a></p></article>
+
+              <article class="publication"><time class="pub-year">[2017]</time><p class="pub-body">李后建, 张剑. 企业创新对产能过剩的影响机制研究[J]. 产业经济研究, (2): 114-126. DOI: <a href="https://doi.org/10.13269/j.cnki.ier.2017.02.010" target="_blank" rel="noopener">10.13269/j.cnki.ier.2017.02.010</a></p></article>
+
+              <article class="publication"><time class="pub-year">[2017]</time><p class="pub-body">张剑, 李后建. 新股发行制度改革：市场化，还是去市场化？——基于双边随机前沿与异质性随机前沿分析[J]. 商业经济与管理, (1): 85-96. DOI: <a href="https://doi.org/10.14134/j.cnki.cn33-1336/f.2017.01.009" target="_blank" rel="noopener">10.14134/j.cnki.cn33-1336/f.2017.01.009</a></p></article>
+
+              <article class="publication"><time class="pub-year">[2017]</time><p class="pub-body">张剑, 李后建, 邹雨潇. 政治效能感、政治参与和家庭高风险投资决策——基于 CGSS 2010 的实证研究[J]. 当代经济科学, 39(1): 62-74+126.</p></article>
+
+              <article class="publication"><time class="pub-year">[2015]</time><p class="pub-body">李后建, 张剑. 腐败与企业创新：润滑剂抑或绊脚石[J]. 南开经济研究, (2): 24-58. DOI: <a href="https://doi.org/10.14116/j.nkes.2015.02.002" target="_blank" rel="noopener">10.14116/j.nkes.2015.02.002</a></p></article>
+            </div>
+          </div>
+
+          <div class="publication-group">
+            <h3>英文期刊</h3>
+            <div class="publication-list">
+              <article class="publication"><time class="pub-year">[2026]</time><p class="pub-body">Qingyun Bai, Qianling Shen, Jian Zhang, et al. Does digital literacy promote climate disaster-adaptive production behaviors among grain-producing smallholders in China? <em>Journal of Integrative Agriculture</em> (SCI). DOI: <a href="https://doi.org/10.1016/j.jia.2025.12.057" target="_blank" rel="noopener">10.1016/j.jia.2025.12.057</a></p></article>
+
+              <article class="publication"><time class="pub-year">[2025]</time><p class="pub-body">The impact of digital government construction on urban green total factor productivity: evidence from China's information benefit pilot program. <em>Environment, Development and Sustainability</em> (SCIE). DOI: <a href="https://doi.org/10.1007/s10668-025-06885-y" target="_blank" rel="noopener">10.1007/s10668-025-06885-y</a></p></article>
+
+              <article class="publication"><time class="pub-year">[2025]</time><p class="pub-body">"Bridging the urban-rural divide": evaluating the impact of e-commerce pilots on urban-rural integration — evidence from a quasi-natural experiment in China's rural e-commerce construction policy. <em>Electronic Commerce Research</em> (SSCI). DOI: <a href="https://doi.org/10.1007/s10660-025-09992-0" target="_blank" rel="noopener">10.1007/s10660-025-09992-0</a></p></article>
+
+              <article class="publication"><time class="pub-year">[2024]</time><p class="pub-body">Revitalizing green progress: Assessing corporate environmental performance in the wake of Yangtze River Major Conservation initiatives. <em>Journal of Cleaner Production</em> (SCIE). DOI: <a href="https://doi.org/10.1016/j.jclepro.2024.141766" target="_blank" rel="noopener">10.1016/j.jclepro.2024.141766</a></p></article>
+
+              <article class="publication"><time class="pub-year">[2024]</time><p class="pub-body">Can digitalization facilitate low carbon lifestyle? — Evidence from households' embedded emissions in China. <em>Technology in Society</em> (SSCI). DOI: <a href="https://doi.org/10.1016/j.techsoc.2024.102455" target="_blank" rel="noopener">10.1016/j.techsoc.2024.102455</a></p></article>
+
+              <article class="publication"><time class="pub-year">[2021]</time><p class="pub-body">The impact of the COVID-19 outbreak on the air quality in China: Evidence from a quasi-natural experiment. <em>Journal of Cleaner Production</em> (SCIE). DOI: <a href="https://doi.org/10.1016/j.jclepro.2021.126475" target="_blank" rel="noopener">10.1016/j.jclepro.2021.126475</a></p></article>
+
+              <article class="publication"><time class="pub-year">[2019]</time><p class="pub-body">Does gender inequality affect household green consumption behaviour in China? <em>Energy Policy</em> (SSCI, SCIE). DOI: <a href="https://doi.org/10.1016/j.enpol.2019.111071" target="_blank" rel="noopener">10.1016/j.enpol.2019.111071</a></p></article>
+            </div>
+          </div>
+        </section>
+
+        <section class="content-section" id="skills">
+          <h2>自定义技能</h2>
+          <div class="skills-panel">
+            <div class="skills-visual">
+              <img src="skills_banner.png" alt="张剑开源学术技能库封面" width="1080" height="1080" loading="lazy">
+            </div>
+            <div class="skills-copy">
+              <p>围绕学术研究、写作与教学，我自行开发并维护了一套可复用的 AI 技能（Agent Skills），现已全部开源。重点覆盖学术写作润色、文献综述撰写、社科基金申报、同行评审与量化结果作图等科研场景。</p>
+              <span class="repo-line">github.com/jefeerzhang/myskill</span>
+              <a class="button" href="https://github.com/jefeerzhang/myskill" target="_blank" rel="noopener">进入技能仓库</a>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
-  </section>
+  </main>
 
-  <section>
-    <h2>发表论文</h2>
-
-    <div class="grp">中文（CSSCI / 北大核心）</div>
-
-    <div class="pub"><div class="yr">[2026]</div><div class="body">柏青云, 沈倩岭, 张剑, 等. 农户对气候灾害适应性技术的选择偏好及异质性来源——基于四川省粮农的选择实验分析[J/OL]. 中国农业资源与区划, 1-18. <a href="https://link.cnki.net/urlid/11.3513.s.20260409.1727.016" target="_blank" rel="noopener">[链接]</a></div></div>
-
-    <div class="pub"><div class="yr">[2025]</div><div class="body">柏青云, 沈倩岭, 张剑, 等. "知天而作"：气象服务与农业经济增长[J]. 中国农业大学学报, 30(9): 217-231.</div></div>
-
-    <div class="pub"><div class="yr">[2024]</div><div class="body">刘璐, 王家瑶, 张剑. 中国碳金融、绿色信贷与绿色保险关联性研究——基于绿色金融体系内部协调性的视角[J]. 财经论丛, (4): 46-59. DOI: <a href="https://doi.org/10.13762/j.cnki.cjlc.2024.04.006" target="_blank" rel="noopener">10.13762/j.cnki.cjlc.2024.04.006</a></div></div>
-
-    <div class="pub"><div class="yr">[2021]</div><div class="body">张剑, 周小强, 肖诗顺. 从背井离乡到创新创业——兼论互联网使用对创业的作用[J]. 重庆大学学报(社会科学版), 27(3): 259-274.</div></div>
-
-    <div class="pub"><div class="yr">[2020]</div><div class="body">杜连雄, 张剑. 主动环境行为与技术创新对企业绩效的影响[J]. 华东经济管理, 34(1): 121-128. DOI: <a href="https://doi.org/10.19629/j.cnki.34-1014/f.190508011" target="_blank" rel="noopener">10.19629/j.cnki.34-1014/f.190508011</a></div></div>
-
-    <div class="pub"><div class="yr">[2019]</div><div class="body">张剑, 王玉峰, 周子琪. 最低工资制度对非正规就业的影响研究——来自中国省级动态面板数据的证据[J]. 财经论丛, (10): 12-20. DOI: <a href="https://doi.org/10.13762/j.cnki.cjlc.20181015.002" target="_blank" rel="noopener">10.13762/j.cnki.cjlc.20181015.002</a></div></div>
-
-    <div class="pub"><div class="yr">[2018]</div><div class="body">李后建, 秦杰, 张剑. 最低工资标准如何影响企业雇佣结构[J]. 产业经济研究, (1): 90-103. DOI: <a href="https://doi.org/10.13269/j.cnki.ier.2018.01.008" target="_blank" rel="noopener">10.13269/j.cnki.ier.2018.01.008</a></div></div>
-
-    <div class="pub"><div class="yr">[2017]</div><div class="body">李后建, 张剑. 企业创新对产能过剩的影响机制研究[J]. 产业经济研究, (2): 114-126. DOI: <a href="https://doi.org/10.13269/j.cnki.ier.2017.02.010" target="_blank" rel="noopener">10.13269/j.cnki.ier.2017.02.010</a></div></div>
-
-    <div class="pub"><div class="yr">[2017]</div><div class="body">张剑, 李后建. 新股发行制度改革：市场化，还是去市场化？——基于双边随机前沿与异质性随机前沿分析[J]. 商业经济与管理, (1): 85-96. DOI: <a href="https://doi.org/10.14134/j.cnki.cn33-1336/f.2017.01.009" target="_blank" rel="noopener">10.14134/j.cnki.cn33-1336/f.2017.01.009</a></div></div>
-
-    <div class="pub"><div class="yr">[2017]</div><div class="body">张剑, 李后建, 邹雨潇. 政治效能感、政治参与和家庭高风险投资决策——基于 CGSS 2010 的实证研究[J]. 当代经济科学, 39(1): 62-74+126.</div></div>
-
-    <div class="pub"><div class="yr">[2015]</div><div class="body">李后建, 张剑. 腐败与企业创新：润滑剂抑或绊脚石[J]. 南开经济研究, (2): 24-58. DOI: <a href="https://doi.org/10.14116/j.nkes.2015.02.002" target="_blank" rel="noopener">10.14116/j.nkes.2015.02.002</a></div></div>
-
-    <div class="grp">英文期刊</div>
-
-    <div class="pub"><div class="yr">[2026]</div><div class="body">Qingyun Bai, Qianling Shen, Jian Zhang, et al. Does digital literacy promote climate disaster-adaptive production behaviors among grain-producing smallholders in China? <em>Journal of Integrative Agriculture</em> (SCI). DOI: <a href="https://doi.org/10.1016/j.jia.2025.12.057" target="_blank" rel="noopener">10.1016/j.jia.2025.12.057</a></div></div>
-
-    <div class="pub"><div class="yr">[2025]</div><div class="body">The impact of digital government construction on urban green total factor productivity: evidence from China's information benefit pilot program. <em>Environment, Development and Sustainability</em> (SCIE). DOI: <a href="https://doi.org/10.1007/s10668-025-06885-y" target="_blank" rel="noopener">10.1007/s10668-025-06885-y</a></div></div>
-
-    <div class="pub"><div class="yr">[2025]</div><div class="body">"Bridging the urban-rural divide": evaluating the impact of e-commerce pilots on urban-rural integration — evidence from a quasi-natural experiment in China's rural e-commerce construction policy. <em>Electronic Commerce Research</em> (SSCI). DOI: <a href="https://doi.org/10.1007/s10660-025-09992-0" target="_blank" rel="noopener">10.1007/s10660-025-09992-0</a></div></div>
-
-    <div class="pub"><div class="yr">[2024]</div><div class="body">Revitalizing green progress: Assessing corporate environmental performance in the wake of Yangtze River Major Conservation initiatives. <em>Journal of Cleaner Production</em> (SCIE). DOI: <a href="https://doi.org/10.1016/j.jclepro.2024.141766" target="_blank" rel="noopener">10.1016/j.jclepro.2024.141766</a></div></div>
-
-    <div class="pub"><div class="yr">[2024]</div><div class="body">Can digitalization facilitate low carbon lifestyle? — Evidence from households' embedded emissions in China. <em>Technology in Society</em> (SSCI). DOI: <a href="https://doi.org/10.1016/j.techsoc.2024.102455" target="_blank" rel="noopener">10.1016/j.techsoc.2024.102455</a></div></div>
-
-    <div class="pub"><div class="yr">[2021]</div><div class="body">The impact of the COVID-19 outbreak on the air quality in China: Evidence from a quasi-natural experiment. <em>Journal of Cleaner Production</em> (SCIE). DOI: <a href="https://doi.org/10.1016/j.jclepro.2021.126475" target="_blank" rel="noopener">10.1016/j.jclepro.2021.126475</a></div></div>
-
-    <div class="pub"><div class="yr">[2019]</div><div class="body">Does gender inequality affect household green consumption behaviour in China? <em>Energy Policy</em> (SSCI, SCIE). DOI: <a href="https://doi.org/10.1016/j.enpol.2019.111071" target="_blank" rel="noopener">10.1016/j.enpol.2019.111071</a></div></div>
-  </section>
-
-  <section id="skills">
-    <h2>自定义技能</h2>
-    <div class="skill-box">
-      <p>围绕学术研究、写作与教学，我自行开发并维护了一套可复用的 AI 技能（Agent Skills），现已全部开源。重点覆盖学术写作润色、文献综述撰写、社科基金申报、同行评审与量化结果作图等科研场景。</p>
-      <a class="repo" href="https://github.com/jefeerzhang/myskill" target="_blank" rel="noopener">
-        <span class="tag">Repo</span>
-        <span class="url">github.com/jefeerzhang/myskill</span>
-      </a>
-      <a class="skill-cta" href="https://github.com/jefeerzhang/myskill" target="_blank" rel="noopener">进入技能仓库 →</a>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管 · 最后更新 2026-07-10</span>
+      <div class="footer-links">
+        <a href="../">返回首页</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
     </div>
-  </section>
-
-  <section>
-    <h2>其他</h2>
-    <p class="note">教育背景、工作经历、研究方向、教学、获奖等板块待补充。</p>
-  </section>
-
-  <footer>由 GitHub Pages 托管 · 最后更新 2026-07-10</footer>
-</div>
+  </footer>
 </body>
 </html>
