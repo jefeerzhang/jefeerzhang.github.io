@@ -4,39 +4,84 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>张剑 · 个人简历 (CV)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: #fff; color: #1a1a1a; line-height: 1.7; padding: 40px 20px;
+  :root {
+    --ink: #1c1b19;
+    --ink-soft: #57534e;
+    --ink-faint: #a8a29e;
+    --paper: #faf8f5;
+    --card: #ffffff;
+    --line: #e7e2da;
+    --accent: #2f5d50;
+    --accent-soft: #eef3f0;
+    --shadow: 0 1px 2px rgba(28,27,25,.04), 0 14px 32px -16px rgba(28,27,25,.16);
+    --ease: cubic-bezier(.22,.61,.36,1);
   }
-  .wrap { max-width: 820px; margin: 0 auto; }
-  header { border-bottom: 2px solid #1a1a1a; padding-bottom: 18px; margin-bottom: 28px; }
-  header h1 { font-size: 30px; font-weight: 700; }
-  header .aff { color: #444; font-size: 16px; margin-top: 6px; }
-  header .orcid { font-size: 14px; margin-top: 8px; }
-  header .orcid a { color: #2563eb; text-decoration: none; }
-  header .orcid a:hover { text-decoration: underline; }
-  section { margin-bottom: 32px; }
-  section h2 { font-size: 20px; font-weight: 700; margin-bottom: 14px; padding-left: 10px; border-left: 4px solid #2563eb; }
-  .pub { margin-bottom: 14px; padding-left: 14px; text-indent: -14px; font-size: 15px; }
-  .pub .yr { color: #2563eb; font-weight: 600; }
-  .pub a { color: #2563eb; text-decoration: none; }
-  .pub a:hover { text-decoration: underline; }
-  section h3.grp { font-size: 15px; color: #444; margin: 18px 0 10px; font-weight: 700; letter-spacing: .02em; }
-  .achieve { background: #f7f9fc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 18px; line-height: 1.95; color: #2d3748; font-size: 15px; }
-  .note { color: #999; font-size: 13px; font-style: italic; }
-  footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #e6e8eb; color: #999; font-size: 13px; }
-  .back { display: inline-block; margin-bottom: 20px; color: #2563eb; text-decoration: none; font-size: 14px; }
-  .back:hover { text-decoration: underline; }
-  .skill { display: flex; gap: 12px; align-items: baseline; padding: 8px 0; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
-  .sk-name { flex: 0 0 220px; font-weight: 600; color: #1a1a1a; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
-  .sk-desc { color: #555; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--paper); color: var(--ink); line-height: 1.75;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    padding: clamp(36px, 6vw, 72px) 22px;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
 
-  .skill-banner { margin: 18px 0; text-align: center; }
-  .skill-banner img { max-width: 360px; width: 70%; height: auto; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.10); transition: transform .2s ease; }
-  .skill-banner img:hover { transform: scale(1.02); }
-  .skill-banner figcaption { margin-top: 10px; font-size: 13px; color: #999; }
+  .back {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-bottom: 36px; color: var(--ink-soft); text-decoration: none; font-size: 13.5px;
+    transition: color .3s var(--ease), gap .3s var(--ease);
+  }
+  .back:hover { color: var(--accent); gap: 10px; }
+
+  header { margin-bottom: 52px; }
+  .eyebrow { font-size: 12px; letter-spacing: .26em; text-transform: uppercase; color: var(--accent); font-weight: 500; margin-bottom: 14px; }
+  header h1 {
+    font-family: "Noto Serif SC", serif; font-weight: 700;
+    font-size: clamp(38px, 8vw, 54px); line-height: 1.1; letter-spacing: -.02em; margin-bottom: 14px;
+  }
+  header .aff { color: var(--ink-soft); font-size: 16px; }
+  header .orcid { font-size: 14px; margin-top: 10px; color: var(--ink-soft); }
+  header .orcid a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .3s var(--ease); }
+  header .orcid a:hover { border-color: var(--accent); }
+
+  section { margin-bottom: 46px; }
+  section h2 {
+    font-family: "Noto Serif SC", serif; font-weight: 600; font-size: 22px;
+    letter-spacing: -.005em; margin-bottom: 18px; padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .achieve {
+    background: var(--accent-soft); border-radius: 12px; padding: 20px 22px;
+    line-height: 2; color: #36403b; font-size: 15px;
+  }
+  .pub {
+    margin-bottom: 16px; padding-left: 16px; text-indent: -16px; font-size: 14.5px; color: var(--ink-soft);
+    border-bottom: 1px solid var(--line); padding-bottom: 16px;
+  }
+  .pub:last-child { border-bottom: none; padding-bottom: 0; }
+  .pub .yr { color: var(--accent); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .pub em { font-style: italic; color: var(--ink); font-weight: 500; }
+  .pub a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .3s var(--ease); }
+  .pub a:hover { border-color: var(--accent); }
+  section h3.grp {
+    font-size: 13px; color: var(--ink-faint); margin: 22px 0 14px; font-weight: 500;
+    letter-spacing: .14em; text-transform: uppercase;
+  }
+
+  .note { color: var(--ink-faint); font-size: 13.5px; }
+  footer { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12.5px; letter-spacing: .02em; }
+
+  .skill-banner { margin: 22px 0 4px; text-align: center; }
+  .skill-banner img {
+    max-width: 420px; width: 78%; height: auto; border-radius: 14px;
+    box-shadow: var(--shadow); transition: transform .5s var(--ease);
+  }
+  .skill-banner img:hover { transform: scale(1.015); }
+  .skill-banner figcaption { margin-top: 12px; font-size: 12.5px; color: var(--ink-faint); }
 </style>
 </head>
 <body>
@@ -44,6 +89,7 @@
   <a class="back" href="../">&larr; 返回首页</a>
 
   <header>
+    <div class="eyebrow">Curriculum Vitae</div>
     <h1>张剑</h1>
     <div class="aff">四川农业大学经济学院 · 副教授</div>
     <div class="orcid">ORCID: <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">0000-0002-8024-5483</a></div>
@@ -85,7 +131,6 @@
     <div class="pub"><span class="yr">[2017]</span> 张剑, 李后建, 邹雨潇. 政治效能感、政治参与和家庭高风险投资决策——基于CGSS 2010的实证研究[J]. 当代经济科学, 39(1): 62-74+126.</div>
 
     <div class="pub"><span class="yr">[2015]</span> 李后建, 张剑. 腐败与企业创新：润滑剂抑或绊脚石[J]. 南开经济研究, (2): 24-58. DOI: <a href="https://doi.org/10.14116/j.nkes.2015.02.002" target="_blank" rel="noopener">10.14116/j.nkes.2015.02.002</a></div>
-  </section>
 
     <h3 class="grp">英文期刊</h3>
 
