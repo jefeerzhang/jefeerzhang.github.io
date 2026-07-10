@@ -7,6 +7,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "index.html"
 ICON = ROOT / "assets" / "prompt-optimizer.png"
+CSS = ROOT / "assets" / "site.css"
 
 
 class TagCollector(HTMLParser):
@@ -33,7 +34,7 @@ class HomepageToolbarTests(unittest.TestCase):
         grids = [
             attrs
             for tag, attrs in self.parser.tags
-            if tag == "div" and has_class(attrs, "tools-grid")
+            if tag == "article" and has_class(attrs, "entry-tool")
         ]
         cards = [
             attrs
@@ -67,8 +68,8 @@ class HomepageToolbarTests(unittest.TestCase):
             if tag == "img" and attrs.get("src") == "assets/prompt-optimizer.png"
         ]
         self.assertEqual(len(images), 1)
-        self.assertEqual(images[0].get("width"), "32")
-        self.assertEqual(images[0].get("height"), "32")
+        self.assertEqual(images[0].get("width"), "256")
+        self.assertEqual(images[0].get("height"), "256")
         self.assertTrue(images[0].get("alt"))
         self.assertTrue(ICON.exists())
 
@@ -79,10 +80,12 @@ class HomepageToolbarTests(unittest.TestCase):
         self.assertGreaterEqual(height, 16)
 
     def test_toolbar_css_is_responsive_and_accessible(self):
-        self.assertIn("grid-template-columns: repeat(2, minmax(0, 1fr))", self.html)
-        self.assertIn(".tool-card:focus-visible", self.html)
-        self.assertIn(".tools-grid { grid-template-columns: 1fr; }", self.html)
-        self.assertIn("@media (prefers-reduced-motion: reduce)", self.html)
+        self.assertTrue(CSS.exists())
+        css = CSS.read_text(encoding="utf-8")
+        self.assertIn(".entry-grid", css)
+        self.assertIn(".tool-card:focus-visible", css)
+        self.assertIn("@media (max-width: 760px)", css)
+        self.assertIn("@media (prefers-reduced-motion: reduce)", css)
 
     def test_legacy_tool_block_is_removed(self):
         self.assertNotIn("tool-block", self.html)
