@@ -1,215 +1,130 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jefeer Zhang · 课程与资料</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --ink: #1c1b19;
-    --ink-soft: #57534e;
-    --ink-faint: #a8a29e;
-    --paper: #faf8f5;
-    --card: #ffffff;
-    --line: #e7e2da;
-    --accent: #2f5d50;
-    --accent-soft: #eef3f0;
-    --shadow: 0 1px 2px rgba(28,27,25,.04), 0 12px 28px -12px rgba(28,27,25,.14);
-    --ease: cubic-bezier(.22,.61,.36,1);
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    font-family: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: var(--paper); color: var(--ink); line-height: 1.7;
-    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
-    padding: clamp(40px, 8vw, 96px) 22px;
-  }
-  .wrap { max-width: 720px; margin: 0 auto; }
-
-  header { margin-bottom: 56px; }
-  .eyebrow {
-    font-size: 12px; letter-spacing: .26em; text-transform: uppercase;
-    color: var(--accent); font-weight: 500; margin-bottom: 18px;
-  }
-  header h1 {
-    font-family: "Noto Serif SC", serif; font-weight: 700;
-    font-size: clamp(34px, 6vw, 46px); line-height: 1.18; letter-spacing: -.01em;
-    margin-bottom: 16px;
-  }
-  header p { color: var(--ink-soft); font-size: 16px; max-width: 52ch; }
-
-  .card {
-    display: block; text-decoration: none; color: inherit;
-    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
-    padding: 26px 28px; margin-bottom: 18px;
-    box-shadow: var(--shadow);
-    transition: transform .45s var(--ease), box-shadow .45s var(--ease), border-color .45s var(--ease);
-    opacity: 0; transform: translateY(14px);
-    animation: rise .7s var(--ease) forwards;
-  }
-  .card:nth-child(2) { animation-delay: .06s; }
-  .card:nth-child(3) { animation-delay: .12s; }
-  .card:nth-child(4) { animation-delay: .18s; }
-  @keyframes rise { to { opacity: 1; transform: translateY(0); } }
-  .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 2px 4px rgba(28,27,25,.05), 0 22px 44px -16px rgba(28,27,25,.22);
-    border-color: #d8d1c6;
-  }
-  .card .row { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
-  .card h2 {
-    font-family: "Noto Serif SC", serif; font-weight: 600;
-    font-size: 21px; letter-spacing: -.005em; margin-bottom: 8px;
-  }
-  .card .meta {
-    color: var(--accent); font-size: 12.5px; font-weight: 500;
-    letter-spacing: .01em; white-space: nowrap; font-variant-numeric: tabular-nums;
-  }
-  .card p { color: var(--ink-soft); font-size: 14.5px; }
-  .card .arrow {
-    display: inline-block; margin-top: 14px; color: var(--accent);
-    font-size: 13px; font-weight: 500; letter-spacing: .02em;
-    transition: transform .4s var(--ease);
-  }
-  .card:hover .arrow { transform: translateX(5px); }
-
-  .card.skill { border-left: 3px solid var(--accent); background: var(--accent-soft); }
-  .card.skill .meta { color: var(--accent); }
-
-  .section-label {
-    display: flex; align-items: center; gap: 12px;
-    margin: 52px 0 22px; color: var(--ink-faint);
-    font-size: 12px; font-weight: 500; letter-spacing: .24em; text-transform: uppercase;
-  }
-  .section-label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
-
-  .tools-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
-  }
-  .tool-card {
-    display: grid;
-    grid-template-columns: 56px minmax(0, 1fr) 20px;
-    align-items: center;
-    gap: 16px;
-    min-height: 124px;
-    padding: 22px;
-    color: inherit;
-    text-decoration: none;
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    box-shadow: var(--shadow);
-    transition: transform .45s var(--ease), box-shadow .45s var(--ease), border-color .45s var(--ease);
-  }
-  .tool-card:hover {
-    transform: translateY(-4px);
-    border-color: #d8d1c6;
-    box-shadow: 0 2px 4px rgba(28,27,25,.05), 0 22px 44px -16px rgba(28,27,25,.22);
-  }
-  .tool-card:focus-visible {
-    outline: 3px solid rgba(47,93,80,.32);
-    outline-offset: 4px;
-  }
-  .tool-icon {
-    display: grid;
-    place-items: center;
-    width: 56px;
-    height: 56px;
-    background: var(--accent-soft);
-    border-radius: 10px;
-  }
-  .tool-icon img {
-    display: block;
-    width: 32px;
-    height: 32px;
-    object-fit: contain;
-  }
-  .tool-copy { min-width: 0; }
-  .tool-name {
-    display: block;
-    color: var(--ink);
-    font-family: "Noto Serif SC", serif;
-    font-size: 17px;
-    font-weight: 600;
-    letter-spacing: 0;
-  }
-  .tool-description {
-    display: block;
-    margin-top: 5px;
-    color: var(--ink-soft);
-    font-size: 13px;
-    line-height: 1.55;
-  }
-  .tool-external {
-    color: var(--accent);
-    font-size: 18px;
-    line-height: 1;
-    transition: transform .35s var(--ease);
-  }
-  .tool-card:hover .tool-external { transform: translate(2px, -2px); }
-
-  footer {
-    margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--line);
-    color: var(--ink-faint); font-size: 12.5px; letter-spacing: .02em;
-  }
-  @media (max-width: 640px) {
-    .tools-grid { grid-template-columns: 1fr; }
-    .tool-card { min-height: 112px; padding: 20px; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .card { animation: none; opacity: 1; transform: none; }
-    .tool-card, .tool-external { transition: none; }
-    .tool-card:hover { transform: none; }
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>张剑 · 四川农业大学经济学院</title>
+  <meta name="description" content="张剑，四川农业大学经济学院副教授、硕士研究生导师，研究方向涵盖数字经济、绿色发展与应用计量。">
+  <link rel="canonical" href="https://jefeerzhang.github.io/">
+  <meta property="og:title" content="张剑 · 四川农业大学经济学院">
+  <meta property="og:description" content="经济学研究、教学资料、个人简历与开源学术技能。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://jefeerzhang.github.io/">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%23245642'/%3E%3Ctext x='32' y='41' text-anchor='middle' font-family='serif' font-size='27' font-weight='700' fill='white'%3EJZ%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/site.css">
 </head>
-<body>
-<div class="wrap">
-  <header>
-    <div class="eyebrow">Course &amp; Materials</div>
-    <h1>课程与资料</h1>
-    <p>按方向整理的教学与研究资料汇总。点击卡片进入对应内容。</p>
+<body class="home-page">
+  <a class="skip-link" href="#main-content">跳至主要内容</a>
+
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="./">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+          <a href="./" aria-current="page">首页</a>
+          <a href="cv/">个人简历</a>
+          <a href="https://jefeerzhang.github.io/master-course/">硕士课程</a>
+          <a href="cv/#skills">自定义技能</a>
+        </div>
+      </div>
+    </nav>
   </header>
 
-  <a class="card" href="https://jefeerzhang.github.io/master-course/">
-    <div class="row"><h2>硕士课程</h2><span class="meta">master-course/</span></div>
-    <p>面向硕士研究生的教学资料，含第一性原理思维讲稿及配套图示。</p>
-    <span class="arrow">进入课程 →</span>
-  </a>
+  <main id="main-content">
+    <section class="container home-hero" aria-labelledby="home-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Economics / Research / Teaching</p>
+        <h1 id="home-title">张剑</h1>
+        <p class="hero-role">四川农业大学经济学院副教授、硕士研究生导师</p>
+        <p class="hero-summary">聚焦数字经济、绿色发展与应用计量研究，并持续整理教学和研究资料。</p>
+        <div class="hero-actions">
+          <a class="button" href="cv/">查看个人简历</a>
+          <a class="button button-secondary" href="https://jefeerzhang.github.io/master-course/">进入硕士课程</a>
+          <a class="text-link" href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID 0000-0002-8024-5483</a>
+        </div>
+      </div>
 
-  <a class="card" href="https://jefeerzhang.github.io/cv/">
-    <div class="row"><h2>个人简历 (CV)</h2><span class="meta">cv/</span></div>
-    <p>张剑 · 四川农业大学经济学院副教授，含发表论文列表与 ORCID 链接。</p>
-    <span class="arrow">查看简历 →</span>
-  </a>
+      <aside class="research-index" aria-labelledby="research-focus-title">
+        <h2 id="research-focus-title">研究关注</h2>
+        <ol>
+          <li>数字经济与城乡发展</li>
+          <li>绿色转型与环境绩效</li>
+          <li>应用计量与政策评估</li>
+        </ol>
+      </aside>
+    </section>
 
-  <a class="card skill" href="cv/#skills">
-    <div class="row"><h2>自定义技能</h2><span class="meta">myskill</span></div>
-    <p>本人开源开发的 AI 技能库（学术写作、文献综述、社科基金申报、AI 写作治理、量化作图等），详见 CV 页「自定义技能」一节。</p>
-    <span class="arrow">浏览技能库 →</span>
-  </a>
+    <section class="entry-section" aria-labelledby="entry-title">
+      <div class="container">
+        <div class="section-heading">
+          <h2 id="entry-title">课程、研究与工具</h2>
+          <p>从课程资料到科研成果，按使用场景进入对应内容。</p>
+        </div>
 
-  <div class="section-label">工具栏 · Tools</div>
-  <div class="tools-grid">
-    <a class="tool-card" href="https://prompt.always200.com/#/basic/system" target="_blank" rel="noopener" aria-label="打开提示词优化器（新窗口）">
-      <span class="tool-icon">
-        <img src="assets/prompt-optimizer.png" alt="提示词优化器图标" width="32" height="32">
-      </span>
-      <span class="tool-copy">
-        <span class="tool-name">提示词优化器</span>
-        <span class="tool-description">优化系统提示词与任务指令</span>
-      </span>
-      <span class="tool-external" aria-hidden="true">↗</span>
-    </a>
-  </div>
+        <div class="entry-grid">
+          <article class="entry-card entry-course">
+            <a class="entry-link" href="https://jefeerzhang.github.io/master-course/">
+              <div>
+                <h3>硕士课程</h3>
+                <p>面向硕士研究生的教学资料，包含第一性原理思维讲稿及配套图示。</p>
+              </div>
+              <div class="entry-meta">
+                <span>主要教学入口</span>
+                <span class="entry-arrow" aria-hidden="true">→</span>
+              </div>
+            </a>
+          </article>
 
-  <footer>由 GitHub Pages 托管 · 持续更新中</footer>
-</div>
+          <article class="entry-card entry-cv">
+            <a class="entry-link" href="cv/">
+              <div>
+                <h3>个人简历</h3>
+                <p>查看个人情况、科研业绩、发表论文和学者身份信息。</p>
+              </div>
+              <div class="entry-meta">
+                <span>CV / Publications</span>
+                <span class="entry-arrow" aria-hidden="true">→</span>
+              </div>
+            </a>
+          </article>
+
+          <article class="entry-card entry-skills">
+            <a class="entry-link" href="cv/#skills">
+              <div>
+                <h3>自定义技能</h3>
+                <p>开源的学术写作、文献综述、基金申报与量化作图技能库。</p>
+              </div>
+              <div class="entry-skills-visual">
+                <img src="cv/skills_banner.png" alt="自定义学术技能库视觉封面" width="1080" height="1080" loading="lazy">
+              </div>
+            </a>
+          </article>
+
+          <article class="entry-card entry-tool">
+            <a class="tool-card" href="https://prompt.always200.com/#/basic/system" target="_blank" rel="noopener" aria-label="打开提示词优化器（新窗口）">
+              <span class="tool-icon">
+                <img src="assets/prompt-optimizer.png" alt="提示词优化器图标" width="256" height="256">
+              </span>
+              <span class="tool-copy">
+                <h3>提示词优化器</h3>
+                <span class="tool-description">优化系统提示词与任务指令</span>
+              </span>
+              <span class="entry-arrow" aria-hidden="true">↗</span>
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>
