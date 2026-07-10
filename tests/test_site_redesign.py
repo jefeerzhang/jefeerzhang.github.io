@@ -18,21 +18,47 @@ class DocumentParser(HTMLParser):
         self.tags = []
         self.text_stack = []
         self.heading_text = []
+        self.div_stack = []
+        self.current_publication_group = None
+        self.current_pub_year_chunks = None
+        self.publication_groups = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
         self.tags.append((tag, attrs))
+        if tag == "div":
+            is_publication_group = "publication-group" in class_tokens(attrs)
+            self.div_stack.append(is_publication_group)
+            if is_publication_group:
+                group = {"attrs": attrs, "years": []}
+                self.publication_groups.append(group)
+                self.current_publication_group = group
+        if (
+            tag == "time"
+            and "pub-year" in class_tokens(attrs)
+            and self.current_publication_group is not None
+        ):
+            self.current_pub_year_chunks = []
         if tag in {"h1", "h2", "h3"}:
             self.text_stack.append([tag, []])
 
     def handle_data(self, data):
         if self.text_stack:
             self.text_stack[-1][1].append(data)
+        if self.current_pub_year_chunks is not None:
+            self.current_pub_year_chunks.append(data)
 
     def handle_endtag(self, tag):
+        if tag == "time" and self.current_pub_year_chunks is not None:
+            year_text = "".join(self.current_pub_year_chunks).strip().strip("[]")
+            self.current_publication_group["years"].append(int(year_text))
+            self.current_pub_year_chunks = None
         if self.text_stack and self.text_stack[-1][0] == tag:
             heading_tag, chunks = self.text_stack.pop()
             self.heading_text.append((heading_tag, "".join(chunks).strip()))
+        if tag == "div" and self.div_stack:
+            if self.div_stack.pop():
+                self.current_publication_group = None
 
 
 def parse(path):
@@ -151,6 +177,20 @@ class CvRedesignTests(unittest.TestCase):
         self.assertEqual(len(find_tags(self.parser, "article", "publication")), 18)
         for value in ("5", "6", "20+", "27.3", "Top 1%"):
             self.assertIn(value, self.html)
+
+    def test_publications_are_grouped_by_language_and_sorted_newest_first(self):
+        groups = self.parser.publication_groups
+        self.assertEqual(
+            [group["attrs"].get("data-language") for group in groups],
+            ["zh", "en"],
+        )
+        self.assertEqual([len(group["years"]) for group in groups], [11, 7])
+        for group in groups:
+            self.assertEqual(group["attrs"].get("data-sort"), "year-desc")
+            self.assertEqual(group["years"], sorted(group["years"], reverse=True))
+        self.assertIn(("h3", "中文论文"), self.parser.heading_text)
+        self.assertIn(("h3", "英文论文"), self.parser.heading_text)
+        self.assertIn("按语言分类，各组按发表时间倒序排列。", self.html)
 
     def test_cv_preserves_identifiers_and_doi_links(self):
         for value in (

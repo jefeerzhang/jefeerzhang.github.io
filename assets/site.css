@@ -778,6 +778,13 @@ a {
   margin-top: 44px;
 }
 
+.publication-order-note {
+  margin: -18px 0 30px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
 .publication-group h3 {
   margin: 0 0 20px;
   color: var(--accent);
