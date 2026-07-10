@@ -4,55 +4,115 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Jefeer Zhang · 课程与资料</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: #f5f6f8; color: #1a1a1a; line-height: 1.6;
-    padding: 48px 20px;
+  :root {
+    --ink: #1c1b19;
+    --ink-soft: #57534e;
+    --ink-faint: #a8a29e;
+    --paper: #faf8f5;
+    --card: #ffffff;
+    --line: #e7e2da;
+    --accent: #2f5d50;
+    --accent-soft: #eef3f0;
+    --shadow: 0 1px 2px rgba(28,27,25,.04), 0 12px 28px -12px rgba(28,27,25,.14);
+    --ease: cubic-bezier(.22,.61,.36,1);
   }
-  .wrap { max-width: 760px; margin: 0 auto; }
-  header { margin-bottom: 36px; }
-  header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-  header p { color: #666; font-size: 15px; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--paper); color: var(--ink); line-height: 1.7;
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    padding: clamp(40px, 8vw, 96px) 22px;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  header { margin-bottom: 56px; }
+  .eyebrow {
+    font-size: 12px; letter-spacing: .26em; text-transform: uppercase;
+    color: var(--accent); font-weight: 500; margin-bottom: 18px;
+  }
+  header h1 {
+    font-family: "Noto Serif SC", serif; font-weight: 700;
+    font-size: clamp(34px, 6vw, 46px); line-height: 1.18; letter-spacing: -.01em;
+    margin-bottom: 16px;
+  }
+  header p { color: var(--ink-soft); font-size: 16px; max-width: 52ch; }
+
   .card {
     display: block; text-decoration: none; color: inherit;
-    background: #fff; border: 1px solid #e6e8eb; border-radius: 12px;
-    padding: 22px 24px; margin-bottom: 16px;
-    transition: box-shadow .2s, transform .2s, border-color .2s;
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    padding: 26px 28px; margin-bottom: 18px;
+    box-shadow: var(--shadow);
+    transition: transform .45s var(--ease), box-shadow .45s var(--ease), border-color .45s var(--ease);
+    opacity: 0; transform: translateY(14px);
+    animation: rise .7s var(--ease) forwards;
   }
-  .card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.08); transform: translateY(-2px); border-color: #c9cdd4; }
-  .card h2 { font-size: 18px; margin-bottom: 6px; }
-  .card .meta { color: #2563eb; font-size: 13px; margin-bottom: 8px; }
-  .card p { color: #555; font-size: 14px; }
-  footer { margin-top: 40px; color: #999; font-size: 13px; text-align: center; }
-  .empty { color: #aaa; font-size: 14px; font-style: italic; }
-  .card.skill { border-left: 4px solid #16a34a; }
-  .card.skill .desc { color: #16a34a; }
+  .card:nth-child(2) { animation-delay: .06s; }
+  .card:nth-child(3) { animation-delay: .12s; }
+  .card:nth-child(4) { animation-delay: .18s; }
+  @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 2px 4px rgba(28,27,25,.05), 0 22px 44px -16px rgba(28,27,25,.22);
+    border-color: #d8d1c6;
+  }
+  .card .row { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+  .card h2 {
+    font-family: "Noto Serif SC", serif; font-weight: 600;
+    font-size: 21px; letter-spacing: -.005em; margin-bottom: 8px;
+  }
+  .card .meta {
+    color: var(--accent); font-size: 12.5px; font-weight: 500;
+    letter-spacing: .01em; white-space: nowrap; font-variant-numeric: tabular-nums;
+  }
+  .card p { color: var(--ink-soft); font-size: 14.5px; }
+  .card .arrow {
+    display: inline-block; margin-top: 14px; color: var(--accent);
+    font-size: 13px; font-weight: 500; letter-spacing: .02em;
+    transition: transform .4s var(--ease);
+  }
+  .card:hover .arrow { transform: translateX(5px); }
+
+  .card.skill { border-left: 3px solid var(--accent); background: var(--accent-soft); }
+  .card.skill .meta { color: var(--accent); }
+
+  footer {
+    margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--line);
+    color: var(--ink-faint); font-size: 12.5px; letter-spacing: .02em;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card { animation: none; opacity: 1; transform: none; }
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
+    <div class="eyebrow">Course &amp; Materials</div>
     <h1>课程与资料</h1>
-    <p>按方向整理的教学资料汇总，点击进入对应内容。</p>
+    <p>按方向整理的教学与研究资料汇总。点击卡片进入对应内容。</p>
   </header>
 
   <a class="card" href="https://jefeerzhang.github.io/master-course/">
-    <h2>硕士课程</h2>
-    <div class="meta">https://jefeerzhang.github.io/master-course/</div>
+    <div class="row"><h2>硕士课程</h2><span class="meta">master-course/</span></div>
     <p>面向硕士研究生的教学资料，含第一性原理思维讲稿及配套图示。</p>
+    <span class="arrow">进入课程 →</span>
   </a>
 
   <a class="card" href="https://jefeerzhang.github.io/cv/">
-    <h2>个人简历 (CV)</h2>
-    <div class="meta">https://jefeerzhang.github.io/cv/</div>
+    <div class="row"><h2>个人简历 (CV)</h2><span class="meta">cv/</span></div>
     <p>张剑 · 四川农业大学经济学院副教授，含发表论文列表与 ORCID 链接。</p>
+    <span class="arrow">查看简历 →</span>
   </a>
 
   <a class="card skill" href="cv/#skills">
-    <div class="title">自定义技能</div>
+    <div class="row"><h2>自定义技能</h2><span class="meta">myskill</span></div>
     <p>本人开源开发的 AI 技能库（学术写作、文献综述、社科基金申报、AI 写作治理、量化作图等），点击查看全部清单。</p>
+    <span class="arrow">浏览技能库 →</span>
   </a>
 
   <footer>由 GitHub Pages 托管 · 持续更新中</footer>
