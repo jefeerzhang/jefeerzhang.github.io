@@ -32,6 +32,11 @@
   .skill { display: flex; gap: 12px; align-items: baseline; padding: 8px 0; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
   .sk-name { flex: 0 0 220px; font-weight: 600; color: #1a1a1a; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
   .sk-desc { color: #555; }
+
+  .skill-banner { margin: 18px 0; text-align: center; }
+  .skill-banner img { max-width: 360px; width: 70%; height: auto; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.10); transition: transform .2s ease; }
+  .skill-banner img:hover { transform: scale(1.02); }
+  .skill-banner figcaption { margin-top: 10px; font-size: 13px; color: #999; }
 </style>
 </head>
 <body>
@@ -101,26 +106,13 @@
 
   <section id="skills">
     <h2>自定义技能</h2>
-    <p class="note">以下技能由本人开发并开源，代码库位于 <a href="https://github.com/jefeerzhang/myskill" target="_blank" rel="noopener">github.com/jefeerzhang/myskill</a>（共 19 项，涵盖学术写作、文献综述、社科基金申报、AI 写作治理、量化作图等）。</p>
-    <div class="skill"><span class="sk-name">academic-literature-guide-v2</span><span class="sk-desc">学术文献检索与阅读指南，规范文献管理与综述素材整理</span></div>
-    <div class="skill"><span class="sk-name">avoid-ai-writing</span><span class="sk-desc">审计并改写文本，消除 AI 写作痕迹（AI-isms）</span></div>
-    <div class="skill"><span class="sk-name">coefplot</span><span class="sk-desc">Stata 回归系数图、多模型对比图、边际效应图与系数排序图绘制专家</span></div>
-    <div class="skill"><span class="sk-name">econ-literature-review-writer</span><span class="sk-desc">经济管理类文献综述写作，支持研究脉络梳理、主题聚类与述评生成</span></div>
-    <div class="skill"><span class="sk-name">grill-me</span><span class="sk-desc">围绕 plan/design 持续追问用户，逐分支达成共识后再动手</span></div>
-    <div class="skill"><span class="sk-name">grill-with-docs</span><span class="sk-desc">带文档审查的追问版，用领域文档挑战并校准方案</span></div>
-    <div class="skill"><span class="sk-name">khazix-writer</span><span class="sk-desc">结构化长文写作技能，含内容方法论与风格范例</span></div>
-    <div class="skill"><span class="sk-name">material-ideation</span><span class="sk-desc">读取本地文献/调研/政策材料，提取人文社科核心机制并生成选题</span></div>
-    <div class="skill"><span class="sk-name">mattpocock-grilling</span><span class="sk-desc">针对计划或设计的 relentlessly 追问，澄清边界与假设</span></div>
-    <div class="skill"><span class="sk-name">mem0-memory-flow</span><span class="sk-desc">长期记忆的自动建议、评审、上传与召回流程</span></div>
-    <div class="skill"><span class="sk-name">peer-review</span><span class="sk-desc">学术论文同行评审专家（正常版+批判版双轨，五大批判原则）</span></div>
-    <div class="skill"><span class="sk-name">proposal-review-expert</span><span class="sk-desc">基金/课题申报书评审与 RAG 检索增强</span></div>
-    <div class="skill"><span class="sk-name">ragflow-client</span><span class="sk-desc">调用 RAGflow 原生对话 API 进行知识库问答</span></div>
-    <div class="skill"><span class="sk-name">research-topic-selection</span><span class="sk-desc">研究方向与选题的扫描、评估与 gate 筛选</span></div>
-    <div class="skill"><span class="sk-name">stop-ai-slop-zh</span><span class="sk-desc">识别并消除中文 AI 写作典型痕迹（套话、排比、八股）</span></div>
-    <div class="skill"><span class="sk-name">teach</span><span class="sk-desc">在 workspace 中教用户一个新 skill 或概念</span></div>
-    <div class="skill"><span class="sk-name">口播视频制作</span><span class="sk-desc">口播视频脚本与制作流程辅助</span></div>
-    <div class="skill"><span class="sk-name">社科基金选题说明撰写指南</span><span class="sk-desc">国家/省部级社科基金选题说明撰写（三层结构+政策引用+范例）</span></div>
-    <div class="skill"><span class="sk-name">社科基金题目评审</span><span class="sk-desc">从问题意识、对象、方法、研究空间四维度评审社科基金题目</span></div>
+    <p class="note">我围绕学术研究、写作与教学，自行开发并维护了一套可复用的 AI 技能（Agent Skills），代码全部开源在 <a href="https://github.com/jefeerzhang/myskill" target="_blank" rel="noopener">github.com/jefeerzhang/myskill</a>。这些技能覆盖学术写作润色、文献综述撰写、社科基金申报、同行评审、量化结果作图等科研场景，目的是把重复性的研究助理工作交给自动化流程，提升写作与科研的效率。下方是一张由生图模型生成的技能库示意图，点击图片可查看大图，右键即可保存到本地。</p>
+    <figure class="skill-banner">
+      <a href="skills_banner.png" target="_blank" rel="noopener">
+        <img src="skills_banner.png" alt="自定义 AI 技能库示意图" />
+      </a>
+      <figcaption>自定义 AI 技能库示意图（生图模型生成）· 点击放大，右键可下载</figcaption>
+    </figure>
   </section>
 
   <section>
