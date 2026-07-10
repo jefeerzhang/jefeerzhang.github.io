@@ -1,25 +1,0 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>作业 on Zhang Jian&#39;s Homepage</title>
-    <link>/tags/%E4%BD%9C%E4%B8%9A/</link>
-    <description>Recent content in 作业 on Zhang Jian&#39;s Homepage</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>zh_CN</language>
-    <lastBuildDate>Fri, 13 Mar 2020 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="/tags/%E4%BD%9C%E4%B8%9A/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>投资学的一些例题代码演示</title>
-      <link>/post/2020/03/13/%E6%8A%95%E8%B5%84%E5%AD%A6%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BE%8B%E9%A2%98%E4%BB%A3%E7%A0%81%E6%BC%94%E7%A4%BA/</link>
-      <pubDate>Fri, 13 Mar 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/post/2020/03/13/%E6%8A%95%E8%B5%84%E5%AD%A6%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BE%8B%E9%A2%98%E4%BB%A3%E7%A0%81%E6%BC%94%E7%A4%BA/</guid>
-      <description>金融决策之——内部收益率法则IRR计算思路演示支付宝借呗内部收益率计算纯储蓄（投资型）保险是否值得购买金融决策之——内部收益率法则IRR计算思路演示这里我们只需使用tidyverse包绘图
-pacman::p_load(tidyverse)x &amp;lt;-c()y &amp;lt;-c()for ( i in seq(0,0.2,by = 0.0001)){npv = -100+ 30/(1+i)+60/(1+i)^2+40/(1+i)^3x = append(x,i)y = append(y,npv)}res &amp;lt;- tibble(irr=x,npv=y)ggplot(res,aes(x=irr,y=npv)) + geom_line()+geom_hline(yintercept = 0 ,color=&amp;#39;red&amp;#39;,alpha=0.6) +geom_vline(xintercept = 0.137,size=1.3,color=&amp;#39;blue&amp;#39;) +tidyquant::theme_tq() + xlab(&amp;#39;贴现率&amp;#39;)+ylab(&amp;#39;对应NPV&amp;#39;) +ggtitle(&amp;#39;演示内部收益率IRR的求解思路&amp;#39;)## Registered S3 method overwritten by &amp;#39;quantmod&amp;#39;:## method from## as.</description>
-    </item>
-    
-  </channel>
-</rss>
