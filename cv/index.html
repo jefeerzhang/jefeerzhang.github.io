@@ -99,15 +99,36 @@
   .pub a:hover { border-color: var(--accent); }
 
   .skill-box {
-    background: var(--accent-soft); border: 1px solid #dce8e2; border-radius: 14px;
-    padding: 22px 24px;
+    position: relative; background: var(--paper); border: 1px solid var(--line);
+    border-radius: 12px; padding: 24px 26px 24px 28px;
+  }
+  .skill-box::before {
+    content: ""; position: absolute; left: 0; top: 18px; bottom: 18px;
+    width: 3px; border-radius: 3px; background: var(--accent);
   }
   .skill-box p { font-size: 14.5px; color: #36403b; line-height: 1.95; }
   .skill-box p + p { margin-top: 12px; }
-  .skill-box a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent); font-weight: 500; }
-  .skill-box a:hover { opacity: .75; }
-  .skill-cta { display: inline-flex; align-items: center; gap: 7px; margin-top: 16px; color: #fff; background: var(--accent); padding: 9px 18px; border-radius: 999px; font-size: 13.5px; text-decoration: none; transition: transform .3s var(--ease), background .3s var(--ease); }
-  .skill-cta:hover { transform: translateX(3px); background: #264b41; }
+  .skill-box a { color: var(--accent); text-decoration: none; font-weight: 500; }
+  .skill-box a:hover { opacity: .8; }
+  .repo {
+    display: flex; align-items: center; gap: 10px; margin-top: 16px;
+    padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px;
+    background: #fff; font-size: 13px;
+  }
+  .repo .tag {
+    font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent); border: 1px solid var(--line); border-radius: 4px;
+    padding: 2px 7px; white-space: nowrap;
+  }
+  .repo .url { font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace; color: var(--ink); font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .repo:hover { border-color: var(--accent); }
+  .skill-cta {
+    display: inline-flex; align-items: center; gap: 6px; margin-top: 18px;
+    color: var(--accent); border: 1px solid var(--accent); border-radius: 6px;
+    padding: 8px 16px; font-size: 13.5px; text-decoration: none; font-weight: 500;
+    transition: transform .25s var(--ease), background .25s var(--ease), color .25s var(--ease);
+  }
+  .skill-cta:hover { transform: translateX(3px); background: var(--accent); color: #fff; }
 
   .note { color: var(--ink-faint); font-size: 13.5px; }
   footer { margin-top: 60px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12.5px; letter-spacing: .02em; }
@@ -203,7 +224,10 @@
     <h2>自定义技能</h2>
     <div class="skill-box">
       <p>围绕学术研究、写作与教学，我自行开发并维护了一套可复用的 AI 技能（Agent Skills），现已全部开源。重点覆盖学术写作润色、文献综述撰写、社科基金申报、同行评审与量化结果作图等科研场景。</p>
-      <p>代码仓库：<a href="https://github.com/jefeerzhang/myskill" target="_blank" rel="noopener">github.com/jefeerzhang/myskill</a></p>
+      <a class="repo" href="https://github.com/jefeerzhang/myskill" target="_blank" rel="noopener">
+        <span class="tag">Repo</span>
+        <span class="url">github.com/jefeerzhang/myskill</span>
+      </a>
       <a class="skill-cta" href="https://github.com/jefeerzhang/myskill" target="_blank" rel="noopener">进入技能仓库 →</a>
     </div>
   </section>
