@@ -1,6 +1,6 @@
 :root {
   --paper: #f2f5f2;
-  --surface: #ffffff;
+  --surface: #fbfcfb;
   --surface-soft: #e7eee9;
   --surface-deep: #dbe6df;
   --ink: #1b2520;
@@ -87,7 +87,7 @@ a {
   padding: 10px 14px;
   border-radius: 6px;
   background: var(--ink);
-  color: #ffffff;
+  color: #f7faf8;
   text-decoration: none;
   transform: translateY(-160%);
   transition: transform 180ms ease;
@@ -505,7 +505,7 @@ a {
 }
 
 .entry-course .entry-link:hover h3 {
-  color: #ffffff;
+  color: #f7faf8;
 }
 
 .entry-skills .entry-link {
@@ -1123,14 +1123,56 @@ a {
     display: none;
   }
 
-  .hero-actions {
-    align-items: stretch;
-    flex-direction: column;
+  .home-hero {
+    gap: 30px;
+    padding-block: 38px 34px;
   }
 
-  .hero-actions .button,
-  .hero-actions .text-link {
+  .hero-role {
+    margin-top: 16px;
+    font-size: 17px;
+  }
+
+  .hero-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 22px;
+  }
+
+  .hero-actions .button {
     width: 100%;
+    padding-inline: 12px;
+  }
+
+  .hero-actions .text-link {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .research-index {
+    padding-top: 18px;
+  }
+
+  .research-index h2 {
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+
+  .research-index ol {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 14px;
+  }
+
+  .research-index li {
+    grid-template-columns: 26px minmax(0, 1fr);
+    padding: 8px 0;
+    font-size: 13px;
+  }
+
+  .research-index li:last-child {
+    grid-column: 1 / -1;
   }
 
   .entry-link {
