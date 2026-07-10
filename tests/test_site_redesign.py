@@ -174,9 +174,10 @@ class CvRedesignTests(unittest.TestCase):
 
     def test_cv_preserves_research_metrics_and_publications(self):
         self.assertEqual(len(find_tags(self.parser, "div", "metric")), 5)
-        self.assertEqual(len(find_tags(self.parser, "article", "publication")), 18)
+        self.assertEqual(len(find_tags(self.parser, "article", "publication")), 19)
         for value in ("5", "6", "20+", "27.3", "Top 1%"):
             self.assertIn(value, self.html)
+        self.assertIn("中国IPO询价制下发行效率的随机前沿分析", self.html)
 
     def test_publications_are_grouped_by_language_and_sorted_newest_first(self):
         groups = self.parser.publication_groups
@@ -184,10 +185,11 @@ class CvRedesignTests(unittest.TestCase):
             [group["attrs"].get("data-language") for group in groups],
             ["zh", "en"],
         )
-        self.assertEqual([len(group["years"]) for group in groups], [11, 7])
+        self.assertEqual([len(group["years"]) for group in groups], [12, 7])
         for group in groups:
             self.assertEqual(group["attrs"].get("data-sort"), "year-desc")
             self.assertEqual(group["years"], sorted(group["years"], reverse=True))
+        self.assertEqual(groups[0]["years"][-1], 2014)
         self.assertIn(("h3", "中文论文"), self.parser.heading_text)
         self.assertIn(("h3", "英文论文"), self.parser.heading_text)
         self.assertIn("按语言分类，各组按发表时间倒序排列。", self.html)
