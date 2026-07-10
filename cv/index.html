@@ -82,6 +82,17 @@
   }
   .skill-banner img:hover { transform: scale(1.015); }
   .skill-banner figcaption { margin-top: 12px; font-size: 12.5px; color: var(--ink-faint); }
+
+    .skill-banner .banner-link { position: relative; display: block; border-radius: 14px; overflow: hidden; }
+    .skill-banner .banner-link img { display: block; transition: transform .5s cubic-bezier(.22,.61,.36,1); }
+    .skill-banner .banner-link:hover img { transform: scale(1.03); }
+    .banner-cta {
+      position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%);
+      background: rgba(27,54,46,.92); color: #f5f3ec; padding: 9px 18px; border-radius: 999px;
+      font-size: 14px; letter-spacing: .04em; opacity: 0; transition: opacity .35s cubic-bezier(.22,.61,.36,1);
+      backdrop-filter: blur(2px); white-space: nowrap;
+    }
+    .skill-banner .banner-link:hover .banner-cta { opacity: 1; }
 </style>
 </head>
 <body>
@@ -151,12 +162,13 @@
 
   <section id="skills">
     <h2>自定义技能</h2>
-    <p class="note">我围绕学术研究、写作与教学，自行开发并维护了一套可复用的 AI 技能（Agent Skills），代码全部开源在 <a href="https://github.com/jefeerzhang/myskill" target="_blank" rel="noopener">github.com/jefeerzhang/myskill</a>。这些技能覆盖学术写作润色、文献综述撰写、社科基金申报、同行评审、量化结果作图等科研场景，目的是把重复性的研究助理工作交给自动化流程，提升写作与科研的效率。下方是一张由生图模型生成的技能库示意图，点击图片可查看大图，右键即可保存到本地。</p>
+    <p class="note">我围绕学术研究、写作与教学，自行开发并维护了一套可复用的 AI 技能（Agent Skills），代码全部开源在 <a href="https://github.com/jefeerzhang/myskill" target="_blank" rel="noopener">github.com/jefeerzhang/myskill</a>。这些技能覆盖学术写作润色、文献综述撰写、社科基金申报、同行评审、量化结果作图等科研场景，目的是把重复性的研究助理工作交给自动化流程，提升写作与科研的效率。下方是一张由生图模型生成的技能库示意图，点击图片即可进入仓库浏览全部技能。</p>
     <figure class="skill-banner">
-      <a href="skills_banner.png" target="_blank" rel="noopener">
+      <a href="https://github.com/jefeerzhang/myskill" target="_blank" rel="noopener" class="banner-link">
         <img src="skills_banner.png" alt="自定义 AI 技能库示意图" />
+        <span class="banner-cta">进入技能仓库 →</span>
       </a>
-      <figcaption>自定义 AI 技能库示意图（生图模型生成）· 点击放大，右键可下载</figcaption>
+      <figcaption>自定义 AI 技能库示意图（生图模型生成）· 点击图片进入 github.com/jefeerzhang/myskill</figcaption>
     </figure>
   </section>
 
