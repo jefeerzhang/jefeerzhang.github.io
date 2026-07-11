@@ -1270,3 +1270,15 @@ footer.site-footer a:hover { color: var(--accent); }
   .metric { border-left: 0; padding: 12px 0; border-bottom: 1px solid var(--line); }
   .metric:last-child { border-bottom: 0; }
 }
+
+/* ---- CV 页面 .cv-page 类错挂到 <body> 的兼容：让 header 浮顶, 解除 56px paper 带 ---- */
+body.cv-page .site-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+body.cv-page main {
+  padding-top: 56px;
+}
