@@ -140,23 +140,12 @@ class HomepageRedesignTests(unittest.TestCase):
         expected = {
             "https://jefeerzhang.github.io/master-course/",
             "cv/",
-            "cv/#skills",
-            "https://prompt.always200.com/#/basic/system",
+            "knowledge/",
+            "tools/",
             "https://orcid.org/0000-0002-8024-5483",
         }
         self.assertTrue(expected.issubset(hrefs))
         self.assertEqual(len(find_tags(self.parser, "article", "entry-card")), 4)
-
-    def test_prompt_optimizer_image_is_valid(self):
-        images = [
-            attrs
-            for attrs in find_tags(self.parser, "img")
-            if attrs.get("src") == "assets/prompt-optimizer.png"
-        ]
-        self.assertEqual(len(images), 1)
-        self.assertEqual(images[0].get("width"), "256")
-        self.assertEqual(images[0].get("height"), "256")
-        assert_valid_png(self, PROMPT_ICON)
 
 
 class CvRedesignTests(unittest.TestCase):
