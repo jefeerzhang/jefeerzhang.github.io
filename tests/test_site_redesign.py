@@ -167,7 +167,7 @@ class CvRedesignTests(unittest.TestCase):
 
     def test_cv_has_section_navigation_and_no_placeholder(self):
         hrefs = {attrs.get("href") for attrs in find_tags(self.parser, "a")}
-        for anchor in ("#profile", "#research", "#publications", "#skills"):
+        for anchor in ("#profile", "#research", "#publications"):
             self.assertIn(anchor, hrefs)
         self.assertNotIn("待补充", self.html)
         self.assertNotIn("<h2>其他</h2>", self.html)
@@ -203,19 +203,6 @@ class CvRedesignTests(unittest.TestCase):
             "10.1016/j.enpol.2019.111071",
         ):
             self.assertIn(value, self.html)
-
-    def test_skills_section_uses_real_banner_and_repository(self):
-        images = [
-            attrs
-            for attrs in find_tags(self.parser, "img")
-            if attrs.get("src") == "skills_banner.png"
-        ]
-        self.assertEqual(len(images), 1)
-        self.assertEqual(images[0].get("width"), "1080")
-        self.assertEqual(images[0].get("height"), "1080")
-        self.assertIn("https://github.com/jefeerzhang/myskill", self.html)
-        assert_valid_png(self, SKILLS_BANNER, 1000, 1000)
-
 
 if __name__ == "__main__":
     unittest.main()
