@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 4: 充分性分析与布尔最小化</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;600&display=swap');
+  :root { --text: #1a1a2e; --muted: #6b7280; --accent: #2563eb; --accent-light: #dbeafe; --bg: #fafafa; --card: #ffffff; --border: #e5e7eb; --success: #059669; --warning: #d97706; --danger: #ef4444; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Noto Serif SC', serif; color: var(--text); background: var(--bg); line-height: 1.8; font-size: 16px; }
+  .container { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem; }
+  header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--border); }
+  .lesson-meta { font-family: 'Noto Sans SC', sans-serif; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.5rem; letter-spacing: 0.5px; }
+  h1 { font-size: 1.8rem; font-weight: 700; line-height: 1.3; margin-bottom: 0.5rem; }
+  .subtitle { font-family: 'Noto Sans SC', sans-serif; font-size: 0.95rem; color: var(--muted); }
+  section { margin-bottom: 2.2rem; }
+  h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.8rem; padding-bottom: 0.3rem; border-bottom: 1px solid var(--border); }
+  p { margin-bottom: 0.8rem; }
+  .callout { background: var(--accent-light); border-left: 4px solid var(--accent); padding: 1rem 1.2rem; margin: 1.2rem 0; border-radius: 0 6px 6px 0; font-family: 'Noto Sans SC', sans-serif; font-size: 0.9rem; }
+  .callout strong { color: var(--accent); }
+  .callout-warn { background: #fef3c7; border-left-color: var(--warning); }
+  .callout-warn strong { color: var(--warning); }
+  .callout-success { background: #d1fae5; border-left-color: var(--success); }
+  .callout-success strong { color: var(--success); }
+  .callout-danger { background: #fee2e2; border-left-color: var(--danger); }
+  .callout-danger strong { color: var(--danger); }
+  .example { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; margin: 1.2rem 0; }
+  .example-title { font-family: 'Noto Sans SC', sans-serif; font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+  .key-concept { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.2rem; margin: 1rem 0; }
+  .key-concept h4 { font-family: 'Noto Sans SC', sans-serif; font-size: 0.85rem; color: var(--accent); margin-bottom: 0.3rem; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-family: 'Noto Sans SC', sans-serif; font-size: 0.85rem; }
+  th, td { padding: 0.5rem 0.8rem; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--accent-light); font-weight: 600; color: var(--accent); }
+  .formula { background: #f3f4f6; padding: 0.8rem 1rem; border-radius: 6px; font-family: 'Courier New', monospace; font-size: 0.9rem; margin: 0.8rem 0; text-align: center; }
+  .quiz { background: var(--card); border: 2px solid var(--border); border-radius: 10px; padding: 1.2rem; margin: 1.5rem 0; }
+  .quiz h3 { color: var(--text); margin-top: 0; }
+  .quiz-question { font-weight: 600; margin-bottom: 0.8rem; }
+  .quiz-options label { display: block; padding: 0.5rem 0.8rem; margin: 0.3rem 0; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-family: 'Noto Sans SC', sans-serif; font-size: 0.88rem; transition: all 0.15s; }
+  .quiz-options label:hover { background: var(--accent-light); border-color: var(--accent); }
+  .quiz-options input { margin-right: 0.5rem; }
+  .quiz-feedback { display: none; margin-top: 0.8rem; padding: 0.8rem; border-radius: 6px; font-family: 'Noto Sans SC', sans-serif; font-size: 0.88rem; }
+  .quiz-feedback.correct { display: block; background: #d1fae5; border: 1px solid var(--success); }
+  .quiz-feedback.incorrect { display: block; background: #fee2e2; border: 1px solid var(--danger); }
+  .ref-list { font-family: 'Noto Sans SC', sans-serif; font-size: 0.8rem; color: var(--muted); list-style: none; padding: 0; }
+  .ref-list li { padding: 0.3rem 0; border-bottom: 1px solid var(--border); }
+  footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); text-align: center; font-family: 'Noto Sans SC', sans-serif; font-size: 0.75rem; color: var(--muted); }
+  @media (max-width: 600px) { .container { padding: 1.2rem 1rem; } h1 { font-size: 1.4rem; } }
+</style>
+<script>
+function checkQuiz(el) {
+  var fb = document.getElementById('feedback4');
+  var correct = el.value === 'C';
+  fb.className = 'quiz-feedback ' + (correct ? 'correct' : 'incorrect');
+  fb.textContent = correct ? '✅ 正确！中间解有选择地使用逻辑剩余项进行简化。' : '❌ 不对，再想想三种解的区别。';
+}
+</script>
+</head>
+<body>
+<div class="container">
+<header>
+  <div class="lesson-meta">Lesson 4 / 6 · 阅读约 10 分钟</div>
+  <h1>充分性分析与布尔最小化</h1>
+  <div class="subtitle">从真值表到因果路径——fsQCA 的核心分析步骤</div>
+</header>
+
+<section>
+  <h2>1. 充分性分析</h2>
+  <p>在完成必要性分析后，下一步是<strong>充分性分析（sufficiency analysis）</strong>。</p>
+  <div class="key-concept">
+    <h4>充分性分析问的是：</h4>
+    <p><strong>条件组合是否足以产生结果？</strong><br>即：X ⊆ Y（条件组合 X 是结果 Y 的子集）</p>
+  </div>
+  <div class="formula">充分性一致性 = ∑min(Xi, Yi) / ∑Xi</div>
+  <p>注意充分性公式与必要性公式的区别：<strong>分母不同</strong>。充分性分母是条件隶属分数之和，必要性分母是结果隶属分数之和。</p>
+</section>
+
+<section>
+  <h2>2. 从真值表到布尔最小化</h2>
+  <p>真值表构建好后，fsQCA 软件会进行<strong>布尔最小化（Boolean minimization）</strong>——简化条件组合，找到最简洁的解释路径。</p>
+  <div class="example">
+    <div class="example-title">布尔最小化的逻辑</div>
+    <p>核心规则：<strong>如果两个条件组合的唯一区别是一个条件的取值不同，但都导致相同的结果，那么这个条件可以被消除。</strong></p>
+    <p>例如：</p>
+    <ul>
+      <li>组合 A：R · E · P → Y</li>
+      <li>组合 B：R · E · ~P → Y</li>
+      <li>区别只在 P 的取值不同 → 简化：R · E → Y</li>
+    </ul>
+    <p>无论知识产权保护强弱，只要有高 R&D 和高教育，就能产生高创新产出。</p>
+  </div>
+</section>
+
+<section>
+  <h2>3. 三种解</h2>
+  <p>布尔最小化会产生<strong>三种不同的解</strong>：</p>
+  <div class="key-concept">
+    <h4>复杂解（Complex Solution）</h4>
+    <p><strong>不使用</strong>任何逻辑剩余项。只基于实际观察到的数据。解最复杂但最保守。</p>
+  </div>
+  <div class="key-concept">
+    <h4>简约解（Parsimonious Solution）</h4>
+    <p><strong>使用所有</strong>逻辑剩余项进行简化。解最简单但可能包含不合理假设。</p>
+  </div>
+  <div class="key-concept">
+    <h4>中间解（Intermediate Solution）</h4>
+    <p><strong>有选择地使用</strong>逻辑剩余项。这是 fsQCA 中<strong>最常报告的解</strong>。</p>
+  </div>
+  <div class="callout callout-warn">
+    <strong>重要</strong>：论文中通常报告<strong>中间解</strong>，并对比简约解来区分核心条件和边缘条件。
+  </div>
+</section>
+
+<section>
+  <h2>4. 核心条件与边缘条件</h2>
+  <div class="example">
+    <div class="example-title">区分方法</div>
+    <ul>
+      <li><strong>核心条件</strong>：同时出现在中间解和简约解中。是因果路径中最重要的部分。</li>
+      <li><strong>边缘条件</strong>：只出现在中间解中。辅助核心条件，重要性相对较低。</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>5. 解的评估指标</h2>
+  <div class="example">
+    <div class="example-title">三个关键指标</div>
+    <p><strong>一致性（Consistency）</strong>：通常要求 ≥ 0.80。</p>
+    <p><strong>覆盖度（Coverage）</strong>：解解释结果的比例。</p>
+    <p><strong>唯一覆盖度（Unique Coverage）</strong>：某条路径单独解释的结果比例。</p>
+  </div>
+  <div class="callout callout-success">
+    <strong>原则</strong>：先看一致性是否达标，再看覆盖度。
+  </div>
+</section>
+
+<section>
+  <h2>6. 分析结果示例</h2>
+  <div class="example">
+    <div class="example-title">创新研究的中间解</div>
+    <p>路径 1：R · E → Y（高 R&D × 高教育）</p>
+    <p>路径 2：R · P → Y（高 R&D × 强知识产权）</p>
+    <p>整个解：一致性 = 0.87，覆盖度 = 0.85</p>
+    <p>解读：高创新产出可以通过两条路径实现，都以高 R&D 为核心条件。</p>
+  </div>
+</section>
+
+<section>
+  <h2>7. 检查理解</h2>
+  <div class="quiz" id="quiz4">
+    <h3>✍ 测验</h3>
+    <p class="quiz-question">以下哪种说法是正确的？</p>
+    <div class="quiz-options">
+      <label><input type="radio" name="q4" value="A" onclick="checkQuiz(this)"> A. 复杂解使用了所有逻辑剩余项</label>
+      <label><input type="radio" name="q4" value="B" onclick="checkQuiz(this)"> B. 简约解不使用逻辑剩余项</label>
+      <label><input type="radio" name="q4" value="C" onclick="checkQuiz(this)"> C. 中间解有选择地使用逻辑剩余项</label>
+      <label><input type="radio" name="q4" value="D" onclick="checkQuiz(this)"> D. 三种解总是完全相同</label>
+    </div>
+    <div id="feedback4" class="quiz-feedback"></div>
+  </div>
+</section>
+
+<section>
+  <h2>要点回顾</h2>
+  <div class="example">
+    <ol>
+      <li>充分性分析问条件组合是否足以产生结果</li>
+      <li>布尔最小化通过消除冗余条件来简化</li>
+      <li>三种解：复杂解、简约解、中间解</li>
+      <li>核心条件同时出现在中间解和简约解中</li>
+      <li>评估指标：一致性 ≥ 0.80，覆盖度越高越好</li>
+    </ol>
+  </div>
+</section>
+<footer>Lesson 4 / 6 · fsQCA 教学系列</footer>
+</div>
+</body>
+</html>

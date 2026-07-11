@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 5: 解的解读与稳健性检验</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;600&display=swap');
+  :root { --text: #1a1a2e; --muted: #6b7280; --accent: #2563eb; --accent-light: #dbeafe; --bg: #fafafa; --card: #ffffff; --border: #e5e7eb; --success: #059669; --warning: #d97706; --danger: #ef4444; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Noto Serif SC', serif; color: var(--text); background: var(--bg); line-height: 1.8; font-size: 16px; }
+  .container { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem; }
+  header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--border); }
+  .lesson-meta { font-family: 'Noto Sans SC', sans-serif; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.5rem; letter-spacing: 0.5px; }
+  h1 { font-size: 1.8rem; font-weight: 700; line-height: 1.3; margin-bottom: 0.5rem; }
+  .subtitle { font-family: 'Noto Sans SC', sans-serif; font-size: 0.95rem; color: var(--muted); }
+  section { margin-bottom: 2.2rem; }
+  h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.8rem; padding-bottom: 0.3rem; border-bottom: 1px solid var(--border); }
+  p { margin-bottom: 0.8rem; }
+  .callout { background: var(--accent-light); border-left: 4px solid var(--accent); padding: 1rem 1.2rem; margin: 1.2rem 0; border-radius: 0 6px 6px 0; font-family: 'Noto Sans SC', sans-serif; font-size: 0.9rem; }
+  .callout strong { color: var(--accent); }
+  .callout-warn { background: #fef3c7; border-left-color: var(--warning); }
+  .callout-warn strong { color: var(--warning); }
+  .callout-success { background: #d1fae5; border-left-color: var(--success); }
+  .callout-success strong { color: var(--success); }
+  .callout-danger { background: #fee2e2; border-left-color: var(--danger); }
+  .callout-danger strong { color: var(--danger); }
+  .example { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; margin: 1.2rem 0; }
+  .example-title { font-family: 'Noto Sans SC', sans-serif; font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
+  .key-concept { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.2rem; margin: 1rem 0; }
+  .key-concept h4 { font-family: 'Noto Sans SC', sans-serif; font-size: 0.85rem; color: var(--accent); margin-bottom: 0.3rem; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-family: 'Noto Sans SC', sans-serif; font-size: 0.85rem; }
+  th, td { padding: 0.5rem 0.8rem; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--accent-light); font-weight: 600; color: var(--accent); }
+  .quiz { background: var(--card); border: 2px solid var(--border); border-radius: 10px; padding: 1.2rem; margin: 1.5rem 0; }
+  .quiz h3 { color: var(--text); margin-top: 0; }
+  .quiz-question { font-weight: 600; margin-bottom: 0.8rem; }
+  .quiz-options label { display: block; padding: 0.5rem 0.8rem; margin: 0.3rem 0; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-family: 'Noto Sans SC', sans-serif; font-size: 0.88rem; transition: all 0.15s; }
+  .quiz-options label:hover { background: var(--accent-light); border-color: var(--accent); }
+  .quiz-options input { margin-right: 0.5rem; }
+  .quiz-feedback { display: none; margin-top: 0.8rem; padding: 0.8rem; border-radius: 6px; font-family: 'Noto Sans SC', sans-serif; font-size: 0.88rem; }
+  .quiz-feedback.correct { display: block; background: #d1fae5; border: 1px solid var(--success); }
+  .quiz-feedback.incorrect { display: block; background: #fee2e2; border: 1px solid var(--danger); }
+  .ref-list { font-family: 'Noto Sans SC', sans-serif; font-size: 0.8rem; color: var(--muted); list-style: none; padding: 0; }
+  .ref-list li { padding: 0.3rem 0; border-bottom: 1px solid var(--border); }
+  footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); text-align: center; font-family: 'Noto Sans SC', sans-serif; font-size: 0.75rem; color: var(--muted); }
+  @media (max-width: 600px) { .container { padding: 1.2rem 1rem; } h1 { font-size: 1.4rem; } }
+</style>
+<script>
+function checkQuiz(el) {
+  var fb = document.getElementById('feedback5');
+  var correct = el.value === 'B';
+  fb.className = 'quiz-feedback ' + (correct ? 'correct' : 'incorrect');
+  fb.textContent = correct ? '✅ 正确！稳健性检验的核心是改变分析参数后看结论是否仍然成立。' : '❌ 不对，再想想。';
+}
+</script>
+</head>
+<body>
+<div class="container">
+<header>
+  <div class="lesson-meta">Lesson 5 / 6 · 阅读约 10 分钟</div>
+  <h1>解的解读与稳健性检验</h1>
+  <div class="subtitle">从结果到结论——如何正确解读 fsQCA 的发现</div>
+</header>
+
+<section>
+  <h2>1. 如何解读 fsQCA 的结果</h2>
+  <p>拿到 fsQCA 的分析结果后，需要按以下步骤系统解读：</p>
+  <div class="example">
+    <div class="example-title">解读步骤</div>
+    <ol>
+      <li><strong>先看整体解的一致性</strong>：是否 ≥ 0.80？如果低于 0.75，解不可接受。</li>
+      <li><strong>再看整体覆盖度</strong>：值越高，解释力越强。0.70+ 较好，0.50-0.70 中等。</li>
+      <li><strong>逐条路径看一致性和覆盖度</strong>：每条路径的一致性都应该达标。</li>
+      <li><strong>对比各条路径的唯一覆盖度</strong>：高唯一覆盖度表示该路径有独特解释力。</li>
+      <li><strong>区分核心条件和边缘条件</strong>：核心条件更重要。</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <h2>2. 结果报告模板</h2>
+  <div class="example">
+    <div class="example-title">学术论文中的标准报告方式</div>
+    <table>
+      <tr><th>因果路径</th><th>一致性</th><th>原始覆盖度</th><th>唯一覆盖度</th></tr>
+      <tr><td>R · E</td><td>0.92</td><td>0.78</td><td>0.35</td></tr>
+      <tr><td>R · P</td><td>0.88</td><td>0.65</td><td>0.22</td></tr>
+      <tr><td>~R · ~E · P</td><td>0.81</td><td>0.28</td><td>0.08</td></tr>
+      <tr><td><strong>整个解</strong></td><td><strong>0.87</strong></td><td><strong>0.85</strong></td><td>—</td></tr>
+    </table>
+    <p>报告时还需注明：频率阈值、一致性阈值、解的类别（中间解/简约解/复杂解）。</p>
+  </div>
+  <div class="callout callout-warn">
+    <strong>重要</strong>：不能只报告"好看的"路径。所有满足阈值的路径都应该报告。
+  </div>
+</section>
+
+<section>
+  <h2>3. 结果的口头化解读</h2>
+  <div class="example">
+    <div class="example-title">如何用自然语言描述结果</div>
+    <p><strong>路径 R · E → Y</strong>："在那些同时具备高 R&D 投入和高教育水平的组织中，高创新产出几乎必然出现（一致性=0.92）。这条路径解释了约 78% 的高创新产出案例。"</p>
+    <p><strong>不合适的写法</strong>："R 和 E 的交互项显著"——这是回归语言，不是 QCA 语言。</p>
+  </div>
+  <div class="callout callout-success">
+    <strong>语言要点</strong>：使用"路径""组合""条件""隶属"等 QCA 术语，而非"自变量""因变量""显著"等回归术语。
+  </div>
+</section>
+
+<section>
+  <h2>4. 稳健性检验</h2>
+  <p>在学术研究中，必须进行<strong>稳健性检验（robustness checks）</strong>来验证结论的可靠性。</p>
+  <div class="key-concept">
+    <h4>常见的稳健性检验方法</h4>
+    <ul>
+      <li><strong>调整一致性阈值</strong>：如从 0.80 改为 0.85，看解是否稳定</li>
+      <li><strong>调整频率阈值</strong>：如从 1 改为 2，看关键路径是否仍然存在</li>
+      <li><strong>调整校准锚点</strong>：微调完全隶属/交叉点/完全不隶属的阈值</li>
+      <li><strong>增加或减少条件</strong>：加入或删除一个条件，看核心路径是否不变</li>
+      <li><strong>检验否定结果</strong>：分析~Y（结果不发生）的条件组合，看是否与 Y 的解对称</li>
+    </ul>
+  </div>
+  <div class="callout callout-danger">
+    <strong>常见错误</strong>：不做稳健性检验。审稿人几乎一定会要求你验证结论的稳健性。
+  </div>
+</section>
+
+<section>
+  <h2>5. 稳健性检验的结果呈现</h2>
+  <div class="example">
+    <div class="example-title">在论文中如何呈现</div>
+    <table>
+      <tr><th>检验项目</th><th>设定</th><th>核心路径是否保持</th></tr>
+      <tr><td>基准模型</td><td>一致性=0.80, 频率=1</td><td>—</td></tr>
+      <tr><td>检验 1</td><td>一致性=0.85</td><td>✅ 是</td></tr>
+      <tr><td>检验 2</td><td>频率阈值=2</td><td>✅ 是</td></tr>
+      <tr><td>检验 3</td><td>校准锚点微调 +5%</td><td>✅ 是</td></tr>
+      <tr><td>检验 4</td><td>加入新条件</td><td>✅ 核心路径保持</td></tr>
+    </table>
+    <p>如果所有稳健性检验都通过，可以自信地说结论是可靠的。</p>
+  </div>
+</section>
+
+<section>
+  <h2>6. 常见解读错误</h2>
+  <div class="callout callout-danger"><strong>错误 1：因果断言</strong> — fsQCA 识别的是<strong>充分条件组合</strong>，不是严格因果关系。用"与……相关""足以产生"而非"导致"。</div>
+  <div class="callout callout-danger"><strong>错误 2：忽视不一致的案例</strong> — 即使一致性很高，也可能有反例。讨论这些反例能增加论文深度。</div>
+  <div class="callout callout-danger"><strong>错误 3：过度简化</strong> — 不要只关注最简路径。有时复杂路径能揭示更有趣的理论机制。</div>
+  <div class="callout callout-danger"><strong>错误 4：样本外推广</strong> — fsQCA 的结果适用于你的分析样本和类似情境，不要过度推广。</div>
+</section>
+
+<section>
+  <h2>7. 检查理解</h2>
+  <div class="quiz" id="quiz5">
+    <h3>✍ 测验</h3>
+    <p class="quiz-question">稳健性检验的核心目的是什么？</p>
+    <div class="quiz-options">
+      <label><input type="radio" name="q5" value="A" onclick="checkQuiz(this)"> A. 让结果看起来更显著</label>
+      <label><input type="radio" name="q5" value="B" onclick="checkQuiz(this)"> B. 验证结论在分析参数变化时是否仍然成立</label>
+      <label><input type="radio" name="q5" value="C" onclick="checkQuiz(this)"> C. 增加样本量</label>
+      <label><input type="radio" name="q5" value="D" onclick="checkQuiz(this)"> D. 把覆盖度提高</label>
+    </div>
+    <div id="feedback5" class="quiz-feedback"></div>
+  </div>
+</section>
+
+<section>
+  <h2>要点回顾</h2>
+  <div class="example">
+    <ol>
+      <li>解读顺序：整体解一致性 → 覆盖度 → 逐条路径</li>
+      <li>用 QCA 术语描述结果，避免回归语言</li>
+      <li>稳健性检验是学术论文的必要部分</li>
+      <li>常见方法：调整阈值、调整校准锚点、增减条件</li>
+      <li>避免常见错误：因果断言、忽视反例、过度推广</li>
+    </ol>
+  </div>
+</section>
+<footer>Lesson 5 / 6 · fsQCA 教学系列</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 1: QCA 是什么？为什么用？</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;600&display=swap');
+  :root { --text: #1a1a2e; --muted: #6b7280; --accent: #2563eb; --accent-light: #dbeafe; --bg: #fafafa; --card: #ffffff; --border: #e5e7eb; --success: #059669; --warning: #d97706; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Noto Serif SC', serif; color: var(--text); background: var(--bg); line-height: 1.8; font-size: 16px; }
+  .container { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem; }
+  header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--border); }
+  .lesson-meta { font-family: 'Noto Sans SC', sans-serif; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.5rem; letter-spacing: 0.5px; }
+  h1 { font-size: 1.8rem; font-weight: 700; line-height: 1.3; margin-bottom: 0.5rem; }
+  .subtitle { font-family: 'Noto Sans SC', sans-serif; font-size: 0.95rem; color: var(--muted); }
+  section { margin-bottom: 2.2rem; }
+  h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.8rem; padding-bottom: 0.3rem; border-bottom: 1px solid var(--border); }
+  p { margin-bottom: 0.8rem; }
+  .callout { background: var(--accent-light); border-left: 4px solid var(--accent); padding: 1rem 1.2rem; margin: 1.2rem 0; border-radius: 0 6px 6px 0; font-family: 'Noto Sans SC', sans-serif; font-size: 0.9rem; }
+  .callout strong { color: var(--accent); }
+  .callout-warn { background: #fef3c7; border-left-color: var(--warning); }
+  .callout-warn strong { color: var(--warning); }
+  .callout-success { background: #d1fae5; border-left-color: var(--success); }
+  .callout-success strong { color: var(--success); }
+  .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.2rem 0; }
+  .comparison-item { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; font-family: 'Noto Sans SC', sans-serif; font-size: 0.88rem; }
+  .comparison-item h4 { font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--accent); }
+  .comparison-item ul { list-style: none; padding: 0; }
+  .comparison-item li { padding: 0.2rem 0; position: relative; padding-left: 1rem; }
+  .comparison-item li::before { content: "\2022"; position: absolute; left: 0; color: var(--muted); }
+  .example { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; margin: 1.2rem 0; }
+  .key-concept { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.2rem; margin: 1rem 0; }
+  .key-concept h4 { font-family: 'Noto Sans SC', sans-serif; font-size: 0.85rem; color: var(--accent); margin-bottom: 0.3rem; }
+  .tag { display: inline-block; font-family: 'Noto Sans SC', sans-serif; font-size: 0.75rem; padding: 0.15rem 0.5rem; border-radius: 4px; margin-right: 0.3rem; }
+  .tag-blue { background: var(--accent-light); color: var(--accent); }
+  .tag-green { background: #d1fae5; color: var(--success); }
+  .tag-yellow { background: #fef3c7; color: var(--warning); }
+  .quiz { background: var(--card); border: 2px solid var(--border); border-radius: 10px; padding: 1.2rem; margin: 1.5rem 0; }
+  .quiz h3 { color: var(--text); margin-top: 0; }
+  .quiz-question { font-weight: 600; margin-bottom: 0.8rem; }
+  .quiz-options label { display: block; padding: 0.5rem 0.8rem; margin: 0.3rem 0; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-family: 'Noto Sans SC', sans-serif; font-size: 0.88rem; transition: all 0.15s; }
+  .quiz-options label:hover { background: var(--accent-light); border-color: var(--accent); }
+  .quiz-options input { margin-right: 0.5rem; }
+  .quiz-feedback { display: none; margin-top: 0.8rem; padding: 0.8rem; border-radius: 6px; font-family: 'Noto Sans SC', sans-serif; font-size: 0.88rem; }
+  .quiz-feedback.correct { display: block; background: #d1fae5; border: 1px solid var(--success); }
+  .quiz-feedback.incorrect { display: block; background: #fee2e2; border: 1px solid #ef4444; }
+  .ref-list { font-family: 'Noto Sans SC', sans-serif; font-size: 0.8rem; color: var(--muted); list-style: none; padding: 0; }
+  .ref-list li { padding: 0.3rem 0; border-bottom: 1px solid var(--border); }
+  footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); text-align: center; font-family: 'Noto Sans SC', sans-serif; font-size: 0.75rem; color: var(--muted); }
+  @media (max-width: 600px) { .comparison { grid-template-columns: 1fr; } .container { padding: 1.2rem 1rem; } h1 { font-size: 1.4rem; } }
+</style>
+<script>
+function checkQuiz(el) {
+  var fb = document.getElementById('feedback1');
+  var correct = el.value === 'B';
+  fb.className = 'quiz-feedback ' + (correct ? 'correct' : 'incorrect');
+  fb.textContent = correct ? '\u2705 正确！20个案例+5个条件 = 典型的QCA适用场景。' : '\u274c 不对，再想想。';
+}
+</script>
+</head>
+<body>
+<div class="container">
+<header>
+  <div class="lesson-meta">Lesson 1 / 6 · 阅读约 8 分钟</div>
+  <h1>QCA 是什么？为什么用？</h1>
+  <div class="subtitle">从"哪个因素影响大"到"哪些条件组合导致结果"——换个视角看因果</div>
+</header>
+<section>
+  <h2>1. 一个研究者的困境</h2>
+  <p>想象一下：你研究 15 个国家的创新政策，想搞清楚"为什么有些国家成了创新强国，有些没有"。你有 6~7 个可能的解释变量（R&amp;D 投入、教育水平、知识产权保护、市场规模……）。</p>
+  <p>传统做法是跑个回归。但样本只有 15 个，变量有 6、7 个——<strong>自由度不够</strong>。更关键的是，你怀疑不是某一个变量单独起作用，而是 <strong>多个条件组合在一起</strong> 才导致了结果。</p>
+  <div class="callout"><strong>💡 核心直觉</strong>：高 R&amp;D 投入 + 强知识产权保护 → 创新强？但有没有可能：高 R&amp;D + 弱保护但市场规模大 → 也一样强？单一变量的"净效应"逻辑，回答不了这种"条条大路通罗马"的问题。</div>
+</section>
+<section>
+  <h2>2. QCA：一种不同的因果逻辑</h2>
+  <p><strong>QCA（Qualitative Comparative Analysis，定性比较分析）</strong> 是由社会学家 Charles Ragin 在 1980 年代提出的方法。它的核心思想是：</p>
+  <div class="key-concept"><h4>🎯 QCA 的基本命题</h4><p>因果关系不是"变量 A 对结果 Y 有正向影响"，而是"<strong>条件 A 和条件 B 同时存在时（并且条件 C 不存在时），结果 Y 就会发生</strong>"。</p></div>
+  <p>QCA 基于<strong>集合论（set theory）</strong>而不是相关/回归逻辑。每个案例被看作一个"条件组合"的成员，而不是一个个变量的分数。</p>
+</section>
+<section>
+  <h2>3. QCA vs. 传统回归：根本区别</h2>
+  <div class="comparison">
+    <div class="comparison-item"><h4>📊 回归分析</h4><ul><li>问：X 对 Y 的平均净效应是什么？</li><li>假设：变量独立发挥作用</li><li>逻辑：<em>ceteris paribus</em>（其他条件不变）</li><li>追求：单个变量的系数</li><li>典型问题：样本不够大就没法做</li></ul></div>
+    <div class="comparison-item"><h4>🔗 QCA</h4><ul><li>问：哪些条件组合足以/必须产生 Y？</li><li>假设：条件是<strong>相互依赖</strong>的</li><li>逻辑：<strong>必要</strong>和<strong>充分</strong>条件</li><li>追求：条件组合（组态/configurations）</li><li>典型问题：10~50 个案例也能做</li></ul></div>
+  </div>
+  <div class="callout callout-warn"><strong>⚠️ 重要</strong>：QCA <strong>不是</strong>回归的替代品，它们是回答<strong>不同问题</strong>的工具。</div>
+</section>
+<section>
+  <h2>4. 三种 QCA：csQCA → mvQCA → fsQCA</h2>
+  <div class="example">
+    <p><span class="tag tag-blue">csQCA</span> <strong>清晰集</strong>：每个条件只能是 0 或 1（属于/不属于）。</p>
+    <p><span class="tag tag-yellow">mvQCA</span> <strong>多值集</strong>：条件可以取多个离散值（0, 1, 2...）。</p>
+    <p><span class="tag tag-green">fsQCA</span> <strong>模糊集</strong> ✅ <strong>你的目标</strong>：条件可以取 0 到 1 之间的任意值，保留了细微差异。</p>
+  </div>
+  <div class="callout callout-success"><strong>✅ 为什么选 fsQCA？</strong> 大多数社会科学概念不是要么有要么无的，而是<strong>程度问题</strong>。fsQCA 让你能捕捉这种"部分属于"的细微差别。</div>
+</section>
+<section>
+  <h2>5. 三个必须理解的概念</h2>
+  <div class="key-concept"><h4>🔑 必要性（Necessity）</h4><p>条件 X 是结果 Y 的<strong>必要条件</strong>：没有 X 就没有 Y。即 Y ⊆ X。<br>例：要成为博士生，<strong>必须</strong>有硕士学位。</p></div>
+  <div class="key-concept"><h4>🔑 充分性（Sufficiency）</h4><p>条件 X 是结果 Y 的<strong>充分条件</strong>：有 X 就有 Y。即 X ⊆ Y。<br>例：下雨 → 地面湿。</p></div>
+  <div class="key-concept"><h4>🔑 等效性/多重实现（Equifinality）</h4><p>同一个结果可以通过<strong>多种不同的条件组合</strong>达到。这是 QCA 最核心的洞见之一。</p></div>
+</section>
+<section>
+  <h2>6. 什么时候该用 QCA？</h2>
+  <div class="example"><ul><li><strong>中等样本量</strong>（10~50 个案例）</li><li><strong>组态理论</strong>（configurational theory）</li><li><strong>等效性</strong>：多条路径通向同一个结果</li><li><strong>不对称性</strong>：结果发生和不发生的解释可能不一样</li></ul></div>
+</section>
+<section>
+  <h2>7. 检查理解</h2>
+  <div class="quiz" id="quiz1">
+    <h3>📝 测验</h3>
+    <p class="quiz-question">下面哪种研究问题<strong>最适合</strong>用 fsQCA？</p>
+    <div class="quiz-options">
+      <label><input type="radio" name="q1" value="A" onclick="checkQuiz(this)"> A. 收入对幸福感的影响（3000 份问卷，线性回归）</label>
+      <label><input type="radio" name="q1" value="B" onclick="checkQuiz(this)"> B. 哪些条件组合导致创业成功（20 个案例，有 5 个条件）</label>
+      <label><input type="radio" name="q1" value="C" onclick="checkQuiz(this)"> C. GDP 增长率的时间序列预测</label>
+      <label><input type="radio" name="q1" value="D" onclick="checkQuiz(this)"> D. 基因与疾病的相关性分析（大样本）</label>
+    </div>
+    <div id="feedback1" class="quiz-feedback"></div>
+  </div>
+</section>
+<section>
+  <h2>8. 本课要点回顾</h2>
+  <div class="example"><ol><li><strong>QCA</strong> 是一种基于集合论的研究方法，关注条件组合（组态）与结果之间的关系</li><li>与回归不同，QCA 回答的是"<strong>哪些条件组合导致结果</strong>"而不是"哪个变量影响大"</li><li>三种类型：csQCA、mvQCA、<strong>fsQCA（模糊集）</strong></li><li>三个核心概念：<strong>必要性</strong>、<strong>充分性</strong>、<strong>等效性</strong></li></ol></div>
+</section>
+<section>
+  <h2>参考资料</h2>
+  <ul class="ref-list">
+    <li>Ragin, C. C. (2008). Redesigning Social Inquiry: Fuzzy Sets and Beyond. University of Chicago Press.</li>
+    <li>Schneider, C. Q., & Wagemann, C. (2012). Set-Theoretic Methods for the Social Sciences. Cambridge University Press.</li>
+  </ul>
+</section>
+<footer>Lesson 1 / 6 · fsQCA 教学系列</footer>
+</div>
+</body>
+</html>
