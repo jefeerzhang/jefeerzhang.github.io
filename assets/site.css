@@ -432,10 +432,6 @@ a {
   animation-delay: 120ms;
 }
 
-.entry-card:nth-child(4) {
-  animation-delay: 180ms;
-}
-
 .entry-course {
   grid-column: 1 / span 7;
   grid-row: 1 / span 2;
@@ -450,15 +446,9 @@ a {
 }
 
 .entry-skills {
-  grid-column: 8 / span 3;
+  grid-column: 8 / span 5;
   grid-row: 2;
   background: var(--surface-soft);
-}
-
-.entry-tool {
-  grid-column: 11 / span 2;
-  grid-row: 2;
-  background: var(--surface);
 }
 
 .entry-link,
@@ -542,8 +532,7 @@ a {
   padding: 24px;
 }
 
-.entry-skills h3,
-.entry-tool h3 {
+.entry-skills h3 {
   font-size: 21px;
 }
 
@@ -967,22 +956,6 @@ a {
     grid-column: 8 / span 5;
   }
 
-  .entry-tool {
-    grid-column: 1 / span 7;
-    grid-row: 3;
-  }
-
-  .entry-tool .tool-card {
-    display: grid;
-    grid-template-columns: 52px minmax(0, 1fr) 24px;
-    align-items: center;
-    gap: 18px;
-  }
-
-  .entry-tool .tool-copy {
-    margin-top: 0;
-  }
-
   .metric-band {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -1058,8 +1031,7 @@ a {
 
   .entry-course,
   .entry-cv,
-  .entry-skills,
-  .entry-tool {
+  .entry-skills {
     grid-column: 1;
     grid-row: auto;
   }
@@ -1071,21 +1043,6 @@ a {
   .entry-cv,
   .entry-skills {
     min-height: 250px;
-  }
-
-  .entry-tool {
-    min-height: 118px;
-  }
-
-  .entry-tool .tool-card {
-    display: grid;
-    grid-template-columns: 52px minmax(0, 1fr) 24px;
-    align-items: center;
-    gap: 18px;
-  }
-
-  .entry-tool .tool-copy {
-    margin-top: 0;
   }
 
   .footer-inner {
