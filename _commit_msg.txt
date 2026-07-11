@@ -1,9 +1,0 @@
-cv: 移除开源学术技能章节
-移除了 skills_banner.png、myskill 链接、侧边栏入口、meta 描述
-
-- 删除 section id="skills"
-- 删除侧边栏 #skills 导航
-- 收敛 meta description / og:description
-- 同步 tests/test_site_redesign.py：移除 #skills 锚点断言 + 删 test_skills_section_uses_real_banner_and_repository（用户已确认）
-
-测试：14/14 通过
