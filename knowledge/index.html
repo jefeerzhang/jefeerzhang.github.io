@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>知识学习 · 张剑</title>
+  <meta name="description" content="张剑的知识学习专栏，涵盖研究方法、实证分析等系列课程。">
+  <link rel="stylesheet" href="../assets/site.css">
+  <style>
+    .hub-hero {
+      padding-block: 64px 48px;
+      border-bottom: 1px solid var(--line-strong);
+    }
+    .hub-hero .eyebrow {
+      margin: 0 0 14px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .hub-hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(40px, 6vw, 64px);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+    .hub-hero p {
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.7;
+      max-width: 560px;
+    }
+
+    .columns-section {
+      padding-block: 52px 84px;
+    }
+    .columns-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 22px;
+      margin-top: 30px;
+    }
+    .column-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-decoration: none;
+      color: inherit;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 30px 28px;
+      min-height: 210px;
+      transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+    }
+    .column-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 10px 34px rgba(31, 59, 45, 0.1);
+      transform: translateY(-3px);
+    }
+    .column-card .col-tag {
+      display: inline-block;
+      align-self: flex-start;
+      padding: 4px 12px;
+      background: var(--surface-soft);
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.3px;
+      margin-bottom: 16px;
+    }
+    .column-card h3 {
+      font-family: var(--serif);
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+    .column-card p {
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+    .column-card .col-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .column-card .col-arrow {
+      font-size: 20px;
+      transition: transform 180ms ease;
+    }
+    .column-card:hover .col-arrow {
+      transform: translateX(4px);
+    }
+
+    .column-card.is-coming {
+      background: transparent;
+      border-style: dashed;
+      border-color: var(--line-strong);
+      color: var(--muted);
+      cursor: default;
+    }
+    .column-card.is-coming:hover {
+      border-color: var(--line-strong);
+      box-shadow: none;
+      transform: none;
+    }
+    .column-card.is-coming .col-tag {
+      background: var(--surface-soft);
+      color: var(--muted);
+    }
+    .column-card.is-coming h3 {
+      color: var(--muted);
+    }
+    .column-card.is-coming p {
+      color: var(--muted);
+    }
+    .column-card.is-coming .col-meta {
+      color: var(--muted);
+      border-top-color: var(--line);
+    }
+
+    @media (max-width: 760px) {
+      .hub-hero {
+        padding-block: 48px 40px;
+      }
+      .columns-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="home-page">
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+          <a href="../">首页</a>
+          <a href="../cv/">个人简历</a>
+          <a href="https://jefeerzhang.github.io/master-course/">硕士课程</a>
+          <a href="../cv/#skills">自定义技能</a>
+          <a href="./" aria-current="page">知识学习</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <section class="container hub-hero" aria-labelledby="hub-title">
+      <p class="eyebrow">Knowledge · Learning</p>
+      <h1 id="hub-title">知识学习</h1>
+      <p>按主题整理的系列学习专栏，涵盖研究方法、实证分析等内容。每个专栏自成体系，由浅入深。</p>
+    </section>
+
+    <section class="container columns-section" aria-labelledby="columns-title">
+      <h2 id="columns-title" class="section-heading" style="margin-bottom: 0;">
+        学习专栏
+        <p>选择一个专栏开始学习。</p>
+      </h2>
+
+      <div class="columns-grid">
+
+        <a class="column-card" href="./fsqca/">
+          <span class="col-tag">研究方法</span>
+          <div>
+            <h3>fsQCA 模糊集定性比较分析</h3>
+            <p>从 QCA 是什么到开题报告写作，系统掌握模糊集定性比较分析方法。</p>
+          </div>
+          <div class="col-meta">
+            <span>6 节 · 入门 → 实战</span>
+            <span class="col-arrow" aria-hidden="true">→</span>
+          </div>
+        </a>
+
+        <div class="column-card is-coming" aria-disabled="true">
+          <span class="col-tag">筹备中</span>
+          <div>
+            <h3>更多专栏</h3>
+            <p>研究方法、实证分析等更多系列课程正在筹备中，敬请期待。</p>
+          </div>
+          <div class="col-meta">
+            <span>即将上线</span>
+            <span class="col-arrow" aria-hidden="true">···</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

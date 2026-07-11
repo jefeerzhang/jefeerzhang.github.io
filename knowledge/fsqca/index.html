@@ -3,32 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>知识学习 · fsQCA 模糊集定性比较分析</title>
+  <title>fsQCA 专栏 · 知识学习</title>
   <meta name="description" content="fsQCA（模糊集定性比较分析）系统课程，从入门到开题报告，共 6 课时。">
-  <link rel="stylesheet" href="../assets/site.css">
+  <link rel="stylesheet" href="../../assets/site.css">
   <style>
-    .knowledge-hero {
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-block: 28px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .breadcrumb a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .breadcrumb a:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .breadcrumb .sep {
+      color: var(--line-strong);
+    }
+    .breadcrumb .current {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .column-hero {
       display: grid;
       grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
       align-items: center;
       gap: clamp(40px, 6vw, 80px);
-      padding-block: 64px 56px;
+      padding-block: 36px 56px;
       border-bottom: 1px solid var(--line-strong);
     }
-    .knowledge-hero-copy h1 {
+    .column-hero-copy .eyebrow {
+      margin: 0 0 14px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .column-hero-copy h1 {
       font-family: var(--serif);
-      font-size: clamp(36px, 5vw, 52px);
+      font-size: clamp(34px, 5vw, 50px);
       font-weight: 700;
       line-height: 1.2;
       margin-bottom: 12px;
     }
-    .knowledge-hero-copy .subtitle {
+    .column-hero-copy .subtitle {
       color: var(--text);
       font-size: 16px;
       line-height: 1.7;
       max-width: 520px;
     }
-    .knowledge-meta {
+    .column-meta {
       background: var(--surface);
       border: 1px solid var(--line);
       border-radius: var(--radius);
@@ -127,9 +160,9 @@
     }
 
     @media (max-width: 760px) {
-      .knowledge-hero {
+      .column-hero {
         grid-template-columns: 1fr;
-        padding-block: 48px 44px;
+        padding-block: 28px 44px;
       }
       .lesson-grid {
         grid-template-columns: 1fr;
@@ -146,29 +179,34 @@
   <header class="site-header">
     <nav class="site-nav" aria-label="主导航">
       <div class="container nav-inner">
-        <a class="site-brand" href="../">张剑 <span>/ Jian Zhang</span></a>
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
         <div class="nav-links">
-          <a href="../">首页</a>
-          <a href="../cv/">个人简历</a>
+          <a href="../../">首页</a>
+          <a href="../../cv/">个人简历</a>
           <a href="https://jefeerzhang.github.io/master-course/">硕士课程</a>
-          <a href="../cv/#skills">自定义技能</a>
-          <a href="./" aria-current="page">知识学习</a>
+          <a href="../../cv/#skills">自定义技能</a>
+          <a href="../" aria-current="page">知识学习</a>
         </div>
       </div>
     </nav>
   </header>
 
   <main id="main-content">
-    <section class="container knowledge-hero" aria-labelledby="knowledge-title">
-      <div class="knowledge-hero-copy">
-        <h1 id="knowledge-title">fsQCA 定性比较分析</h1>
+    <div class="container">
+      <nav class="breadcrumb" aria-label="面包屑">
+        <a href="../">知识学习</a>
+        <span class="sep">/</span>
+        <span class="current">fsQCA 专栏</span>
+      </nav>
+    </div>
+
+    <section class="container column-hero" aria-labelledby="column-title">
+      <div class="column-hero-copy">
+        <p class="eyebrow">知识学习 · 专栏</p>
+        <h1 id="column-title">fsQCA 定性比较分析</h1>
         <p class="subtitle">从 QCA 是什么到开题报告写作，系统掌握模糊集定性比较分析方法。适用于管理学、社会学、经济学等社科领域的组态研究。</p>
       </div>
-      <div class="knowledge-meta">
-        <div class="meta-item">
-          <span class="meta-label">课程</span>
-          <span class="meta-value">fsQCA 模糊集定性比较分析</span>
-        </div>
+      <div class="column-meta">
         <div class="meta-item">
           <span class="meta-label">课时</span>
           <span class="meta-value">6 节</span>
