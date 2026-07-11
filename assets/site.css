@@ -442,13 +442,7 @@ a {
 
 .entry-cv {
   grid-column: 8 / span 5;
-  grid-row: 1;
-}
-
-.entry-skills {
-  grid-column: 8 / span 5;
-  grid-row: 2;
-  background: var(--surface-soft);
+  grid-row: 1 / span 2;
 }
 
 .entry-link,
@@ -526,30 +520,6 @@ a {
 
 .entry-course .entry-link:hover h3 {
   color: #f7faf8;
-}
-
-.entry-skills .entry-link {
-  padding: 24px;
-}
-
-.entry-skills h3 {
-  font-size: 21px;
-}
-
-.entry-skills-visual {
-  width: calc(100% + 48px);
-  margin: 24px -24px -24px;
-  aspect-ratio: 16 / 7;
-  overflow: hidden;
-  border-top: 1px solid var(--line);
-  background: var(--surface-deep);
-}
-
-.entry-skills-visual img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 34%;
 }
 
 .tool-card {
@@ -876,57 +846,6 @@ a {
   color: var(--accent-hover);
 }
 
-.skills-panel {
-  display: grid;
-  grid-template-columns: minmax(250px, 0.8fr) minmax(0, 1.2fr);
-  overflow: hidden;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius);
-  background: var(--surface);
-}
-
-.skills-visual {
-  min-height: 100%;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  background: var(--surface-deep);
-}
-
-.skills-visual img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.skills-copy {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-width: 0;
-  padding: clamp(26px, 5vw, 46px);
-}
-
-.skills-copy p {
-  margin: 0;
-  color: var(--text);
-  font-size: 14px;
-  line-height: 1.9;
-}
-
-.skills-copy .button {
-  align-self: flex-start;
-  margin-top: 24px;
-}
-
-.repo-line {
-  display: block;
-  margin-top: 18px;
-  color: var(--muted);
-  font-family: var(--mono);
-  font-size: 11px;
-  overflow-wrap: anywhere;
-}
-
 @keyframes enter {
   from {
     opacity: 0;
@@ -949,10 +868,6 @@ a {
   }
 
   .entry-cv {
-    grid-column: 8 / span 5;
-  }
-
-  .entry-skills {
     grid-column: 8 / span 5;
   }
 
@@ -1030,8 +945,7 @@ a {
   }
 
   .entry-course,
-  .entry-cv,
-  .entry-skills {
+  .entry-cv {
     grid-column: 1;
     grid-row: auto;
   }
@@ -1040,8 +954,7 @@ a {
     min-height: 420px;
   }
 
-  .entry-cv,
-  .entry-skills {
+  .entry-cv {
     min-height: 250px;
   }
 
@@ -1109,14 +1022,6 @@ a {
   .publication {
     grid-template-columns: 62px minmax(0, 1fr);
     gap: 14px;
-  }
-
-  .skills-panel {
-    grid-template-columns: 1fr;
-  }
-
-  .skills-visual {
-    aspect-ratio: 16 / 9;
   }
 }
 
