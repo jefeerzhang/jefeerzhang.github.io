@@ -1017,9 +1017,9 @@ footer.site-footer a:hover { color: var(--accent); }
   margin: 0 0 12px;
   font-family: var(--display);
   font-size: clamp(48px, 6.5vw, 72px);
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.05;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   color: var(--ink);
   text-wrap: balance;
   font-feature-settings: "kern", "liga", "halt";
@@ -1028,7 +1028,7 @@ footer.site-footer a:hover { color: var(--accent); }
   margin: 0 0 4px;
   font-family: var(--display);
   font-size: clamp(16px, 1.3vw, 18px);
-  font-weight: 500;
+  font-weight: 600;
   font-style: italic;
   color: var(--accent);
   letter-spacing: 0.005em;
@@ -1036,8 +1036,9 @@ footer.site-footer a:hover { color: var(--accent); }
 .cv-affiliation {
   margin: 0;
   font-family: var(--serif);
-  font-size: 14px;
-  color: var(--muted);
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
 }
 .cv-scholar {
   display: flex;
@@ -1046,13 +1047,14 @@ footer.site-footer a:hover { color: var(--accent); }
   align-items: flex-end;
   font-family: var(--mono);
   font-size: 12px;
-  color: var(--muted);
+  font-weight: 600;
+  color: var(--text);
   text-align: right;
 }
 .cv-scholar .orcid-link {
   font-family: var(--mono);
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 12.5px;
+  font-weight: 700;
   color: var(--accent);
   letter-spacing: 0.01em;
   text-decoration: none;
@@ -1063,8 +1065,10 @@ footer.site-footer a:hover { color: var(--accent); }
 .cv-scholar .orcid-link:hover { border-bottom-color: var(--accent); }
 .cv-scholar span {
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: 11.5px;
+  font-weight: 600;
   letter-spacing: 0.04em;
+  color: var(--ink);
 }
 
 @media (max-width: 760px) {
@@ -1148,7 +1152,7 @@ footer.site-footer a:hover { color: var(--accent); }
   max-width: 38em;
   font-family: var(--serif);
   font-size: clamp(16px, 1.15vw, 18px);
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.78;
   color: var(--ink);
   font-feature-settings: "kern", "liga", "halt";
@@ -1159,8 +1163,10 @@ footer.site-footer a:hover { color: var(--accent); }
 .content-section p,
 .content-section li {
   max-width: 38em;
+  font-weight: 500;
   font-feature-settings: "kern", "liga", "halt";
 }
+.content-section p strong { font-weight: 800; color: var(--accent); }
 
 /* 数字指标条 — metric-band */
 .metric-band {
@@ -1183,7 +1189,7 @@ footer.site-footer a:hover { color: var(--accent); }
 .metric-value {
   font-family: var(--display);
   font-size: clamp(22px, 2.4vw, 30px);
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.1;
   color: var(--accent);
   letter-spacing: -0.01em;
@@ -1245,7 +1251,8 @@ footer.site-footer a:hover { color: var(--accent); }
 .pub-body {
   margin: 0;
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: 16px;
+  font-weight: 500;
   line-height: 1.7;
   color: var(--ink);
   font-feature-settings: "kern", "liga", "halt";
@@ -1259,6 +1266,17 @@ footer.site-footer a:hover { color: var(--accent); }
 }
 .pub-body a:hover {
   border-bottom-color: var(--accent);
+}
+
+/* 作者本人姓名高亮 — 中英文 '张剑' / 'Jian Zhang' */
+.pub-body strong.me,
+.pub-body b.me {
+  font-weight: 800;
+  color: var(--accent);
+  background: linear-gradient(transparent 60%, rgba(36, 86, 66, 0.10) 60%);
+  padding: 0 1px;
+  border-radius: 2px;
+  letter-spacing: 0.01em;
 }
 
 /* CV 页移动端：单栏 */
