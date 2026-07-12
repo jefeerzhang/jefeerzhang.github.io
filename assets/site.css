@@ -1409,53 +1409,93 @@ body.fsqca-page {
   transform: translateX(3px);
 }
 
-/* ---------- 子页 .lesson-hero ---------- */
+/* ---------- 子页 .lesson-hero (新版 · 上下分层) ---------- */
 .lesson-hero {
+  padding: 36px 0 64px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, #f3f6f0 0%, #ffffff 100%);
+}
+.lesson-hero .breadcrumb {
+  margin: 0 0 32px;
+}
+.lesson-hero .breadcrumb .current {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.lesson-hero-grid {
   display: grid;
-  grid-template-columns: 240px minmax(0, 1fr);
-  gap: clamp(32px, 6vw, 80px);
-  align-items: center;
-  padding: 96px 0 56px;
-  border-bottom: 1px solid var(--line-strong);
-  background: var(--paper);
+  grid-template-columns: minmax(160px, 220px) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 64px);
+  align-items: start;
 }
 @media (max-width: 720px) {
-  .lesson-hero { grid-template-columns: 1fr; padding-top: 56px; }
-  .lesson-hero .lesson-num-big { font-size: 72px; }
+  .lesson-hero-grid { grid-template-columns: 1fr; gap: 20px; }
+  .lesson-hero .lesson-hero-num { font-size: 72px; }
 }
-.lesson-hero .lesson-num-big {
+
+.lesson-hero-num-block {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  line-height: 1;
+  padding-top: 6px;
+  border-top: 4px solid var(--accent);
+}
+.lesson-hero-num {
   font-family: var(--mono);
-  font-size: 120px;
+  font-size: 100px;
   font-weight: 700;
-  line-height: 0.95;
   color: var(--accent);
   letter-spacing: -0.04em;
+  line-height: 0.9;
 }
-.lesson-hero .lesson-eyebrow {
-  margin: 0 0 14px;
-  color: var(--accent);
+.lesson-hero-num-total {
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+
+.lesson-hero-text { min-width: 0; }
+
+.lesson-tag-pill {
+  display: inline-block;
+  margin: 0 0 16px;
+  padding: 5px 12px;
   font-family: var(--mono);
   font-size: 12px;
   font-weight: 700;
-  text-transform: uppercase;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(36, 86, 66, 0.08);
+  border: 1px solid rgba(36, 86, 66, 0.18);
+  border-radius: 999px;
 }
-.lesson-hero h1 {
+.lesson-hero-text h1 {
   margin: 0;
   font-family: var(--display);
-  font-size: clamp(38px, 5vw, 56px);
+  font-size: clamp(36px, 5vw, 52px);
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1.15;
   letter-spacing: -0.02em;
   text-wrap: balance;
+  color: var(--ink);
 }
-.lesson-hero .subtitle {
-  margin: 18px 0 0;
-  color: var(--text);
+.lesson-hero-text .hero-summary {
+  margin: 22px 0 0;
+  padding-top: 18px;
+  border-top: 1px dashed var(--line);
   font-family: var(--serif);
-  font-size: 17px;
-  line-height: 1.75;
-  max-width: 56ch;
+  font-size: 16.5px;
+  line-height: 1.8;
+  color: var(--muted);
+  max-width: 60ch;
+}
+@media (max-width: 720px) {
+  .lesson-hero-text .hero-summary { margin-top: 16px; padding-top: 14px; }
 }
 
 /* ---------- lesson 内容区 ---------- */
