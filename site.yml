@@ -5,6 +5,19 @@
 # 作用:让 AI/我每次改站都照这份清单执行,杜绝"结构每次都不一样"
 # =============================================================
 
+# ---------- AI 阅读须知(每次接到网站任务先看这段) ----------
+# 接到"改站 / 加子站 / 调样式 / 写文案"这类任务,请按以下顺序:
+#   1. 读 `palette` + `design_rules`:知道能用什么色 / 什么字体 / 什么禁条
+#   2. 读 `sections`:知道顶层有哪几个栏目,目录路径是什么
+#   3. 读 `knowledge` 下的子站清单:挂新子站必须照 `lesson_page_shell` 的外壳写
+#   4. 读 `homepage_entries` + `knowledge_card`:主页/知识库卡要跟它们保持一致
+#   5. 写文案读 `writing_rules`;改样式读 `design_rules`
+# 铁律:
+#   - 不准删本文件的 key;新增 key 在最后追加
+#   - 不准自己改 `accent` 色 / 字体栈;要改先问张剑
+#   - 改完任何 html 后,按 `verification` 段两条 curl 验真
+#   - commit 信息格式:`feat|fix|style|docs(scope): 中文说明`
+
 site:
   domain: jefeerzhang.github.io
   repo: jefeerzhang/jefeerzhang.github.io
