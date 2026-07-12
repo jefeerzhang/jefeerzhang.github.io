@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第十课：信度、效度与因子结构</title>
+  <link rel="stylesheet" href="../assets/course.css">
+</head>
+<body><main>
+  <header>
+    <div class="eyebrow">LESSON 0010 · 约 15 分钟</div>
+    <h1>测量质量不是三个合格线</h1>
+    <p class="lede">本课的 tangible win：能解释 alpha、因子分析和效度证据各自回答什么问题，并拒绝“指标达标即量表有效”的结论。</p>
+    <p class="meta"><a href="course-map.html">课程地图</a> · <a href="compiled-material-review.html">资料修正说明</a></p>
+  </header>
+
+  <h2>1. 三个不同问题</h2>
+  <table>
+    <thead><tr><th>问题</th><th>常见证据</th><th>不能推出</th></tr></thead>
+    <tbody>
+      <tr><td>分数是否足够稳定或精确？</td><td>内部一致性、重测、评分者一致性、测量误差</td><td>一定测到了目标构念</td></tr>
+      <tr><td>题项怎样组成维度？</td><td>EFA、CFA、载荷、残差和模型比较</td><td>模型拟合好就理论正确</td></tr>
+      <tr><td>分数解释和用途是否合理？</td><td>内容、内部结构、与其他变量关系、反应过程和后果</td><td>一次研究永久证明效度</td></tr>
+    </tbody>
+  </table>
+
+  <h2>2. Alpha 的正确位置</h2>
+  <p>Cronbach's alpha 是在特定假设下描述内部一致性的指标，受题目数量和题目相关影响。高 alpha 可能来自内容重复；多维题目也可能得到高 alpha。因此先研究维度，再解释对应分数的可靠性。</p>
+  <div class="formula">信度是分数在特定用途下的性质，不是问卷名称上的永久标签。</div>
+
+  <h2>3. EFA 与 CFA</h2>
+  <p><strong>EFA</strong>用于探索题项间潜在结构，但仍需理论和内容判断；因子数不应只靠“特征值大于 1”，可结合平行分析、碎石图和可解释性。<strong>CFA</strong>检验预设测量模型与数据的相容程度，但最好使用独立样本或交叉验证，避免在同一数据上探索后立即宣称确认。</p>
+  <p>MacCallum 等人的研究说明，因子分析样本量依赖共同度、因子过度决定程度与模型条件，而非固定人数口诀。</p>
+  <div class="callout"><strong>测量证据要回到理论。</strong>因子结构应与理论预期的维度一致；与其他变量的关系应检验理论预测的方向与强度。统计拟合不是脱离理论的独立评分。</div>
+
+  <h2>4. 即时判断</h2>
+  <div class="exercise" data-quiz data-correct="正确。内部一致性只是证据的一部分，还需维度、内容和外部关系等证据。" data-wrong="想一想 alpha 回答的是一致性问题，还是构念解释是否合理的问题。">
+    <h3>某量表 alpha = .92，最稳妥的结论是？</h3>
+    <div class="options">
+      <button class="option" data-answer="wrong">该量表已经充分证明构念效度良好</button>
+      <button class="option" data-answer="correct">题项内部一致性较高仍需其他证据</button>
+      <button class="option" data-answer="wrong">该量表确定只有一个潜在因子存在</button>
+    </div><div class="feedback" aria-live="polite"></div>
+  </div>
+
+  <h2>5. 你的产出</h2>
+  <div class="exercise">
+    <p>针对“大学生 AI 学习自我效能量表”，分别写出一条：</p>
+    <ol class="checklist">
+      <li>内容证据。</li>
+      <li>回答过程证据。</li>
+      <li>内部结构证据。</li>
+      <li>与其他变量关系的证据。</li>
+      <li>适合报告的信度证据。</li>
+    </ol>
+    <details class="answer-panel"><summary>展开自查标准</summary><ul class="checklist"><li>内容证据说明题项怎样覆盖自我效能的理论范围。</li><li>回答过程证据来自目标人群对题意和作答过程的解释。</li><li>内部结构证据检验预设维度，而不是只报告 alpha。</li><li>外部关系证据预先说明应与哪些变量正相关、负相关或弱相关。</li><li>信度指标与分数结构和使用情境匹配，并说明不确定性。</li></ul></details>
+  </div>
+
+  <h2>主读</h2>
+  <p><a href="https://doi.org/10.3389/fpubh.2018.00149">Boateng et al. (2018)</a>；样本量纠偏阅读 <a href="https://doi.org/10.1037/1082-989X.4.1.84">MacCallum et al. (1999)</a>；构念开发阅读 <a href="https://doi.org/10.1037/1040-3590.7.3.309">Clark & Watson (1995)</a>。</p>
+  <div class="lesson-nav"><a href="0009-data-quality.html">← 第九课</a><a href="0011-transparent-reporting.html">第十一课 →</a></div>
+  <footer><p>解释统计输出时，必须同时考虑题项、计分规则、样本、测量模型和分数用途。</p></footer>
+</main><script src="../assets/quiz.js"></script></body></html>

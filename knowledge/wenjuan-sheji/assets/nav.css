@@ -1,0 +1,201 @@
+/* 问卷设计专栏导航页样式
+   注意: 本样式只在 wenjuan-sheji/index.html 引用,
+         11 个课节 HTML 仍只引用 course.css, 互不影响。 */
+
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 24px 0 18px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.breadcrumb a {
+  color: var(--accent);
+  text-decoration: none;
+}
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb .sep { color: var(--line-strong); }
+.breadcrumb .current { color: var(--ink); }
+
+.hub-hero { padding: 24px 0 56px; }
+.hub-hero .eyebrow {
+  margin: 0 0 14px;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+.hub-hero h1 {
+  margin: 0 0 18px;
+  font-family: var(--serif);
+  font-size: clamp(48px, 6vw, 72px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+.hub-hero .hero-summary {
+  max-width: 64ch;
+  margin: 0 0 28px;
+  color: var(--text);
+  font-size: clamp(15px, 1.4vw, 17px);
+  font-weight: 500;
+  line-height: 1.8;
+}
+.hub-hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  padding: 18px 0 0;
+  border-top: 1px solid var(--line-strong);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.hub-hero-meta strong {
+  margin-right: 4px;
+  color: var(--accent);
+  font-weight: 800;
+  font-feature-settings: "tnum" 1;
+}
+
+/* ============== 11 课节网格 ============== */
+.wj-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin: 24px 0 4px;
+}
+
+.wj-card {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 16px;
+  padding: 22px 22px 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 200ms var(--ease), box-shadow 200ms var(--ease), transform 200ms var(--ease);
+}
+.wj-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 10px 30px rgba(31, 59, 45, 0.10);
+  transform: translateY(-2px);
+}
+
+.wj-card-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: start;
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  background: var(--surface-soft);
+  color: var(--accent);
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-feature-settings: "tnum" 1;
+}
+.wj-card-body { min-width: 0; }
+.wj-card-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(36, 86, 66, 0.10);
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+.wj-card-body h3 {
+  margin: 0 0 6px;
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.wj-card-body p {
+  margin: 0;
+  color: var(--text);
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.7;
+}
+
+/* ============== 6 个配套参考 (横向) ============== */
+.wj-refs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin: 24px 0 4px;
+}
+.wj-ref {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 200ms ease, background 200ms ease;
+}
+.wj-ref:hover {
+  border-color: var(--line-strong);
+  background: var(--surface-soft);
+}
+.wj-ref-tag {
+  align-self: flex-start;
+  padding: 2px 10px;
+  border-radius: 4px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.wj-ref h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+}
+.wj-ref p {
+  margin: 0;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.65;
+}
+
+/* 移动端: 让 card-num 跟 body 并列更紧凑 */
+@media (max-width: 760px) {
+  .wj-card { grid-template-columns: 44px 1fr; gap: 12px; padding: 18px 16px 16px; }
+  .wj-card-num { width: 44px; height: 44px; font-size: 20px; }
+  .wj-card-body h3 { font-size: 16px; }
+  .hub-hero { padding: 16px 0 40px; }
+}

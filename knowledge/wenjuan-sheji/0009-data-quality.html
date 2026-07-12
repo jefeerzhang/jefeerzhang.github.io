@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第九课：数据质量规则</title>
+  <link rel="stylesheet" href="../assets/course.css">
+</head>
+<body><main>
+  <header>
+    <div class="eyebrow">LESSON 0009 · 约 12 分钟</div>
+    <h1>先写质控规则，再看结果</h1>
+    <p class="lede">本课的 tangible win：写出一份可复核的数据质量规则，区分技术异常、低投入回答与真实但极端的受访者。</p>
+    <p class="meta"><a href="course-map.html">课程地图</a> · <a href="research-protocol-checklist.html">研究方案检查表</a></p>
+  </header>
+
+  <h2>1. 低质量不是一个单一标签</h2>
+  <table>
+    <thead><tr><th>信号</th><th>可能原因</th><th>处理原则</th></tr></thead>
+    <tbody>
+      <tr><td>重复提交</td><td>重复点击、共享设备、蓄意刷答</td><td>结合时间、标识和答案模式核验</td></tr>
+      <tr><td>极短时长</td><td>跳读、熟悉题目、设备记录偏差</td><td>以预测试分布建立规则，不用任意秒数</td></tr>
+      <tr><td>直线作答</td><td>敷衍，也可能是真实一致态度</td><td>结合反应变异、反向内容和时长判断</td></tr>
+      <tr><td>逻辑矛盾</td><td>误解、记忆误差、跳转故障</td><td>先检查问卷设计，再决定标记或排除</td></tr>
+      <tr><td>缺失数据</td><td>敏感、疲劳、技术或不适用</td><td>区分拒答、不知道、不适用和系统缺失</td></tr>
+    </tbody>
+  </table>
+
+  <h2>2. 好规则应具备四个特征</h2>
+  <ol class="checklist">
+    <li><strong>事先：</strong>尽可能在主要分析前写明。</li>
+    <li><strong>组合：</strong>避免单一信号自动决定剔除。</li>
+    <li><strong>可解释：</strong>说明该信号为什么威胁数据用途。</li>
+    <li><strong>可复核：</strong>保留原始数据、标记变量和剔除日志。</li>
+  </ol>
+  <div class="callout"><strong>不要为得到理想结果而清洗。</strong>如果排除标准是在看到显著性或模型拟合后反复调整，应做敏感性分析并透明报告。</div>
+
+  <h2>3. 即时判断</h2>
+  <div class="exercise" data-quiz data-correct="正确。单一速度阈值可能误删认真但阅读快的人，应结合多种证据并保留标记。" data-wrong="检查规则是否事先确定、是否只凭一个信号、是否保留审计痕迹。">
+    <h3>哪一种质控做法更合理？</h3>
+    <div class="options">
+      <button class="option" data-answer="wrong">统一删除最快完成的百分之十样本</button>
+      <button class="option" data-answer="correct">结合时长矛盾重复信号进行标记复核</button>
+      <button class="option" data-answer="wrong">删除导致研究假设不显著的异常回答</button>
+    </div><div class="feedback" aria-live="polite"></div>
+  </div>
+
+  <h2>4. 你的产出</h2>
+  <div class="exercise">
+    <p>为一份 8 分钟网络问卷写五条质控规则，至少覆盖重复、时长、逻辑矛盾、缺失和开放题。每条说明“标记依据、是否自动排除、如何记录”。</p>
+    <details class="answer-panel"><summary>展开自查标准</summary><ul class="checklist"><li>每条规则说明证据来源，而不是只写一个任意阈值。</li><li>单一异常信号原则上先标记，不自动排除。</li><li>缺失被区分为拒答、不知道、不适用和系统缺失。</li><li>保留原始记录、标记变量、排除理由和敏感性分析方案。</li><li>规则不以研究结果是否显著为依据。</li></ul></details>
+  </div>
+
+  <h2>主读</h2>
+  <p><a href="https://aapor.org/standards-and-ethics/disclosure-standards/">AAPOR Disclosure Standards</a>，重点阅读数据处理、有效性检查、机器人、重复提交和排除程序的披露要求。</p>
+  <div class="lesson-nav"><a href="0008-sampling-inference.html">← 第八课</a><a href="0010-measurement-evidence.html">第十课 →</a></div>
+  <footer><p>真实质控需要结合平台可导出的时长、设备、访问标识、跳转和提交记录制定。</p></footer>
+</main><script src="../assets/quiz.js"></script></body></html>

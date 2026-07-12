@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第八课：抽样决定推断边界</title>
+  <link rel="stylesheet" href="../assets/course.css">
+</head>
+<body><main>
+  <header>
+    <div class="eyebrow">LESSON 0008 · 约 13 分钟</div>
+    <h1>样本大，不等于样本代表</h1>
+    <p class="lede">本课的 tangible win：根据招募方式写出诚实的推断边界，并区分随机误差、覆盖误差与自我选择偏差。</p>
+    <p class="meta"><a href="course-map.html">课程地图</a> · <a href="questionnaire-workflow.html">全流程速查表</a></p>
+  </header>
+
+  <h2>1. 概率与非概率抽样的根本差别</h2>
+  <table>
+    <thead><tr><th>方式</th><th>入样机制</th><th>典型推断</th></tr></thead>
+    <tbody>
+      <tr><td>概率抽样</td><td>总体成员从已知抽样框以已知非零概率被选择</td><td>在设计和无应答条件允许时估计总体参数与抽样误差</td></tr>
+      <tr><td>非概率抽样</td><td>便利、志愿、滚雪球、开放链接或目的选择</td><td>描述所获样本；推广依赖额外且可辩护的模型假设</td></tr>
+    </tbody>
+  </table>
+  <p>非概率样本并非一律无用：它可用于工具早期测试、探索关系、难接触群体研究或实验。但必须准确描述招募机制，避免把“参与者”改写成“总体”。</p>
+
+  <h2>2. 三类误差不能互相抵消</h2>
+  <ul class="checklist">
+    <li><strong>随机误差：</strong>抽到另一批样本，估计会波动；增加合适样本量通常有帮助。</li>
+    <li><strong>覆盖误差：</strong>抽样框漏掉目标总体中的某些人；扩大同一有缺口的名单未必有帮助。</li>
+    <li><strong>自我选择与无应答：</strong>愿意或能够参与的人系统不同；更多志愿者可能让偏差更稳定。</li>
+  </ul>
+  <div class="formula">精确地描述一个偏斜样本，仍然不等于准确地描述总体。</div>
+
+  <h2>3. 样本量应从任务反推</h2>
+  <p>描述比例要考虑期望精度和设计效应；比较组别要考虑最小有意义差异与检验力；因子分析要考虑共同度、载荷、题项数量和模型复杂度。不存在跨任务通用的“200 人”或“每题 10 人”。</p>
+
+  <h2>4. 即时判断</h2>
+  <div class="exercise" data-quiz data-correct="正确。开放链接产生自我选择样本，样本量再大也不能自动代表全部学生。" data-wrong="判断谁看到了链接、谁选择参加，以及每个人的入样概率是否已知。">
+    <h3>五千人填写校园公众号开放链接，最稳妥的描述是？</h3>
+    <div class="options">
+      <button class="option" data-answer="wrong">结果代表该校所有在籍学生意见</button>
+      <button class="option" data-answer="correct">结果描述主动参与调查学生意见</button>
+      <button class="option" data-answer="wrong">结果误差小于随机抽样调查结果</button>
+    </div><div class="feedback" aria-live="polite"></div>
+  </div>
+
+  <h2>5. 你的产出</h2>
+  <div class="exercise">
+    <p>假设你通过三个班级群和个人朋友圈招募到 600 名大学生。写三段各一句话：</p>
+    <ol class="checklist">
+      <li>准确描述样本如何产生。</li>
+      <li>指出至少两个可能被漏掉或低估的群体。</li>
+      <li>写出结果可以支持和不能支持的结论。</li>
+    </ol>
+    <details class="answer-panel"><summary>展开自查标准</summary><ul class="checklist"><li>明确说明样本来自班级群和朋友圈中的自愿参与者。</li><li>指出未进入这些社交网络、较少上网或参与意愿较低者可能被低估。</li><li>可以描述样本内部的分布与关系，但不能无条件估计全部大学生的总体比例。</li><li>不使用“600 人很多”作为代表性依据。</li></ul></details>
+  </div>
+
+  <h2>主读</h2>
+  <p><a href="https://doi.org/10.59170/stattrans-2023-029">Kalton (2023): Probability vs. Nonprobability Sampling</a>，配合 <a href="https://aapor.org/standards-and-ethics/disclosure-standards/">AAPOR Disclosure Standards</a> 的抽样披露要求。</p>
+  <div class="lesson-nav"><a href="0007-cognitive-pretesting.html">← 第七课</a><a href="0009-data-quality.html">第九课 →</a></div>
+  <footer><p>界定推断边界时，应同时写出真实招募渠道、名单来源和希望推广到的总体，再比较三者差异。</p></footer>
+</main><script src="../assets/quiz.js"></script></body></html>
