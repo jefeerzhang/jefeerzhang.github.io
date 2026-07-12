@@ -2322,6 +2322,18 @@ li { font-weight: 500; }
 :root[data-theme="dark"] .footer-counter {
   color: var(--muted);
 }
+/* fsqca 入口页 hero 用 hardcoded 浅色渐变 (#f3f6f0 → #ffffff),
+   dark 模式下必须反相, 否则白底浅字不可读 */
+:root[data-theme="dark"] .fsqca-hero {
+  background: linear-gradient(180deg, #1a2024 0%, #14191c 100%);
+  border-bottom-color: var(--line);
+}
+:root[data-theme="dark"] .fsqca-card-num {
+  background: var(--surface-deep);
+}
+:root[data-theme="dark"] .fsqca-card:hover {
+  box-shadow: 0 6px 22px rgba(127, 176, 152, 0.12);
+}
 
 /* ---- 主题切换按钮 (顶 nav 右侧) ---- */
 .theme-toggle {
