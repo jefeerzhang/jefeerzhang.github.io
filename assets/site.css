@@ -2057,38 +2057,38 @@ body.fsqca-page {
 
 /* 首页 hero: 张剑 / 副标题 / lead 段 */
 .home-hero .name {
-  font-weight: 800;
-  letter-spacing: -0.025em;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 .home-hero .subtitle {
-  font-weight: 600;
+  font-weight: 500;
   color: var(--ink);
 }
 .home-hero .lead {
-  font-weight: 500;
+  font-weight: 450;
   color: var(--text);
   max-width: 38em;
 }
 
 /* 联系方式区段头 */
 .contact-eyebrow > span:first-child {
-  font-weight: 800;
+  font-weight: 700;
 }
 .contact-eyebrow .eyebrow-en {
-  font-weight: 800;
+  font-weight: 700;
 }
 
 /* 联系方式卡 — 标签 / 值 / hint */
 .contact-label {
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.16em;
 }
 .contact-value {
-  font-size: 17px;
-  font-weight: 800;
+  font-size: 16.5px;
+  font-weight: 600;
 }
 .contact-hint {
-  font-weight: 600;
+  font-weight: 500;
   color: var(--ink);
 }
 
@@ -2099,25 +2099,25 @@ body.fsqca-page {
 
 /* entry-card: 标题 / 描述 / meta */
 article.entry-card h3 {
-  font-size: 1.25rem;
-  font-weight: 800;
+  font-size: 1.18rem;
+  font-weight: 700;
 }
 article.entry-card p {
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 0.98rem;
+  font-weight: 500;
   color: var(--ink);
 }
 article.entry-card .meta,
 article.entry-card time {
-  font-size: 0.88rem;
-  font-weight: 700;
+  font-size: 0.85rem;
+  font-weight: 600;
   color: var(--text);
 }
 
 /* section-heading: h2 + 副标 + p */
 .section-heading h2 {
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  letter-spacing: -0.015em;
 }
 .section-heading p {
   font-weight: 500;
