@@ -2352,3 +2352,21 @@ li { font-weight: 500; }
 :root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 :root:not([data-theme="dark"]) .theme-toggle .icon-sun { display: none; }
 :root:not([data-theme="dark"]) .theme-toggle .icon-moon { display: inline-block; }
+
+/* 浮窗 FAB (fixed 右下角), 让没有 nav 的页面 (例如课节) 也能切主题 */
+.theme-toggle--fab {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  background: var(--surface);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  z-index: 1000;
+}
+:root[data-theme="dark"] .theme-toggle--fab {
+  background: var(--surface-deep);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+.theme-toggle--fab svg { width: 18px; height: 18px; }

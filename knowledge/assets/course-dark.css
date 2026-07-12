@@ -1,0 +1,126 @@
+/* Dark mode override for course.css (wenjuan-sheji 课节 / 参考文件)
+   仅在 [data-theme="dark"] 下生效, 不动原始 course.css
+   保留 course.css 的 9 个 token 全部覆盖
+*/
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #e6ebe7;
+  --muted: #8e9a93;
+  --paper: #14191c;
+  --panel: #1c2429;
+  --line: #313b40;
+  --accent: #6fb29a;          /* 提亮的墨绿, 暗底对比度 */
+  --accent-2: #d69881;        /* 提亮的赤陶色, dark 模式更醒目 */
+  --correct: #5dc294;
+  --wrong: #e07d6e;
+}
+:root[data-theme="dark"] body {
+  background: var(--paper);
+  color: var(--ink);
+}
+:root[data-theme="dark"] a {
+  color: var(--accent);
+}
+:root[data-theme="dark"] .eyebrow {
+  color: var(--accent-2);
+}
+:root[data-theme="dark"] .lede {
+  color: var(--muted);
+}
+:root[data-theme="dark"] .meta {
+  color: var(--muted);
+}
+:root[data-theme="dark"] .tag {
+  background: var(--panel);
+  color: var(--accent);
+  border-color: var(--line);
+}
+:root[data-theme="dark"] .lesson-nav a {
+  color: var(--accent);
+}
+:root[data-theme="dark"] .option {
+  background: var(--panel);
+  border-color: var(--line);
+  color: var(--ink);
+}
+:root[data-theme="dark"] .option:hover {
+  border-color: var(--accent);
+  background: var(--line);
+}
+:root[data-theme="dark"] .feedback {
+  color: var(--muted);
+}
+:root[data-theme="dark"] .course-item {
+  background: var(--panel);
+  border-color: var(--line);
+}
+:root[data-theme="dark"] .course-item:hover {
+  border-color: var(--accent);
+}
+:root[data-theme="dark"] code,
+:root[data-theme="dark"] pre {
+  background: var(--panel);
+  color: var(--ink);
+  border-color: var(--line);
+}
+:root[data-theme="dark"] blockquote {
+  background: var(--panel);
+  border-left-color: var(--accent);
+  color: var(--muted);
+}
+:root[data-theme="dark"] hr {
+  border-top-color: var(--line);
+}
+:root[data-theme="dark"] table {
+  border-color: var(--line);
+}
+:root[data-theme="dark"] th {
+  background: var(--panel);
+  color: var(--ink);
+}
+:root[data-theme="dark"] td {
+  border-color: var(--line);
+}
+:root[data-theme="dark"] .formula {
+  background: var(--panel);
+  border-color: var(--line);
+}
+:root[data-theme="dark"] .callout {
+  background: rgba(111, 178, 154, 0.10);
+  border-left-color: var(--accent);
+  color: var(--ink);
+}
+:root[data-theme="dark"] .callout--warn {
+  background: rgba(214, 152, 129, 0.10);
+  border-left-color: var(--accent-2);
+}
+:root[data-theme="dark"] .checklist li {
+  border-color: var(--line);
+  background: transparent;
+}
+:root[data-theme="dark"] .btn-quiz {
+  background: var(--panel);
+  border-color: var(--line);
+  color: var(--ink);
+}
+:root[data-theme="dark"] .btn-quiz:hover {
+  background: var(--line);
+  border-color: var(--accent);
+}
+:root[data-theme="dark"] .btn-quiz.is-correct {
+  background: rgba(93, 194, 148, 0.15);
+  border-color: var(--correct);
+  color: var(--correct);
+}
+:root[data-theme="dark"] .btn-quiz.is-wrong {
+  background: rgba(224, 125, 110, 0.15);
+  border-color: var(--wrong);
+  color: var(--wrong);
+}
+:root[data-theme="dark"] header nav,
+:root[data-theme="dark"] .lesson-meta {
+  color: var(--muted);
+}
+:root[data-theme="dark"] .progress-bar {
+  background: var(--panel);
+}
