@@ -36,7 +36,7 @@ body {
   color: var(--ink);
   font-family: var(--serif);
   font-size: 18px;
-  font-weight: 450;
+  font-weight: 500;
   line-height: 1.75;
   text-rendering: optimizeLegibility;
   font-feature-settings: "kern", "liga", "halt";
@@ -663,7 +663,7 @@ body {
   color: var(--ink);
   font-family: var(--serif);
   font-size: 16px;
-  font-weight: 450;
+  font-weight: 500;
   line-height: 1.7;
 }
 
@@ -2049,4 +2049,94 @@ body.fsqca-page {
 }
 @media (max-width: 480px) {
   .contact-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+ * 加重一档 — 让全站正文 + 卡片内文字更醒目
+ * ============================================================ */
+
+/* 首页 hero: 张剑 / 副标题 / lead 段 */
+.home-hero .name {
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+.home-hero .subtitle {
+  font-weight: 600;
+  color: var(--ink);
+}
+.home-hero .lead {
+  font-weight: 500;
+  color: var(--text);
+  max-width: 38em;
+}
+
+/* 联系方式区段头 */
+.contact-eyebrow > span:first-child {
+  font-weight: 800;
+}
+.contact-eyebrow .eyebrow-en {
+  font-weight: 800;
+}
+
+/* 联系方式卡 — 标签 / 值 / hint */
+.contact-label {
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+.contact-value {
+  font-size: 17px;
+  font-weight: 800;
+}
+.contact-hint {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* 复制按钮 pill */
+.contact-copy-pill {
+  font-weight: 700;
+}
+
+/* entry-card: 标题 / 描述 / meta */
+article.entry-card h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+article.entry-card p {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+article.entry-card .meta,
+article.entry-card time {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* section-heading: h2 + 副标 + p */
+.section-heading h2 {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.section-heading p {
+  font-weight: 500;
+}
+
+/* 站点头部 / 导航 */
+.site-brand {
+  font-weight: 800;
+  letter-spacing: -0.005em;
+}
+.nav-links a {
+  font-weight: 700;
+}
+
+/* 通用正文段落兜底 */
+p { font-weight: 500; }
+li { font-weight: 500; }
+
+/* 移动端 contact-value 字号同步 */
+@media (max-width: 760px) {
+  .contact-value { font-size: 16px; }
 }
