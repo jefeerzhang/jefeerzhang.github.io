@@ -2335,6 +2335,69 @@ li { font-weight: 500; }
   box-shadow: 0 6px 22px rgba(127, 176, 152, 0.12);
 }
 
+/* 子页 lesson-hero 同样用 hardcoded 浅色渐变 */
+:root[data-theme="dark"] .lesson-hero {
+  background: linear-gradient(180deg, #1a2024 0%, #14191c 100%);
+  border-bottom-color: var(--line);
+}
+
+/* callout 三个变体 (warn / danger / success) 用 hardcoded 浅色背景 */
+:root[data-theme="dark"] .callout-warn {
+  background: rgba(214, 152, 129, 0.10);
+  border-left-color: #d69881;
+}
+:root[data-theme="dark"] .callout-danger {
+  background: rgba(224, 125, 110, 0.10);
+  border-left-color: #e07d6e;
+}
+:root[data-theme="dark"] .callout-success {
+  background: rgba(111, 178, 154, 0.10);
+  border-left-color: #6fb29a;
+}
+
+/* .example 用 hardcoded 白色半透明 (亮色), dark 下用 surface 变体 */
+:root[data-theme="dark"] .example {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: var(--line-strong);
+}
+
+/* .formula 用 hardcoded 浅绿底 (#cfe4d6) + 深绿字 (#111c17), dark 翻转 */
+:root[data-theme="dark"] .formula {
+  background: rgba(111, 178, 154, 0.10);
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+/* tag 变体 hardcoded 色翻转 */
+:root[data-theme="dark"] .tag-yellow {
+  background: rgba(214, 152, 129, 0.15);
+  color: #e5b09a;
+}
+:root[data-theme="dark"] .tag-green {
+  background: rgba(111, 178, 154, 0.15);
+  color: #6fb29a;
+}
+
+/* quiz 选项 (label / hover / feedback) hardcoded 色翻转 */
+:root[data-theme="dark"] .quiz-options label {
+  background: var(--surface);
+  border-color: var(--line);
+  color: var(--ink);
+}
+:root[data-theme="dark"] .quiz-options label:hover {
+  background: var(--surface-soft);
+}
+:root[data-theme="dark"] .quiz-feedback.correct {
+  background: rgba(111, 178, 154, 0.12);
+  border-color: #6fb29a;
+  color: #6fb29a;
+}
+:root[data-theme="dark"] .quiz-feedback.incorrect {
+  background: rgba(224, 125, 110, 0.12);
+  border-color: #e07d6e;
+  color: #e07d6e;
+}
+
 /* ---- 主题切换按钮 (顶 nav 右侧) ---- */
 .theme-toggle {
   display: inline-flex;
