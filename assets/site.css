@@ -2231,10 +2231,18 @@ body.fsqca-page {
   font-weight: 700;
 }
 
-/* entry-card: 标题 / 描述 / meta */
+/* entry-card: 标题 / 描述 / meta (描述已删除, 仅保留标题 + meta) */
+article.entry-card > a {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 150px;
+  padding: 22px 22px 18px;
+}
 article.entry-card h3 {
-  font-size: 1.18rem;
-  font-weight: 700;
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin: 12px 0 0;
 }
 article.entry-card p {
   font-size: 0.98rem;
@@ -2243,8 +2251,9 @@ article.entry-card p {
 }
 article.entry-card .meta,
 article.entry-card time {
+  margin-top: auto;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text);
 }
 
