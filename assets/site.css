@@ -756,7 +756,7 @@ article.entry-card .meta {
 /* ---- 通用三栏 grid (knowledge 等) ---- */
 .columns-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 18px;
   margin: 24px 0;
 }
@@ -766,6 +766,94 @@ article.entry-card .meta {
   border-radius: var(--radius);
   padding: 18px 20px;
 }
+
+/* ---- knowledge/ 子站专栏卡片 ---- */
+.column-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-decoration: none;
+  color: inherit;
+  padding: 30px 28px;
+  min-height: 210px;
+  transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+}
+.column-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 10px 34px rgba(31, 59, 45, 0.10);
+  transform: translateY(-3px);
+}
+.column-card .col-tag {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 4px 12px;
+  background: var(--surface-soft);
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.3px;
+  margin-bottom: 16px;
+}
+.column-card h3 {
+  font-family: var(--serif);
+  font-size: 1.55rem;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  margin: 0 0 10px;
+  color: var(--ink);
+}
+.column-card p {
+  color: var(--text);
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1.7;
+  margin: 0;
+}
+.column-card .col-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.column-card .col-arrow {
+  font-size: 20px;
+  font-weight: 700;
+  transition: transform 180ms ease;
+}
+.column-card:hover .col-arrow {
+  transform: translateX(4px);
+}
+
+/* coming-soon 状态卡片 */
+.column-card.is-coming {
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--line-strong);
+  color: var(--muted);
+  cursor: default;
+}
+.column-card.is-coming:hover {
+  border-color: var(--line-strong);
+  box-shadow: none;
+  transform: none;
+}
+.column-card.is-coming .col-tag {
+  background: var(--surface-soft);
+  color: var(--muted);
+}
+.column-card.is-coming h3 { color: var(--muted); }
+.column-card.is-coming p { color: var(--muted); }
+.column-card.is-coming .col-meta { color: var(--muted); border-top-color: var(--line); }
 
 /* ---- /tools/ 小工具卡片 ---- */
 .tools-grid {
