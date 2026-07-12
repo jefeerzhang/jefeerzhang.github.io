@@ -858,7 +858,7 @@ article.entry-card .meta {
 /* ---- /tools/ 小工具卡片 ---- */
 .tools-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 18px;
   margin: 24px 0 4px;
 }
@@ -866,8 +866,9 @@ article.entry-card .meta {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 22px 22px 18px;
+  gap: 16px;
+  padding: 28px 26px 20px;
+  min-height: 220px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -876,36 +877,49 @@ article.entry-card .meta {
   transition: border-color 220ms var(--ease), transform 220ms var(--ease), box-shadow 220ms var(--ease);
 }
 .tool-card:hover {
-  border-color: var(--line-strong);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px -18px rgba(27, 37, 32, 0.45);
+  border-color: var(--accent);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px rgba(31, 59, 45, 0.12);
 }
 .tool-icon {
   display: block;
-  width: 52px;
-  height: 52px;
-  padding: 8px;
-  background: var(--surface-soft);
+  width: 48px;
+  height: 48px;
+  padding: 10px;
+  background: var(--accent);
   border-radius: 10px;
   object-fit: contain;
   align-self: flex-start;
+  /* 让 SVG 在墨绿底上呈白色 */
+  filter: brightness(0) invert(1);
 }
 .tool-icon--placeholder {
-  background: linear-gradient(135deg, var(--surface-soft), var(--surface-deep));
+  background: var(--surface-soft);
+  filter: none;
+  position: relative;
+}
+.tool-icon--placeholder::after {
+  content: "";
+  position: absolute;
+  inset: 14px;
+  border: 1.5px dashed var(--line-strong);
+  border-radius: 4px;
 }
 .tool-body h3 {
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   font-family: var(--serif);
-  font-size: 1.18rem;
-  font-weight: 600;
+  font-size: 1.65rem;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
   color: var(--ink);
-  letter-spacing: 0;
 }
 .tool-body p {
   margin: 0;
   color: var(--text);
-  font-size: 0.92rem;
-  line-height: 1.55;
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1.7;
 }
 .tool-meta {
   display: flex;
@@ -913,38 +927,49 @@ article.entry-card .meta {
   justify-content: space-between;
   gap: 12px;
   margin-top: auto;
-  padding-top: 10px;
+  padding-top: 14px;
   border-top: 1px solid var(--line);
-  font-family: var(--sans);
-  font-size: 0.82rem;
-  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
   letter-spacing: 0.02em;
+  color: var(--accent);
 }
 .tool-arrow {
   color: var(--accent);
-  font-weight: 500;
-  transition: transform 220ms var(--ease);
+  font-size: 18px;
+  font-weight: 700;
+  transition: transform 180ms var(--ease);
 }
 .tool-card:hover .tool-arrow {
-  transform: translate(2px, -2px);
+  transform: translate(3px, -3px);
 }
 .tool-meta__pill {
-  padding: 3px 10px;
+  padding: 3px 12px;
   border-radius: 999px;
   background: var(--surface-soft);
-  color: var(--text);
-  font-size: 0.78rem;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
 }
 .tool-card.is-coming {
-  background: repeating-linear-gradient(
-    135deg,
-    var(--surface),
-    var(--surface) 8px,
-    var(--surface-soft) 8px,
-    var(--surface-soft) 9px
-  );
-  opacity: 0.9;
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--line-strong);
+  color: var(--muted);
+  cursor: default;
 }
+.tool-card.is-coming:hover {
+  border-color: var(--line-strong);
+  box-shadow: none;
+  transform: none;
+}
+.tool-card.is-coming h3 { color: var(--muted); }
+.tool-card.is-coming p { color: var(--muted); }
+.tool-card.is-coming .tool-meta { color: var(--muted); border-top-color: var(--line); }
 
 /* ---- CV 页两栏布局 ---- */
 .profile-grid {
