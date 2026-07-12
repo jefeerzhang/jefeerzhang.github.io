@@ -1,0 +1,179 @@
+# =============================================================
+# 站点结构总纲(Site Manifest)
+# 维护:张剑
+# 生效:2026-07-12
+# 作用:让 AI/我每次改站都照这份清单执行,杜绝"结构每次都不一样"
+# =============================================================
+
+site:
+  domain: jefeerzhang.github.io
+  repo: jefeerzhang/jefeerzhang.github.io
+  branch: master
+  deploy: GitHub Pages
+  owner_email: zhangjian@sicau.edu.cn
+  wechat: jefeerzhang
+
+# -------------------------------------------------------------
+# 一、配色(huashu-design 学术极简 · master-course 同款)
+# -------------------------------------------------------------
+theme:
+  style_skill: huashu-design
+  palette:
+    paper:    "#f2f5f2"     # 页面主背景,米白偏绿
+    surface:  "#fbfcfb"     # 卡片底
+    surface_soft: "#f1ede4" # 卡片 hover/分隔区
+    surface_deep: "#e8e2d4" # 重点分隔区
+    accent:   "#245642"     # 深绿(按钮/标题/边框)
+    accent_hover: "#173e2f"
+    accent_ink: "#f6fbf8"
+    text:     "#4c5b53"     # 正文色
+    ink:      "#1a1817"     # 标题/重点色
+    muted:    "#6b6b66"     # 副文本
+    line:     "#e5e2dc"     # 细线
+    line_strong: "#b9c8be"  # 强分隔线
+  font:
+    serif:   '"Source Han Serif SC", "Songti SC", "Noto Serif CJK SC", STSong, Georgia, serif'
+    display: '"Source Han Serif SC", "Songti SC", Newsreader, "EB Garamond", "Source Serif 4", "Noto Serif CJK SC", STSong, Georgia, serif'
+    sans:    'Inter, "Geist", "Noto Sans CJK SC", "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", Arial, sans-serif'
+    mono:    '"JetBrains Mono", "Cascadia Mono", SFMono-Regular, Consolas, monospace'
+    note: 标题统一走 display 栈,西文 Newsreader 优先,中文 Noto Serif CJK SC fallback
+  container_max_width: 1180px
+  radius: 8px
+  rule:
+    no_gradient: true
+    no_shadow_card: true
+    circle_radius: 2px   # 极个别圆形元素(如头像)用,普通卡片仍 8px
+  design_discipline: taste_skill_sop
+
+# -------------------------------------------------------------
+# 二、导航(全站主入口,4 项)
+# -------------------------------------------------------------
+nav:
+  - id: home
+    label: 首页
+    path: /
+    file: index.html
+  - id: cv
+    label: 个人简历
+    path: /cv/
+    file: cv/index.html
+  - id: knowledge
+    label: 知识库
+    path: /knowledge/
+    file: knowledge/index.html
+  - id: tools
+    label: 小工具
+    path: /tools/
+    file: tools/index.html
+
+# master-course 在另一个仓库,这里只做外链
+external_links:
+  - id: master_course
+    label: 硕士课程
+    url: https://jefeerzhang.github.io/master-course/
+
+# -------------------------------------------------------------
+# 三、栏目(全站顶层目录)
+#   每栏目 = 一个子站/页面集合,各栏目下必须有自己的 index.html
+#   卡片样式遵循 knowledge/index.html 的 column-card / section-card
+# -------------------------------------------------------------
+sections:
+  - id: knowledge
+    path: /knowledge/
+    intro: 按主题整理的系列学习专栏,涵盖研究方法、实证分析等内容。每个专栏自成体系,由浅入深。
+    layout: column-grid           # 卡片栅格
+    columns:
+      - id: fsqca
+        path: /knowledge/fsqca/
+        title: fsQCA 模糊集定性比较分析
+        summary: 从 QCA 是什么到开题报告写作,系统掌握模糊集定性比较分析方法。
+        tag: 研究方法
+        meta: 6 节核心 · 入门 → 实战
+        shell: knowledge-shell
+        status: live
+      - id: zhang-gen-li-lun
+        path: /knowledge/zhang-gen-li-lun/
+        title: 扎根理论 · 系统学习
+        summary: 从研究问题、访谈观察到编码与理论整合,系统掌握扎根理论的完整流程。
+        tag: 研究方法
+        meta: 12 节核心 + 7 篇辅助 · 入门 → 实战
+        shell: knowledge-shell
+        status: live
+
+  - id: tools
+    path: /tools/
+    intro: 学术研究常用的小工具合集。
+    layout: tool-grid
+    items: []   # 由 tools/index.html 维护,这里只占位
+
+  - id: cv
+    path: /cv/
+    intro: 个人学术简历
+    file: cv/index.html
+    style: cv-page               # cv 页有独立 CV 段落样式
+
+# -------------------------------------------------------------
+# 四、知识库子页统一外壳(knowledge-shell)
+#   任何 knowledge 下的子页必须按这个结构套,杜绝"每个子站结构都不一样"
+#   约定:保留原 inline <style>;不引入 <main> 嵌套
+# -------------------------------------------------------------
+shells:
+  knowledge-shell:
+    block_order:
+      - site-header               # 顶部主导航(全站统一)
+      - breadcrumb                # 面包屑
+      - lesson-hero               # 课程头(eyebrow + 中文 h1 + 一句话总述)
+      - main                      # 原文件 <body> 内主体(保留 inline style)
+      - lesson-nav                # 上/下一课导航
+      - site-footer               # 全站统一页脚
+    breadcrumb_format: "{父栏目} / {子站名} / 第 N 课"
+    hero_template:
+      eyebrow: "LESSON {NN}"
+      h1: "{课名}"
+      subtitle: "{一句话总述,3-15 字}"
+    lesson_nav:
+      required: true
+      prev_label: "← 上一课"
+      next_label: "下一课 →"
+
+# -------------------------------------------------------------
+# 五、文案纪律(去 AI 味,stop_ai_slop_zh_sop 落地)
+#   每次新增/修改任何中文文案,必须遵守;AI 违规即打回
+# -------------------------------------------------------------
+copy_discipline:
+  style: stop_ai_slop_zh_sop
+  hard_rules:
+    - id: no_em_dash
+      rule: 全站禁用 em-dash(—),改用 → 或 , 或句号
+    - id: no_ai_cliche
+      forbid: [赋能, 至关重要, 不容忽视, 时代呼唤, 让我们一起, 值得一提的是,
+               综上所述, 由此可见, 毫无疑问, 在此背景下, 不可或缺, 深度赋能]
+    - id: specific_numbers
+      rule: 凡是"课程数/章节数/课时数",必须写具体数字(如 12 节、7 篇),禁"多/一些/若干"
+    - id: card_meta_arrow
+      rule: card 角标使用 → 而非 - 或 ~ (例: "12 节 + 7 篇 · 入门 → 实战")
+
+# -------------------------------------------------------------
+# 六、改站流程(每次 AI 接站,必须按此顺序)
+# -------------------------------------------------------------
+workflow:
+  steps:
+    - read site.yml              # 先读总纲
+    - read jefeerzhang_site.md   # 站级硬规则
+    - read taste_skill_sop.md    # 反 AI 视觉
+    - read stop_ai_slop_zh_sop.md # 反 AI 文案
+    - 修改
+    - git commit + push master
+    - curl 远端 raw 验真
+  verify:
+    tool: curl.exe --noproxy '*' --max-time 15
+    raw_url: https://raw.githubusercontent.com/jefeerzhang/jefeerzhang.github.io/master
+    pages_url: https://jefeerzhang.github.io
+    note: 加 /index.html 或具体 html 避免 GitHub Pages 自定义 404
+
+# -------------------------------------------------------------
+# 七、维护者
+# -------------------------------------------------------------
+maintainer:
+  name: 张剑
+  note: 本文件改一次,commit 一次;AI 不得擅改 site.yml
