@@ -1,32 +1,52 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lesson 2: 校准（Calibration）— 把数据变成模糊集</title>
-<script>
-function checkQuiz(el) {
-  var fb = document.getElementById('feedback2');
-  var correct = el.value === 'C';
-  fb.className = 'quiz-feedback ' + (correct ? 'correct' : 'incorrect');
-  fb.textContent = correct ? '\u2705 正确！校准需要第三方的、独立于数据的理论基础来设定阈值，不能纯靠数据分布。' : '\u274c 不对，再想想。校准的核心是什么？';
-}
-</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 02: 校准（Calibration） · fsQCA</title>
+  <meta name="description" content="把原始数据转化为 0–1 之间的模糊隶属度，三个锚点怎么定。">
+  <link rel="stylesheet" href="../../assets/site.css">
 </head>
-<body>
-<div class="container">
-<header>
-  <div class="lesson-meta">Lesson 2 / 6 · 阅读约 10 分钟</div>
-  <h1>校准（Calibration）</h1>
-  <div class="subtitle">把原始数据变成 0~1 的模糊集隶属分数——fsQCA 最关键的步骤</div>
-</header>
-<section>
+<body class="fsqca-page">
+  <a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+          <a href="../../">首页</a>
+          <a href="../../cv/">个人简历</a>
+          <a href="../" aria-current="page">知识学习</a>
+          <a href="https://jefeerzh.github.io" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <p class="eyebrow">fsQCA · Lesson 02 / 6</p>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num">02</div>
+          <div class="lesson-hero-text">
+            <p class="lesson-tag">方法</p>
+            <h1>校准（Calibration）</h1>
+            <p class="hero-summary">把原始数据转化为 0–1 之间的模糊隶属度，三个锚点怎么定。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="fsqca-section">
+      <div class="container lesson-content">
+<section class="entry-section">
   <h2>1. 为什么需要校准？</h2>
   <p>回想一下上一课：fsQCA 中每个条件（变量）的值是 0 到 1 之间的<strong>隶属分数</strong>。但你的原始数据可能是 GDP（美元）、教育年限、满意度评分……</p>
   <p><strong>校准（calibration）</strong> 就是把这些原始数据转换成有意义的 0~1 隶属分数的过程。</p>
   <div class="callout callout-warn"><strong>关键区分</strong>：校准 <strong>不是</strong> 标准化或归一化。标准化只是数学变换，校准需要<strong>理论依据</strong>——你必须基于外部标准来决定什么算"完全属于这个集合"。</div>
 </section>
-<section>
+<section class="entry-section">
   <h2>2. 校准 vs. 简单归一化</h2>
   <div class="example">
     <p>假设你研究"高收入国家"，有 5 个国家的 GDP 数据：</p>
@@ -40,7 +60,7 @@ function checkQuiz(el) {
     <p>归一化按数据范围压缩，意义取决于样本。校准根据<strong>外部理论标准</strong>（如世界银行的高收入门槛）来确定隶属分数。</p>
   </div>
 </section>
-<section>
+<section class="entry-section">
   <h2>3. 直接校准法：三个锚点</h2>
   <p>最常用的是 Ragin（2008）的<strong>直接校准法</strong>，需要设定<strong>三个定性锚点</strong>：</p>
   <div class="key-concept">
@@ -52,7 +72,7 @@ function checkQuiz(el) {
   <div class="formula">membership = 1 / (1 + exp(-a × (raw - crossover)))</div>
   <p>其中 a 是斜率参数，由三个锚点拟合得出。fsQCA 软件或 R 的 QCA 包会自动计算。</p>
 </section>
-<section>
+<section class="entry-section">
   <h2>4. 实践案例：校准"教育水平"</h2>
   <div class="example">
     <p><strong>第一步：设定锚点</strong></p>
@@ -72,7 +92,7 @@ function checkQuiz(el) {
     </table>
   </div>
 </section>
-<section>
+<section class="entry-section">
   <h2>5. 间接校准法</h2>
   <div class="example">
     <ol>
@@ -84,14 +104,14 @@ function checkQuiz(el) {
   </div>
   <div class="callout"><strong>建议</strong>：大多数研究用直接法就够了。</div>
 </section>
-<section>
+<section class="entry-section">
   <h2>6. 常见错误</h2>
   <div class="callout callout-danger"><strong>错误 1：用数据分布设定锚点</strong> — 锚点必须基于<strong>理论或外部标准</strong>。</div>
   <div class="callout callout-danger"><strong>错误 2：锚点过于极端</strong> — 完全/完全不隶属应有意义的理论边界。</div>
   <div class="callout callout-danger"><strong>错误 3：结果变量与条件变量锚点不一致</strong> — 所有变量的校准逻辑应一致。</div>
   <div class="callout callout-danger"><strong>错误 4：校准后不检查分布</strong> — 大量案例集中在 0.50 附近说明锚点不合理。</div>
 </section>
-<section>
+<section class="entry-section">
   <h2>7. 检查理解</h2>
   <div class="quiz" id="quiz2">
     <h3>测验</h3>
@@ -105,7 +125,7 @@ function checkQuiz(el) {
     <div id="feedback2" class="quiz-feedback"></div>
   </div>
 </section>
-<section>
+<section class="entry-section">
   <h2>要点回顾</h2>
   <div class="example">
     <ol>
@@ -116,18 +136,36 @@ function checkQuiz(el) {
     </ol>
   </div>
 </section>
-<section>
+<section class="entry-section">
   <h2>参考资料</h2>
   <ul class="ref-list">
     <li>Ragin, C. C. (2008). Redesigning Social Inquiry. Chapter 5: Calibration.</li>
     <li>Schneider & Wagemann (2012). Set-Theoretic Methods. Chapter 3: Calibrating Fuzzy Sets.</li>
   </ul>
 </section>
-  <div class="lesson-nav">
-    <a href="index.html" class="nav-home">← 返回目录</a>
-    <a href="0003-zhen-zhi-biao-bi-yao-xing.html">下一课：Lesson 3: 真值表与必要性分析 →</a>
-  </div>
-<footer>Lesson 2 / 6 · fsQCA 教学系列</footer>
-</div>
+  
+      </div>
+    </section>
+
+    <section class="fsqca-section">
+      <div class="container">
+        <nav class="lesson-nav">
+    <a class="nav-prev" href="0001-qca-shi-shi-mo.html"><span class="nav-label">上一课</span><span class="nav-title">← QCA 是什么？为什么用？</span></a>
+    <a href="index.html" class="nav-home">← 课程目录</a>
+    <a class="nav-next" href="0003-zhen-zhi-biao-bi-yao-xing.html"><span class="nav-label">下一课</span><span class="nav-title">真值表与必要性分析 →</span></a>
+        </nav>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>

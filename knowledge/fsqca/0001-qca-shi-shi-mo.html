@@ -1,38 +1,58 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lesson 1: QCA 是什么？为什么用？</title>
-<script>
-function checkQuiz(el) {
-  var fb = document.getElementById('feedback1');
-  var correct = el.value === 'B';
-  fb.className = 'quiz-feedback ' + (correct ? 'correct' : 'incorrect');
-  fb.textContent = correct ? '\u2705 正确！20个案例+5个条件 = 典型的QCA适用场景。' : '\u274c 不对，再想想。';
-}
-</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 01: QCA 是什么？为什么用？ · fsQCA</title>
+  <meta name="description" content="从研究范式讲起，弄清 csQCA / mvQCA / fsQCA 的差别与适用场景。">
+  <link rel="stylesheet" href="../../assets/site.css">
 </head>
-<body>
-<div class="container">
-<header>
-  <div class="lesson-meta">Lesson 1 / 6 · 阅读约 8 分钟</div>
-  <h1>QCA 是什么？为什么用？</h1>
-  <div class="subtitle">从"哪个因素影响大"到"哪些条件组合导致结果"——换个视角看因果</div>
-</header>
-<section>
+<body class="fsqca-page">
+  <a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+          <a href="../../">首页</a>
+          <a href="../../cv/">个人简历</a>
+          <a href="../" aria-current="page">知识学习</a>
+          <a href="https://jefeerzh.github.io" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <p class="eyebrow">fsQCA · Lesson 01 / 6</p>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num">01</div>
+          <div class="lesson-hero-text">
+            <p class="lesson-tag">引言</p>
+            <h1>QCA 是什么？为什么用？</h1>
+            <p class="hero-summary">从研究范式讲起，弄清 csQCA / mvQCA / fsQCA 的差别与适用场景。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="fsqca-section">
+      <div class="container lesson-content">
+<section class="entry-section">
   <h2>1. 一个研究者的困境</h2>
   <p>想象一下：你研究 15 个国家的创新政策，想搞清楚"为什么有些国家成了创新强国，有些没有"。你有 6~7 个可能的解释变量（R&amp;D 投入、教育水平、知识产权保护、市场规模……）。</p>
   <p>传统做法是跑个回归。但样本只有 15 个，变量有 6、7 个——<strong>自由度不够</strong>。更关键的是，你怀疑不是某一个变量单独起作用，而是 <strong>多个条件组合在一起</strong> 才导致了结果。</p>
   <div class="callout"><strong>💡 核心直觉</strong>：高 R&amp;D 投入 + 强知识产权保护 → 创新强？但有没有可能：高 R&amp;D + 弱保护但市场规模大 → 也一样强？单一变量的"净效应"逻辑，回答不了这种"条条大路通罗马"的问题。</div>
 </section>
-<section>
+<section class="entry-section">
   <h2>2. QCA：一种不同的因果逻辑</h2>
   <p><strong>QCA（Qualitative Comparative Analysis，定性比较分析）</strong> 是由社会学家 Charles Ragin 在 1980 年代提出的方法。它的核心思想是：</p>
   <div class="key-concept"><h4>🎯 QCA 的基本命题</h4><p>因果关系不是"变量 A 对结果 Y 有正向影响"，而是"<strong>条件 A 和条件 B 同时存在时（并且条件 C 不存在时），结果 Y 就会发生</strong>"。</p></div>
   <p>QCA 基于<strong>集合论（set theory）</strong>而不是相关/回归逻辑。每个案例被看作一个"条件组合"的成员，而不是一个个变量的分数。</p>
 </section>
-<section>
+<section class="entry-section">
   <h2>3. QCA vs. 传统回归：根本区别</h2>
   <div class="comparison">
     <div class="comparison-item"><h4>📊 回归分析</h4><ul><li>问：X 对 Y 的平均净效应是什么？</li><li>假设：变量独立发挥作用</li><li>逻辑：<em>ceteris paribus</em>（其他条件不变）</li><li>追求：单个变量的系数</li><li>典型问题：样本不够大就没法做</li></ul></div>
@@ -40,7 +60,7 @@ function checkQuiz(el) {
   </div>
   <div class="callout callout-warn"><strong>⚠️ 重要</strong>：QCA <strong>不是</strong>回归的替代品，它们是回答<strong>不同问题</strong>的工具。</div>
 </section>
-<section>
+<section class="entry-section">
   <h2>4. 三种 QCA：csQCA → mvQCA → fsQCA</h2>
   <div class="example">
     <p><span class="tag tag-blue">csQCA</span> <strong>清晰集</strong>：每个条件只能是 0 或 1（属于/不属于）。</p>
@@ -49,17 +69,17 @@ function checkQuiz(el) {
   </div>
   <div class="callout callout-success"><strong>✅ 为什么选 fsQCA？</strong> 大多数社会科学概念不是要么有要么无的，而是<strong>程度问题</strong>。fsQCA 让你能捕捉这种"部分属于"的细微差别。</div>
 </section>
-<section>
+<section class="entry-section">
   <h2>5. 三个必须理解的概念</h2>
   <div class="key-concept"><h4>🔑 必要性（Necessity）</h4><p>条件 X 是结果 Y 的<strong>必要条件</strong>：没有 X 就没有 Y。即 Y ⊆ X。<br>例：要成为博士生，<strong>必须</strong>有硕士学位。</p></div>
   <div class="key-concept"><h4>🔑 充分性（Sufficiency）</h4><p>条件 X 是结果 Y 的<strong>充分条件</strong>：有 X 就有 Y。即 X ⊆ Y。<br>例：下雨 → 地面湿。</p></div>
   <div class="key-concept"><h4>🔑 等效性/多重实现（Equifinality）</h4><p>同一个结果可以通过<strong>多种不同的条件组合</strong>达到。这是 QCA 最核心的洞见之一。</p></div>
 </section>
-<section>
+<section class="entry-section">
   <h2>6. 什么时候该用 QCA？</h2>
   <div class="example"><ul><li><strong>中等样本量</strong>（10~50 个案例）</li><li><strong>组态理论</strong>（configurational theory）</li><li><strong>等效性</strong>：多条路径通向同一个结果</li><li><strong>不对称性</strong>：结果发生和不发生的解释可能不一样</li></ul></div>
 </section>
-<section>
+<section class="entry-section">
   <h2>7. 检查理解</h2>
   <div class="quiz" id="quiz1">
     <h3>📝 测验</h3>
@@ -73,22 +93,39 @@ function checkQuiz(el) {
     <div id="feedback1" class="quiz-feedback"></div>
   </div>
 </section>
-<section>
+<section class="entry-section">
   <h2>8. 本课要点回顾</h2>
   <div class="example"><ol><li><strong>QCA</strong> 是一种基于集合论的研究方法，关注条件组合（组态）与结果之间的关系</li><li>与回归不同，QCA 回答的是"<strong>哪些条件组合导致结果</strong>"而不是"哪个变量影响大"</li><li>三种类型：csQCA、mvQCA、<strong>fsQCA（模糊集）</strong></li><li>三个核心概念：<strong>必要性</strong>、<strong>充分性</strong>、<strong>等效性</strong></li></ol></div>
 </section>
-<section>
+<section class="entry-section">
   <h2>参考资料</h2>
   <ul class="ref-list">
     <li>Ragin, C. C. (2008). Redesigning Social Inquiry: Fuzzy Sets and Beyond. University of Chicago Press.</li>
     <li>Schneider, C. Q., & Wagemann, C. (2012). Set-Theoretic Methods for the Social Sciences. Cambridge University Press.</li>
   </ul>
 </section>
-  <div class="lesson-nav">
-    <a href="index.html" class="nav-home">← 返回目录</a>
-    <a href="0002-jiao-zhun-calibration.html">下一课：Lesson 2: 校准 →</a>
-  </div>
-<footer>Lesson 1 / 6 · fsQCA 教学系列</footer>
-</div>
+  
+      </div>
+    </section>
+
+    <section class="fsqca-section">
+      <div class="container">
+        <nav class="lesson-nav">
+    <a href="index.html" class="nav-home">← 课程目录</a>
+    <a class="nav-next" href="0002-jiao-zhun-calibration.html"><span class="nav-label">下一课</span><span class="nav-title">校准（Calibration） →</span></a>
+        </nav>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>

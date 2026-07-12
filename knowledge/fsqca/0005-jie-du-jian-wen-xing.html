@@ -1,27 +1,46 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lesson 5: 解的解读与稳健性检验</title>
-<script>
-function checkQuiz(el) {
-  var fb = document.getElementById('feedback5');
-  var correct = el.value === 'B';
-  fb.className = 'quiz-feedback ' + (correct ? 'correct' : 'incorrect');
-  fb.textContent = correct ? '✅ 正确！稳健性检验的核心是改变分析参数后看结论是否仍然成立。' : '❌ 不对，再想想。';
-}
-</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 05: 解的解读与稳健性检验 · fsQCA</title>
+  <meta name="description" content="理解 fsQCA 输出，检验结论的稳健性，避免过度推广。">
+  <link rel="stylesheet" href="../../assets/site.css">
 </head>
-<body>
-<div class="container">
-<header>
-  <div class="lesson-meta">Lesson 5 / 6 · 阅读约 10 分钟</div>
-  <h1>解的解读与稳健性检验</h1>
-  <div class="subtitle">从结果到结论——如何正确解读 fsQCA 的发现</div>
-</header>
+<body class="fsqca-page">
+  <a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+          <a href="../../">首页</a>
+          <a href="../../cv/">个人简历</a>
+          <a href="../" aria-current="page">知识学习</a>
+          <a href="https://jefeerzh.github.io" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
 
-<section>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <p class="eyebrow">fsQCA · Lesson 05 / 6</p>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num">05</div>
+          <div class="lesson-hero-text">
+            <p class="lesson-tag">结论</p>
+            <h1>解的解读与稳健性检验</h1>
+            <p class="hero-summary">理解 fsQCA 输出，检验结论的稳健性，避免过度推广。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="fsqca-section">
+      <div class="container lesson-content">
+<section class="entry-section">
   <h2>1. 如何解读 fsQCA 的结果</h2>
   <p>拿到 fsQCA 的分析结果后，需要按以下步骤系统解读：</p>
   <div class="example">
@@ -36,7 +55,7 @@ function checkQuiz(el) {
   </div>
 </section>
 
-<section>
+<section class="entry-section">
   <h2>2. 结果报告模板</h2>
   <div class="example">
     <div class="example-title">学术论文中的标准报告方式</div>
@@ -54,7 +73,7 @@ function checkQuiz(el) {
   </div>
 </section>
 
-<section>
+<section class="entry-section">
   <h2>3. 结果的口头化解读</h2>
   <div class="example">
     <div class="example-title">如何用自然语言描述结果</div>
@@ -66,7 +85,7 @@ function checkQuiz(el) {
   </div>
 </section>
 
-<section>
+<section class="entry-section">
   <h2>4. 稳健性检验</h2>
   <p>在学术研究中，必须进行<strong>稳健性检验（robustness checks）</strong>来验证结论的可靠性。</p>
   <div class="key-concept">
@@ -84,7 +103,7 @@ function checkQuiz(el) {
   </div>
 </section>
 
-<section>
+<section class="entry-section">
   <h2>5. 稳健性检验的结果呈现</h2>
   <div class="example">
     <div class="example-title">在论文中如何呈现</div>
@@ -100,7 +119,7 @@ function checkQuiz(el) {
   </div>
 </section>
 
-<section>
+<section class="entry-section">
   <h2>6. 常见解读错误</h2>
   <div class="callout callout-danger"><strong>错误 1：因果断言</strong> — fsQCA 识别的是<strong>充分条件组合</strong>，不是严格因果关系。用"与……相关""足以产生"而非"导致"。</div>
   <div class="callout callout-danger"><strong>错误 2：忽视不一致的案例</strong> — 即使一致性很高，也可能有反例。讨论这些反例能增加论文深度。</div>
@@ -108,7 +127,7 @@ function checkQuiz(el) {
   <div class="callout callout-danger"><strong>错误 4：样本外推广</strong> — fsQCA 的结果适用于你的分析样本和类似情境，不要过度推广。</div>
 </section>
 
-<section>
+<section class="entry-section">
   <h2>7. 检查理解</h2>
   <div class="quiz" id="quiz5">
     <h3>✍ 测验</h3>
@@ -123,7 +142,7 @@ function checkQuiz(el) {
   </div>
 </section>
 
-<section>
+<section class="entry-section">
   <h2>要点回顾</h2>
   <div class="example">
     <ol>
@@ -135,11 +154,29 @@ function checkQuiz(el) {
     </ol>
   </div>
 </section>
-  <div class="lesson-nav">
-    <a href="index.html" class="nav-home">← 返回目录</a>
-    <a href="0006-kai-ti-bao-gao.html">下一课：Lesson 6: 开题报告写作指南 →</a>
-  </div>
-<footer>Lesson 5 / 6 · fsQCA 教学系列</footer>
-</div>
+  
+      </div>
+    </section>
+
+    <section class="fsqca-section">
+      <div class="container">
+        <nav class="lesson-nav">
+    <a class="nav-prev" href="0004-chong-fen-xing-bo-er-zui-xiao-hua.html"><span class="nav-label">上一课</span><span class="nav-title">← 充分性分析与布尔最小化</span></a>
+    <a href="index.html" class="nav-home">← 课程目录</a>
+    <a class="nav-next" href="0006-kai-ti-bao-gao.html"><span class="nav-label">下一课</span><span class="nav-title">开题报告写作指南 →</span></a>
+        </nav>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>

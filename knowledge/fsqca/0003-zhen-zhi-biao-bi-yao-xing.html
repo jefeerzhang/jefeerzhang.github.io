@@ -1,27 +1,46 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lesson 3: 真值表与必要性分析</title>
-<script>
-function checkQuiz(el) {
-  var fb = document.getElementById('feedback3');
-  var correct = el.value === 'B';
-  fb.className = 'quiz-feedback ' + (correct ? 'correct' : 'incorrect');
-  fb.textContent = correct ? '✅ 正确！必要性分析的核心是看某个条件是否"每次结果发生时都存在"，这与"足够"不同。' : '❌ 不对，再想想。必要性和充分性的区别是什么？';
-}
-</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 03: 真值表与必要性分析 · fsQCA</title>
+  <meta name="description" content="构建真值表、判断必要条件、读一致性 / 覆盖度。">
+  <link rel="stylesheet" href="../../assets/site.css">
 </head>
-<body>
-<div class="container">
-<header>
-  <div class="lesson-meta">Lesson 3 / 6 · 阅读约 10 分钟</div>
-  <h1>真值表与必要性分析</h1>
-  <div class="subtitle">从校准后的数据到分析的核心工具</div>
-</header>
+<body class="fsqca-page">
+  <a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+          <a href="../../">首页</a>
+          <a href="../../cv/">个人简历</a>
+          <a href="../" aria-current="page">知识学习</a>
+          <a href="https://jefeerzh.github.io" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
 
-<section>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <p class="eyebrow">fsQCA · Lesson 03 / 6</p>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num">03</div>
+          <div class="lesson-hero-text">
+            <p class="lesson-tag">分析</p>
+            <h1>真值表与必要性分析</h1>
+            <p class="hero-summary">构建真值表、判断必要条件、读一致性 / 覆盖度。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="fsqca-section">
+      <div class="container lesson-content">
+<section class="entry-section">
   <h2>1. 什么是真值表？</h2>
   <p>校准完成后，下一步就是构建<strong>真值表（truth table）</strong>。真值表是 fsQCA 的核心分析工具，它将数据排列成所有可能的条件组合。</p>
   <div class="key-concept">
@@ -32,7 +51,7 @@ function checkQuiz(el) {
   <p>每一行包含：条件组合、案例数、一致性分数、结果编码。</p>
 </section>
 
-<section>
+<section class="entry-section">
   <h2>2. 从原始数据到真值表</h2>
   <div class="example">
     <div class="example-title">示例：创新研究（3个条件）</div>
@@ -49,7 +68,7 @@ function checkQuiz(el) {
   </div>
 </section>
 
-<section>
+<section class="entry-section">
   <h2>3. 两个关键阈值</h2>
   <div class="key-concept">
     <h4>频率阈值（Frequency Threshold）</h4>
@@ -69,7 +88,7 @@ function checkQuiz(el) {
   </div>
 </section>
 
-<section>
+<section class="entry-section">
   <h2>4. 必要性分析</h2>
   <p>构建真值表前，惯例是<strong>先做必要性分析</strong>。</p>
   <div class="key-concept">
@@ -93,7 +112,7 @@ function checkQuiz(el) {
   </div>
 </section>
 
-<section>
+<section class="entry-section">
   <h2>5. 必要性分析示例</h2>
   <div class="example">
     <div class="example-title">创新研究中的必要性分析结果</div>
@@ -108,7 +127,7 @@ function checkQuiz(el) {
   </div>
 </section>
 
-<section>
+<section class="entry-section">
   <h2>6. 检查理解</h2>
   <div class="quiz" id="quiz3">
     <h3>✍ 测验</h3>
@@ -123,7 +142,7 @@ function checkQuiz(el) {
   </div>
 </section>
 
-<section>
+<section class="entry-section">
   <h2>要点回顾</h2>
   <div class="example">
     <ol>
@@ -136,7 +155,7 @@ function checkQuiz(el) {
   </div>
 </section>
 
-<section>
+<section class="entry-section">
   <h2>参考资料</h2>
   <ul class="ref-list">
     <li>Ragin, C. C. (2008). Redesigning Social Inquiry. Chapter 6.</li>
@@ -144,11 +163,29 @@ function checkQuiz(el) {
   </ul>
 </section>
 
-  <div class="lesson-nav">
-    <a href="index.html" class="nav-home">← 返回目录</a>
-    <a href="0004-chong-fen-xing-bo-er-zui-xiao-hua.html">下一课：Lesson 4: 充分性分析与布尔最小化 →</a>
-  </div>
-<footer>Lesson 3 / 6 · fsQCA 教学系列</footer>
-</div>
+  
+      </div>
+    </section>
+
+    <section class="fsqca-section">
+      <div class="container">
+        <nav class="lesson-nav">
+    <a class="nav-prev" href="0002-jiao-zhun-calibration.html"><span class="nav-label">上一课</span><span class="nav-title">← 校准（Calibration）</span></a>
+    <a href="index.html" class="nav-home">← 课程目录</a>
+    <a class="nav-next" href="0004-chong-fen-xing-bo-er-zui-xiao-hua.html"><span class="nav-label">下一课</span><span class="nav-title">充分性分析与布尔最小化 →</span></a>
+        </nav>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>

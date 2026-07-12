@@ -1,27 +1,46 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lesson 4: 充分性分析与布尔最小化</title>
-<script>
-function checkQuiz(el) {
-  var fb = document.getElementById('feedback4');
-  var correct = el.value === 'C';
-  fb.className = 'quiz-feedback ' + (correct ? 'correct' : 'incorrect');
-  fb.textContent = correct ? '✅ 正确！中间解有选择地使用逻辑剩余项进行简化。' : '❌ 不对，再想想三种解的区别。';
-}
-</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 04: 充分性分析与布尔最小化 · fsQCA</title>
+  <meta name="description" content="复杂解 / 简约解 / 中间解怎么读，核心条件 / 边缘条件如何区分。">
+  <link rel="stylesheet" href="../../assets/site.css">
 </head>
-<body>
-<div class="container">
-<header>
-  <div class="lesson-meta">Lesson 4 / 6 · 阅读约 10 分钟</div>
-  <h1>充分性分析与布尔最小化</h1>
-  <div class="subtitle">从真值表到因果路径——fsQCA 的核心分析步骤</div>
-</header>
+<body class="fsqca-page">
+  <a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+          <a href="../../">首页</a>
+          <a href="../../cv/">个人简历</a>
+          <a href="../" aria-current="page">知识学习</a>
+          <a href="https://jefeerzh.github.io" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
 
-<section>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <p class="eyebrow">fsQCA · Lesson 04 / 6</p>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num">04</div>
+          <div class="lesson-hero-text">
+            <p class="lesson-tag">分析</p>
+            <h1>充分性分析与布尔最小化</h1>
+            <p class="hero-summary">复杂解 / 简约解 / 中间解怎么读，核心条件 / 边缘条件如何区分。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="fsqca-section">
+      <div class="container lesson-content">
+<section class="entry-section">
   <h2>1. 充分性分析</h2>
   <p>在完成必要性分析后，下一步是<strong>充分性分析（sufficiency analysis）</strong>。</p>
   <div class="key-concept">
@@ -32,7 +51,7 @@ function checkQuiz(el) {
   <p>注意充分性公式与必要性公式的区别：<strong>分母不同</strong>。充分性分母是条件隶属分数之和，必要性分母是结果隶属分数之和。</p>
 </section>
 
-<section>
+<section class="entry-section">
   <h2>2. 从真值表到布尔最小化</h2>
   <p>真值表构建好后，fsQCA 软件会进行<strong>布尔最小化（Boolean minimization）</strong>——简化条件组合，找到最简洁的解释路径。</p>
   <div class="example">
@@ -48,7 +67,7 @@ function checkQuiz(el) {
   </div>
 </section>
 
-<section>
+<section class="entry-section">
   <h2>3. 三种解</h2>
   <p>布尔最小化会产生<strong>三种不同的解</strong>：</p>
   <div class="key-concept">
@@ -68,7 +87,7 @@ function checkQuiz(el) {
   </div>
 </section>
 
-<section>
+<section class="entry-section">
   <h2>4. 核心条件与边缘条件</h2>
   <div class="example">
     <div class="example-title">区分方法</div>
@@ -79,7 +98,7 @@ function checkQuiz(el) {
   </div>
 </section>
 
-<section>
+<section class="entry-section">
   <h2>5. 解的评估指标</h2>
   <div class="example">
     <div class="example-title">三个关键指标</div>
@@ -92,7 +111,7 @@ function checkQuiz(el) {
   </div>
 </section>
 
-<section>
+<section class="entry-section">
   <h2>6. 分析结果示例</h2>
   <div class="example">
     <div class="example-title">创新研究的中间解</div>
@@ -103,7 +122,7 @@ function checkQuiz(el) {
   </div>
 </section>
 
-<section>
+<section class="entry-section">
   <h2>7. 检查理解</h2>
   <div class="quiz" id="quiz4">
     <h3>✍ 测验</h3>
@@ -118,7 +137,7 @@ function checkQuiz(el) {
   </div>
 </section>
 
-<section>
+<section class="entry-section">
   <h2>要点回顾</h2>
   <div class="example">
     <ol>
@@ -130,11 +149,29 @@ function checkQuiz(el) {
     </ol>
   </div>
 </section>
-  <div class="lesson-nav">
-    <a href="index.html" class="nav-home">← 返回目录</a>
-    <a href="0005-jie-du-jian-wen-xing.html">下一课：Lesson 5: 解的解读与稳健性检验 →</a>
-  </div>
-<footer>Lesson 4 / 6 · fsQCA 教学系列</footer>
-</div>
+  
+      </div>
+    </section>
+
+    <section class="fsqca-section">
+      <div class="container">
+        <nav class="lesson-nav">
+    <a class="nav-prev" href="0003-zhen-zhi-biao-bi-yao-xing.html"><span class="nav-label">上一课</span><span class="nav-title">← 真值表与必要性分析</span></a>
+    <a href="index.html" class="nav-home">← 课程目录</a>
+    <a class="nav-next" href="0005-jie-du-jian-wen-xing.html"><span class="nav-label">下一课</span><span class="nav-title">解的解读与稳健性检验 →</span></a>
+        </nav>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>
