@@ -185,6 +185,73 @@ workflow:
     note: 加 /index.html 或具体 html 避免 GitHub Pages 自定义 404
 
 # -------------------------------------------------------------
+# 七、知识库子站挂载标准流程(给 AI 的操作清单)
+#   用户只需说: "把 XXX 文件夹挂到 knowledge 下,叫 YYY"
+#   AI 按以下步骤执行,不问不猜
+# -------------------------------------------------------------
+knowledge_mount:
+  description: |
+    用户给一个本地文件夹(含若干 HTML),挂到 /knowledge/{slug}/ 下。
+    index.html 作为接入页(加导航栏),其余子页原样保留。
+  input:
+    folder: "本地文件夹绝对路径"
+    slug: "英文短横线目录名,如 zhang-gen-li-lun"
+    title: "中文标题,用于知识库卡片"
+    summary: "一句话描述,用于知识库卡片"
+    tag: "分类标签,如 研究方法"
+    meta: "附加信息,如 12 节核心 + 7 篇辅助 · 入门 → 实战"
+  steps:
+    - step: 1
+      name: 拷贝文件
+      action: "把文件夹内所有 HTML 复制到 site_clone/knowledge/{slug}/"
+      note: 先删目标目录旧文件(如有)
+    - step: 2
+      name: index.html 加导航
+      action: |
+        只给 index.html 加:
+          1. <head> 内 </style> 后加 <link rel="stylesheet" href="../../assets/site.css">
+          2. <body> 后加 site-header(5 链接:首页/个人简历/知识学习{active}/个人学习站/硕士课程)
+          3. </body> 前加 site-footer(版权+不蒜子+busuanzi.js)
+      note: 其他子页不动,保留素材原样
+    - step: 3
+      name: 更新 site.yml
+      action: "在 sections[0](knowledge).columns 末尾追加新条目"
+      template: |
+        - id: {slug}
+          path: /knowledge/{slug}/
+          title: {title}
+          summary: {summary}
+          tag: {tag}
+          meta: {meta}
+          shell: knowledge-shell-index-only
+          status: live
+    - step: 4
+      name: 更新知识库主页卡片
+      action: "在 site_clone/knowledge/index.html 的卡片区加一张新卡片"
+      note: 卡片格式同 fsqca/zhang-gen-li-lun 现有卡片
+    - step: 5
+      name: commit + push + 验证
+      action: |
+        git add knowledge/{slug}/ knowledge/index.html site.yml
+        git commit -m "feat(knowledge): 挂载 {title} 子站"
+        git push origin master
+        curl 验证远端 index.html 含 site-header
+  shell_types:
+    knowledge-shell-index-only:
+      description: "仅 index.html 加外壳,子页原样(扎根理论模式)"
+      applies_to: index.html
+      blocks: [site-header, site-footer, site.css]
+    knowledge-shell-full:
+      description: "所有子页都加外壳+breadcrumb+hero(完整 fsqca 模式)"
+      applies_to: all pages
+      blocks: [site-header, breadcrumb, lesson-hero, lesson-nav, site-footer, site.css]
+  rules:
+    - 不改子页 CSS/布局,只改 index.html
+    - site-header 的 active 链接指向当前子站路径
+    - footer-counter 不蒜子必须居中(class="footer-counter")
+    - 不准自己改 accent 色;要改先问张剑
+
+# -------------------------------------------------------------
 # 七、维护者
 # -------------------------------------------------------------
 maintainer:
