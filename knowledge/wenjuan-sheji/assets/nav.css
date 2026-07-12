@@ -59,25 +59,6 @@
   line-height: 1.7;
   letter-spacing: 0.02em;
 }
-.hub-hero-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 22px;
-  padding: 18px 0 0;
-  border-top: 1px solid var(--line-strong);
-  color: var(--text);
-  font-family: var(--mono);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-}
-.hub-hero-meta strong {
-  margin-right: 4px;
-  color: var(--accent);
-  font-weight: 800;
-  font-feature-settings: "tnum" 1;
-}
-
 /* ============== 11 课节网格 ============== */
 .wj-grid {
   display: grid;
