@@ -978,6 +978,8 @@ footer.site-footer {
 footer.site-footer a { color: var(--text); }
 footer.site-footer a:hover { color: var(--accent); }
 
+.footer-counter { text-align: center; margin-top: 0.5rem; font-size: 0.82rem; color: var(--muted); }
+
 /* ---- 移动端 ---- */
 @media (max-width: 760px) {.entry-grid, .columns-grid { grid-template-columns: 1fr; gap: 14px; }
   article.post { padding: 22px 18px; }
