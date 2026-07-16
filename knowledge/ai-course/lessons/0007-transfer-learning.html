@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第 7 课：迁移学习与训练技巧</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <div class="lesson-container">
+    <div class="nav">
+      <a href="0006-cnns-and-computer-vision.html">← 上一课</a>
+      <span class="breadcrumb">📍 Phase 2 · 核心深入</span>
+      <a href="0008-nlp-fundamentals.html">下一课：NLP 基础与文本表示 →</a>
+    </div>
+    <div class="progress-bar">
+      <div class="step done"></div><div class="step done"></div><div class="step done"></div>
+      <div class="step done"></div><div class="step done"></div><div class="step done"></div>
+      <div class="step current"></div><div class="step"></div><div class="step"></div>
+      <div class="step"></div><div class="step"></div><div class="step"></div>
+    </div>
+
+    <h1>第 7 课：迁移学习与训练技巧</h1>
+    <p class="meta">预计 40 分钟 · 目标：理解迁移学习原理，掌握数据增强与训练优化技巧</p>
+
+    <div class="callout">
+      <strong>本课目标：</strong> 理解为什么预训练模型有效；学会特征提取与微调两种迁移学习策略；掌握数据增强、学习率调度和 Dropout 等实用技巧。
+    </div>
+
+    <h2>1. 为什么迁移学习有效？</h2>
+    <p>在 ImageNet（130 万张图片、1000 类）上预训练的 CNN，浅层学到了通用视觉特征（边缘、纹理、形状），这些特征对几乎所有视觉任务都有用。迁移学习就是<strong>复用这些已学好的特征</strong>，在新任务上只训练少量参数。</p>
+
+    <table>
+      <tr><th>策略</th><th>做法</th><th>适用场景</th></tr>
+      <tr><td><strong>特征提取</strong></td><td>冻结所有预训练层，只训练新分类器</td><td>数据量少（<1000 张）</td></tr>
+      <tr><td><strong>微调（Fine-tuning）</strong></td><td>解冻部分层，用小学习率继续训练</td><td>数据量中等</td></tr>
+      <tr><td><strong>从零训练</strong></td><td>不使用预训练权重</td><td>数据量巨大且领域差异大</td></tr>
+    </table>
+
+    <h2>2. 特征提取：冻结 + 替换分类器</h2>
+    <div class="code-title"><span>transfer_learning.py</span><span class="lang-badge">Python</span></div>
+    <div class="code-block"><span class="keyword">import</span> torchvision.models <span class="keyword">as</span> models
+<span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn
+
+<span class="comment"># 加载预训练 ResNet18</span>
+model = models.resnet18(pretrained=<span class="keyword">True</span>)
+
+<span class="comment"># 冻结所有参数——不计算梯度、不更新</span>
+<span class="keyword">for</span> param <span class="keyword">in</span> model.parameters():
+    param.requires_grad = <span class="keyword">False</span>
+
+<span class="comment"># 替换最后一层为新分类器（这层会被训练）</span>
+num_features = model.fc.in_features
+model.fc = nn.Linear(num_features, <span class="number">10</span>)  <span class="comment"># 10 个新类别</span></div>
+
+    <h2>3. 微调：解冻部分层</h2>
+    <div class="code-block"><span class="comment"># 先做特征提取训练几个 epoch，然后解冻最后几层微调</span>
+<span class="keyword">for</span> name, param <span class="keyword">in</span> model.named_parameters():
+    <span class="keyword">if</span> <span class="string">"layer4"</span> <span class="keyword">in</span> name <span class="keyword">or</span> <span class="string">"fc"</span> <span class="keyword">in</span> name:
+        param.requires_grad = <span class="keyword">True</span>
+
+<span class="comment"># 微调时用更小的学习率</span>
+optimizer = torch.optim.Adam(
+    filter(<span class="keyword">lambda</span> p: p.requires_grad, model.parameters()),
+    lr=<span class="number">1e-5</span>  <span class="comment"># 比从零训练小 10-100 倍</span>
+)</div>
+
+    <div class="callout warn">
+      <strong>⚠️ 关键原则：</strong> 微调时学习率一定要小（1e-4 到 1e-5），否则会破坏预训练权重。通常先用特征提取训几轮，再解冻微调。
+    </div>
+
+    <h2>4. 数据增强</h2>
+    <p>数据增强通过对训练图片做随机变换（翻转、裁剪、旋转、颜色抖动），<strong>人为增加数据多样性</strong>，是防止过拟合最有效的手段之一。</p>
+    <div class="code-title"><span>data_augmentation.py</span><span class="lang-badge">Python</span></div>
+    <div class="code-block"><span class="keyword">from</span> torchvision <span class="keyword">import</span> transforms
+
+train_transform = transforms.Compose([
+    transforms.RandomResizedCrop(<span class="number">224</span>),           <span class="comment"># 随机裁剪+缩放</span>
+    transforms.RandomHorizontalFlip(),         <span class="comment"># 随机水平翻转</span>
+    transforms.ColorJitter(brightness=<span class="number">0.2</span>,     <span class="comment"># 亮度</span>
+                           contrast=<span class="number">0.2</span>,       <span class="comment"># 对比度</span>
+                           saturation=<span class="number">0.2</span>),     <span class="comment"># 饱和度</span>
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>],  <span class="comment"># ImageNet 标准化</span>
+                         std=[<span class="number">0.229</span>, <span class="number">0.224</span>, <span class="number">0.225</span>])
+])</div>
+
+    <h2>5. 训练技巧小结</h2>
+    <ul>
+      <li><strong>学习率调度：</strong> 训练过程中逐渐降低学习率，让模型在后期更精细地收敛。</li>
+      <li><strong>批归一化（BatchNorm）：</strong> 在每层输出上做标准化，加速训练、允许更大学习率。</li>
+      <li><strong>Dropout：</strong> 训练时随机丢弃神经元，防止模型过度依赖某些特征。</li>
+      <li><strong>混合精度训练：</strong> 用 float16 加速训练、节省显存（大模型时有用）。</li>
+    </ul>
+
+    <div class="notebook-link">
+      <span class="icon">📓</span>
+      <div>
+        <strong>配套 Notebook：</strong>
+        <a href="../notebooks/4-ComputerVision/08-TransferLearning/TransferLearningPyTorch.html" target="_blank">TransferLearningPyTorch.ipynb</a> ·
+        <a href="../notebooks/4-ComputerVision/08-TransferLearning/Dropout.html" target="_blank">Dropout.ipynb</a>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-title">✍️ 动手练习：迁移学习做猫狗分类</div>
+      <p>1. 找一个小型猫狗图片数据集（Kaggle Dogs vs Cats 或自收集 20 张以上）。</p>
+      <p>2. 用预训练 ResNet18 做特征提取（冻结+替换分类器），训练 10 个 epoch 观察准确率。</p>
+      <p>3. 解冻最后 1-2 层做微调，用更小学习率继续训练，准确率是否提升？</p>
+      <p>4. 加入数据增强，对比有/无增强时验证集准确率的差距。</p>
+    </div>
+
+    <h2>6. 快速自测</h2>
+    <p id="quiz-question">迁移学习中"特征提取"策略的做法是什么？</p>
+    <button class="quiz-option" onclick="check(this, false)">A. 从零开始训练整个网络，不使用预训练权重。</button>
+    <button class="quiz-option" onclick="check(this, true)">B. 冻结预训练层，只训练新的分类器层。</button>
+    <button class="quiz-option" onclick="check(this, false)">C. 解冻所有层，用大学习率重新训练。</button>
+    <button class="quiz-option" onclick="check(this, false)">D. 删除预训练模型，用同样结构从头初始化。</button>
+    <div id="quiz-feedback" class="feedback hidden"></div>
+
+    <p id="quiz-question2">微调（fine-tuning）时为什么要用比从零训练更小的学习率？</p>
+    <button class="quiz-option" onclick="check2(this, false)">A. 因为小学习率能自动增加数据量。</button>
+    <button class="quiz-option" onclick="check2(this, false)">B. 因为大学习率在微调时会导致 GPU 内存不足。</button>
+    <button class="quiz-option" onclick="check2(this, true)">C. 因为预训练权重已经很好，大学习率会破坏已学到的特征。</button>
+    <button class="quiz-option" onclick="check2(this, false)">D. 学习率大小无所谓，微调时不影响结果。</button>
+    <div id="quiz-feedback2" class="feedback hidden"></div>
+
+    <h2>7. 延伸阅读与参考</h2>
+    <ul>
+      <li><strong>Primary source:</strong> <a href="../AI-For-Beginners-zh-CN/lessons/4-ComputerVision/08-TransferLearning/README.md" target="_blank">AI-For-Beginners：迁移学习</a> · <a href="../AI-For-Beginners-zh-CN/lessons/4-ComputerVision/08-TransferLearning/TrainingTricks.md" target="_blank">训练技巧</a></li>
+      <li><a href="../reference/0001-glossary.html" target="_blank">术语表：迁移学习、过拟合、Dropout</a></li>
+      <li>Andrej Karpathy <a href="https://karpathy.github.io/2019/04/25/recipe/" target="_blank">"A recipe for training neural networks"</a></li>
+    </ul>
+
+    <div class="footer">
+      <p>下一课：<a href="0008-nlp-fundamentals.html">NLP 基础与文本表示</a></p>
+    </div>
+  </div>
+
+  <script>
+    function check(btn, isCorrect) {
+      const opts = btn.parentElement.querySelectorAll(':scope > .quiz-option');
+      opts.forEach(o => { o.classList.remove('correct', 'wrong'); o.disabled = true; });
+      btn.classList.add(isCorrect ? 'correct' : 'wrong');
+      const fb = document.getElementById('quiz-feedback');
+      fb.classList.remove('hidden');
+      fb.style.background = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+      fb.innerHTML = isCorrect
+        ? '✅ 正确。特征提取冻结预训练层参数，只训练新加的分类器，适合数据量少的场景。'
+        : '❌ 不正确。特征提取的核心是"冻结+替换分类器"。';
+    }
+    function check2(btn, isCorrect) {
+      const opts = btn.parentElement.querySelectorAll(':scope > .quiz-option');
+      opts.forEach(o => { o.classList.remove('correct', 'wrong'); o.disabled = true; });
+      btn.classList.add(isCorrect ? 'correct' : 'wrong');
+      const fb = document.getElementById('quiz-feedback2');
+      fb.classList.remove('hidden');
+      fb.style.background = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+      fb.innerHTML = isCorrect
+        ? '✅ 正确。预训练权重已经包含有价值的特征，大学习率的大步更新会破坏这些特征。'
+        : '❌ 不正确。小学习率的目的是保护已有的预训练特征不被破坏。';
+    }
+  </script>
+</body>
+</html>

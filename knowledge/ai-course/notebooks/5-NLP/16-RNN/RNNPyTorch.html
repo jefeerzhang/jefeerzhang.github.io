@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RNNPyTorch</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 RNNPyTorch</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h1>循环神经网络</h1>
+<p>在之前的模块中，我们使用了丰富的文本语义表示，并在嵌入的基础上使用了一个简单的线性分类器。这种架构能够捕捉句子中词语的整体意义，但它没有考虑词语的<strong>顺序</strong>，因为嵌入上的聚合操作会将原始文本中的顺序信息移除。由于这些模型无法建模词语的顺序，它们无法解决更复杂或更模糊的任务，例如文本生成或问答。</p>
+<p>为了捕捉文本序列的意义，我们需要使用另一种神经网络架构，称为<strong>循环神经网络</strong>（Recurrent Neural Network，RNN）。在 RNN 中，我们将句子逐个符号传递给网络，网络会生成某种<strong>状态</strong>，然后我们将该状态与下一个符号一起再次传递给网络。</p>
+<p>给定输入序列的标记 $X_0,\dots,X_n$，RNN 会创建一个神经网络块的序列，并通过反向传播对该序列进行端到端训练。每个网络块以 $(X_i,S_i)$ 作为输入，并生成 $S_{i+1}$ 作为结果。最终状态 $S_n$ 或输出 $X_n$ 会传递给线性分类器以生成结果。所有网络块共享相同的权重，并通过一次反向传播训练端到端。</p>
+<p>由于状态向量 $S_0,\dots,S_n$ 会通过网络传递，RNN 能够学习词语之间的顺序依赖关系。例如，当单词 *not* 出现在序列中的某处时，它可以学习在状态向量中否定某些元素，从而实现否定。</p>
+<p>&gt; 由于图片中所有 RNN 块的权重是共享的，因此同一张图片可以表示为一个带有循环反馈回路的单块（右侧），该回路将网络的输出状态传回输入。</p>
+<p>接下来我们看看循环神经网络如何帮助我们对新闻数据集进行分类。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import torch
+import torchtext
+from torchnlp import *
+train_dataset, test_dataset, classes, vocab = load_dataset()
+vocab_size = len(vocab)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Loading dataset...
+Building vocab...
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>简单 RNN 分类器</h2>
+<p>对于简单的 RNN，每个循环单元都是一个简单的线性网络，它接收拼接后的输入向量和状态向量，并生成一个新的状态向量。PyTorch 使用 <code>RNNCell</code> 类表示这个单元，并将由这些单元组成的网络表示为 <code>RNN</code> 层。</p>
+<p>为了定义一个 RNN 分类器，我们首先会应用一个嵌入层来降低输入词汇的维度，然后在其上添加一个 RNN 层：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>class RNNClassifier(torch.nn.Module):
+    def __init__(self, vocab_size, embed_dim, hidden_dim, num_class):
+        super().__init__()
+        self.hidden_dim = hidden_dim
+        self.embedding = torch.nn.Embedding(vocab_size, embed_dim)
+        self.rnn = torch.nn.RNN(embed_dim,hidden_dim,batch_first=True)
+        self.fc = torch.nn.Linear(hidden_dim, num_class)
+
+    def forward(self, x):
+        batch_size = x.size(0)
+        x = self.embedding(x)
+        x,h = self.rnn(x)
+        return self.fc(x.mean(dim=1))</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>&gt; <strong>注意：</strong> 为了简化操作，我们这里使用了未训练的嵌入层，但如果想要更好的效果，可以使用预训练的嵌入层，例如 Word2Vec 或 GloVe 嵌入，这在前一单元中已有描述。为了更好地理解，您可能需要将此代码调整为使用预训练的嵌入。</p>
+<p>在我们的例子中，我们将使用填充数据加载器，因此每个批次将包含若干长度相同的填充序列。RNN 层将接收嵌入张量的序列，并生成两个输出：</p>
+<ul>
+<li>$x$ 是每一步 RNN 单元输出的序列</li>
+<li>$h$ 是序列最后一个元素的最终隐藏状态</li>
+</ul>
+<p>然后我们应用一个全连接的线性分类器来获得类别数量。</p>
+<p>&gt; <strong>注意：</strong> RNN 的训练相当困难，因为一旦 RNN 单元沿着序列长度展开，反向传播中涉及的层数会非常多。因此，我们需要选择较小的学习率，并在更大的数据集上训练网络以获得良好的结果。这可能需要相当长的时间，因此建议使用 GPU。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=16, collate_fn=padify, shuffle=True)
+net = RNNClassifier(vocab_size,64,32,len(classes)).to(device)
+train_epoch(net,train_loader, lr=0.001)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">3200: acc=0.3090625
+6400: acc=0.38921875
+9600: acc=0.4590625
+12800: acc=0.511953125
+16000: acc=0.5506875
+19200: acc=0.57921875
+22400: acc=0.6070089285714285
+25600: acc=0.6304296875
+28800: acc=0.6484027777777778
+32000: acc=0.66509375
+35200: acc=0.6790056818181818
+38400: acc=0.6929166666666666
+41600: acc=0.7035817307692308
+44800: acc=0.7137276785714286
+48000: acc=0.72225
+51200: acc=0.73001953125
+54400: acc=0.7372794117647059
+57600: acc=0.7436631944444444
+60800: acc=0.7503947368421052
+64000: acc=0.75634375
+67200: acc=0.7615773809523809
+70400: acc=0.7662642045454545
+73600: acc=0.7708423913043478
+76800: acc=0.7751822916666666
+80000: acc=0.7790625
+83200: acc=0.7825
+86400: acc=0.7858564814814815
+89600: acc=0.7890513392857142
+92800: acc=0.7920474137931034
+96000: acc=0.7952708333333334
+99200: acc=0.7982258064516129
+102400: acc=0.80099609375
+105600: acc=0.8037594696969697
+108800: acc=0.8060569852941176
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>长短期记忆网络 (LSTM)</h2>
+<p>经典 RNN 的主要问题之一是所谓的 <strong>梯度消失</strong> 问题。由于 RNN 是通过一次反向传播端到端训练的，因此在将误差传播到网络的第一层时会遇到困难，从而无法学习远距离的词元之间的关系。解决这一问题的一种方法是通过使用所谓的 <strong>门控机制</strong> 引入 <strong>显式状态管理</strong>。最著名的两种架构是：<strong>长短期记忆网络</strong> (LSTM) 和 <strong>门控循环单元</strong> (GRU)。</p>
+<p>!<a href="../../../../../lessons/5-NLP/16-RNN/images/long-short-term-memory-cell.svg">展示长短期记忆单元示例的图片</a></p>
+<p>LSTM 网络的组织方式与 RNN 类似，但有两个状态会从层传递到层：实际状态 $c$ 和隐藏向量 $h$。在每个单元中，隐藏向量 $h_i$ 与输入 $x_i$ 连接在一起，并通过 <strong>门控机制</strong> 控制状态 $c$ 的变化。每个门都是一个带有 sigmoid 激活函数的神经网络（输出范围为 $[0,1]$），可以通过与状态向量相乘来理解为逐位掩码。以下是这些门（如上图从左到右）：</p>
+<ul>
+<li>**遗忘门** 接收隐藏向量并决定状态向量 $c$ 的哪些部分需要遗忘，哪些需要保留。</li>
+<li>**输入门** 从输入和隐藏向量中提取一些信息，并将其插入状态中。</li>
+<li>**输出门** 通过某种带有 $\tanh$ 激活的线性层转换状态，然后使用隐藏向量 $h_i$ 选择状态的某些部分以生成新的状态 $c_{i+1}$。</li>
+</ul>
+<p>状态 $c$ 的各个组成部分可以被视为一些可以打开或关闭的标志。例如，当我们在序列中遇到名字 *Alice* 时，我们可能会假设它指代女性角色，并在状态中设置一个标志，表示句子中有女性名词。当我们进一步遇到短语 *and Tom* 时，我们会设置一个标志，表示句子中有复数名词。因此，通过操控状态，我们可以追踪句子部分的语法属性。</p>
+<p>&gt; <strong>Note</strong>: 理解 LSTM 内部结构的一个优秀资源是 Christopher Olah 的这篇文章 <a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/">Understanding LSTM Networks</a>。</p>
+<p>虽然 LSTM 单元的内部结构看起来很复杂，但 PyTorch 将其实现隐藏在 <code>LSTMCell</code> 类中，并提供了 <code>LSTM</code> 对象来表示整个 LSTM 层。因此，LSTM 分类器的实现与我们之前看到的简单 RNN 非常相似：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>class LSTMClassifier(torch.nn.Module):
+    def __init__(self, vocab_size, embed_dim, hidden_dim, num_class):
+        super().__init__()
+        self.hidden_dim = hidden_dim
+        self.embedding = torch.nn.Embedding(vocab_size, embed_dim)
+        self.embedding.weight.data = torch.randn_like(self.embedding.weight.data)-0.5
+        self.rnn = torch.nn.LSTM(embed_dim,hidden_dim,batch_first=True)
+        self.fc = torch.nn.Linear(hidden_dim, num_class)
+
+    def forward(self, x):
+        batch_size = x.size(0)
+        x = self.embedding(x)
+        x,(h,c) = self.rnn(x)
+        return self.fc(h[-1])</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>net = LSTMClassifier(vocab_size,64,32,len(classes)).to(device)
+train_epoch(net,train_loader, lr=0.001)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">3200: acc=0.259375
+6400: acc=0.25859375
+9600: acc=0.26177083333333334
+12800: acc=0.2784375
+16000: acc=0.313
+19200: acc=0.3528645833333333
+22400: acc=0.3965625
+25600: acc=0.4385546875
+28800: acc=0.4752777777777778
+32000: acc=0.505375
+35200: acc=0.5326704545454546
+38400: acc=0.5557552083333334
+41600: acc=0.5760817307692307
+44800: acc=0.5954910714285714
+48000: acc=0.6118333333333333
+51200: acc=0.62681640625
+54400: acc=0.6404779411764706
+57600: acc=0.6520138888888889
+60800: acc=0.662828947368421
+64000: acc=0.673546875
+67200: acc=0.6831547619047619
+70400: acc=0.6917897727272727
+73600: acc=0.6997146739130434
+76800: acc=0.707109375
+80000: acc=0.714075
+83200: acc=0.7209134615384616
+86400: acc=0.727037037037037
+89600: acc=0.7326674107142858
+92800: acc=0.7379633620689655
+96000: acc=0.7433645833333333
+99200: acc=0.7479032258064516
+102400: acc=0.752119140625
+105600: acc=0.7562405303030303
+108800: acc=0.76015625
+112000: acc=0.7641339285714286
+115200: acc=0.7677777777777778
+118400: acc=0.7711233108108108
+</div><div class="jp-OutputArea-output">(0.03487814127604167, 0.7728)</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>填充序列</h2>
+<p>在我们的示例中，我们需要用零向量填充小批量中的所有序列。虽然这会导致一些内存浪费，但对于 RNN 来说，更重要的是为填充的输入项创建额外的 RNN 单元，这些单元参与训练，但并不包含任何重要的输入信息。更好的方法是仅根据实际序列长度来训练 RNN。</p>
+<p>为此，PyTorch 引入了一种特殊的填充序列存储格式。假设我们有一个填充的小批量输入，如下所示：</p>
+<pre><code>
+[[1,2,3,4,5],
+ [6,7,8,0,0],
+ [9,0,0,0,0]]
+</code></pre>
+<p>这里的 0 表示填充值，输入序列的实际长度向量为 <code>[5,3,1]</code>。</p>
+<p>为了有效地用填充序列训练 RNN，我们希望首先用较大的小批量（<code>[1,6,9]</code>）开始训练第一组 RNN 单元，然后结束第三个序列的处理，并继续用较小的小批量（<code>[2,7]</code>，<code>[3,8]</code>）进行训练，依此类推。因此，填充序列被表示为一个向量——在我们的例子中是 <code>[1,6,9,2,7,3,8,4,5]</code>，以及长度向量（<code>[5,3,1]</code>），通过这些信息我们可以轻松地重建原始填充的小批量。</p>
+<p>为了生成填充序列，我们可以使用 <code>torch.nn.utils.rnn.pack_padded_sequence</code> 函数。所有循环层，包括 RNN、LSTM 和 GRU，都支持将填充序列作为输入，并生成填充序列的输出，这些输出可以通过 <code>torch.nn.utils.rnn.pad_packed_sequence</code> 解码。</p>
+<p>为了能够生成填充序列，我们需要将长度向量传递给网络，因此我们需要一个不同的函数来准备小批量：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def pad_length(b):
+    # build vectorized sequence
+    v = [encode(x[1]) for x in b]
+    # compute max length of a sequence in this minibatch and length sequence itself
+    len_seq = list(map(len,v))
+    l = max(len_seq)
+    return ( # tuple of three tensors - labels, padded features, length sequence
+        torch.LongTensor([t[0]-1 for t in b]),
+        torch.stack([torch.nn.functional.pad(torch.tensor(t),(0,l-len(t)),mode=&#x27;constant&#x27;,value=0) for t in v]),
+        torch.tensor(len_seq)
+    )
+
+train_loader_len = torch.utils.data.DataLoader(train_dataset, batch_size=16, collate_fn=pad_length, shuffle=True)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>实际的网络与上面的 <code>LSTMClassifier</code> 非常相似，但 <code>forward</code> 传递会接收填充后的小批量数据以及序列长度的向量。在计算嵌入后，我们计算打包序列，将其传递给 LSTM 层，然后将结果解包回来。</p>
+<p>&gt; <strong>注意</strong>: 实际上我们并不使用解包后的结果 <code>x</code>，因为我们在后续计算中使用的是隐藏层的输出。因此，我们可以完全从代码中移除解包操作。之所以将其保留在这里，是为了方便您在需要使用网络输出进行进一步计算时能够轻松修改代码。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>class LSTMPackClassifier(torch.nn.Module):
+    def __init__(self, vocab_size, embed_dim, hidden_dim, num_class):
+        super().__init__()
+        self.hidden_dim = hidden_dim
+        self.embedding = torch.nn.Embedding(vocab_size, embed_dim)
+        self.embedding.weight.data = torch.randn_like(self.embedding.weight.data)-0.5
+        self.rnn = torch.nn.LSTM(embed_dim,hidden_dim,batch_first=True)
+        self.fc = torch.nn.Linear(hidden_dim, num_class)
+
+    def forward(self, x, lengths):
+        batch_size = x.size(0)
+        x = self.embedding(x)
+        pad_x = torch.nn.utils.rnn.pack_padded_sequence(x,lengths,batch_first=True,enforce_sorted=False)
+        pad_x,(h,c) = self.rnn(pad_x)
+        x, _ = torch.nn.utils.rnn.pad_packed_sequence(pad_x,batch_first=True)
+        return self.fc(h[-1])</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>net = LSTMPackClassifier(vocab_size,64,32,len(classes)).to(device)
+train_epoch_emb(net,train_loader_len, lr=0.001,use_pack_sequence=True)
+</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">3200: acc=0.285625
+6400: acc=0.33359375
+9600: acc=0.3876041666666667
+12800: acc=0.44078125
+16000: acc=0.4825
+19200: acc=0.5235416666666667
+22400: acc=0.5559821428571429
+25600: acc=0.58609375
+28800: acc=0.6116666666666667
+32000: acc=0.63340625
+35200: acc=0.6525284090909091
+38400: acc=0.668515625
+41600: acc=0.6822596153846154
+44800: acc=0.6948214285714286
+48000: acc=0.7052708333333333
+51200: acc=0.71521484375
+54400: acc=0.7239889705882353
+57600: acc=0.7315277777777778
+60800: acc=0.7388486842105263
+64000: acc=0.74571875
+67200: acc=0.7518303571428572
+70400: acc=0.7576988636363636
+73600: acc=0.7628940217391305
+76800: acc=0.7681510416666667
+80000: acc=0.7728125
+83200: acc=0.7772235576923077
+86400: acc=0.7815393518518519
+89600: acc=0.7857700892857142
+92800: acc=0.7895043103448276
+96000: acc=0.7930520833333333
+99200: acc=0.7959072580645161
+102400: acc=0.798994140625
+105600: acc=0.802064393939394
+108800: acc=0.8051378676470589
+112000: acc=0.8077857142857143
+115200: acc=0.8104600694444445
+118400: acc=0.8128293918918919
+</div><div class="jp-OutputArea-output">(0.029785829671223958, 0.8138166666666666)</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>&gt; <strong>注意：</strong> 您可能已经注意到我们传递给训练函数的参数 <code>use_pack_sequence</code>。目前，<code>pack_padded_sequence</code> 函数要求长度序列张量位于 CPU 设备上，因此训练函数需要避免在训练时将长度序列数据移动到 GPU。您可以查看 <a href="../../../../../lessons/5-NLP/16-RNN/torchnlp.py"><code>torchnlp.py</code></a> 文件中 <code>train_emb</code> 函数的实现。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>双向和多层 RNN</h2>
+<p>在我们的示例中，所有的循环网络都是单向运行的，从序列的开始到结束。这看起来很自然，因为它类似于我们阅读和听语音的方式。然而，在许多实际情况下，我们可以随机访问输入序列，因此在两个方向上运行循环计算可能更有意义。这类网络称为<strong>双向</strong> RNN，可以通过向 RNN/LSTM/GRU 构造函数传递 <code>bidirectional=True</code> 参数来创建。</p>
+<p>在处理双向网络时，我们需要两个隐藏状态向量，每个方向一个。PyTorch 将这些向量编码为一个大小加倍的向量，这非常方便，因为通常会将生成的隐藏状态传递给全连接线性层，只需在创建该层时考虑到大小的增加即可。</p>
+<p>无论是单向还是双向的循环网络，都能捕捉序列中的某些模式，并将其存储到状态向量中或传递到输出中。与卷积网络类似，我们可以在第一层循环网络之上构建另一层循环网络，以捕捉更高层次的模式，这些模式是由第一层提取的低层次模式构建而成的。这引出了<strong>多层 RNN</strong>的概念，它由两个或更多的循环网络组成，其中上一层的输出作为下一层的输入。</p>
+<p>!<a href="../../../../../lessons/5-NLP/16-RNN/images/multi-layer-lstm.jpg">显示多层长短时记忆 RNN 的图片</a></p>
+<p>*图片来源于 <a href="https://towardsdatascience.com/from-a-lstm-cell-to-a-multilayer-lstm-network-with-pytorch-2899eb5696f3">Fernando López 的这篇精彩文章</a>*</p>
+<p>PyTorch 使构建此类网络变得非常简单，因为只需向 RNN/LSTM/GRU 构造函数传递 <code>num_layers</code> 参数，就可以自动构建多层循环网络。这也意味着隐藏状态向量的大小会按比例增加，在处理循环层的输出时需要考虑这一点。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>RNN用于其他任务</h2>
+<p>在本单元中，我们已经了解到RNN可以用于序列分类，但实际上，它还可以处理更多任务，例如文本生成、机器翻译等。我们将在下一单元中讨论这些任务。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务<a href="https://github.com/Azure/co-op-translator">Co-op Translator</a>进行翻译。虽然我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。应以原始语言的文档作为权威来源。对于重要信息，建议使用专业人工翻译。我们不对因使用此翻译而产生的任何误解或误读承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

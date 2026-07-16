@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perceptron</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 Perceptron</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>感知器</h2>
+<p>&gt; 本笔记本是 <a href="http://github.com/microsoft/ai-for-beginners">AI for Beginners Curricula</a> 的一部分。访问该仓库以获取完整的学习资料。</p>
+<p>正如我们所讨论的，感知器可以用来解决<strong>二分类问题</strong>，即将输入样本分类为两类——我们可以称之为<strong>正类</strong>和<strong>负类</strong>。</p>
+<p>首先，让我们导入一些必要的库。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import pylab
+from matplotlib import gridspec
+from sklearn.datasets import make_classification
+import numpy as np
+from ipywidgets import interact, interactive, fixed
+import ipywidgets as widgets
+import pickle
+import os
+import gzip
+
+# pick the seed for reproducability - change it to explore the effects of random variations
+np.random.seed(1)
+import random</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>玩具问题</h2>
+<p>首先，让我们从一个简单的玩具问题开始，这里我们有两个输入特征。例如，在医学中，我们可能希望根据肿瘤的大小和年龄将其分类为良性或恶性。</p>
+<p>我们将使用 SciKit Learn 库中的 <code>make_classification</code> 函数生成一个随机分类数据集：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>n = 50
+X, Y = make_classification(n_samples = n, n_features=2,
+                           n_redundant=0, n_informative=2, flip_y=0)
+Y = Y*2-1 # convert initial 0/1 values into -1/1
+X = X.astype(np.float32); Y = Y.astype(np.int32) # features - float, label - int
+
+# Split the dataset into training and test
+train_x, test_x = np.split(X, [ n*8//10])
+train_labels, test_labels = np.split(Y, [n*8//10])
+print(&quot;Features:\n&quot;,train_x[0:4])
+print(&quot;Labels:\n&quot;,train_labels[0:4])</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Features:
+ [[-1.7441838  -1.3952037 ]
+ [ 2.5921783  -0.08124504]
+ [ 0.9218062   0.91789985]
+ [-0.8437018  -0.18738253]]
+Labels:
+ [-1 -1  1 -1]
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们也绘制数据集：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def plot_dataset(suptitle, features, labels):
+    # prepare the plot
+    fig, ax = pylab.subplots(1, 1)
+    #pylab.subplots_adjust(bottom=0.2, wspace=0.4)
+    fig.suptitle(suptitle, fontsize = 16)
+    ax.set_xlabel(&#x27;$x_i[0]$ -- (feature 1)&#x27;)
+    ax.set_ylabel(&#x27;$x_i[1]$ -- (feature 2)&#x27;)
+
+    colors = [&#x27;r&#x27; if l&gt;0 else &#x27;b&#x27; for l in labels]
+    ax.scatter(features[:, 0], features[:, 1], marker=&#x27;o&#x27;, c=colors, s=100, alpha = 0.5)
+    fig.show()
+
+plot_dataset(&#x27;Training data&#x27;, train_x, train_labels)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;ipython-input-4-ade59d2ee664&gt;:11: UserWarning: Matplotlib is currently using module://ipykernel.pylab.backend_inline, which is a non-GUI backend, so cannot show the figure.
+  fig.show()
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>感知机</h2>
+<p>由于感知机是一个二分类器，对于每个输入向量 $x$，感知机的输出将根据类别为 +1 或 -1。输出通过以下公式计算：</p>
+<p>$$y(\mathbf{x}) = f(\mathbf{w}^{\mathrm{T}}\mathbf{x})$$</p>
+<p>其中，$\mathbf{w}$ 是权重向量，$f$ 是阶跃激活函数：</p>
+<p>$$</p>
+<p>f(x) = \begin{cases}</p>
+<p>+1 &amp; x \geq 0 \\</p>
+<p>-1 &amp; x &lt; 0</p>
+<p>\end{cases} \\</p>
+<p>$$</p>
+<p>然而，一个通用的线性模型通常还需要一个偏置项，也就是说，理想情况下我们应该通过 $y=f(\mathbf{w}^{\mathrm{T}}\mathbf{x}+\mathbf{b})$ 来计算 $y$。为了简化我们的模型，我们可以通过在输入特征中添加一个始终等于 1 的维度来去掉这个偏置项：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>pos_examples = np.array([ [t[0], t[1], 1] for i,t in enumerate(train_x) 
+                          if train_labels[i]&gt;0])
+neg_examples = np.array([ [t[0], t[1], 1] for i,t in enumerate(train_x) 
+                          if train_labels[i]&lt;0])
+print(pos_examples[0:3])</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[[ 0.92180622  0.91789985  1.        ]
+ [-1.06435513  1.49764717  1.        ]
+ [ 0.32839951  2.25677919  1.        ]]
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>训练算法</h2>
+<p>为了训练感知机，我们需要找到能够最小化误差的权重 $\mathbf{w}$。误差通过<strong>感知机准则</strong>定义为：</p>
+<p>$$E(\mathbf{w}) = -\sum_{n \in \mathcal{M}}\mathbf{w}^{\mathrm{T}}\mathbf{x}_{n}t_{n}$$</p>
+<ul>
+<li>$t_{n} \in \{-1, +1\}$ 分别表示负样本和正样本</li>
+<li>$\mathcal{M}$ - 错误分类样本的集合</li>
+</ul>
+<p>我们将使用<strong>梯度下降</strong>的过程。从一些初始随机权重 $\mathbf{w}^{(0)}$ 开始，我们将在训练的每一步通过 $E$ 的梯度来调整权重：</p>
+<p>$$\mathbf{w}^{\tau + 1}=\mathbf{w}^{\tau} - \eta \nabla E(\mathbf{w}) = \mathbf{w}^{\tau} + \eta\sum_{n \in \mathcal{M}}\mathbf{x}_{n} t_{n}$$</p>
+<p>其中 $\eta$ 是<strong>学习率</strong>，$\tau\in\mathbb{N}$ 表示迭代次数。</p>
+<p>我们用 Python 来定义这个算法：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def train(positive_examples, negative_examples, num_iterations = 100, learning_rate = 0.01):
+    num_dims = positive_examples.shape[1]
+    
+    # Initialize weights. 
+    # We initialize with 0 for simplicity, but random initialization is also a good idea
+    weights = np.zeros((num_dims,1)) 
+    
+    pos_count = positive_examples.shape[0]
+    neg_count = negative_examples.shape[0]
+    
+    report_frequency = 10
+    
+    for i in range(num_iterations):
+        # Pick one positive and one negative example
+        pos = random.choice(positive_examples)
+        neg = random.choice(negative_examples)
+
+        z = np.dot(pos, weights)   
+        if z &lt; 0: # positive example was classified as negative
+            weights = weights + learning_rate * pos.reshape(weights.shape)
+
+        z  = np.dot(neg, weights)
+        if z &gt;= 0: # negative example was classified as positive
+            weights = weights - learning_rate * neg.reshape(weights.shape)
+            
+        # Periodically, print out the current accuracy on all examples 
+        if i % report_frequency == 0:             
+            pos_out = np.dot(positive_examples, weights)
+            neg_out = np.dot(negative_examples, weights)        
+            pos_correct = (pos_out &gt;= 0).sum() / float(pos_count)
+            neg_correct = (neg_out &lt; 0).sum() / float(neg_count)
+            print(&quot;Iteration={}, pos correct={}, neg correct={}&quot;.format(i,pos_correct,neg_correct))
+
+    return weights</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p><strong>关于学习率的说明</strong>：<code>learning_rate</code> 参数（默认值为 <code>0.01</code>）控制我们在每次训练步骤中调整权重的幅度。这实现了梯度下降更新公式：</p>
+<p>$$\mathbf{w}^{\tau + 1}=\mathbf{w}^{\tau} + \eta \mathbf{x}_{n} t_{n}$$</p>
+<ul>
+<li>较大的学习率（例如 `1.0`）会使感知器学习速度更快，但可能会超过最优解</li>
+<li>较小的学习率（例如 `0.001`）学习速度较慢，但可能更精确地收敛</li>
+<li>你可以通过调用以下代码进行实验：`train(pos_examples, neg_examples, learning_rate=0.1)`</li>
+</ul></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在让我们在我们的数据集上运行训练：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>wts = train(pos_examples,neg_examples)
+print(wts.transpose())</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Iteration=0, pos correct=0.2631578947368421, neg correct=0.6190476190476191
+Iteration=10, pos correct=0.8947368421052632, neg correct=0.8571428571428571
+Iteration=20, pos correct=0.8421052631578947, neg correct=1.0
+Iteration=30, pos correct=0.8947368421052632, neg correct=0.9523809523809523
+Iteration=40, pos correct=0.8947368421052632, neg correct=0.9523809523809523
+Iteration=50, pos correct=0.9473684210526315, neg correct=0.9047619047619048
+Iteration=60, pos correct=0.8947368421052632, neg correct=0.9523809523809523
+Iteration=70, pos correct=0.8947368421052632, neg correct=0.9047619047619048
+Iteration=80, pos correct=0.8947368421052632, neg correct=0.6190476190476191
+Iteration=90, pos correct=0.8421052631578947, neg correct=1.0
+[[-0.66042328  4.90850882 -1.        ]]
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>如你所见，初始准确率约为50%，但很快就提升到接近90%的较高值。</p>
+<p>让我们来可视化类的分隔情况。我们的分类函数形式为 $\mathbf{w}^Tx$，对于一个类别，它的值大于0；对于另一个类别，它的值小于0。因此，类别分隔线由 $\mathbf{w}^Tx = 0$ 定义。由于我们只有两个维度 $x_0$ 和 $x_1$，这条线的方程为 $w_0x_0+w_1x_1+w_2 = 0$（记住我们明确定义了一个额外维度 $x_2=1$）。让我们绘制这条线：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def plot_boundary(positive_examples, negative_examples, weights):
+    if np.isclose(weights[1], 0):
+        if np.isclose(weights[0], 0):
+            x = y = np.array([-6, 6], dtype = &#x27;float32&#x27;)
+        else:
+            y = np.array([-6, 6], dtype=&#x27;float32&#x27;)
+            x = -(weights[1] * y + weights[2])/weights[0]
+    else:
+        x = np.array([-6, 6], dtype=&#x27;float32&#x27;)
+        y = -(weights[0] * x + weights[2])/weights[1]
+
+    pylab.xlim(-6, 6)
+    pylab.ylim(-6, 6)                      
+    pylab.plot(positive_examples[:,0], positive_examples[:,1], &#x27;bo&#x27;)
+    pylab.plot(negative_examples[:,0], negative_examples[:,1], &#x27;ro&#x27;)
+    pylab.plot(x, y, &#x27;g&#x27;, linewidth=2.0)
+    pylab.show()</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>plot_boundary(pos_examples,neg_examples,wts)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>探索学习率</h2>
+<p>现在让我们来研究不同的学习率如何影响训练过程。学习率控制梯度下降中的步长——这是一个关键的超参数，影响着收敛速度和稳定性。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># Compare different learning rates
+learning_rates = [0.001, 0.01, 0.1, 1.0]
+fig, axes = pylab.subplots(2, 2, figsize=(12, 10))
+fig.suptitle(&#x27;Effect of Different Learning Rates&#x27;, fontsize=16)
+
+for idx, lr in enumerate(learning_rates):
+    ax = axes[idx // 2, idx % 2]
+    
+    # Train with this learning rate
+    weights_lr = train(pos_examples, neg_examples, num_iterations=100, learning_rate=lr)
+    
+    # Plot decision boundary
+    if np.isclose(weights_lr[1], 0):
+        if np.isclose(weights_lr[0], 0):
+            x = y = np.array([-6, 6], dtype=&#x27;float32&#x27;)
+        else:
+            y = np.array([-6, 6], dtype=&#x27;float32&#x27;)
+            x = -(weights_lr[1] * y + weights_lr[2])/weights_lr[0]
+    else:
+        x = np.array([-6, 6], dtype=&#x27;float32&#x27;)
+        y = -(weights_lr[0] * x + weights_lr[2])/weights_lr[1]
+    
+    ax.set_xlim(-6, 6)
+    ax.set_ylim(-6, 6)
+    ax.plot(pos_examples[:, 0], pos_examples[:, 1], &#x27;bo&#x27;, label=&#x27;Positive&#x27;, alpha=0.7)
+    ax.plot(neg_examples[:, 0], neg_examples[:, 1], &#x27;ro&#x27;, label=&#x27;Negative&#x27;, alpha=0.7)
+    ax.plot(x, y, &#x27;g-&#x27;, linewidth=2)
+    ax.set_title(f&#x27;Learning Rate = {lr}&#x27;)
+    ax.set_xlabel(&#x27;Feature 1&#x27;)
+    ax.set_ylabel(&#x27;Feature 2&#x27;)
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+
+pylab.tight_layout()
+pylab.show()
+</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>交互式学习率实验</h3>
+<p>使用下面的滑块，交互式地尝试不同的学习率，观察它们如何影响决策边界：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def train_and_plot_with_lr(learning_rate=0.01):
+    &quot;&quot;&quot;Train perceptron with specified learning rate and plot results&quot;&quot;&quot;
+    weights_lr = train(pos_examples, neg_examples, num_iterations=100, learning_rate=learning_rate)
+    
+    fig, (ax1, ax2) = pylab.subplots(1, 2, figsize=(14, 5))
+    
+    # Plot 1: Decision boundary
+    if np.isclose(weights_lr[1], 0):
+        if np.isclose(weights_lr[0], 0):
+            x = y = np.array([-6, 6], dtype=&#x27;float32&#x27;)
+        else:
+            y = np.array([-6, 6], dtype=&#x27;float32&#x27;)
+            x = -(weights_lr[1] * y + weights_lr[2])/weights_lr[0]
+    else:
+        x = np.array([-6, 6], dtype=&#x27;float32&#x27;)
+        y = -(weights_lr[0] * x + weights_lr[2])/weights_lr[1]
+    
+    ax1.set_xlim(-6, 6)
+    ax1.set_ylim(-6, 6)
+    ax1.plot(pos_examples[:, 0], pos_examples[:, 1], &#x27;bo&#x27;, label=&#x27;Positive&#x27;, s=100, alpha=0.6)
+    ax1.plot(neg_examples[:, 0], neg_examples[:, 1], &#x27;ro&#x27;, label=&#x27;Negative&#x27;, s=100, alpha=0.6)
+    ax1.plot(x, y, &#x27;g-&#x27;, linewidth=3, label=&#x27;Decision Boundary&#x27;)
+    ax1.set_title(f&#x27;Decision Boundary (lr={learning_rate})&#x27;, fontsize=14)
+    ax1.set_xlabel(&#x27;Feature 1&#x27;)
+    ax1.set_ylabel(&#x27;Feature 2&#x27;)
+    ax1.legend()
+    ax1.grid(True, alpha=0.3)
+    
+    # Plot 2: Weight values
+    ax2.bar([&#x27;w0&#x27;, &#x27;w1&#x27;, &#x27;bias&#x27;], weights_lr.flatten(), color=[&#x27;blue&#x27;, &#x27;green&#x27;, &#x27;red&#x27;], alpha=0.7)
+    ax2.set_title(&#x27;Final Weight Values&#x27;, fontsize=14)
+    ax2.set_ylabel(&#x27;Weight Value&#x27;)
+    ax2.grid(True, alpha=0.3, axis=&#x27;y&#x27;)
+    ax2.axhline(y=0, color=&#x27;black&#x27;, linestyle=&#x27;-&#x27;, linewidth=0.5)
+    
+    pylab.tight_layout()
+    pylab.show()
+    
+    print(f&quot;Final weights: {weights_lr.flatten()}&quot;)
+
+# Create interactive widget
+interact(train_and_plot_with_lr, 
+         learning_rate=widgets.FloatSlider(value=0.01, min=0.001, max=1.0, step=0.001, 
+                                          description=&#x27;Learning Rate:&#x27;, continuous_update=False))
+</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>在测试数据集上评估</h2>
+<p>一开始，我们将一部分数据分离出来作为测试数据集。现在让我们看看我们的分类器在这个测试数据集上的准确性如何。为此，我们同样需要为测试数据集扩展一个额外的维度，与权重矩阵相乘，并确保得到的值与标签（+1 或 -1）符号相同。然后将所有布尔值相加，并除以测试样本的长度，以获得准确率：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def accuracy(weights, test_x, test_labels):
+    res = np.dot(np.c_[test_x,np.ones(len(test_x))],weights)
+    return (res.reshape(test_labels.shape)*test_labels&gt;=0).sum()/float(len(test_labels))
+
+accuracy(wts, test_x, test_labels)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">1.0</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>观察训练过程</h2>
+<p>我们之前已经看到，训练过程中准确率会下降。能够观察分隔线在训练过程中的变化会很有趣。下面的代码将在一张图上可视化所有内容，你可以通过移动滑块来“穿越时间”查看训练过程。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def train_graph(positive_examples, negative_examples, num_iterations = 100, learning_rate = 0.01):
+    num_dims = positive_examples.shape[1]
+    weights = np.zeros((num_dims,1)) # initialize weights
+    
+    pos_count = positive_examples.shape[0]
+    neg_count = negative_examples.shape[0]
+    
+    report_frequency = 15;
+    snapshots = []
+    
+    for i in range(num_iterations):
+        pos = random.choice(positive_examples)
+        neg = random.choice(negative_examples)
+
+        z = np.dot(pos, weights)   
+        if z &lt; 0:
+            weights = weights + learning_rate * pos.reshape(weights.shape)
+
+        z  = np.dot(neg, weights)
+        if z &gt;= 0:
+            weights = weights - learning_rate * neg.reshape(weights.shape)
+            
+        if i % report_frequency == 0:             
+            pos_out = np.dot(positive_examples, weights)
+            neg_out = np.dot(negative_examples, weights)        
+            pos_correct = (pos_out &gt;= 0).sum() / float(pos_count)
+            neg_correct = (neg_out &lt; 0).sum() / float(neg_count)
+            snapshots.append([np.copy(weights).flatten(), (pos_correct+neg_correct)/2.0])
+
+    return np.array(snapshots, dtype=object)
+
+snapshots = train_graph(pos_examples,neg_examples)
+
+def plotit(pos_examples,neg_examples,snapshots,step):
+    fig = pylab.figure(figsize=(10,4))
+    fig.add_subplot(1, 2, 1)
+    plot_boundary(pos_examples, neg_examples, snapshots[step][0])
+    fig.add_subplot(1, 2, 2)
+    pylab.plot(np.arange(len(snapshots[:,1])), snapshots[:,1])
+    pylab.ylabel(&#x27;Accuracy&#x27;)
+    pylab.xlabel(&#x27;Iteration&#x27;)
+    pylab.plot(step, snapshots[step,1], &quot;bo&quot;)
+    pylab.show()
+def pl1(step): plotit(pos_examples,neg_examples,snapshots,step)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>interact(pl1, step=widgets.IntSlider(value=0, min=0, max=len(snapshots)-1))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">interactive(children=(IntSlider(value=0, description=&#x27;step&#x27;, max=6), Output()), _dom_classes=(&#x27;widget-interact…</div><div class="jp-OutputArea-output">&lt;function __main__.pl1(step)&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>感知机的局限性</h2>
+<p>如上所述，感知机是一种<strong>线性分类器</strong>。如果两个类别是<strong>线性可分的</strong>，即可以用一条直线分开，那么它可以很好地区分这两个类别。否则，感知机的训练过程将无法收敛。</p>
+<p>一个最明显的例子是感知机无法解决的所谓<strong>XOR问题</strong>。我们希望感知机学习XOR布尔函数，其真值表如下：</p>
+<p>|   | 0 | 1 |</p>
+<p>|---|---|---|</p>
+<p>| 0 | 0 | 1 |</p>
+<p>| 1 | 1 | 0 |</p>
+<p>让我们试试吧！我们将手动填充所有正样本和负样本，然后调用我们上面定义的训练函数：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>pos_examples_xor = np.array([[1,0,1],[0,1,1]])
+neg_examples_xor = np.array([[1,1,1],[0,0,1]])
+
+snapshots_xor = train_graph(pos_examples_xor,neg_examples_xor,1000)
+def pl2(step): plotit(pos_examples_xor,neg_examples_xor,snapshots_xor,step)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>interact(pl2, step=widgets.IntSlider(value=0, min=0, max=len(snapshots)-1))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">interactive(children=(IntSlider(value=0, description=&#x27;step&#x27;, max=6), Output()), _dom_classes=(&#x27;widget-interact…</div><div class="jp-OutputArea-output">&lt;function __main__.pl2(step)&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>正如上图所示，准确率从未超过75%，因为不可能画出一条直线来正确分类所有可能的样本。</p>
+<p>XOR问题是感知机局限性的经典例子，这一问题由Marvin Minsky和Seymour Papert在1969年的著作<a href="https://en.wikipedia.org/wiki/Perceptrons_(book">《Perceptrons》</a>)中指出。这一观察限制了神经网络领域的研究近10年，尽管——我们将在课程的下一部分看到——多层感知机完全能够解决此类问题。</p>
+<h2>复杂示例 - MNIST</h2>
+<p>尽管感知机无法解决XOR问题，但它可以解决许多更复杂的问题，例如手写字符识别。</p>
+<p>一个在学习机器学习时经常使用的数据集叫做<a href="https://en.wikipedia.org/wiki/MNIST_database">MNIST</a>。它由美国国家标准与技术研究院（Modified National Institute of Standards and Technology）创建，包含一个由60000个手写数字组成的训练集，这些数字来自约250名学生和研究院员工。此外，还有一个由10000个数字组成的测试数据集，这些数字来自不同的个人。</p>
+<p>所有数字都以28x28像素的灰度图像表示。</p>
+<p>&gt; MNIST数据集作为一个训练竞赛可在<a href="https://www.kaggle.com/c/digit-recognizer">Kaggle</a>上找到，这是一个举办机器学习竞赛和比赛的网站。一旦你学会如何分类MNIST数字，可以将你的解决方案提交到Kaggle，看看它在其他参与者中的排名。</p>
+<p>我们从加载MNIST数据集开始：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># If you are not running this notebook from a cloned repository, you may need to grab the binary dataset file first
+# !wget https://github.com/microsoft/AI-For-Beginners/raw/main/data/mnist.pkl.gz?raw=true
+# In this case correct the link to the dataset below as well.
+
+with gzip.open(&#x27;../../../data/mnist.pkl.gz&#x27;, &#x27;rb&#x27;) as mnist_pickle:
+    MNIST = pickle.load(mnist_pickle, encoding=&#x27;latin1&#x27;)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在我们来绘制数据集：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>print(MNIST[&#x27;Train&#x27;][&#x27;Features&#x27;][0][130:180])
+print(MNIST[&#x27;Train&#x27;][&#x27;Labels&#x27;][0])
+features = MNIST[&#x27;Train&#x27;][&#x27;Features&#x27;].astype(np.float32) / 256.0
+labels = MNIST[&#x27;Train&#x27;][&#x27;Labels&#x27;]
+fig = pylab.figure(figsize=(10,5))
+for i in range(10):
+    ax = fig.add_subplot(1,10,i+1)
+    pylab.imshow(features[i].reshape(28,28))
+pylab.show()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[  0   0 188 255  94   0   0   0   0   0   0   0   0   0   0   0   0   0
+   0   0   0   0   0   0   0   0   0   0   0 191 250 253  93   0   0   0
+   0   0   0   0   0   0   0   0   0   0   0   0   0   0]
+1
+</div><div class="jp-OutputArea-output">&lt;Figure size 720x360 with 10 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>因为感知器是一个二分类器，我们将把问题限制为只识别两个数字。下面的函数将用两个给定的数字填充正样本和负样本数组（并且还会显示这些数字的样本以便于理解）。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def set_mnist_pos_neg(positive_label, negative_label):
+    positive_indices = [i for i, j in enumerate(MNIST[&#x27;Train&#x27;][&#x27;Labels&#x27;]) 
+                          if j == positive_label]
+    negative_indices = [i for i, j in enumerate(MNIST[&#x27;Train&#x27;][&#x27;Labels&#x27;]) 
+                          if j == negative_label]
+
+    positive_images = MNIST[&#x27;Train&#x27;][&#x27;Features&#x27;][positive_indices]
+    negative_images = MNIST[&#x27;Train&#x27;][&#x27;Features&#x27;][negative_indices]
+
+    fig = pylab.figure()
+    ax = fig.add_subplot(1, 2, 1)
+    pylab.imshow(positive_images[0].reshape(28,28), cmap=&#x27;gray&#x27;, interpolation=&#x27;nearest&#x27;)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax = fig.add_subplot(1, 2, 2)
+    pylab.imshow(negative_images[0].reshape(28,28), cmap=&#x27;gray&#x27;, interpolation=&#x27;nearest&#x27;)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    pylab.show()
+    
+    return positive_images, negative_images</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们将从尝试在0和1之间进行分类开始：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>pos1,neg1 = set_mnist_pos_neg(1,0)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 2 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def plotit2(snapshots_mn,step):
+    fig = pylab.figure(figsize=(10,4))
+    ax = fig.add_subplot(1, 2, 1)
+    pylab.imshow(snapshots_mn[step][0].reshape(28, 28), interpolation=&#x27;nearest&#x27;)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    pylab.colorbar()
+    ax = fig.add_subplot(1, 2, 2)
+    ax.set_ylim([0,1])
+    pylab.plot(np.arange(len(snapshots_mn[:,1])), snapshots_mn[:,1])
+    pylab.plot(step, snapshots_mn[step,1], &quot;bo&quot;)
+    pylab.show()
+def pl3(step): plotit2(snapshots_mn,step)
+def pl4(step): plotit2(snapshots_mn2,step)    </code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>snapshots_mn = train_graph(pos1,neg1,1000)    
+interact(pl3, step=widgets.IntSlider(value=0, min=0, max=len(snapshots_mn) - 1))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">interactive(children=(IntSlider(value=0, description=&#x27;step&#x27;, max=66), Output()), _dom_classes=(&#x27;widget-interac…</div><div class="jp-OutputArea-output">&lt;function __main__.pl3(step)&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>请注意，准确率会非常快地接近100%。</p>
+<p>请将滑块移动到训练结束时的某个位置，并观察左侧绘制的权重矩阵。这个矩阵将帮助您理解感知器的实际工作原理。您可以看到字段中间的高权重值，这些值对应于数字1通常出现的像素，而两侧的低负值则对应于数字0的部分。因此，如果呈现给感知器的数字确实是1，中间部分的像素会与高权重值相乘，产生正结果。相反，当感知器观察到数字0时，相应的像素会与负数相乘。</p>
+<p>&gt; 您可能会注意到，如果我们给感知器一个稍微水平偏移的数字1，使其像素占据了数字0的垂直部分位置，我们可能会得到错误的结果。由于我们的MNIST数据集的特点是所有数字都居中并正确定位，感知器依赖于这一点来区分数字。</p>
+<p>现在让我们尝试不同的数字：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>pos2,neg2 = set_mnist_pos_neg(2,5)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 2 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>snapshots_mn2 = train_graph(pos2,neg2,1000)
+interact(pl4, step=widgets.IntSlider(value=0, min=0, max=len(snapshots_mn2) - 1))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">interactive(children=(IntSlider(value=0, description=&#x27;step&#x27;, max=66), Output()), _dom_classes=(&#x27;widget-interac…</div><div class="jp-OutputArea-output">&lt;function __main__.pl4(step)&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>讨论</h2>
+<p>由于某些原因，数字 2 和 5 并不容易区分。尽管我们获得了相对较高的准确率（超过 85%），但我们可以清楚地看到感知器在某个点停止了学习。</p>
+<p>为了理解为什么会发生这种情况，我们可以尝试使用<a href="https://en.wikipedia.org/wiki/Principal_component_analysis">主成分分析</a> (PCA)。这是一种机器学习技术，用于降低输入数据集的维度，从而获得类别之间的最佳可分性。</p>
+<p>在我们的例子中，输入图像有 784 个像素（输入特征），我们希望使用 PCA 将参数数量减少到仅 2 个，以便可以在图表上绘制它们。这两个参数将是原始特征的线性组合，我们可以将这一过程视为“旋转”我们原始的 784 维空间，并观察其在二维空间中的投影，直到我们获得最佳视角来区分类别。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>from sklearn.decomposition import PCA
+
+def pca_analysis(positive_label, negative_label):
+    positive_images, negative_images = set_mnist_pos_neg(positive_label, negative_label)
+    M = np.append(positive_images, negative_images, 0)
+
+    mypca = PCA(n_components=2)
+    mypca.fit(M)
+    
+    pos_points = mypca.transform(positive_images[:200])
+    neg_points = mypca.transform(negative_images[:200])
+
+    pylab.plot(pos_points[:,0], pos_points[:,1], &#x27;bo&#x27;)
+    pylab.plot(neg_points[:,0], neg_points[:,1], &#x27;ro&#x27;)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>pca_analysis(1,0)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 2 Axes&gt;</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>pca_analysis(2,5)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 2 Axes&gt;</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>正如你所见，0 和 1 可以通过一条直线清晰地分开。这表明在原始的784维空间中，与数字对应的点也是线性可分的。而对于数字2和5，我们无法找到一个能够清晰分开这两个数字的良好投影，因此会出现一些错误分类的情况。</p>
+<p>&gt; 在本课程的后续部分，我们将学习如何使用神经网络创建非线性分类器，以及如何处理数字未正确对齐的问题。很快，我们将在MNIST数字分类中达到超过99%的准确率，同时将数字分类为10个不同的类别。</p>
+<h2>收获总结</h2>
+<ul>
+<li>我们学习了最简单的神经网络架构——单层感知机。</li>
+<li>我们通过手动实现了感知机，使用基于梯度下降的简单训练过程。</li>
+<li>尽管简单，单层感知机仍然可以解决相当复杂的手写数字识别问题。</li>
+<li>单层感知机是一个线性分类器，因此它的分类能力与逻辑回归相同。</li>
+<li>在样本空间中，感知机可以通过超平面分开两类输入数据。</li>
+</ul></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>致谢</h2>
+<p>本笔记本是 <a href="http://github.com/microsoft/ai-for-beginners">AI for Beginners Curricula</a> 的一部分，由 <a href="http://soshnikov.com">Dmitry Soshnikov</a> 编写。灵感来源于微软剑桥研究院的神经网络研讨会。一些代码和示例材料取自 <a href="https://www.microsoft.com/en-us/research/people/kahofman/">Katja Hoffmann</a>、<a href="https://www.microsoft.com/en-us/research/people/matjoh/">Matthew Johnson</a> 和 <a href="https://www.microsoft.com/en-us/research/people/ryoto/">Ryoto Tomioka</a> 的演示文稿，以及 <a href="http://github.com/shwars/NeuroWorkshop">NeuroWorkshop</a> 仓库。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p>&lt;!-- CO-OP TRANSLATOR DISCLAIMER START --&gt;</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务<a href="https://github.com/Azure/co-op-translator">Co-op Translator</a>进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。原始语言的文档应被视为权威来源。对于关键信息，建议使用专业人工翻译。我们对因使用此翻译而产生的任何误解或误读不承担责任。</p>
+<p>&lt;!-- CO-OP TRANSLATOR DISCLAIMER END --&gt;</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GPT-PyTorch</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 GPT-PyTorch</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>探索 OpenAI GPT</h2>
+<p>本笔记本是 <a href="http://aka.ms/ai-beginners">AI 初学者课程</a> 的一部分。</p>
+<p>在本笔记本中，我们将使用 Hugging Face 的 <code>transformers</code> 库来探索如何与 OpenAI-GPT 模型进行交互。</p>
+<p>话不多说，让我们创建文本生成管道并开始生成吧！</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>from transformers import pipeline
+
+model_name = &#x27;openai-gpt&#x27; 
+
+generator = pipeline(&#x27;text-generation&#x27;, model=model_name)
+
+generator(&quot;Hello! I am a neural network, and I want to say that&quot;, max_length=100, num_return_sequences=5)
+</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">c:\Users\bethanycheum\Desktop\AI-For-Beginners\.venv\lib\site-packages\tqdm\auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+Downloading model.safetensors: 100%|██████████| 479M/479M [04:28&lt;00:00, 1.78MB/s] 
+c:\Users\bethanycheum\Desktop\AI-For-Beginners\.venv\lib\site-packages\huggingface_hub\file_download.py:133: UserWarning: `huggingface_hub` cache-system uses symlinks by default to efficiently store duplicated files but your machine does not support them in C:\Users\bethanycheum\.cache\huggingface\hub. Caching files will still work but in a degraded version that might require more space on your disk. This warning can be disabled by setting the `HF_HUB_DISABLE_SYMLINKS_WARNING` environment variable. For more details, see https://huggingface.co/docs/huggingface_hub/how-to-cache#limitations.
+To support symlinks on Windows, you either need to activate Developer Mode or to run Python as an administrator. In order to see activate developer mode, see this article: https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development
+  warnings.warn(message)
+Some weights of OpenAIGPTLMHeadModel were not initialized from the model checkpoint at openai-gpt and are newly initialized: [&#x27;position_ids&#x27;]
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+Downloading (…)neration_config.json: 100%|██████████| 74.0/74.0 [00:00&lt;00:00, 48.8kB/s]
+Downloading (…)olve/main/vocab.json: 100%|██████████| 816k/816k [00:00&lt;00:00, 1.76MB/s]
+Downloading (…)olve/main/merges.txt: 100%|██████████| 458k/458k [00:00&lt;00:00, 1.11MB/s]
+Downloading (…)/main/tokenizer.json: 100%|██████████| 1.27M/1.27M [00:00&lt;00:00, 2.12MB/s]
+Xformers is not installed correctly. If you want to use memory_efficient_attention to accelerate training use the following command to install Xformers
+pip install xformers.
+</div><div class="jp-OutputArea-output">[{&#x27;generated_text&#x27;: &quot;Hello! I am a neural network, and I want to say that i apologize for not coming to you yourself, for not helping you, and that i was too busy getting dressed and studying for a midterm. you know, the kind where the teachers are like that and they come in pairs with their boyfriends, but not with theirs. it&#x27;s true, that i have had a girlfriend, and i&#x27;m only going on wednesdays and thursdays because i was too busy with college, but maybe&quot;},
+ {&#x27;generated_text&#x27;: &#x27;Hello! I am a neural network, and I want to say that we have been blessed with a wonderful gift ; no one of us has died at all. and our spirits are strong, very strong. in one very lucky moment of luck for you, all has been given direction and destiny, and for us there are no more mysteries. the earth has been chosen for you, and that earth is now ours, and you must be forever in our hearts. &quot; \n the words, as one,&#x27;},
+ {&#x27;generated_text&#x27;: &#x27;Hello! I am a neural network, and I want to say that if you would just turn and face the general, you would have a nice day. &quot; \n &quot; sure thing, &quot; said one of the soldiers, and started to run. the rest of the soldiers followed, shouting. the general turned to general zulu, raising his arm. the general said something in his native language, and the general immediately started to run. zulu started to move toward the wall, with the&#x27;},
+ {&#x27;generated_text&#x27;: &#x27;Hello! I am a neural network, and I want to say that i am not a doctor but an anthropologist to you, a specialist, a specialist in the field of astrobiological biology, and that i am very much involved in this investigation. i am not sure, i am not certain, but i can confirm your conclusions and therefore i will go to the top. i have a colleague who has just returned from this expedition and his findings confirm that you are a specialist. that is, he&#x27;},
+ {&#x27;generated_text&#x27;: &quot;Hello! I am a neural network, and I want to say that everyone here is in agreement that no matter how many times i say to myself,&#x27;he was never a man of action on the battlefield,&#x27;or&#x27;he &#x27;ll never take a chance at killing any civilians,&#x27;or&#x27;he &#x27;ll never let his men go undefended against enemy forces of this caliber,&#x27;or&#x27;that&#x27;s just what i need in a day like today. \n you see, there are only three groups that&quot;}]</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>提示工程</h2>
+<p>在某些问题中，你可以通过设计正确的提示直接使用 openai-gpt 生成内容。请看以下示例：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>generator(&quot;Synonyms of a word cat:&quot;, max_length=20, num_return_sequences=5)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[{&#x27;generated_text&#x27;: &#x27;Synonyms of a word cat: the same cat i used to stare at, and you in&#x27;},
+ {&#x27;generated_text&#x27;: &#x27;Synonyms of a word cat: cat of the woods, cat of the hills, cat of&#x27;},
+ {&#x27;generated_text&#x27;: &#x27;Synonyms of a word cat: you! \n &quot; it\&#x27;s a girl. &quot; i said&#x27;},
+ {&#x27;generated_text&#x27;: &quot;Synonyms of a word cat: big cat. but how come, we didn&#x27;t hear it&quot;},
+ {&#x27;generated_text&#x27;: &#x27;Synonyms of a word cat: &quot; mea - o - c &quot; which makes them sound&#x27;}]</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>generator(&quot;I love when you say this -&gt; Positive\nI have myself -&gt; Negative\nThis is awful for you to say this -&gt;&quot;, max_length=40, num_return_sequences=5)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[{&#x27;generated_text&#x27;: &#x27;I love when you say this -&gt; Positive\nI have myself -&gt; Negative\nThis is awful for you to say this -&gt; positive this is so horrible - &gt; positive that your brother is gay - &gt;&#x27;},
+ {&#x27;generated_text&#x27;: &#x27;I love when you say this -&gt; Positive\nI have myself -&gt; Negative\nThis is awful for you to say this -&gt; negative i will bring this on you -, &lt; positive am i, i&#x27;},
+ {&#x27;generated_text&#x27;: &#x27;I love when you say this -&gt; Positive\nI have myself -&gt; Negative\nThis is awful for you to say this -&gt; negative i have self - esteem i must take it - : \n - -&#x27;},
+ {&#x27;generated_text&#x27;: &#x27;I love when you say this -&gt; Positive\nI have myself -&gt; Negative\nThis is awful for you to say this -&gt; negative this is - : \n if it were true that the devil would have&#x27;},
+ {&#x27;generated_text&#x27;: &quot;I love when you say this -&gt; Positive\nI have myself -&gt; Negative\nThis is awful for you to say this -&gt; positive i have you - &gt; positive it&#x27;s a bad thing, &gt; positive&quot;}]</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>generator(&quot;Translate English to French: cat =&gt; chat, dog =&gt; chien, student =&gt; &quot;, top_k=50, max_length=30, num_return_sequences=3)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[{&#x27;generated_text&#x27;: &#x27;Translate English to French: cat =&gt; chat, dog =&gt; chien, student =&gt;  new and unusual. there were no more words to be&#x27;},
+ {&#x27;generated_text&#x27;: &#x27;Translate English to French: cat =&gt; chat, dog =&gt; chien, student =&gt;  student \n his eyes were huge in his lean face as&#x27;},
+ {&#x27;generated_text&#x27;: &quot;Translate English to French: cat =&gt; chat, dog =&gt; chien, student =&gt;  the teacher&#x27;s words, their words, their words.&quot;}]</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>generator(&quot;People who liked the movie The Matrix also liked &quot;, max_length=40, num_return_sequences=5)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[{&#x27;generated_text&#x27;: &#x27;People who liked the movie The Matrix also liked  it, and there was the movie of the first man after us. \n i wanted to laugh at how stupid these stupid actors were. no, they were&#x27;},
+ {&#x27;generated_text&#x27;: &quot;People who liked the movie The Matrix also liked  the movie, and the film was the result. and that&#x27;s when the man in the story was brought into reality, after a few decades. \n a&quot;},
+ {&#x27;generated_text&#x27;: &#x27;People who liked the movie The Matrix also liked  the movie the matrix, because there was a very old movie movie called the matrix, where there was a great super hero, and the super hero came out&#x27;},
+ {&#x27;generated_text&#x27;: &quot;People who liked the movie The Matrix also liked  the movie that didn&#x27;t have a chance to pay cash, if they could afford it. most often they got a good deal and a lot of money,&quot;},
+ {&#x27;generated_text&#x27;: &quot;People who liked the movie The Matrix also liked  the movie, and i didn&#x27;t seem to have the same problem. \n i &#x27;d met the other half of my family. i spent most of my time&quot;}]</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>文本采样策略</h2>
+<p>到目前为止，我们一直在使用简单的<strong>贪婪</strong>采样策略，即根据最高概率选择下一个词。其工作原理如下：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>prompt = &quot;It was early evening when I can back from work. I usually work late, but this time it was an exception. When I entered a room, I saw&quot;
+generator(prompt,max_length=100,num_return_sequences=5)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[{&#x27;generated_text&#x27;: &#x27;It was early evening when I can back from work. I usually work late, but this time it was an exception. When I entered a room, I saw my friend, a young man, sprawled across the bed in his bed. \n &quot; hi, i\&#x27;m mike eptirard. &quot; \n there was silence on the other side of the door. i listened for any trace of life but there was nothing. my heart began to pound, i was starting to sweat, i took out my wallet&#x27;},
+ {&#x27;generated_text&#x27;: &#x27;It was early evening when I can back from work. I usually work late, but this time it was an exception. When I entered a room, I saw my mother on the bed, hugging her legs to her chest and sobbing. i saw my dad and mother from the corner of my eye. \n elfin face was covered in tears as i entered the room. my dad and mother also wept ; just as they did every other time i came to work. but this time, they had different faces&#x27;},
+ {&#x27;generated_text&#x27;: &#x27;It was early evening when I can back from work. I usually work late, but this time it was an exception. When I entered a room, I saw the room had changed because it was dark. it still smelled like a hospital. a new light shined through from a vent in the ceiling. i found myself in a bathroom and a small room with a sink and a wall of glass. the bathroom billion years ago. not so different from all of the rest of the apartment. \n now...&#x27;},
+ {&#x27;generated_text&#x27;: &#x27;It was early evening when I can back from work. I usually work late, but this time it was an exception. When I entered a room, I saw a large woman with dark hair and pale skin. she was asleep, but i noticed a faint movement of her face. i could sense she was awake. i got up and walked over to her. \n &quot; hello miss. i am inspector michael o\&#x27;dell ; we are investigating the case against you. i wanted to ask if you were the&#x27;},
+ {&#x27;generated_text&#x27;: &#x27;It was early evening when I can back from work. I usually work late, but this time it was an exception. When I entered a room, I saw i had an empty table and three empty chairs. that was all i needed. i had left a note on a table in the center of the room and had a pen in hand. &quot; \n &quot; i think what you were doing was something he was doing to her. &quot; \n &quot; yeah, &quot; i nodded with a grin. &quot; i&#x27;}]</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p><strong>束搜索</strong>允许生成器探索多个文本生成方向（*束*），并选择总体得分较高的方向。您可以通过提供<code>num_beams</code>参数来进行束搜索。您还可以指定<code>no_repeat_ngram_size</code>参数，以惩罚模型重复给定大小的n-gram：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>prompt = &quot;It was early evening when I can back from work. I usually work late, but this time it was an exception. When I entered a room, I saw&quot;
+generator(prompt,max_length=100,num_return_sequences=5,num_beams=10,no_repeat_ngram_size=2)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[{&#x27;generated_text&#x27;: &#x27;It was early evening when I can back from work. I usually work late, but this time it was an exception. When I entered a room, I saw a man sitting in a chair with his head in his hands. he didn\&#x27;t look up as i approached. \n &quot; excuse me, sir, &quot; i said. &quot; can i help you? &quot; \n the man looked up at me. his eyes were red - rimmed and his face was pale, as if he hadn\&#x27;t slept in days&#x27;},
+ {&#x27;generated_text&#x27;: &#x27;It was early evening when I can back from work. I usually work late, but this time it was an exception. When I entered a room, I saw a man sitting at a desk in the middle of the room. he had his back to me, so i couldn\&#x27;t see what he was doing. &quot; \n &quot; what did he look like? &quot; i asked as i sat down on the bed next to her. \n she took a deep breath and looked at me with tears in her eyes&#x27;},
+ {&#x27;generated_text&#x27;: &#x27;It was early evening when I can back from work. I usually work late, but this time it was an exception. When I entered a room, I saw a woman sitting on the bed, reading a book. she looked up at me and smiled. \n &quot; hi, &quot; she said. &quot; can i help you? &quot; \n i sat down next to her and looked around the room. the walls were white, and there was a large window in the middle of the wall that looked out on&#x27;},
+ {&#x27;generated_text&#x27;: &#x27;It was early evening when I can back from work. I usually work late, but this time it was an exception. When I entered a room, I saw a man sitting at a table in the middle of the room. he looked up as i walked in, and when he saw me, he got up and walked over to me. \n &quot; can i help you? &quot; he asked as he put his hand on the small of my back and led me to a chair at the other end of&#x27;},
+ {&#x27;generated_text&#x27;: &#x27;It was early evening when I can back from work. I usually work late, but this time it was an exception. When I entered a room, I saw a woman sitting on the edge of her bed, reading a book. she looked up at me and smiled. \n &quot; hello, &quot; she said. &quot; can i help you? &quot; \n i didn\&#x27;t know what to say, so i just sat down in the chair next to the bed and looked at her. her hair was dark brown&#x27;}]</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p><strong>采样</strong>使用模型返回的概率分布以非确定性方式选择下一个词。您可以通过参数<code>do_sample=True</code>启用采样。您还可以指定<code>temperature</code>，以使模型变得更或更少确定性。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>prompt = &quot;It was early evening when I can back from work. I usually work late, but this time it was an exception. When I entered a room, I saw&quot;
+generator(prompt,max_length=100,do_sample=True,temperature=0.8)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[{&#x27;generated_text&#x27;: &#x27;It was early evening when I can back from work. I usually work late, but this time it was an exception. When I entered a room, I saw her. she was on the bed, but she looked very different. \n &quot; honey, what\&#x27;s the matter? &quot; i asked. \n she sat up. &quot; i can\&#x27;t believe it\&#x27;s real. i\&#x27;ve been dreaming about you for the last two days. &quot; \n &quot; i can\&#x27;t believe it either. i guess that\&#x27;s how&#x27;}]</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们还可以为采样提供额外的参数：</p>
+<ul>
+<li>`top_k` 指定在使用采样时需要考虑的单词选项数量。这可以减少在文本中出现奇怪（低概率）单词的可能性。</li>
+<li>`top_p` 类似，但我们选择的是总概率大于 p 的最小高概率单词子集。</li>
+</ul>
+<p>可以随意尝试添加这些参数进行实验。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>微调您的模型</h2>
+<p>您还可以使用自己的数据集<a href="https://learn.microsoft.com/en-us/azure/cognitive-services/openai/how-to/fine-tuning?pivots=programming-language-studio?WT.mc_id=academic-77998-bethanycheum">微调您的模型</a>。这样可以在保留语言模型主要部分的同时，调整文本的风格。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务<a href="https://github.com/Azure/co-op-translator">Co-op Translator</a>进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。应以原始语言的文档作为权威来源。对于关键信息，建议使用专业人工翻译。我们不对因使用此翻译而产生的任何误解或误读承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

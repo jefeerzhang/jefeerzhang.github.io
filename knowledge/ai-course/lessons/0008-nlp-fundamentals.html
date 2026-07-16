@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第 8 课：NLP 基础与文本表示</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <div class="lesson-container">
+    <div class="nav">
+      <a href="0007-transfer-learning.html">← 上一课</a>
+      <span class="breadcrumb">📍 Phase 3 · NLP 进阶</span>
+      <a href="0009-rnn-sequence-modeling.html">下一课：RNN 与序列建模 →</a>
+    </div>
+    <div class="progress-bar">
+      <div class="step done"></div><div class="step done"></div><div class="step done"></div>
+      <div class="step done"></div><div class="step done"></div><div class="step done"></div>
+      <div class="step done"></div><div class="step current"></div><div class="step"></div>
+      <div class="step"></div><div class="step"></div><div class="step"></div>
+    </div>
+
+    <h1>第 8 课：NLP 基础与文本表示</h1>
+    <p class="meta">预计 40 分钟 · 目标：理解文本如何变成数字，掌握从词袋到词嵌入的演进</p>
+
+    <div class="callout">
+      <strong>本课目标：</strong> 了解 NLP 的主要任务类型；掌握文本预处理流程；理解从 One-Hot 到词袋到 TF-IDF 到词嵌入的演进脉络；能运行 scikit-learn 做文本向量化。
+    </div>
+
+    <h2>1. NLP 的主要任务</h2>
+    <table>
+      <tr><th>任务</th><th>输入 → 输出</th><th>例子</th></tr>
+      <tr><td>文本分类</td><td>文本 → 类别</td><td>垃圾邮件检测、情感分析</td></tr>
+      <tr><td>命名实体识别（NER）</td><td>文本 → 标注序列</td><td>"北京"→地点、"张三"→人名</td></tr>
+      <tr><td>机器翻译</td><td>源语言 → 目标语言</td><td>中译英</td></tr>
+      <tr><td>文本生成</td><td>提示 → 文本</td><td>GPT 写文章</td></tr>
+      <tr><td>问答系统</td><td>问题+文档 → 答案</td><td>搜索引擎、RAG</td></tr>
+    </table>
+
+    <h2>2. 文本预处理</h2>
+    <div class="code-block"><span class="comment"># 中文文本预处理基本流程</span>
+原文 → 分词 → 去停用词 → 向量化
+
+<span class="comment"># 英文："I love cats" → ["I", "love", "cats"]</span>
+<span class="comment"># 中文："我喜欢猫" → ["我", "喜欢", "猫"]（需要分词工具如 jieba）</span></div>
+
+    <h2>3. 文本表示方法演进</h2>
+
+    <h3>3.1 One-Hot（独热编码）</h3>
+    <p>每个词是一个很长的向量，只有对应位置是 1。缺点：维度高、无法表达词与词的关系。</p>
+
+    <h3>3.2 词袋模型（BOW）</h3>
+    <p>用词的频率表示文档，忽略词序。<strong>只关心"出现了多少次"，不关心"出现在哪里"。</strong></p>
+    <div class="code-title"><span>bow_example.py</span><span class="lang-badge">Python</span></div>
+    <div class="code-block"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> CountVectorizer
+
+corpus = [<span class="string">"我喜欢猫"</span>, <span class="string">"我喜欢狗"</span>, <span class="string">"猫和狗都可爱"</span>]
+vectorizer = CountVectorizer()
+X = vectorizer.fit_transform(corpus)
+
+print(vectorizer.get_feature_names_out())  <span class="comment"># 词汇表</span>
+print(X.toarray())  <span class="comment"># 每行是一个文档的词频向量</span></div>
+
+    <h3>3.3 TF-IDF</h3>
+    <p>TF-IDF 在词频基础上加权：<strong>一个词在当前文档出现多，但在所有文档中很少见，则权重高</strong>。能突出有区分力的词。</p>
+    <div class="code-block"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> TfidfVectorizer
+
+tfidf = TfidfVectorizer()
+X = tfidf.fit_transform(corpus)
+<span class="comment"># TF-IDF 值越高，说明该词对当前文档越重要</span></div>
+
+    <h2>4. 词嵌入：让语义有距离</h2>
+    <p>词嵌入把每个词映射为<strong>低维稠密向量</strong>（如 100-300 维），语义相近的词在向量空间中距离近。</p>
+    <ul>
+      <li><strong>Word2Vec：</strong> 核心思想"一个词的意思由它周围的词决定"。</li>
+      <li><strong>GloVe：</strong> 基于全局词共现矩阵的嵌入方法。</li>
+    </ul>
+    <p>经典例子：<code>国王 - 男人 + 女人 ≈ 女王</code>，说明词向量编码了语义关系。</p>
+
+    <div class="callout tip">
+      <strong>💡 词袋 vs 词嵌入：</strong> 词袋是"稀疏的高维向量"（维度=词汇表大小，大部分为0）；词嵌入是"稠密的低维向量"（维度通常100-300，每个维度都有值）。词嵌入能捕捉语义相似性，词袋不能。
+    </div>
+
+    <div class="notebook-link">
+      <span class="icon">📓</span>
+      <div>
+        <strong>配套 Notebook：</strong>
+        <a href="../notebooks/5-NLP/13-TextRep/TextRepresentationPyTorch.html" target="_blank">TextRepresentationPyTorch.ipynb</a> ·
+        <a href="../notebooks/5-NLP/14-Embeddings/EmbeddingsPyTorch.html" target="_blank">EmbeddingsPyTorch.ipynb</a>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-title">✍️ 动手练习：文本分类</div>
+      <p>1. 准备 20 条中文评论（10 条正面、10 条负面）。</p>
+      <p>2. 用 jieba 分词，用 TfidfVectorizer 向量化。</p>
+      <p>3. 用 scikit-learn 的 LogisticRegression 训练一个情感分类器，测试新句子的分类结果。</p>
+      <p>4. 思考：为什么"这部电影太好看了"和"这部电影太烂了"在词袋模型中可能只有一字之差？</p>
+    </div>
+
+    <h2>5. 快速自测</h2>
+    <p id="quiz-question">词袋模型（BOW）的主要缺点是什么？</p>
+    <button class="quiz-option" onclick="check(this, false)">A. 计算速度太慢，无法处理大规模文本。</button>
+    <button class="quiz-option" onclick="check(this, true)">B. 丢失词序信息，无法表达语义关系。</button>
+    <button class="quiz-option" onclick="check(this, false)">C. 只能处理英文，不能处理中文。</button>
+    <button class="quiz-option" onclick="check(this, false)">D. 生成的向量维度太低，信息不足。</button>
+    <div id="quiz-feedback" class="feedback hidden"></div>
+
+    <p id="quiz-question2">TF-IDF 相比简单词频（TF）的改进点是什么？</p>
+    <button class="quiz-option" onclick="check2(this, false)">A. 它能保留词序信息。</button>
+    <button class="quiz-option" onclick="check2(this, true)">B. 它降低在所有文档中都频繁出现的词的权重，突出有区分力的词。</button>
+    <button class="quiz-option" onclick="check2(this, false)">C. 它把文本变成低维稠密向量。</button>
+    <button class="quiz-option" onclick="check2(this, false)">D. 它自动完成分词和去停用词。</button>
+    <div id="quiz-feedback2" class="feedback hidden"></div>
+
+    <h2>6. 延伸阅读与参考</h2>
+    <ul>
+      <li><strong>Primary source:</strong> <a href="../AI-For-Beginners-zh-CN/lessons/5-NLP/13-TextRep/README.md" target="_blank">AI-For-Beginners：文本表示</a> · <a href="../AI-For-Beginners-zh-CN/lessons/5-NLP/14-Embeddings/README.md" target="_blank">词嵌入</a></li>
+      <li><a href="../reference/0001-glossary.html" target="_blank">术语表：NLP、词嵌入、TF-IDF</a></li>
+      <li>《动手学深度学习》<a href="https://zh.d2l.ai/" target="_blank">NLP 章节</a></li>
+    </ul>
+
+    <div class="footer">
+      <p>下一课：<a href="0009-rnn-sequence-modeling.html">RNN 与序列建模</a></p>
+    </div>
+  </div>
+
+  <script>
+    function check(btn, isCorrect) {
+      const opts = btn.parentElement.querySelectorAll(':scope > .quiz-option');
+      opts.forEach(o => { o.classList.remove('correct', 'wrong'); o.disabled = true; });
+      btn.classList.add(isCorrect ? 'correct' : 'wrong');
+      const fb = document.getElementById('quiz-feedback');
+      fb.classList.remove('hidden');
+      fb.style.background = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+      fb.innerHTML = isCorrect
+        ? '✅ 正确。词袋模型只记录词频，完全丢失了词序和语义关系。'
+        : '❌ 不正确。词袋模型的根本缺陷是丢失词序和语义信息。';
+    }
+    function check2(btn, isCorrect) {
+      const opts = btn.parentElement.querySelectorAll(':scope > .quiz-option');
+      opts.forEach(o => { o.classList.remove('correct', 'wrong'); o.disabled = true; });
+      btn.classList.add(isCorrect ? 'correct' : 'wrong');
+      const fb = document.getElementById('quiz-feedback2');
+      fb.classList.remove('hidden');
+      fb.style.background = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+      fb.innerHTML = isCorrect
+        ? '✅ 正确。IDF 部分降低了在所有文档中都常见的词（如"的""是"）的权重，突出有区分力的词。'
+        : '❌ 不正确。TF-IDF 仍然不保留词序，也不做分词。它的改进是用 IDF 加权。';
+    }
+  </script>
+</body>
+</html>

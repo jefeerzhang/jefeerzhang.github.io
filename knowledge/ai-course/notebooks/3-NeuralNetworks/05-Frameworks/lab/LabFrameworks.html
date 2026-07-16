@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LabFrameworks</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 LabFrameworks</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h1>使用 PyTorch/TensorFlow 进行分类</h1>
+<p>来自 <a href="https://github.com/microsoft/ai-for-beginners">AI for Beginners Curriculum</a> 的实验任务。</p>
+<h2>第一部分：鸢尾花分类</h2>
+<p>鸢尾花数据集包含 150 条记录，分为 3 种不同类别的鸢尾花。每条记录包含 4 个数值参数：萼片长度/宽度和花瓣长度/宽度。这是一个简单的数据集示例，不需要使用强大的神经网络。</p>
+<h3>获取数据集</h3>
+<p>鸢尾花数据集内置于 Scikit Learn，因此我们可以轻松获取：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+
+iris = load_iris()
+features = iris[&#x27;data&#x27;]
+labels = iris[&#x27;target&#x27;]
+class_names = iris[&#x27;target_names&#x27;]
+feature_names = iris[&#x27;feature_names&#x27;]
+
+print(f&quot;Features: {feature_names}, Classes: {class_names}&quot;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Features: [&#x27;sepal length (cm)&#x27;, &#x27;sepal width (cm)&#x27;, &#x27;petal length (cm)&#x27;, &#x27;petal width (cm)&#x27;], Classes: [&#x27;setosa&#x27; &#x27;versicolor&#x27; &#x27;virginica&#x27;]
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>可视化数据</h3>
+<p>在许多情况下，可视化数据是有意义的，这样可以查看数据是否看起来是可分的——这能让我们确信可以构建一个良好的分类模型。由于我们有少量的特征，可以构建一系列成对的二维散点图，用不同的点颜色表示不同的类别。这可以通过一个名为 <strong>seaborn</strong> 的包自动完成：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import seaborn as sns
+import pandas as pd
+
+df = pd.DataFrame(features,columns=feature_names).join(pd.DataFrame(labels,columns=[&#x27;Label&#x27;]))
+
+df</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">     sepal length (cm)  sepal width (cm)  petal length (cm)  petal width (cm)  \
+0                  5.1               3.5                1.4               0.2   
+1                  4.9               3.0                1.4               0.2   
+2                  4.7               3.2                1.3               0.2   
+3                  4.6               3.1                1.5               0.2   
+4                  5.0               3.6                1.4               0.2   
+..                 ...               ...                ...               ...   
+145                6.7               3.0                5.2               2.3   
+146                6.3               2.5                5.0               1.9   
+147                6.5               3.0                5.2               2.0   
+148                6.2               3.4                5.4               2.3   
+149                5.9               3.0                5.1               1.8   
+
+     Label  
+0        0  
+1        0  
+2        0  
+3        0  
+4        0  
+..     ...  
+145      2  
+146      2  
+147      2  
+148      2  
+149      2  
+
+[150 rows x 5 columns]</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>sns.pairplot(df,hue=&#x27;Label&#x27;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;seaborn.axisgrid.PairGrid at 0x14f4f772f70&gt;</div><div class="jp-OutputArea-output">&lt;Figure size 762.375x720 with 20 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>规范化和编码数据</h3>
+<p>为了准备数据用于神经网络训练，我们需要将输入规范化到 <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.normalize.html">0..1] 的范围内。这可以通过简单的 <code>numpy</code> 操作完成，也可以使用 [Scikit Learn 方法</a>。</p>
+<p>此外，你需要决定是否将目标标签进行独热编码（one-hot encoding）。PyTorch 和 TensorFlow 允许你以两种方式提供类别编号：可以是整数形式（从 0 到 N-1），也可以是独热编码向量。在创建神经网络结构时，你需要根据输入格式指定相应的损失函数（例如，数字表示使用 *sparse categorical crossentropy*，独热编码使用 *crossentropy loss*）。独热编码也可以通过 <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html">Sklearn 实现</a>，或者使用以下代码片段：</p>
+<pre><code>
+n_values = np.max(labels) + 1
+labels_onehot = np.eye(n_values)[labels]
+</code></pre></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># Code to normalize and encode the data</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>将数据分为训练集和测试集</h3>
+<p>由于我们没有单独的训练集和测试集，因此需要将数据拆分为训练集和测试集 <a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html">使用 Sklearn</a></p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># Split the data</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>定义和训练神经网络</h3>
+<p>现在你已经准备好了，导入你喜欢的框架，定义神经网络并开始训练，同时观察训练和验证准确率的变化情况。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># Define the network</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># Train the network</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># Visualize train/validation accuracy graph</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>实验</h3>
+<p>现在你可以尝试不同的网络结构，看看它如何影响结果。试试以下几种方法：</p>
+<p>1. 一个包含3个神经元（等于类别数）的单层网络</p>
+<p>1. 一个包含小/中/大隐藏层的两层网络</p>
+<p>1. 使用更多层的网络</p>
+<p>当你使用包含大量神经元（参数）的复杂模型时，一定要注意观察过拟合现象。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># Experiment</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>第2部分：MNIST训练</h2>
+<p>Keras和PyTorch都将MNIST作为内置数据集，因此你可以通过几行代码轻松获取它（<a href="https://keras.io/api/datasets/mnist/">Keras</a>，<a href="https://pytorch.org/vision/stable/datasets.html">PyTorch</a>）。你还可以直接加载训练集和测试集，而无需手动拆分它们。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># Load the dataset</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在，您需要执行上述步骤，以确保数据集已标准化（它可能已经标准化），并定义和训练一个神经网络。</p>
+<h2>重点</h2>
+<p>1. 神经网络可以用于传统的机器学习任务。然而，在许多情况下，它们过于强大，可能会导致过拟合。</p>
+<p>1. 在本次作业中，观察过拟合现象并尝试避免它是非常重要的。</p>
+<p>1. 使用像 Keras 这样的框架，有时训练神经网络相对简单。但您需要理解其中的原理。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务<a href="https://github.com/Azure/co-op-translator">Co-op Translator</a>进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。应以原始语言的文档作为权威来源。对于关键信息，建议使用专业人工翻译。我们对因使用本翻译而引起的任何误解或误读不承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

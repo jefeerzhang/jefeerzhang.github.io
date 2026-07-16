@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TransformersTF</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 TransformersTF</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h1>注意力机制与Transformer</h1>
+<p>循环网络的一个主要缺点是序列中的所有单词对结果的影响相同。这会导致标准的LSTM编码器-解码器模型在处理序列到序列任务（如命名实体识别和机器翻译）时表现不佳。实际上，输入序列中的某些特定单词对输出序列的影响往往比其他单词更大。</p>
+<p>以序列到序列模型为例，比如机器翻译。它通过两个循环网络实现，其中一个网络（<strong>编码器</strong>）将输入序列压缩成隐藏状态，另一个网络（<strong>解码器</strong>）将隐藏状态展开成翻译结果。这种方法的问题在于，网络的最终状态很难记住句子的开头部分，从而导致模型在处理长句子时质量较差。</p>
+<p><strong>注意力机制</strong>提供了一种方法，可以对每个输入向量对RNN输出预测的上下文影响进行加权。它的实现方式是通过在输入RNN的中间状态和输出RNN之间创建快捷路径。这样，在生成输出符号$y_t$时，我们会考虑所有输入隐藏状态$h_i$，并赋予不同的权重系数$\alpha_{t,i}$。</p>
+<p>!<a href="../../../../../lessons/5-NLP/18-Transformers/images/encoder-decoder-attention.png">显示带有加性注意力层的编码器/解码器模型的图像</a></p>
+<p>*<a href="https://arxiv.org/pdf/1409.0473.pdf">Bahdanau等人，2015</a>中的编码器-解码器模型，图片引用自<a href="https://lilianweng.github.io/lil-log/2018/06/24/attention-attention.html">这篇博客</a>*</p>
+<p>注意力矩阵$\{\alpha_{i,j}\}$表示某些输入单词在生成输出序列中某个单词时的影响程度。下面是一个这样的矩阵示例：</p>
+<p>!<a href="../../../../../lessons/5-NLP/18-Transformers/images/bahdanau-fig3.png">显示RNNsearch-50找到的样本对齐的图像，取自Bahdanau - arviz.org</a></p>
+<p>*图片取自<a href="https://arxiv.org/pdf/1409.0473.pdf">Bahdanau等人，2015</a>（图3）*</p>
+<p>注意力机制是当前或接近当前自然语言处理领域的先进技术的核心。然而，添加注意力机制会显著增加模型参数的数量，这导致了循环网络的扩展问题。循环网络扩展的一个关键限制是模型的循环特性使得批量处理和训练并行化变得困难。在循环网络中，序列的每个元素都需要按顺序处理，这意味着它无法轻松并行化。</p>
+<p>注意力机制的采用结合这一限制，促成了如今我们所熟知和使用的先进Transformer模型的诞生，从BERT到OpenGPT3。</p>
+<h2>Transformer模型</h2>
+<p>与将每次预测的上下文传递到下一步评估不同，<strong>Transformer模型</strong>使用<strong>位置编码</strong>和<strong>注意力机制</strong>来捕获给定输入在提供的文本窗口中的上下文。下图展示了位置编码与注意力机制如何在给定窗口中捕获上下文。</p>
+<p>!<a href="../../../../../lessons/5-NLP/18-Transformers/images/transformer-animated-explanation.gif">显示Transformer模型中如何进行评估的动画GIF</a></p>
+<p>由于每个输入位置可以独立映射到每个输出位置，Transformer比循环网络更容易并行化，这使得构建更大、更具表现力的语言模型成为可能。每个注意力头可以用来学习单词之间的不同关系，从而提升下游自然语言处理任务的效果。</p>
+<h2>构建简单的Transformer模型</h2>
+<p>Keras中没有内置的Transformer层，但我们可以自己构建。和之前一样，我们将专注于AG News数据集的文本分类，但值得一提的是，Transformer模型在更复杂的自然语言处理任务中表现最佳。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import tensorflow as tf
+from tensorflow import keras
+import tensorflow_datasets as tfds
+import numpy as np
+
+ds_train, ds_test = tfds.load(&#x27;ag_news_subset&#x27;).values()
+
+def extract_text(x):
+    return x[&#x27;title&#x27;]+&#x27; &#x27;+x[&#x27;description&#x27;]
+
+def tupelize(x):
+    return (extract_text(x),x[&#x27;label&#x27;])</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>在 Keras 中，新层应继承 <code>Layer</code> 类，并实现 <code>call</code> 方法。让我们从 <strong>位置嵌入</strong> 层开始。我们将使用<a href="https://keras.io/examples/nlp/text_classification_with_transformer/">官方 Keras 文档中的一些代码</a>。我们将假设我们将所有输入序列填充到长度 <code>maxlen</code>。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>class TokenAndPositionEmbedding(keras.layers.Layer):
+    def __init__(self, maxlen, vocab_size, embed_dim):
+        super(TokenAndPositionEmbedding, self).__init__()
+        self.token_emb = keras.layers.Embedding(input_dim=vocab_size, output_dim=embed_dim)
+        self.pos_emb = keras.layers.Embedding(input_dim=maxlen, output_dim=embed_dim)
+        self.maxlen = maxlen
+
+    def call(self, x):
+        maxlen = self.maxlen
+        positions = tf.range(start=0, limit=maxlen, delta=1)
+        positions = self.pos_emb(positions)
+        x = self.token_emb(x)
+        return x+positions</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>这一层由两个<code>Embedding</code>层组成：一个用于嵌入标记（以我们之前讨论的方式），另一个用于嵌入标记位置。标记位置是通过使用<code>tf.range</code>从0到<code>maxlen</code>生成的一系列自然数创建的，然后通过嵌入层处理。两个生成的嵌入向量随后相加，生成输入的基于位置嵌入的表示，其形状为<code>maxlen</code>$\times$<code>embed_dim</code>。</p>
+<p>现在，让我们实现Transformer块。它将接收之前定义的嵌入层的输出：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>class TransformerBlock(keras.layers.Layer):
+    def __init__(self, embed_dim, num_heads, ff_dim, rate=0.1):
+        super(TransformerBlock, self).__init__()
+        self.att = keras.layers.MultiHeadAttention(num_heads=num_heads, key_dim=embed_dim, name=&#x27;attn&#x27;)
+        self.ffn = keras.Sequential(
+            [keras.layers.Dense(ff_dim, activation=&quot;relu&quot;), keras.layers.Dense(embed_dim),]
+        )
+        self.layernorm1 = keras.layers.LayerNormalization(epsilon=1e-6)
+        self.layernorm2 = keras.layers.LayerNormalization(epsilon=1e-6)
+        self.dropout1 = keras.layers.Dropout(rate)
+        self.dropout2 = keras.layers.Dropout(rate)
+
+    def call(self, inputs, training):
+        attn_output = self.att(inputs, inputs)
+        attn_output = self.dropout1(attn_output, training=training)
+        out1 = self.layernorm1(inputs + attn_output)
+        ffn_output = self.ffn(out1)
+        ffn_output = self.dropout2(ffn_output, training=training)
+        return self.layernorm2(out1 + ffn_output)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在，我们已经准备好定义完整的 Transformer 模型：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>embed_dim = 32  # Embedding size for each token
+num_heads = 2  # Number of attention heads
+ff_dim = 32  # Hidden layer size in feed forward network inside transformer
+maxlen = 256
+vocab_size = 20000
+
+model = keras.models.Sequential([
+    keras.layers.experimental.preprocessing.TextVectorization(max_tokens=vocab_size,output_sequence_length=maxlen, input_shape=(1,)),
+    TokenAndPositionEmbedding(maxlen, vocab_size, embed_dim),
+    TransformerBlock(embed_dim, num_heads, ff_dim),
+    keras.layers.GlobalAveragePooling1D(),
+    keras.layers.Dropout(0.1),
+    keras.layers.Dense(20, activation=&quot;relu&quot;),
+    keras.layers.Dropout(0.1),
+    keras.layers.Dense(4, activation=&quot;softmax&quot;)
+])
+
+model.summary()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;sequential_1&quot;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+text_vectorization (TextVect (None, 256)               0         
+_________________________________________________________________
+token_and_position_embedding (None, 256, 32)           648192    
+_________________________________________________________________
+transformer_block (Transform (None, 256, 32)           10656     
+_________________________________________________________________
+global_average_pooling1d (Gl (None, 32)                0         
+_________________________________________________________________
+dropout_2 (Dropout)          (None, 32)                0         
+_________________________________________________________________
+dense_2 (Dense)              (None, 20)                660       
+_________________________________________________________________
+dropout_3 (Dropout)          (None, 20)                0         
+_________________________________________________________________
+dense_3 (Dense)              (None, 4)                 84        
+=================================================================
+Total params: 659,592
+Trainable params: 659,592
+Non-trainable params: 0
+_________________________________________________________________
+</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>print(&#x27;Training tokenizer&#x27;)
+model.layers[0].adapt(ds_train.map(extract_text))
+model.compile(loss=&#x27;sparse_categorical_crossentropy&#x27;,metrics=[&#x27;acc&#x27;], optimizer=&#x27;adam&#x27;)
+model.fit(ds_train.map(tupelize).batch(128),validation_data=ds_test.map(tupelize).batch(128))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Training tokenizer
+938/938 [==============================] - 45s 39ms/step - loss: 0.4978 - acc: 0.8068 - val_loss: 0.2808 - val_acc: 0.9124
+</div><div class="jp-OutputArea-output">&lt;tensorflow.python.keras.callbacks.History at 0x7f9c2427a0d0&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>BERT Transformer 模型</h2>
+<p><strong>BERT</strong>（双向编码器表示的变换器）是一个非常大的多层变换器网络，*BERT-base* 有 12 层，*BERT-large* 有 24 层。该模型首先在大规模文本数据（维基百科 + 书籍）上进行无监督训练（预测句子中被遮盖的单词）。在预训练过程中，模型吸收了大量的语言理解能力，随后可以通过微调与其他数据集结合使用。这一过程被称为 <strong>迁移学习</strong>。</p>
+<p>!<a href="../../../../../lessons/5-NLP/18-Transformers/images/jalammarBERT-language-modeling-masked-lm.png">图片来源于 http://jalammar.github.io/illustrated-bert/</a></p>
+<p>变换器架构有许多变体，包括 BERT、DistilBERT、BigBird、OpenGPT3 等，这些都可以进行微调。</p>
+<p>接下来，我们来看如何使用预训练的 BERT 模型来解决传统的序列分类问题。我们将借用 <a href="https://www.tensorflow.org/text/tutorials/classify_text_with_bert">官方文档</a> 中的一些思路和代码。</p>
+<p>为了加载预训练模型，我们将使用 <strong>Tensorflow hub</strong>。首先，让我们加载 BERT 专用的向量化工具：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import tensorflow_text 
+import tensorflow_hub as hub
+vectorizer = hub.KerasLayer(&#x27;https://tfhub.dev/tensorflow/bert_en_uncased_preprocess/3&#x27;)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>vectorizer([&#x27;I love transformers&#x27;])</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">{&#x27;input_type_ids&#x27;: &lt;tf.Tensor: shape=(1, 128), dtype=int32, numpy=
+ array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+       dtype=int32)&gt;,
+ &#x27;input_word_ids&#x27;: &lt;tf.Tensor: shape=(1, 128), dtype=int32, numpy=
+ array([[  101,  1045,  2293, 19081,   102,     0,     0,     0,     0,
+             0,     0,     0,     0,     0,     0,     0,     0,     0,
+             0,     0,     0,     0,     0,     0,     0,     0,     0,
+             0,     0,     0,     0,     0,     0,     0,     0,     0,
+             0,     0,     0,     0,     0,     0,     0,     0,     0,
+             0,     0,     0,     0,     0,     0,     0,     0,     0,
+             0,     0,     0,     0,     0,     0,     0,     0,     0,
+             0,     0,     0,     0,     0,     0,     0,     0,     0,
+             0,     0,     0,     0,     0,     0,     0,     0,     0,
+             0,     0,     0,     0,     0,     0,     0,     0,     0,
+             0,     0,     0,     0,     0,     0,     0,     0,     0,
+             0,     0,     0,     0,     0,     0,     0,     0,     0,
+             0,     0,     0,     0,     0,     0,     0,     0,     0,
+             0,     0,     0,     0,     0,     0,     0,     0,     0,
+             0,     0]], dtype=int32)&gt;,
+ &#x27;input_mask&#x27;: &lt;tf.Tensor: shape=(1, 128), dtype=int32, numpy=
+ array([[1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+       dtype=int32)&gt;}</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>使用与原始网络训练时相同的向量化工具是非常重要的。此外，BERT 向量化工具会返回三个组件：</p>
+<ul>
+<li>`input_word_ids`，这是输入句子的标记编号序列</li>
+<li>`input_mask`，用于显示序列中哪些部分是实际输入，哪些部分是填充。这与 `Masking` 层生成的掩码类似</li>
+<li>`input_type_ids`，用于语言建模任务，允许在一个序列中指定两个输入句子。</li>
+</ul>
+<p>然后，我们可以实例化 BERT 特征提取器：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>bert = hub.KerasLayer(&#x27;https://tfhub.dev/tensorflow/small_bert/bert_en_uncased_L-4_H-128_A-2/1&#x27;)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>z = bert(vectorizer([&#x27;I love transformers&#x27;]))
+for i,x in z.items():
+    print(f&quot;{i} -&gt; { len(x) if isinstance(x, list) else x.shape }&quot;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">pooled_output -&gt; (1, 128)
+encoder_outputs -&gt; 4
+sequence_output -&gt; (1, 128, 128)
+default -&gt; (1, 128)
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>因此，BERT 层会返回一些有用的结果：</p>
+<ul>
+<li>`pooled_output` 是通过对序列中所有标记进行平均得到的结果。你可以将其视为整个网络的智能语义嵌入。它等同于我们之前模型中 `GlobalAveragePooling1D` 层的输出。</li>
+<li>`sequence_output` 是最后一个 Transformer 层的输出（对应于我们上面模型中的 `TransformerBlock` 的输出）。</li>
+<li>`encoder_outputs` 是所有 Transformer 层的输出。由于我们加载了一个 4 层的 BERT 模型（你可能已经从名字中包含的 `4_H` 猜到了），它有 4 个张量。最后一个张量与 `sequence_output` 相同。</li>
+</ul>
+<p>现在我们将定义端到端的分类模型。我们将使用*函数式模型定义*，在定义模型输入后，通过一系列表达式计算其输出。我们还会将 BERT 模型的权重设置为不可训练，仅训练最终的分类器：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>inp = keras.Input(shape=(),dtype=tf.string)
+x = vectorizer(inp)
+x = bert(x)
+x = keras.layers.Dropout(0.1)(x[&#x27;pooled_output&#x27;])
+out = keras.layers.Dense(4,activation=&#x27;softmax&#x27;)(x)
+model = keras.models.Model(inp,out)
+bert.trainable = False
+model.summary()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;model&quot;
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to                     
+==================================================================================================
+input_1 (InputLayer)            [(None,)]            0                                            
+__________________________________________________________________________________________________
+keras_layer (KerasLayer)        {&#x27;input_type_ids&#x27;: ( 0           input_1[0][0]                    
+__________________________________________________________________________________________________
+keras_layer_1 (KerasLayer)      {&#x27;pooled_output&#x27;: (N 4782465     keras_layer[0][0]                
+                                                                 keras_layer[0][1]                
+                                                                 keras_layer[0][2]                
+__________________________________________________________________________________________________
+dropout_4 (Dropout)             (None, 128)          0           keras_layer_1[0][5]              
+__________________________________________________________________________________________________
+dense_4 (Dense)                 (None, 4)            516         dropout_4[0][0]                  
+==================================================================================================
+Total params: 4,782,981
+Trainable params: 516
+Non-trainable params: 4,782,465
+__________________________________________________________________________________________________
+</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model.compile(loss=&#x27;sparse_categorical_crossentropy&#x27;,metrics=[&#x27;acc&#x27;], optimizer=&#x27;adam&#x27;)
+model.fit(ds_train.map(tupelize).batch(128),validation_data=ds_test.map(tupelize).batch(128))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">938/938 [==============================] - 528s 559ms/step - loss: 0.8056 - acc: 0.6983 - val_loss: 0.5953 - val_acc: 0.7888
+</div><div class="jp-OutputArea-output">&lt;tensorflow.python.keras.callbacks.History at 0x7f9bb1e36d00&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>尽管可训练参数很少，但过程仍然相当缓慢，因为 BERT 特征提取器计算量很大。看起来我们无法达到合理的准确性，可能是由于训练不足或模型参数不足。</p>
+<p>让我们尝试解冻 BERT 的权重并对其进行训练。这需要非常小的学习率，同时还需要更谨慎的训练策略，包括<strong>预热</strong>，并使用 <strong>AdamW</strong> 优化器。我们将使用 <code>tf-models-official</code> 包来创建优化器：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>from official.nlp import optimization 
+bert.trainable=True
+model.summary()
+epochs = 3
+opt = optimization.create_optimizer(
+    init_lr=3e-5,
+    num_train_steps=epochs*len(ds_train),
+    num_warmup_steps=0.1*epochs*len(ds_train),
+    optimizer_type=&#x27;adamw&#x27;)
+
+model.compile(loss=&#x27;sparse_categorical_crossentropy&#x27;,metrics=[&#x27;acc&#x27;], optimizer=opt)
+model.fit(ds_train.map(tupelize).batch(128),validation_data=ds_test.map(tupelize).batch(128))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;model&quot;
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to                     
+==================================================================================================
+input_1 (InputLayer)            [(None,)]            0                                            
+__________________________________________________________________________________________________
+keras_layer (KerasLayer)        {&#x27;input_type_ids&#x27;: ( 0           input_1[0][0]                    
+__________________________________________________________________________________________________
+keras_layer_1 (KerasLayer)      {&#x27;pooled_output&#x27;: (N 4782465     keras_layer[0][0]                
+                                                                 keras_layer[0][1]                
+                                                                 keras_layer[0][2]                
+__________________________________________________________________________________________________
+dropout_4 (Dropout)             (None, 128)          0           keras_layer_1[0][5]              
+__________________________________________________________________________________________________
+dense_4 (Dense)                 (None, 4)            516         dropout_4[0][0]                  
+==================================================================================================
+Total params: 4,782,981
+Trainable params: 4,782,980
+Non-trainable params: 1
+__________________________________________________________________________________________________
+938/938 [==============================] - 629s 664ms/step - loss: 0.6344 - acc: 0.7658 - val_loss: 0.4876 - val_acc: 0.8247
+</div><div class="jp-OutputArea-output">&lt;tensorflow.python.keras.callbacks.History at 0x7f9bb0bd0070&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>正如你所看到的，训练过程相当缓慢——但你可能想尝试训练模型几个周期（5-10），看看与我们之前使用的方法相比，是否能获得最佳结果。</p>
+<h2>Huggingface Transformers库</h2>
+<p>另一种非常常见（且稍微简单一些）的使用Transformer模型的方法是<a href="https://github.com/huggingface/">HuggingFace包</a>，它为不同的NLP任务提供了简单的构建模块。该库同时支持Tensorflow和PyTorch，这两个非常流行的神经网络框架。</p>
+<p>&gt; <strong>注意</strong>：如果你对了解Transformers库的工作原理不感兴趣——可以直接跳到笔记本的最后部分，因为你不会看到与我们之前所做的有实质性不同的内容。我们将重复使用不同的库和更大的模型来训练BERT模型的相同步骤。因此，这个过程涉及一些相当长时间的训练，所以你可能只需要浏览代码即可。</p>
+<p>让我们看看如何使用<a href="http://huggingface.co">Huggingface Transformers</a>来解决我们的问题。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>首先，我们需要选择将要使用的模型。除了内置的一些模型之外，Huggingface还提供了一个<a href="https://huggingface.co/models">在线模型库</a>，社区中有许多预训练模型可供选择。所有这些模型都可以通过提供模型名称来加载和使用。模型所需的所有二进制文件会自动下载。</p>
+<p>有时候，你可能需要加载自己的模型，这种情况下可以指定包含所有相关文件的目录，包括分词器的参数、包含模型参数的<code>config.json</code>文件、二进制权重等。</p>
+<p>通过模型名称，我们可以实例化模型和分词器。让我们从分词器开始：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import transformers
+
+# To load the model from Internet repository using model name. 
+# Use this if you are running from your own copy of the notebooks
+bert_model = &#x27;bert-base-uncased&#x27; 
+
+# To load the model from the directory on disk. Use this for Microsoft Learn module, because we have
+# prepared all required files for you.
+#bert_model = &#x27;./bert&#x27;
+
+tokenizer = transformers.BertTokenizer.from_pretrained(bert_model)
+
+MAX_SEQ_LEN = 128
+PAD_INDEX = tokenizer.convert_tokens_to_ids(tokenizer.pad_token)
+UNK_INDEX = tokenizer.convert_tokens_to_ids(tokenizer.unk_token)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p><code>tokenizer</code> 对象包含 <code>encode</code> 函数，可直接用于编码文本：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>tokenizer.encode(&#x27;Tensorflow is a great framework for NLP&#x27;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[101, 23435, 12314, 2003, 1037, 2307, 7705, 2005, 17953, 2361, 102]</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们还可以使用分词器以适合传递给模型的方式对序列进行编码，例如包括 <code>token_ids</code>、<code>input_mask</code> 字段等。我们还可以通过提供 <code>return_tensors=&#x27;tf&#x27;</code> 参数来指定我们需要 Tensorflow 张量：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>tokenizer([&#x27;Hello, there&#x27;],return_tensors=&#x27;tf&#x27;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">{&#x27;input_ids&#x27;: &lt;tf.Tensor: shape=(1, 5), dtype=int32, numpy=array([[ 101, 7592, 1010, 2045,  102]], dtype=int32)&gt;, &#x27;token_type_ids&#x27;: &lt;tf.Tensor: shape=(1, 5), dtype=int32, numpy=array([[0, 0, 0, 0, 0]], dtype=int32)&gt;, &#x27;attention_mask&#x27;: &lt;tf.Tensor: shape=(1, 5), dtype=int32, numpy=array([[1, 1, 1, 1, 1]], dtype=int32)&gt;}</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>在我们的案例中，我们将使用预训练的BERT模型，名为<code>bert-base-uncased</code>。*Uncased*表示该模型对大小写不敏感。</p>
+<p>在训练模型时，我们需要提供经过分词的序列作为输入，因此我们将设计数据处理管道。由于<code>tokenizer.encode</code>是一个Python函数，我们将采用与上一单元相同的方法，通过调用<code>py_function</code>来实现：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def process(x):
+    return tokenizer.encode(x.numpy().decode(&#x27;utf-8&#x27;),return_tensors=&#x27;tf&#x27;,padding=&#x27;max_length&#x27;,max_length=MAX_SEQ_LEN,truncation=True)[0]
+
+def process_fn(x):
+    s = x[&#x27;title&#x27;]+&#x27; &#x27;+x[&#x27;description&#x27;]
+    e = tf.py_function(process,inp=[s],Tout=(tf.int32))
+    e.set_shape(MAX_SEQ_LEN)
+    return e,x[&#x27;label&#x27;]</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在我们可以使用<code>BertForSequenceClassification</code>包加载实际模型。这确保了我们的模型已经具有分类所需的架构，包括最终的分类器。您会看到一条警告消息，指出最终分类器的权重尚未初始化，模型需要进行预训练——这完全没问题，因为这正是我们即将要做的！</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model = transformers.TFBertForSequenceClassification.from_pretrained(bert_model,num_labels=4,output_attentions=False)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model.summary()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;tf_bert_for_sequence_classification_1&quot;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+bert (TFBertMainLayer)       multiple                  109482240 
+_________________________________________________________________
+dropout_75 (Dropout)         multiple                  0         
+_________________________________________________________________
+classifier (Dense)           multiple                  3076      
+=================================================================
+Total params: 109,485,316
+Trainable params: 109,485,316
+Non-trainable params: 0
+_________________________________________________________________
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>从 <code>summary()</code> 可以看出，该模型包含将近 1.1 亿个参数！据推测，如果我们希望在相对较小的数据集上进行简单的分类任务，我们不希望训练 BERT 基础层：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model.layers[0].trainable = False
+model.summary()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;tf_bert_for_sequence_classification_1&quot;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+bert (TFBertMainLayer)       multiple                  109482240 
+_________________________________________________________________
+dropout_75 (Dropout)         multiple                  0         
+_________________________________________________________________
+classifier (Dense)           multiple                  3076      
+=================================================================
+Total params: 109,485,316
+Trainable params: 3,076
+Non-trainable params: 109,482,240
+_________________________________________________________________
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在我们可以开始训练了！</p>
+<p>&gt; <strong>注意</strong>：训练完整规模的BERT模型可能会非常耗时！因此，我们只会训练前32个批次。这只是为了展示模型训练的设置方式。如果你有兴趣尝试完整规模的训练，只需移除 <code>steps_per_epoch</code> 和 <code>validation_steps</code> 参数，然后准备好等待吧！</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model.compile(&#x27;adam&#x27;,&#x27;sparse_categorical_crossentropy&#x27;,[&#x27;acc&#x27;])
+tf.get_logger().setLevel(&#x27;ERROR&#x27;)
+model.fit(ds_train.map(process_fn).batch(32),validation_data=ds_test.map(process_fn).batch(32),steps_per_epoch=32,validation_steps=2)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">32/32 [==============================] - 142s 4s/step - loss: 1.3896 - acc: 0.2500 - val_loss: 1.3863 - val_acc: 0.2480
+</div><div class="jp-OutputArea-output">&lt;tensorflow.python.keras.callbacks.History at 0x7f1d40a4b6a0&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>如果你增加迭代次数并等待足够长的时间，同时进行多个训练周期，你可以预期 BERT 分类会给我们带来最佳的准确率！这是因为 BERT 已经对语言结构有了相当好的理解，我们只需要微调最终的分类器即可。然而，由于 BERT 是一个大型模型，整个训练过程需要很长时间，并且需要强大的计算能力！（GPU，最好是多块 GPU）。</p>
+<p>&gt; <strong>Note:</strong> 在我们的示例中，我们使用的是最小的预训练 BERT 模型之一。还有更大的模型可能会带来更好的结果。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>要点</h2>
+<p>在本单元中，我们了解了基于<strong>transformers</strong>的最新模型架构。我们将其应用于文本分类任务，但同样，BERT模型也可以用于实体提取、问答以及其他自然语言处理任务。</p>
+<p>Transformer模型代表了当前自然语言处理领域的最先进技术。在大多数情况下，当你开始尝试实现定制的自然语言处理解决方案时，它应该是首选。然而，如果你希望构建高级的神经网络模型，理解本模块中讨论的循环神经网络的基本原理是非常重要的。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code></code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务<a href="https://github.com/Azure/co-op-translator">Co-op Translator</a>进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。原始语言的文档应被视为权威来源。对于关键信息，建议使用专业人工翻译。我们不对因使用此翻译而产生的任何误解或误读承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clip</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 Clip</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h1>多模态模型</h1>
+<p>此笔记本来自 <a href="http://aka.ms/ai-beginners">AI for Beginners Curriculum</a>。</p>
+<h2>试验 CLIP</h2>
+<p><a href="https://openai.com/blog/clip/">CLIP</a> 是 OpenAI 发布的公开模型，您可以尝试将其用于不同任务，包括零样本图像分类。请注意，它对资源的需求非常高！</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import sys
+!{sys.executable} -m pip install git+https://github.com/openai/CLIP.git</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们将首先确保可以使用 GPU（如果可用），然后加载 CLIP 模型。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import torch
+import clip
+from PIL import Image
+import matplotlib.pyplot as plt
+import numpy as np
+import os
+np.set_printoptions(precision=2,suppress=True)
+
+device = &quot;cuda&quot; if torch.cuda.is_available() else &quot;cpu&quot;
+model, preprocess = clip.load(&quot;ViT-B/32&quot;, device=device)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们从<a href="https://www.robots.ox.ac.uk/~vgg/data/pets/">Oxford-IIIT 数据集</a>中获取一部分猫的图像：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>!wget https://mslearntensorflowlp.blob.core.windows.net/data/oxcats.tar.gz
+!tar xfz oxcats.tar.gz
+!rm oxcats.tar.gz</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>零样本图像分类</h3>
+<p>CLIP 的主要功能是将图像与文本提示进行匹配。例如，如果我们有一张猫的图片，然后尝试将其与文本提示“猫”、“企鹅”、“熊”进行匹配——第一个选项的概率通常会更高。因此，我们可以得出结论，这是一只猫。我们不需要训练模型，因为它已经在一个庞大的数据集上进行了预训练——因此被称为<strong>零样本</strong>。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>image = preprocess(Image.open(&quot;oxcats/Maine_Coon_1.jpg&quot;)).unsqueeze(0).to(device)
+text = clip.tokenize([&quot;a penguin&quot;, &quot;a bear&quot;, &quot;a cat&quot;]).to(device)
+
+with torch.no_grad():
+    image_features = model.encode_image(image)
+    text_features = model.encode_text(text)
+    
+    logits_per_image, logits_per_text = model(image, text)
+    probs = logits_per_image.softmax(dim=-1).cpu().numpy()
+
+print(&quot;Label probs:&quot;, probs)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Label probs: [[0. 0. 1.]]
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>智能图像搜索</h3>
+<p>在前面的例子中，我们有一张图片和三个文本提示。我们可以在不同的场景中使用CLIP，例如，我们可以拍摄多张猫的照片，然后选择最符合文本描述的那张图片：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>cats_img = [ Image.open(os.path.join(&quot;oxcats&quot;,x)) for x in os.listdir(&quot;oxcats&quot;) ] 
+cats = torch.cat([ preprocess(i).unsqueeze(0) for i in cats_img ]).to(device)
+text = clip.tokenize([&quot;a very fat gray cat&quot;]).to(device)
+with torch.no_grad():
+    logits_per_image, logits_per_text = model(cats, text)
+    res = logits_per_text.softmax(dim=-1).argmax().cpu().numpy()
+
+print(&quot;Img Index:&quot;, res)
+
+plt.imshow(cats_img[res])</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Img Index: 97
+</div><div class="jp-OutputArea-output">&lt;matplotlib.image.AxesImage at 0x2f58593b310&gt;</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>要点</h2>
+<p>预训练的 CLIP 模型可以用于执行诸如常见物体的图像分类等任务，而无需进行特定领域的训练。此外，它还允许更灵活的分类/图像搜索，能够考虑图片中物体的空间布局。</p>
+<p>想了解 CLIP 的另一个令人兴奋的用法，可以查看 <strong>VQGAN+CLIP</strong>。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务 <a href="https://github.com/Azure/co-op-translator">Co-op Translator</a> 进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。应以原始语言的文档作为权威来源。对于关键信息，建议使用专业人工翻译。我们不对因使用此翻译而产生的任何误解或误读承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

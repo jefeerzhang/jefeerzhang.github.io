@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第 12 课：AI 伦理与课程回顾</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <div class="lesson-container">
+    <div class="nav">
+      <a href="0011-generative-models-and-rl.html">← 上一课</a>
+      <span class="breadcrumb">📍 Phase 4 · 高级应用</span>
+      <span></span>
+    </div>
+    <div class="progress-bar">
+      <div class="step done"></div><div class="step done"></div><div class="step done"></div>
+      <div class="step done"></div><div class="step done"></div><div class="step done"></div>
+      <div class="step done"></div><div class="step done"></div><div class="step done"></div>
+      <div class="step done"></div><div class="step done"></div><div class="step current"></div>
+    </div>
+
+    <h1>第 12 课：AI 伦理与课程回顾</h1>
+    <p class="meta">预计 35 分钟 · 目标：识别 AI 伦理风险，回顾 12 课所学，规划后续路径</p>
+
+    <div class="callout">
+      <strong>本课目标：</strong> 学会从公平性、透明度、隐私和安全四个角度审视 AI 系统；完成课程全面回顾，确定下一步学习方向。
+    </div>
+
+    <h2>1. 为什么 AI 伦理不是"附加题"</h2>
+    <p>AI 模型从数据中学习。如果训练数据带有历史偏见，模型会放大这种偏见。更高效的算法如果部署不当，可能侵犯隐私、加剧歧视或造成不可逆的社会影响。</p>
+
+    <h2>2. 负责任 AI 的四个核心维度</h2>
+    <table>
+      <tr><th>维度</th><th>核心问题</th><th>举例</th></tr>
+      <tr><td><strong>公平性</strong></td><td>不同群体是否一视同仁？</td><td>人脸识别对深色皮肤错误率更高</td></tr>
+      <tr><td><strong>透明度</strong></td><td>能否理解决策依据？</td><td>贷款被拒时能否知道原因</td></tr>
+      <tr><td><strong>隐私与安全</strong></td><td>数据是否安全？模型能否被攻击？</td><td>训练数据泄露、对抗样本攻击</td></tr>
+      <tr><td><strong>可靠性</strong></td><td>真实环境中是否稳定？</td><td>自动驾驶在极端天气的表现</td></tr>
+    </table>
+
+    <h2>3. 偏见从哪里来？</h2>
+    <ol>
+      <li><strong>数据偏见：</strong> 训练数据本身不均衡，某类人群样本过少。</li>
+      <li><strong>标注偏见：</strong> 标注者的主观判断影响了标签。</li>
+      <li><strong>反馈循环：</strong> 模型预测影响现实决策，反过来产生新的有偏见数据。</li>
+    </ol>
+
+    <div class="callout warn">
+      <strong>⚠️ 评估 AI 产品时问自己：</strong>
+      <ol style="margin:0.5rem 0 0; padding-left:1.5rem;">
+        <li>这个模型在谁的数据上训练？能代表所有用户吗？</li>
+        <li>如果模型出错，谁会受到伤害？有多严重？</li>
+        <li>用户是否知道系统在做 AI 决策？能否申诉？</li>
+        <li>模型是否被测试过边缘情况和对抗样本？</li>
+      </ol>
+    </div>
+
+    <h2>4. 课程回顾：12 课知识图谱</h2>
+    <table>
+      <tr><th>阶段</th><th>课次</th><th>核心能力</th></tr>
+      <tr><td rowspan="3"><strong>Phase 1 基础入门</strong></td><td>1. AI 全景</td><td>区分 AI/ML/DL/NN，搭建环境</td></tr>
+      <tr><td>2. ML 基础</td><td>数据→模型→损失→优化→评估流程</td></tr>
+      <tr><td>3. 神经网络</td><td>感知器、激活函数、MLP、反向传播</td></tr>
+      <tr><td rowspan="4"><strong>Phase 2 核心深入</strong></td><td>4. 自建框架</td><td>用 NumPy 从零实现 MLP + 反向传播</td></tr>
+      <tr><td>5. 框架深入</td><td>PyTorch/TF 核心、过拟合、正则化</td></tr>
+      <tr><td>6. CNN 与 CV</td><td>卷积、池化、CNN 架构演进</td></tr>
+      <tr><td>7. 迁移学习</td><td>特征提取、微调、数据增强</td></tr>
+      <tr><td rowspan="3"><strong>Phase 3 NLP 进阶</strong></td><td>8. NLP 基础</td><td>文本表示：BOW → TF-IDF → 词嵌入</td></tr>
+      <tr><td>9. RNN</td><td>序列建模、LSTM 门控、双向 RNN</td></tr>
+      <tr><td>10. Transformer</td><td>自注意力、BERT/GPT、提示工程</td></tr>
+      <tr><td rowspan="2"><strong>Phase 4 高级应用</strong></td><td>11. 生成模型与 RL</td><td>自编码器、GAN、强化学习</td></tr>
+      <tr><td>12. AI 伦理</td><td>公平、透明、隐私、安全</td></tr>
+    </table>
+
+    <h2>5. 下一步：你可以往哪里走？</h2>
+    <ul>
+      <li><strong>继续深挖：</strong> 回头把 AI-For-Beginners 中未覆盖的 Notebook 都跑一遍（如符号 AI、目标检测、语义分割）。</li>
+      <li><strong>做一个项目：</strong> 选一个数据集（图像、文本、表格），完成"数据清洗→训练→评估→写报告"的完整流程。</li>
+      <li><strong>学大模型应用：</strong> 学习 RAG、Agent、微调等当前最实用的 LLM 技术。</li>
+      <li><strong>学数学基础：</strong> 线性代数、概率统计、微积分，为深入理解算法打基础。</li>
+    </ul>
+
+    <div class="exercise">
+      <div class="exercise-title">✍️ 动手练习：伦理案例分析</div>
+      <p>选择一个你熟悉的 AI 应用（如：招聘简历筛选、人脸门禁、内容推荐、医疗影像诊断、AI 生成图片）。</p>
+      <p>1. 写出它的输入、输出和主要用户群体。</p>
+      <p>2. 从公平性、透明度、隐私、安全四个维度各提出一个潜在风险。</p>
+      <p>3. 为其中一个风险提出一个具体的缓解措施。</p>
+      <p>4. 把分析写成 200 字以内的笔记，保存为 <code>learning-records/0001-ai-ethics-case.md</code>。</p>
+    </div>
+
+    <h2>6. 快速自测</h2>
+    <p id="quiz-question">以下哪种情况最可能属于"数据偏见"导致的模型公平性问题？</p>
+    <button class="quiz-option" onclick="check(this, false)">A. 模型推理速度太慢，用户体验不佳。</button>
+    <button class="quiz-option" onclick="check(this, false)">B. 模型对英文文本效果好，但对中文文本效果差。</button>
+    <button class="quiz-option" onclick="check(this, true)">C. 模型对某类人群错误率明显高于其他人群。</button>
+    <button class="quiz-option" onclick="check(this, false)">D. 模型无法解释自己的预测依据。</button>
+    <div id="quiz-feedback" class="feedback hidden"></div>
+
+    <p id="quiz-question2">"反馈循环"导致的偏见是指什么？</p>
+    <button class="quiz-option" onclick="check2(this, false)">A. 模型训练 loss 来回震荡，无法收敛。</button>
+    <button class="quiz-option" onclick="check2(this, true)">B. 模型预测影响现实决策，反过来又产生新的有偏见数据。</button>
+    <button class="quiz-option" onclick="check2(this, false)">C. 用户给模型的反馈被错误地忽略了。</button>
+    <button class="quiz-option" onclick="check2(this, false)">D. 模型自动循环使用同一批数据训练。</button>
+    <div id="quiz-feedback2" class="feedback hidden"></div>
+
+    <h2>7. 延伸阅读与参考</h2>
+    <ul>
+      <li><strong>Primary source:</strong> <a href="../AI-For-Beginners-zh-CN/lessons/7-Ethics/README.md" target="_blank">AI-For-Beginners：AI 伦理</a></li>
+      <li><a href="../AI-For-Beginners-zh-CN/README.md" target="_blank">返回完整 24 课课程目录</a>，继续学习未覆盖内容</li>
+      <li>Microsoft Learn: <a href="https://docs.microsoft.com/learn/paths/responsible-ai-business-principles/" target="_blank">负责任 AI 原则</a></li>
+    </ul>
+
+    <div class="callout">
+      <strong>🎉 恭喜你完成 12 课 AI 入门课程！</strong> 如果希望继续深入某个方向（CV、NLP、大模型应用），请告诉 agent，我们会基于你的 mission 调整后续课程。
+    </div>
+
+    <div class="footer">
+      <p>课程起点：<a href="0001-ai-overview.html">第 1 课：AI 全景与课程导学</a></p>
+    </div>
+  </div>
+
+  <script>
+    function check(btn, isCorrect) {
+      const opts = btn.parentElement.querySelectorAll(':scope > .quiz-option');
+      opts.forEach(o => { o.classList.remove('correct', 'wrong'); o.disabled = true; });
+      btn.classList.add(isCorrect ? 'correct' : 'wrong');
+      const fb = document.getElementById('quiz-feedback');
+      fb.classList.remove('hidden');
+      fb.style.background = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+      fb.innerHTML = isCorrect
+        ? '✅ 正确。数据偏见通常表现为模型对某些群体表现明显更差，这是公平性问题的典型信号。'
+        : '❌ 不正确。公平性问题关注的是模型对不同群体的表现差异。';
+    }
+    function check2(btn, isCorrect) {
+      const opts = btn.parentElement.querySelectorAll(':scope > .quiz-option');
+      opts.forEach(o => { o.classList.remove('correct', 'wrong'); o.disabled = true; });
+      btn.classList.add(isCorrect ? 'correct' : 'wrong');
+      const fb = document.getElementById('quiz-feedback2');
+      fb.classList.remove('hidden');
+      fb.style.background = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+      fb.innerHTML = isCorrect
+        ? '✅ 正确。反馈循环是偏见的自我强化：模型预测→影响决策→产生新偏见数据→再训练更偏见的模型。'
+        : '❌ 不正确。反馈循环偏见过的是模型预测与现实决策之间的相互影响。';
+    }
+  </script>
+</body>
+</html>

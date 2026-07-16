@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IntroKeras</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 IntroKeras</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>使用 Keras 简单介绍神经网络</h2>
+<p>&gt; 本笔记本是 <a href="http://github.com/microsoft/ai-for-beginners">AI for Beginners Curricula</a> 的一部分。访问该仓库以获取完整的学习资料。</p>
+<h3>神经网络框架</h3>
+<p>有许多框架可以用来训练神经网络。然而，如果你想快速入门，而不深入了解内部工作原理——你可以考虑使用 <a href="https://keras.io/">Keras</a>。这个简短的教程将帮助你开始学习，如果你想更深入地理解其工作原理，可以查看 <a href="IntroKerasTF.ipynb">Introduction to Tensorflow and Keras</a> 笔记本。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>准备工作</h3>
+<p>Keras 是 Tensorflow 2.x 框架的一部分。我们需要确保安装了 Tensorflow 2.x.x 版本：</p>
+<pre><code>
+pip install tensorflow
+</code></pre>
+<p>或者</p>
+<pre><code>
+conda install tensorflow
+</code></pre></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import tensorflow as tf
+from tensorflow import keras
+import numpy as np
+from sklearn.datasets import make_classification
+import matplotlib.pyplot as plt
+print(f&#x27;Tensorflow version = {tf.__version__}&#x27;)
+print(f&#x27;Keras version = {keras.__version__}&#x27;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Tensorflow version = 2.7.0
+Keras version = 2.7.0
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>基本概念：张量</h2>
+<p><strong>张量</strong> 是一种多维数组。使用张量来表示不同类型的数据非常方便：</p>
+<ul>
+<li>400x400 - 黑白图片</li>
+<li>400x400x3 - 彩色图片</li>
+<li>16x400x400x3 - 包含16张彩色图片的小批量</li>
+<li>25x400x400x3 - 一秒钟的25帧视频</li>
+<li>8x25x400x400x3 - 包含8个1秒视频的小批量</li>
+</ul>
+<p>张量为我们提供了一种方便的方式来表示输入/输出数据，以及神经网络中的权重。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>示例问题</h2>
+<p>让我们来考虑一个二元分类问题。一个很好的例子是根据肿瘤的大小和年龄来分类其是恶性还是良性。我们先从生成一些示例数据开始：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>np.random.seed(0) # pick the seed for reproducibility - change it to explore the effects of random variations
+
+n = 100
+X, Y = make_classification(n_samples = n, n_features=2,
+                           n_redundant=0, n_informative=2, flip_y=0.05,class_sep=1.5)
+X = X.astype(np.float32)
+Y = Y.astype(np.int32)
+
+split = [ 70*n//100 ]
+train_x, test_x = np.split(X, split)
+train_labels, test_labels = np.split(Y, split)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def plot_dataset(features, labels, W=None, b=None):
+    # prepare the plot
+    fig, ax = plt.subplots(1, 1)
+    ax.set_xlabel(&#x27;$x_i[0]$ -- (feature 1)&#x27;)
+    ax.set_ylabel(&#x27;$x_i[1]$ -- (feature 2)&#x27;)
+    colors = [&#x27;r&#x27; if l else &#x27;b&#x27; for l in labels]
+    ax.scatter(features[:, 0], features[:, 1], marker=&#x27;o&#x27;, c=colors, s=100, alpha = 0.5)
+    if W is not None:
+        min_x = min(features[:,0])
+        max_x = max(features[:,1])
+        min_y = min(features[:,1])*(1-.1)
+        max_y = max(features[:,1])*(1+.1)
+        cx = np.array([min_x,max_x],dtype=np.float32)
+        cy = (0.5-W[0]*cx-b)/W[1]
+        ax.plot(cx,cy,&#x27;g&#x27;)
+        ax.set_ylim(min_y,max_y)
+    fig.show()</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>plot_dataset(train_x, train_labels)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">C:\Users\dmitryso\AppData\Local\Temp/ipykernel_103052/2721537645.py:17: UserWarning: Matplotlib is currently using module://matplotlib_inline.backend_inline, which is a non-GUI backend, so cannot show the figure.
+  fig.show()
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>数据归一化</h2>
+<p>在训练之前，我们通常会将输入特征调整到标准范围 [0,1]（或 [-1,1]）。具体原因我们会在课程后面详细讨论，但简单来说，原因如下：我们希望避免网络中的数值过大或过小，通常会将所有数值保持在接近 0 的小范围内。因此，我们用小的随机数初始化权重，并将信号保持在同样的范围内。</p>
+<p>在进行数据归一化时，我们需要减去最小值并除以范围。最小值和范围是通过训练数据计算得出的，然后使用训练集的最小值和范围对测试/验证数据集进行归一化。这是因为在实际应用中，我们通常只能获得训练集，而无法提前知道网络需要预测的所有新输入值。偶尔会出现新值超出 [0,1] 范围的情况，但这并不是关键问题。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>train_x_norm = (train_x-np.min(train_x,axis=0)) / (np.max(train_x,axis=0)-np.min(train_x,axis=0))
+test_x_norm = (test_x-np.min(train_x,axis=0)) / (np.max(train_x,axis=0)-np.min(train_x,axis=0))</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>训练单层网络（感知器）</h2>
+<p>在许多情况下，神经网络由一系列层组成。可以使用 Keras 中的 <code>Sequential</code> 模型按以下方式定义：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model = keras.models.Sequential()
+model.add(keras.Input(shape=(2,)))
+model.add(keras.layers.Dense(1))
+model.add(keras.layers.Activation(keras.activations.sigmoid))
+
+model.summary()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;sequential_2&quot;
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ dense_2 (Dense)             (None, 1)                 3         
+                                                                 
+ activation_1 (Activation)   (None, 1)                 0         
+                                                                 
+=================================================================
+Total params: 3
+Trainable params: 3
+Non-trainable params: 0
+_________________________________________________________________
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>这里，我们首先创建模型，然后向其中添加层：</p>
+<ul>
+<li>第一个 `Input` 层（严格来说不算是一个层）包含了网络输入大小的规格说明</li>
+<li>`Dense` 层是真正的感知器，包含可训练的权重</li>
+<li>最后，有一个带有 *sigmoid* `Activation` 函数的层，用于将网络的输出结果映射到 0-1 范围内（使其成为概率）。</li>
+</ul>
+<p>输入大小以及激活函数也可以直接在 <code>Dense</code> 层中指定，以简化代码：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model = keras.models.Sequential()
+model.add(keras.layers.Dense(1,input_shape=(2,),activation=&#x27;sigmoid&#x27;))
+model.summary()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;sequential_9&quot;
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ dense_9 (Dense)             (None, 1)                 3         
+                                                                 
+=================================================================
+Total params: 3
+Trainable params: 3
+Non-trainable params: 0
+_________________________________________________________________
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>在训练模型之前，我们需要<strong>编译模型</strong>，这主要包括以下内容：</p>
+<ul>
+<li>**损失函数**，用于定义如何计算损失。由于我们是一个二分类问题，因此我们将使用*二元交叉熵损失*。</li>
+<li>**优化器**，用于优化模型。最简单的选择是使用`sgd`（随机梯度下降），或者你也可以选择更高级的优化器，比如`adam`。</li>
+<li>**评估指标**，用于衡量训练的成功程度。因为这是一个分类任务，一个不错的评估指标是`Accuracy`（或者简写为`acc`）。</li>
+</ul>
+<p>我们可以通过字符串的形式指定损失函数、评估指标和优化器，也可以通过提供Keras框架中的一些对象来实现。在我们的例子中，我们需要指定<code>learning_rate</code>参数，以便微调模型的学习速度，因此我们提供了Keras SGD优化器的完整名称。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model.compile(optimizer=keras.optimizers.SGD(learning_rate=0.2),loss=&#x27;binary_crossentropy&#x27;,metrics=[&#x27;acc&#x27;])</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>在编译模型之后，我们可以通过调用 <code>fit</code> 方法进行实际的训练。以下是一些重要的参数：</p>
+<ul>
+<li>`x` 和 `y` 分别指定训练数据的特征和标签</li>
+<li>如果希望在每个 epoch 进行验证，可以指定 `validation_data` 参数，该参数应为一个包含特征和标签的元组</li>
+<li>`epochs` 指定训练的轮数</li>
+<li>如果希望以小批量的方式进行训练，可以指定 `batch_size` 参数。你也可以在将数据传递给 `x`/`y`/`validation_data` 之前手动预处理成小批量数据，这种情况下就不需要指定 `batch_size`</li>
+</ul></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model.fit(x=train_x_norm,y=train_labels,validation_data=(test_x_norm,test_labels),epochs=10,batch_size=1)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 1/10
+70/70 [==============================] - 0s 4ms/step - loss: 0.3379 - acc: 0.9000 - val_loss: 0.3282 - val_acc: 0.9000
+Epoch 2/10
+70/70 [==============================] - 0s 2ms/step - loss: 0.3270 - acc: 0.9429 - val_loss: 0.3336 - val_acc: 0.9000
+Epoch 3/10
+70/70 [==============================] - 0s 2ms/step - loss: 0.3195 - acc: 0.9143 - val_loss: 0.3137 - val_acc: 0.9000
+Epoch 4/10
+70/70 [==============================] - 0s 2ms/step - loss: 0.3087 - acc: 0.9286 - val_loss: 0.2970 - val_acc: 0.9333
+Epoch 5/10
+70/70 [==============================] - 0s 3ms/step - loss: 0.3006 - acc: 0.9429 - val_loss: 0.3210 - val_acc: 0.9000
+Epoch 6/10
+70/70 [==============================] - 0s 3ms/step - loss: 0.3003 - acc: 0.9000 - val_loss: 0.2985 - val_acc: 0.9000
+Epoch 7/10
+70/70 [==============================] - 0s 3ms/step - loss: 0.2956 - acc: 0.9286 - val_loss: 0.3037 - val_acc: 0.9000
+Epoch 8/10
+70/70 [==============================] - 0s 3ms/step - loss: 0.2891 - acc: 0.9429 - val_loss: 0.3035 - val_acc: 0.9000
+Epoch 9/10
+70/70 [==============================] - 0s 3ms/step - loss: 0.2809 - acc: 0.9000 - val_loss: 0.2815 - val_acc: 0.9000
+Epoch 10/10
+70/70 [==============================] - 0s 3ms/step - loss: 0.2809 - acc: 0.9286 - val_loss: 0.2907 - val_acc: 0.9000
+</div><div class="jp-OutputArea-output">&lt;keras.callbacks.History at 0x2c420b89910&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>您可以尝试调整不同的训练参数，观察它们对训练效果的影响：</p>
+<ul>
+<li>将 `batch_size` 设置得过大（或根本不指定）可能会导致训练不够稳定，因为对于低维数据来说，小批量大小可以为每个具体情况提供更精确的梯度方向。</li>
+<li>过高的 `learning_rate` 可能会导致过拟合或结果不够稳定，而过低的学习率则意味着需要更多的训练轮次才能达到目标。</li>
+</ul>
+<p>&gt; 请注意，您可以连续多次调用 <code>fit</code> 函数以进一步训练网络。如果您希望从头开始训练，则需要重新运行包含模型定义的代码单元。</p>
+<p>为了确保我们的训练有效，让我们绘制一条分隔两类的线。分隔线由方程 $W\times x + b = 0.5$ 定义。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>plot_dataset(train_x,train_labels,model.layers[0].weights[0],model.layers[0].weights[1])</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">C:\Users\dmitryso\AppData\Local\Temp/ipykernel_103052/2721537645.py:17: UserWarning: Matplotlib is currently using module://matplotlib_inline.backend_inline, which is a non-GUI backend, so cannot show the figure.
+  fig.show()
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>绘制训练图表</h2>
+<p><code>fit</code> 函数返回的结果是一个 <code>history</code> 对象，可以用来观察每个 epoch 的损失和指标。在下面的示例中，我们将以较小的学习率重新开始训练，并观察损失和准确率的变化情况。</p>
+<p>&gt; <strong>注意</strong> 我们在定义 <code>Sequential</code> 模型时使用了稍微不同的语法。与其逐层使用 <code>add</code> 方法添加层，我们也可以在创建模型时直接指定层的列表——这种语法更简洁，你可能会更喜欢使用它。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model = keras.models.Sequential([
+    keras.layers.Dense(1,input_shape=(2,),activation=&#x27;sigmoid&#x27;)])
+model.compile(optimizer=keras.optimizers.SGD(learning_rate=0.05),loss=&#x27;binary_crossentropy&#x27;,metrics=[&#x27;acc&#x27;])
+hist = model.fit(x=train_x_norm,y=train_labels,validation_data=(test_x_norm,test_labels),epochs=10,batch_size=1)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 1/10
+70/70 [==============================] - 1s 5ms/step - loss: 0.6600 - acc: 0.6143 - val_loss: 0.6351 - val_acc: 0.8000
+Epoch 2/10
+70/70 [==============================] - 0s 2ms/step - loss: 0.6384 - acc: 0.7143 - val_loss: 0.6187 - val_acc: 0.8333
+Epoch 3/10
+70/70 [==============================] - 0s 2ms/step - loss: 0.6188 - acc: 0.7571 - val_loss: 0.6001 - val_acc: 0.8667
+Epoch 4/10
+70/70 [==============================] - 0s 3ms/step - loss: 0.6022 - acc: 0.7714 - val_loss: 0.5837 - val_acc: 0.9000
+Epoch 5/10
+70/70 [==============================] - 0s 2ms/step - loss: 0.5860 - acc: 0.8571 - val_loss: 0.5673 - val_acc: 0.9000
+Epoch 6/10
+70/70 [==============================] - 0s 2ms/step - loss: 0.5702 - acc: 0.8571 - val_loss: 0.5597 - val_acc: 0.8667
+Epoch 7/10
+70/70 [==============================] - 0s 2ms/step - loss: 0.5568 - acc: 0.8286 - val_loss: 0.5458 - val_acc: 0.9000
+Epoch 8/10
+70/70 [==============================] - 0s 2ms/step - loss: 0.5430 - acc: 0.8714 - val_loss: 0.5325 - val_acc: 0.9000
+Epoch 9/10
+70/70 [==============================] - 0s 2ms/step - loss: 0.5308 - acc: 0.8714 - val_loss: 0.5234 - val_acc: 0.9000
+Epoch 10/10
+70/70 [==============================] - 0s 3ms/step - loss: 0.5175 - acc: 0.9143 - val_loss: 0.5170 - val_acc: 0.8667
+</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>plt.plot(hist.history[&#x27;acc&#x27;])
+plt.plot(hist.history[&#x27;val_acc&#x27;])</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[&lt;matplotlib.lines.Line2D at 0x2c41a32fe80&gt;]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>多分类问题</h2>
+<p>如果需要解决一个多分类问题，您的网络将会有多个输出——对应于类别的数量 $C$。每个输出将包含某个类别的概率。</p>
+<p>&gt; 请注意，您也可以使用具有两个输出的网络以相同的方式执行二分类。这正是我们接下来要演示的内容。</p>
+<p>当您期望网络输出一组概率 $p_1,\dots, p_C$ 时，我们需要确保它们的总和为1。为此，我们在最后一层使用 <code>softmax</code> 作为最终的激活函数。<strong>Softmax</strong> 接受一个向量输入，并确保该向量的所有分量都被转换为概率。</p>
+<p>此外，由于网络的输出是一个 $C$ 维向量，我们需要标签也具有相同的形式。这可以通过使用 <strong>one-hot 编码</strong> 来实现，其中类别编号 $i$ 被转换为一个全零的向量，只有第 $i$ 个位置为1。</p>
+<p>为了将神经网络的概率输出与期望的 one-hot 编码标签进行比较，我们使用 <strong>交叉熵损失</strong> 函数。它接受两个概率分布，并输出它们之间差异的大小。</p>
+<p>因此，总结一下我们在 $C$ 类别的多分类问题中需要做的事情：</p>
+<ul>
+<li>网络的最后一层应该有 $C$ 个神经元</li>
+<li>最后的激活函数应该是 **softmax**</li>
+<li>损失函数应该是 **交叉熵损失**</li>
+<li>标签应该被转换为 **one-hot 编码**（可以使用 `numpy`，或者 Keras 的工具函数 `to_categorical`）</li>
+</ul></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model = keras.models.Sequential([
+    keras.layers.Dense(5,input_shape=(2,),activation=&#x27;relu&#x27;),
+    keras.layers.Dense(2,activation=&#x27;softmax&#x27;)
+])
+model.compile(keras.optimizers.Adam(0.01),&#x27;categorical_crossentropy&#x27;,[&#x27;acc&#x27;])
+
+# Two ways to convert to one-hot encoding
+train_labels_onehot = keras.utils.to_categorical(train_labels)
+test_labels_onehot = np.eye(2)[test_labels]
+
+hist = model.fit(x=train_x_norm,y=train_labels_onehot,
+                 validation_data=[test_x_norm,test_labels_onehot],batch_size=1,epochs=10)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 1/10
+70/70 [==============================] - 1s 6ms/step - loss: 0.6524 - acc: 0.7000 - val_loss: 0.5936 - val_acc: 0.9000
+Epoch 2/10
+70/70 [==============================] - 0s 2ms/step - loss: 0.5715 - acc: 0.8286 - val_loss: 0.5255 - val_acc: 0.8333
+Epoch 3/10
+70/70 [==============================] - 0s 3ms/step - loss: 0.4820 - acc: 0.8714 - val_loss: 0.4213 - val_acc: 0.9000
+Epoch 4/10
+70/70 [==============================] - 0s 3ms/step - loss: 0.4426 - acc: 0.9000 - val_loss: 0.3694 - val_acc: 0.9333
+Epoch 5/10
+70/70 [==============================] - 0s 3ms/step - loss: 0.3602 - acc: 0.9000 - val_loss: 0.3454 - val_acc: 0.9000
+Epoch 6/10
+70/70 [==============================] - 0s 3ms/step - loss: 0.3209 - acc: 0.8857 - val_loss: 0.2862 - val_acc: 0.9333
+Epoch 7/10
+70/70 [==============================] - 0s 3ms/step - loss: 0.2905 - acc: 0.9286 - val_loss: 0.2787 - val_acc: 0.9000
+Epoch 8/10
+70/70 [==============================] - 0s 3ms/step - loss: 0.2698 - acc: 0.9000 - val_loss: 0.2381 - val_acc: 0.9333
+Epoch 9/10
+70/70 [==============================] - 0s 3ms/step - loss: 0.2639 - acc: 0.8857 - val_loss: 0.2217 - val_acc: 0.9667
+Epoch 10/10
+70/70 [==============================] - 0s 2ms/step - loss: 0.2592 - acc: 0.9286 - val_loss: 0.2391 - val_acc: 0.9000
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>稀疏类别交叉熵</h3>
+<p>在多分类任务中，标签通常用类别编号表示。Keras还支持另一种损失函数，称为<strong>稀疏类别交叉熵</strong>，它要求类别编号为整数，而不是独热向量。使用这种损失函数，我们可以简化训练代码：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model.compile(keras.optimizers.Adam(0.01),&#x27;sparse_categorical_crossentropy&#x27;,[&#x27;acc&#x27;])
+model.fit(x=train_x_norm,y=train_labels,validation_data=[test_x_norm,test_labels],batch_size=1,epochs=10)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 1/10
+70/70 [==============================] - 1s 6ms/step - loss: 0.2353 - acc: 0.9143 - val_loss: 0.2190 - val_acc: 0.9000
+Epoch 2/10
+70/70 [==============================] - 0s 3ms/step - loss: 0.2243 - acc: 0.9286 - val_loss: 0.1886 - val_acc: 0.9333
+Epoch 3/10
+70/70 [==============================] - 0s 2ms/step - loss: 0.2366 - acc: 0.9143 - val_loss: 0.2262 - val_acc: 0.9000
+Epoch 4/10
+70/70 [==============================] - 0s 2ms/step - loss: 0.2259 - acc: 0.9429 - val_loss: 0.2124 - val_acc: 0.9000
+Epoch 5/10
+70/70 [==============================] - 0s 2ms/step - loss: 0.2061 - acc: 0.9429 - val_loss: 0.2691 - val_acc: 0.9000
+Epoch 6/10
+70/70 [==============================] - 0s 2ms/step - loss: 0.2200 - acc: 0.9286 - val_loss: 0.2344 - val_acc: 0.9000
+Epoch 7/10
+70/70 [==============================] - 0s 3ms/step - loss: 0.2133 - acc: 0.9286 - val_loss: 0.1973 - val_acc: 0.9000
+Epoch 8/10
+70/70 [==============================] - 0s 3ms/step - loss: 0.2062 - acc: 0.9429 - val_loss: 0.1893 - val_acc: 0.9000
+Epoch 9/10
+70/70 [==============================] - 0s 3ms/step - loss: 0.2060 - acc: 0.9571 - val_loss: 0.2719 - val_acc: 0.9000
+Epoch 10/10
+70/70 [==============================] - 0s 3ms/step - loss: 0.2021 - acc: 0.9571 - val_loss: 0.2293 - val_acc: 0.9000
+</div><div class="jp-OutputArea-output">&lt;keras.callbacks.History at 0x2c42267de80&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>多标签分类</h2>
+<p>有时候，我们会遇到对象同时属于两个类别的情况。例如，假设我们想开发一个分类器，用于识别图片中的猫和狗，同时也希望能够处理猫和狗同时出现的情况。</p>
+<p>在多标签分类中，我们不会使用独热编码向量，而是使用一个向量，其中与输入样本相关的所有类别对应的位置都标记为1。因此，网络的输出不应该是所有类别的归一化概率，而是每个类别的独立概率——这对应于使用<strong>sigmoid</strong>激活函数。交叉熵损失仍然可以作为损失函数使用。</p>
+<p>&gt; <strong>注意</strong> 这与使用<strong>不同的神经网络</strong>对每个特定类别进行二元分类非常相似——只是网络的初始部分（直到最终分类层）是所有类别共享的。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>分类损失函数概述</h2>
+<p>我们已经了解到，二元分类、多类分类和多标签分类在网络最后一层的损失函数和激活函数类型上有所不同。如果你刚开始学习，这可能会有些令人困惑，但以下是一些需要记住的规则：</p>
+<ul>
+<li>如果网络只有一个输出（**二元分类**），我们使用 **sigmoid** 激活函数；对于 **多类分类**，使用 **softmax**。</li>
+<li>如果输出类别以独热编码表示，损失函数将是 **交叉熵损失**（分类交叉熵）；如果输出包含类别编号，则使用 **稀疏分类交叉熵**。对于 **二元分类**，使用 **二元交叉熵**（与 **对数损失** 相同）。</li>
+<li>**多标签分类** 是指一个对象可以同时属于多个类别。在这种情况下，我们需要使用独热编码对标签进行编码，并使用 **sigmoid** 作为激活函数，以确保每个类别的概率在 0 到 1 之间。</li>
+</ul>
+<p>| 分类类型       | 标签格式                 | 激活函数       | 损失函数                  |</p>
+<p>|---------------|-----------------------|-----------------|--------------------------|</p>
+<p>| 二元分类      | 第一个类别的概率         | sigmoid         | binary crossentropy      |</p>
+<p>| 二元分类      | 独热编码（2 个输出）     | softmax         | categorical crossentropy |</p>
+<p>| 多类分类      | 独热编码                 | softmax         | categorical crossentropy |</p>
+<p>| 多类分类      | 类别编号                 | softmax         | sparse categorical crossentropy |</p>
+<p>| 多标签分类    | 独热编码                 | sigmoid         | categorical crossentropy |</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p><strong>任务</strong>:</p>
+<p>使用 Keras 训练一个 MNIST 手写数字分类器：</p>
+<ul>
+<li>注意，Keras 包含一些标准数据集，包括 MNIST。要使用 Keras 中的 MNIST，只需要几行代码即可（更多信息请参考 [这里](https://www.tensorflow.org/api_docs/python/tf/keras/datasets/mnist)）。</li>
+<li>尝试多种网络配置，包括不同数量的层/神经元、激活函数。</li>
+</ul>
+<p>你能够达到的最高准确率是多少？</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>要点</h2>
+<ul>
+<li>**Keras** 非常推荐给初学者，因为它可以非常轻松地通过层来构建网络，并且只需几行代码就能进行训练。</li>
+<li>如果需要非标准的架构，你可能需要更深入地学习 Tensorflow。或者，你可以请别人将自定义逻辑实现为一个 Keras 层，然后在 Keras 模型中使用它。</li>
+<li>也建议看看 PyTorch，并比较两者的方法。</li>
+</ul>
+<p>Keras 的创建者提供了一个关于 Keras 和 Tensorflow 2.0 的优秀示例笔记本，可以在<a href="https://t.co/k694J95PI8">这里</a>找到。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务<a href="https://github.com/Azure/co-op-translator">Co-op Translator</a>进行翻译。尽管我们努力确保准确性，但请注意，自动翻译可能包含错误或不准确之处。应以原始语言的文档作为权威来源。对于关键信息，建议使用专业人工翻译。因使用本翻译而导致的任何误解或误读，我们概不负责。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

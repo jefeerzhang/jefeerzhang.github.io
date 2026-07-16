@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MSConceptGraph</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 MSConceptGraph</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>使用 ConceptNet 的概念图</h2>
+<p>&gt; <strong>注意：</strong> 原始的 <a href="https://concept.research.microsoft.com/">Microsoft Concept Graph</a> API 已不再可用。该笔记本已更新为使用作为替代的 <a href="https://conceptnet.io/">ConceptNet</a>，这是一个免费开放的知识图谱，具有概念之间类似的 <code>is-a</code> 关系。</p>
+<p><a href="https://conceptnet.io/">ConceptNet</a> 是一个包含诸如 <code>IsA</code>、<code>PartOf</code>、<code>UsedFor</code> 等关系的大型概念语义网络。它可通过以下方式获得：</p>
+<ul>
+<li>可下载的数据文件</li>
+<li>REST API（无需 API 密钥）</li>
+</ul>
+<p>ConceptNet 统计数据：</p>
+<ul>
+<li>超过 800 万个节点</li>
+<li>跨 83 种语言的 2100 多万条边</li>
+</ul></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>使用 ConceptNet Web 服务</h2>
+<p><a href="https://conceptnet.io/">ConceptNet</a> 提供了一个 REST API 用于探索概念之间的 <code>is-a</code>（IsA）关系。无需 API 密钥。</p>
+<p>以下是调用的示例 URL：<code>https://api.conceptnet.io/query?start=/c/en/microsoft&amp;rel=/r/IsA&amp;limit=10</code></p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import urllib
+import json
+
+def http(x):
+    response = urllib.request.urlopen(x)
+    data = response.read()
+    return data.decode(&#x27;utf-8&#x27;)
+
+def query(x):
+    concept = x.lower().replace(&#x27; &#x27;, &#x27;_&#x27;)
+    url = &quot;https://api.conceptnet.io/query?start=/c/en/{}&amp;rel=/r/IsA&amp;limit=10&quot;.format(
+        urllib.parse.quote(concept))
+    try:
+        result = json.loads(http(url))
+    except Exception:
+        return {}
+    edges = result.get(&#x27;edges&#x27;, [])
+    if not edges:
+        return {}
+    total_weight = sum(edge[&#x27;weight&#x27;] for edge in edges)
+    if total_weight == 0:
+        return {}
+    return {edge[&#x27;end&#x27;][&#x27;label&#x27;]: edge[&#x27;weight&#x27;] / total_weight for edge in edges}
+
+query(&#x27;microsoft&#x27;)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们尝试使用父概念对新闻标题进行分类。为了获取新闻标题，我们将使用<a href="http://newsapi.org">NewsApi.org</a>服务。您需要获得自己的API密钥才能使用该服务——请访问该网站并注册免费开发者计划。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>newsapi_key = &#x27;&lt;your API key here&gt;&#x27;
+def get_news(country=&#x27;us&#x27;):
+    res = json.loads(http(&quot;https://newsapi.org/v2/top-headlines?country={0}&amp;apiKey={1}&quot;.format(country,newsapi_key)))
+    return res[&#x27;articles&#x27;]
+
+all_titles = [x[&#x27;title&#x27;] for x in get_news(&#x27;us&#x27;)+get_news(&#x27;gb&#x27;)]</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>all_titles</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[&#x27;Covid-19 Live Updates: Vaccines and Boosters News - The New York Times&#x27;,
+ &#x27;Ukrainians Flee Mariupol as Russian Forces Push to Take Port City - The Wall Street Journal&#x27;,
+ &#x27;Bond Yields Jump, Stock Futures Rise After Powell Says Fed Is Ready to Be More Aggressive - The Wall Street Journal&#x27;,
+ &#x27;Putin critic Alexei Navalny found guilty by Russian court - New York Post &#x27;,
+ &quot;Supreme Court nominee Ketanji Brown Jackson will face questions at confirmation hearing&#x27;s second day - CNN&quot;,
+ &#x27;2 teachers killed at Swedish high school, student arrested - ABC News&#x27;,
+ &#x27;Clues to Covid-19’s Next Moves Come From Sewers - The Wall Street Journal&#x27;,
+ &#x27;Republicans to roll dice by grilling Jackson over child-pornography sentencing decisions | TheHill - The Hill&#x27;,
+ &#x27;‘Clear sign’ Putin considering using chemical weapons in Ukraine, claims President Biden - The Independent&#x27;,
+ &#x27;NASA confirms there are 5,000 planets outside our solar system - Daily Mail&#x27;,
+ &quot;US stocks whipsawed overnight after Fed Chair Powell&#x27;s remarks - Fox Business&quot;,
+ &quot;&#x27;We&#x27;ve learned absolutely nothing&#x27;: Tests could again be in short supply if Covid surges - POLITICO&quot;,
+ &quot;Duchess of Cambridge swaps khaki jungle gear for Vampire&#x27;s Wife dress on Belize trip - Daily Mail&quot;,
+ &#x27;China searches for victims, flight recorders after first plane crash in 12 years - Reuters&#x27;,
+ &#x27;Second superyacht linked to Russian oligarch Abramovich docks in Turkey - Reuters&#x27;,
+ &#x27;Live updates: Russia stops talks with Japan over sanctions - The Associated Press - en Español&#x27;,
+ &#x27;Powers Remain and Threats Lurk as Women’s Sweet 16 Is Set - The New York Times&#x27;,
+ &#x27;Webb Space Telescope Begins Multi-Instrument Alignment - SciTechDaily&#x27;,
+ &quot;UConn vs UCF - NCAA women&#x27;s tournament second-round highlights - March Madness&quot;,
+ &#x27;Bucking Republican Trend, Indiana Governor Vetoes Transgender Sports Bill - The New York Times&#x27;,
+ &quot;Maggie Fox dead: Coronation Street and Shameless actress dies after &#x27;sudden accident&#x27; - Mirror Online - The Mirror&quot;,
+ &#x27;China plane crash – live: Search for survivors continues as witness describes moment flight fell from sky - The Independent&#x27;,
+ &#x27;Daniel Morgan murder: damning report condemns Met police - The Guardian&#x27;,
+ &#x27;What to expect from Rishi Sunak’s Spring Statement - BBC.com&#x27;,
+ &#x27;UK and Republic of Ireland in line to host Euro 2028 after no one else bids - The Guardian&#x27;,
+ &quot;Friends beg Vladimir Putin&#x27;s &#x27;lover&#x27; to persuade him to end Ukraine invasion - The Mirror&quot;,
+ &#x27;Brass Eye’s outtakes show the brutal TV comedy was the tip of an iceberg - The Guardian&#x27;,
+ &quot;Vladimir Putin threatens civilians to break Mariupol&#x27;s spirit - The Times&quot;,
+ &#x27;Shell U-turn on Cambo oilfield would threaten green targets, say campaigners - The Guardian&#x27;,
+ &#x27;St Helens dog attack: Girl aged 17 months killed at home - BBC&#x27;,
+ &quot;PlayStation to buy &#x27;Assassin&#x27;s Creed&#x27; veteran Jade Raymond&#x27;s Haven Studios - NME&quot;,
+ &#x27;‘Clear sign’ Putin considering using chemical weapons in Ukraine, claims President Biden - The Independent&#x27;,
+ &#x27;NASA confirms there are 5,000 planets outside our solar system - Daily Mail&#x27;,
+ &#x27;Nintendo Switch finally has folders • Eurogamer.net - Eurogamer.net&#x27;,
+ &#x27;FA to “find a solution” as Liverpool fan group blasts “shambolic” Wembley travel - This Is Anfield&#x27;,
+ &#x27;Manchester United transfer news LIVE Erik ten Hag latest and Man Utd manager updates - Manchester Evening News&#x27;,
+ &#x27;Inflation raises cost of UK government borrowing in February; crude oil up again – business live - The Guardian&#x27;,
+ &#x27;Alexei Navalny: Kremlin critic found guilty of large-scale fraud and contempt of court by Russian court - Sky News&#x27;,
+ &quot;UK prepares to nationalize Russia natural gas giant Gazprom&#x27;s retail unit - Business Insider&quot;,
+ &#x27;Zaghari-Ratcliffe: Hunt calls for inquiry into delay over Iran debt payment - The Guardian&#x27;]</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>首先，我们希望能够从新闻标题中提取名词。我们将使用 <code>TextBlob</code> 库来实现这一点，该库简化了许多典型的自然语言处理任务。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import sys
+!{sys.executable} -m pip install textblob
+!{sys.executable} -m textblob.download_corpora
+from textblob import TextBlob</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Requirement already satisfied: textblob in c:\winapp\miniconda3\lib\site-packages (0.17.1)
+Requirement already satisfied: nltk&gt;=3.1 in c:\winapp\miniconda3\lib\site-packages (from textblob) (3.5)
+Requirement already satisfied: joblib in c:\winapp\miniconda3\lib\site-packages (from nltk&gt;=3.1-&gt;textblob) (1.0.1)
+Requirement already satisfied: regex in c:\winapp\miniconda3\lib\site-packages (from nltk&gt;=3.1-&gt;textblob) (2021.11.10)
+Requirement already satisfied: tqdm in c:\winapp\miniconda3\lib\site-packages (from nltk&gt;=3.1-&gt;textblob) (4.61.2)
+Requirement already satisfied: click in c:\winapp\miniconda3\lib\site-packages (from nltk&gt;=3.1-&gt;textblob) (8.0.3)
+Requirement already satisfied: colorama in c:\winapp\miniconda3\lib\site-packages (from click-&gt;nltk&gt;=3.1-&gt;textblob) (0.4.4)
+Finished.
+</div><div class="jp-OutputArea-output">[nltk_data] Downloading package brown to
+[nltk_data]     C:\Users\dmitryso\AppData\Roaming\nltk_data...
+[nltk_data]   Package brown is already up-to-date!
+[nltk_data] Downloading package punkt to
+[nltk_data]     C:\Users\dmitryso\AppData\Roaming\nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+[nltk_data] Downloading package wordnet to
+[nltk_data]     C:\Users\dmitryso\AppData\Roaming\nltk_data...
+[nltk_data]   Package wordnet is already up-to-date!
+[nltk_data] Downloading package averaged_perceptron_tagger to
+[nltk_data]     C:\Users\dmitryso\AppData\Roaming\nltk_data...
+[nltk_data]   Package averaged_perceptron_tagger is already up-to-
+[nltk_data]       date!
+[nltk_data] Downloading package conll2000 to
+[nltk_data]     C:\Users\dmitryso\AppData\Roaming\nltk_data...
+[nltk_data]   Package conll2000 is already up-to-date!
+[nltk_data] Downloading package movie_reviews to
+[nltk_data]     C:\Users\dmitryso\AppData\Roaming\nltk_data...
+[nltk_data]   Package movie_reviews is already up-to-date!
+</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>w = {}
+for x in all_titles:
+    for n in TextBlob(x).noun_phrases:
+        if n in w:
+            w[n].append(x)
+        else:
+            w[n]=[x]
+{ x:len(w[x]) for x in w.keys()}</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">{&#x27;covid-19 live updates&#x27;: 1,
+ &#x27;vaccines&#x27;: 1,
+ &#x27;boosters&#x27;: 1,
+ &#x27;york&#x27;: 4,
+ &#x27;ukrainians flee mariupol&#x27;: 1,
+ &#x27;forces push&#x27;: 1,
+ &#x27;port city&#x27;: 1,
+ &#x27;wall street journal&#x27;: 3,
+ &#x27;bond yields&#x27;: 1,
+ &#x27;futures rise&#x27;: 1,
+ &#x27;powell says fed&#x27;: 1,
+ &#x27;ready&#x27;: 1,
+ &#x27;be&#x27;: 1,
+ &#x27;aggressive&#x27;: 1,
+ &#x27;putin&#x27;: 3,
+ &#x27;alexei navalny&#x27;: 2,
+ &#x27;russian&#x27;: 2,
+ &#x27;supreme court nominee&#x27;: 1,
+ &#x27;ketanji brown jackson&#x27;: 1,
+ &quot;confirmation hearing &#x27;s&quot;: 1,
+ &#x27;cnn&#x27;: 1,
+ &#x27;swedish&#x27;: 1,
+ &#x27;high school&#x27;: 1,
+ &#x27;abc&#x27;: 1,
+ &#x27;clues&#x27;: 1,
+ &#x27;covid-19&#x27;: 1,
+ &#x27;’ s&#x27;: 2,
+ &#x27;moves&#x27;: 1,
+ &#x27;sewers&#x27;: 1,
+ &#x27;roll dice&#x27;: 1,
+ &#x27;jackson&#x27;: 1,
+ &#x27;decisions |&#x27;: 1,
+ &#x27;thehill&#x27;: 1,
+ &#x27;clear&#x27;: 2,
+ &#x27;chemical weapons&#x27;: 2,
+ &#x27;ukraine&#x27;: 3,
+ &#x27;claims president&#x27;: 2,
+ &#x27;biden&#x27;: 2,
+ &#x27;nasa&#x27;: 2,
+ &#x27;solar system&#x27;: 2,
+ &#x27;daily mail&#x27;: 3,
+ &#x27;us stocks&#x27;: 1,
+ &#x27;fed chair powell&#x27;: 1,
+ &quot;&#x27;s remarks&quot;: 1,
+ &#x27;fox&#x27;: 1,
+ &quot;&#x27;we &#x27;ve&quot;: 1,
+ &#x27;tests&#x27;: 1,
+ &#x27;covid&#x27;: 1,
+ &#x27;politico&#x27;: 1,
+ &#x27;duchess&#x27;: 1,
+ &#x27;cambridge&#x27;: 1,
+ &#x27;swaps khaki jungle gear&#x27;: 1,
+ &#x27;vampire&#x27;: 1,
+ &#x27;wife&#x27;: 1,
+ &#x27;belize&#x27;: 1,
+ &#x27;china&#x27;: 2,
+ &#x27;flight recorders&#x27;: 1,
+ &#x27;plane crash&#x27;: 1,
+ &#x27;reuters&#x27;: 2,
+ &#x27;russian oligarch&#x27;: 1,
+ &#x27;abramovich&#x27;: 1,
+ &#x27;live&#x27;: 1,
+ &#x27;russia&#x27;: 2,
+ &#x27;stops talks&#x27;: 1,
+ &#x27;japan&#x27;: 1,
+ &#x27;español&#x27;: 1,
+ &#x27;powers remain&#x27;: 1,
+ &#x27;threats lurk&#x27;: 1,
+ &#x27;set&#x27;: 1,
+ &#x27;webb&#x27;: 1,
+ &#x27;telescope begins multi-instrument alignment&#x27;: 1,
+ &#x27;scitechdaily&#x27;: 1,
+ &#x27;uconn&#x27;: 1,
+ &#x27;ucf&#x27;: 1,
+ &#x27;ncaa&#x27;: 1,
+ &quot;women &#x27;s tournament second-round highlights&quot;: 1,
+ &#x27;march madness&#x27;: 1,
+ &#x27;bucking republican trend&#x27;: 1,
+ &#x27;indiana&#x27;: 1,
+ &#x27;vetoes transgender&#x27;: 1,
+ &#x27;bill&#x27;: 1,
+ &#x27;maggie fox&#x27;: 1,
+ &#x27;coronation&#x27;: 1,
+ &#x27;shameless&#x27;: 1,
+ &quot;&#x27;sudden accident&quot;: 1,
+ &#x27;mirror online&#x27;: 1,
+ &#x27;mirror&#x27;: 2,
+ &#x27;plane crash –&#x27;: 1,
+ &#x27;search&#x27;: 1,
+ &#x27;moment flight&#x27;: 1,
+ &#x27;daniel morgan&#x27;: 1,
+ &#x27;report condemns&#x27;: 1,
+ &#x27;met&#x27;: 1,
+ &#x27;guardian&#x27;: 6,
+ &#x27;rishi sunak&#x27;: 1,
+ &#x27;’ s spring&#x27;: 1,
+ &#x27;statement&#x27;: 1,
+ &#x27;bbc.com&#x27;: 1,
+ &#x27;uk&#x27;: 3,
+ &#x27;ireland&#x27;: 1,
+ &#x27;euro&#x27;: 1,
+ &#x27;vladimir putin&#x27;: 2,
+ &quot;&#x27;s &#x27;lover&quot;: 1,
+ &#x27;brass eye&#x27;: 1,
+ &#x27;’ s outtakes&#x27;: 1,
+ &#x27;brutal tv comedy&#x27;: 1,
+ &#x27;threatens civilians&#x27;: 1,
+ &#x27;mariupol&#x27;: 1,
+ &quot;&#x27;s spirit&quot;: 1,
+ &#x27;shell u-turn&#x27;: 1,
+ &#x27;cambo&#x27;: 1,
+ &#x27;green targets&#x27;: 1,
+ &#x27;st helens&#x27;: 1,
+ &#x27;dog attack&#x27;: 1,
+ &#x27;girl&#x27;: 1,
+ &#x27;bbc&#x27;: 1,
+ &#x27;playstation&#x27;: 1,
+ &quot;&#x27;assassin &#x27;s&quot;: 1,
+ &#x27;creed&#x27;: 1,
+ &#x27;jade raymond&#x27;: 1,
+ &#x27;haven studios&#x27;: 1,
+ &#x27;nme&#x27;: 1,
+ &#x27;nintendo switch&#x27;: 1,
+ &#x27;folders •&#x27;: 1,
+ &#x27;eurogamer.net&#x27;: 2,
+ &#x27;fa&#x27;: 1,
+ &#x27;solution ”&#x27;: 1,
+ &#x27;liverpool&#x27;: 1,
+ &#x27;fan group blasts “ shambolic ”&#x27;: 1,
+ &#x27;wembley&#x27;: 1,
+ &#x27;anfield&#x27;: 1,
+ &#x27;manchester&#x27;: 1,
+ &#x27;live erik&#x27;: 1,
+ &#x27;hag&#x27;: 1,
+ &#x27;utd&#x27;: 1,
+ &#x27;manager updates&#x27;: 1,
+ &#x27;manchester evening&#x27;: 1,
+ &#x27;inflation&#x27;: 1,
+ &#x27;government borrowing&#x27;: 1,
+ &#x27;february&#x27;: 1,
+ &#x27;crude oil&#x27;: 1,
+ &#x27;– business&#x27;: 1,
+ &#x27;kremlin&#x27;: 1,
+ &#x27;large-scale fraud&#x27;: 1,
+ &#x27;sky&#x27;: 1,
+ &#x27;natural gas&#x27;: 1,
+ &#x27;gazprom&#x27;: 1,
+ &#x27;retail unit&#x27;: 1,
+ &#x27;insider&#x27;: 1,
+ &#x27;zaghari-ratcliffe&#x27;: 1,
+ &#x27;hunt&#x27;: 1,
+ &#x27;iran&#x27;: 1,
+ &#x27;debt payment&#x27;: 1}</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们可以看到，名词并没有给我们带来大型的主题组。让我们用从概念图中获得的更通用的术语替换名词。这将花费一些时间，因为我们对每个名词短语都在执行REST调用。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>w = {}
+for x in all_titles:
+    for noun in TextBlob(x).noun_phrases:
+        terms = query(noun)
+        for term in [u for u in terms.keys() if terms[u]&gt;0.1]:
+            if term in w:
+                w[term].append(x)
+            else:
+                w[term]=[x]</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>{ x:len(w[x]) for x in w.keys() if len(w[x])&gt;3}</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">{&#x27;city&#x27;: 9,
+ &#x27;brand&#x27;: 4,
+ &#x27;place&#x27;: 9,
+ &#x27;town&#x27;: 4,
+ &#x27;factor&#x27;: 4,
+ &#x27;film&#x27;: 4,
+ &#x27;nation&#x27;: 11,
+ &#x27;state&#x27;: 5,
+ &#x27;person&#x27;: 4,
+ &#x27;organization&#x27;: 5,
+ &#x27;publication&#x27;: 10,
+ &#x27;market&#x27;: 5,
+ &#x27;economy&#x27;: 4,
+ &#x27;company&#x27;: 6,
+ &#x27;newspaper&#x27;: 6,
+ &#x27;relationship&#x27;: 6}</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>print(&#x27;\nECONOMY:\n&#x27;+&#x27;\n&#x27;.join(w[&#x27;economy&#x27;]))
+print(&#x27;\nNATION:\n&#x27;+&#x27;\n&#x27;.join(w[&#x27;nation&#x27;]))
+print(&#x27;\nPERSON:\n&#x27;+&#x27;\n&#x27;.join(w[&#x27;person&#x27;]))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">
+ECONOMY:
+China searches for victims, flight recorders after first plane crash in 12 years - Reuters
+Live updates: Russia stops talks with Japan over sanctions - The Associated Press - en Español
+China plane crash – live: Search for survivors continues as witness describes moment flight fell from sky - The Independent
+UK prepares to nationalize Russia natural gas giant Gazprom&#x27;s retail unit - Business Insider
+
+NATION:
+‘Clear sign’ Putin considering using chemical weapons in Ukraine, claims President Biden - The Independent
+Duchess of Cambridge swaps khaki jungle gear for Vampire&#x27;s Wife dress on Belize trip - Daily Mail
+China searches for victims, flight recorders after first plane crash in 12 years - Reuters
+Live updates: Russia stops talks with Japan over sanctions - The Associated Press - en Español
+Live updates: Russia stops talks with Japan over sanctions - The Associated Press - en Español
+China plane crash – live: Search for survivors continues as witness describes moment flight fell from sky - The Independent
+UK and Republic of Ireland in line to host Euro 2028 after no one else bids - The Guardian
+Friends beg Vladimir Putin&#x27;s &#x27;lover&#x27; to persuade him to end Ukraine invasion - The Mirror
+‘Clear sign’ Putin considering using chemical weapons in Ukraine, claims President Biden - The Independent
+UK prepares to nationalize Russia natural gas giant Gazprom&#x27;s retail unit - Business Insider
+Zaghari-Ratcliffe: Hunt calls for inquiry into delay over Iran debt payment - The Guardian
+
+PERSON:
+‘Clear sign’ Putin considering using chemical weapons in Ukraine, claims President Biden - The Independent
+Duchess of Cambridge swaps khaki jungle gear for Vampire&#x27;s Wife dress on Belize trip - Daily Mail
+Second superyacht linked to Russian oligarch Abramovich docks in Turkey - Reuters
+‘Clear sign’ Putin considering using chemical weapons in Ukraine, claims President Biden - The Independent
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p>&lt;!-- CO-OP TRANSLATOR DISCLAIMER START --&gt;</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文件由 AI 翻译服务 <a href="https://github.com/Azure/co-op-translator">Co-op Translator</a> 翻译而成。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能存在错误或不准确之处。原始语言版本的文件应被视为权威来源。对于重要信息，建议使用专业人工翻译。因使用本翻译内容所引起的任何误解或曲解，我们概不负责。</p>
+<p>&lt;!-- CO-OP TRANSLATOR DISCLAIMER END --&gt;</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

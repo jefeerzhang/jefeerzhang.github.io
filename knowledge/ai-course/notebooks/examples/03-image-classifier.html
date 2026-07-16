@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>03-image-classifier</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 03-image-classifier</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h1>简单图像分类器</h1>
+<p>本笔记本将向您展示如何使用预训练的神经网络对图像进行分类。</p>
+<p><strong>您将学习：</strong></p>
+<ul>
+<li>如何加载和使用预训练模型</li>
+<li>图像预处理</li>
+<li>对图像进行预测</li>
+<li>理解置信度分数</li>
+</ul>
+<p><strong>使用场景：</strong> 识别图像中的物体（例如“猫”、“狗”、“汽车”等）</p>
+<p>---</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>第一步：导入所需的库</h2>
+<p>让我们导入所需的工具。如果你还不完全理解这些也不用担心！</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># Core libraries
+import numpy as np
+from PIL import Image
+import requests
+from io import BytesIO
+
+# TensorFlow for deep learning
+try:
+    import tensorflow as tf
+    from tensorflow.keras.applications import MobileNetV2
+    from tensorflow.keras.applications.mobilenet_v2 import preprocess_input, decode_predictions
+    print(&quot;✅ TensorFlow loaded successfully!&quot;)
+    print(f&quot;   Version: {tf.__version__}&quot;)
+except ImportError:
+    print(&quot;❌ Please install TensorFlow: pip install tensorflow&quot;)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>第2步：加载预训练模型</h2>
+<p>我们将使用 <strong>MobileNetV2</strong>，这是一个已经在数百万张图片上训练过的神经网络。</p>
+<p>这被称为 <strong>迁移学习</strong> - 使用别人训练好的模型！</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>print(&quot;📦 Loading pre-trained MobileNetV2 model...&quot;)
+print(&quot;   This may take a minute on first run (downloading weights)...&quot;)
+
+# Load the model
+# include_top=True means we use the classification layer
+# weights=&#x27;imagenet&#x27; means it was trained on ImageNet dataset
+model = MobileNetV2(weights=&#x27;imagenet&#x27;, include_top=True)
+
+print(&quot;✅ Model loaded!&quot;)
+print(f&quot;   The model can recognize 1000 different object categories&quot;)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>第 3 步：辅助函数</h2>
+<p>让我们创建一些函数，用于加载和准备模型所需的图像。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def load_image_from_url(url):
+    &quot;&quot;&quot;
+    Load an image from a URL.
+    
+    Args:
+        url: Web address of the image
+        
+    Returns:
+        PIL Image object
+    &quot;&quot;&quot;
+    response = requests.get(url)
+    img = Image.open(BytesIO(response.content))
+    return img
+
+
+def prepare_image(img):
+    &quot;&quot;&quot;
+    Prepare an image for the model.
+    
+    Steps:
+    1. Resize to 224x224 (model&#x27;s expected size)
+    2. Convert to array
+    3. Add batch dimension
+    4. Preprocess for MobileNetV2
+    
+    Args:
+        img: PIL Image
+        
+    Returns:
+        Preprocessed image array
+    &quot;&quot;&quot;
+    # Resize to 224x224 pixels
+    img = img.resize((224, 224))
+    
+    # Convert to numpy array
+    img_array = np.array(img)
+    
+    # Add batch dimension (model expects multiple images)
+    img_array = np.expand_dims(img_array, axis=0)
+    
+    # Preprocess for MobileNetV2
+    img_array = preprocess_input(img_array)
+    
+    return img_array
+
+
+def classify_image(img):
+    &quot;&quot;&quot;
+    Classify an image and return top predictions.
+    
+    Args:
+        img: PIL Image
+        
+    Returns:
+        List of (class_name, confidence) tuples
+    &quot;&quot;&quot;
+    # Prepare the image
+    img_array = prepare_image(img)
+    
+    # Make prediction
+    predictions = model.predict(img_array, verbose=0)
+    
+    # Decode predictions to human-readable labels
+    # top=5 means we get the top 5 most likely classes
+    decoded = decode_predictions(predictions, top=5)[0]
+    
+    # Convert to simpler format
+    results = [(label, float(confidence)) for (_, label, confidence) in decoded]
+    
+    return results
+
+
+print(&quot;✅ Helper functions ready!&quot;)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>第四步：在样本图像上进行测试</h2>
+<p>让我们尝试对一些来自互联网的图像进行分类吧！</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># Sample images to classify
+# These are from Unsplash (free stock photos)
+test_images = [
+    {
+        &quot;url&quot;: &quot;https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&quot;,
+        &quot;description&quot;: &quot;A cat&quot;
+    },
+    {
+        &quot;url&quot;: &quot;https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&quot;,
+        &quot;description&quot;: &quot;A dog&quot;
+    },
+    {
+        &quot;url&quot;: &quot;https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=400&quot;,
+        &quot;description&quot;: &quot;A car&quot;
+    },
+]
+
+print(f&quot;🧪 Testing on {len(test_images)} images...&quot;)
+print(&quot;=&quot; * 70)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>分类每张图片</h3></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>for i, img_data in enumerate(test_images, 1):
+    print(f&quot;\n📸 Image {i}: {img_data[&#x27;description&#x27;]}&quot;)
+    print(&quot;-&quot; * 70)
+    
+    try:
+        # Load image
+        img = load_image_from_url(img_data[&#x27;url&#x27;])
+        
+        # Display image
+        display(img.resize((200, 200)))  # Show smaller version
+        
+        # Classify
+        results = classify_image(img)
+        
+        # Show predictions
+        print(&quot;\n🎯 Top 5 Predictions:&quot;)
+        for rank, (label, confidence) in enumerate(results, 1):
+            # Create a visual bar
+            bar_length = int(confidence * 50)
+            bar = &quot;█&quot; * bar_length
+            
+            print(f&quot;  {rank}. {label:20s} {confidence*100:5.2f}% {bar}&quot;)
+        
+    except Exception as e:
+        print(f&quot;❌ Error: {e}&quot;)
+
+print(&quot;\n&quot; + &quot;=&quot; * 70)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>第五步：尝试使用自己的图片！</h2>
+<p>将下面的 URL 替换为您想要分类的任何图片 URL。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># Try your own image!
+# Replace this URL with any image URL
+custom_image_url = &quot;https://images.unsplash.com/photo-1472491235688-bdc81a63246e?w=400&quot;  # A flower
+
+print(&quot;🖼️  Classifying your custom image...&quot;)
+print(&quot;=&quot; * 70)
+
+try:
+    # Load and show image
+    img = load_image_from_url(custom_image_url)
+    display(img.resize((300, 300)))
+    
+    # Classify
+    results = classify_image(img)
+    
+    # Show results
+    print(&quot;\n🎯 Top 5 Predictions:&quot;)
+    print(&quot;-&quot; * 70)
+    for rank, (label, confidence) in enumerate(results, 1):
+        bar_length = int(confidence * 50)
+        bar = &quot;█&quot; * bar_length
+        print(f&quot;  {rank}. {label:20s} {confidence*100:5.2f}% {bar}&quot;)
+    
+    # Highlight top prediction
+    top_label, top_confidence = results[0]
+    print(&quot;\n&quot; + &quot;=&quot; * 70)
+    print(f&quot;\n🏆 Best guess: {top_label} ({top_confidence*100:.2f}% confident)&quot;)
+    
+except Exception as e:
+    print(f&quot;❌ Error: {e}&quot;)
+    print(&quot;   Make sure the URL points to a valid image!&quot;)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>💡 刚刚发生了什么？</h2>
+<p>1. <strong>我们加载了一个预训练模型</strong> - MobileNetV2 已经在数百万张图片上完成了训练</p>
+<p>2. <strong>我们对图片进行了预处理</strong> - 调整大小并格式化以适配模型</p>
+<p>3. <strong>模型进行了预测</strong> - 输出了1000个物体类别的概率</p>
+<p>4. <strong>我们解码了结果</strong> - 将数字转换为人类可读的标签</p>
+<h3>理解置信度分数</h3>
+<ul>
+<li>**90-100%**：非常有信心（几乎肯定正确）</li>
+<li>**70-90%**：有信心（可能正确）</li>
+<li>**50-70%**：信心一般（可能正确）</li>
+<li>**低于50%**：信心不足（不确定）</li>
+</ul>
+<h3>为什么预测可能会出错？</h3>
+<ul>
+<li>**不寻常的角度或光线** - 模型是在典型照片上训练的</li>
+<li>**多个物体** - 模型预期只有一个主要物体</li>
+<li>**罕见物体** - 模型只识别1000个类别</li>
+<li>**低质量图片** - 模糊或像素化的图片更难识别</li>
+</ul>
+<p>---</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>🚀 下一步</h2>
+<p>1. <strong>尝试不同的图片：</strong></p>
+<ul>
+<li>在 [Unsplash](https://unsplash.com) 上寻找图片</li>
+<li>右键点击 → “复制图片地址” 获取 URL</li>
+</ul>
+<p>2. <strong>进行实验：</strong></p>
+<ul>
+<li>抽象艺术会有什么效果？</li>
+<li>它能识别不同角度的物体吗？</li>
+<li>它如何处理多个物体？</li>
+</ul>
+<p>3. <strong>深入学习：</strong></p>
+<ul>
+<li>探索 [计算机视觉课程](../lessons/4-ComputerVision/README.md)</li>
+<li>学习如何训练自己的图像分类器</li>
+<li>理解 CNN（卷积神经网络）的工作原理</li>
+</ul>
+<p>---</p>
+<h2>🎉 恭喜！</h2>
+<p>你刚刚使用最先进的神经网络构建了一个图像分类器！</p>
+<p>这种技术同样驱动了：</p>
+<ul>
+<li>Google Photos（整理你的照片）</li>
+<li>自动驾驶汽车（识别物体）</li>
+<li>医学诊断（分析 X 光片）</li>
+<li>质量控制（检测缺陷）</li>
+</ul>
+<p>继续探索和学习吧！🚀</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务 <a href="https://github.com/Azure/co-op-translator">Co-op Translator</a> 进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。原始语言的文档应被视为权威来源。对于关键信息，建议使用专业人工翻译。我们不对因使用此翻译而产生的任何误解或误读承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

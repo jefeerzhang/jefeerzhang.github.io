@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第 6 课：CNN 与计算机视觉</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <div class="lesson-container">
+    <div class="nav">
+      <a href="0005-pytorch-tensorflow-deep.html">← 上一课</a>
+      <span class="breadcrumb">📍 Phase 2 · 核心深入</span>
+      <a href="0007-transfer-learning.html">下一课：迁移学习与训练技巧 →</a>
+    </div>
+    <div class="progress-bar">
+      <div class="step done"></div><div class="step done"></div><div class="step done"></div>
+      <div class="step done"></div><div class="step done"></div><div class="step current"></div>
+      <div class="step"></div><div class="step"></div><div class="step"></div>
+      <div class="step"></div><div class="step"></div><div class="step"></div>
+    </div>
+
+    <h1>第 6 课：CNN 与计算机视觉</h1>
+    <p class="meta">预计 45 分钟 · 目标：理解卷积神经网络的核心思想，能运行并修改一个图像分类实验</p>
+
+    <div class="callout">
+      <strong>本课目标：</strong> 理解卷积和池化如何让神经网络高效处理图像；了解典型 CNN 架构；用迁移学习在少量数据上取得好效果。
+    </div>
+
+    <h2>1. 图像给全连接网络的问题</h2>
+    <p>一张 1000×1000 的彩色图片有 300 万个像素值。如果直接输入全连接网络，参数量会爆炸，而且网络无法利用"相邻像素相关"这一先验知识。</p>
+
+    <h2>2. 卷积：局部感受野 + 参数共享</h2>
+    <p><strong>卷积（Convolution）：</strong> 用一个小窗口（卷积核 kernel）在图片上滑动，提取局部特征（边缘、纹理）。<strong>参数共享：</strong> 同一个卷积核扫过整张图片，不管猫出现在左上角还是右下角，都能被识别。</p>
+
+    <div class="code-title"><span>conv_layer.py</span><span class="lang-badge">Python</span></div>
+    <div class="code-block"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn
+
+conv = nn.Conv2d(
+    in_channels=<span class="number">3</span>,   <span class="comment"># 输入通道：RGB 彩色图</span>
+    out_channels=<span class="number">16</span>, <span class="comment"># 输出通道：16 个卷积核</span>
+    kernel_size=<span class="number">3</span>,   <span class="comment"># 卷积核大小 3×3</span>
+    padding=<span class="number">1</span>        <span class="comment"># 边缘补零，保持输出尺寸</span>
+)
+<span class="comment"># 输入: (1, 3, 32, 32) → 输出: (1, 16, 32, 32)</span></div>
+
+    <h2>3. 池化：降维与平移不变性</h2>
+    <p><strong>池化（Pooling）：</strong> 把一个小区域压缩成一个值（通常取最大值），降低特征图尺寸，减少计算量。</p>
+    <div class="code-block">pool = nn.MaxPool2d(kernel_size=<span class="number">2</span>, stride=<span class="number">2</span>)
+<span class="comment"># 32×32 的特征图 → 16×16</span></div>
+
+    <h2>4. CNN 典型结构</h2>
+    <div class="code-block">[输入图像]
+  → Conv2d + ReLU（提取边缘）
+  → MaxPool
+  → Conv2d + ReLU（提取纹理、部件）
+  → MaxPool
+  → Flatten（展平）
+  → Dense（全连接层）
+  → 输出类别概率</div>
+
+    <h2>5. 经典 CNN 架构演进</h2>
+    <table>
+      <tr><th>架构</th><th>年份</th><th>关键创新</th></tr>
+      <tr><td>LeNet</td><td>1998</td><td>最早的 CNN，用于手写数字识别</td></tr>
+      <tr><td>AlexNet</td><td>2012</td><td>ReLU + Dropout + GPU 训练</td></tr>
+      <tr><td>VGG</td><td>2014</td><td>小卷积核 (3×3) 堆叠</td></tr>
+      <tr><td>ResNet</td><td>2015</td><td>残差连接，训练超深网络（152层+）</td></tr>
+    </table>
+
+    <div class="callout tip">
+      <strong>💡 残差连接（ResNet 的核心）：</strong> 让输入"跳过"一层直接加到输出上：y = F(x) + x。这解决了超深网络的梯度消失问题，让训练 100+ 层的网络成为可能。
+    </div>
+
+    <h2>6. 迁移学习预览</h2>
+    <p>预训练 CNN 已学会通用视觉特征。在新任务上只需替换最后一层分类器，用少量数据微调。下一课会深入讲解。</p>
+    <div class="code-block"><span class="keyword">import</span> torchvision.models <span class="keyword">as</span> models
+model = models.resnet18(pretrained=<span class="keyword">True</span>)
+model.fc = nn.Linear(model.fc.in_features, <span class="number">10</span>)  <span class="comment"># 替换分类器</span></div>
+
+    <div class="notebook-link">
+      <span class="icon">📓</span>
+      <div>
+        <strong>配套 Notebook：</strong>
+        <a href="../notebooks/4-ComputerVision/06-IntroCV/OpenCV.html" target="_blank">OpenCV.ipynb</a> ·
+        <a href="../notebooks/4-ComputerVision/07-ConvNets/ConvNetsPyTorch.html" target="_blank">ConvNetsPyTorch.ipynb</a>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-title">✍️ 动手练习：观察 CNN 特征图</div>
+      <p>1. 打开 ConvNetsPyTorch Notebook，运行 CNN 训练代码。</p>
+      <p>2. 可视化第一层卷积核的权重——你能看到它在检测什么样的边缘和纹理？</p>
+      <p>3. 把卷积核数量从 16 改为 32 或 8，观察对准确率和训练速度的影响。</p>
+    </div>
+
+    <h2>7. 快速自测</h2>
+    <p id="quiz-question">卷积神经网络中的"参数共享"主要带来什么好处？</p>
+    <button class="quiz-option" onclick="check(this, false)">A. 让网络可以处理任意大小的输入图像。</button>
+    <button class="quiz-option" onclick="check(this, true)">B. 减少参数量，并帮助模型识别不同位置的模式。</button>
+    <button class="quiz-option" onclick="check(this, false)">C. 让网络的层数变得更深，从而提高准确率。</button>
+    <button class="quiz-option" onclick="check(this, false)">D. 让模型不再需要池化层，降低计算复杂度。</button>
+    <div id="quiz-feedback" class="feedback hidden"></div>
+
+    <p id="quiz-question2">ResNet 的"残差连接"解决的核心问题是什么？</p>
+    <button class="quiz-option" onclick="check2(this, true)">A. 超深网络的梯度消失问题，让梯度能直接跳过层传播。</button>
+    <button class="quiz-option" onclick="check2(this, false)">B. 减少模型参数量，让网络更小。</button>
+    <button class="quiz-option" onclick="check2(this, false)">C. 自动选择最佳的卷积核大小。</button>
+    <button class="quiz-option" onclick="check2(this, false)">D. 替代池化层做降维。</button>
+    <div id="quiz-feedback2" class="feedback hidden"></div>
+
+    <h2>8. 延伸阅读与参考</h2>
+    <ul>
+      <li><strong>Primary source:</strong> <a href="../AI-For-Beginners-zh-CN/lessons/4-ComputerVision/07-ConvNets/README.md" target="_blank">AI-For-Beginners：卷积神经网络</a> · <a href="../AI-For-Beginners-zh-CN/lessons/4-ComputerVision/07-ConvNets/CNN_Architectures.md" target="_blank">CNN 架构</a></li>
+      <li><a href="../reference/0001-glossary.html" target="_blank">术语表：CNN、卷积、池化、残差连接</a></li>
+      <li>CS231n <a href="https://cs231n.github.io/convolutional-networks/" target="_blank">卷积网络教程</a></li>
+    </ul>
+
+    <div class="footer">
+      <p>下一课：<a href="0007-transfer-learning.html">迁移学习与训练技巧</a></p>
+    </div>
+  </div>
+
+  <script>
+    function check(btn, isCorrect) {
+      const opts = btn.parentElement.querySelectorAll(':scope > .quiz-option');
+      opts.forEach(o => { o.classList.remove('correct', 'wrong'); o.disabled = true; });
+      btn.classList.add(isCorrect ? 'correct' : 'wrong');
+      const fb = document.getElementById('quiz-feedback');
+      fb.classList.remove('hidden');
+      fb.style.background = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+      fb.innerHTML = isCorrect
+        ? '✅ 正确。参数共享让同一个卷积核扫过整张图片，大幅减少参数量并提升位置不变性。'
+        : '❌ 不正确。参数共享的核心是减少参数量和位置不变性。';
+    }
+    function check2(btn, isCorrect) {
+      const opts = btn.parentElement.querySelectorAll(':scope > .quiz-option');
+      opts.forEach(o => { o.classList.remove('correct', 'wrong'); o.disabled = true; });
+      btn.classList.add(isCorrect ? 'correct' : 'wrong');
+      const fb = document.getElementById('quiz-feedback2');
+      fb.classList.remove('hidden');
+      fb.style.background = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+      fb.innerHTML = isCorrect
+        ? '✅ 正确。残差连接让梯度能通过"捷径"直接传回，解决了超深网络的梯度消失。'
+        : '❌ 不正确。残差连接不是为了减少参数或替代池化，而是解决梯度消失。';
+    }
+  </script>
+</body>
+</html>

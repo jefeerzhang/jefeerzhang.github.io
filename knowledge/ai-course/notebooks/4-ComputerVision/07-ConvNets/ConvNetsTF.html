@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ConvNetsTF</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 ConvNetsTF</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h1>卷积神经网络</h1>
+<p>我们之前已经看到，神经网络在处理图像方面表现得相当不错，即使是单层感知机也能够以较高的准确率识别 MNIST 数据集中的手写数字。然而，MNIST 数据集非常特殊，所有数字都被居中放置在图像中，这使得任务变得更简单。</p>
+<p>在现实生活中，我们希望能够识别图片中的物体，而不受它们在图像中具体位置的影响。计算机视觉与通用分类不同，因为当我们试图在图片中找到某个特定物体时，我们会扫描图像，寻找一些特定的<strong>模式</strong>及其组合。例如，当寻找一只猫时，我们可能首先寻找水平线，这些线可能形成胡须，然后某种胡须的组合可以告诉我们这实际上是一张猫的图片。某些模式的相对位置和存在是重要的，而不是它们在图像中的确切位置。</p>
+<p>为了提取这些模式，我们将使用<strong>卷积滤波器</strong>的概念。但首先，让我们加载之前单元中定义的所有依赖项和函数。我们还会导入 <code>tfcv</code> 辅助库，它包含一些实用函数，这些函数我们不想在这个笔记本中定义，以保持代码简洁明了。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import tensorflow as tf
+from tensorflow import keras
+import matplotlib.pyplot as plt
+import numpy as np
+from tfcv import *</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>在这个例子中，我们将重点关注之前看到的MNIST数据集以及图像分类。我们将首先使用Keras内置函数加载数据集。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>(x_train,y_train),(x_test,y_test) = keras.datasets.mnist.load_data()
+x_train = x_train.astype(np.float32) / 255.0
+x_test = x_test.astype(np.float32) / 255.0</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>卷积滤波器</h2>
+<p>卷积滤波器是小型窗口，它会遍历图像的每个像素，并计算邻近像素的加权平均值。</p>
+<p>它们由权重系数矩阵定义。让我们来看两个不同的卷积滤波器在我们的 MNIST 手写数字上的应用示例：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>plot_convolution(x_train[:5],[[-1.,0.,1.],[-1.,0.,1.],[-1.,0.,1.]],&#x27;Vertical edge filter&#x27;)
+plot_convolution(x_train[:5],[[-1.,-1.,-1.],[0.,0.,0.],[1.,1.,1.]],&#x27;Horizontal edge filter&#x27;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 576x216 with 12 Axes&gt;</div><div class="jp-OutputArea-output">&lt;Figure size 576x216 with 12 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>第一个滤波器称为<strong>垂直边缘滤波器</strong>，其定义如下矩阵：</p>
+<p>$$</p>
+<p>\left(</p>
+<p>\begin{matrix}</p>
+<p>-1 &amp; 0 &amp; 1 \cr</p>
+<p>-1 &amp; 0 &amp; 1 \cr</p>
+<p>-1 &amp; 0 &amp; 1 \cr</p>
+<p>\end{matrix}</p>
+<p>\right)</p>
+<p>$$</p>
+<p>当这个滤波器作用于相对均匀的像素区域时，所有值相加为0。然而，当它遇到图像中的垂直边缘时，会产生一个较高的峰值。这就是为什么在上面的图像中，你可以看到垂直边缘以高值和低值的形式表现出来，而水平边缘则被平均化了。</p>
+<p>当我们应用水平边缘滤波器时，情况正好相反——水平线被放大，而垂直线被平均化。</p>
+<p>在传统的计算机视觉中，会对图像应用多个滤波器以生成特征，然后通过机器学习算法利用这些特征来构建分类器。这些滤波器实际上与某些动物视觉系统中的神经结构非常相似。</p>
+<p>&lt;img src=&quot;images/lmfilters.jpg&quot; width=&quot;400&quot;/&gt;</p>
+<p>然而，在深度学习中，我们构建了能够<strong>学习</strong>最佳卷积滤波器的网络，以解决分类问题。为此，我们引入了<strong>卷积层</strong>。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>卷积层</h2>
+<p>为了使卷积层的权重可训练，我们需要将应用卷积滤波窗口到图像的过程简化为矩阵操作，这样才能进行反向传播训练。为此，我们使用了一种巧妙的矩阵变换，称为 <strong>im2col</strong>。</p>
+<p>假设我们有一个小图像 $\mathbf{x}$，像素如下：</p>
+<p>$$</p>
+<p>\mathbf{x} = \left(</p>
+<p>\begin{array}{ccccc}</p>
+<p>a &amp; b &amp; c &amp; d &amp; e \\</p>
+<p>f &amp; g &amp; h &amp; i &amp; j \\</p>
+<p>k &amp; l &amp; m &amp; n &amp; o \\</p>
+<p>p &amp; q &amp; r &amp; s &amp; t \\</p>
+<p>u &amp; v &amp; w &amp; x &amp; y \\</p>
+<p>\end{array}</p>
+<p>\right)</p>
+<p>$$</p>
+<p>我们希望应用两个卷积滤波器，其权重如下：</p>
+<p>$$</p>
+<p>W^{(i)} = \left(\begin{array}{ccc}</p>
+<p>w^{(i)}_{00} &amp; w^{(i)}_{01} &amp; w^{(i)}_{02} \\</p>
+<p>w^{(i)}_{10} &amp; w^{(i)}_{11} &amp; w^{(i)}_{12} \\</p>
+<p>w^{(i)}_{20} &amp; w^{(i)}_{21} &amp; w^{(i)}_{22} \\</p>
+<p>\end{array}\right)</p>
+<p>$$</p>
+<p>在应用卷积时，结果的第一个像素是通过以下两个矩阵的逐元素相乘得到的：</p>
+<p>$\left(\begin{array}{ccc}</p>
+<p>a &amp; b &amp; c \\</p>
+<p>f &amp; g &amp; h \\</p>
+<p>k &amp; l &amp; m \\</p>
+<p>\end{array}\right)$ 和 $W^{(i)}$。第二个像素则是通过以下矩阵相乘得到的：</p>
+<p>$\left(\begin{array}{ccc}</p>
+<p>b &amp; c &amp; d \\</p>
+<p>g &amp; h &amp; i \\</p>
+<p>l &amp; m &amp; n \\</p>
+<p>\end{array}\right)$ 和 $W^{(i)}$，以此类推。</p>
+<p>为了形式化这个过程，我们将原始图像 $x$ 的所有 $3\times3$ 片段提取到以下矩阵中：</p>
+<p>$$</p>
+<p>\mathrm{im2col}(x) = \left[</p>
+<p>\begin{array}{cccccc}</p>
+<p>a &amp; b &amp; \ldots &amp; g &amp; \ldots &amp; m \\</p>
+<p>b &amp; c &amp; \ldots &amp; h &amp; \ldots &amp; n \\</p>
+<p>c &amp; d &amp; \ldots &amp; i &amp; \ldots &amp; o \\</p>
+<p>f &amp; g &amp; \ldots &amp; l &amp; \ldots &amp; r \\</p>
+<p>g &amp; h &amp; \ldots &amp; m &amp; \ldots &amp; s \\</p>
+<p>h &amp; i &amp; \ldots &amp; n &amp; \ldots &amp; t \\</p>
+<p>k &amp; l &amp; \ldots &amp; q &amp; \ldots &amp; w \\</p>
+<p>l &amp; m &amp; \ldots &amp; r &amp; \ldots &amp; x \\</p>
+<p>m &amp; n &amp; \ldots &amp; s &amp; \ldots &amp; y \\</p>
+<p>\end{array}</p>
+<p>\right]</p>
+<p>$$</p>
+<p>这个矩阵的每一列对应原始图像的一个 $3\times3$ 子区域。现在，为了得到卷积的结果，我们只需要将这个矩阵与权重矩阵相乘：</p>
+<p>$$</p>
+<p>\mathbf{W} = \left[</p>
+<p>\begin{array}{cccccccc}</p>
+<p>w^{(0)}_{00} &amp; w^{(0)}_{01} &amp; w^{(0)}_{02} &amp; w^{(0)}_{10} &amp; w^{(0)}_{11} &amp; \ldots &amp; w^{(0)}_{21} &amp; w^{(0)}_{22} \\</p>
+<p>w^{(1)}_{00} &amp; w^{(1)}_{01} &amp; w^{(1)}_{02} &amp; w^{(1)}_{10} &amp; w^{(1)}_{11} &amp; \ldots &amp; w^{(1)}_{21} &amp; w^{(1)}_{22} \\</p>
+<p>\end{array}</p>
+<p>\right]</p>
+<p>$$</p>
+<p>（这个矩阵的每一行包含第 $i$ 个滤波器的权重，展平成一行）</p>
+<p>因此，将卷积滤波器应用到原始图像的过程可以用矩阵乘法替代，而我们已经知道如何通过反向传播处理矩阵乘法：</p>
+<p>$$</p>
+<p>C(x) = W\times\mathbf{im2col}(x)</p>
+<p>$$</p>
+<p>卷积层可以通过 <code>Conv2d</code> 类定义。我们需要指定以下内容：</p>
+<ul>
+<li>`filters` - 使用的滤波器数量。我们将使用 9 个不同的滤波器，这样网络就有足够的机会探索哪些滤波器最适合我们的场景。</li>
+<li>`kernel_size` - 滑动窗口的大小。通常使用 3x3 或 5x5 的滤波器。</li>
+</ul>
+<p>最简单的卷积神经网络（CNN）包含一个卷积层。给定输入大小为 28x28，在应用九个 5x5 滤波器后，我们将得到一个 24x24x9 的张量。空间维度变小了，因为在 28 像素中，只有 24 个位置可以容纳长度为 5 的滑动窗口。</p>
+<p>在卷积之后，我们将 24x24x9 的张量展平成一个大小为 5184 的向量，然后添加一个线性层，生成 10 个类别。在层之间，我们还使用 <code>relu</code> 激活函数。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model = keras.models.Sequential([
+    keras.layers.Conv2D(filters=9, kernel_size=(5,5), input_shape=(28,28,1),activation=&#x27;relu&#x27;),
+    keras.layers.Flatten(),
+    keras.layers.Dense(10)
+])
+
+model.compile(loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True),metrics=[&#x27;acc&#x27;])
+
+model.summary()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;sequential&quot;
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ conv2d (Conv2D)             (None, 24, 24, 9)         234       
+                                                                 
+ flatten (Flatten)           (None, 5184)              0         
+                                                                 
+ dense (Dense)               (None, 10)                51850     
+                                                                 
+=================================================================
+Total params: 52,084
+Trainable params: 52,084
+Non-trainable params: 0
+_________________________________________________________________
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>你可以看到，这个网络包含大约 50k 个可训练参数，而全连接多层网络中大约有 80k 个。这使得我们即使在较小的数据集上也能取得良好的结果，因为卷积网络的泛化能力要好得多。</p>
+<p>&gt; <strong>Note</strong>: 在大多数实际情况下，我们希望将卷积层应用于彩色图像。因此，<code>Conv2D</code> 层期望输入的形状为 $W\times H\times C$，其中 $W$ 和 $H$ 分别是图像的宽度和高度，$C$ 是颜色通道的数量。对于灰度图像，我们需要相同的形状，但 $C=1$。</p>
+<p>在开始训练之前，我们需要对数据进行重塑：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>x_train_c = np.expand_dims(x_train,3)
+x_test_c = np.expand_dims(x_test,3)
+hist = model.fit(x_train_c,y_train,validation_data=(x_test_c,y_test),epochs=5)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 1/5
+1875/1875 [==============================] - 15s 7ms/step - loss: 0.2099 - acc: 0.9410 - val_loss: 0.0879 - val_acc: 0.9735
+Epoch 2/5
+1875/1875 [==============================] - 13s 7ms/step - loss: 0.0858 - acc: 0.9753 - val_loss: 0.0682 - val_acc: 0.9791
+Epoch 3/5
+1875/1875 [==============================] - 13s 7ms/step - loss: 0.0665 - acc: 0.9808 - val_loss: 0.0553 - val_acc: 0.9829
+Epoch 4/5
+1875/1875 [==============================] - 15s 8ms/step - loss: 0.0582 - acc: 0.9835 - val_loss: 0.0513 - val_acc: 0.9835
+Epoch 5/5
+1875/1875 [==============================] - 14s 8ms/step - loss: 0.0527 - acc: 0.9847 - val_loss: 0.0503 - val_acc: 0.9833
+</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>plot_results(hist)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 1080x216 with 2 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>正如您所见，与上一单元中的全连接网络相比，我们能够实现更高的准确性，并且训练所需的周期数更少。然而，训练过程本身需要更多资源，对于非GPU计算机来说可能会更慢。</p>
+<h2>可视化卷积层</h2>
+<p>我们还可以可视化训练好的卷积层的权重，以更好地理解其内部的工作原理：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>fig,ax = plt.subplots(1,9)
+l = model.layers[0].weights[0]
+for i in range(9):
+    ax[i].imshow(l[...,0,i])
+    ax[i].axis(&#x27;off&#x27;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 9 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>你可以看到，有些滤波器似乎能够识别一些斜线，而其他的看起来则比较随机。</p>
+<p>&gt; <strong>任务</strong>：使用3x3滤波器训练相同的网络并可视化它们。你是否能看到更多熟悉的模式？</p>
+<h2>多层CNN和池化层</h2>
+<p>第一层卷积层会寻找一些基本模式，比如水平线或垂直线，但我们可以在它们之上应用更多的卷积层来寻找更高级的模式，比如基本形状。然后，更多的卷积层可以将这些形状组合成图像的一些部分，最终形成我们试图分类的目标对象。</p>
+<p>在这样做时，我们还可以应用一个技巧：减少图像的空间尺寸。一旦我们检测到在滑动的3x3窗口内存在水平线，具体发生在哪个像素点就不那么重要了。因此，我们可以“缩小”图像的尺寸，这可以通过使用一种<strong>池化层</strong>来实现：</p>
+<ul>
+<li>**平均池化**使用一个滑动窗口（例如2x2像素），并计算窗口内值的平均值。</li>
+<li>**最大池化**用窗口内的最大值替代窗口。最大池化的核心思想是检测滑动窗口内某种模式的存在。</li>
+</ul>
+<p>因此，在一个典型的CNN中，会有多个卷积层，并在它们之间插入池化层以减少图像的维度。同时，我们会增加滤波器的数量，因为随着模式变得更加复杂，我们需要寻找的可能的有趣组合也会增多。</p>
+<p>!<a href="../../../../../lessons/4-ComputerVision/07-ConvNets/images/cnn-pyramid.png">展示多个卷积层和池化层的图像。</a></p>
+<p>由于空间维度的减少和特征/滤波器维度的增加，这种架构也被称为<strong>金字塔架构</strong>。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model = keras.models.Sequential([
+    keras.layers.Conv2D(filters=10, kernel_size=(5,5), input_shape=(28,28,1),activation=&#x27;relu&#x27;),
+    keras.layers.MaxPooling2D(),
+    keras.layers.Conv2D(filters=20, kernel_size=(5,5), activation=&#x27;relu&#x27;),
+    keras.layers.MaxPooling2D(),    
+    keras.layers.Flatten(),
+    keras.layers.Dense(10)
+])
+
+model.compile(loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True),metrics=[&#x27;acc&#x27;])
+
+model.summary()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;sequential_1&quot;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+conv2d_1 (Conv2D)            (None, 24, 24, 10)        260       
+_________________________________________________________________
+max_pooling2d (MaxPooling2D) (None, 12, 12, 10)        0         
+_________________________________________________________________
+conv2d_2 (Conv2D)            (None, 8, 8, 20)          5020      
+_________________________________________________________________
+max_pooling2d_1 (MaxPooling2 (None, 4, 4, 20)          0         
+_________________________________________________________________
+flatten_1 (Flatten)          (None, 320)               0         
+_________________________________________________________________
+dense_1 (Dense)              (None, 10)                3210      
+=================================================================
+Total params: 8,490
+Trainable params: 8,490
+Non-trainable params: 0
+_________________________________________________________________
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>注意，可训练参数的数量（约8.5K）比之前的情况显著减少。这是因为卷积层通常具有较少的参数，并且在应用最终的全连接层之前，图像的维度显著降低。较少的参数数量对我们的模型有积极影响，因为它有助于防止即使在较小的数据集规模上也出现过拟合。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>hist = model.fit(x_train_c,y_train,validation_data=(x_test_c,y_test),epochs=5)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 1/5
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.0723 - acc: 0.9780 - val_loss: 0.0423 - val_acc: 0.9861
+Epoch 2/5
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.0523 - acc: 0.9842 - val_loss: 0.0425 - val_acc: 0.9866
+Epoch 3/5
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.0448 - acc: 0.9868 - val_loss: 0.0403 - val_acc: 0.9865
+Epoch 4/5
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.0383 - acc: 0.9886 - val_loss: 0.0323 - val_acc: 0.9888
+Epoch 5/5
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.0338 - acc: 0.9895 - val_loss: 0.0331 - val_acc: 0.9896
+</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>plot_results(hist)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 1080x216 with 2 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们可以注意到，与仅使用一层相比，我们能够在更少的训练周期（通常只需1到2个周期）内实现更高的准确率。这意味着复杂的网络架构需要更少的数据就能理解发生了什么，并从我们的图像中提取通用模式。然而，训练过程也会更耗时，并且需要使用GPU。</p>
+<h2>使用CIFAR-10数据集中的真实图像进行实验</h2>
+<p>虽然我们的手写数字识别问题看起来像是一个简单的练习，但现在我们已经准备好处理更复杂的问题了。让我们来探索一个更高级的数据集——CIFAR-10，它包含了不同物体的图片。这个数据集名为<a href="https://www.cs.toronto.edu/~kriz/cifar.html">CIFAR-10</a>，包含了60,000张32x32的图像，分为10个类别。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>(x_train,y_train),(x_test,y_test) = keras.datasets.cifar10.load_data()
+x_train = x_train.astype(np.float32) / 255.0
+x_test = x_test.astype(np.float32) / 255.0
+classes = (&#x27;plane&#x27;, &#x27;car&#x27;, &#x27;bird&#x27;, &#x27;cat&#x27;,
+           &#x27;deer&#x27;, &#x27;dog&#x27;, &#x27;frog&#x27;, &#x27;horse&#x27;, &#x27;ship&#x27;, &#x27;truck&#x27;)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>display_dataset(x_train,y_train,classes=classes)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 1080x216 with 10 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>一个著名的用于CIFAR-10的架构叫做<a href="https://en.wikipedia.org/wiki/LeNet">LeNet</a>，由*Yann LeCun*提出。它遵循了我们上面概述的相同原则，主要区别是有3个输入颜色通道而不是1个。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model = keras.models.Sequential([
+    keras.layers.Conv2D(filters = 6, kernel_size = 5, strides = 1, activation = &#x27;relu&#x27;, input_shape = (32,32,3)),
+    keras.layers.MaxPooling2D(pool_size = 2, strides = 2),
+    keras.layers.Conv2D(filters = 16, kernel_size = 5, strides = 1, activation = &#x27;relu&#x27;),
+    keras.layers.MaxPooling2D(pool_size = 2, strides = 2),
+    keras.layers.Flatten(),
+    keras.layers.Dense(120, activation = &#x27;relu&#x27;),
+    keras.layers.Dense(84, activation = &#x27;relu&#x27;),
+    keras.layers.Dense(10, activation = &#x27;softmax&#x27;)])
+
+model.summary()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;sequential_3&quot;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+conv2d_8 (Conv2D)            (None, 28, 28, 6)         456       
+_________________________________________________________________
+max_pooling2d_6 (MaxPooling2 (None, 14, 14, 6)         0         
+_________________________________________________________________
+conv2d_9 (Conv2D)            (None, 10, 10, 16)        2416      
+_________________________________________________________________
+max_pooling2d_7 (MaxPooling2 (None, 5, 5, 16)          0         
+_________________________________________________________________
+flatten_3 (Flatten)          (None, 400)               0         
+_________________________________________________________________
+dense_9 (Dense)              (None, 120)               48120     
+_________________________________________________________________
+dense_10 (Dense)             (None, 84)                10164     
+_________________________________________________________________
+dense_11 (Dense)             (None, 10)                850       
+=================================================================
+Total params: 62,006
+Trainable params: 62,006
+Non-trainable params: 0
+_________________________________________________________________
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>正确训练这个网络将需要大量时间，最好在支持GPU的计算设备上进行。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model.compile(optimizer = &#x27;adam&#x27;, loss = &#x27;sparse_categorical_crossentropy&#x27;, metrics = [&#x27;acc&#x27;])
+hist = model.fit(x_train,y_train,validation_data=(x_test,y_test),epochs=10)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 1/10
+1563/1563 [==============================] - 6s 4ms/step - loss: 1.6205 - acc: 0.4033 - val_loss: 1.4287 - val_acc: 0.4743
+Epoch 2/10
+1563/1563 [==============================] - 6s 4ms/step - loss: 1.3435 - acc: 0.5154 - val_loss: 1.2804 - val_acc: 0.5412
+Epoch 3/10
+1563/1563 [==============================] - 5s 3ms/step - loss: 1.2225 - acc: 0.5645 - val_loss: 1.2164 - val_acc: 0.5600
+Epoch 4/10
+1563/1563 [==============================] - 5s 4ms/step - loss: 1.1360 - acc: 0.5957 - val_loss: 1.1918 - val_acc: 0.5768
+Epoch 5/10
+1563/1563 [==============================] - 5s 3ms/step - loss: 1.0776 - acc: 0.6178 - val_loss: 1.1451 - val_acc: 0.5906
+Epoch 6/10
+1563/1563 [==============================] - 5s 4ms/step - loss: 1.0228 - acc: 0.6370 - val_loss: 1.1178 - val_acc: 0.6098
+Epoch 7/10
+1563/1563 [==============================] - 5s 4ms/step - loss: 0.9769 - acc: 0.6544 - val_loss: 1.0793 - val_acc: 0.6202
+Epoch 8/10
+1563/1563 [==============================] - 5s 3ms/step - loss: 0.9340 - acc: 0.6711 - val_loss: 1.0783 - val_acc: 0.6271
+Epoch 9/10
+1563/1563 [==============================] - 5s 4ms/step - loss: 0.8983 - acc: 0.6824 - val_loss: 1.0952 - val_acc: 0.6203
+Epoch 10/10
+1563/1563 [==============================] - 6s 4ms/step - loss: 0.8648 - acc: 0.6939 - val_loss: 1.1103 - val_acc: 0.6217
+</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>plot_results(hist)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 1080x216 with 2 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们在短时间内训练了几个周期后所达到的准确率似乎并不算太高。然而，请记住，盲目猜测的准确率只有10%，而且我们的任务实际上比MNIST数字分类要复杂得多。在如此短的训练时间内能够达到超过50%的准确率，已经是一个不错的成就。</p>
+<h2>收获总结</h2>
+<p>在本单元中，我们学习了计算机视觉神经网络的核心概念——卷积神经网络。现实中用于图像分类、目标检测，甚至图像生成的网络架构，都是基于卷积神经网络（CNN）的，只是增加了更多的层数以及一些额外的训练技巧。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务 <a href="https://github.com/Azure/co-op-translator">Co-op Translator</a> 进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。应以原始语言的文档作为权威来源。对于关键信息，建议使用专业人工翻译。我们不对因使用此翻译而产生的任何误解或误读承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

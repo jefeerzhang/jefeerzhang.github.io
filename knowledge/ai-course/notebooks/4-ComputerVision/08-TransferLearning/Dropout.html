@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dropout</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 Dropout</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>Dropout 的影响</h2>
+<p>让我们亲自看看 dropout 如何实际影响训练。我们将使用 MNIST 数据集和一个简单的卷积网络来进行实验：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>from tensorflow import keras
+import numpy as np
+import matplotlib.pyplot as plt
+
+(x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+
+x_train = x_train.astype(&quot;float32&quot;) / 255
+x_test = x_test.astype(&quot;float32&quot;) / 255
+
+x_train = np.expand_dims(x_train, -1)
+x_test = np.expand_dims(x_test, -1)
+</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们将定义一个名为 <code>train</code> 的函数，该函数将负责整个训练过程，包括以下内容：</p>
+<ul>
+<li>使用给定的 dropout 率 `d` 定义神经网络架构</li>
+<li>指定合适的训练参数（优化器和损失函数）</li>
+<li>执行训练并收集训练历史记录</li>
+</ul>
+<p>接下来，我们将针对一系列不同的 dropout 值运行此函数：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def train(d):
+    print(f&quot;Training with dropout = {d}&quot;)
+    model = keras.Sequential([
+        keras.layers.Conv2D(32, kernel_size=(3, 3), activation=&quot;relu&quot;, input_shape=(28,28,1)),
+        keras.layers.MaxPooling2D(pool_size=(2, 2)),
+        keras.layers.Conv2D(64, kernel_size=(3, 3), activation=&quot;relu&quot;),
+        keras.layers.MaxPooling2D(pool_size=(2, 2)),
+        keras.layers.Flatten(),
+        keras.layers.Dropout(d),
+        keras.layers.Dense(10, activation=&quot;softmax&quot;)
+    ])
+    model.compile(loss=&#x27;sparse_categorical_crossentropy&#x27;,optimizer=&#x27;adam&#x27;,metrics=[&#x27;acc&#x27;])
+    hist = model.fit(x_train,y_train,validation_data=(x_test,y_test),epochs=5,batch_size=64)
+    return hist
+
+res = { d : train(d) for d in [0,0.2,0.5,0.8] }</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Training with dropout = 0
+Epoch 1/5
+938/938 [==============================] - 26s 27ms/step - loss: 0.1949 - acc: 0.9435 - val_loss: 0.0596 - val_acc: 0.9802
+Epoch 2/5
+938/938 [==============================] - 27s 29ms/step - loss: 0.0592 - acc: 0.9816 - val_loss: 0.0433 - val_acc: 0.9857
+Epoch 3/5
+938/938 [==============================] - 26s 28ms/step - loss: 0.0438 - acc: 0.9867 - val_loss: 0.0472 - val_acc: 0.9849
+Epoch 4/5
+938/938 [==============================] - 27s 28ms/step - loss: 0.0355 - acc: 0.9890 - val_loss: 0.0353 - val_acc: 0.9882
+Epoch 5/5
+938/938 [==============================] - 26s 28ms/step - loss: 0.0294 - acc: 0.9910 - val_loss: 0.0305 - val_acc: 0.9894
+Training with dropout = 0.2
+Epoch 1/5
+938/938 [==============================] - 29s 31ms/step - loss: 0.2097 - acc: 0.9377 - val_loss: 0.0655 - val_acc: 0.9781
+Epoch 2/5
+938/938 [==============================] - 31s 33ms/step - loss: 0.0676 - acc: 0.9792 - val_loss: 0.0409 - val_acc: 0.9852
+Epoch 3/5
+938/938 [==============================] - 28s 30ms/step - loss: 0.0514 - acc: 0.9837 - val_loss: 0.0384 - val_acc: 0.9871
+Epoch 4/5
+938/938 [==============================] - 28s 29ms/step - loss: 0.0424 - acc: 0.9871 - val_loss: 0.0343 - val_acc: 0.9889
+Epoch 5/5
+938/938 [==============================] - 30s 32ms/step - loss: 0.0356 - acc: 0.9893 - val_loss: 0.0343 - val_acc: 0.9885
+Training with dropout = 0.5
+Epoch 1/5
+938/938 [==============================] - 30s 31ms/step - loss: 0.2586 - acc: 0.9212 - val_loss: 0.0666 - val_acc: 0.9797
+Epoch 2/5
+938/938 [==============================] - 28s 30ms/step - loss: 0.0860 - acc: 0.9734 - val_loss: 0.0441 - val_acc: 0.9860
+Epoch 3/5
+938/938 [==============================] - 29s 31ms/step - loss: 0.0674 - acc: 0.9792 - val_loss: 0.0414 - val_acc: 0.9868
+Epoch 4/5
+938/938 [==============================] - 30s 32ms/step - loss: 0.0564 - acc: 0.9822 - val_loss: 0.0326 - val_acc: 0.9886
+Epoch 5/5
+938/938 [==============================] - 29s 31ms/step - loss: 0.0511 - acc: 0.9843 - val_loss: 0.0298 - val_acc: 0.9899
+Training with dropout = 0.8
+Epoch 1/5
+938/938 [==============================] - 31s 32ms/step - loss: 0.3832 - acc: 0.8766 - val_loss: 0.0849 - val_acc: 0.9732
+Epoch 2/5
+938/938 [==============================] - 29s 31ms/step - loss: 0.1563 - acc: 0.9521 - val_loss: 0.0686 - val_acc: 0.9797
+Epoch 3/5
+938/938 [==============================] - 32s 34ms/step - loss: 0.1253 - acc: 0.9616 - val_loss: 0.0490 - val_acc: 0.9854
+Epoch 4/5
+938/938 [==============================] - 33s 35ms/step - loss: 0.1105 - acc: 0.9658 - val_loss: 0.0395 - val_acc: 0.9872
+Epoch 5/5
+938/938 [==============================] - 34s 36ms/step - loss: 0.1022 - acc: 0.9680 - val_loss: 0.0363 - val_acc: 0.9878
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在，让我们绘制不同 dropout 值的验证准确率图表，以观察训练速度：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>for d,h in res.items():
+    plt.plot(h.history[&#x27;val_acc&#x27;],label=str(d))
+plt.legend()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;matplotlib.legend.Legend at 0x235bc70f0d0&gt;</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>从这张图中，你可能会注意到以下几点：</p>
+<ul>
+<li>当 Dropout 值在 0.2-0.5 范围内时，你会看到训练速度最快，整体效果最好</li>
+<li>如果没有使用 Dropout ($d=0$)，训练过程可能会变得不太稳定且速度较慢</li>
+<li>高 Dropout 值（0.8）会使情况变得更糟</li>
+</ul></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务<a href="https://github.com/Azure/co-op-translator">Co-op Translator</a>进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。原始语言的文档应被视为权威来源。对于关键信息，建议使用专业人工翻译。我们不对因使用此翻译而产生的任何误解或误读承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

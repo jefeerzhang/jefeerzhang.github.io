@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SemanticSegmentationTF</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 SemanticSegmentationTF</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h1>语义分割</h1>
+<p><strong>分割</strong> 是计算机视觉中的主要任务之一。对于图像中的<strong>每个</strong>像素，你需要指定其所属的类别（包括背景）。语义分割只标注像素的类别，而实例分割则将类别划分为不同的实例。</p>
+<p>例如，在实例分割中，十辆汽车是<strong>不同的</strong>对象；而在语义分割中，<strong>所有</strong>汽车都属于同一个类别。</p>
+<p>&lt;img src=&quot;images/instance_vs_semantic.jpeg&quot; width=&quot;50%&quot;&gt;</p>
+<p>&gt; 图片来源于 <a href="https://nirmalamurali.medium.com/image-classification-vs-semantic-segmentation-vs-instance-segmentation-625c33a08d50">这篇博客文章</a></p>
+<p>几乎所有的架构都有相同的结构。第一部分是<strong>编码器</strong>，用于从输入图像中提取特征；第二部分是<strong>解码器</strong>，将这些特征转换为具有相同高度和宽度的图像，并且通道数可能等于类别的数量。</p>
+<p>&lt;img src=&quot;images/segm.png&quot; width=&quot;80%&quot;&gt;</p>
+<p>&gt; 图片来源于 <a href="https://arxiv.org/pdf/2001.05566.pdf">这篇论文</a></p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import tensorflow as tf
+import tensorflow.keras.layers as keras
+import matplotlib.pyplot as plt
+from tqdm import tqdm
+import numpy as np
+from skimage.io import imread
+from skimage.transform import resize
+import os
+import tensorflow.keras.optimizers as optimizers
+import tensorflow.keras.losses as losses
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+tf.random.set_seed(42)
+np.random.seed(42)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>train_size = 0.8
+lr = 3e-4
+weight_decay = 8e-9
+batch_size = 64
+epochs = 100</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>数据集</h2></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>!apt-get install rar
+!wget https://www.dropbox.com/s/k88qukc20ljnbuo/PH2Dataset.rar
+!unrar x -Y PH2Dataset.rar</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def load_dataset(train_part, root=&#x27;PH2Dataset&#x27;):
+    images = []
+    masks = []
+
+    for root, dirs, files in os.walk(os.path.join(root, &#x27;PH2 Dataset images&#x27;)):
+        if root.endswith(&#x27;_Dermoscopic_Image&#x27;):
+            images.append(imread(os.path.join(root, files[0])))
+        if root.endswith(&#x27;_lesion&#x27;):
+            masks.append(imread(os.path.join(root, files[0])))
+
+    size = (256, 256)
+    images = np.array([resize(image, size, mode=&#x27;constant&#x27;, anti_aliasing=True,) for image in images])
+    masks = np.expand_dims(np.array([resize(mask, size, mode=&#x27;constant&#x27;, anti_aliasing=False) &gt; 0.5 for mask in masks]), axis=3)
+
+    indices = np.random.permutation(range(len(images)))
+    train_part = int(train_part * len(images))
+    train_ind = indices[:train_part]
+    test_ind = indices[train_part:]
+
+    X_train = tf.cast(images[train_ind, :, :, :], tf.float32)
+    y_train = tf.cast(masks[train_ind, :, :, :], tf.float32)
+
+    X_test = tf.cast(images[test_ind, :, :, :], tf.float32)
+    y_test = tf.cast(masks[test_ind, :, :, :], tf.float32)
+
+    return (X_train, y_train), (X_test, y_test)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>(X_train, y_train), (X_test, y_test) = load_dataset(train_size)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def plotn(n, data):
+    images, masks = data[0], data[1]
+    fig, ax = plt.subplots(1, n)
+    fig1, ax1 = plt.subplots(1, n)
+    for i, (img, mask) in enumerate(zip(images, masks)):
+        if i == n:
+            break
+        ax[i].imshow(img)
+        ax1[i].imshow(mask[:, :, 0])
+    plt.show()</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们绘制一些带有对应掩码的图像。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>plotn(5, (X_train, y_train))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>SegNet</h2>
+<p>简单的编码器-解码器架构，编码器中包含卷积和池化层，解码器中包含卷积和上采样层。</p>
+<p>&lt;img src=&quot;images/segnet.png&quot; width=&quot;80%&quot;&gt;</p>
+<ul>
+<li>Badrinarayanan, V., Kendall, A., &amp; Cipolla, R. (2015). [SegNet: 一种用于图像分割的深度卷积编码器-解码器架构](https://arxiv.org/pdf/1511.00561.pdf)</li>
+</ul></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>class SegNet(tf.keras.Model):
+    def __init__(self):
+        super().__init__()
+        self.enc_conv0 = keras.Conv2D(16, kernel_size=3, padding=&#x27;same&#x27;)
+        self.bn0 = keras.BatchNormalization()
+        self.relu0 = keras.Activation(&#x27;relu&#x27;)
+        self.pool0 = keras.MaxPool2D()
+
+        self.enc_conv1 = keras.Conv2D(32, kernel_size=3, padding=&#x27;same&#x27;)
+        self.relu1 = keras.Activation(&#x27;relu&#x27;)
+        self.bn1 = keras.BatchNormalization()
+        self.pool1 = keras.MaxPool2D()
+
+        self.enc_conv2 = keras.Conv2D(64, kernel_size=3, padding=&#x27;same&#x27;)
+        self.relu2 = keras.Activation(&#x27;relu&#x27;)
+        self.bn2 = keras.BatchNormalization()
+        self.pool2 = keras.MaxPool2D()
+
+        self.enc_conv3 = keras.Conv2D(128, kernel_size=3, padding=&#x27;same&#x27;)
+        self.relu3 = keras.Activation(&#x27;relu&#x27;)
+        self.bn3 = keras.BatchNormalization()
+        self.pool3 = keras.MaxPool2D()
+
+        self.bottleneck_conv = keras.Conv2D(256, kernel_size=(3, 3), padding=&#x27;same&#x27;)
+
+        self.upsample0 =  keras.UpSampling2D(interpolation=&#x27;bilinear&#x27;)
+        self.dec_conv0 = keras.Conv2D(128, kernel_size=3, padding=&#x27;same&#x27;)
+        self.dec_relu0 = keras.Activation(&#x27;relu&#x27;)
+        self.dec_bn0 = keras.BatchNormalization()
+
+        self.upsample1 =  keras.UpSampling2D(interpolation=&#x27;bilinear&#x27;)
+        self.dec_conv1 = keras.Conv2D(64, kernel_size=3, padding=&#x27;same&#x27;)
+        self.dec_relu1 = keras.Activation(&#x27;relu&#x27;)
+        self.dec_bn1 = keras.BatchNormalization()
+
+        self.upsample2 =  keras.UpSampling2D(interpolation=&#x27;bilinear&#x27;)
+        self.dec_conv2 = keras.Conv2D(32, kernel_size=3, padding=&#x27;same&#x27;)
+        self.dec_relu2 = keras.Activation(&#x27;relu&#x27;)
+        self.dec_bn2 = keras.BatchNormalization()
+
+        self.upsample3 =  keras.UpSampling2D(interpolation=&#x27;bilinear&#x27;)
+        self.dec_conv3 = keras.Conv2D(1, kernel_size=1)
+
+    def call(self, input):
+        e0 = self.pool0(self.relu0(self.bn0(self.enc_conv0(input))))
+        e1 = self.pool1(self.relu1(self.bn1(self.enc_conv1(e0))))
+        e2 = self.pool2(self.relu2(self.bn2(self.enc_conv2(e1))))
+        e3 = self.pool3(self.relu3(self.bn3(self.enc_conv3(e2))))
+
+        b = self.bottleneck_conv(e3)
+
+        d0 = self.dec_relu0(self.dec_bn0(self.upsample0(self.dec_conv0(b))))
+        d1 = self.dec_relu1(self.dec_bn1(self.upsample1(self.dec_conv1(d0))))
+        d2 = self.dec_relu2(self.dec_bn2(self.upsample2(self.dec_conv2(d1))))
+        d3 = self.dec_conv3(self.upsample3(d2))
+
+        return d3</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model = SegNet()
+optimizer = optimizers.Adam(learning_rate=lr, decay=weight_decay)
+loss_fn = losses.BinaryCrossentropy(from_logits=True)
+
+model.compile(loss=loss_fn, optimizer=optimizer)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def train(datasets, model, epochs, batch_size):
+    train_dataset, test_dataset = datasets[0], datasets[1]
+
+    model.fit(train_dataset[0], train_dataset[1],
+                epochs=epochs,
+                batch_size=batch_size,
+                shuffle=True,
+                validation_data=(test_dataset[0], test_dataset[1]))</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>train(((X_train, y_train), (X_test, y_test)), model, epochs, batch_size)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 1/100
+3/3 [==============================] - 2s 298ms/step - loss: 0.6123 - val_loss: 0.6960
+Epoch 2/100
+3/3 [==============================] - 1s 197ms/step - loss: 0.3332 - val_loss: 0.6874
+Epoch 3/100
+3/3 [==============================] - 1s 199ms/step - loss: 0.2715 - val_loss: 0.6707
+Epoch 4/100
+3/3 [==============================] - 1s 205ms/step - loss: 0.2508 - val_loss: 0.6544
+Epoch 5/100
+3/3 [==============================] - 1s 286ms/step - loss: 0.2290 - val_loss: 0.6403
+Epoch 6/100
+3/3 [==============================] - 1s 235ms/step - loss: 0.2110 - val_loss: 0.6242
+Epoch 7/100
+3/3 [==============================] - 1s 231ms/step - loss: 0.1986 - val_loss: 0.6138
+Epoch 8/100
+3/3 [==============================] - 1s 197ms/step - loss: 0.1923 - val_loss: 0.6068
+Epoch 9/100
+3/3 [==============================] - 1s 203ms/step - loss: 0.1789 - val_loss: 0.6018
+Epoch 10/100
+3/3 [==============================] - 1s 199ms/step - loss: 0.1714 - val_loss: 0.5979
+Epoch 11/100
+3/3 [==============================] - 1s 201ms/step - loss: 0.1745 - val_loss: 0.5945
+Epoch 12/100
+3/3 [==============================] - 1s 196ms/step - loss: 0.1613 - val_loss: 0.5912
+Epoch 13/100
+3/3 [==============================] - 1s 199ms/step - loss: 0.1570 - val_loss: 0.5877
+Epoch 14/100
+3/3 [==============================] - 1s 201ms/step - loss: 0.1547 - val_loss: 0.5861
+Epoch 15/100
+3/3 [==============================] - 1s 204ms/step - loss: 0.1546 - val_loss: 0.5862
+Epoch 16/100
+3/3 [==============================] - 1s 197ms/step - loss: 0.1527 - val_loss: 0.5853
+Epoch 17/100
+3/3 [==============================] - 1s 197ms/step - loss: 0.1456 - val_loss: 0.5865
+Epoch 18/100
+3/3 [==============================] - 1s 202ms/step - loss: 0.1567 - val_loss: 0.5903
+Epoch 19/100
+3/3 [==============================] - 1s 198ms/step - loss: 0.1429 - val_loss: 0.5939
+Epoch 20/100
+3/3 [==============================] - 1s 207ms/step - loss: 0.1432 - val_loss: 0.5960
+Epoch 21/100
+3/3 [==============================] - 1s 201ms/step - loss: 0.1438 - val_loss: 0.5940
+Epoch 22/100
+3/3 [==============================] - 1s 204ms/step - loss: 0.1449 - val_loss: 0.5933
+Epoch 23/100
+3/3 [==============================] - 1s 201ms/step - loss: 0.1424 - val_loss: 0.5972
+Epoch 24/100
+3/3 [==============================] - 1s 201ms/step - loss: 0.1407 - val_loss: 0.5999
+Epoch 25/100
+3/3 [==============================] - 1s 206ms/step - loss: 0.1370 - val_loss: 0.6001
+Epoch 26/100
+3/3 [==============================] - 1s 215ms/step - loss: 0.1371 - val_loss: 0.6021
+Epoch 27/100
+3/3 [==============================] - 1s 200ms/step - loss: 0.1345 - val_loss: 0.6194
+Epoch 28/100
+3/3 [==============================] - 1s 200ms/step - loss: 0.1312 - val_loss: 0.6287
+Epoch 29/100
+3/3 [==============================] - 1s 199ms/step - loss: 0.1304 - val_loss: 0.6154
+Epoch 30/100
+3/3 [==============================] - 1s 201ms/step - loss: 0.1265 - val_loss: 0.6151
+Epoch 31/100
+3/3 [==============================] - 1s 201ms/step - loss: 0.1219 - val_loss: 0.6220
+Epoch 32/100
+3/3 [==============================] - 1s 210ms/step - loss: 0.1200 - val_loss: 0.6249
+Epoch 33/100
+3/3 [==============================] - 1s 199ms/step - loss: 0.1151 - val_loss: 0.6268
+Epoch 34/100
+3/3 [==============================] - 1s 202ms/step - loss: 0.1139 - val_loss: 0.6328
+Epoch 35/100
+3/3 [==============================] - 1s 200ms/step - loss: 0.1117 - val_loss: 0.6297
+Epoch 36/100
+3/3 [==============================] - 1s 200ms/step - loss: 0.1081 - val_loss: 0.6288
+Epoch 37/100
+3/3 [==============================] - 1s 204ms/step - loss: 0.1064 - val_loss: 0.6330
+Epoch 38/100
+3/3 [==============================] - 1s 202ms/step - loss: 0.1056 - val_loss: 0.6385
+Epoch 39/100
+3/3 [==============================] - 1s 204ms/step - loss: 0.1086 - val_loss: 0.6446
+Epoch 40/100
+3/3 [==============================] - 1s 199ms/step - loss: 0.1047 - val_loss: 0.6595
+Epoch 41/100
+3/3 [==============================] - 1s 206ms/step - loss: 0.1040 - val_loss: 0.6602
+Epoch 42/100
+3/3 [==============================] - 1s 206ms/step - loss: 0.1073 - val_loss: 0.6681
+Epoch 43/100
+3/3 [==============================] - 1s 200ms/step - loss: 0.1074 - val_loss: 0.6802
+Epoch 44/100
+3/3 [==============================] - 1s 202ms/step - loss: 0.0992 - val_loss: 0.6728
+Epoch 45/100
+3/3 [==============================] - 1s 204ms/step - loss: 0.0976 - val_loss: 0.6802
+Epoch 46/100
+3/3 [==============================] - 1s 198ms/step - loss: 0.0973 - val_loss: 0.6865
+Epoch 47/100
+3/3 [==============================] - 1s 200ms/step - loss: 0.1094 - val_loss: 0.7038
+Epoch 48/100
+3/3 [==============================] - 1s 202ms/step - loss: 0.0974 - val_loss: 0.7115
+Epoch 49/100
+3/3 [==============================] - 1s 200ms/step - loss: 0.0964 - val_loss: 0.7044
+Epoch 50/100
+3/3 [==============================] - 1s 206ms/step - loss: 0.0922 - val_loss: 0.7199
+Epoch 51/100
+3/3 [==============================] - 1s 198ms/step - loss: 0.0951 - val_loss: 0.7396
+Epoch 52/100
+3/3 [==============================] - 1s 198ms/step - loss: 0.1069 - val_loss: 0.7395
+Epoch 53/100
+3/3 [==============================] - 1s 203ms/step - loss: 0.1093 - val_loss: 0.7520
+Epoch 54/100
+3/3 [==============================] - 1s 202ms/step - loss: 0.0953 - val_loss: 0.7568
+Epoch 55/100
+3/3 [==============================] - 1s 206ms/step - loss: 0.1025 - val_loss: 0.7783
+Epoch 56/100
+3/3 [==============================] - 1s 201ms/step - loss: 0.0912 - val_loss: 0.7390
+Epoch 57/100
+3/3 [==============================] - 1s 203ms/step - loss: 0.0931 - val_loss: 0.7246
+Epoch 58/100
+3/3 [==============================] - 1s 198ms/step - loss: 0.0870 - val_loss: 0.7614
+Epoch 59/100
+3/3 [==============================] - 1s 200ms/step - loss: 0.0896 - val_loss: 0.7579
+Epoch 60/100
+3/3 [==============================] - 1s 200ms/step - loss: 0.0872 - val_loss: 0.7351
+Epoch 61/100
+3/3 [==============================] - 1s 200ms/step - loss: 0.0839 - val_loss: 0.7296
+Epoch 62/100
+3/3 [==============================] - 1s 203ms/step - loss: 0.0797 - val_loss: 0.7343
+Epoch 63/100
+3/3 [==============================] - 1s 198ms/step - loss: 0.0776 - val_loss: 0.7349
+Epoch 64/100
+3/3 [==============================] - 1s 205ms/step - loss: 0.0794 - val_loss: 0.7375
+Epoch 65/100
+3/3 [==============================] - 1s 200ms/step - loss: 0.0758 - val_loss: 0.7488
+Epoch 66/100
+3/3 [==============================] - 1s 200ms/step - loss: 0.0774 - val_loss: 0.7626
+Epoch 67/100
+3/3 [==============================] - 1s 203ms/step - loss: 0.0758 - val_loss: 0.7650
+Epoch 68/100
+3/3 [==============================] - 1s 205ms/step - loss: 0.0792 - val_loss: 0.7603
+Epoch 69/100
+3/3 [==============================] - 1s 198ms/step - loss: 0.0764 - val_loss: 0.7573
+Epoch 70/100
+3/3 [==============================] - 1s 198ms/step - loss: 0.0791 - val_loss: 0.7603
+Epoch 71/100
+3/3 [==============================] - 1s 197ms/step - loss: 0.0749 - val_loss: 0.7415
+Epoch 72/100
+3/3 [==============================] - 1s 199ms/step - loss: 0.0730 - val_loss: 0.7432
+Epoch 73/100
+3/3 [==============================] - 1s 199ms/step - loss: 0.0729 - val_loss: 0.7702
+Epoch 74/100
+3/3 [==============================] - 1s 200ms/step - loss: 0.0711 - val_loss: 0.7692
+Epoch 75/100
+3/3 [==============================] - 1s 199ms/step - loss: 0.0710 - val_loss: 0.7545
+Epoch 76/100
+3/3 [==============================] - 1s 200ms/step - loss: 0.0680 - val_loss: 0.7410
+Epoch 77/100
+3/3 [==============================] - 1s 201ms/step - loss: 0.0683 - val_loss: 0.7372
+Epoch 78/100
+3/3 [==============================] - 1s 199ms/step - loss: 0.0684 - val_loss: 0.6997
+Epoch 79/100
+3/3 [==============================] - 1s 200ms/step - loss: 0.0654 - val_loss: 0.7236
+Epoch 80/100
+3/3 [==============================] - 1s 196ms/step - loss: 0.0682 - val_loss: 0.7213
+Epoch 81/100
+3/3 [==============================] - 1s 194ms/step - loss: 0.0721 - val_loss: 0.6602
+Epoch 82/100
+3/3 [==============================] - 1s 201ms/step - loss: 0.0821 - val_loss: 0.6739
+Epoch 83/100
+3/3 [==============================] - 1s 199ms/step - loss: 0.0835 - val_loss: 0.7153
+Epoch 84/100
+3/3 [==============================] - 1s 195ms/step - loss: 0.0793 - val_loss: 0.6923
+Epoch 85/100
+3/3 [==============================] - 1s 201ms/step - loss: 0.0796 - val_loss: 0.6331
+Epoch 86/100
+3/3 [==============================] - 1s 199ms/step - loss: 0.0719 - val_loss: 0.6116
+Epoch 87/100
+3/3 [==============================] - 1s 199ms/step - loss: 0.0782 - val_loss: 0.5826
+Epoch 88/100
+3/3 [==============================] - 1s 199ms/step - loss: 0.0681 - val_loss: 0.5903
+Epoch 89/100
+3/3 [==============================] - 1s 199ms/step - loss: 0.0683 - val_loss: 0.6258
+Epoch 90/100
+3/3 [==============================] - 1s 196ms/step - loss: 0.0659 - val_loss: 0.5808
+Epoch 91/100
+3/3 [==============================] - 1s 196ms/step - loss: 0.0660 - val_loss: 0.5802
+Epoch 92/100
+3/3 [==============================] - 1s 202ms/step - loss: 0.0668 - val_loss: 0.5854
+Epoch 93/100
+3/3 [==============================] - 1s 200ms/step - loss: 0.0659 - val_loss: 0.5884
+Epoch 94/100
+3/3 [==============================] - 1s 199ms/step - loss: 0.0675 - val_loss: 0.5855
+Epoch 95/100
+3/3 [==============================] - 1s 202ms/step - loss: 0.0608 - val_loss: 0.5175
+Epoch 96/100
+3/3 [==============================] - 1s 199ms/step - loss: 0.0624 - val_loss: 0.4879
+Epoch 97/100
+3/3 [==============================] - 1s 198ms/step - loss: 0.0631 - val_loss: 0.4896
+Epoch 98/100
+3/3 [==============================] - 1s 201ms/step - loss: 0.0591 - val_loss: 0.4590
+Epoch 99/100
+3/3 [==============================] - 1s 200ms/step - loss: 0.0624 - val_loss: 0.4910
+Epoch 100/100
+3/3 [==============================] - 1s 190ms/step - loss: 0.0604 - val_loss: 0.4450
+</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>predictions = []
+image_mask = []
+plots = 5
+
+for i, (img, mask) in enumerate(zip(X_test, y_test)):
+    if i == plots:
+        break
+    img = tf.expand_dims(img, 0)
+    pred = np.array(model.predict(img))
+    predictions.append(pred[0, :, :, 0] &gt; 0.5)
+    image_mask.append(mask)
+plotn(plots, (predictions, image_mask))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>U-Net</h2>
+<p>一种非常简单的架构，使用了跳跃连接。每个卷积层的跳跃连接可以帮助网络在该层保留原始输入的特征信息。</p>
+<p>U-Net通常使用默认的编码器进行特征提取，例如resnet50。</p>
+<p>&lt;img src=&quot;images/unet.png&quot; width=&quot;70%&quot;&gt;</p>
+<ul>
+<li>Ronneberger, Olaf, Philipp Fischer, 和 Thomas Brox. [U-Net: 用于生物医学图像分割的卷积网络。](https://arxiv.org/pdf/1505.04597.pdf)</li>
+</ul></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>class UNet(tf.keras.Model):
+    def __init__(self):
+        super().__init__()
+        self.enc_conv0 = keras.Conv2D(16, kernel_size=3, padding=&#x27;same&#x27;)
+        self.bn0 = keras.BatchNormalization()
+        self.relu0 = keras.Activation(&#x27;relu&#x27;)
+        self.pool0 = keras.MaxPool2D()
+
+        self.enc_conv1 = keras.Conv2D(32, kernel_size=3, padding=&#x27;same&#x27;)
+        self.relu1 = keras.Activation(&#x27;relu&#x27;)
+        self.bn1 = keras.BatchNormalization()
+        self.pool1 = keras.MaxPool2D()
+
+        self.enc_conv2 = keras.Conv2D(64, kernel_size=3, padding=&#x27;same&#x27;)
+        self.relu2 = keras.Activation(&#x27;relu&#x27;)
+        self.bn2 = keras.BatchNormalization()
+        self.pool2 = keras.MaxPool2D()
+
+        self.enc_conv3 = keras.Conv2D(128, kernel_size=3, padding=&#x27;same&#x27;)
+        self.relu3 = keras.Activation(&#x27;relu&#x27;)
+        self.bn3 = keras.BatchNormalization()
+        self.pool3 = keras.MaxPool2D()
+
+        self.bottleneck_conv = keras.Conv2D(256, kernel_size=(3, 3), padding=&#x27;same&#x27;)
+
+        self.upsample0 =  keras.UpSampling2D(interpolation=&#x27;bilinear&#x27;)
+        self.dec_conv0 = keras.Conv2D(128, kernel_size=3, padding=&#x27;same&#x27;, input_shape=[None, 384, None, None])
+        self.dec_relu0 = keras.Activation(&#x27;relu&#x27;)
+        self.dec_bn0 = keras.BatchNormalization()
+
+        self.upsample1 =  keras.UpSampling2D(interpolation=&#x27;bilinear&#x27;)
+        self.dec_conv1 = keras.Conv2D(64, kernel_size=3, padding=&#x27;same&#x27;, input_shape=[None, 192, None, None])
+        self.dec_relu1 = keras.Activation(&#x27;relu&#x27;)
+        self.dec_bn1 = keras.BatchNormalization()
+
+        self.upsample2 =  keras.UpSampling2D(interpolation=&#x27;bilinear&#x27;)
+        self.dec_conv2 = keras.Conv2D(32, kernel_size=3, padding=&#x27;same&#x27;, input_shape=[None, 96, None, None])
+        self.dec_relu2 = keras.Activation(&#x27;relu&#x27;)
+        self.dec_bn2 = keras.BatchNormalization()
+
+        self.upsample3 =  keras.UpSampling2D(interpolation=&#x27;bilinear&#x27;)
+        self.dec_conv3 = keras.Conv2D(1, kernel_size=1, input_shape=[None, 48, None, None])
+
+        self.cat0 = keras.Concatenate(axis=3)
+        self.cat1 = keras.Concatenate(axis=3)
+        self.cat2 = keras.Concatenate(axis=3)
+        self.cat3 = keras.Concatenate(axis=3)
+
+    def call(self, input):
+        e0 = self.pool0(self.relu0(self.bn0(self.enc_conv0(input))))
+        e1 = self.pool1(self.relu1(self.bn1(self.enc_conv1(e0))))
+        e2 = self.pool2(self.relu2(self.bn2(self.enc_conv2(e1))))
+        e3 = self.pool3(self.relu3(self.bn3(self.enc_conv3(e2))))
+
+        cat0 = self.relu0(self.bn0(self.enc_conv0(input)))
+        cat1 = self.relu1(self.bn1(self.enc_conv1(e0)))
+        cat2 = self.relu2(self.bn2(self.enc_conv2(e1)))
+        cat3 = self.relu3(self.bn3(self.enc_conv3(e2)))
+
+        b = self.bottleneck_conv(e3)
+
+        cat_tens0 = self.cat0([self.upsample0(b), cat3])
+        d0 = self.dec_relu0(self.dec_bn0(self.dec_conv0(cat_tens0)))
+
+        cat_tens1 = self.cat1([self.upsample1(d0), cat2])
+        d1 = self.dec_relu1(self.dec_bn1(self.dec_conv1(cat_tens1)))
+
+        cat_tens2 = self.cat2([self.upsample2(d1), cat1])
+        d2 = self.dec_relu2(self.dec_bn2(self.dec_conv2(cat_tens2)))
+
+        cat_tens3 = self.cat3([self.upsample3(d2), cat0])
+        d3 = self.dec_conv3(cat_tens3)
+
+        return d3</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model = UNet()
+optimizer = optimizers.Adam(learning_rate=lr, decay=weight_decay)
+loss_fn = losses.BinaryCrossentropy(from_logits=True)
+
+model.compile(loss=loss_fn, optimizer=optimizer)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>train(((X_train, y_train), (X_test, y_test)), model, epochs, batch_size)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 1/100
+3/3 [==============================] - 5s 482ms/step - loss: 0.5073 - val_loss: 0.6237
+Epoch 2/100
+3/3 [==============================] - 1s 368ms/step - loss: 0.3388 - val_loss: 0.6192
+Epoch 3/100
+3/3 [==============================] - 1s 363ms/step - loss: 0.2867 - val_loss: 0.6133
+Epoch 4/100
+3/3 [==============================] - 1s 367ms/step - loss: 0.2624 - val_loss: 0.6043
+Epoch 5/100
+3/3 [==============================] - 1s 365ms/step - loss: 0.2435 - val_loss: 0.5949
+Epoch 6/100
+3/3 [==============================] - 1s 364ms/step - loss: 0.2320 - val_loss: 0.5844
+Epoch 7/100
+3/3 [==============================] - 1s 369ms/step - loss: 0.2201 - val_loss: 0.5781
+Epoch 8/100
+3/3 [==============================] - 1s 362ms/step - loss: 0.2119 - val_loss: 0.5673
+Epoch 9/100
+3/3 [==============================] - 1s 367ms/step - loss: 0.2047 - val_loss: 0.5588
+Epoch 10/100
+3/3 [==============================] - 1s 360ms/step - loss: 0.1946 - val_loss: 0.5544
+Epoch 11/100
+3/3 [==============================] - 1s 368ms/step - loss: 0.1959 - val_loss: 0.5412
+Epoch 12/100
+3/3 [==============================] - 1s 366ms/step - loss: 0.1814 - val_loss: 0.5346
+Epoch 13/100
+3/3 [==============================] - 1s 366ms/step - loss: 0.1780 - val_loss: 0.5336
+Epoch 14/100
+3/3 [==============================] - 1s 368ms/step - loss: 0.1727 - val_loss: 0.5344
+Epoch 15/100
+3/3 [==============================] - 1s 367ms/step - loss: 0.1715 - val_loss: 0.5280
+Epoch 16/100
+3/3 [==============================] - 1s 368ms/step - loss: 0.1691 - val_loss: 0.5166
+Epoch 17/100
+3/3 [==============================] - 1s 365ms/step - loss: 0.1641 - val_loss: 0.5133
+Epoch 18/100
+3/3 [==============================] - 1s 366ms/step - loss: 0.1707 - val_loss: 0.5221
+Epoch 19/100
+3/3 [==============================] - 1s 367ms/step - loss: 0.1628 - val_loss: 0.5239
+Epoch 20/100
+3/3 [==============================] - 1s 363ms/step - loss: 0.1615 - val_loss: 0.5177
+Epoch 21/100
+3/3 [==============================] - 1s 362ms/step - loss: 0.1577 - val_loss: 0.5221
+Epoch 22/100
+3/3 [==============================] - 1s 369ms/step - loss: 0.1566 - val_loss: 0.5044
+Epoch 23/100
+3/3 [==============================] - 1s 365ms/step - loss: 0.1561 - val_loss: 0.5046
+Epoch 24/100
+3/3 [==============================] - 1s 366ms/step - loss: 0.1469 - val_loss: 0.5063
+Epoch 25/100
+3/3 [==============================] - 1s 368ms/step - loss: 0.1437 - val_loss: 0.4947
+Epoch 26/100
+3/3 [==============================] - 1s 371ms/step - loss: 0.1428 - val_loss: 0.4857
+Epoch 27/100
+3/3 [==============================] - 1s 366ms/step - loss: 0.1449 - val_loss: 0.4850
+Epoch 28/100
+3/3 [==============================] - 1s 367ms/step - loss: 0.1426 - val_loss: 0.4875
+Epoch 29/100
+3/3 [==============================] - 1s 392ms/step - loss: 0.1444 - val_loss: 0.4638
+Epoch 30/100
+3/3 [==============================] - 1s 365ms/step - loss: 0.1341 - val_loss: 0.4796
+Epoch 31/100
+3/3 [==============================] - 1s 367ms/step - loss: 0.1357 - val_loss: 0.4689
+Epoch 32/100
+3/3 [==============================] - 1s 365ms/step - loss: 0.1351 - val_loss: 0.4550
+Epoch 33/100
+3/3 [==============================] - 1s 366ms/step - loss: 0.1294 - val_loss: 0.4419
+Epoch 34/100
+3/3 [==============================] - 1s 369ms/step - loss: 0.1271 - val_loss: 0.4100
+Epoch 35/100
+3/3 [==============================] - 1s 368ms/step - loss: 0.1265 - val_loss: 0.4188
+Epoch 36/100
+3/3 [==============================] - 1s 367ms/step - loss: 0.1214 - val_loss: 0.4285
+Epoch 37/100
+3/3 [==============================] - 1s 371ms/step - loss: 0.1206 - val_loss: 0.4129
+Epoch 38/100
+3/3 [==============================] - 1s 365ms/step - loss: 0.1230 - val_loss: 0.4196
+Epoch 39/100
+3/3 [==============================] - 1s 369ms/step - loss: 0.1213 - val_loss: 0.3899
+Epoch 40/100
+3/3 [==============================] - 1s 365ms/step - loss: 0.1184 - val_loss: 0.3972
+Epoch 41/100
+3/3 [==============================] - 1s 366ms/step - loss: 0.1163 - val_loss: 0.3951
+Epoch 42/100
+3/3 [==============================] - 1s 368ms/step - loss: 0.1193 - val_loss: 0.3735
+Epoch 43/100
+3/3 [==============================] - 1s 368ms/step - loss: 0.1239 - val_loss: 0.3669
+Epoch 44/100
+3/3 [==============================] - 1s 368ms/step - loss: 0.1137 - val_loss: 0.3668
+Epoch 45/100
+3/3 [==============================] - 1s 368ms/step - loss: 0.1096 - val_loss: 0.3684
+Epoch 46/100
+3/3 [==============================] - 1s 367ms/step - loss: 0.1144 - val_loss: 0.3403
+Epoch 47/100
+3/3 [==============================] - 1s 371ms/step - loss: 0.1209 - val_loss: 0.3419
+Epoch 48/100
+3/3 [==============================] - 1s 395ms/step - loss: 0.1071 - val_loss: 0.3213
+Epoch 49/100
+3/3 [==============================] - 1s 370ms/step - loss: 0.1074 - val_loss: 0.3212
+Epoch 50/100
+3/3 [==============================] - 1s 369ms/step - loss: 0.1039 - val_loss: 0.3247
+Epoch 51/100
+3/3 [==============================] - 1s 367ms/step - loss: 0.1085 - val_loss: 0.3067
+Epoch 52/100
+3/3 [==============================] - 1s 394ms/step - loss: 0.1090 - val_loss: 0.3093
+Epoch 53/100
+3/3 [==============================] - 1s 367ms/step - loss: 0.1098 - val_loss: 0.2827
+Epoch 54/100
+3/3 [==============================] - 1s 373ms/step - loss: 0.1039 - val_loss: 0.2746
+Epoch 55/100
+3/3 [==============================] - 1s 365ms/step - loss: 0.1037 - val_loss: 0.2868
+Epoch 56/100
+3/3 [==============================] - 1s 369ms/step - loss: 0.1004 - val_loss: 0.2750
+Epoch 57/100
+3/3 [==============================] - 1s 371ms/step - loss: 0.0995 - val_loss: 0.2636
+Epoch 58/100
+3/3 [==============================] - 1s 365ms/step - loss: 0.0940 - val_loss: 0.2648
+Epoch 59/100
+3/3 [==============================] - 1s 371ms/step - loss: 0.0953 - val_loss: 0.2583
+Epoch 60/100
+3/3 [==============================] - 1s 368ms/step - loss: 0.0976 - val_loss: 0.2508
+Epoch 61/100
+3/3 [==============================] - 1s 371ms/step - loss: 0.0905 - val_loss: 0.2378
+Epoch 62/100
+3/3 [==============================] - 1s 372ms/step - loss: 0.0900 - val_loss: 0.2481
+Epoch 63/100
+3/3 [==============================] - 1s 396ms/step - loss: 0.0858 - val_loss: 0.2540
+Epoch 64/100
+3/3 [==============================] - 1s 373ms/step - loss: 0.0847 - val_loss: 0.2499
+Epoch 65/100
+3/3 [==============================] - 1s 372ms/step - loss: 0.0841 - val_loss: 0.2326
+Epoch 66/100
+3/3 [==============================] - 1s 369ms/step - loss: 0.0871 - val_loss: 0.2275
+Epoch 67/100
+3/3 [==============================] - 1s 372ms/step - loss: 0.0827 - val_loss: 0.2274
+Epoch 68/100
+3/3 [==============================] - 1s 370ms/step - loss: 0.0889 - val_loss: 0.2166
+Epoch 69/100
+3/3 [==============================] - 1s 370ms/step - loss: 0.0882 - val_loss: 0.2222
+Epoch 70/100
+3/3 [==============================] - 1s 369ms/step - loss: 0.0885 - val_loss: 0.2330
+Epoch 71/100
+3/3 [==============================] - 1s 368ms/step - loss: 0.0878 - val_loss: 0.2104
+Epoch 72/100
+3/3 [==============================] - 1s 372ms/step - loss: 0.0843 - val_loss: 0.2211
+Epoch 73/100
+3/3 [==============================] - 1s 392ms/step - loss: 0.0837 - val_loss: 0.2141
+Epoch 74/100
+3/3 [==============================] - 1s 374ms/step - loss: 0.0858 - val_loss: 0.1999
+Epoch 75/100
+3/3 [==============================] - 1s 367ms/step - loss: 0.0798 - val_loss: 0.2131
+Epoch 76/100
+3/3 [==============================] - 1s 372ms/step - loss: 0.0769 - val_loss: 0.1851
+Epoch 77/100
+3/3 [==============================] - 1s 396ms/step - loss: 0.0788 - val_loss: 0.1921
+Epoch 78/100
+3/3 [==============================] - 1s 372ms/step - loss: 0.0771 - val_loss: 0.2266
+Epoch 79/100
+3/3 [==============================] - 1s 373ms/step - loss: 0.0738 - val_loss: 0.1826
+Epoch 80/100
+3/3 [==============================] - 1s 371ms/step - loss: 0.0728 - val_loss: 0.1870
+Epoch 81/100
+3/3 [==============================] - 1s 373ms/step - loss: 0.0759 - val_loss: 0.1821
+Epoch 82/100
+3/3 [==============================] - 1s 372ms/step - loss: 0.0830 - val_loss: 0.1887
+Epoch 83/100
+3/3 [==============================] - 1s 373ms/step - loss: 0.0861 - val_loss: 0.1783
+Epoch 84/100
+3/3 [==============================] - 1s 372ms/step - loss: 0.0854 - val_loss: 0.1988
+Epoch 85/100
+3/3 [==============================] - 1s 373ms/step - loss: 0.0857 - val_loss: 0.1749
+Epoch 86/100
+3/3 [==============================] - 1s 372ms/step - loss: 0.0820 - val_loss: 0.1620
+Epoch 87/100
+3/3 [==============================] - 1s 368ms/step - loss: 0.0874 - val_loss: 0.1668
+Epoch 88/100
+3/3 [==============================] - 1s 374ms/step - loss: 0.0744 - val_loss: 0.1711
+Epoch 89/100
+3/3 [==============================] - 1s 371ms/step - loss: 0.0750 - val_loss: 0.1632
+Epoch 90/100
+3/3 [==============================] - 1s 399ms/step - loss: 0.0717 - val_loss: 0.1742
+Epoch 91/100
+3/3 [==============================] - 1s 372ms/step - loss: 0.0723 - val_loss: 0.1670
+Epoch 92/100
+3/3 [==============================] - 1s 374ms/step - loss: 0.0713 - val_loss: 0.1652
+Epoch 93/100
+3/3 [==============================] - 1s 372ms/step - loss: 0.0718 - val_loss: 0.1707
+Epoch 94/100
+3/3 [==============================] - 1s 373ms/step - loss: 0.0739 - val_loss: 0.1692
+Epoch 95/100
+3/3 [==============================] - 1s 400ms/step - loss: 0.0650 - val_loss: 0.1621
+Epoch 96/100
+3/3 [==============================] - 1s 374ms/step - loss: 0.0653 - val_loss: 0.1547
+Epoch 97/100
+3/3 [==============================] - 1s 372ms/step - loss: 0.0681 - val_loss: 0.1475
+Epoch 98/100
+3/3 [==============================] - 1s 369ms/step - loss: 0.0613 - val_loss: 0.1513
+Epoch 99/100
+3/3 [==============================] - 1s 371ms/step - loss: 0.0665 - val_loss: 0.1537
+Epoch 100/100
+3/3 [==============================] - 1s 363ms/step - loss: 0.0640 - val_loss: 0.1525
+</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>predictions = []
+image_mask = []
+plots = 5
+
+for i, (img, mask) in enumerate(zip(X_test, y_test)):
+    if i == plots:
+        break
+    img = tf.expand_dims(img, 0)
+    pred = np.array(model.predict(img))
+    predictions.append(pred[0, :, :, 0] &gt; 0.5)
+    image_mask.append(mask)
+plotn(plots, (predictions, image_mask))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务<a href="https://github.com/Azure/co-op-translator">Co-op Translator</a>进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。原始语言的文档应被视为权威来源。对于关键信息，建议使用专业人工翻译。我们不对因使用此翻译而产生的任何误解或误读承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

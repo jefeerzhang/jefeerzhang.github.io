@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EmbeddingsPyTorch</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 EmbeddingsPyTorch</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>嵌入</h2>
+<p>在之前的例子中，我们处理的是长度为 <code>vocab_size</code> 的高维词袋向量，并且我们显式地将低维位置表示向量转换为稀疏的独热表示。这种独热表示并不节省内存，而且每个单词都是彼此独立处理的，也就是说，独热编码的向量无法表达单词之间的语义相似性。</p>
+<p>在本单元中，我们将继续探索 <strong>News AG</strong> 数据集。首先，让我们加载数据并从之前的笔记本中获取一些定义。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import torch
+import torchtext
+import numpy as np
+from torchnlp import *
+train_dataset, test_dataset, classes, vocab = load_dataset()
+vocab_size = len(vocab)
+print(&quot;Vocab size = &quot;,vocab_size)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Loading dataset...
+</div><div class="jp-OutputArea-output">d:\WORK\ai-for-beginners\5-NLP\14-Embeddings\data\train.csv: 29.5MB [00:01, 18.8MB/s]                            
+d:\WORK\ai-for-beginners\5-NLP\14-Embeddings\data\test.csv: 1.86MB [00:00, 11.2MB/s]                          
+</div><div class="jp-OutputArea-output">Building vocab...
+Vocab size =  95812
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>什么是嵌入？</h2>
+<p><strong>嵌入</strong>的概念是用低维密集向量来表示单词，这些向量能够在某种程度上反映单词的语义意义。稍后我们会讨论如何构建有意义的单词嵌入，但现在可以简单地将嵌入理解为一种降低单词向量维度的方法。</p>
+<p>嵌入层会将一个单词作为输入，并生成指定<code>embedding_size</code>的输出向量。从某种意义上说，它与<code>Linear</code>层非常相似，但嵌入层不需要接收独热编码向量，而是可以直接接收单词编号作为输入。</p>
+<p>通过将嵌入层作为网络的第一层，我们可以从词袋模型切换到<strong>嵌入袋</strong>模型。在嵌入袋模型中，我们首先将文本中的每个单词转换为对应的嵌入向量，然后对所有这些嵌入向量进行某种聚合操作，例如<code>sum</code>（求和）、<code>average</code>（平均）或<code>max</code>（最大值）。</p>
+<p>!<a href="../../../../../lessons/5-NLP/14-Embeddings/images/embedding-classifier-example.png">展示五个序列单词的嵌入分类器的图片。</a></p>
+<p>我们的分类器神经网络将从嵌入层开始，然后是聚合层，最后是线性分类器：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>class EmbedClassifier(torch.nn.Module):
+    def __init__(self, vocab_size, embed_dim, num_class):
+        super().__init__()
+        self.embedding = torch.nn.Embedding(vocab_size, embed_dim)
+        self.fc = torch.nn.Linear(embed_dim, num_class)
+
+    def forward(self, x):
+        x = self.embedding(x)
+        x = torch.mean(x,dim=1)
+        return self.fc(x)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>处理变量序列长度</h3>
+<p>由于这种架构，我们需要以特定方式创建网络的微批次。在前一个单元中，使用词袋模型（BoW）时，微批次中的所有 BoW 张量都具有相同的大小 <code>vocab_size</code>，无论文本序列的实际长度是多少。一旦我们转向词嵌入，每个文本样本中会包含不同数量的单词，而在将这些样本组合成微批次时，我们需要进行一些填充。</p>
+<p>这可以通过向数据源提供 <code>collate_fn</code> 函数的相同技术来实现：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def padify(b):
+    # b is the list of tuples of length batch_size
+    #   - first element of a tuple = label, 
+    #   - second = feature (text sequence)
+    # build vectorized sequence
+    v = [encode(x[1]) for x in b]
+    # first, compute max length of a sequence in this minibatch
+    l = max(map(len,v))
+    return ( # tuple of two tensors - labels and features
+        torch.LongTensor([t[0]-1 for t in b]),
+        torch.stack([torch.nn.functional.pad(torch.tensor(t),(0,l-len(t)),mode=&#x27;constant&#x27;,value=0) for t in v])
+    )
+
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=16, collate_fn=padify, shuffle=True)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>训练嵌入分类器</h3>
+<p>现在我们已经定义了合适的数据加载器，可以使用我们在上一单元中定义的训练函数来训练模型：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>net = EmbedClassifier(vocab_size,32,len(classes)).to(device)
+train_epoch(net,train_loader, lr=1, epoch_size=25000)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">3200: acc=0.6415625
+6400: acc=0.6865625
+9600: acc=0.7103125
+12800: acc=0.726953125
+16000: acc=0.739375
+19200: acc=0.75046875
+22400: acc=0.7572321428571429
+</div><div class="jp-OutputArea-output">(0.889799795315499, 0.7623160588611644)</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>&gt; <strong>注意</strong>：我们这里只训练了25k条记录（少于一个完整的周期）以节省时间，但您可以继续训练，编写一个函数来训练多个周期，并尝试调整学习率参数以获得更高的准确性。您应该能够达到大约90%的准确率。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>EmbeddingBag层与可变长度序列表示</h3>
+<p>在之前的架构中，我们需要将所有序列填充到相同的长度，以便将它们放入一个小批量中。这并不是表示可变长度序列的最有效方式——另一种方法是使用<strong>偏移量</strong>向量，它可以存储一个大向量中所有序列的偏移量。</p>
+<p>!<a href="../../../../../lessons/5-NLP/14-Embeddings/images/offset-sequence-representation.png">显示偏移量序列表示的图片</a></p>
+<p>&gt; <strong>注意</strong>：在上图中，我们展示的是字符序列，但在我们的示例中，我们处理的是单词序列。然而，用偏移量向量表示序列的基本原理是相同的。</p>
+<p>为了使用偏移量表示，我们使用<a href="https://pytorch.org/docs/stable/generated/torch.nn.EmbeddingBag.html"><code>EmbeddingBag</code></a>层。它与<code>Embedding</code>类似，但它以内容向量和偏移量向量作为输入，并且还包括一个平均层，可以是<code>mean</code>、<code>sum</code>或<code>max</code>。</p>
+<p>以下是使用<code>EmbeddingBag</code>的修改后的网络：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>class EmbedClassifier(torch.nn.Module):
+    def __init__(self, vocab_size, embed_dim, num_class):
+        super().__init__()
+        self.embedding = torch.nn.EmbeddingBag(vocab_size, embed_dim)
+        self.fc = torch.nn.Linear(embed_dim, num_class)
+
+    def forward(self, text, off):
+        x = self.embedding(text, off)
+        return self.fc(x)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>为了准备用于训练的数据集，我们需要提供一个转换函数来准备偏移向量：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def offsetify(b):
+    # first, compute data tensor from all sequences
+    x = [torch.tensor(encode(t[1])) for t in b]
+    # now, compute the offsets by accumulating the tensor of sequence lengths
+    o = [0] + [len(t) for t in x]
+    o = torch.tensor(o[:-1]).cumsum(dim=0)
+    return ( 
+        torch.LongTensor([t[0]-1 for t in b]), # labels
+        torch.cat(x), # text 
+        o
+    )
+
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=16, collate_fn=offsetify, shuffle=True)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>注意，与之前的所有示例不同，我们的网络现在接受两个参数：数据向量和偏移向量，它们的大小不同。同样，我们的数据加载器也为我们提供了3个值而不是2个：文本和偏移向量都作为特征提供。因此，我们需要稍微调整我们的训练函数来处理这一点：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>net = EmbedClassifier(vocab_size,32,len(classes)).to(device)
+
+def train_epoch_emb(net,dataloader,lr=0.01,optimizer=None,loss_fn = torch.nn.CrossEntropyLoss(),epoch_size=None, report_freq=200):
+    optimizer = optimizer or torch.optim.Adam(net.parameters(),lr=lr)
+    loss_fn = loss_fn.to(device)
+    net.train()
+    total_loss,acc,count,i = 0,0,0,0
+    for labels,text,off in dataloader:
+        optimizer.zero_grad()
+        labels,text,off = labels.to(device), text.to(device), off.to(device)
+        out = net(text, off)
+        loss = loss_fn(out,labels) #cross_entropy(out,labels)
+        loss.backward()
+        optimizer.step()
+        total_loss+=loss
+        _,predicted = torch.max(out,1)
+        acc+=(predicted==labels).sum()
+        count+=len(labels)
+        i+=1
+        if i%report_freq==0:
+            print(f&quot;{count}: acc={acc.item()/count}&quot;)
+        if epoch_size and count&gt;epoch_size:
+            break
+    return total_loss.item()/count, acc.item()/count
+
+
+train_epoch_emb(net,train_loader, lr=4, epoch_size=25000)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">3200: acc=0.6153125
+6400: acc=0.6615625
+9600: acc=0.6932291666666667
+12800: acc=0.715078125
+16000: acc=0.7270625
+19200: acc=0.7382291666666667
+22400: acc=0.7486160714285715
+</div><div class="jp-OutputArea-output">(22.771553103007037, 0.7551983365323096)</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>语义嵌入：Word2Vec</h2>
+<p>在之前的例子中，模型的嵌入层学习了将单词映射为向量表示，但这种表示并没有太多语义上的意义。如果能够学习一种向量表示，使得相似的单词或同义词在某种向量距离（例如欧几里得距离）上彼此接近，那就更好了。</p>
+<p>为了实现这一点，我们需要以特定的方式在大量文本集合上预训练嵌入模型。最早的一种训练语义嵌入的方法被称为 <a href="https://en.wikipedia.org/wiki/Word2vec">Word2Vec</a>。它基于两种主要架构，用于生成单词的分布式表示：</p>
+<ul>
+<li>**连续词袋模型** (CBoW) —— 在这种架构中，我们训练模型根据上下文预测一个单词。给定 ngram $(W_{-2},W_{-1},W_0,W_1,W_2)$，模型的目标是从 $(W_{-2},W_{-1},W_1,W_2)$ 中预测 $W_0$。</li>
+<li>**连续跳词模型** (Skip-Gram) 与 CBoW 相反。模型使用上下文窗口中的单词来预测当前单词。</li>
+</ul>
+<p>CBoW 的训练速度更快，而 Skip-Gram 虽然较慢，但在表示不常见单词方面表现更好。</p>
+<p>!<a href="../../../../../lessons/5-NLP/14-Embeddings/images/example-algorithms-for-converting-words-to-vectors.png">展示 CBoW 和 Skip-Gram 算法将单词转换为向量的图片。</a></p>
+<p>为了实验基于 Google News 数据集预训练的 Word2Vec 嵌入，我们可以使用 <strong>gensim</strong> 库。下面我们找到与“neural”最相似的单词：</p>
+<p>&gt; <strong>注意:</strong> 当你第一次创建单词向量时，下载它们可能需要一些时间！</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import gensim.downloader as api
+w2v = api.load(&#x27;word2vec-google-news-300&#x27;)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>for w,p in w2v.most_similar(&#x27;neural&#x27;):
+    print(f&quot;{w} -&gt; {p}&quot;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">neuronal -&gt; 0.7804799675941467
+neurons -&gt; 0.7326500415802002
+neural_circuits -&gt; 0.7252851724624634
+neuron -&gt; 0.7174385190010071
+cortical -&gt; 0.6941086649894714
+brain_circuitry -&gt; 0.6923246383666992
+synaptic -&gt; 0.6699118614196777
+neural_circuitry -&gt; 0.6638563275337219
+neurochemical -&gt; 0.6555314064025879
+neuronal_activity -&gt; 0.6531826257705688
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们还可以从单词计算向量嵌入，用于训练分类模型（为清晰起见，我们仅显示向量的前20个分量）：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>w2v.word_vec(&#x27;play&#x27;)[:20]</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">array([ 0.01226807,  0.06225586,  0.10693359,  0.05810547,  0.23828125,
+        0.03686523,  0.05151367, -0.20703125,  0.01989746,  0.10058594,
+       -0.03759766, -0.1015625 , -0.15820312, -0.08105469, -0.0390625 ,
+       -0.05053711,  0.16015625,  0.2578125 ,  0.10058594, -0.25976562],
+      dtype=float32)</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>语义嵌入的一个伟大之处在于，你可以操控向量编码来改变语义。例如，我们可以要求找到一个词，其向量表示尽可能接近词语*国王*和*女人*，并尽可能远离词语*男人*：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>w2v.most_similar(positive=[&#x27;king&#x27;,&#x27;woman&#x27;],negative=[&#x27;man&#x27;])[0]</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">(&#x27;queen&#x27;, 0.7118192911148071)</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>CBoW 和 Skip-Grams 都是“预测型”嵌入，因为它们只考虑局部上下文。Word2Vec 并未利用全局上下文。</p>
+<p><strong>FastText</strong> 基于 Word2Vec，通过为每个单词以及单词中的字符 n-gram 学习向量表示来扩展功能。在每次训练步骤中，这些表示的值会被平均成一个向量。虽然这增加了预训练的计算量，但它使得词嵌入能够编码子词信息。</p>
+<p>另一种方法 <strong>GloVe</strong> 利用了共现矩阵的概念，使用神经方法将共现矩阵分解为更具表现力和非线性的词向量。</p>
+<p>你可以通过将嵌入模型切换为 FastText 和 GloVe 来尝试示例，因为 gensim 支持多种不同的词嵌入模型。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>在 PyTorch 中使用预训练的嵌入</h2>
+<p>我们可以修改上面的示例，在嵌入层的矩阵中预填充语义嵌入，例如 Word2Vec。需要注意的是，预训练嵌入的词汇表和我们的文本语料库的词汇表可能不完全匹配，因此我们会用随机值初始化缺失词的权重：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>embed_size = len(w2v.get_vector(&#x27;hello&#x27;))
+print(f&#x27;Embedding size: {embed_size}&#x27;)
+
+net = EmbedClassifier(vocab_size,embed_size,len(classes))
+
+print(&#x27;Populating matrix, this will take some time...&#x27;,end=&#x27;&#x27;)
+found, not_found = 0,0
+for i,w in enumerate(vocab.get_itos()):
+    try:
+        net.embedding.weight[i].data = torch.tensor(w2v.get_vector(w))
+        found+=1
+    except:
+        net.embedding.weight[i].data = torch.normal(0.0,1.0,(embed_size,))
+        not_found+=1
+
+print(f&quot;Done, found {found} words, {not_found} words missing&quot;)
+net = net.to(device)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Embedding size: 300
+Populating matrix, this will take some time...Done, found 41080 words, 54732 words missing
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在让我们训练我们的模型。请注意，由于嵌入层大小更大，因此参数数量显著增加，训练模型所需的时间比前一个例子要长得多。此外，正因为如此，如果我们想避免过拟合，可能需要在更多的例子上训练我们的模型。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>train_epoch_emb(net,train_loader, lr=4, epoch_size=25000)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">3200: acc=0.6359375
+6400: acc=0.68109375
+9600: acc=0.7067708333333333
+12800: acc=0.723671875
+16000: acc=0.73625
+19200: acc=0.7463541666666667
+22400: acc=0.7560714285714286
+</div><div class="jp-OutputArea-output">(214.1013875559821, 0.7626759436980166)</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>在我们的案例中，准确率并没有显著提升，这可能是由于词汇差异较大。</p>
+<p>为了解决词汇差异的问题，我们可以采用以下解决方案：</p>
+<ul>
+<li>重新训练 word2vec 模型以适应我们的词汇</li>
+<li>使用预训练的 word2vec 模型的词汇加载我们的数据集。在加载数据集时，可以指定使用的词汇。</li>
+</ul>
+<p>后一种方法似乎更简单，尤其是因为 PyTorch 的 <code>torchtext</code> 框架内置了对嵌入的支持。例如，我们可以通过以下方式实例化基于 GloVe 的词汇：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>vocab = torchtext.vocab.GloVe(name=&#x27;6B&#x27;, dim=50)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">100%|█████████▉| 399999/400000 [00:15&lt;00:00, 25411.14it/s]
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>加载的词汇表具有以下基本操作：</p>
+<ul>
+<li>`vocab.stoi` 字典允许我们将单词转换为其在字典中的索引</li>
+<li>`vocab.itos` 则执行相反的操作——将数字转换为单词</li>
+<li>`vocab.vectors` 是嵌入向量的数组，因此要获取单词 `s` 的嵌入，我们需要使用 `vocab.vectors[vocab.stoi[s]]`</li>
+</ul>
+<p>以下是操作嵌入的一个示例，用来展示方程 <strong>kind-man+woman = queen</strong>（我稍微调整了一下系数以使其生效）：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># get the vector corresponding to kind-man+woman
+qvec = vocab.vectors[vocab.stoi[&#x27;king&#x27;]]-vocab.vectors[vocab.stoi[&#x27;man&#x27;]]+1.3*vocab.vectors[vocab.stoi[&#x27;woman&#x27;]]
+# find the index of the closest embedding vector 
+d = torch.sum((vocab.vectors-qvec)**2,dim=1)
+min_idx = torch.argmin(d)
+# find the corresponding word
+vocab.itos[min_idx]</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&#x27;queen&#x27;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>要使用这些嵌入训练分类器，我们首先需要使用GloVe词汇表对数据集进行编码：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def offsetify(b):
+    # first, compute data tensor from all sequences
+    x = [torch.tensor(encode(t[1],voc=vocab)) for t in b] # pass the instance of vocab to encode function!
+    # now, compute the offsets by accumulating the tensor of sequence lengths
+    o = [0] + [len(t) for t in x]
+    o = torch.tensor(o[:-1]).cumsum(dim=0)
+    return ( 
+        torch.LongTensor([t[0]-1 for t in b]), # labels
+        torch.cat(x), # text 
+        o
+    )</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>正如我们上面所看到的，所有向量嵌入都存储在 <code>vocab.vectors</code> 矩阵中。通过简单的复制操作，可以非常轻松地将这些权重加载到嵌入层的权重中：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>net = EmbedClassifier(len(vocab),len(vocab.vectors[0]),len(classes))
+net.embedding.weight.data = vocab.vectors
+net = net.to(device)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在让我们训练我们的模型，看看是否能获得更好的结果：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=16, collate_fn=offsetify, shuffle=True)
+train_epoch_emb(net,train_loader, lr=4, epoch_size=25000)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">3200: acc=0.6271875
+6400: acc=0.68078125
+9600: acc=0.7030208333333333
+12800: acc=0.71984375
+16000: acc=0.7346875
+19200: acc=0.7455729166666667
+22400: acc=0.7529464285714286
+</div><div class="jp-OutputArea-output">(35.53972978646833, 0.7575175943698017)</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们没有看到准确率显著提高的原因之一是因为我们数据集中的一些词在预训练的GloVe词汇表中缺失，因此它们实际上被忽略了。为了克服这一问题，我们可以在我们的数据集上训练自己的嵌入。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>上下文嵌入</h2>
+<p>传统预训练嵌入表示（如 Word2Vec）的一个主要局限是词义消歧问题。虽然预训练嵌入可以在一定程度上捕捉单词在上下文中的含义，但每个单词的所有可能含义都会被编码到同一个嵌入中。这可能会导致下游模型出现问题，因为许多单词（例如“play”）的含义会根据使用的上下文而有所不同。</p>
+<p>例如，“play”在以下两句话中的含义就完全不同：</p>
+<ul>
+<li>我去剧院看了一场**戏剧**。</li>
+<li>约翰想和他的朋友们一起**玩**。</li>
+</ul>
+<p>上述预训练嵌入将“play”的这两种含义表示为同一个嵌入。为了克服这一局限，我们需要基于<strong>语言模型</strong>来构建嵌入。语言模型是在大规模文本语料库上训练的，它*了解*单词如何在不同的上下文中组合。关于上下文嵌入的讨论超出了本教程的范围，但我们将在下一单元讨论语言模型时回到这个话题。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务<a href="https://github.com/Azure/co-op-translator">Co-op Translator</a>进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。应以原文档的原始语言版本作为权威来源。对于关键信息，建议使用专业人工翻译。我们对因使用此翻译而引起的任何误解或误读不承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

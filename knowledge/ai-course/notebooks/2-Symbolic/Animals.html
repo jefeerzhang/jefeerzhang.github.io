@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Animals</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 Animals</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h1>实现动物专家系统</h1>
+<p>来自 <a href="http://github.com/microsoft/ai-for-beginners">AI for Beginners Curriculum</a> 的示例。</p>
+<p>在此示例中，我们将实现一个简单的基于知识的系统，根据一些物理特征来确定动物。该系统可以用以下 AND-OR 树表示（这是整个树的一部分，我们可以很容易地添加更多规则）：</p>
+<p>![](../../../../../../translated_images/zh-CN/AND-OR-Tree.5592d2c70187f283.webp)</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>我们自己的带有逆向推理的专家系统外壳</h2>
+<p>让我们尝试定义一个基于产生规则的简单知识表示语言。我们将使用 Python 类作为关键字来定义规则。基本上将有三种类型的类：</p>
+<ul>
+<li>`Ask` 表示需要向用户提出的问题。它包含可能的答案集合。</li>
+<li>`If` 表示一个规则，它只是存储规则内容的语法糖</li>
+<li>`AND`/`OR` 是表示树的 AND/OR 分支的类。它们只存储内部的参数列表。为简化代码，所有功能都定义在父类 `Content` 中。</li>
+</ul></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>class Ask():
+    def __init__(self,choices=[&#x27;y&#x27;,&#x27;n&#x27;]):
+        self.choices = choices
+    def ask(self):
+        if max([len(x) for x in self.choices])&gt;1:
+            for i,x in enumerate(self.choices):
+                print(&quot;{0}. {1}&quot;.format(i,x),flush=True)
+            x = int(input())
+            return self.choices[x]
+        else:
+            print(&quot;/&quot;.join(self.choices),flush=True)
+            return input()
+
+class Content():
+    def __init__(self,x):
+        self.x=x
+        
+class If(Content):
+    pass
+
+class AND(Content):
+    pass
+
+class OR(Content):
+    pass</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>在我们的系统中，工作记忆将包含作为<strong>属性-值对</strong>的<strong>事实</strong>列表。知识库可以定义为一个大型字典，将动作（应插入工作记忆的新事实）映射到以与或表达式表示的条件。此外，某些事实可以被<code>Ask</code>。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>rules = {
+    &#x27;default&#x27;: Ask([&#x27;y&#x27;,&#x27;n&#x27;]),
+    &#x27;color&#x27; : Ask([&#x27;red-brown&#x27;,&#x27;black and white&#x27;,&#x27;other&#x27;]),
+    &#x27;pattern&#x27; : Ask([&#x27;dark stripes&#x27;,&#x27;dark spots&#x27;]),
+    &#x27;mammal&#x27;: If(OR([&#x27;hair&#x27;,&#x27;gives milk&#x27;])),
+    &#x27;carnivor&#x27;: If(OR([AND([&#x27;sharp teeth&#x27;,&#x27;claws&#x27;,&#x27;forward-looking eyes&#x27;]),&#x27;eats meat&#x27;])),
+    &#x27;ungulate&#x27;: If([&#x27;mammal&#x27;,OR([&#x27;has hooves&#x27;,&#x27;chews cud&#x27;])]),
+    &#x27;bird&#x27;: If(OR([&#x27;feathers&#x27;,AND([&#x27;flies&#x27;,&#x27;lies eggs&#x27;])])),
+    &#x27;animal:monkey&#x27; : If([&#x27;mammal&#x27;,&#x27;carnivor&#x27;,&#x27;color:red-brown&#x27;,&#x27;pattern:dark spots&#x27;]),
+    &#x27;animal:tiger&#x27; : If([&#x27;mammal&#x27;,&#x27;carnivor&#x27;,&#x27;color:red-brown&#x27;,&#x27;pattern:dark stripes&#x27;]),
+    &#x27;animal:giraffe&#x27; : If([&#x27;ungulate&#x27;,&#x27;long neck&#x27;,&#x27;long legs&#x27;,&#x27;pattern:dark spots&#x27;]),
+    &#x27;animal:zebra&#x27; : If([&#x27;ungulate&#x27;,&#x27;pattern:dark stripes&#x27;]),
+    &#x27;animal:ostrich&#x27; : If([&#x27;bird&#x27;,&#x27;long nech&#x27;,&#x27;color:black and white&#x27;,&#x27;cannot fly&#x27;]),
+    &#x27;animal:pinguin&#x27; : If([&#x27;bird&#x27;,&#x27;swims&#x27;,&#x27;color:black and white&#x27;,&#x27;cannot fly&#x27;]),
+    &#x27;animal:albatross&#x27; : If([&#x27;bird&#x27;,&#x27;flies well&#x27;])
+}</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>为了执行向后推理，我们将定义 <code>Knowledgebase</code> 类。它将包含：</p>
+<ul>
+<li>工作的 `memory` —— 一个将属性映射到值的字典</li>
+<li>知识库中的 `rules`，格式如上文所定义</li>
+</ul>
+<p>两个主要方法是：</p>
+<ul>
+<li>`get` 用于获取属性的值，必要时执行推理。例如，`get(&#x27;color&#x27;)` 会获取颜色槽的值（如有必要会询问，并将值存储以备后续使用在工作内存中）。如果我们调用 `get(&#x27;color:blue&#x27;)`，它会询问颜色，然后根据颜色返回 `y`/`n` 值。</li>
+<li>`eval` 执行实际推理，即遍历 AND/OR 树，评估子目标等。</li>
+</ul></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>class KnowledgeBase():
+    def __init__(self,rules):
+        self.rules = rules
+        self.memory = {}
+        
+    def get(self,name):
+        if &#x27;:&#x27; in name:
+            k,v = name.split(&#x27;:&#x27;)
+            vv = self.get(k)
+            return &#x27;y&#x27; if v==vv else &#x27;n&#x27;
+        if name in self.memory.keys():
+            return self.memory[name]
+        for fld in self.rules.keys():
+            if fld==name or fld.startswith(name+&quot;:&quot;):
+                # print(&quot; + proving {}&quot;.format(fld))
+                value = &#x27;y&#x27; if fld==name else fld.split(&#x27;:&#x27;)[1]
+                res = self.eval(self.rules[fld],field=name)
+                if res!=&#x27;y&#x27; and res!=&#x27;n&#x27; and value==&#x27;y&#x27;:
+                    self.memory[name] = res
+                    return res
+                if res==&#x27;y&#x27;:
+                    self.memory[name] = value
+                    return value
+        # field is not found, using default
+        res = self.eval(self.rules[&#x27;default&#x27;],field=name)
+        self.memory[name]=res
+        return res
+                
+    def eval(self,expr,field=None):
+        # print(&quot; + eval {}&quot;.format(expr))
+        if isinstance(expr,Ask):
+            print(field)
+            return expr.ask()
+        elif isinstance(expr,If):
+            return self.eval(expr.x)
+        elif isinstance(expr,AND) or isinstance(expr,list):
+            expr = expr.x if isinstance(expr,AND) else expr
+            for x in expr:
+                if self.eval(x)==&#x27;n&#x27;:
+                    return &#x27;n&#x27;
+            return &#x27;y&#x27;
+        elif isinstance(expr,OR):
+            for x in expr.x:
+                if self.eval(x)==&#x27;y&#x27;:
+                    return &#x27;y&#x27;
+            return &#x27;n&#x27;
+        elif isinstance(expr,str):
+            return self.get(expr)
+        else:
+            print(&quot;Unknown expr: {}&quot;.format(expr))</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在让我们定义我们的动物知识库并进行咨询。请注意，此调用会向您提问。您可以通过输入 <code>y</code>/<code>n</code> 来回答是非题，或者通过指定数字（0..N）来回答具有多个选项的题目。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>kb = KnowledgeBase(rules)
+kb.get(&#x27;animal&#x27;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">hair
+y/n
+sharp teeth
+y/n
+claws
+y/n
+forward-looking eyes
+y/n
+color
+0. red-brown
+1. black and white
+2. other
+has hooves
+y/n
+long neck
+y/n
+long legs
+y/n
+pattern
+0. dark stripes
+1. dark spots
+</div><div class="jp-OutputArea-output">&#x27;giraffe&#x27;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>使用 Experta 进行正向推理</h2>
+<p>在下一个示例中，我们将尝试使用用于知识表示的库之一 <a href="https://github.com/nilp0inter/experta">Experta</a> 实现正向推理。<strong>Experta</strong> 是一个用于在 Python 中创建正向推理系统的库，其设计类似于经典的旧系统 <a href="http://www.clipsrules.net/index.html">CLIPS</a>。</p>
+<p>我们本来也可以自己实现正向链式推理而不会有太大问题，但简单的实现通常效率不高。为了更有效地进行规则匹配，使用了一种特殊算法 <a href="https://en.wikipedia.org/wiki/Rete_algorithm">Rete</a>。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import sys
+!{sys.executable} -m pip install git+https://github.com/nilp0inter/experta</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Collecting git+https://github.com/nilp0inter/experta
+  Cloning https://github.com/nilp0inter/experta to /tmp/pip-req-build-7qurtwk3
+  Running command git clone --filter=blob:none --quiet https://github.com/nilp0inter/experta /tmp/pip-req-build-7qurtwk3
+  Resolved https://github.com/nilp0inter/experta to commit c6d5834b123861f5ae09e7d07027dc98bec58741
+  Installing build dependencies ... [?25ldone
+[?25h  Getting requirements to build wheel ... [?25ldone
+[?25h  Preparing metadata (pyproject.toml) ... [?25ldone
+[?25hRequirement already satisfied: frozendict~=2.4.6 in /opt/conda/envs/ai4beg/lib/python3.12/site-packages (from experta==1.9.5.dev1) (2.4.7)
+Collecting schema~=0.6.7 (from experta==1.9.5.dev1)
+  Downloading schema-0.6.8-py2.py3-none-any.whl.metadata (14 kB)
+Downloading schema-0.6.8-py2.py3-none-any.whl (14 kB)
+Building wheels for collected packages: experta
+  Building wheel for experta (pyproject.toml) ... [?25ldone
+[?25h  Created wheel for experta: filename=experta-1.9.5.dev1-py3-none-any.whl size=34804 sha256=888c459512a5e713f4b674caa9a0f96cfdf07ec0d6eb56cc318ce0653d218014
+  Stored in directory: /tmp/pip-ephem-wheel-cache-1eeii9zy/wheels/3d/e8/bb/22d7956359603fa8dd679aa09f5b8efb3f29991c3986fdc787
+Successfully built experta
+Installing collected packages: schema, experta
+[2K   [90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m [32m2/2[0m [experta]
+[1A[2KSuccessfully installed experta-1.9.5.dev1 schema-0.6.8
+</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>from experta import *
+#import experta</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们将把系统定义为一个继承自 <code>KnowledgeEngine</code> 的类。每条规则由一个带有 <code>@Rule</code> 注解的单独函数定义，该注解指定规则何时触发。在规则内部，我们可以使用 <code>declare</code> 函数添加新的事实，添加这些事实将导致前向推理引擎调用更多规则。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>class Animals(KnowledgeEngine):
+    @Rule(OR(
+           AND(Fact(&#x27;sharp teeth&#x27;),Fact(&#x27;claws&#x27;),Fact(&#x27;forward looking eyes&#x27;)),
+           Fact(&#x27;eats meat&#x27;)))
+    def cornivor(self):
+        self.declare(Fact(&#x27;carnivor&#x27;))
+        
+    @Rule(OR(Fact(&#x27;hair&#x27;),Fact(&#x27;gives milk&#x27;)))
+    def mammal(self):
+        self.declare(Fact(&#x27;mammal&#x27;))
+
+    @Rule(Fact(&#x27;mammal&#x27;),
+          OR(Fact(&#x27;has hooves&#x27;),Fact(&#x27;chews cud&#x27;)))
+    def hooves(self):
+        self.declare(&#x27;ungulate&#x27;)
+        
+    @Rule(OR(Fact(&#x27;feathers&#x27;),AND(Fact(&#x27;flies&#x27;),Fact(&#x27;lays eggs&#x27;))))
+    def bird(self):
+        self.declare(&#x27;bird&#x27;)
+        
+    @Rule(Fact(&#x27;mammal&#x27;),Fact(&#x27;carnivor&#x27;),
+          Fact(color=&#x27;red-brown&#x27;),
+          Fact(pattern=&#x27;dark spots&#x27;))
+    def monkey(self):
+        self.declare(Fact(animal=&#x27;monkey&#x27;))
+
+    @Rule(Fact(&#x27;mammal&#x27;),Fact(&#x27;carnivor&#x27;),
+          Fact(color=&#x27;red-brown&#x27;),
+          Fact(pattern=&#x27;dark stripes&#x27;))
+    def tiger(self):
+        self.declare(Fact(animal=&#x27;tiger&#x27;))
+
+    @Rule(Fact(&#x27;ungulate&#x27;),
+          Fact(&#x27;long neck&#x27;),
+          Fact(&#x27;long legs&#x27;),
+          Fact(pattern=&#x27;dark spots&#x27;))
+    def giraffe(self):
+        self.declare(Fact(animal=&#x27;giraffe&#x27;))
+
+    @Rule(Fact(&#x27;ungulate&#x27;),
+          Fact(pattern=&#x27;dark stripes&#x27;))
+    def zebra(self):
+        self.declare(Fact(animal=&#x27;zebra&#x27;))
+
+    @Rule(Fact(&#x27;bird&#x27;),
+          Fact(&#x27;long neck&#x27;),
+          Fact(&#x27;cannot fly&#x27;),
+          Fact(color=&#x27;black and white&#x27;))
+    def straus(self):
+        self.declare(Fact(animal=&#x27;ostrich&#x27;))
+
+    @Rule(Fact(&#x27;bird&#x27;),
+          Fact(&#x27;swims&#x27;),
+          Fact(&#x27;cannot fly&#x27;),
+          Fact(color=&#x27;black and white&#x27;))
+    def pinguin(self):
+        self.declare(Fact(animal=&#x27;pinguin&#x27;))
+
+    @Rule(Fact(&#x27;bird&#x27;),
+          Fact(&#x27;flies well&#x27;))
+    def albatros(self):
+        self.declare(Fact(animal=&#x27;albatross&#x27;))
+        
+    @Rule(Fact(animal=MATCH.a))
+    def print_result(self,a):
+          print(&#x27;Animal is {}&#x27;.format(a))
+                    
+    def factz(self,l):
+        for x in l:
+            self.declare(x)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>一旦我们定义了知识库，我们就用一些初始事实来填充工作内存，然后调用 <code>run()</code> 方法来执行推理。结果你可以看到，新的推断事实被添加到工作内存中，包括关于动物的最终事实（如果我们正确设置了所有初始事实）。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>ex1 = Animals()
+ex1.reset()
+ex1.factz([
+    Fact(color=&#x27;red-brown&#x27;),
+    Fact(pattern=&#x27;dark stripes&#x27;),
+    Fact(&#x27;sharp teeth&#x27;),
+    Fact(&#x27;claws&#x27;),
+    Fact(&#x27;forward looking eyes&#x27;),
+    Fact(&#x27;gives milk&#x27;)])
+ex1.run()
+ex1.facts</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Animal is tiger
+</div><div class="jp-OutputArea-output">FactList([(0, InitialFact()),
+          (1, Fact(color=&#x27;red-brown&#x27;)),
+          (2, Fact(pattern=&#x27;dark stripes&#x27;)),
+          (3, Fact(&#x27;sharp teeth&#x27;)),
+          (4, Fact(&#x27;claws&#x27;)),
+          (5, Fact(&#x27;forward looking eyes&#x27;)),
+          (6, Fact(&#x27;gives milk&#x27;)),
+          (7, Fact(&#x27;mammal&#x27;)),
+          (8, Fact(&#x27;carnivor&#x27;)),
+          (9, Fact(animal=&#x27;tiger&#x27;))])</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code></code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p>&lt;!-- CO-OP TRANSLATOR DISCLAIMER START --&gt;</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文件已使用人工智能翻译服务<a href="https://github.com/Azure/co-op-translator">Co-op Translator</a>进行翻译。尽管我们力求准确，但请注意，自动翻译可能存在错误或不准确之处。请以原始语言的原文件为权威来源。对于重要信息，建议采用专业人工翻译。我们不对因使用本翻译而产生的任何误解或误释承担责任。</p>
+<p>&lt;!-- CO-OP TRANSLATOR DISCLAIMER END --&gt;</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

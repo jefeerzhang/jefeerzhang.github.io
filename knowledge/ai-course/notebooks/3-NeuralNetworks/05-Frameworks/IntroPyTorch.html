@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IntroPyTorch</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 IntroPyTorch</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>PyTorch简介</h2>
+<p>&gt; 本笔记本是<a href="http://github.com/microsoft/ai-for-beginners">AI for Beginners Curricula</a>的一部分。访问该仓库以获取完整的学习资料。</p>
+<h3>神经网络框架</h3>
+<p>我们已经了解到，训练神经网络需要以下内容：</p>
+<ul>
+<li>快速进行矩阵（张量）运算</li>
+<li>计算梯度以执行梯度下降优化</li>
+</ul>
+<p>神经网络框架可以让你做到以下事情：</p>
+<ul>
+<li>在可用的计算设备上操作张量，无论是CPU、GPU，甚至是TPU</li>
+<li>自动计算梯度（所有内置张量函数都显式编程支持）</li>
+</ul>
+<p>可选功能：</p>
+<ul>
+<li>神经网络构造器/高级API（将网络描述为一系列层）</li>
+<li>简单的训练函数（如Scikit Learn中的`fit`）</li>
+<li>除梯度下降外的多种优化算法</li>
+<li>数据处理抽象（理想情况下也能在GPU上运行）</li>
+</ul></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>最受欢迎的框架</h3>
+<ul>
+<li>Tensorflow 1.x - 第一个广泛使用的框架（Google）。允许定义静态计算图，将其推送到GPU，并显式进行评估</li>
+<li>PyTorch - 来自Facebook的框架，越来越受欢迎</li>
+<li>Keras - 基于Tensorflow/PyTorch的高级API，用于统一和简化神经网络的使用（Francois Chollet）</li>
+<li>Tensorflow 2.x + Keras - 新版Tensorflow，集成了Keras功能，支持**动态计算图**，可以进行类似numpy（以及PyTorch）的张量操作</li>
+</ul>
+<p>在这个Notebook中，我们将学习如何使用PyTorch。请确保您安装了最新版本的PyTorch——具体操作请参考<a href="https://pytorch.org/get-started/locally/">他们网站上的说明</a>。通常只需执行以下命令：</p>
+<pre><code>
+pip install torch torchvision
+</code></pre>
+<p>或者</p>
+<pre><code>
+conda install pytorch -c pytorch
+</code></pre></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import torch
+torch.__version__</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&#x27;1.11.0+cu113&#x27;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>基本概念：张量</h2>
+<p><strong>张量</strong> 是一种多维数组。使用张量来表示不同类型的数据非常方便：</p>
+<ul>
+<li>400x400 - 黑白图片</li>
+<li>400x400x3 - 彩色图片</li>
+<li>16x400x400x3 - 包含16张彩色图片的小批量</li>
+<li>25x400x400x3 - 一秒钟的25帧视频</li>
+<li>8x25x400x400x3 - 包含8个1秒视频的小批量</li>
+</ul></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>简单张量</h3>
+<p>你可以轻松地通过 np-array 列表创建简单的张量，或者生成随机张量：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>a = torch.tensor([[1,2],[3,4]])
+print(a)
+a = torch.randn(size=(10,3))
+print(a)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">tensor([[1, 2],
+        [3, 4]])
+tensor([[ 0.8995, -1.6137,  1.4489],
+        [-0.2796, -2.1443, -2.4618],
+        [-0.2358, -0.4249, -0.0716],
+        [-0.1267, -0.6382,  0.0593],
+        [-0.4956,  1.7054,  0.3874],
+        [ 1.3479, -1.6329,  0.2793],
+        [ 1.1211, -1.5430,  0.7186],
+        [-1.5197,  0.5559, -1.6421],
+        [ 0.1900, -0.4175, -0.3922],
+        [ 1.8994,  0.1497, -0.7039]])
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>您可以对张量进行算术运算，这些运算是逐元素执行的，就像在 numpy 中一样。如果需要，张量会自动扩展到所需的维度。要从张量中提取 numpy 数组，请使用 <code>.numpy()</code>：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>print(a-a[0])
+print(torch.exp(a)[0].numpy())</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">tensor([[ 0.0000,  0.0000,  0.0000],
+        [-2.0583, -0.5631,  1.4932],
+        [-1.0613, -1.0738,  2.2078],
+        [-1.5101,  0.5896,  2.4722],
+        [-2.8219, -2.0846,  1.2405],
+        [ 0.8706, -0.2485,  2.3679],
+        [-1.6590,  0.1935,  1.8698],
+        [-0.3316,  0.8065,  1.6490],
+        [-1.5788, -1.1844, -0.4816],
+        [ 0.0680, -1.4526,  1.8159]])
+[3.887189   2.1276016  0.17371987]
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>原地操作和非原地操作</h2>
+<p>像 <code>+</code>/<code>add</code> 这样的张量操作会返回新的张量。然而，有时你需要直接修改现有的张量。大多数操作都有对应的原地版本，这些操作以 <code>_</code> 结尾：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>u = torch.tensor(5)
+print(&quot;Result when adding out-of-place:&quot;,u.add(torch.tensor(3)))
+u.add_(torch.tensor(3))
+print(&quot;Result after adding in-place:&quot;, u)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Result when adding out-of-place: tensor(8)
+Result after adding in-place: tensor(8)
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>这是我们以一种简单方式计算矩阵中所有行的总和的方法：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>s = torch.zeros_like(a[0])
+for i in a:
+  s.add_(i)
+
+print(s)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">tensor([ 3.4945,  2.5325, -2.8684])
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>但更好的是使用</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>torch.sum(a,axis=0)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">tensor([ 3.4945,  2.5325, -2.8684])</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>你可以在<a href="https://pytorch.org/tutorials/beginner/basics/tensorqs_tutorial.html">官方文档</a>中阅读更多关于PyTorch张量的内容</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>计算梯度</h2>
+<p>为了进行反向传播，你需要计算梯度。我们可以将任意 PyTorch Tensor 的属性 <code>requires_grad</code> 设置为 <code>True</code>，这样与该张量相关的所有操作都会被跟踪，用于梯度计算。要计算梯度，你需要调用 <code>backward()</code> 方法，之后可以通过 <code>grad</code> 属性获取梯度：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>a = torch.randn(size=(2, 2), requires_grad=True)
+b = torch.randn(size=(2, 2))
+
+c = torch.mean(torch.sqrt(torch.square(a) + torch.square(b)))  # Do some math using `a`
+c.backward() # call backward() to compute all gradients
+# What&#x27;s the gradient of `c` with respect to `a`?
+print(a.grad)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">tensor([[-0.1728,  0.0913],
+        [-0.1666, -0.1942]])
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>为了更精确地说，PyTorch 会自动<strong>累积</strong>梯度。如果在调用 <code>backward</code> 时指定 <code>retain_graph=True</code>，计算图将被保留，并且新的梯度会被添加到 <code>grad</code> 字段中。为了从头开始重新计算梯度，我们需要通过调用 <code>zero_()</code> 显式地将 <code>grad</code> 字段重置为 0：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>c = torch.mean(torch.sqrt(torch.square(a) + torch.square(b)))
+c.backward(retain_graph=True)
+c.backward(retain_graph=True)
+print(a.grad)
+a.grad.zero_()
+c.backward()
+print(a.grad)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">tensor([[-0.5185,  0.2739],
+        [-0.4998, -0.5826]])
+tensor([[-0.1728,  0.0913],
+        [-0.1666, -0.1942]])
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>为了计算梯度，PyTorch 创建并维护<strong>计算图</strong>。对于每个 <code>requires_grad</code> 标志设置为 <code>True</code> 的张量，PyTorch 维护一个名为 <code>grad_fn</code> 的特殊函数，该函数根据链式求导法则计算表达式的导数：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>print(c)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">tensor(0.9143, grad_fn=&lt;MeanBackward0&gt;)
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>这里的 <code>c</code> 是通过 <code>mean</code> 函数计算的，因此 <code>grad_fn</code> 指向一个名为 <code>MeanBackward</code> 的函数。</p>
+<p>在大多数情况下，我们希望 PyTorch 计算标量函数（例如损失函数）的梯度。然而，如果我们想计算一个张量相对于另一个张量的梯度，PyTorch 允许我们计算雅可比矩阵与给定向量的乘积。</p>
+<p>假设我们有一个向量函数 $\vec{y}=f(\vec{x})$，其中</p>
+<p>$\vec{x}=\langle x_1,\dots,x_n\rangle$ 且</p>
+<p>$\vec{y}=\langle y_1,\dots,y_m\rangle$，那么 $\vec{y}$ 相对于 $\vec{x}$ 的梯度由 <strong>雅可比矩阵</strong> 定义：</p>
+<p>$$</p>
+<p>\begin{align}J=\left(\begin{array}{ccc}</p>
+<p>\frac{\partial y_{1}}{\partial x_{1}} &amp; \cdots &amp; \frac{\partial y_{1}}{\partial x_{n}}\\</p>
+<p>\vdots &amp; \ddots &amp; \vdots\\</p>
+<p>\frac{\partial y_{m}}{\partial x_{1}} &amp; \cdots &amp; \frac{\partial y_{m}}{\partial x_{n}}</p>
+<p>\end{array}\right)\end{align}</p>
+<p>$$</p>
+<p>PyTorch 并不会直接提供整个雅可比矩阵，而是计算雅可比矩阵与某个向量 $v=(v_1 \dots v_m)$ 的乘积 $v^T\cdot J$。为了实现这一点，我们需要调用 <code>`backward</code><code> 并将 </code>v<code> 作为参数传入。</code>v` 的大小应与我们计算梯度时的原始张量大小一致。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>c = torch.sqrt(torch.square(a) + torch.square(b))
+c.backward(torch.eye(2)) # eye(2) means 2x2 identity matrix
+print(a.grad)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">tensor([[-0.8642,  0.0913],
+        [-0.1666, -0.9710]])
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>在 PyTorch 中计算雅可比矩阵的更多信息可以在<a href="https://pytorch.org/tutorials/beginner/basics/autogradqs_tutorial.html">官方文档</a>中找到</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h1>示例 0：使用梯度下降进行优化</h1>
+<p>我们尝试使用自动微分来找到一个简单的二元函数 $f(x_1,x_2)=(x_1-3)^2+(x_2+2)^2$ 的最小值。让张量 <code>x</code> 保存一个点的当前坐标。我们从起始点 $x^{(0)}=(0,0)$ 开始，并使用梯度下降公式计算序列中的下一个点：</p>
+<p>$$</p>
+<p>x^{(n+1)} = x^{(n)} - \eta\nabla f</p>
+<p>$$</p>
+<p>这里 $\eta$ 是所谓的<strong>学习率</strong>（在代码中我们用 <code>lr</code> 表示），而 $\nabla f = (\frac{\partial f}{\partial x_1},\frac{\partial f}{\partial x_2})$ 是 $f$ 的梯度。</p>
+<p>首先，让我们定义 <code>x</code> 的初始值和函数 <code>f</code>：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>x = torch.zeros(2,requires_grad=True)
+f = lambda x : (x-torch.tensor([3,-2])).pow(2).sum()
+lr = 0.1</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在让我们进行15次梯度下降迭代。在每次迭代中，我们将更新<code>x</code>坐标并打印它们，以确保我们正在接近最低点(3,-2)：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>for i in range(15):
+    y = f(x)
+    y.backward()
+    gr = x.grad
+    x.data.add_(-lr*gr)
+    x.grad.zero_()
+    print(&quot;Step {}: x[0]={}, x[1]={}&quot;.format(i,x[0],x[1]))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Step 0: x[0]=0.6000000238418579, x[1]=-0.4000000059604645
+Step 1: x[0]=1.0800000429153442, x[1]=-0.7200000286102295
+Step 2: x[0]=1.4639999866485596, x[1]=-0.9760000705718994
+Step 3: x[0]=1.7711999416351318, x[1]=-1.1808000802993774
+Step 4: x[0]=2.0169599056243896, x[1]=-1.3446400165557861
+Step 5: x[0]=2.2135679721832275, x[1]=-1.4757120609283447
+Step 6: x[0]=2.370854377746582, x[1]=-1.5805696249008179
+Step 7: x[0]=2.4966835975646973, x[1]=-1.6644556522369385
+Step 8: x[0]=2.597346782684326, x[1]=-1.7315645217895508
+Step 9: x[0]=2.677877426147461, x[1]=-1.7852516174316406
+Step 10: x[0]=2.7423019409179688, x[1]=-1.8282012939453125
+Step 11: x[0]=2.793841600418091, x[1]=-1.8625609874725342
+Step 12: x[0]=2.835073232650757, x[1]=-1.8900487422943115
+Step 13: x[0]=2.868058681488037, x[1]=-1.912039041519165
+Step 14: x[0]=2.894446849822998, x[1]=-1.929631233215332
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>示例 1：线性回归</h2>
+<p>现在我们已经掌握了足够的知识来解决经典的<strong>线性回归</strong>问题。让我们生成一个小型的合成数据集：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import make_classification, make_regression
+from sklearn.model_selection import train_test_split
+import random</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>np.random.seed(13) # pick the seed for reproducibility - change it to explore the effects of random variations
+
+train_x = np.linspace(0, 3, 120)
+train_labels = 2 * train_x + 0.9 + np.random.randn(*train_x.shape) * 0.5
+
+plt.scatter(train_x,train_labels)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;matplotlib.collections.PathCollection at 0x20b8e1f1ca0&gt;</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>线性回归由一条直线 $f_{W,b}(x) = Wx+b$ 定义，其中 $W, b$ 是我们需要找到的模型参数。我们数据集上的误差 $\{x_i,y_i\}_{i=1}^N$（也称为<strong>损失函数</strong>）可以定义为均方误差：</p>
+<p>$$</p>
+<p>\mathcal{L}(W,b) = {1\over N}\sum_{i=1}^N (f_{W,b}(x_i)-y_i)^2</p>
+<p>$$</p>
+<p>让我们定义我们的模型和损失函数：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>input_dim = 1
+output_dim = 1
+learning_rate = 0.1
+
+# This is our weight matrix
+w = torch.tensor([100.0],requires_grad=True,dtype=torch.float32)
+# This is our bias vector
+b = torch.zeros(size=(output_dim,),requires_grad=True)
+
+def f(x):
+  return torch.matmul(x,w) + b
+
+def compute_loss(labels, predictions):
+  return torch.mean(torch.square(labels - predictions))</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们将通过一系列小批量数据来训练模型。我们将使用梯度下降法，根据以下公式调整模型参数：</p>
+<p>$$</p>
+<p>\begin{array}{l}</p>
+<p>W^{(n+1)}=W^{(n)}-\eta\frac{\partial\mathcal{L}}{\partial W} \\</p>
+<p>b^{(n+1)}=b^{(n)}-\eta\frac{\partial\mathcal{L}}{\partial b} \\</p>
+<p>\end{array}</p>
+<p>$$</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def train_on_batch(x, y):
+  predictions = f(x)
+  loss = compute_loss(y, predictions)
+  loss.backward()
+  w.data.sub_(learning_rate * w.grad)
+  b.data.sub_(learning_rate * b.grad)
+  w.grad.zero_()
+  b.grad.zero_()
+  return loss</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们进行训练。我们将多次遍历数据集（所谓的<strong>epochs</strong>），将其分成小批量并调用上面定义的函数：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># Shuffle the data.
+indices = np.random.permutation(len(train_x))
+features = torch.tensor(train_x[indices],dtype=torch.float32)
+labels = torch.tensor(train_labels[indices],dtype=torch.float32)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>batch_size = 4
+for epoch in range(10):
+  for i in range(0,len(features),batch_size):
+    loss = train_on_batch(features[i:i+batch_size].view(-1,1),labels[i:i+batch_size])
+  print(&#x27;Epoch %d: last batch loss = %.4f&#x27; % (epoch, float(loss)))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 0: last batch loss = 94.5247
+Epoch 1: last batch loss = 9.3428
+Epoch 2: last batch loss = 1.4166
+Epoch 3: last batch loss = 0.5224
+Epoch 4: last batch loss = 0.3807
+Epoch 5: last batch loss = 0.3495
+Epoch 6: last batch loss = 0.3413
+Epoch 7: last batch loss = 0.3390
+Epoch 8: last batch loss = 0.3384
+Epoch 9: last batch loss = 0.3382
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们现在已经获得了优化后的参数 $W$ 和 $b$。注意，它们的值与生成数据集时使用的原始值相似（$W=2, b=1$）。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>w,b</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">(tensor([1.8617], requires_grad=True), tensor([1.0711], requires_grad=True))</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>plt.scatter(train_x,train_labels)
+x = np.array([min(train_x),max(train_x)])
+with torch.no_grad():
+  y = w.numpy()*x+b.numpy()
+plt.plot(x,y,color=&#x27;red&#x27;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[&lt;matplotlib.lines.Line2D at 0x20b8e30a850&gt;]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>在 GPU 上进行计算</h2>
+<p>为了在 GPU 上进行计算，PyTorch 支持将张量移动到 GPU 并为 GPU 构建计算图。通常，在代码的开头，我们会定义可用的计算设备 <code>device</code>（可以是 <code>cpu</code> 或 <code>cuda</code>），然后通过调用 <code>.to(device)</code> 将所有张量移动到该设备上。我们也可以在创建张量时直接指定设备，通过在张量创建代码中传递参数 <code>device=...</code> 来实现。这种代码在 CPU 和 GPU 上都可以无需修改地运行：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>device = &#x27;cuda&#x27; if torch.cuda.is_available() else &#x27;cpu&#x27;
+
+print(&#x27;Doing computations on &#x27;+device)
+
+### Changes here: indicate device
+w = torch.tensor([100.0],requires_grad=True,dtype=torch.float32,device=device)
+b = torch.zeros(size=(output_dim,),requires_grad=True,device=device)
+
+def f(x):
+  return torch.matmul(x,w) + b
+
+def compute_loss(labels, predictions):
+  return torch.mean(torch.square(labels - predictions))
+
+def train_on_batch(x, y):
+  predictions = f(x)
+  loss = compute_loss(y, predictions)
+  loss.backward()
+  w.data.sub_(learning_rate * w.grad)
+  b.data.sub_(learning_rate * b.grad)
+  w.grad.zero_()
+  b.grad.zero_()
+  return loss
+
+batch_size = 4
+for epoch in range(10):
+  for i in range(0,len(features),batch_size):
+    ### Changes here: move data to required device
+    loss = train_on_batch(features[i:i+batch_size].view(-1,1).to(device),labels[i:i+batch_size].to(device))
+  print(&#x27;Epoch %d: last batch loss = %.4f&#x27; % (epoch, float(loss)))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Doing computations on cpu
+Epoch 0: last batch loss = 94.5247
+Epoch 1: last batch loss = 9.3428
+Epoch 2: last batch loss = 1.4166
+Epoch 3: last batch loss = 0.5224
+Epoch 4: last batch loss = 0.3807
+Epoch 5: last batch loss = 0.3495
+Epoch 6: last batch loss = 0.3413
+Epoch 7: last batch loss = 0.3390
+Epoch 8: last batch loss = 0.3384
+Epoch 9: last batch loss = 0.3382
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>示例 2：分类</h2>
+<p>现在我们来考虑一个二分类问题。一个很好的例子是根据肿瘤的大小和年龄来区分恶性和良性。</p>
+<p>核心模型与回归类似，但我们需要使用不同的损失函数。让我们从生成样本数据开始：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>np.random.seed(0) # pick the seed for reproducibility - change it to explore the effects of random variations
+
+n = 100
+X, Y = make_classification(n_samples = n, n_features=2,
+                           n_redundant=0, n_informative=2, flip_y=0.1,class_sep=1.5)
+X = X.astype(np.float32)
+Y = Y.astype(np.int32)
+
+split = [ 70*n//100, (15+70)*n//100 ]
+train_x, valid_x, test_x = np.split(X, split)
+train_labels, valid_labels, test_labels = np.split(Y, split)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def plot_dataset(features, labels, W=None, b=None):
+    # prepare the plot
+    fig, ax = plt.subplots(1, 1)
+    ax.set_xlabel(&#x27;$x_i[0]$ -- (feature 1)&#x27;)
+    ax.set_ylabel(&#x27;$x_i[1]$ -- (feature 2)&#x27;)
+    colors = [&#x27;r&#x27; if l else &#x27;b&#x27; for l in labels]
+    ax.scatter(features[:, 0], features[:, 1], marker=&#x27;o&#x27;, c=colors, s=100, alpha = 0.5)
+    if W is not None:
+        min_x = min(features[:,0])
+        max_x = max(features[:,1])
+        min_y = min(features[:,1])*(1-.1)
+        max_y = max(features[:,1])*(1+.1)
+        cx = np.array([min_x,max_x],dtype=np.float32)
+        cy = (0.5-W[0]*cx-b)/W[1]
+        ax.plot(cx,cy,&#x27;g&#x27;)
+        ax.set_ylim(min_y,max_y)
+    fig.show()</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>plot_dataset(train_x, train_labels)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">C:\Users\dmitryso\AppData\Local\Temp/ipykernel_89704/2721537645.py:17: UserWarning: Matplotlib is currently using module://matplotlib_inline.backend_inline, which is a non-GUI backend, so cannot show the figure.
+  fig.show()
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>训练单层感知机</h2>
+<p>让我们使用 PyTorch 的梯度计算机制来训练单层感知机。</p>
+<p>我们的神经网络将有两个输入和一个输出。权重矩阵 $W$ 的尺寸为 $2\times1$，偏置向量 $b$ 的尺寸为 $1$。</p>
+<p>为了让代码更有结构性，我们将所有参数归类到一个单独的类中：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>class Network():
+  def __init__(self):
+     self.W = torch.randn(size=(2,1),requires_grad=True)
+     self.b = torch.zeros(size=(1,),requires_grad=True)
+
+  def forward(self,x):
+    return torch.matmul(x,self.W)+self.b
+
+  def zero_grad(self):
+    self.W.data.zero_()
+    self.b.data.zero_()
+
+  def update(self,lr=0.1):
+    self.W.data.sub_(lr*self.W.grad)
+    self.b.data.sub_(lr*self.b)
+
+net = Network()</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>&gt; 注意，我们使用 <code>W.data.zero_()</code> 而不是 <code>W.zero_()</code>。我们需要这样做，因为无法直接修改通过 *Autograd* 机制跟踪的张量。</p>
+<p>核心模型与之前的例子相同，但损失函数将是逻辑损失。为了应用逻辑损失，我们需要将网络输出的值转换为<strong>概率</strong>，即需要通过 <code>sigmoid</code> 激活函数将输出 $z$ 映射到 [0,1] 范围内：$p=\sigma(z)$。</p>
+<p>如果我们得到第 i 个输入值对应的实际类别 $y_i\in\{0,1\}$ 的概率 $p_i$，损失计算公式为 $\mathcal{L_i}=-(y_i\log p_i + (1-y_i)\log(1-p_i))$。</p>
+<p>在 PyTorch 中，这两个步骤（应用 sigmoid 和逻辑损失）可以通过调用 <code>binary_cross_entropy_with_logits</code> 函数一次性完成。由于我们在小批量中训练网络，因此需要对小批量中的所有元素的损失进行平均——这也可以通过 <code>binary_cross_entropy_with_logits</code> 函数自动完成：</p>
+<p>&gt; 调用 <code>binary_crossentropy_with_logits</code> 等同于先调用 <code>sigmoid</code>，然后调用 <code>binary_crossentropy</code></p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def train_on_batch(net, x, y):
+  z = net.forward(x).flatten()
+  loss = torch.nn.functional.binary_cross_entropy_with_logits(input=z,target=y)
+  net.zero_grad()
+  loss.backward()
+  net.update()
+  return loss</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>为了遍历我们的数据，我们将使用 PyTorch 内置的管理数据集的机制。它基于两个概念：</p>
+<ul>
+<li>**Dataset** 是数据的主要来源，可以是 **Iterable** 或 **Map-style** 类型。</li>
+<li>**Dataloader** 负责从数据集中加载数据并将其分割成小批量。</li>
+</ul>
+<p>在我们的例子中，我们将基于一个张量定义一个数据集，并将其分割成每批包含 16 个元素的小批量。每个小批量包含两个张量，输入数据（大小为 16x2）和标签（一个长度为 16 的整数类型向量 - 类别编号）。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># Create a tf.data.Dataset object for easy batched iteration
+dataset = torch.utils.data.TensorDataset(torch.tensor(train_x),torch.tensor(train_labels,dtype=torch.float32))
+dataloader = torch.utils.data.DataLoader(dataset,batch_size=16)
+
+list(dataloader)[0]</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[tensor([[ 1.5442,  2.5290],
+         [-1.6284,  0.0772],
+         [-1.7141,  2.4770],
+         [-1.4951,  0.7320],
+         [-1.6899,  0.9243],
+         [-0.9474, -0.7681],
+         [ 3.8597, -2.2951],
+         [-1.3944,  1.4300],
+         [ 4.3627,  3.1333],
+         [-1.0973, -1.7011],
+         [-2.5532, -0.0777],
+         [-1.2661, -0.3167],
+         [ 0.3921,  1.8406],
+         [ 2.2091, -1.6045],
+         [ 1.8383, -1.4861],
+         [ 0.7173, -0.9718]]),
+ tensor([1., 0., 0., 0., 0., 0., 1., 0., 1., 0., 0., 0., 1., 1., 1., 1.])]</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在我们可以遍历整个数据集来训练我们的网络15个周期：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>for epoch in range(15):
+  for (x, y) in dataloader:
+    loss = train_on_batch(net,x,y)
+  print(&#x27;Epoch %d: last batch loss = %.4f&#x27; % (epoch, float(loss)))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 0: last batch loss = 0.6491
+Epoch 1: last batch loss = 0.6064
+Epoch 2: last batch loss = 0.5822
+Epoch 3: last batch loss = 0.5679
+Epoch 4: last batch loss = 0.5592
+Epoch 5: last batch loss = 0.5537
+Epoch 6: last batch loss = 0.5501
+Epoch 7: last batch loss = 0.5478
+Epoch 8: last batch loss = 0.5463
+Epoch 9: last batch loss = 0.5454
+Epoch 10: last batch loss = 0.5447
+Epoch 11: last batch loss = 0.5443
+Epoch 12: last batch loss = 0.5441
+Epoch 13: last batch loss = 0.5439
+Epoch 14: last batch loss = 0.5438
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>获得的参数：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>print(net.W,net.b)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">tensor([[ 0.1330],
+        [-0.2810]], requires_grad=True) tensor([0.], requires_grad=True)
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>为了确保我们的训练有效，让我们绘制出分隔两类的直线。分隔线由方程 $W\times x + b = 0.5$ 定义。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>plot_dataset(train_x,train_labels,net.W.detach().numpy(),net.b.detach().numpy())</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">C:\Users\dmitryso\AppData\Local\Temp/ipykernel_89704/2721537645.py:17: UserWarning: Matplotlib is currently using module://matplotlib_inline.backend_inline, which is a non-GUI backend, so cannot show the figure.
+  fig.show()
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>pred = torch.sigmoid(net.forward(torch.tensor(valid_x)))
+torch.mean(((pred.view(-1)&gt;0.5)==(torch.tensor(valid_labels)&gt;0.5)).type(torch.float32))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">tensor(0.7333)</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们来解释这里发生了什么：</p>
+<ul>
+<li>`pred` 是整个验证数据集的预测概率向量。我们通过将原始验证数据 `valid_x` 输入到我们的网络中，并应用 `sigmoid` 函数来计算概率。</li>
+<li>`pred.view(-1)` 创建了一个原始张量的扁平化视图。`view` 类似于 numpy 中的 `reshape` 函数。</li>
+<li>`pred.view(-1)&gt;0.5` 返回一个布尔张量或真值，显示预测的类别（False = 类别 0，True = 类别 1）。</li>
+<li>同样地，`torch.tensor(valid_labels)&gt;0.5` 创建了验证标签的布尔张量真值。</li>
+<li>我们对这两个张量逐元素进行比较，得到另一个布尔张量，其中 `True` 表示预测正确，`False` 表示预测错误。</li>
+<li>我们将该张量转换为浮点数，并使用 `torch.mean` 计算其平均值——这就是我们想要的准确率。</li>
+</ul></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>神经网络和优化器</h2>
+<p>在 PyTorch 中，一个特殊的模块 <code>torch.nn.Module</code> 被定义用来表示神经网络。你可以通过以下两种方法定义自己的神经网络：</p>
+<ul>
+<li>**Sequential**，只需指定组成网络的层列表</li>
+<li>继承自 `torch.nn.Module` 的 **类**</li>
+</ul>
+<p>第一种方法适用于定义由层顺序组成的标准网络，而第二种方法更灵活，可以表达任意复杂架构的网络。</p>
+<p>在模块中，你可以使用标准的 <strong>层</strong>，例如：</p>
+<ul>
+<li>`Linear` - 密集线性层，相当于单层感知机。它的架构与我们之前为网络定义的架构相同</li>
+<li>`Softmax`、`Sigmoid`、`ReLU` - 对应激活函数的层</li>
+<li>还有其他用于特殊网络类型的层，例如卷积层、循环层等。我们将在课程后续部分详细讨论它们。</li>
+</ul>
+<p>&gt; PyTorch 中的大多数激活函数和损失函数都以两种形式提供：作为 <strong>函数</strong>（在 <code>torch.nn.functional</code> 命名空间中）和 <strong>作为层</strong>（在 <code>torch.nn</code> 命名空间中）。对于激活函数，通常更方便使用 <code>torch.nn.functional</code> 中的函数形式，而无需创建单独的层对象。</p>
+<p>如果我们想训练一个单层感知机，只需使用一个内置的 <code>Linear</code> 层即可：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>net = torch.nn.Linear(2,1) # 2 inputs, 1 output
+
+print(list(net.parameters()))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[Parameter containing:
+tensor([[-0.0422,  0.1821]], requires_grad=True), Parameter containing:
+tensor([0.6582], requires_grad=True)]
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>正如你所看到的，<code>parameters()</code> 方法返回了所有在训练过程中需要调整的参数。它们对应于权重矩阵 $W$ 和偏置 $b$。你可能注意到它们的 <code>requires_grad</code> 属性被设置为 <code>True</code>，因为我们需要根据这些参数计算梯度。</p>
+<p>PyTorch 还包含内置的<strong>优化器</strong>，它实现了诸如<strong>梯度下降</strong>等优化方法。以下是我们如何定义一个<strong>随机梯度下降优化器</strong>的方式：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>optim = torch.optim.SGD(net.parameters(),lr=0.05)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>使用优化器后，我们的训练循环将如下所示：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>val_x = torch.tensor(valid_x)
+val_lab = torch.tensor(valid_labels)
+
+for ep in range(10):
+  for (x,y) in dataloader:
+    z = net(x).flatten()
+    loss = torch.nn.functional.binary_cross_entropy_with_logits(z,y)
+    optim.zero_grad()
+    loss.backward()
+    optim.step()
+  acc = ((torch.sigmoid(net(val_x).flatten())&gt;0.5).float()==val_lab).float().mean()
+  print(f&quot;Epoch {ep}: last batch loss = {loss}, val acc = {acc}&quot;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 0: last batch loss = 0.7596041560173035, val acc = 0.5333333611488342
+Epoch 1: last batch loss = 0.6602361798286438, val acc = 0.6000000238418579
+Epoch 2: last batch loss = 0.5847358107566833, val acc = 0.6666666865348816
+Epoch 3: last batch loss = 0.5263020992279053, val acc = 0.7333333492279053
+Epoch 4: last batch loss = 0.48015740513801575, val acc = 0.800000011920929
+Epoch 5: last batch loss = 0.4430023431777954, val acc = 0.8666666746139526
+Epoch 6: last batch loss = 0.41254672408103943, val acc = 0.8666666746139526
+Epoch 7: last batch loss = 0.3871781527996063, val acc = 0.800000011920929
+Epoch 8: last batch loss = 0.3657420873641968, val acc = 0.800000011920929
+Epoch 9: last batch loss = 0.34739670157432556, val acc = 0.800000011920929
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>您可能会注意到，为了将网络应用于输入数据，我们可以使用 <code>net(x)</code> 而不是 <code>net.forward(x)</code>，因为 <code>nn.Module</code> 实现了 Python 的 <code>__call__()</code> 函数。</p>
+<p>考虑到这一点，我们可以定义一个通用的 <code>train</code> 函数：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def train(net, dataloader, val_x, val_lab, epochs=10, lr=0.05):
+  optim = torch.optim.Adam(net.parameters(),lr=lr)
+  for ep in range(epochs):
+    for (x,y) in dataloader:
+      z = net(x).flatten()
+      loss = torch.nn.functional.binary_cross_entropy_with_logits(z,y)
+      optim.zero_grad()
+      loss.backward()
+      optim.step()
+    acc = ((torch.sigmoid(net(val_x).flatten())&gt;0.5).float()==val_lab).float().mean()
+    print(f&quot;Epoch {ep}: last batch loss = {loss}, val acc = {acc}&quot;)
+
+net = torch.nn.Linear(2,1)
+
+train(net,dataloader,val_x,val_lab,lr=0.03)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 0: last batch loss = 0.48486900329589844, val acc = 0.7333333492279053
+Epoch 1: last batch loss = 0.41338109970092773, val acc = 0.800000011920929
+Epoch 2: last batch loss = 0.35756850242614746, val acc = 0.800000011920929
+Epoch 3: last batch loss = 0.31495171785354614, val acc = 0.800000011920929
+Epoch 4: last batch loss = 0.2824164032936096, val acc = 0.800000011920929
+Epoch 5: last batch loss = 0.2572754919528961, val acc = 0.800000011920929
+Epoch 6: last batch loss = 0.23751722276210785, val acc = 0.800000011920929
+Epoch 7: last batch loss = 0.2217157930135727, val acc = 0.800000011920929
+Epoch 8: last batch loss = 0.2088666558265686, val acc = 0.800000011920929
+Epoch 9: last batch loss = 0.19824868440628052, val acc = 0.800000011920929
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>定义网络为层的序列</h2>
+<p>现在让我们训练一个多层感知机。它可以通过指定一系列层来定义。生成的对象将自动继承自 <code>Module</code>，例如，它也会拥有 <code>parameters</code> 方法，该方法将返回整个网络的所有参数。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>net = torch.nn.Sequential(torch.nn.Linear(2,5),torch.nn.Sigmoid(),torch.nn.Linear(5,1))
+print(net)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Sequential(
+  (0): Linear(in_features=2, out_features=5, bias=True)
+  (1): Sigmoid()
+  (2): Linear(in_features=5, out_features=1, bias=True)
+)
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们可以使用我们上面定义的函数 <code>train</code> 来训练这个多层网络：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>train(net,dataloader,val_x,val_lab)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 0: last batch loss = 0.5835739970207214, val acc = 0.800000011920929
+Epoch 1: last batch loss = 0.4642275869846344, val acc = 0.800000011920929
+Epoch 2: last batch loss = 0.35158076882362366, val acc = 0.800000011920929
+Epoch 3: last batch loss = 0.26132312417030334, val acc = 0.800000011920929
+Epoch 4: last batch loss = 0.19465585052967072, val acc = 0.800000011920929
+Epoch 5: last batch loss = 0.14735405147075653, val acc = 0.800000011920929
+Epoch 6: last batch loss = 0.11454981565475464, val acc = 0.800000011920929
+Epoch 7: last batch loss = 0.09244414418935776, val acc = 0.800000011920929
+Epoch 8: last batch loss = 0.07805468142032623, val acc = 0.800000011920929
+Epoch 9: last batch loss = 0.06894762068986893, val acc = 0.800000011920929
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>将网络定义为一个类</h2>
+<p>使用继承自 <code>torch.nn.Module</code> 的类是一种更灵活的方法，因为我们可以在其中定义任何计算。<code>Module</code> 自动化了许多操作，例如，它会自动识别所有内部变量中属于 PyTorch 层的部分，并收集它们的参数以供优化使用。你只需要将网络的所有层定义为类的成员即可：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>class MyNet(torch.nn.Module):
+  def __init__(self,hidden_size=10,func=torch.nn.Sigmoid()):
+    super().__init__()
+    self.fc1 = torch.nn.Linear(2,hidden_size)
+    self.func = func
+    self.fc2 = torch.nn.Linear(hidden_size,1)
+
+  def forward(self,x):
+    x = self.fc1(x)
+    x = self.func(x)
+    x = self.fc2(x)
+    return x
+  
+net = MyNet(func=torch.nn.ReLU())
+print(net)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">MyNet(
+  (fc1): Linear(in_features=2, out_features=10, bias=True)
+  (func): ReLU()
+  (fc2): Linear(in_features=10, out_features=1, bias=True)
+)
+</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>train(net,dataloader,val_x,val_lab,lr=0.005)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 0: last batch loss = 0.7821246981620789, val acc = 0.46666666865348816
+Epoch 1: last batch loss = 0.7457502484321594, val acc = 0.5333333611488342
+Epoch 2: last batch loss = 0.7120334506034851, val acc = 0.5333333611488342
+Epoch 3: last batch loss = 0.6811249256134033, val acc = 0.6666666865348816
+Epoch 4: last batch loss = 0.6533011794090271, val acc = 0.7333333492279053
+Epoch 5: last batch loss = 0.627849280834198, val acc = 0.7333333492279053
+Epoch 6: last batch loss = 0.6030643582344055, val acc = 0.800000011920929
+Epoch 7: last batch loss = 0.5775002837181091, val acc = 0.800000011920929
+Epoch 8: last batch loss = 0.5522137880325317, val acc = 0.8666666746139526
+Epoch 9: last batch loss = 0.5250465869903564, val acc = 0.8666666746139526
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p><strong>任务 1</strong>：绘制训练过程中损失函数和准确率在训练数据和验证数据上的图表</p>
+<p><strong>任务 2</strong>：尝试使用此代码解决 MNIST 分类问题。提示：使用 <code>crossentropy_with_logits</code> 作为损失函数。</p></div>
+<div class="jp-Cell jp-MarkdownCell"></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们将编写的PyTorch模型代码包装在PyTorch Lightning模块中。这使您可以更方便和灵活地使用各种Lightning方法进行训练和准确性测试。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>首先，我们需要安装并导入 PyTorch Lightning。这可以通过以下命令完成：</p>
+<pre><code>
+pip install pytorch-lightning
+</code></pre>
+<p>或者</p>
+<pre><code>
+conda install -c conda-forge pytorch-lightning
+</code></pre></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import pytorch_lightning as pl</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>为了让我们的代码在 Lightning 中正常运行，我们需要完成以下步骤：</p>
+<p>1. 创建一个 <code>pl.LightningModule</code> 的子类，并在 <code>__init__</code> 方法中添加模型架构，同时实现 <code>forward</code> 方法。</p>
+<p>2. 将使用的优化器移至 <code>configure_optimizers()</code> 方法中。</p>
+<p>3. 分别在 <code>training_step</code> 和 <code>validation_step</code> 方法中定义训练和验证过程。</p>
+<p>4. （可选）实现测试过程（<code>test_step</code> 方法）和预测过程（<code>predict_step</code> 方法）。</p>
+<p>还需要注意的是，PyTorch Lightning 内置了模型在不同设备之间的自动转换功能，这取决于来自 <code>DataLoaders</code> 的输入数据所在的位置。因此，代码中所有 <code>.cuda()</code> 或 <code>.to(device)</code> 的调用都应该被移除。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>class MyNetPL(pl.LightningModule):
+    def __init__(self, hidden_size = 10, func = torch.nn.Sigmoid()):
+        super().__init__()
+        self.fc1 = torch.nn.Linear(2,hidden_size)
+        self.func = func
+        self.fc2 = torch.nn.Linear(hidden_size,1)
+
+        self.val_epoch_num = 0 # for logging
+
+    def forward(self, x):
+        x = self.fc1(x)
+        x = self.func(x)
+        x = self.fc2(x)
+        return x
+
+    def training_step(self, batch, batch_nb):
+        x, y = batch
+        y_res = self(x).view(-1)
+        loss = torch.nn.functional.binary_cross_entropy_with_logits(y_res, y)
+        return loss
+
+    def configure_optimizers(self):
+        optimizer = torch.optim.SGD(self.parameters(), lr = 0.005)
+        return optimizer
+    
+    def validation_step(self, batch, batch_nb):
+        x, y = batch
+        y_res = self(x).view(-1)
+        val_loss = torch.nn.functional.binary_cross_entropy_with_logits(y_res, y)
+        print(&quot;Epoch &quot;, self.val_epoch_num, &quot;: val loss = &quot;, val_loss.item(), &quot; val acc = &quot;,((torch.sigmoid(y_res.flatten())&gt;0.5).float()==y).float().mean().item(),  sep = &quot;&quot;)
+        self.val_epoch_num += 1</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们也添加验证<code>Dataset</code>和<code>DataLoader</code>：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>valid_dataset = torch.utils.data.TensorDataset(torch.tensor(valid_x),torch.tensor(valid_labels,dtype=torch.float32))
+valid_dataloader = torch.utils.data.DataLoader(valid_dataset, batch_size = 16)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在我们的模型已准备好进行训练。在 Pytorch Lightning 中，这个过程是通过 <code>Trainer</code> 类的对象实现的，它本质上将模型与任何数据集“混合”在一起。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>net = MyNetPL(func=torch.nn.ReLU())
+trainer = pl.Trainer(max_epochs = 30, log_every_n_steps = 1, accelerator=&#x27;gpu&#x27;, devices=1)
+trainer.fit(model = net, train_dataloaders = dataloader, val_dataloaders = valid_dataloader)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">GPU available: True, used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+
+  | Name | Type   | Params
+--------------------------------
+0 | fc1  | Linear | 30    
+1 | func | ReLU   | 0     
+2 | fc2  | Linear | 11    
+--------------------------------
+41        Trainable params
+0         Non-trainable params
+41        Total params
+0.000     Total estimated model params size (MB)
+</div><div class="jp-OutputArea-output">Sanity Checking: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 0: val loss = 0.7213451266288757 val acc = 0.3333333432674408
+</div><div class="jp-OutputArea-output">Training: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 1: val loss = 0.7164624333381653 val acc = 0.3333333432674408
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 2: val loss = 0.7117107510566711 val acc = 0.3333333432674408
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 3: val loss = 0.7070826292037964 val acc = 0.3333333432674408
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 4: val loss = 0.7025845050811768 val acc = 0.3333333432674408
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 5: val loss = 0.6982313990592957 val acc = 0.2666666805744171
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 6: val loss = 0.6939730644226074 val acc = 0.2666666805744171
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 7: val loss = 0.6897947192192078 val acc = 0.2666666805744171
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 8: val loss = 0.6857149004936218 val acc = 0.2666666805744171
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 9: val loss = 0.6817294359207153 val acc = 0.46666669845581055
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 10: val loss = 0.6778346300125122 val acc = 0.46666669845581055
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 11: val loss = 0.6740307807922363 val acc = 0.46666669845581055
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 12: val loss = 0.6703100204467773 val acc = 0.5333333611488342
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 13: val loss = 0.6666661500930786 val acc = 0.5333333611488342
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 14: val loss = 0.663104772567749 val acc = 0.6000000238418579
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 15: val loss = 0.6596227884292603 val acc = 0.6000000238418579
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 16: val loss = 0.6562108993530273 val acc = 0.6000000238418579
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 17: val loss = 0.652866542339325 val acc = 0.6666666865348816
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 18: val loss = 0.649587094783783 val acc = 0.6666666865348816
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 19: val loss = 0.6463660597801208 val acc = 0.7333333492279053
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 20: val loss = 0.6432054042816162 val acc = 0.7333333492279053
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 21: val loss = 0.6401029229164124 val acc = 0.7333333492279053
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 22: val loss = 0.6370567679405212 val acc = 0.7333333492279053
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 23: val loss = 0.6340654492378235 val acc = 0.7333333492279053
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 24: val loss = 0.6311267018318176 val acc = 0.7333333492279053
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 25: val loss = 0.6282366514205933 val acc = 0.7333333492279053
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 26: val loss = 0.6253498792648315 val acc = 0.7333333492279053
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 27: val loss = 0.6225143671035767 val acc = 0.7333333492279053
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 28: val loss = 0.6197248101234436 val acc = 0.7333333492279053
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 29: val loss = 0.6169812679290771 val acc = 0.7333333492279053
+</div><div class="jp-OutputArea-output">Validation: 0it [00:00, ?it/s]</div><div class="jp-OutputArea-output">Epoch 30: val loss = 0.6142613887786865 val acc = 0.8000000715255737
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>要点</h2>
+<ul>
+<li>PyTorch 允许你在低层次上操作张量，提供了最大的灵活性。</li>
+<li>有一些方便的工具可以处理数据，比如 Datasets 和 Dataloaders。</li>
+<li>你可以使用 `Sequential` 语法定义神经网络架构，或者通过继承 `torch.nn.Module` 类来实现。</li>
+<li>如果想用更简单的方法定义和训练网络，可以了解一下 PyTorch Lightning。</li>
+</ul></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务<a href="https://github.com/Azure/co-op-translator">Co-op Translator</a>进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。应以原文档的原始语言版本为权威来源。对于关键信息，建议使用专业人工翻译。我们对因使用此翻译而引起的任何误解或误读不承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

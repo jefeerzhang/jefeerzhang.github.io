@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FamilyOntology</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 FamilyOntology</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h1>家庭关系本体</h1>
+<p>此示例是 <a href="http://github.com/microsoft/ai-for-beginners">AI for Beginners Curriculum</a> 的一部分，灵感来源于<a href="https://habr.com/post/270857/">这篇博客文章</a>。</p>
+<p>我总是觉得记住家庭成员之间的各种关系很困难。在这个示例中，我们将使用一个定义家庭关系的本体，以及实际的家谱树，展示如何通过自动推理来找到所有的亲属关系。</p>
+<h3>获取家谱树</h3>
+<p>作为示例，我们将使用<a href="https://en.wikipedia.org/wiki/House_of_Romanov">罗曼诺夫沙皇家族</a>的家谱。描述家庭关系最常见的格式是 <a href="https://en.wikipedia.org/wiki/GEDCOM">GEDCOM</a>。我们将使用 GEDCOM 格式的罗曼诺夫家族树：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>!head -15 data/tsars.ged</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">0 HEAD
+1 CHAR UTF8
+1 GEDC
+2 VERS 5.5
+0 @0@ INDI
+1 NAME Mihail Fedorovich /Romanov/
+1 SEX M
+1 BIRT
+2 DATE 1613
+1 DEAT 
+2 DATE 1645
+1 FAMS @41@
+0 @1@ INDI
+1 NAME Evdokija Lukjanovna /Streshneva/
+1 SEX F
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>要使用GEDCOM文件，我们可以使用<code>python-gedcom</code>库：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import sys
+!{sys.executable} -m pip install python-gedcom</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Collecting python-gedcom
+  Downloading python_gedcom-1.0.0-py2.py3-none-any.whl (35 kB)
+Installing collected packages: python-gedcom
+Successfully installed python-gedcom-1.0.0
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>这个库解决了一些文件解析的技术问题，但它仍然为我们提供了对树中所有个人和家庭的相当低级的访问。以下是我们如何解析文件并显示所有个人列表的方法：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>from gedcom.parser import Parser
+from gedcom.element.individual import IndividualElement
+from gedcom.element.family import FamilyElement
+g = Parser()
+g.parse_file(&#x27;data/tsars.ged&#x27;)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>d = g.get_element_dictionary()
+[ (k,v.get_name()) for k,v in d.items() if isinstance(v,IndividualElement)]</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[(&#x27;@0@&#x27;, (&#x27;Mihail Fedorovich&#x27;, &#x27;Romanov&#x27;)),
+ (&#x27;@1@&#x27;, (&#x27;Evdokija Lukjanovna&#x27;, &#x27;Streshneva&#x27;)),
+ (&#x27;@2@&#x27;, (&#x27;Aleksej Mihajlovich&#x27;, &#x27;Romanov&#x27;)),
+ (&#x27;@3@&#x27;, (&#x27;Marija Ilinichna&#x27;, &#x27;Miloslavskaja&#x27;)),
+ (&#x27;@4@&#x27;, (&#x27;Natalja Kirillovna&#x27;, &#x27;Naryshkina&#x27;)),
+ (&#x27;@5@&#x27;, (&#x27;Marfa Matveevna&#x27;, &#x27;Apraksina&#x27;)),
+ (&#x27;@6@&#x27;, (&#x27;Fedor Alekseevich&#x27;, &#x27;Romanov&#x27;)),
+ (&#x27;@7@&#x27;, (&#x27;Sofja Aleksevna&#x27;, &#x27;Romanova&#x27;)),
+ (&#x27;@8@&#x27;, (&#x27;Ivan V Alekseevich&#x27;, &#x27;Romanov&#x27;)),
+ (&#x27;@9@&#x27;, (&#x27;Praskovja Fedorovna&#x27;, &#x27;Saltykova&#x27;)),
+ (&#x27;@10@&#x27;, (&#x27;Ekaterina Ivanovna&#x27;, &#x27;Romanova&#x27;)),
+ (&#x27;@11@&#x27;, (&#x27;Anna Ivanovna&#x27;, &#x27;Romanova&#x27;)),
+ (&#x27;@12@&#x27;, (&#x27;Fridrih Vilgelm&#x27;, &#x27;Kurlandskij&#x27;)),
+ (&#x27;@13@&#x27;, (&#x27;Karl Leopold&#x27;, &#x27;Meklenburg-Shverinskij&#x27;)),
+ (&#x27;@14@&#x27;, (&#x27;Anna Leopoldovna&#x27;, &#x27;Meklenburg-Shverinskaja&#x27;)),
+ (&#x27;@15@&#x27;, (&#x27;Anton Ulrih&#x27;, &#x27;Braunshvejg-Volfenbjuttelskij&#x27;)),
+ (&#x27;@16@&#x27;, (&#x27;Ivan VI Antonovich&#x27;, &#x27;Braunshvejg-Volfenbjuttelskij&#x27;)),
+ (&#x27;@17@&#x27;, (&#x27;Petr I Alekseevich&#x27;, &#x27;Romanov&#x27;)),
+ (&#x27;@18@&#x27;, (&#x27;Evdokija Fedorovna&#x27;, &#x27;Lopuhina&#x27;)),
+ (&#x27;@19@&#x27;, (&#x27;Ekaterina I Alekseevna&#x27;, &#x27;Mihajlova&#x27;)),
+ (&#x27;@20@&#x27;, (&#x27;Aleksej Petrovich&#x27;, &#x27;Romanov&#x27;)),
+ (&#x27;@21@&#x27;, (&#x27;Sharlotta Kristina&#x27;, &#x27;Braunshvejg-Volfenbjuttelskaja&#x27;)),
+ (&#x27;@22@&#x27;, (&#x27;Petr II Alekseevich&#x27;, &#x27;Romanov&#x27;)),
+ (&#x27;@23@&#x27;, (&#x27;Anna Petrovna&#x27;, &#x27;Romanova&#x27;)),
+ (&#x27;@24@&#x27;, (&#x27;Elizaveta Petrovna&#x27;, &#x27;Romanova&#x27;)),
+ (&#x27;@25@&#x27;, (&#x27;Karl Fridrih&#x27;, &#x27;Golshtejn-Gottorpskij&#x27;)),
+ (&#x27;@26@&#x27;, (&#x27;Petr III Fedorovich&#x27;, &#x27;Romanov&#x27;)),
+ (&#x27;@27@&#x27;, (&#x27;Ekaterina II&#x27;, &#x27;Alekseevna&#x27;)),
+ (&#x27;@28@&#x27;, (&#x27;Pavel I Petrovich&#x27;, &#x27;Romanov&#x27;)),
+ (&#x27;@29@&#x27;, (&#x27;Natalja Alekseevna&#x27;, &#x27;Gessen-Darmshtadskaja&#x27;)),
+ (&#x27;@30@&#x27;, (&#x27;Marija Fedorovna&#x27;, &#x27;Vjurtembergskaja&#x27;)),
+ (&#x27;@31@&#x27;, (&#x27;Aleksandr I Pavlovich&#x27;, &#x27;Romanov&#x27;)),
+ (&#x27;@32@&#x27;, (&#x27;Elizaveta Alekseevna&#x27;, &#x27;Baden-Durlahskaja&#x27;)),
+ (&#x27;@33@&#x27;, (&#x27;Nikolaj I Pavlovich&#x27;, &#x27;Romanov&#x27;)),
+ (&#x27;@34@&#x27;, (&#x27;Aleksandra Fedorovna&#x27;, &#x27;Prusskaja&#x27;)),
+ (&#x27;@35@&#x27;, (&#x27;Aleksandr II Nikolaevich&#x27;, &#x27;Romanov&#x27;)),
+ (&#x27;@36@&#x27;, (&#x27;Marija Aleksandrovna&#x27;, &#x27;Gessenskaja&#x27;)),
+ (&#x27;@37@&#x27;, (&#x27;Aleksandr III Aleksandrovich&#x27;, &#x27;Romanov&#x27;)),
+ (&#x27;@38@&#x27;, (&#x27;Marija Fedorovna&#x27;, &#x27;Datskaja&#x27;)),
+ (&#x27;@39@&#x27;, (&#x27;Nikolaj II Aleksandrovich&#x27;, &#x27;Romanov&#x27;)),
+ (&#x27;@40@&#x27;, (&#x27;Aleksandra Fedorovna&#x27;, &#x27;Gessenskaja&#x27;))]</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>以下是我们获取家庭信息的方法。请注意，这会给我们一个<strong>标识符</strong>列表，如果我们想要更清楚，需要将它们转换为名称：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>d = g.get_element_dictionary()
+[ (k,[x.get_value() for x in v.get_child_elements()]) for k,v in d.items() if isinstance(v,FamilyElement)]</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[(&#x27;@41@&#x27;, [&#x27;@0@&#x27;, &#x27;@1@&#x27;, &#x27;@2@&#x27;]),
+ (&#x27;@42@&#x27;, [&#x27;@2@&#x27;, &#x27;@3@&#x27;, &#x27;@6@&#x27;, &#x27;@7@&#x27;, &#x27;@8@&#x27;]),
+ (&#x27;@43@&#x27;, [&#x27;@8@&#x27;, &#x27;@9@&#x27;, &#x27;@10@&#x27;, &#x27;@11@&#x27;]),
+ (&#x27;@44@&#x27;, [&#x27;@13@&#x27;, &#x27;@10@&#x27;, &#x27;@14@&#x27;]),
+ (&#x27;@45@&#x27;, [&#x27;@15@&#x27;, &#x27;@14@&#x27;, &#x27;@16@&#x27;]),
+ (&#x27;@46@&#x27;, [&#x27;@2@&#x27;, &#x27;@4@&#x27;, &#x27;@17@&#x27;]),
+ (&#x27;@47@&#x27;, [&#x27;@17@&#x27;, &#x27;@18@&#x27;, &#x27;@20@&#x27;]),
+ (&#x27;@48@&#x27;, [&#x27;@20@&#x27;, &#x27;@21@&#x27;, &#x27;@22@&#x27;]),
+ (&#x27;@49@&#x27;, [&#x27;@17@&#x27;, &#x27;@19@&#x27;, &#x27;@23@&#x27;, &#x27;@24@&#x27;]),
+ (&#x27;@50@&#x27;, [&#x27;@25@&#x27;, &#x27;@23@&#x27;, &#x27;@26@&#x27;]),
+ (&#x27;@51@&#x27;, [&#x27;@26@&#x27;, &#x27;@27@&#x27;, &#x27;@28@&#x27;]),
+ (&#x27;@52@&#x27;, [&#x27;@28@&#x27;, &#x27;@30@&#x27;, &#x27;@31@&#x27;, &#x27;@33@&#x27;]),
+ (&#x27;@53@&#x27;, [&#x27;@33@&#x27;, &#x27;@34@&#x27;, &#x27;@35@&#x27;]),
+ (&#x27;@54@&#x27;, [&#x27;@35@&#x27;, &#x27;@36@&#x27;, &#x27;@37@&#x27;]),
+ (&#x27;@55@&#x27;, [&#x27;@37@&#x27;, &#x27;@38@&#x27;, &#x27;@39@&#x27;])]</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>获取家庭本体</h3>
+<p>接下来，让我们看看<a href="https://raw.githubusercontent.com/blokhin/genealogical-trees/master/data/header.ttl">家庭本体</a>，它被定义为一组语义网三元组。这个本体定义了诸如 <code>isUncleOf</code>、<code>isCousinOf</code> 等许多关系。所有这些关系都是基于基本谓词 <code>isMotherOf</code>、<code>isFatherOf</code>、<code>isBrotherOf</code> 和 <code>isSisterOf</code> 定义的。我们将使用自动推理，通过本体推导出所有其他关系。</p>
+<p>以下是 <code>isAuntOf</code> 属性的一个示例定义，它被定义为 <code>isSisterOf</code> 和 <code>isParentOf</code> 的组合（*姑/姨是某人父母的姐妹*）。</p>
+<pre><code>
+fhkb:isAuntOf a owl:ObjectProperty ;
+    rdfs:domain fhkb:Woman ;
+    rdfs:range fhkb:Person ;
+    owl:propertyChainAxiom ( fhkb:isSisterOf fhkb:isParentOf ) .
+</code></pre></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>!head -20 data/onto.ttl</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">@prefix fhkb: &lt;http://www.example.com/genealogy.owl#&gt; .
+@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .
+@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
+@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
+@prefix xml: &lt;http://www.w3.org/XML/1998/namespace&gt; .
+@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
+
+&lt;http://www.example.com/genealogy.owl#&gt; a owl:Ontology .
+
+fhkb:DomainEntity a owl:Class .
+
+fhkb:Man a owl:Class ;
+    owl:equivalentClass [ a owl:Class ;
+            owl:intersectionOf ( fhkb:Person [ a owl:Restriction ;
+                        owl:onProperty fhkb:hasSex ;
+                        owl:someValuesFrom fhkb:Male ] ) ] .
+
+fhkb:Woman a owl:Class ;
+    owl:equivalentClass [ a owl:Class ;
+            owl:intersectionOf ( fhkb:Person [ a owl:Restriction ;
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>构建推理本体</h3>
+<p>为了简化操作，我们将创建一个本体文件，其中包括家庭本体中的原始规则，以及来自我们 GEDCOM 文件的个人事实。我们将遍历 GEDCOM 文件，提取有关家庭和个人的信息，并将其转换为三元组。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>!cp data/onto.ttl .
+
+gedcom_dict = g.get_element_dictionary()
+individuals, marriages = {}, {}
+
+def term2id(el):
+    return &quot;i&quot; + el.get_pointer().replace(&#x27;@&#x27;, &#x27;&#x27;).lower()
+
+out = open(&quot;onto.ttl&quot;,&quot;a&quot;)
+
+for k, v in gedcom_dict.items():
+    if isinstance(v,IndividualElement):
+        children, siblings = set(), set()
+        idx = term2id(v)
+
+        title = v.get_name()[0] + &quot; &quot; + v.get_name()[1]
+        title = title.replace(&#x27;&quot;&#x27;, &#x27;&#x27;).replace(&#x27;[&#x27;, &#x27;&#x27;).replace(&#x27;]&#x27;, &#x27;&#x27;).replace(&#x27;(&#x27;, &#x27;&#x27;).replace(&#x27;)&#x27;, &#x27;&#x27;).strip()
+
+        own_families = g.get_families(v, &#x27;FAMS&#x27;)
+        for fam in own_families:
+            children |= set(term2id(i) for i in g.get_family_members(fam, &quot;CHIL&quot;))
+
+        parent_families = g.get_families(v, &#x27;FAMC&#x27;)
+        if len(parent_families):
+            for member in g.get_family_members(parent_families[0], &quot;CHIL&quot;): # NB adoptive families i.e len(parent_families)&gt;1 are not considered (TODO?)
+                if member.get_pointer() == v.get_pointer():
+                    continue
+                siblings.add(term2id(member))
+
+        if idx in individuals:
+            children |= individuals[idx].get(&#x27;children&#x27;, set())
+            siblings |= individuals[idx].get(&#x27;siblings&#x27;, set())
+        individuals[idx] = {&#x27;sex&#x27;: v.get_gender().lower(), &#x27;children&#x27;: children, &#x27;siblings&#x27;: siblings, &#x27;title&#x27;: title}
+
+    elif isinstance(v,FamilyElement):
+        wife, husb, children = None, None, set()
+        children = set(term2id(i) for i in g.get_family_members(v, &quot;CHIL&quot;))
+
+        try:
+            wife = g.get_family_members(v, &quot;WIFE&quot;)[0]
+            wife = term2id(wife)
+            if wife in individuals: individuals[wife][&#x27;children&#x27;] |= children
+            else: individuals[wife] = {&#x27;children&#x27;: children}
+        except IndexError: pass
+        try:
+            husb = g.get_family_members(v, &quot;HUSB&quot;)[0]
+            husb = term2id(husb)
+            if husb in individuals: individuals[husb][&#x27;children&#x27;] |= children
+            else: individuals[husb] = {&#x27;children&#x27;: children}
+        except IndexError: pass
+
+        if wife and husb: marriages[wife + husb] = (term2id(v), wife, husb)
+
+for idx, val in individuals.items():
+    added_terms = &#x27;&#x27;
+    if val[&#x27;sex&#x27;] == &#x27;f&#x27;:
+        parent_predicate, sibl_predicate = &quot;isMotherOf&quot;, &quot;isSisterOf&quot;
+    else:
+        parent_predicate, sibl_predicate = &quot;isFatherOf&quot;, &quot;isBrotherOf&quot;
+    if len(val[&#x27;children&#x27;]):
+        added_terms += &quot; ;\n    fhkb:&quot; + parent_predicate + &quot; &quot; + &quot;, &quot;.join([&quot;fhkb:&quot; + i for i in val[&#x27;children&#x27;]])
+    if len(val[&#x27;siblings&#x27;]):
+        added_terms += &quot; ;\n    fhkb:&quot; + sibl_predicate + &quot; &quot; + &quot;, &quot;.join([&quot;fhkb:&quot; + i for i in val[&#x27;siblings&#x27;]])
+    out.write(&quot;fhkb:%s a owl:NamedIndividual, owl:Thing%s ;\n    rdfs:label \&quot;%s\&quot; .\n&quot; % (idx, added_terms, val[&#x27;title&#x27;]))
+
+for k, v in marriages.items():
+    out.write(&quot;fhkb:%s a owl:NamedIndividual, owl:Thing ;\n    fhkb:hasFemalePartner fhkb:%s ;\n    fhkb:hasMalePartner fhkb:%s .\n&quot; % v)
+
+out.write(&quot;[] a owl:AllDifferent ;\n    owl:distinctMembers (&quot;)
+for idx in individuals.keys():
+    out.write(&quot;    fhkb:&quot; + idx)
+for k, v in marriages.items():
+    out.write(&quot;    fhkb:&quot; + v[0])
+out.write(&quot;    ) .&quot;)
+out.close()</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>!tail onto.ttl</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">    fhkb:hasFemalePartner fhkb:i34 ;
+    fhkb:hasMalePartner fhkb:i33 .
+fhkb:i54 a owl:NamedIndividual, owl:Thing ;
+    fhkb:hasFemalePartner fhkb:i36 ;
+    fhkb:hasMalePartner fhkb:i35 .
+fhkb:i55 a owl:NamedIndividual, owl:Thing ;
+    fhkb:hasFemalePartner fhkb:i38 ;
+    fhkb:hasMalePartner fhkb:i37 .
+[] a owl:AllDifferent ;
+    owl:distinctMembers (    fhkb:i0    fhkb:i1    fhkb:i2    fhkb:i3    fhkb:i4    fhkb:i5    fhkb:i6    fhkb:i7    fhkb:i8    fhkb:i9    fhkb:i10    fhkb:i11    fhkb:i12    fhkb:i13    fhkb:i14    fhkb:i15    fhkb:i16    fhkb:i17    fhkb:i18    fhkb:i19    fhkb:i20    fhkb:i21    fhkb:i22    fhkb:i23    fhkb:i24    fhkb:i25    fhkb:i26    fhkb:i27    fhkb:i28    fhkb:i29    fhkb:i30    fhkb:i31    fhkb:i32    fhkb:i33    fhkb:i34    fhkb:i35    fhkb:i36    fhkb:i37    fhkb:i38    fhkb:i39    fhkb:i40    fhkb:i41    fhkb:i42    fhkb:i43    fhkb:i44    fhkb:i45    fhkb:i46    fhkb:i47    fhkb:i48    fhkb:i49    fhkb:i50    fhkb:i51    fhkb:i52    fhkb:i53    fhkb:i54    fhkb:i55    ) .</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>推理操作</h3>
+<p>现在我们希望能够使用这个本体进行推理和查询。我们将使用 <a href="https://github.com/RDFLib">RDFLib</a>，一个用于读取不同格式的 RDF 图、查询等操作的库。</p>
+<p>对于逻辑推理，我们将使用 <a href="https://github.com/RDFLib/OWL-RL">OWL-RL</a> 库，它允许我们构建 RDF 图的<strong>闭包</strong>，即添加所有可以推导出的概念和关系。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>!{sys.executable} -m pip install rdflib
+!{sys.executable} -m pip install git+https://github.com/RDFLib/OWL-RL.git</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Requirement already satisfied: rdflib in /home/rg/anaconda3/envs/ai4beg/lib/python3.11/site-packages (6.3.2)
+Requirement already satisfied: isodate&lt;0.7.0,&gt;=0.6.0 in /home/rg/anaconda3/envs/ai4beg/lib/python3.11/site-packages (from rdflib) (0.6.1)
+Requirement already satisfied: pyparsing&lt;4,&gt;=2.1.0 in /home/rg/anaconda3/envs/ai4beg/lib/python3.11/site-packages (from rdflib) (3.0.9)
+Requirement already satisfied: six in /home/rg/anaconda3/envs/ai4beg/lib/python3.11/site-packages (from isodate&lt;0.7.0,&gt;=0.6.0-&gt;rdflib) (1.16.0)
+Collecting git+https://github.com/RDFLib/OWL-RL.git
+  Cloning https://github.com/RDFLib/OWL-RL.git to /tmp/pip-req-build-lbfzwi3m
+  Running command git clone --filter=blob:none --quiet https://github.com/RDFLib/OWL-RL.git /tmp/pip-req-build-lbfzwi3m
+  Resolved https://github.com/RDFLib/OWL-RL.git to commit a77e1791b88b54aace609bc6000aac14c7add4ff
+  Preparing metadata (setup.py) ... [?25ldone
+[?25hRequirement already satisfied: rdflib&gt;=6.0.2 in /home/rg/anaconda3/envs/ai4beg/lib/python3.11/site-packages (from owlrl==6.0.2) (6.3.2)
+Requirement already satisfied: isodate&lt;0.7.0,&gt;=0.6.0 in /home/rg/anaconda3/envs/ai4beg/lib/python3.11/site-packages (from rdflib&gt;=6.0.2-&gt;owlrl==6.0.2) (0.6.1)
+Requirement already satisfied: pyparsing&lt;4,&gt;=2.1.0 in /home/rg/anaconda3/envs/ai4beg/lib/python3.11/site-packages (from rdflib&gt;=6.0.2-&gt;owlrl==6.0.2) (3.0.9)
+Requirement already satisfied: six in /home/rg/anaconda3/envs/ai4beg/lib/python3.11/site-packages (from isodate&lt;0.7.0,&gt;=0.6.0-&gt;rdflib&gt;=6.0.2-&gt;owlrl==6.0.2) (1.16.0)
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们打开本体文件，看看它包含多少个三元组：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import rdflib
+from owlrl import DeductiveClosure, OWLRL_Extension
+
+g = rdflib.Graph()
+g.parse(&quot;onto.ttl&quot;, format=&quot;turtle&quot;)
+
+print(&quot;Triplets found:%d&quot; % len(g))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Triplets found:669
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在让我们构建闭包，看看三元组的数量如何增加：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>DeductiveClosure(OWLRL_Extension).expand(g)
+print(&quot;Triplets after inference:%d&quot; % len(g))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Triplets after inference:4246
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>查询亲属关系</h3>
+<p>现在我们可以查询图谱，查看人与人之间的不同关系。我们可以结合使用 <strong>SPARQL</strong> 语言和 <code>query</code> 方法。在我们的例子中，让我们看看家谱中所有的<strong>叔叔</strong>：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>qres = g.query(
+    &quot;&quot;&quot;SELECT DISTINCT ?aname ?bname
+       WHERE {
+          ?a fhkb:isUncleOf ?b .
+          ?a rdfs:label ?aname .
+          ?b rdfs:label ?bname .
+       }&quot;&quot;&quot;)
+
+for row in qres:
+    print(&quot;%s is uncle of %s&quot; % row)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Fedor Alekseevich Romanov is uncle of Ekaterina Ivanovna Romanova
+Aleksandr I Pavlovich Romanov is uncle of Aleksandr II Nikolaevich Romanov
+Fedor Alekseevich Romanov is uncle of Anna Ivanovna Romanova
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>可以尝试不同的家庭关系。例如，可以查看 <code>isAncestorOf</code> 关系，它递归地定义了某个人的所有祖先。</p>
+<p>最后，让我们整理一下！</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>!rm onto.ttl</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code></code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务<a href="https://github.com/Azure/co-op-translator">Co-op Translator</a>进行翻译。虽然我们尽力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。原始语言的文档应被视为权威来源。对于关键信息，建议使用专业人工翻译。我们不对因使用此翻译而产生的任何误解或误读承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

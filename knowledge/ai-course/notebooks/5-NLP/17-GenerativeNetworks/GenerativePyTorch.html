@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GenerativePyTorch</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 GenerativePyTorch</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h1>生成网络</h1>
+<p>循环神经网络（RNNs）及其门控单元变体（如长短期记忆单元 LSTMs 和门控循环单元 GRUs）提供了一种语言建模的机制，即它们可以学习单词的排列顺序，并预测序列中下一个单词。这使得我们可以将 RNN 用于<strong>生成任务</strong>，例如普通文本生成、机器翻译，甚至图像描述生成。</p>
+<p>在我们上一单元讨论的 RNN 架构中，每个 RNN 单元会生成下一个隐藏状态作为输出。然而，我们也可以为每个循环单元添加另一个输出，这样就可以输出一个<strong>序列</strong>（长度与原始序列相等）。此外，我们还可以使用不在每一步接受输入的 RNN 单元，而是仅接受一个初始状态向量，然后生成一系列输出。</p>
+<p>在本笔记中，我们将专注于帮助我们生成文本的简单生成模型。为了简化起见，让我们构建一个<strong>字符级网络</strong>，逐字母生成文本。在训练过程中，我们需要获取一些文本语料库，并将其拆分为字母序列。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import torch
+import torchtext
+import numpy as np
+from torchnlp import *
+train_dataset,test_dataset,classes,vocab = load_dataset()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Loading dataset...
+Building vocab...
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>构建字符词汇表</h2>
+<p>为了构建基于字符的生成网络，我们需要将文本拆分为单个字符，而不是单词。这可以通过定义一个不同的分词器来实现：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def char_tokenizer(words):
+    return list(words) #[word for word in words]
+
+counter = collections.Counter()
+for (label, line) in train_dataset:
+    counter.update(char_tokenizer(line))
+vocab = torchtext.vocab.vocab(counter)
+
+vocab_size = len(vocab)
+print(f&quot;Vocabulary size = {vocab_size}&quot;)
+print(f&quot;Encoding of &#x27;a&#x27; is {vocab.get_stoi()[&#x27;a&#x27;]}&quot;)
+print(f&quot;Character with code 13 is {vocab.get_itos()[13]}&quot;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Vocabulary size = 82
+Encoding of &#x27;a&#x27; is 1
+Character with code 13 is c
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们看看如何对数据集中的文本进行编码的示例：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def enc(x):
+    return torch.LongTensor(encode(x,voc=vocab,tokenizer=char_tokenizer))
+
+enc(train_dataset[0][1])</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">tensor([ 0,  1,  2,  2,  3,  4,  5,  6,  3,  7,  8,  1,  9, 10,  3, 11,  2,  1,
+        12,  3,  7,  1, 13, 14,  3, 15, 16,  5, 17,  3,  5, 18,  8,  3,  7,  2,
+         1, 13, 14,  3, 19, 20,  8, 21,  5,  8,  9, 10, 22,  3, 20,  8, 21,  5,
+         8,  9, 10,  3, 23,  3,  4, 18, 17,  9,  5, 23, 10,  8,  2,  2,  8,  9,
+        10, 24,  3,  0,  1,  2,  2,  3,  4,  5,  9,  8,  8,  5, 25, 10,  3, 26,
+        12, 27, 16, 26,  2, 27, 16, 28, 29, 30,  1, 16, 26,  3, 17, 31,  3, 21,
+         2,  5,  9,  1, 23, 13, 32, 16, 27, 13, 10, 24,  3,  1,  9,  8,  3, 10,
+         8,  8, 27, 16, 28,  3, 28,  9,  8,  8, 16,  3,  1, 28,  1, 27, 16,  6])</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>训练生成式 RNN</h2>
+<p>我们将通过以下方式训练 RNN 来生成文本。在每一步中，我们会取一个长度为 <code>nchars</code> 的字符序列，并让网络为每个输入字符生成下一个输出字符：</p>
+<p>!<a href="../../../../../lessons/5-NLP/17-GenerativeNetworks/images/rnn-generate.png">显示 RNN 生成单词 &#x27;HELLO&#x27; 示例的图片。</a></p>
+<p>根据实际场景，我们可能还需要包含一些特殊字符，比如 *序列结束符* <code>&lt;eos&gt;</code>。在我们的例子中，我们只是想训练网络进行无尽的文本生成，因此我们会将每个序列的大小固定为 <code>nchars</code> 个标记。因此，每个训练样本将由 <code>nchars</code> 个输入和 <code>nchars</code> 个输出组成（输出是输入序列向左偏移一个符号）。一个小批量（minibatch）将由若干这样的序列组成。</p>
+<p>我们生成小批量的方式是取每条长度为 <code>l</code> 的新闻文本，并从中生成所有可能的输入-输出组合（这样的组合会有 <code>l-nchars</code> 个）。这些组合将形成一个小批量，而每次训练步骤中小批量的大小会有所不同。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>nchars = 100
+
+def get_batch(s,nchars=nchars):
+    ins = torch.zeros(len(s)-nchars,nchars,dtype=torch.long,device=device)
+    outs = torch.zeros(len(s)-nchars,nchars,dtype=torch.long,device=device)
+    for i in range(len(s)-nchars):
+        ins[i] = enc(s[i:i+nchars])
+        outs[i] = enc(s[i+1:i+nchars+1])
+    return ins,outs
+
+get_batch(train_dataset[0][1])</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">(tensor([[ 0,  1,  2,  ..., 28, 29, 30],
+         [ 1,  2,  2,  ..., 29, 30,  1],
+         [ 2,  2,  3,  ..., 30,  1, 16],
+         ...,
+         [20,  8, 21,  ...,  1, 28,  1],
+         [ 8, 21,  5,  ..., 28,  1, 27],
+         [21,  5,  8,  ...,  1, 27, 16]]),
+ tensor([[ 1,  2,  2,  ..., 29, 30,  1],
+         [ 2,  2,  3,  ..., 30,  1, 16],
+         [ 2,  3,  4,  ...,  1, 16, 26],
+         ...,
+         [ 8, 21,  5,  ..., 28,  1, 27],
+         [21,  5,  8,  ...,  1, 27, 16],
+         [ 5,  8,  9,  ..., 27, 16,  6]]))</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在我们来定义生成网络。它可以基于我们在上一单元中讨论过的任何循环单元（简单循环单元、LSTM 或 GRU）。在我们的示例中，我们将使用 LSTM。</p>
+<p>由于网络以字符作为输入，并且词汇表的大小相对较小，我们不需要嵌入层，直接使用独热编码的输入即可传递给 LSTM 单元。然而，由于我们传递的是字符编号作为输入，因此在传递给 LSTM 之前需要对它们进行独热编码。这可以通过在 <code>forward</code> 过程中调用 <code>one_hot</code> 函数来完成。输出编码器将是一个线性层，用于将隐藏状态转换为独热编码的输出。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>class LSTMGenerator(torch.nn.Module):
+    def __init__(self, vocab_size, hidden_dim):
+        super().__init__()
+        self.rnn = torch.nn.LSTM(vocab_size,hidden_dim,batch_first=True)
+        self.fc = torch.nn.Linear(hidden_dim, vocab_size)
+
+    def forward(self, x, s=None):
+        x = torch.nn.functional.one_hot(x,vocab_size).to(torch.float32)
+        x,s = self.rnn(x,s)
+        return self.fc(x),s</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>在训练过程中，我们希望能够对生成的文本进行采样。为此，我们将定义一个 <code>generate</code> 函数，该函数会从初始字符串 <code>start</code> 开始，生成长度为 <code>size</code> 的输出字符串。</p>
+<p>其工作原理如下：首先，我们将整个初始字符串 <code>start</code> 传递给网络，获取输出状态 <code>s</code> 和下一个预测字符 <code>out</code>。由于 <code>out</code> 是独热编码的，我们通过 <code>argmax</code> 获取字符在词汇表中的索引 <code>nc</code>，然后使用 <code>itos</code> 找到实际字符，并将其添加到结果字符列表 <code>chars</code> 中。生成一个字符的这个过程会重复执行 <code>size</code> 次，以生成所需数量的字符。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def generate(net,size=100,start=&#x27;today &#x27;):
+        chars = list(start)
+        out, s = net(enc(chars).view(1,-1).to(device))
+        for i in range(size):
+            nc = torch.argmax(out[0][-1])
+            chars.append(vocab.get_itos()[nc])
+            out, s = net(nc.view(1,-1),s)
+        return &#x27;&#x27;.join(chars)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在开始训练吧！训练循环与我们之前的所有示例几乎相同，但这次我们每隔1000个epoch打印一次生成的文本样本，而不是打印准确率。</p>
+<p>需要特别注意的是我们计算损失的方式。我们需要根据独热编码的输出 <code>out</code> 和预期的文本 <code>text_out</code>（字符索引列表）来计算损失。幸运的是，<code>cross_entropy</code> 函数的第一个参数需要未归一化的网络输出，第二个参数需要类别编号，这正好符合我们的需求。它还会自动对小批量的大小进行平均。</p>
+<p>我们还通过 <code>samples_to_train</code> 限制训练样本数量，以避免等待时间过长。我们鼓励你进行实验，尝试更长时间的训练，可能是多个epoch（在这种情况下，你需要在这段代码外再创建一个循环）。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>net = LSTMGenerator(vocab_size,64).to(device)
+
+samples_to_train = 10000
+optimizer = torch.optim.Adam(net.parameters(),0.01)
+loss_fn = torch.nn.CrossEntropyLoss()
+net.train()
+for i,x in enumerate(train_dataset):
+    # x[0] is class label, x[1] is text
+    if len(x[1])-nchars&lt;10:
+        continue
+    samples_to_train-=1
+    if not samples_to_train: break
+    text_in, text_out = get_batch(x[1])
+    optimizer.zero_grad()
+    out,s = net(text_in)
+    loss = torch.nn.functional.cross_entropy(out.view(-1,vocab_size),text_out.flatten()) #cross_entropy(out,labels)
+    loss.backward()
+    optimizer.step()
+    if i%1000==0:
+        print(f&quot;Current loss = {loss.item()}&quot;)
+        print(generate(net))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Current loss = 4.398899078369141
+today sr sr sr sr sr sr sr sr sr sr sr sr sr sr sr sr sr sr sr sr sr sr sr sr sr sr sr sr sr sr sr sr sr s
+Current loss = 2.161320447921753
+today and to the tor to to the tor to to the tor to to the tor to to the tor to to the tor to to the tor t
+Current loss = 1.6722588539123535
+today and the court to the could to the could to the could to the could to the could to the could to the c
+Current loss = 2.423795223236084
+today and a second to the conternation of the conternation of the conternation of the conternation of the 
+Current loss = 1.702607274055481
+today and the company to the company to the company to the company to the company to the company to the co
+Current loss = 1.692358136177063
+today and the company to the company to the company to the company to the company to the company to the co
+Current loss = 1.9722288846969604
+today and the control the control the control the control the control the control the control the control 
+Current loss = 1.8705692291259766
+today and the second to the second to the second to the second to the second to the second to the second t
+Current loss = 1.7626899480819702
+today and a security and a security and a security and a security and a security and a security and a secu
+Current loss = 1.5574463605880737
+today and the company and the company and the company and the company and the company and the company and 
+Current loss = 1.5620026588439941
+today and the be that the be the be that the be the be that the be the be that the be the be that the be t
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>这个示例已经生成了一些相当不错的文本，但仍有几个方面可以进一步改进：</p>
+<ul>
+<li>**更好的小批量生成**。我们在训练数据准备时，是从一个样本中生成一个小批量。这种方法并不理想，因为小批量的大小各不相同，有些甚至无法生成，因为文本长度小于 `nchars`。此外，较小的小批量无法充分利用 GPU 的性能。更明智的做法是从所有样本中获取一个较大的文本块，然后生成所有输入-输出对，打乱顺序，并生成大小相等的小批量。</li>
+</ul>
+<ul>
+<li>**多层 LSTM**。尝试使用 2 或 3 层的 LSTM 单元是有意义的。正如我们在前一个单元中提到的，每一层 LSTM 都会从文本中提取特定的模式。在字符级生成器的情况下，我们可以预期较低的 LSTM 层负责提取音节，而较高的层负责提取单词和单词组合。这可以通过向 LSTM 构造函数传递层数参数来简单实现。</li>
+</ul>
+<ul>
+<li>你还可以尝试使用 **GRU 单元**，看看哪种表现更好，以及尝试 **不同的隐藏层大小**。隐藏层过大可能导致过拟合（例如，网络会学习到精确的文本），而隐藏层过小可能无法生成良好的结果。</li>
+</ul></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>软文本生成与温度</h2>
+<p>在之前定义的 <code>generate</code> 方法中，我们总是选择概率最高的字符作为生成文本中的下一个字符。这导致生成的文本经常在相同的字符序列之间“循环”，如下例所示：</p>
+<pre><code>
+today of the second the company and a second the company ...
+</code></pre>
+<p>然而，如果我们查看下一个字符的概率分布，可能会发现几个最高概率之间的差异并不大，例如，一个字符的概率可能是 0.2，而另一个是 0.19，等等。例如，当寻找序列 &#x27;*play*&#x27; 的下一个字符时，下一个字符可能同样可能是空格，或者是 <strong>e</strong>（如单词 *player* 中的情况）。</p>
+<p>这让我们得出一个结论：选择概率最高的字符并不总是“公平”的，因为选择第二高的字符也可能生成有意义的文本。更明智的做法是从网络输出给出的概率分布中<strong>采样</strong>字符。</p>
+<p>这种采样可以通过实现所谓<strong>多项分布</strong>的 <code>multinomial</code> 函数来完成。下面定义了一个实现这种<strong>软</strong>文本生成的函数：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def generate_soft(net,size=100,start=&#x27;today &#x27;,temperature=1.0):
+        chars = list(start)
+        out, s = net(enc(chars).view(1,-1).to(device))
+        for i in range(size):
+            #nc = torch.argmax(out[0][-1])
+            out_dist = out[0][-1].div(temperature).exp()
+            nc = torch.multinomial(out_dist,1)[0]
+            chars.append(vocab.get_itos()[nc])
+            out, s = net(nc.view(1,-1),s)
+        return &#x27;&#x27;.join(chars)
+    
+for i in [0.3,0.8,1.0,1.3,1.8]:
+    print(f&quot;--- Temperature = {i}\n{generate_soft(net,size=300,start=&#x27;Today &#x27;,temperature=i)}\n&quot;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">--- Temperature = 0.3
+Today and a company and complete an all the land the restrational the as a security and has provers the pay to and a report and the computer in the stand has filities and working the law the stations for a company and with the company and the final the first company and refight of the state and and workin
+
+--- Temperature = 0.8
+Today he oniis its first to Aus bomblaties the marmation a to manan  boogot that pirate assaid a relaid their that goverfin the the Cappets Ecrotional Assonia Cition targets it annight the w scyments Blamity #39;s TVeer Diercheg Reserals fran envyuil that of ster said access what succers of Dour-provelith
+
+--- Temperature = 1.0
+Today holy they a 11 will meda a toket subsuaties, engins for Chanos, they&#x27;s has stainger past to opening orital his thempting new Nattona was al innerforder advan-than #36;s night year his religuled talitatian what the but with Wednesday to Justment will wemen of Mark CCC Camp as Timed Nae wome a leaders
+
+--- Temperature = 1.3
+Today gpone 2.5 fech atcusion poor cocles toparsdorM.cht Line Pamage put 43 his calt lowed to the book, that has authh-the silia rruch ailing to&#x27;ory andhes beutirsimi- Aefffive heading offil an auf eacklets is charged evis, Gunymy oy) Mony has it after-sloythyor loveId out filme, the Natabl -Najuntaxiggs 
+
+--- Temperature = 1.8
+Today plary, P.slan chly\401 mardregationly #39;t 8.1Mide) closes ,filtcon alfly playin roven!\grea.-QFBEP: Iss onfarchQ/itilia CCf Zivesigntwasta orce.-Peul-aw.uicrin of fuglinfsut aftaningwo, MIEX awayew Aice Woiduar Corvagiugge oppo esig ThusBratourid canthly-RyI.co lagitems\eexciaishes.conBabntusmor I
+
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们引入了一个名为<strong>温度</strong>的参数，用于指示我们应多大程度上坚持最高概率。如果温度为1.0，我们进行公平的多项式采样，而当温度趋于无穷大时——所有概率变得相等，我们随机选择下一个字符。在下面的示例中，我们可以观察到，当我们将温度提高得过高时，文本变得毫无意义，而当温度接近0时，它类似于“循环”的硬生成文本。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务 <a href="https://github.com/Azure/co-op-translator">Co-op Translator</a> 进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。应以原始语言的文档作为权威来源。对于关键信息，建议使用专业人工翻译。我们对因使用此翻译而引起的任何误解或误读不承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

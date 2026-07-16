@@ -1,0 +1,306 @@
+/* ============================================================
+   AI 入门课程 — 共享样式表
+   所有课程页面和参考文档统一引用此文件
+   ============================================================ */
+
+:root {
+  --text: #111;
+  --muted: #555;
+  --link: #0066cc;
+  --bg: #fff;
+  --stripe: #f8f9fa;
+  --border: #e0e0e0;
+  --accent: #2a7f62;
+  --accent-light: #e8f5f0;
+  --correct: #d4edda;
+  --wrong: #f8d7da;
+  --code-bg: #263238;
+  --code-fg: #eeffff;
+  --code-comment: #80cbc4;
+  --code-keyword: #c792ea;
+  --code-string: #c3e88d;
+  --code-number: #f78c6c;
+  --max-width: 760px;
+  --lesson-width: 720px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: "Noto Serif SC", "Source Han Serif SC", Georgia, serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.65;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+
+.container { max-width: var(--max-width); margin: 0 auto; }
+.lesson-container { max-width: var(--lesson-width); margin: 0 auto; }
+
+/* ---------- 导航 ---------- */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+.nav a { color: var(--link); }
+.nav .breadcrumb { color: var(--muted); font-size: 0.85rem; }
+
+/* ---------- 标题 ---------- */
+h1 { font-weight: 400; margin-bottom: 0.25rem; }
+h2 {
+  font-weight: 600;
+  margin-top: 2.5rem;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 0.3rem;
+}
+h3 { font-weight: 600; margin-top: 1.8rem; }
+h4 { font-weight: 600; margin-top: 1.4rem; color: var(--muted); }
+
+.subtitle { color: var(--muted); font-style: italic; margin-bottom: 1.5rem; }
+.meta { color: var(--muted); font-style: italic; margin-bottom: 1.5rem; font-size: 0.9rem; }
+
+/* ---------- 文本元素 ---------- */
+p { margin: 0.8rem 0; }
+ul, ol { padding-left: 1.5rem; }
+li { margin: 0.4rem 0; }
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+strong { font-weight: 600; }
+code {
+  font-family: "SF Mono", Consolas, "Roboto Mono", monospace;
+  font-size: 0.88em;
+  background: var(--stripe);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+pre code { background: none; padding: 0; }
+
+/* ---------- 代码块 ---------- */
+.code-block {
+  background: var(--code-bg);
+  color: var(--code-fg);
+  padding: 0.9rem 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-family: "SF Mono", Consolas, "Roboto Mono", monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 1rem 0;
+  white-space: pre;
+}
+.code-block .comment { color: var(--code-comment); }
+.code-block .keyword { color: var(--code-keyword); }
+.code-block .string { color: var(--code-string); }
+.code-block .number { color: var(--code-number); }
+
+/* 代码块标题栏 */
+.code-title {
+  background: #1a2529;
+  color: #b0bec5;
+  font-size: 0.75rem;
+  font-family: "SF Mono", Consolas, monospace;
+  padding: 0.4rem 1rem;
+  border-radius: 6px 6px 0 0;
+  margin-bottom: -0.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.code-title + .code-block { border-radius: 0 0 6px 6px; }
+.code-title .lang-badge {
+  background: var(--accent);
+  color: #fff;
+  padding: 0.1rem 0.5rem;
+  border-radius: 3px;
+  font-size: 0.7rem;
+}
+
+/* ---------- 提示框 ---------- */
+.callout {
+  background: var(--stripe);
+  border-left: 4px solid var(--accent);
+  padding: 1rem 1.2rem;
+  margin: 1.2rem 0;
+  border-radius: 0 4px 4px 0;
+}
+.callout.warn {
+  border-left-color: #e8a838;
+  background: #fff8ed;
+}
+.callout.tip {
+  border-left-color: #0066cc;
+  background: #f0f6ff;
+}
+
+/* ---------- 练习 ---------- */
+.exercise {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.2rem;
+  margin: 1.5rem 0;
+  background: #fff;
+}
+.exercise-title { font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; }
+
+/* ---------- Quiz ---------- */
+.quiz-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.7rem 1rem;
+  margin: 0.4rem 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.quiz-option:hover { background: var(--stripe); }
+.quiz-option.correct { background: var(--correct); border-color: #28a745; }
+.quiz-option.wrong { background: var(--wrong); border-color: #dc3545; }
+.quiz-option:disabled { cursor: default; }
+.hidden { display: none; }
+.feedback { margin-top: 0.8rem; padding: 0.8rem; border-radius: 4px; }
+
+/* ---------- 表格 ---------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.2rem 0;
+  font-size: 0.9rem;
+}
+th, td {
+  border: 1px solid var(--border);
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+}
+th { background: var(--stripe); font-weight: 600; }
+tr:nth-child(even) { background: var(--stripe); }
+
+/* ---------- 首页课程列表 ---------- */
+.lesson-list { list-style: none; padding: 0; }
+.lesson-list li {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem 1.2rem;
+  margin: 0.8rem 0;
+  background: #fff;
+  transition: background 0.15s, border-color 0.15s;
+}
+.lesson-list li:hover { background: var(--stripe); border-color: var(--accent); }
+.lesson-list a { text-decoration: none; color: var(--text); display: block; }
+.lesson-title { font-weight: 600; color: var(--link); font-size: 1.05rem; margin-bottom: 0.3rem; }
+.lesson-meta { color: var(--muted); font-size: 0.9rem; }
+.lesson-num {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  text-align: center;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+.lesson-phase {
+  display: inline-block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.15rem 0.6rem;
+  border-radius: 3px;
+  margin-left: 0.5rem;
+  font-weight: 600;
+}
+.phase-intro { background: var(--accent-light); color: var(--accent); }
+.phase-core  { background: #fff3e0; color: #e65100; }
+.phase-adv   { background: #fce4ec; color: #c62828; }
+.phase-applied { background: #e8eaf6; color: #283593; }
+
+/* ---------- 首页参考卡片 ---------- */
+.ref-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.ref-card {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem;
+  background: var(--stripe);
+}
+.ref-card a { font-weight: 600; color: var(--link); }
+.ref-card p { margin: 0.4rem 0 0; color: var(--muted); font-size: 0.9rem; }
+
+/* ---------- Notebook 指引框 ---------- */
+.notebook-link {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  border: 1px solid var(--border);
+  border-left: 4px solid #0066cc;
+  border-radius: 4px;
+  padding: 0.8rem 1rem;
+  margin: 1.2rem 0;
+  background: #f0f6ff;
+  font-size: 0.9rem;
+}
+.notebook-link .icon { font-size: 1.4rem; }
+.notebook-link a { font-weight: 600; }
+
+/* ---------- 术语表搜索 ---------- */
+.search-box {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+  margin-bottom: 1.5rem;
+}
+.glossary dl { margin: 0.5rem 0; }
+.glossary dt { font-weight: 600; color: var(--accent); margin-top: 0.8rem; }
+.glossary dd { margin-left: 1.5rem; color: var(--text); }
+.glossary .en { color: var(--muted); font-style: italic; font-size: 0.9rem; }
+
+/* ---------- 页脚 ---------- */
+.footer {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ---------- 进度条 ---------- */
+.progress-bar {
+  display: flex;
+  gap: 0.3rem;
+  margin: 1rem 0 2rem;
+}
+.progress-bar .step {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+}
+.progress-bar .step.done { background: var(--accent); }
+.progress-bar .step.current { background: var(--link); }
+
+/* ---------- 响应式 ---------- */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.6rem; }
+  .container, .lesson-container { max-width: 100%; }
+  .code-block { font-size: 0.78rem; }
+  table { font-size: 0.8rem; }
+  th, td { padding: 0.4rem 0.5rem; }
+}

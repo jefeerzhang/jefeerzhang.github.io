@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第 9 课：RNN 与序列建模</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <div class="lesson-container">
+    <div class="nav">
+      <a href="0008-nlp-fundamentals.html">← 上一课</a>
+      <span class="breadcrumb">📍 Phase 3 · NLP 进阶</span>
+      <a href="0010-transformers-and-llms.html">下一课：Transformer 与大语言模型 →</a>
+    </div>
+    <div class="progress-bar">
+      <div class="step done"></div><div class="step done"></div><div class="step done"></div>
+      <div class="step done"></div><div class="step done"></div><div class="step done"></div>
+      <div class="step done"></div><div class="step done"></div><div class="step current"></div>
+      <div class="step"></div><div class="step"></div><div class="step"></div>
+    </div>
+
+    <h1>第 9 课：RNN 与序列建模</h1>
+    <p class="meta">预计 45 分钟 · 目标：理解 RNN 原理与 LSTM 门控机制，能用 PyTorch 构建序列模型</p>
+
+    <div class="callout">
+      <strong>本课目标：</strong> 理解 RNN 如何处理序列数据；理解梯度消失问题和 LSTM/GRU 的门控机制；掌握双向 RNN 和多层 RNN 的概念。
+    </div>
+
+    <h2>1. 为什么需要 RNN？</h2>
+    <p>前馈网络（MLP、CNN）处理的是<strong>固定大小</strong>的输入。但很多数据是<strong>序列</strong>：文本（词序列）、时间序列（股价）、语音（音频帧）。RNN 的核心思想是：<strong>用一个"隐藏状态"记住之前看过的内容</strong>，逐步处理序列。</p>
+
+    <h2>2. RNN 原理</h2>
+    <p>在每个时间步 t，RNN 接收当前输入 xₜ 和上一步的隐藏状态 hₜ₋₁，更新隐藏状态并输出：</p>
+    <div class="code-block">hₜ = tanh(Wₓ · xₜ + Wₕ · hₜ₋₁ + b)
+yₜ = Wᵧ · hₜ + b
+
+<span class="comment"># 关键：Wₓ、Wₕ、Wᵧ 在所有时间步共享同一组参数</span>
+<span class="comment"># hₜ 像"记忆"，编码了从序列开头到当前步的信息</span></div>
+
+    <div class="callout tip">
+      <strong>💡 直觉：</strong> 想象你在读一句话，每读一个词就在脑中更新对这句话的理解。RNN 的隐藏状态就像你脑中的"理解"，每读一个词就更新一次。
+    </div>
+
+    <h2>3. RNN 的梯度消失问题</h2>
+    <p>RNN 在反向传播时要沿时间步展开。当序列很长时，梯度在反复乘以同一组权重后会<strong>指数级衰减</strong>（消失）或<strong>爆炸</strong>，导致网络无法学习长距离依赖。</p>
+    <p><strong>表现：</strong> RNN 能记住最近几个词，但"忘了"句子开头的词。</p>
+
+    <h2>4. LSTM：门控机制</h2>
+    <p><strong>长短期记忆网络（LSTM）</strong>通过三个"门"精确控制信息的保留和遗忘：</p>
+    <table>
+      <tr><th>门</th><th>作用</th><th>类比</th></tr>
+      <tr><td><strong>遗忘门</strong></td><td>决定从记忆中丢弃什么</td><td>"这句话的主题变了，忘掉前面的"</td></tr>
+      <tr><td><strong>输入门</strong></td><td>决定将什么新信息写入记忆</td><td>"这个词很重要，记住它"</td></tr>
+      <tr><td><strong>输出门</strong></td><td>决定基于记忆输出什么</td><td>"根据当前理解，做出预测"</td></tr>
+    </table>
+
+    <p><strong>GRU（门控循环单元）</strong>是 LSTM 的简化版，合并了部分门，参数更少、训练更快，效果通常接近。</p>
+
+    <h2>5. 用 PyTorch 构建 RNN</h2>
+    <div class="code-title"><span>rnn_pytorch.py</span><span class="lang-badge">Python</span></div>
+    <div class="code-block"><span class="keyword">import</span> torch
+<span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn
+
+<span class="comment"># 一个简单的 LSTM 文本分类器</span>
+<span class="keyword">class</span> TextClassifier(nn.Module):
+    <span class="keyword">def</span> __init__(self, vocab_size, embed_dim=<span class="number">100</span>, hidden_dim=<span class="number">128</span>, num_classes=<span class="number">2</span>):
+        super().__init__()
+        self.embedding = nn.Embedding(vocab_size, embed_dim)
+        <span class="comment"># batch_first=True: 输入形状为 (batch, seq_len, embed_dim)</span>
+        self.lstm = nn.LSTM(embed_dim, hidden_dim, batch_first=<span class="keyword">True</span>)
+        self.fc = nn.Linear(hidden_dim, num_classes)
+
+    <span class="keyword">def</span> forward(self, x):
+        <span class="comment"># x: (batch, seq_len) 整数索引</span>
+        embedded = self.embedding(x)  <span class="comment"># (batch, seq_len, embed_dim)</span>
+        <span class="comment"># LSTM 返回: output, (h_n, c_n)</span>
+        output, (h_n, c_n) = self.lstm(embedded)
+        <span class="comment"># 用最后一步的隐藏状态做分类</span>
+        <span class="keyword">return</span> self.fc(h_n[-<span class="number">1</span>])  <span class="comment"># (batch, num_classes)</span></div>
+
+    <h2>6. 双向 RNN 与多层 RNN</h2>
+    <ul>
+      <li><strong>双向 RNN（BiRNN）：</strong> 同时从左到右和从右到左处理序列，合并两个方向的隐藏状态。适合需要<strong>完整上下文</strong>的任务（如 NER）。</li>
+      <li><strong>多层 RNN（Stacked RNN）：</strong> 把多个 RNN 层叠起来，下层输出作为上层输入。层数越多，模型表达能力越强，但也更难训练。</li>
+    </ul>
+    <div class="code-block"><span class="comment"># PyTorch 中设置双向和多层</span>
+lstm = nn.LSTM(
+    input_size=<span class="number">100</span>,
+    hidden_size=<span class="number">128</span>,
+    num_layers=<span class="number">2</span>,         <span class="comment"># 2 层堆叠</span>
+    bidirectional=<span class="keyword">True</span>,    <span class="comment"># 双向</span>
+    batch_first=<span class="keyword">True</span>
+)
+<span class="comment"># 输出维度: hidden_size * 2（双向拼接）</span></div>
+
+    <div class="notebook-link">
+      <span class="icon">📓</span>
+      <div>
+        <strong>配套 Notebook：</strong>
+        <a href="../notebooks/5-NLP/16-RNN/RNNPyTorch.html" target="_blank">RNNPyTorch.ipynb</a>
+        — RNN/LSTM 原理与实现，包含序列分类和生成示例。
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-title">✍️ 动手练习：文本情感分类</div>
+      <p>1. 打开配套 Notebook，运行 LSTM 文本分类器。</p>
+      <p>2. 把 LSTM 换成简单 RNN（<code>nn.RNN</code>），对比训练效果。哪个更好？为什么？</p>
+      <p>3. 尝试把 <code>hidden_dim</code> 从 128 改为 256 或 64，观察对训练速度和准确率的影响。</p>
+      <p>4. 思考：为什么处理"我喜欢这部电影，但结尾太仓促"这种含转折的句子时，RNN 可能不如 Transformer？</p>
+    </div>
+
+    <h2>7. 快速自测</h2>
+    <p id="quiz-question">RNN 中"梯度消失"问题主要导致什么后果？</p>
+    <button class="quiz-option" onclick="check(this, false)">A. 训练速度变快但准确率下降。</button>
+    <button class="quiz-option" onclick="check(this, true)">B. 网络无法学习长距离依赖，"忘记"序列开头的信息。</button>
+    <button class="quiz-option" onclick="check(this, false)">C. 梯度值变得非常大，导致参数更新爆炸。</button>
+    <button class="quiz-option" onclick="check(this, false)">D. 模型自动增加层数来补偿。</button>
+    <div id="quiz-feedback" class="feedback hidden"></div>
+
+    <p id="quiz-question2">LSTM 中的"遗忘门"的作用是什么？</p>
+    <button class="quiz-option" onclick="check2(this, false)">A. 决定将什么新信息写入记忆。</button>
+    <button class="quiz-option" onclick="check2(this, true)">B. 决定从记忆中丢弃哪些不再相关的信息。</button>
+    <button class="quiz-option" onclick="check2(this, false)">C. 决定当前步的输出值。</button>
+    <button class="quiz-option" onclick="check2(this, false)">D. 决定学习率的大小。</button>
+    <div id="quiz-feedback2" class="feedback hidden"></div>
+
+    <h2>8. 延伸阅读与参考</h2>
+    <ul>
+      <li><strong>Primary source:</strong> <a href="../AI-For-Beginners-zh-CN/lessons/5-NLP/16-RNN/README.md" target="_blank">AI-For-Beginners：循环神经网络</a></li>
+      <li><a href="../reference/0001-glossary.html" target="_blank">术语表：RNN、LSTM、GRU、梯度消失</a></li>
+      <li>Christopher Olah <a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank">Understanding LSTM Networks</a>（经典图解）</li>
+    </ul>
+
+    <div class="footer">
+      <p>下一课：<a href="0010-transformers-and-llms.html">Transformer 与大语言模型</a></p>
+    </div>
+  </div>
+
+  <script>
+    function check(btn, isCorrect) {
+      const opts = btn.parentElement.querySelectorAll(':scope > .quiz-option');
+      opts.forEach(o => { o.classList.remove('correct', 'wrong'); o.disabled = true; });
+      btn.classList.add(isCorrect ? 'correct' : 'wrong');
+      const fb = document.getElementById('quiz-feedback');
+      fb.classList.remove('hidden');
+      fb.style.background = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+      fb.innerHTML = isCorrect
+        ? '✅ 正确。梯度消失使网络无法把误差信号传回序列开头，导致"长期记忆"丢失。'
+        : '❌ 不正确。梯度爆炸是另一个问题；梯度消失的后果是无法学习长距离依赖。';
+    }
+    function check2(btn, isCorrect) {
+      const opts = btn.parentElement.querySelectorAll(':scope > .quiz-option');
+      opts.forEach(o => { o.classList.remove('correct', 'wrong'); o.disabled = true; });
+      btn.classList.add(isCorrect ? 'correct' : 'wrong');
+      const fb = document.getElementById('quiz-feedback2');
+      fb.classList.remove('hidden');
+      fb.style.background = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+      fb.innerHTML = isCorrect
+        ? '✅ 正确。遗忘门通过一个 sigmoid 门决定哪些旧记忆该被清除，让 LSTM 能主动管理记忆。'
+        : '❌ 不正确。写入新信息是输入门的职责；遗忘门负责丢弃旧信息。';
+    }
+  </script>
+</body>
+</html>

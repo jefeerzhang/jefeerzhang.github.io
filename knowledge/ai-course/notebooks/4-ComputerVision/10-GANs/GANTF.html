@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GANTF</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 GANTF</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h1>生成对抗网络</h1>
+<p><strong>生成对抗网络</strong>（GAN）的主要目标是生成与训练数据集相似（但不完全相同）的图像。</p>
+<p>GAN由两个相互对抗训练的神经网络组成：</p>
+<ul>
+<li>**生成器**接收一个随机向量，并从中生成一张图像</li>
+<li>**判别器**是一个神经网络，用于区分原始图像（来自训练数据集）和生成器生成的图像</li>
+</ul></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import tensorflow as tf
+import tensorflow.keras as keras
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import *
+import matplotlib.pyplot as plt
+import numpy as np</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>生成器</h2>
+<p>生成器的作用是接收一个随机向量（类似于自动编码器中的潜在向量），并生成目标图像。这与自动编码器的生成部分非常相似。</p>
+<p>在我们的例子中，我们将使用全连接神经网络和MNIST数据集。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>generator = Sequential()
+generator.add(Dense(256, input_shape=(100,)))
+generator.add(LeakyReLU(alpha=0.2))
+generator.add(BatchNormalization(momentum=0.8))
+generator.add(Dense(512))
+generator.add(LeakyReLU(alpha=0.2))
+generator.add(BatchNormalization(momentum=0.8))
+generator.add(Dense(1024))
+generator.add(LeakyReLU(alpha=0.2))
+generator.add(BatchNormalization(momentum=0.8))
+generator.add(Dense(784, activation=&#x27;tanh&#x27;))
+generator.add(Reshape((28,28)))
+
+optimizer = keras.optimizers.Adam(lr=0.0002, decay=8e-9)
+
+generator.compile(loss=&#x27;binary_crossentropy&#x27;,optimizer=optimizer,metrics=[&#x27;accuracy&#x27;])
+</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>一些生成器中使用的技巧：</p>
+<ul>
+<li>我们使用 **Leaky ReLU** 替代 ReLU，即对于负值 $x$，Leaky ReLU 不完全为 0，而是采用另一个具有非常小斜率的线性函数。这很重要，因为即使我们处于 ReLU 的负值区域（值为 0），它也能帮助梯度下降传播数值。</li>
+<li>我们使用批量归一化（Batch Normalization）来稳定训练过程。</li>
+<li>最后一层的激活函数是 `tanh`，因此输出范围为 [-1,1]。</li>
+</ul>
+<h2>判别器</h2>
+<p>判别器是一个经典的图像分类网络。在我们的第一个示例中，我们还将使用密集分类器。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>discriminator = Sequential()
+discriminator.add(Flatten(input_shape=(28,28)))
+discriminator.add(Dense(784))
+
+discriminator.add(LeakyReLU(alpha=0.2))
+discriminator.add(Dense(784//2))
+discriminator.add(LeakyReLU(alpha=0.2))
+
+discriminator.add(Dense(1, activation=&#x27;sigmoid&#x27;))
+
+discriminator.compile(loss=&#x27;binary_crossentropy&#x27;,optimizer=optimizer,metrics=[&#x27;accuracy&#x27;])</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们还将定义一个对抗网络，即生成器后接判别器。该网络以噪声向量开始，并返回一个二进制结果。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>discriminator.trainable = False
+adversarial = Sequential()
+adversarial.add(generator)
+adversarial.add(discriminator)
+adversarial.compile(loss=&#x27;binary_crossentropy&#x27;, optimizer=optimizer)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>加载数据集</h2>
+<p>我们将使用内置于 Keras 的 MNIST 数据集：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>(X_train, _), (_, _) = keras.datasets.mnist.load_data()
+X_train = (X_train.astype(np.float32) - 127.5) / 127.5</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>网络训练</h2>
+<p>在训练的每一步中，我们有两个阶段：</p>
+<ul>
+<li>训练判别器：</li>
+<li>我们生成一些随机向量 `noise`。训练是以小批量进行的，因此我们使用 `batch//2` 个向量来生成 `batch//2` 张生成的图像</li>
+<li>从数据集中随机抽取 `batch//2` 张真实图像</li>
+<li>在50%的真实图像和50%的生成图像上训练判别器，并提供相应的标签（0或1）</li>
+<li>使用联合对抗模型训练生成器，将随机向量作为输入，并期望输出为1（对应于真实图像）</li>
+</ul></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def plotn(n):
+  noise = np.random.normal(0, 1, (n,100))
+  imgs = generator.predict(noise)
+  fig,ax = plt.subplots(1,n)
+  for i,im in enumerate(imgs):
+    ax[i].imshow(im.reshape(28,28))
+  plt.show()</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>batch=32
+for cnt in range(3000):
+## train discriminator
+  random_index =  np.random.randint(0, len(X_train) - batch//2)
+  legit_images = X_train[random_index : random_index + batch//2].reshape(batch//2, 28, 28)
+  gen_noise = np.random.normal(0, 1, (batch//2,100))
+  syntetic_images = generator.predict(gen_noise)
+  x_combined_batch = np.concatenate((legit_images, syntetic_images))
+  y_combined_batch = np.concatenate((np.ones((batch//2, 1)), np.zeros((batch//2, 1))))
+  d_loss = discriminator.train_on_batch(x_combined_batch, y_combined_batch)
+# train generator
+  noise = np.random.normal(0, 1, (batch,100))
+  y_mislabled = np.ones((batch, 1))
+  g_loss = adversarial.train_on_batch(noise, y_mislabled)
+  if cnt%500==0:
+    print (&#x27;epoch: %d, [Discriminator :: d_loss: %f], [ Generator :: loss: %f]&#x27; % (cnt, d_loss[0], g_loss))
+    plotn(5)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">epoch: 0, [Discriminator :: d_loss: 0.601463], [ Generator :: loss: 0.640677]
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output">epoch: 500, [Discriminator :: d_loss: 0.192001], [ Generator :: loss: 12.124918]
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output">epoch: 1000, [Discriminator :: d_loss: 0.141956], [ Generator :: loss: 1.900380]
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output">epoch: 1500, [Discriminator :: d_loss: 0.293635], [ Generator :: loss: 2.443017]
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output">epoch: 2000, [Discriminator :: d_loss: 0.547135], [ Generator :: loss: 2.680543]
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output">epoch: 2500, [Discriminator :: d_loss: 0.491767], [ Generator :: loss: 2.633016]
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>&gt; <strong>任务</strong>：您可以在整个MNIST数据集上训练这个GAN，看看它能达到多好的效果</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>DCGAN</h2>
+<p>在前面的例子中，我们为生成器和判别器使用了密集网络，但我们知道在处理图像时，卷积神经网络（CNN）表现更好。<strong>深度卷积生成对抗网络（DCGAN）</strong>与上述架构类似，但它在生成器和判别器中使用了卷积层。</p>
+<p>这里的主要难点在于构建生成器的架构，因为它需要完成与传统CNN相反的任务——从特征向量生成图像。从某种程度上来说，这与自动编码器的解码器部分类似。这就是为什么我们会在生成器中使用<code>Conv2DTranspose</code>层。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>(X_train, _), (_, _) = keras.datasets.mnist.load_data()
+X_train = (X_train.astype(np.float32)-127.5) / 127.5
+print(X_train.min(),X_train.max())</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">-1.0 1.0
+</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>generator = Sequential()
+generator.add(Dense(128 * 7 * 7, activation=&quot;relu&quot;, input_dim=100))
+generator.add(Reshape((7, 7, 128)))
+generator.add(UpSampling2D())
+generator.add(Conv2DTranspose(128, kernel_size=3, padding=&quot;same&quot;))
+generator.add(BatchNormalization(momentum=0.8))
+generator.add(Activation(&quot;relu&quot;))
+generator.add(UpSampling2D())
+generator.add(Conv2DTranspose(64, kernel_size=3, padding=&quot;same&quot;))
+generator.add(BatchNormalization(momentum=0.8))
+generator.add(Activation(&quot;relu&quot;))
+generator.add(Conv2DTranspose(1, kernel_size=3, padding=&quot;same&quot;))
+generator.add(Activation(&quot;tanh&quot;))
+
+optimizer = keras.optimizers.Adam(0.0001) #, 0.5)
+
+generator.compile(loss=&#x27;binary_crossentropy&#x27;,optimizer=optimizer,metrics=[&#x27;accuracy&#x27;])
+generator.summary()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;sequential_3&quot;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+dense_7 (Dense)              (None, 6272)              633472    
+_________________________________________________________________
+reshape_1 (Reshape)          (None, 7, 7, 128)         0         
+_________________________________________________________________
+up_sampling2d (UpSampling2D) (None, 14, 14, 128)       0         
+_________________________________________________________________
+conv2d_transpose (Conv2DTran (None, 14, 14, 128)       147584    
+_________________________________________________________________
+batch_normalization_3 (Batch (None, 14, 14, 128)       512       
+_________________________________________________________________
+activation (Activation)      (None, 14, 14, 128)       0         
+_________________________________________________________________
+up_sampling2d_1 (UpSampling2 (None, 28, 28, 128)       0         
+_________________________________________________________________
+conv2d_transpose_1 (Conv2DTr (None, 28, 28, 64)        73792     
+_________________________________________________________________
+batch_normalization_4 (Batch (None, 28, 28, 64)        256       
+_________________________________________________________________
+activation_1 (Activation)    (None, 28, 28, 64)        0         
+_________________________________________________________________
+conv2d_transpose_2 (Conv2DTr (None, 28, 28, 1)         577       
+_________________________________________________________________
+activation_2 (Activation)    (None, 28, 28, 1)         0         
+=================================================================
+Total params: 856,193
+Trainable params: 855,809
+Non-trainable params: 384
+_________________________________________________________________
+</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>discriminator = Sequential()
+
+discriminator.add(Conv2D(32, kernel_size=3, strides=2, input_shape=(28,28,1), padding=&quot;same&quot;))
+discriminator.add(LeakyReLU(alpha=0.2))
+discriminator.add(Dropout(0.25))
+discriminator.add(Conv2D(64, kernel_size=3, strides=2, padding=&quot;same&quot;))
+discriminator.add(ZeroPadding2D(padding=((0,1),(0,1))))
+discriminator.add(BatchNormalization(momentum=0.8))
+discriminator.add(LeakyReLU(alpha=0.2))
+discriminator.add(Dropout(0.25))
+discriminator.add(Conv2D(128, kernel_size=3, strides=2, padding=&quot;same&quot;))
+discriminator.add(BatchNormalization(momentum=0.8))
+discriminator.add(LeakyReLU(alpha=0.2))
+discriminator.add(Dropout(0.25))
+discriminator.add(Conv2D(256, kernel_size=3, strides=1, padding=&quot;same&quot;))
+discriminator.add(BatchNormalization(momentum=0.8))
+discriminator.add(LeakyReLU(alpha=0.2))
+discriminator.add(Dropout(0.25))
+discriminator.add(Flatten())
+discriminator.add(Dense(1, activation=&#x27;sigmoid&#x27;))
+
+discriminator.compile(loss=&#x27;binary_crossentropy&#x27;,optimizer=optimizer)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>discriminator.trainable = False
+adversarial = Sequential()
+adversarial.add(generator)
+adversarial.add(discriminator)
+adversarial.compile(loss=&#x27;binary_crossentropy&#x27;, optimizer=optimizer)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>batch=32
+y_labeled = np.ones((batch, 1))
+y_mislabeled = np.zeros((batch, 1))
+for cnt in range(1000):
+## train discriminator
+  random_index =  np.random.randint(0, len(X_train) - batch)
+  legit_images = X_train[random_index : random_index + batch].reshape(batch, 28, 28, 1)
+  gen_noise = np.random.normal(0, 1, (batch,100))
+  syntetic_images = generator.predict(gen_noise)
+  d_loss_1 = discriminator.train_on_batch(legit_images, y_labeled)
+  d_loss_2 = discriminator.train_on_batch(syntetic_images, y_mislabeled)
+  d_loss = 0.5*np.add(d_loss_1,d_loss_2)
+# train generator
+  g_loss = adversarial.train_on_batch(gen_noise, y_labeled)
+  if cnt%100==0:
+    print (&#x27;epoch: %d, [Discriminator :: d_loss: %f], [ Generator :: loss: %f]&#x27; % (cnt, d_loss, g_loss))
+    plotn(5)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">epoch: 0, [Discriminator :: d_loss: 0.957905], [ Generator :: loss: 0.695994]
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output">epoch: 100, [Discriminator :: d_loss: 0.826593], [ Generator :: loss: 1.488088]
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output">epoch: 200, [Discriminator :: d_loss: 0.602254], [ Generator :: loss: 1.362499]
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output">epoch: 300, [Discriminator :: d_loss: 0.711605], [ Generator :: loss: 1.224355]
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output">epoch: 400, [Discriminator :: d_loss: 0.650690], [ Generator :: loss: 0.899742]
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output">epoch: 500, [Discriminator :: d_loss: 0.413256], [ Generator :: loss: 1.106550]
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output">epoch: 600, [Discriminator :: d_loss: 0.574668], [ Generator :: loss: 1.045400]
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output">epoch: 700, [Discriminator :: d_loss: 0.522089], [ Generator :: loss: 1.068755]
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output">epoch: 800, [Discriminator :: d_loss: 0.300957], [ Generator :: loss: 1.292961]
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output">epoch: 900, [Discriminator :: d_loss: 0.389556], [ Generator :: loss: 0.942707]
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>&gt; <strong>任务</strong>: 尝试使用DCGAN生成更复杂的彩色图像 - 例如，从<a href="https://keras.io/api/datasets/cifar10/">CIFAR-10</a>数据集中选择一个类别。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>关于绘画的训练</h2>
+<p>GAN 训练的一个不错选择是由人类艺术家创作的绘画作品。下面是一幅由 DCGAN 在 <a href="http://wikiart.org">WikiArt</a> 数据集上训练后生成的示例图像。使用 <a href="http://github.com/shwars/keragan">KeraGAN</a> 库生成了这幅图像，<a href="https://soshnikov.com/scienceart/creating-generative-art-using-gan-on-azureml/">并借助 Azure Machine Learning</a> 完成。</p>
+<p>![](https://soshnikov.com/images/artartificial/Flo1.jpg)</p>
+<p>（图片来自 <a href="https://soshnikov.com/museum/art-artificial/">Art of Artificial</a> 收藏）</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>参考资料</h2>
+<ul>
+<li>[Keras 实现的各种玩具 GAN 架构](https://github.com/eriklindernoren/Keras-GAN)</li>
+<li>[KeraGAN 库](http://github.com/shwars/Keragan)</li>
+<li>[关于在 Azure ML 上创建 GAN 的博客文章](https://soshnikov.com/scienceart/creating-generative-art-using-gan-on-azureml-ru/)</li>
+</ul></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务<a href="https://github.com/Azure/co-op-translator">Co-op Translator</a>进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。应以原始语言的文档作为权威来源。对于关键信息，建议使用专业人工翻译。我们对因使用此翻译而引起的任何误解或误读不承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

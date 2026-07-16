@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第 10 课：Transformer 与大语言模型</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <div class="lesson-container">
+    <div class="nav">
+      <a href="0009-rnn-sequence-modeling.html">← 上一课</a>
+      <span class="breadcrumb">📍 Phase 3 · NLP 进阶</span>
+      <a href="0011-generative-models-and-rl.html">下一课：生成模型与强化学习 →</a>
+    </div>
+    <div class="progress-bar">
+      <div class="step done"></div><div class="step done"></div><div class="step done"></div>
+      <div class="step done"></div><div class="step done"></div><div class="step done"></div>
+      <div class="step done"></div><div class="step done"></div><div class="step done"></div>
+      <div class="step current"></div><div class="step"></div><div class="step"></div>
+    </div>
+
+    <h1>第 10 课：Transformer 与大语言模型</h1>
+    <p class="meta">预计 45 分钟 · 目标：理解自注意力机制，了解 BERT/GPT 与提示工程</p>
+
+    <div class="callout">
+      <strong>本课目标：</strong> 理解 Transformer 的自注意力机制；了解 BERT（编码器）和 GPT（解码器）的区别；学会写有效的 prompt。
+    </div>
+
+    <h2>1. 从 RNN 到 Transformer</h2>
+    <p>RNN 按顺序处理序列，有两个问题：<strong>无法并行</strong>（必须等上一步算完）和<strong>长距离遗忘</strong>。Transformer 用<strong>自注意力机制</strong>一次性看整个句子，解决这两个问题。</p>
+
+    <h2>2. 自注意力机制</h2>
+    <p>对于句子中的每个词，自注意力计算它与其他所有词的<strong>关联权重</strong>，然后用这些权重对词向量加权求和。</p>
+    <div class="code-block"><span class="comment"># 自注意力直观理解</span>
+句子: "猫坐在垫子上，因为它很累"
+
+<span class="comment"># "它" 需要知道自己指代 "猫" 而不是 "垫子"</span>
+<span class="comment"># 自注意力通过计算 "它" 与每个词的关联度来实现</span>
+
+<span class="comment"># Q(Query): "它在找什么？"  K(Key): "我有什么？"  V(Value): "我的内容是什么"</span>
+Attention(Q, K, V) = softmax(Q · Kᵀ / √d) · V</div>
+
+    <p>三个关键矩阵：<strong>Q（查询）</strong>、<strong>K（键）</strong>、<strong>V（值）</strong>。每个词同时扮演查询者和被查询者。</p>
+
+    <h2>3. 多头注意力</h2>
+    <p>用<strong>多组</strong> Q/K/V 并行计算注意力，让模型从不同角度关注不同关系（如语法关系、语义关系、指代关系）。</p>
+
+    <h2>4. 位置编码</h2>
+    <p>自注意力本身<strong>没有位置信息</strong>（打乱词序结果一样）。位置编码给每个词加上位置信号，让模型知道"谁在前谁在后"。</p>
+
+    <h2>5. BERT vs GPT</h2>
+    <table>
+      <tr><th></th><th>BERT</th><th>GPT</th></tr>
+      <tr><td>架构</td><td>Transformer <strong>编码器</strong></td><td>Transformer <strong>解码器</strong></td></tr>
+      <tr><td>方向</td><td>双向（看全文）</td><td>单向（只看左侧）</td></tr>
+      <tr><td>预训练任务</td><td>完形填空（Masked LM）</td><td>预测下一个词</td></tr>
+      <tr><td>擅长</td><td>理解类任务（分类、NER）</td><td>生成类任务（写作、对话）</td></tr>
+      <tr><td>使用方式</td><td>微调</td><td>提示工程 + 微调</td></tr>
+    </table>
+
+    <div class="callout tip">
+      <strong>💡 大语言模型（LLM）：</strong> GPT-3/4、BERT 等模型在海量文本上预训练，参数量从亿级到万亿级。它们通过<strong>预测下一个词</strong>学会了语言、知识和推理能力。
+    </div>
+
+    <h2>6. 提示工程</h2>
+    <p>通过设计输入提示来引导 LLM 生成更好的输出。好的 prompt 通常包含：角色 + 任务 + 输出格式 + 约束。</p>
+    <div class="code-block"><span class="comment"># 一个有效的 prompt 结构</span>
+<span class="string">"""</span>
+<span class="string">你是一位耐心的 AI 入门老师。</span>
+<span class="string">请用通俗易懂的中文解释什么是梯度下降，</span>
+<span class="string">并举一个生活中的例子。限制在 200 字以内。</span>
+<span class="string">"""</span>
+
+<span class="comment"># 好的 prompt = 角色 + 任务 + 格式 + 约束</span></div>
+
+    <div class="notebook-link">
+      <span class="icon">📓</span>
+      <div>
+        <strong>配套 Notebook：</strong>
+        <a href="../notebooks/5-NLP/18-Transformers/TransformersPyTorch.html" target="_blank">TransformersPyTorch.ipynb</a> ·
+        <a href="../notebooks/5-NLP/20-LangModels/GPT-PyTorch.html" target="_blank">GPT-PyTorch.ipynb</a>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-title">✍️ 动手练习：设计 prompt 并比较输出</div>
+      <p>1. 在任意 LLM 中输入以下三个 prompt，比较回答质量：</p>
+      <div class="code-block">A. 解释梯度下降。
+B. 用中文解释梯度下降，给高中生听。
+C. 你是一位高中数学老师。用比喻和例子解释梯度下降，控制在 150 字内。</div>
+      <p>2. 记录哪个 prompt 输出最清晰。思考：为什么 C 最好？它多了什么信息？</p>
+    </div>
+
+    <h2>7. 快速自测</h2>
+    <p id="quiz-question">相比 RNN，Transformer 的主要优势是什么？</p>
+    <button class="quiz-option" onclick="check(this, false)">A. Transformer 需要按顺序一个词一个词地处理句子。</button>
+    <button class="quiz-option" onclick="check(this, true)">B. Transformer 能同时处理整个句子，并捕捉长距离依赖。</button>
+    <button class="quiz-option" onclick="check(this, false)">C. Transformer 的参数更少，因此训练速度一定更快。</button>
+    <button class="quiz-option" onclick="check(this, false)">D. Transformer 只能用于文本生成，不能用于文本分类。</button>
+    <div id="quiz-feedback" class="feedback hidden"></div>
+
+    <p id="quiz-question2">BERT 和 GPT 的主要区别是什么？</p>
+    <button class="quiz-option" onclick="check2(this, false)">A. BERT 用于生成，GPT 用于理解。</button>
+    <button class="quiz-option" onclick="check2(this, true)">B. BERT 是双向编码器擅长理解任务，GPT 是单向解码器擅长生成任务。</button>
+    <button class="quiz-option" onclick="check2(this, false)">C. BERT 比 GPT 参数多。</button>
+    <button class="quiz-option" onclick="check2(this, false)">D. 两者完全相同，只是名字不同。</button>
+    <div id="quiz-feedback2" class="feedback hidden"></div>
+
+    <h2>8. 延伸阅读与参考</h2>
+    <ul>
+      <li><strong>Primary source:</strong> <a href="../AI-For-Beginners-zh-CN/lessons/5-NLP/18-Transformers/README.md" target="_blank">Transformer 与 BERT</a> · <a href="../AI-For-Beginners-zh-CN/lessons/5-NLP/20-LangModels/README.md" target="_blank">大语言模型</a></li>
+      <li><a href="../reference/0001-glossary.html" target="_blank">术语表：Transformer、自注意力、LLM</a></li>
+      <li>Jay Alammar <a href="https://jalammar.github.io/illustrated-transformer/" target="_blank">The Illustrated Transformer</a>（经典图解）</li>
+    </ul>
+
+    <div class="footer">
+      <p>下一课：<a href="0011-generative-models-and-rl.html">生成模型与强化学习</a></p>
+    </div>
+  </div>
+
+  <script>
+    function check(btn, isCorrect) {
+      const opts = btn.parentElement.querySelectorAll(':scope > .quiz-option');
+      opts.forEach(o => { o.classList.remove('correct', 'wrong'); o.disabled = true; });
+      btn.classList.add(isCorrect ? 'correct' : 'wrong');
+      const fb = document.getElementById('quiz-feedback');
+      fb.classList.remove('hidden');
+      fb.style.background = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+      fb.innerHTML = isCorrect
+        ? '✅ 正确。Transformer 通过自注意力并行处理整个序列，能更好地捕捉长距离依赖。'
+        : '❌ 不正确。Transformer 的关键优势是并行处理整句和强大的长距离依赖建模能力。';
+    }
+    function check2(btn, isCorrect) {
+      const opts = btn.parentElement.querySelectorAll(':scope > .quiz-option');
+      opts.forEach(o => { o.classList.remove('correct', 'wrong'); o.disabled = true; });
+      btn.classList.add(isCorrect ? 'correct' : 'wrong');
+      const fb = document.getElementById('quiz-feedback2');
+      fb.classList.remove('hidden');
+      fb.style.background = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+      fb.innerHTML = isCorrect
+        ? '✅ 正确。BERT 双向编码擅长理解，GPT 单向解码擅长生成，这是核心区别。'
+        : '❌ 不正确。BERT 擅长理解而非生成，GPT 擅长生成而非理解。';
+    }
+  </script>
+</body>
+</html>

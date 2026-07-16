@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PetFaces</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 PetFaces</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h1>宠物面部分类</h1>
+<p>来自 <a href="https://github.com/microsoft/ai-for-beginners">AI for Beginners Curriculum</a> 的实验任务。</p>
+<h3>获取数据</h3>
+<p>在本次任务中，我们将专注于一个相对简单的分类任务——宠物面部分类。我们将使用 <a href="https://www.robots.ox.ac.uk/~vgg/data/pets/">Oxford-IIIT Pet Dataset</a>，该数据集包含37种不同品种的猫狗的图片。让我们从下载并可视化数据集开始。</p>
+<p><strong>注意：</strong> Oxford-IIIT Pet Dataset 包含完整的宠物图片。提取后的文件夹中，图片将按品种进行组织。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>!wget https://thor.robots.ox.ac.uk/~vgg/data/pets/images.tar.gz
+!tar xfz images.tar.gz
+!rm images.tar.gz</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">--2022-02-17 12:32:43--  https://thor.robots.ox.ac.uk/~vgg/data/pets/images.tar.gz
+Resolving mslearntensorflowlp.blob.core.windows.net... 20.150.90.68
+Connecting to mslearntensorflowlp.blob.core.windows.net|20.150.90.68|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 24483412 (23M) [application/x-gzip]
+Saving to: ‘images.tar.gz’
+
+images.tar.gz     100%[===================&gt;]  23.35M  12.5MB/s    in 1.9s    
+
+2022-02-17 12:32:45 (12.5 MB/s) - ‘images.tar.gz’ saved [24483412/24483412]
+
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们将定义通用函数以从列表中显示一系列图像：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import matplotlib.pyplot as plt
+import os
+from PIL import Image
+import numpy as np
+
+def display_images(l,titles=None,fontsize=12):
+    n=len(l)
+    fig,ax = plt.subplots(1,n)
+    for i,im in enumerate(l):
+        ax[i].imshow(im)
+        ax[i].axis(&#x27;off&#x27;)
+        if titles is not None:
+            ax[i].set_title(titles[i],fontsize=fontsize)
+    fig.set_size_inches(fig.get_size_inches()*n)
+    plt.tight_layout()
+    plt.show()</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在让我们遍历所有类别子目录并绘制每个类别的前几张图像：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># Note: The Oxford-IIIT Pet Dataset extracts to a folder named &#x27;images&#x27;
+# Images are named by breed (e.g., &#x27;Abyssinian_1.jpg&#x27;)
+# We need to organize them into breed-specific subdirectories
+import os
+from collections import defaultdict
+
+# Organize images by breed
+if not os.path.exists(&#x27;petfaces&#x27;):
+    os.makedirs(&#x27;petfaces&#x27;)
+    for img_file in os.listdir(&#x27;images&#x27;):
+        if img_file.endswith((&#x27;.jpg&#x27;, &#x27;.png&#x27;)):
+            # Extract breed name from filename (everything before the last underscore and number)
+            breed = &#x27;_&#x27;.join(img_file.split(&#x27;_&#x27;)[:-1])
+            breed_dir = os.path.join(&#x27;petfaces&#x27;, breed)
+            if not os.path.exists(breed_dir):
+                os.makedirs(breed_dir)
+            os.rename(os.path.join(&#x27;images&#x27;, img_file), os.path.join(breed_dir, img_file))
+
+for cls in os.listdir(&#x27;petfaces&#x27;):
+    print(cls)
+    display_images([Image.open(os.path.join(&#x27;petfaces&#x27;,cls,x)) 
+                    for x in os.listdir(os.path.join(&#x27;petfaces&#x27;,cls))[:10]])</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们也定义数据集中的类别数量：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>num_classes = len(os.listdir(&#x27;petfaces&#x27;))
+num_classes</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">35</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>为深度学习准备数据集</h2>
+<p>在开始训练我们的神经网络之前，我们需要将所有图像转换为张量，并创建与标签（类别编号）对应的张量。大多数神经网络框架都包含处理图像的简单工具：</p>
+<ul>
+<li>在 Tensorflow 中，使用 `tf.keras.preprocessing.image_dataset_from_directory`</li>
+<li>在 PyTorch 中，使用 `torchvision.datasets.ImageFolder`</li>
+</ul>
+<p>正如你从上面的图片中看到的，所有图片的比例都接近正方形，因此我们需要将所有图像调整为正方形尺寸。此外，我们还可以将图像组织成小批量。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># CODE TO LOAD DATASET</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在我们需要将数据集分为训练集和测试集：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># CODE TO DO TRAIN/TEST SPLIT</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在让我们打印数据集中张量的大小。如果你一切都设置正确，训练元素的大小应该是：</p>
+<ul>
+<li>对于 Tensorflow，应该是 `(batch_size,image_size,image_size,3)`；对于 PyTorch，应该是 `batch_size,3,image_size,image_size`</li>
+<li>标签的大小应该是 `batch_size`</li>
+</ul>
+<p>标签应该包含类别的编号。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># Print tensor sizes</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># Display the data</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 3024x2016 with 7 Axes&gt;</div><div class="jp-OutputArea-output">&lt;Figure size 3024x2016 with 7 Axes&gt;</div><div class="jp-OutputArea-output">&lt;Figure size 3024x2016 with 7 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>定义神经网络</h2>
+<p>对于图像分类，通常需要定义一个具有多层的卷积神经网络。需要注意以下几点：</p>
+<ul>
+<li>牢记金字塔架构，即随着网络加深，滤波器的数量应该增加。</li>
+<li>不要忘记在层之间使用激活函数（如 ReLU）和最大池化。</li>
+<li>最终的分类器可以有隐藏层，也可以没有，但输出神经元的数量应等于类别的数量。</li>
+</ul>
+<p>一个重要的点是要正确设置最后一层的激活函数和损失函数：</p>
+<ul>
+<li>在 Tensorflow 中，可以使用 `softmax` 作为激活函数，并使用 `sparse_categorical_crossentropy` 作为损失函数。稀疏类别交叉熵与非稀疏的区别在于，前者期望输出为类别编号，而不是独热向量。</li>
+<li>在 PyTorch 中，最后一层可以不使用激活函数，并使用 `CrossEntropyLoss` 作为损失函数。该函数会自动应用 softmax。</li>
+</ul></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># CODE TO DEFINE NEURAL NETWORK</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>训练神经网络</h2>
+<p>现在我们可以开始训练神经网络了。在训练过程中，请在每个训练周期收集训练数据和测试数据的准确率，然后绘制准确率图表，以观察是否存在过拟合现象。</p>
+<p>&gt; 为了加快训练速度，如果有 GPU 可用，请务必使用 GPU。虽然 TensorFlow/Keras 会自动使用 GPU，但在 PyTorch 中，你需要在训练过程中使用 <code>.to()</code> 方法将模型和数据都移到 GPU 上，以利用 GPU 加速。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># TRAIN THE NETWORK</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># PLOT THE ACCURACY on train and validation dataset</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>关于过拟合，你可以说什么？如何提高模型的准确性？</p>
+<h2>可选：计算 Top3 准确率</h2>
+<p>在本次练习中，我们处理的是一个类别数量较多的分类问题（35个类别），因此我们的结果——大约50%的验证准确率——已经相当不错了。标准的 ImageNet 数据集甚至有更多类别——1000个。</p>
+<p>在这种情况下，很难确保模型<strong>总是</strong>正确预测类别。有些情况下，两种类别非常相似，模型返回的概率也非常接近（例如，0.45和0.43）。如果我们测量标准准确率，这种情况会被认为是错误的，即使模型只犯了一个很小的错误。因此，我们经常测量另一种指标——模型预测中最可能的前三个类别的准确率。</p>
+<p>如果目标标签包含在模型预测的前三个类别中，我们就认为该情况是准确的。</p>
+<p>要在测试数据集上计算 Top-3 准确率，你需要手动遍历数据集，应用神经网络获取预测结果，然后进行计算。一些提示：</p>
+<ul>
+<li>在 Tensorflow 中，可以使用 `tf.nn.in_top_k` 函数来查看 `predictions`（模型的输出）是否在 top-k（将 `k=3` 作为参数），与 `targets` 相比。此函数返回一个布尔值的张量，可以使用 `tf.cast` 转换为 `int`，然后使用 `tf.reduce_sum` 累积。</li>
+<li>在 PyTorch 中，可以使用 `torch.topk` 函数获取具有最高概率的类别索引，然后查看正确类别是否属于其中。请参阅 [此处](https://gist.github.com/weiaicunzai/2a5ae6eac6712c70bde0630f3e76b77b) 获取更多提示。</li>
+</ul></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># CALCULATE TOP-3 ACCURACY</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>可选：构建猫与狗分类</h2>
+<p>我们还想看看在同一数据集上，我们的二元猫与狗分类的准确性如何。为此，我们需要调整标签：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># Define dataset that contains only two labels: 0 = cat, 1 = dog
+# Hint: use class name prefix to figure out which one is which</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># Define neural network architecture and train</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务 <a href="https://github.com/Azure/co-op-translator">Co-op Translator</a> 进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。原始语言的文档应被视为权威来源。对于关键信息，建议使用专业人工翻译。我们对因使用此翻译而产生的任何误解或误读不承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

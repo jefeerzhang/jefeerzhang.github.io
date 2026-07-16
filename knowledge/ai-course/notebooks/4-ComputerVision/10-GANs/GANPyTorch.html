@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GANPyTorch</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 GANPyTorch</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h1>生成对抗网络</h1>
+<p><strong>生成对抗网络</strong>（GAN）的主要目标是生成与训练数据集相似（但不完全相同）的图像。</p>
+<p>GAN由两个相互对抗训练的神经网络组成：</p>
+<ul>
+<li>**生成器**接收一个随机向量，并从中生成一张图像</li>
+<li>**判别器**是一个神经网络，用于区分原始图像（来自训练数据集）和生成器生成的图像。</li>
+</ul></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import torch
+import torchvision
+import matplotlib.pyplot as plt
+from torchvision import transforms
+from torch import nn
+from torch import optim
+from tqdm import tqdm
+import numpy as np
+import torch.nn.functional as F
+torch.manual_seed(42)
+np.random.seed(42)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>device = &#x27;cuda:0&#x27; if torch.cuda.is_available() else &#x27;cpu&#x27;
+train_size = 1.0
+lr = 2e-4
+weight_decay = 8e-9
+beta1 = 0.5
+beta2 = 0.999
+batch_size = 256
+epochs = 100
+plot_every = 10</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>生成器</h2>
+<p>生成器的作用是接收一个随机向量（类似于自动编码器中的潜在向量），并生成目标图像。它与自动编码器的生成部分非常相似。</p>
+<p>在我们的示例中，我们将使用线性神经网络和MNIST数据集。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>class Generator(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.linear1 = nn.Linear(100, 256)
+        self.bn1 = nn.BatchNorm1d(256, momentum=0.2)
+        self.linear2 = nn.Linear(256, 512)
+        self.bn2 = nn.BatchNorm1d(512, momentum=0.2)
+        self.linear3 = nn.Linear(512, 1024)
+        self.bn3 = nn.BatchNorm1d(1024, momentum=0.2)
+        self.linear4 = nn.Linear(1024, 784)
+        self.tanh = nn.Tanh()
+        self.leaky_relu = nn.LeakyReLU(0.2)
+
+    def forward(self, input):
+        hidden1 = self.leaky_relu(self.bn1(self.linear1(input)))
+        hidden2 = self.leaky_relu(self.bn2(self.linear2(hidden1)))
+        hidden3 = self.leaky_relu(self.bn3(self.linear3(hidden2)))
+        generated = self.tanh(self.linear4(hidden3)).view(input.shape[0], 1, 28, 28)
+        return generated</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>生成器中使用的一些技巧：</p>
+<ul>
+<li>我们使用 **LeakyReLU** 替代 ReLU，也就是说，对于负值 $x$，它不是完全为 0，而是采用另一个具有非常小斜率的线性函数。</li>
+<li>我们使用 **BatchNorm1D** 来稳定训练过程。</li>
+<li>最后一层的激活函数是 **Tanh**，因此输出范围为 [-1,1]。</li>
+</ul></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>判别器</h2>
+<p>判别器是一个经典的图像分类网络。在我们的第一个示例中，我们也将使用线性分类器。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>class Discriminator(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.linear1 = nn.Linear(784, 512)
+        self.linear2 = nn.Linear(512, 256)
+        self.linear3 = nn.Linear(256, 1)
+        self.leaky_relu = nn.LeakyReLU(0.2)
+        self.sigmoid = nn.Sigmoid()
+
+    def forward(self, input):
+        input = input.view(input.shape[0], -1)
+        hidden1 = self.leaky_relu(self.linear1(input))
+        hidden2 = self.leaky_relu(self.linear2(hidden1))
+        classififed = self.sigmoid(self.linear3(hidden2))
+        return classififed</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>加载数据集</h2>
+<p>我们将使用 MNIST 数据集。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def mnist(train_part, transform=None):
+    dataset = torchvision.datasets.MNIST(&#x27;.&#x27;, download=True, transform=transform)
+    train_part = int(train_part * len(dataset))
+    train_dataset, test_dataset = torch.utils.data.random_split(dataset, [train_part, len(dataset) - train_part])
+    return train_dataset, test_dataset</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>transform = transforms.Compose([
+                                transforms.ToTensor(),
+                                transforms.Normalize(mean=0.5, std=0.5)
+])</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>train_dataset, test_dataset = mnist(train_size, transform)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>train_dataloader = torch.utils.data.DataLoader(train_dataset, drop_last=True, batch_size=batch_size, shuffle=True)
+dataloaders = (train_dataloader, )</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>网络训练</h2>
+<p>在每一步训练中，我们有<strong>两个</strong>阶段：</p>
+<ul>
+<li>**生成器**训练。我们生成一些随机向量**噪声**（训练以小批量进行，因此我们一次使用100个向量），生成**真实标签**（形状为 (bs, 1) 的向量，值为1.0），计算生成器损失，该损失是通过将噪声作为输入传入**冻结的**判别器并与真实标签进行比较得到的。</li>
+</ul>
+<ul>
+<li>**判别器**训练。我们从**两个**部分计算判别器损失，**第一**部分是判别器输出与噪声作为输入的**假标签**（形状为 (bs, 1) 的向量，值为0.0）之间的损失，**第二**部分是判别器输出与真实图像作为输入的真实标签（形状为 (bs, 1) 的向量，值为1.0）之间的损失。**最终损失**为 (第一部分损失 + 第二部分损失) / 2。</li>
+</ul></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def plotn(n, generator, device):
+    generator.eval()
+    noise = torch.FloatTensor(np.random.normal(0, 1, (n, 100))).to(device)
+    imgs = generator(noise).detach().cpu()
+    fig, ax = plt.subplots(1, n)
+    for i, im in enumerate(imgs):
+        ax[i].imshow(im[0])
+    plt.show()</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def train_gan(dataloaders, models, optimizers, loss_fn, epochs, plot_every, device):
+    tqdm_iter = tqdm(range(epochs))
+    train_dataloader = dataloaders[0]
+    
+    gen, disc = models[0], models[1]
+    optim_gen, optim_disc = optimizers[0], optimizers[1]
+
+    for epoch in tqdm_iter:
+        gen.train()
+        disc.train()
+
+        train_gen_loss = 0.0
+        train_disc_loss = 0.0
+        
+        test_gen_loss = 0.0
+        test_disc_loss = 0.0
+
+        for batch in train_dataloader:
+            imgs, _ = batch
+            imgs = imgs.to(device)
+
+            disc.eval()
+            gen.zero_grad()
+
+            noise = torch.FloatTensor(np.random.normal(0.0, 1.0, (imgs.shape[0], 100))).to(device)
+            real_labels = torch.ones((imgs.shape[0], 1)).to(device)
+            fake_labels = torch.zeros((imgs.shape[0], 1)).to(device)
+            
+            generated = gen(noise)
+            disc_preds = disc(generated)
+
+            g_loss = loss_fn(disc_preds, real_labels)
+            g_loss.backward()
+            optim_gen.step()
+
+            disc.train()
+            disc.zero_grad()
+
+            disc_real = disc(imgs)
+            disc_real_loss = loss_fn(disc_real, real_labels)
+
+            disc_fake = disc(generated.detach())
+            disc_fake_loss = loss_fn(disc_fake, fake_labels)
+
+            d_loss = (disc_real_loss + disc_fake_loss) / 2.0
+            d_loss.backward()
+            optim_disc.step()
+
+            train_gen_loss += g_loss.item()
+            train_disc_loss += d_loss.item()
+
+        train_gen_loss /= len(train_dataloader)
+        train_disc_loss /= len(train_dataloader)
+
+        if epoch % plot_every == 0 or epoch == epochs - 1:
+            plotn(5, gen, device)
+
+        tqdm_dct = {&#x27;generator loss:&#x27;: train_gen_loss, &#x27;discriminator loss:&#x27;: train_disc_loss}
+        tqdm_iter.set_postfix(tqdm_dct, refresh=True)
+        tqdm_iter.refresh()</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>generator = Generator().to(device)
+discriminator = Discriminator().to(device)
+optimizer_generator = optim.Adam(generator.parameters(), lr=lr, weight_decay=weight_decay, betas=(beta1, beta2))
+optimizer_discriminator = optim.Adam(discriminator.parameters(), lr=lr, weight_decay=weight_decay, betas=(beta1, beta2))
+loss_fn = nn.BCELoss()
+
+models = (generator, discriminator)
+optimizers = (optimizer_generator, optimizer_discriminator)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>train_gan(dataloaders, models, optimizers, loss_fn, epochs, plot_every, device)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">  0%|          | 0/100 [00:00&lt;?, ?it/s]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output"> 10%|█         | 10/100 [01:32&lt;13:49,  9.21s/it, generator loss:=1.04, discriminator loss:=0.547]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output"> 20%|██        | 20/100 [03:05&lt;12:18,  9.23s/it, generator loss:=0.935, discriminator loss:=0.596]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output"> 30%|███       | 30/100 [04:38&lt;10:47,  9.24s/it, generator loss:=0.9, discriminator loss:=0.617]  </div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output"> 40%|████      | 40/100 [06:11&lt;09:16,  9.28s/it, generator loss:=0.851, discriminator loss:=0.634]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output"> 50%|█████     | 50/100 [07:45&lt;07:49,  9.38s/it, generator loss:=0.839, discriminator loss:=0.638]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output"> 60%|██████    | 60/100 [09:19&lt;06:21,  9.54s/it, generator loss:=0.836, discriminator loss:=0.637]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output"> 70%|███████   | 70/100 [10:52&lt;04:38,  9.27s/it, generator loss:=0.844, discriminator loss:=0.636]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output"> 80%|████████  | 80/100 [12:27&lt;03:05,  9.30s/it, generator loss:=0.853, discriminator loss:=0.634]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output"> 90%|█████████ | 90/100 [13:59&lt;01:31,  9.19s/it, generator loss:=0.854, discriminator loss:=0.633]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output"> 99%|█████████▉| 99/100 [15:23&lt;00:09,  9.29s/it, generator loss:=0.866, discriminator loss:=0.629]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output">100%|██████████| 100/100 [15:32&lt;00:00,  9.33s/it, generator loss:=0.865, discriminator loss:=0.629]
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>DCGAN</h2>
+<p><strong>深度卷积生成对抗网络（Deep Convolutional GAN）</strong> 是一个非常直观的想法，即在生成器和判别器中使用卷积层。这里的主要区别在于生成器中使用了 <strong>Conv2DTranspose</strong> 层。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>&gt; 图片来源于<a href="https://pytorch.org/tutorials/beginner/dcgan_faces_tutorial.html">本教程</a></p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>class DCGenerator(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.ConvTranspose2d(100, 256, kernel_size=(3, 3), stride=(2, 2), bias=False)
+        self.bn1 = nn.BatchNorm2d(256)
+        self.conv2 = nn.ConvTranspose2d(256, 128, kernel_size=(3, 3), stride=(2, 2), bias=False)
+        self.bn2 = nn.BatchNorm2d(128)
+        self.conv3 = nn.ConvTranspose2d(128, 64, kernel_size=(3, 3), stride=(2, 2), bias=False)
+        self.bn3 = nn.BatchNorm2d(64)
+        self.conv4 = nn.ConvTranspose2d(64, 1, kernel_size=(3, 3), stride=(2, 2), padding=(2, 2), output_padding=(1, 1), bias=False)
+        self.tanh = nn.Tanh()
+        self.relu = nn.ReLU()
+
+    def forward(self, input):
+        hidden1 = self.relu(self.bn1(self.conv1(input)))
+        hidden2 = self.relu(self.bn2(self.conv2(hidden1)))
+        hidden3 = self.relu(self.bn3(self.conv3(hidden2)))
+        generated = self.tanh(self.conv4(hidden3)).view(input.shape[0], 1, 28, 28)
+        return generated</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>class DCDiscriminator(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(1, 64, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+        self.conv2 = nn.Conv2d(64, 128, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+        self.bn2 = nn.BatchNorm2d(128)
+        self.conv3 = nn.Conv2d(128, 256, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+        self.bn3 = nn.BatchNorm2d(256)
+        self.conv4 = nn.Conv2d(256, 1, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1), bias=False)
+        self.leaky_relu = nn.LeakyReLU(0.2)
+        self.sigmoid = nn.Sigmoid()
+
+    def forward(self, input):
+        hidden1 = self.leaky_relu(self.conv1(input))
+        hidden2 = self.leaky_relu(self.bn2(self.conv2(hidden1)))
+        hidden3 = self.leaky_relu(self.bn3(self.conv3(hidden2)))
+        classified = self.sigmoid(self.conv4(hidden3)).view(input.shape[0], -1)
+        return classified</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>从<a href="https://arxiv.org/pdf/1511.06434.pdf">DCGAN</a>论文中初始化权重。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def weights_init(model):
+    classname = model.__class__.__name__
+    if classname.find(&#x27;Conv&#x27;) != -1:
+        nn.init.normal_(model.weight.data, 0.0, 0.02)
+    elif classname.find(&#x27;BatchNorm&#x27;) != -1:
+        nn.init.normal_(model.weight.data, 1.0, 0.02)
+        nn.init.constant_(model.bias.data, 0)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>transform = transforms.Compose([
+                                transforms.ToTensor(),
+])</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>train_dataset, test_dataset = mnist(train_size, transform)
+train_dataloader = torch.utils.data.DataLoader(train_dataset, drop_last=True, batch_size=batch_size, shuffle=True)
+dataloaders = (train_dataloader, )</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>generator = DCGenerator().to(device)
+generator.apply(weights_init)
+discriminator = DCDiscriminator().to(device)
+discriminator.apply(weights_init)
+optimizer_generator = optim.Adam(generator.parameters(), lr=lr, weight_decay=weight_decay, betas=(beta1, beta2))
+optimizer_discriminator = optim.Adam(discriminator.parameters(), lr=lr, weight_decay=weight_decay, betas=(beta1, beta2))
+loss_fn = nn.BCELoss()
+
+models = (generator, discriminator)
+optimizers = (optimizer_generator, optimizer_discriminator)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def dcplotn(n, generator, device):
+    generator.eval()
+    noise = torch.FloatTensor(np.random.normal(0, 1, (n, 100, 1, 1))).to(device)
+    imgs = generator(noise).detach().cpu()
+    fig, ax = plt.subplots(1, n)
+    for i, im in enumerate(imgs):
+        ax[i].imshow(im[0])
+    plt.show()</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def train_dcgan(dataloaders, models, optimizers, loss_fn, epochs, plot_every, device):
+    tqdm_iter = tqdm(range(epochs))
+    train_dataloader = dataloaders[0]
+    
+    gen, disc = models[0], models[1]
+    optim_gen, optim_disc = optimizers[0], optimizers[1]
+    
+    gen.train()
+    disc.train()
+
+    for epoch in tqdm_iter:
+        train_gen_loss = 0.0
+        train_disc_loss = 0.0
+        
+        test_gen_loss = 0.0
+        test_disc_loss = 0.0
+
+        for batch in train_dataloader:
+            imgs, _ = batch
+            imgs = imgs.to(device)
+            imgs = 2.0 * imgs - 1.0
+
+            gen.zero_grad()
+
+            noise = torch.FloatTensor(np.random.normal(0.0, 1.0, (imgs.shape[0], 100, 1, 1))).to(device)
+            real_labels = torch.ones((imgs.shape[0], 1)).to(device)
+            fake_labels = torch.zeros((imgs.shape[0], 1)).to(device)
+            
+            generated = gen(noise)
+            disc_preds = disc(generated)
+
+            g_loss = loss_fn(disc_preds, real_labels)
+            g_loss.backward()
+            optim_gen.step()
+
+            disc.zero_grad()
+
+            disc_real = disc(imgs)
+            disc_real_loss = loss_fn(disc_real, real_labels)
+
+            disc_fake = disc(generated.detach())
+            disc_fake_loss = loss_fn(disc_fake, fake_labels)
+
+            d_loss = (disc_real_loss + disc_fake_loss) / 2.0
+            d_loss.backward()
+            optim_disc.step()
+
+            train_gen_loss += g_loss.item()
+            train_disc_loss += d_loss.item()
+
+        train_gen_loss /= len(train_dataloader)
+        train_disc_loss /= len(train_dataloader)
+
+        if epoch % plot_every == 0 or epoch == epochs - 1:
+            dcplotn(5, gen, device)
+
+        tqdm_dct = {&#x27;generator loss:&#x27;: train_gen_loss, &#x27;discriminator loss:&#x27;: train_disc_loss}
+        tqdm_iter.set_postfix(tqdm_dct, refresh=True)
+        tqdm_iter.refresh()</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>train_dcgan(dataloaders, models, optimizers, loss_fn, epochs // 2, plot_every // 2, device)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">  0%|          | 0/50 [00:00&lt;?, ?it/s]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output"> 10%|█         | 5/50 [00:53&lt;08:03, 10.74s/it, generator loss:=2.38, discriminator loss:=0.256]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output"> 20%|██        | 10/50 [01:47&lt;07:03, 10.58s/it, generator loss:=2.12, discriminator loss:=0.254]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output"> 30%|███       | 15/50 [02:40&lt;06:12, 10.66s/it, generator loss:=2.2, discriminator loss:=0.255] </div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output"> 40%|████      | 20/50 [03:33&lt;05:17, 10.57s/it, generator loss:=2.21, discriminator loss:=0.266]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output"> 50%|█████     | 25/50 [04:27&lt;04:24, 10.60s/it, generator loss:=2.34, discriminator loss:=0.229]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output"> 60%|██████    | 30/50 [05:20&lt;03:32, 10.65s/it, generator loss:=2.42, discriminator loss:=0.225]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output"> 70%|███████   | 35/50 [06:13&lt;02:39, 10.60s/it, generator loss:=2.55, discriminator loss:=0.216]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output"> 80%|████████  | 40/50 [07:07&lt;01:46, 10.62s/it, generator loss:=2.62, discriminator loss:=0.207]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output"> 90%|█████████ | 45/50 [08:00&lt;00:52, 10.55s/it, generator loss:=2.8, discriminator loss:=0.178] </div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output"> 98%|█████████▊| 49/50 [08:43&lt;00:10, 10.65s/it, generator loss:=2.77, discriminator loss:=0.2]  </div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div><div class="jp-OutputArea-output">100%|██████████| 50/50 [08:54&lt;00:00, 10.68s/it, generator loss:=2.79, discriminator loss:=0.184]
+</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>generator.eval()
+dcplotn(5, generator, device)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 5 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>&gt; <strong>任务</strong>: 尝试使用DCGAN生成更复杂的彩色图像 - 例如，从<a href="https://pytorch.org/vision/stable/generated/torchvision.datasets.CIFAR10.html">CIFAR-10</a>数据集中选择一个类别。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>关于绘画的训练</h2>
+<p>GAN 训练的一个不错选择是由人类艺术家创作的绘画作品。</p>
+<p>![](https://soshnikov.com/images/artartificial/Flo1.jpg)</p>
+<p>（照片来自 <a href="https://soshnikov.com/museum/art-artificial/">Art of Artificial</a> 收藏）</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>参考资料</h2>
+<ul>
+<li>[GAN arxiv](https://arxiv.org/abs/1406.2661)</li>
+<li>[DCGAN arxiv](https://arxiv.org/abs/1511.06434)</li>
+<li>[DCGAN Pytorch 教程](https://pytorch.org/tutorials/beginner/dcgan_faces_tutorial.html)</li>
+</ul></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务 <a href="https://github.com/Azure/co-op-translator">Co-op Translator</a> 进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。应以原始语言的文档作为权威来源。对于关键信息，建议使用专业人工翻译。我们对因使用此翻译而引起的任何误解或误读不承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

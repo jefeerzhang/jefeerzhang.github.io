@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GenerativeTF</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 GenerativeTF</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h1>生成网络</h1>
+<p>循环神经网络（RNN）及其门控单元变体（如长短期记忆单元 LSTM 和门控循环单元 GRU）提供了一种语言建模的机制，即它们可以学习单词的顺序，并预测序列中下一个单词。这使得我们可以将 RNN 用于<strong>生成任务</strong>，例如普通文本生成、机器翻译，甚至图像描述生成。</p>
+<p>在我们上一单元讨论的 RNN 架构中，每个 RNN 单元会生成下一个隐藏状态作为输出。然而，我们也可以为每个循环单元添加另一个输出，这样就可以输出一个<strong>序列</strong>（其长度等于原始序列的长度）。此外，我们还可以使用不在每一步接受输入的 RNN 单元，而是仅接受一个初始状态向量，然后生成一个输出序列。</p>
+<p>在本笔记中，我们将专注于帮助我们生成文本的简单生成模型。为了简化起见，让我们构建一个<strong>字符级网络</strong>，逐字母生成文本。在训练过程中，我们需要获取一些文本语料库，并将其拆分为字母序列。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import tensorflow as tf
+from tensorflow import keras
+import tensorflow_datasets as tfds
+import numpy as np
+
+ds_train, ds_test = tfds.load(&#x27;ag_news_subset&#x27;).values()</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>构建字符词汇表</h2>
+<p>为了构建字符级生成网络，我们需要将文本拆分为单个字符，而不是单词。我们之前使用的 <code>TextVectorization</code> 层无法实现这一点，因此我们有两个选择：</p>
+<ul>
+<li>手动加载文本并自行进行分词，就像 [这个官方 Keras 示例](https://keras.io/examples/generative/lstm_character_level_text_generation/) 中所展示的那样</li>
+<li>使用 `Tokenizer` 类进行字符级分词</li>
+</ul>
+<p>我们将选择第二种方法。<code>Tokenizer</code> 也可以用于按单词分词，因此可以很轻松地从字符级分词切换到单词级分词。</p>
+<p>要进行字符级分词，我们需要传递参数 <code>char_level=True</code>：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def extract_text(x):
+    return x[&#x27;title&#x27;]+&#x27; &#x27;+x[&#x27;description&#x27;]
+
+def tupelize(x):
+    return (extract_text(x),x[&#x27;label&#x27;])
+
+tokenizer = keras.preprocessing.text.Tokenizer(char_level=True,lower=False)
+tokenizer.fit_on_texts([x[&#x27;title&#x27;].numpy().decode(&#x27;utf-8&#x27;) for x in ds_train])</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们还希望使用一个特殊的标记来表示<strong>序列结束</strong>，我们将其称为<code>&lt;eos&gt;</code>。让我们手动将其添加到词汇表中：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>eos_token = len(tokenizer.word_index)+1
+tokenizer.word_index[&#x27;&lt;eos&gt;&#x27;] = eos_token
+
+vocab_size = eos_token + 1</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在，要将文本编码为数字序列，我们可以使用：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>tokenizer.texts_to_sequences([&#x27;Hello, world!&#x27;])</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[[48, 2, 10, 10, 5, 44, 1, 25, 5, 8, 10, 13, 78]]</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>训练生成式 RNN 来生成标题</h2>
+<p>我们将通过以下方式训练 RNN 来生成新闻标题。在每一步中，我们会选取一个标题，将其输入到 RNN 中，并让网络根据每个输入字符生成下一个输出字符：</p>
+<p>!<a href="../../../../../lessons/5-NLP/17-GenerativeNetworks/images/rnn-generate.png">展示 RNN 生成单词 &#x27;HELLO&#x27; 的示例图像。</a></p>
+<p>对于序列的最后一个字符，我们会让网络生成 <code>&lt;eos&gt;</code> 标记。</p>
+<p>我们这里使用的生成式 RNN 的主要区别在于，我们会从 RNN 的每一步输出中获取结果，而不仅仅是从最后一个单元获取。这可以通过为 RNN 单元指定 <code>return_sequences</code> 参数来实现。</p>
+<p>因此，在训练过程中，网络的输入将是某个长度的编码字符序列，输出将是相同长度的序列，但会向后偏移一个元素并以 <code>&lt;eos&gt;</code> 结束。小批量数据将由多个这样的序列组成，我们需要使用<strong>填充</strong>来对齐所有序列。</p>
+<p>接下来，我们将创建一些函数来转换数据集。由于我们希望在小批量级别对序列进行填充，我们会先通过调用 <code>.batch()</code> 对数据集进行分批处理，然后使用 <code>map</code> 来进行转换。因此，转换函数将以整个小批量数据作为参数：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def title_batch(x):
+    x = [t.numpy().decode(&#x27;utf-8&#x27;) for t in x]
+    z = tokenizer.texts_to_sequences(x)
+    z = tf.keras.preprocessing.sequence.pad_sequences(z)
+    return tf.one_hot(z,vocab_size), tf.one_hot(tf.concat([z[:,1:],tf.constant(eos_token,shape=(len(z),1))],axis=1),vocab_size)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们在这里做的一些重要事情：</p>
+<ul>
+<li>我们首先从字符串张量中提取实际文本</li>
+<li>`text_to_sequences` 将字符串列表转换为整数张量列表</li>
+<li>`pad_sequences` 将这些张量填充到它们的最大长度</li>
+<li>最后，我们对所有字符进行独热编码，同时进行偏移和添加 `&lt;eos&gt;`。我们很快会看到为什么需要独热编码的字符</li>
+</ul>
+<p>然而，这个函数是 <strong>Pythonic</strong> 的，也就是说，它无法自动转换为 Tensorflow 的计算图。如果我们尝试直接在 <code>Dataset.map</code> 函数中使用这个函数，会出现错误。我们需要通过使用 <code>py_function</code> 包装器来封装这个 Pythonic 调用：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def title_batch_fn(x):
+    x = x[&#x27;title&#x27;]
+    a,b = tf.py_function(title_batch,inp=[x],Tout=(tf.float32,tf.float32))
+    return a,b</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>&gt; <strong>注意</strong>: 区分 Pythonic 和 Tensorflow 的数据转换函数可能看起来有些复杂，你可能会疑惑为什么我们不在将数据集传递给 <code>fit</code> 之前，使用标准的 Python 函数进行转换。虽然这样确实是可行的，但使用 <code>Dataset.map</code> 有一个巨大的优势，因为数据转换管道是通过 Tensorflow 的计算图执行的，这可以利用 GPU 的计算能力，并最大限度地减少在 CPU 和 GPU 之间传递数据的需求。</p>
+<p>现在我们可以构建生成器网络并开始训练了。它可以基于我们在上一单元中讨论的任何一种循环单元（简单的、LSTM 或 GRU）。在我们的示例中，我们将使用 LSTM。</p>
+<p>由于网络以字符作为输入，并且词汇表的大小相对较小，我们不需要嵌入层，独热编码的输入可以直接传递到 LSTM 单元中。输出层将是一个 <code>Dense</code> 分类器，用于将 LSTM 的输出转换为独热编码的标记编号。</p>
+<p>此外，由于我们处理的是可变长度的序列，我们可以使用 <code>Masking</code> 层来创建一个掩码，从而忽略字符串中填充的部分。这并不是严格必要的，因为我们对 <code>&lt;eos&gt;</code> 标记之后的内容并不特别感兴趣，但为了熟悉这种层类型的使用，我们还是会用它。<code>input_shape</code> 将是 <code>(None, vocab_size)</code>，其中 <code>None</code> 表示可变长度的序列，而输出形状同样是 <code>(None, vocab_size)</code>，正如你可以从 <code>summary</code> 中看到的那样：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model = keras.models.Sequential([
+    keras.layers.Masking(input_shape=(None,vocab_size)),
+    keras.layers.LSTM(128,return_sequences=True),
+    keras.layers.Dense(vocab_size,activation=&#x27;softmax&#x27;)
+])
+
+model.summary()
+model.compile(loss=&#x27;categorical_crossentropy&#x27;)
+
+model.fit(ds_train.batch(8).map(title_batch_fn))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;sequential&quot;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+masking (Masking)            (None, None, 84)          0         
+_________________________________________________________________
+lstm (LSTM)                  (None, None, 128)         109056    
+_________________________________________________________________
+dense (Dense)                (None, None, 84)          10836     
+=================================================================
+Total params: 119,892
+Trainable params: 119,892
+Non-trainable params: 0
+_________________________________________________________________
+15000/15000 [==============================] - 229s 15ms/step - loss: 1.5385
+</div><div class="jp-OutputArea-output">&lt;tensorflow.python.keras.callbacks.History at 0x7fa40c1245e0&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>生成输出</h2>
+<p>现在我们已经训练了模型，接下来我们希望使用它生成一些输出。首先，我们需要一种方法来解码由一系列标记数字表示的文本。为此，我们可以使用 <code>tokenizer.sequences_to_texts</code> 函数；然而，它在字符级标记化时效果不佳。因此，我们将从标记器中获取一个标记字典（称为 <code>word_index</code>），构建一个反向映射，并编写我们自己的解码函数：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>reverse_map = {val:key for key, val in tokenizer.word_index.items()}
+
+def decode(x):
+    return &#x27;&#x27;.join([reverse_map[t] for t in x])</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在，我们开始生成。我们将从某个字符串 <code>start</code> 开始，将其编码为一个序列 <code>inp</code>，然后在每一步调用我们的网络来推断下一个字符。</p>
+<p>网络的输出 <code>out</code> 是一个包含 <code>vocab_size</code> 元素的向量，表示每个标记的概率。我们可以通过使用 <code>argmax</code> 找到最可能的标记编号。然后将这个字符添加到生成的标记列表中，并继续生成。这个生成一个字符的过程会重复 <code>size</code> 次，以生成所需数量的字符。如果在生成过程中遇到 <code>eos_token</code>，我们会提前终止。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def generate(model,size=100,start=&#x27;Today &#x27;):
+        inp = tokenizer.texts_to_sequences([start])[0]
+        chars = inp
+        for i in range(size):
+            out = model(tf.expand_dims(tf.one_hot(inp,vocab_size),0))[0][-1]
+            nc = tf.argmax(out)
+            if nc==eos_token:
+                break
+            chars.append(nc.numpy())
+            inp = inp+[nc]
+        return decode(chars)
+    
+generate(model)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&#x27;Today #39;s lead to strike for the strike for the strike for the strike (AFP)&#x27;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>在训练过程中采样输出</h2>
+<p>由于我们没有像*准确率*这样的有用指标，判断模型是否在变得更好的唯一方法是通过在训练过程中<strong>采样</strong>生成的字符串。为此，我们将使用<strong>回调函数</strong>，即可以传递给<code>fit</code>函数的函数，这些函数会在训练过程中定期被调用。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>sampling_callback = keras.callbacks.LambdaCallback(
+  on_epoch_end = lambda batch, logs: print(generate(model))
+)
+
+model.fit(ds_train.batch(8).map(title_batch_fn),callbacks=[sampling_callback],epochs=3)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 1/3
+15000/15000 [==============================] - 226s 15ms/step - loss: 1.2703
+Today #39;s a lead in the company for the strike
+Epoch 2/3
+15000/15000 [==============================] - 227s 15ms/step - loss: 1.2057
+Today #39;s the Market Service on Security Start (AP)
+Epoch 3/3
+15000/15000 [==============================] - 226s 15ms/step - loss: 1.1752
+Today #39;s a line on the strike to start for the start
+</div><div class="jp-OutputArea-output">&lt;tensorflow.python.keras.callbacks.History at 0x7fa40c74e3d0&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>这个示例已经生成了一些相当不错的文本，但仍有多种方式可以进一步改进：</p>
+<ul>
+<li>**更多文本**。我们仅使用了标题来完成任务，但你可能想尝试使用完整的文本。请记住，RNN在处理长序列时表现并不太好，因此可以将它们拆分成较短的句子，或者始终在固定的序列长度（例如，`num_chars`，假设为256）上进行训练。你可以尝试将上面的示例改造成这样的架构，并参考[官方 Keras 教程](https://keras.io/examples/generative/lstm_character_level_text_generation/)来获得灵感。</li>
+</ul>
+<ul>
+<li>**多层 LSTM**。尝试使用2或3层的LSTM单元是有意义的。正如我们在前一个单元中提到的，每一层LSTM都会从文本中提取某些模式，而在字符级生成器的情况下，我们可以预期较低的LSTM层负责提取音节，而较高的层负责提取单词和词组组合。这可以通过向LSTM构造函数传递层数参数来简单实现。</li>
+</ul>
+<ul>
+<li>你可能还想尝试使用**GRU单元**，看看哪种表现更好，以及尝试**不同的隐藏层大小**。隐藏层过大可能导致过拟合（例如，网络会学习到精确的文本），而较小的隐藏层可能无法生成良好的结果。</li>
+</ul></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>软文本生成与温度</h2>
+<p>在之前对 <code>generate</code> 的定义中，我们总是选择概率最高的字符作为生成文本中的下一个字符。这导致文本经常在相同的字符序列之间反复“循环”，如下例所示：</p>
+<pre><code>
+today of the second the company and a second the company ...
+</code></pre>
+<p>然而，如果我们查看下一个字符的概率分布，可能会发现几个最高概率之间的差距并不大，例如，一个字符的概率是 0.2，另一个是 0.19，等等。例如，当寻找序列 &#x27;*play*&#x27; 的下一个字符时，下一个字符可能同样可能是空格，或者是 <strong>e</strong>（如单词 *player* 中）。</p>
+<p>这让我们得出结论，选择概率较高的字符并不总是“公平”的，因为选择第二高的字符也可能生成有意义的文本。更明智的做法是从网络输出给出的概率分布中<strong>采样</strong>字符。</p>
+<p>这种采样可以通过 <code>np.multinomial</code> 函数完成，该函数实现了所谓的<strong>多项分布</strong>。下面定义了一个实现这种<strong>软</strong>文本生成的函数：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def generate_soft(model,size=100,start=&#x27;Today &#x27;,temperature=1.0):
+        inp = tokenizer.texts_to_sequences([start])[0]
+        chars = inp
+        for i in range(size):
+            out = model(tf.expand_dims(tf.one_hot(inp,vocab_size),0))[0][-1]
+            probs = tf.exp(tf.math.log(out)/temperature).numpy().astype(np.float64)
+            probs = probs/np.sum(probs)
+            nc = np.argmax(np.random.multinomial(1,probs,1))
+            if nc==eos_token:
+                break
+            chars.append(nc)
+            inp = inp+[nc]
+        return decode(chars)
+
+words = [&#x27;Today &#x27;,&#x27;On Sunday &#x27;,&#x27;Moscow, &#x27;,&#x27;President &#x27;,&#x27;Little red riding hood &#x27;]
+    
+for i in [0.3,0.8,1.0,1.3,1.8]:
+    print(f&quot;\n--- Temperature = {i}&quot;)
+    for j in range(5):
+        print(generate_soft(model,size=300,start=words[j],temperature=i))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">
+--- Temperature = 0.3
+Today #39;s strike #39; to start at the store return
+On Sunday PO to Be Data Profit Up (Reuters)
+Moscow, SP wins straight to the Microsoft #39;s control of the space start
+President olding of the blast start for the strike to pay &amp;lt;b&amp;gt;...&amp;lt;/b&amp;gt;
+Little red riding hood ficed to the spam countered in European &amp;lt;b&amp;gt;...&amp;lt;/b&amp;gt;
+
+--- Temperature = 0.8
+Today countie strikes ryder missile faces food market blut
+On Sunday collores lose-toppy of sale of Bullment in &amp;lt;b&amp;gt;...&amp;lt;/b&amp;gt;
+Moscow, IBM Diffeiting in Afghan Software Hotels (Reuters)
+President Ol Luster for Profit Peaced Raised (AP)
+Little red riding hood dace on depart talks #39; bank up
+
+--- Temperature = 1.0
+Today wits House buiting debate fixes #39; supervice stake again
+On Sunday arling digital poaching In for level
+Moscow, DS Up 7, Top Proble Protest Caprey Mamarian Strike
+President teps help of roubler stepted lessabul-Dhalitics (AFP)
+Little red riding hood signs on cash in Carter-youb
+
+--- Temperature = 1.3
+Today wits flawer ro, pSIA figat&#x27;s co DroftwavesIs Talo up
+On Sunday hround elitwing wint EU Powerburlinetien
+Moscow, Bazz #39;s sentries olymen winnelds&#x27; next for Olympite Huc?
+President lost securitys from power Elections in Smiltrials
+Little red riding hood vides profit, exponituity, profitmainalist-at said listers
+
+--- Temperature = 1.8
+Today #39;It: He deat: N.KA Asside
+On Sunday i arry Par aldeup patient Wo stele1
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们引入了一个名为<strong>温度</strong>的参数，用于指示我们应多大程度上坚持最高概率。如果温度为1.0，我们进行公平的多项式采样，而当温度趋于无穷大时——所有概率变得相等，我们随机选择下一个字符。在下面的示例中，我们可以观察到，当我们将温度增加得过高时，文本变得毫无意义，而当温度接近0时，它类似于“循环”的硬生成文本。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务 <a href="https://github.com/Azure/co-op-translator">Co-op Translator</a> 进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。应以原始语言的文档作为权威来源。对于关键信息，建议使用专业人工翻译。我们对因使用此翻译而引起的任何误解或误读不承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

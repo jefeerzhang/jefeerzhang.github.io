@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CartPole-RL-TF</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 CartPole-RL-TF</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h1>使用强化学习训练平衡小车杆</h1>
+<p>本笔记本是 <a href="http://aka.ms/ai-beginners">AI for Beginners Curriculum</a> 的一部分，灵感来源于 <a href="https://medium.com/swlh/policy-gradient-reinforcement-learning-with-keras-57ca6ed32555">这篇博客文章</a>、<a href="https://www.tensorflow.org/tutorials/reinforcement_learning/actor_critic">官方 TensorFlow 文档</a> 和 <a href="https://keras.io/examples/rl/actor_critic_cartpole/">Keras RL 示例</a>。</p>
+<p>在这个示例中，我们将使用强化学习（RL）训练一个模型，使其能够在水平轨道上移动的小车上平衡一根杆。我们将使用 <a href="https://www.gymlibrary.ml/">OpenAI Gym</a> 环境来模拟这个场景。</p>
+<p>&gt; <strong>注意</strong>: 你可以在本地运行本课程的代码（例如使用 Visual Studio Code），此时模拟环境会在一个新窗口中打开。如果在线运行代码，你可能需要对代码进行一些调整，具体说明请参考 <a href="https://towardsdatascience.com/rendering-openai-gym-envs-on-binder-and-google-colab-536f99391cc7">这里</a>。</p>
+<p>我们将从确保 Gym 已安装开始：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import sys
+!{sys.executable} -m pip install gym pygame</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: gym in /home/leo/.local/lib/python3.10/site-packages (0.25.0)
+Requirement already satisfied: pygame in /home/leo/.local/lib/python3.10/site-packages (2.1.2)
+Requirement already satisfied: gym-notices&gt;=0.0.4 in /home/leo/.local/lib/python3.10/site-packages (from gym) (0.0.7)
+Requirement already satisfied: cloudpickle&gt;=1.2.0 in /home/leo/.local/lib/python3.10/site-packages (from gym) (2.1.0)
+Requirement already satisfied: numpy&gt;=1.18.0 in /usr/lib/python3/dist-packages (from gym) (1.21.5)
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在让我们创建 CartPole 环境，并了解如何操作它。一个环境具有以下属性：</p>
+<ul>
+<li>**动作空间** 是我们在模拟的每一步中可以执行的所有可能动作的集合</li>
+<li>**观察空间** 是我们能够进行的所有可能观察的集合</li>
+</ul></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import gym
+import pygame
+import tqdm
+
+env = gym.make(&quot;CartPole-v1&quot;)
+
+print(f&quot;Action space: {env.action_space}&quot;)
+print(f&quot;Observation space: {env.observation_space}&quot;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Action space: Discrete(2)
+Observation space: Box([-4.8000002e+00 -3.4028235e+38 -4.1887903e-01 -3.4028235e+38], [4.8000002e+00 3.4028235e+38 4.1887903e-01 3.4028235e+38], (4,), float32)
+</div><div class="jp-OutputArea-output">/home/leo/.local/lib/python3.10/site-packages/gym/core.py:329: DeprecationWarning: [33mWARN: Initializing wrapper in old step API which returns one bool instead of two. It is recommended to set `new_step_api=True` to use new step API. This will be the default behaviour in future.[0m
+  deprecation(
+/home/leo/.local/lib/python3.10/site-packages/gym/wrappers/step_api_compatibility.py:39: DeprecationWarning: [33mWARN: Initializing environment in old step API which returns one bool instead of two. It is recommended to set `new_step_api=True` to use new step API. This will be the default behaviour in future.[0m
+  deprecation(
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们看看模拟是如何运行的。以下循环会运行模拟，直到 <code>env.step</code> 不返回终止标志 <code>done</code>。我们将使用 <code>env.action_space.sample()</code> 随机选择动作，这意味着实验可能会非常快地失败（当小车的速度、位置或角度超出某些限制时，CartPole 环境会终止）。</p>
+<p>&gt; 模拟会在新窗口中打开。你可以多次运行代码，观察它的表现。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>env.reset()
+
+done = False
+total_reward = 0
+while not done:
+   env.render()
+   obs, rew, done, info = env.step(env.action_space.sample())
+   total_reward += rew
+   print(f&quot;{obs} -&gt; {rew}&quot;)
+print(f&quot;Total reward: {total_reward}&quot;)
+
+env.close()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">/home/leo/.local/lib/python3.10/site-packages/gym/core.py:57: DeprecationWarning: [33mWARN: You are calling render method, but you didn&#x27;t specified the argument render_mode at environment initialization. To maintain backward compatibility, the environment will render in human mode.
+If you want to render in human mode, initialize the environment in this way: gym.make(&#x27;EnvName&#x27;, render_mode=&#x27;human&#x27;) and don&#x27;t call the render method.
+See here for more information: https://www.gymlibrary.ml/content/api/[0m
+  deprecation(
+</div><div class="jp-OutputArea-output">[ 0.00425272 -0.19994313  0.00917169  0.34113726] -&gt; 1.0
+[ 0.00025386 -0.00495286  0.01599443  0.05136059] -&gt; 1.0
+[ 1.5480528e-04  1.8993615e-01  1.7021643e-02 -2.3623335e-01] -&gt; 1.0
+[ 0.00395353  0.38481084  0.01229698 -0.5234989 ] -&gt; 1.0
+[ 0.01164974  0.18951797  0.001827   -0.22696657] -&gt; 1.0
+[ 0.0154401   0.38461378 -0.00271233 -0.51907265] -&gt; 1.0
+[ 0.02313238  0.5797738  -0.01309379 -0.812609  ] -&gt; 1.0
+[ 0.03472786  0.38483363 -0.02934597 -0.5240733 ] -&gt; 1.0
+[ 0.04242453  0.580356   -0.03982743 -0.8258571 ] -&gt; 1.0
+[ 0.05403165  0.38580072 -0.05634458 -0.54596174] -&gt; 1.0
+[ 0.06174766  0.19151384 -0.06726381 -0.27155042] -&gt; 1.0
+[ 0.06557794 -0.00258703 -0.07269482 -0.00081817] -&gt; 1.0
+[ 0.0655262  -0.19659522 -0.07271118  0.26807207] -&gt; 1.0
+[ 0.0615943  -0.00051497 -0.06734974 -0.04662942] -&gt; 1.0
+[ 0.061584    0.19550486 -0.06828233 -0.3597784 ] -&gt; 1.0
+[ 0.06549409  0.00141663 -0.0754779  -0.08938391] -&gt; 1.0
+[ 0.06552242 -0.19254686 -0.07726558  0.17856352] -&gt; 1.0
+[ 0.06167149  0.00359088 -0.0736943  -0.1374588 ] -&gt; 1.0
+[ 0.0617433   0.19968675 -0.07644348 -0.45245075] -&gt; 1.0
+[ 0.06573704  0.3958018  -0.0854925  -0.7682167 ] -&gt; 1.0
+[ 0.07365308  0.20195423 -0.10085683 -0.50361156] -&gt; 1.0
+[ 0.07769216  0.0083876  -0.11092906 -0.24433874] -&gt; 1.0
+[ 0.07785992 -0.18498953 -0.11581583  0.01139782] -&gt; 1.0
+[ 0.07416012  0.01158649 -0.11558788 -0.31546465] -&gt; 1.0
+[ 0.07439185  0.20814891 -0.12189718 -0.64224803] -&gt; 1.0
+[ 0.07855483  0.01491799 -0.13474214 -0.3903015 ] -&gt; 1.0
+[ 0.07885319 -0.17806001 -0.14254816 -0.14295265] -&gt; 1.0
+[ 0.07529199  0.01878517 -0.14540721 -0.47699296] -&gt; 1.0
+[ 0.07566769 -0.17401667 -0.15494707 -0.23344138] -&gt; 1.0
+[ 0.07218736  0.0229406  -0.1596159  -0.57071024] -&gt; 1.0
+[ 0.07264617  0.21989843 -0.1710301  -0.9091196 ] -&gt; 1.0
+[ 0.07704414  0.02745241 -0.1892125  -0.6747003 ] -&gt; 1.0
+[ 0.07759319 -0.16460665 -0.20270652 -0.4470505 ] -&gt; 1.0
+[ 0.07430106 -0.35637102 -0.21164753 -0.22448184] -&gt; 1.0
+Total reward: 34.0
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>你会注意到观测值包含4个数字，它们是：</p>
+<ul>
+<li>小车的位置</li>
+<li>小车的速度</li>
+<li>杆子的角度</li>
+<li>杆子的旋转速率</li>
+</ul>
+<p><code>rew</code> 是我们在每一步中获得的奖励。在 CartPole 环境中，每进行一步模拟你都会获得1分奖励，目标是最大化总奖励，也就是让小车尽可能长时间保持平衡而不倒下。</p>
+<p>在强化学习中，我们的目标是训练一个<strong>策略</strong> $\pi$，它会根据每个状态 $s$ 告诉我们应该采取的动作 $a$，本质上就是 $a = \pi(s)$。</p>
+<p>如果你想要一个概率性的解决方案，可以将策略视为为每个动作返回一组概率，即 $\pi(a|s)$ 表示在状态 $s$ 下采取动作 $a$ 的概率。</p>
+<h2>策略梯度方法</h2>
+<p>在最简单的强化学习算法中，称为<strong>策略梯度</strong>，我们将训练一个神经网络来预测下一步的动作。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import numpy as np
+import tensorflow as tf
+from tensorflow import keras
+import matplotlib.pyplot as plt
+
+num_inputs = 4
+num_actions = 2
+
+model = keras.Sequential([
+    keras.layers.Dense(128, activation=&quot;relu&quot;,input_shape=(num_inputs,)),
+    keras.layers.Dense(num_actions, activation=&quot;softmax&quot;)
+])
+
+model.compile(loss=&#x27;categorical_crossentropy&#x27;, optimizer=keras.optimizers.Adam(learning_rate=0.01))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">/usr/local/lib/python3.10/dist-packages/tensorflow/__init__.py:29: DeprecationWarning: The distutils package is deprecated and slated for removal in Python 3.12. Use setuptools or check PEP 632 for potential alternatives
+  import distutils as _distutils
+2022-07-24 16:50:47.597258: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#x27;libcudart.so.11.0&#x27;; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory
+2022-07-24 16:50:47.597280: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine.
+/usr/local/lib/python3.10/dist-packages/flatbuffers/compat.py:19: DeprecationWarning: the imp module is deprecated in favour of importlib and slated for removal in Python 3.12; see the module&#x27;s documentation for alternative uses
+  import imp
+2022-07-24 16:50:49.838826: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:975] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2022-07-24 16:50:49.839078: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#x27;libcudart.so.11.0&#x27;; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory
+2022-07-24 16:50:49.839143: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#x27;libcublas.so.11&#x27;; dlerror: libcublas.so.11: cannot open shared object file: No such file or directory
+2022-07-24 16:50:49.839194: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#x27;libcublasLt.so.11&#x27;; dlerror: libcublasLt.so.11: cannot open shared object file: No such file or directory
+2022-07-24 16:50:49.839245: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#x27;libcufft.so.10&#x27;; dlerror: libcufft.so.10: cannot open shared object file: No such file or directory
+2022-07-24 16:50:49.839295: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#x27;libcurand.so.10&#x27;; dlerror: libcurand.so.10: cannot open shared object file: No such file or directory
+2022-07-24 16:50:49.839345: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#x27;libcusolver.so.11&#x27;; dlerror: libcusolver.so.11: cannot open shared object file: No such file or directory
+2022-07-24 16:50:49.839392: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#x27;libcusparse.so.11&#x27;; dlerror: libcusparse.so.11: cannot open shared object file: No such file or directory
+2022-07-24 16:50:49.839441: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library &#x27;libcudnn.so.8&#x27;; dlerror: libcudnn.so.8: cannot open shared object file: No such file or directory
+2022-07-24 16:50:49.839449: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1850] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+2022-07-24 16:50:49.839649: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们将通过运行许多实验来训练网络，并在每次运行后更新我们的网络。让我们定义一个函数来运行实验并返回结果（所谓的<strong>轨迹</strong>）——所有状态、动作（及其推荐概率）和奖励：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def run_episode(max_steps_per_episode = 10000,render=False):    
+    states, actions, probs, rewards = [],[],[],[]
+    state = env.reset()
+    for _ in range(max_steps_per_episode):
+        if render:
+            env.render()
+        action_probs = model(np.expand_dims(state,0))[0]
+        action = np.random.choice(num_actions, p=np.squeeze(action_probs))
+        nstate, reward, done, info = env.step(action)
+        if done:
+            break
+        states.append(state)
+        actions.append(action)
+        probs.append(action_probs)
+        rewards.append(reward)
+        state = nstate
+    return np.vstack(states), np.vstack(actions), np.vstack(probs), np.vstack(rewards)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>您可以运行一个未训练网络的单集，并观察到总奖励（即单集长度）非常低：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>s,a,p,r = run_episode()
+print(f&quot;Total reward: {np.sum(r)}&quot;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Total reward: 27.0
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>政策梯度算法的一个棘手方面是使用<strong>折扣奖励</strong>。其思想是我们在游戏的每一步计算总奖励的向量，并在此过程中使用某个系数 $gamma$ 对早期奖励进行折扣。我们还对结果向量进行归一化，因为我们将使用它作为权重来影响我们的训练：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>eps = 0.0001
+
+def discounted_rewards(rewards,gamma=0.99,normalize=True):
+    ret = []
+    s = 0
+    for r in rewards[::-1]:
+        s = r + gamma * s
+        ret.insert(0, s)
+    if normalize:
+        ret = (ret-np.mean(ret))/(np.std(ret)+eps)
+    return ret</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在开始实际训练！我们将运行300次实验，每次实验中我们将执行以下步骤：</p>
+<p>1. 运行实验并收集轨迹数据。</p>
+<p>2. 计算所采取的动作与预测概率之间的差异（<code>gradients</code>）。差异越小，说明我们越确信采取了正确的动作。</p>
+<p>3. 计算折扣奖励，并将梯度乘以折扣奖励——这样可以确保高奖励的步骤对最终结果的影响比低奖励的步骤更大。</p>
+<p>4. 我们的神经网络的目标动作部分来源于运行期间的预测概率，部分来源于计算出的梯度。我们将使用<code>alpha</code>参数来确定梯度和奖励在多大程度上被考虑——这被称为强化算法的*学习率*。</p>
+<p>5. 最后，我们基于状态和目标动作训练网络，并重复这一过程。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>alpha = 1e-4
+
+history = []
+for epoch in range(300):
+    states, actions, probs, rewards = run_episode()
+    one_hot_actions = np.eye(2)[actions.T][0]
+    gradients = one_hot_actions-probs
+    dr = discounted_rewards(rewards)
+    gradients *= dr
+    target = alpha*np.vstack([gradients])+probs
+    model.train_on_batch(states,target)
+    history.append(np.sum(rewards))
+    if epoch%100==0:
+        print(f&quot;{epoch} -&gt; {np.sum(rewards)}&quot;)
+
+plt.plot(history)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">0 -&gt; 29.0
+</div><div class="jp-OutputArea-output">2022-07-24 16:50:51.475024: W tensorflow/core/data/root_dataset.cc:247] Optimization loop failed: CANCELLED: Operation was cancelled
+</div><div class="jp-OutputArea-output">100 -&gt; 135.0
+200 -&gt; 484.0
+</div><div class="jp-OutputArea-output">2022-07-24 16:51:35.910774: W tensorflow/core/data/root_dataset.cc:247] Optimization loop failed: CANCELLED: Operation was cancelled
+2022-07-24 16:51:37.151017: W tensorflow/core/data/root_dataset.cc:247] Optimization loop failed: CANCELLED: Operation was cancelled
+2022-07-24 16:51:39.284311: W tensorflow/core/data/root_dataset.cc:247] Optimization loop failed: CANCELLED: Operation was cancelled
+2022-07-24 16:51:42.235074: W tensorflow/core/data/root_dataset.cc:247] Optimization loop failed: CANCELLED: Operation was cancelled
+2022-07-24 16:51:44.691458: W tensorflow/core/data/root_dataset.cc:247] Optimization loop failed: CANCELLED: Operation was cancelled
+2022-07-24 16:51:48.381946: W tensorflow/core/data/root_dataset.cc:247] Optimization loop failed: CANCELLED: Operation was cancelled
+</div><div class="jp-OutputArea-output">[&lt;matplotlib.lines.Line2D at 0x7f40201e7b20&gt;]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在让我们运行带有渲染的剧集来查看结果：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>_ = run_episode(render=True)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>希望你能看到，现在杆子已经能够很好地保持平衡了！</p>
+<h2>Actor-Critic 模型</h2>
+<p>Actor-Critic 模型是策略梯度的进一步发展，在这种模型中，我们构建一个神经网络来同时学习策略和奖励的估计。这个网络将有两个输出（或者你也可以将其视为两个独立的网络）：</p>
+<ul>
+<li>**Actor** 将通过给出状态的概率分布来推荐采取的动作，就像在策略梯度模型中一样。</li>
+<li>**Critic** 将估计这些动作可能带来的奖励。它会返回在给定状态下未来的总估计奖励。</li>
+</ul>
+<p>让我们定义这样一个模型：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>num_inputs = 4
+num_actions = 2
+num_hidden = 128
+
+inputs = keras.layers.Input(shape=(num_inputs,))
+common = keras.layers.Dense(num_hidden, activation=&quot;relu&quot;)(inputs)
+action = keras.layers.Dense(num_actions, activation=&quot;softmax&quot;)(common)
+critic = keras.layers.Dense(1)(common)
+
+model = keras.Model(inputs=inputs, outputs=[action, critic])</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们需要稍微修改我们的 <code>run_episode</code> 函数以同时返回评论结果：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def run_episode(max_steps_per_episode = 10000,render=False):    
+    states, actions, probs, rewards, critic = [],[],[],[],[]
+    state = env.reset()
+    for _ in range(max_steps_per_episode):
+        if render:
+            env.render()
+        action_probs, est_rew = model(np.expand_dims(state,0))
+        action = np.random.choice(num_actions, p=np.squeeze(action_probs[0]))
+        nstate, reward, done, info = env.step(action)
+        if done:
+            break
+        states.append(state)
+        actions.append(action)
+        probs.append(tf.math.log(action_probs[0,action]))
+        rewards.append(reward)
+        critic.append(est_rew[0,0])
+        state = nstate
+    return states, actions, probs, rewards, critic</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在我们将运行主要训练循环。我们将通过计算适当的损失函数并更新网络参数来使用手动网络训练过程：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>optimizer = keras.optimizers.Adam(learning_rate=0.01)
+huber_loss = keras.losses.Huber()
+episode_count = 0
+running_reward = 0
+
+while True:  # Run until solved
+    state = env.reset()
+    episode_reward = 0
+    with tf.GradientTape() as tape:
+        _,_,action_probs, rewards, critic_values = run_episode()
+        episode_reward = np.sum(rewards)
+        
+        # Update running reward to check condition for solving
+        running_reward = 0.05 * episode_reward + (1 - 0.05) * running_reward
+
+        # Calculate discounted rewards that will be labels for our critic
+        dr = discounted_rewards(rewards)
+
+        # Calculating loss values to update our network
+        actor_losses = []
+        critic_losses = []
+        for log_prob, value, rew in zip(action_probs, critic_values, dr):
+            # When we took the action with probability `log_prob`, we received discounted reward of `rew`,
+            # while critic predicted it to be `value` 
+            # First we calculate actor loss, to make actor predict actions that lead to higher rewards
+            diff = rew - value
+            actor_losses.append(-log_prob * diff)
+
+            # The critic loss is to minimize the difference between predicted reward `value` and actual
+            # discounted reward `rew`
+            critic_losses.append(
+                huber_loss(tf.expand_dims(value, 0), tf.expand_dims(rew, 0))
+            )
+
+        # Backpropagation
+        loss_value = sum(actor_losses) + sum(critic_losses)
+        grads = tape.gradient(loss_value, model.trainable_variables)
+        optimizer.apply_gradients(zip(grads, model.trainable_variables))
+
+    # Log details
+    episode_count += 1
+    if episode_count % 10 == 0:
+        template = &quot;running reward: {:.2f} at episode {}&quot;
+        print(template.format(running_reward, episode_count))
+
+    if running_reward &gt; 195:  # Condition to consider the task solved
+        print(&quot;Solved at episode {}!&quot;.format(episode_count))
+        break
+</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">running reward: 5.82 at episode 10
+running reward: 9.43 at episode 20
+running reward: 10.30 at episode 30
+running reward: 10.28 at episode 40
+running reward: 11.00 at episode 50
+running reward: 13.01 at episode 60
+running reward: 21.78 at episode 70
+running reward: 40.54 at episode 80
+running reward: 73.70 at episode 90
+running reward: 100.19 at episode 100
+running reward: 159.20 at episode 110
+Solved at episode 114!
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们运行这一集，看看我们的模型有多好：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>_ = run_episode(render=True)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>env.close()</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>要点</h2>
+<p>在这个演示中，我们看到了两种强化学习算法：简单的策略梯度和更复杂的演员-评论者方法。可以看到，这些算法基于状态、动作和奖励的抽象概念进行操作，因此它们可以应用于非常不同的环境。</p>
+<p>强化学习使我们能够仅通过观察最终奖励来学习解决问题的最佳策略。不需要标注数据集这一事实使我们可以多次重复模拟以优化模型。然而，强化学习仍然面临许多挑战，如果你决定深入研究这个有趣的人工智能领域，你将会了解更多。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务<a href="https://github.com/Azure/co-op-translator">Co-op Translator</a>进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。原始语言的文档应被视为权威来源。对于关键信息，建议使用专业人工翻译。我们不对因使用此翻译而产生的任何误解或误读承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

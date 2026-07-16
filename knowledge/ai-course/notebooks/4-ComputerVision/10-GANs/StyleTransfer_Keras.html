@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StyleTransfer_Keras</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 StyleTransfer_Keras</h2></div>
+<div class="jp-Cell jp-MarkdownCell"></div>
+<div class="jp-Cell jp-MarkdownCell"><p>以下示例受<a href="https://medium.com/mlreview/making-ai-art-with-style-transfer-using-keras-8bb5fa44b216">这篇博客文章</a>的启发，其中许多代码也借鉴自该文章。另一个使用CNTK框架进行风格迁移的优秀示例可以在<a href="https://github.com/Microsoft/CNTK/blob/master/Tutorials/CNTK_205_Artistic_Style_Transfer.ipynb">这里</a>找到。关于<a href="https://arxiv.org/abs/1508.06576">艺术风格迁移</a>的原始论文也可以参考。</p>
+<p>风格迁移的主要思想如下：</p>
+<ul>
+<li>从白噪声开始，我们尝试优化当前图像 $x$，以最小化某个损失函数</li>
+<li>损失函数由三个部分组成 $\mathcal{L(x)} = \alpha\mathcal{L}_c(x,i) + \beta\mathcal{L}_s(x,s)+\gamma\mathcal{L}_t(x)$</li>
+<li>$\mathcal{L}_c$ - 内容损失 - 表示当前图像 $x$ 与原始图像 $i$ 的接近程度</li>
+<li>$\mathcal{L}_s$ - 风格损失 - 表示当前图像 $x$ 与风格图像 $s$ 的接近程度</li>
+<li>$\mathcal{L}_t$ - 总变分损失（在我们的示例中不会考虑） - 确保生成的图像是平滑的，即表示图像 $x$ 的相邻像素之间的均方误差</li>
+</ul>
+<p>这些损失函数需要以巧妙的方式设计，例如风格损失应反映图像风格的相似性，而不是实际内容。为此，我们将比较一个CNN中观察图像的某些深层特征层。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们开始加载几张图片：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>!curl https://cdn.pixabay.com/photo/2016/05/18/00/27/franz-marc-1399594_960_720.jpg &gt; images/style.jpg
+!curl https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Golden_tabby_and_white_kitten_n01.jpg/1280px-Golden_tabby_and_white_kitten_n01.jpg &gt; images/image.jpg</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100  210k  100  210k    0     0   208k      0  0:00:01  0:00:01 --:--:--  208k
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100  131k  100  131k    0     0   184k      0 --:--:-- --:--:-- --:--:--  185k
+</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import fmin_l_bfgs_b</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们加载这些图像并将它们调整为 $512\times512$。此外，我们将生成结果图像 <code>img_result</code> 作为一个随机数组。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>img_size = 256
+
+def load_image(fn):
+  x = cv2.imread(fn)
+  return cv2.cvtColor(x, cv2.COLOR_BGR2RGB)
+
+img_style = load_image(&#x27;images/style.jpg&#x27;)
+img_content = load_image(&#x27;images/image.jpg&#x27;)
+img_content = img_content[:,200:200+857,:]
+img_content = cv2.resize(img_content,(img_size,img_size))
+img_style = img_style[:,200:200+671,:]
+img_style = cv2.resize(img_style,(img_size,img_size))
+
+img_result = np.random.randint(256,size=(img_size,img_size,3)).astype(np.float64)
+
+fig,ax = plt.subplots(1,3)
+ax[0].imshow(img_content)
+ax[1].imshow(img_style)
+ax[2].imshow(img_result.astype(np.int))
+plt.show()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 3 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import tensorflow as tf
+from tf.keras import backend as K
+from tf.keras.applications.vgg16 import preprocess_input
+from tf.keras.applications import VGG16
+from tf.keras.preprocessing.image import load_img, img_to_array
+tf_session = K.get_session()</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>img_content_var = K.variable(preprocess_input(np.expand_dims(img_content, axis=0)), dtype=&#x27;float32&#x27;)
+img_style_var = K.variable(preprocess_input(np.expand_dims(img_style, axis=0)), dtype=&#x27;float32&#x27;)
+img_result_1 = preprocess_input(np.expand_dims(img_result, axis=0))
+img_result_holder = K.placeholder(shape=(1, img_size, img_size, 3))</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>要计算风格损失和内容损失，我们需要在由CNN提取的特征空间中进行操作。我们可以使用不同的CNN架构，但为了简单起见，在我们的案例中我们将选择预训练于*ImageNet*的VGG-16。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>cModel = VGG16(include_top=False, weights=&#x27;imagenet&#x27;, input_tensor=img_content_var)
+sModel = VGG16(include_top=False, weights=&#x27;imagenet&#x27;, input_tensor=img_style_var)
+gModel = VGG16(include_top=False, weights=&#x27;imagenet&#x27;, input_tensor=img_result_holder)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们来看看模型架构：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>gModel.summary()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_3 (InputLayer)         (None, None, None, 3)     0         
+_________________________________________________________________
+block1_conv1 (Conv2D)        (None, None, None, 64)    1792      
+_________________________________________________________________
+block1_conv2 (Conv2D)        (None, None, None, 64)    36928     
+_________________________________________________________________
+block1_pool (MaxPooling2D)   (None, None, None, 64)    0         
+_________________________________________________________________
+block2_conv1 (Conv2D)        (None, None, None, 128)   73856     
+_________________________________________________________________
+block2_conv2 (Conv2D)        (None, None, None, 128)   147584    
+_________________________________________________________________
+block2_pool (MaxPooling2D)   (None, None, None, 128)   0         
+_________________________________________________________________
+block3_conv1 (Conv2D)        (None, None, None, 256)   295168    
+_________________________________________________________________
+block3_conv2 (Conv2D)        (None, None, None, 256)   590080    
+_________________________________________________________________
+block3_conv3 (Conv2D)        (None, None, None, 256)   590080    
+_________________________________________________________________
+block3_pool (MaxPooling2D)   (None, None, None, 256)   0         
+_________________________________________________________________
+block4_conv1 (Conv2D)        (None, None, None, 512)   1180160   
+_________________________________________________________________
+block4_conv2 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block4_conv3 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block4_pool (MaxPooling2D)   (None, None, None, 512)   0         
+_________________________________________________________________
+block5_conv1 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block5_conv2 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block5_conv3 (Conv2D)        (None, None, None, 512)   2359808   
+_________________________________________________________________
+block5_pool (MaxPooling2D)   (None, None, None, 512)   0         
+=================================================================
+Total params: 14,714,688
+Trainable params: 14,714,688
+Non-trainable params: 0
+_________________________________________________________________
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>内容损失</h2>
+<p><strong>内容损失</strong> 用于衡量当前图像 $x$ 与原始图像的接近程度。它会查看 CNN 中的中间特征层，并计算平方误差。层 $l$ 上的内容损失定义为：</p>
+<p>$$</p>
+<p>\mathcal{L}_c = {1\over2}\sum_{i,j} (F_{ij}^{(l)}-P_{ij}^{(l)})^2</p>
+<p>$$</p>
+<p>其中 $F^{(l)}$ 和 $P^{(l)}$ 分别表示层 $l$ 的特征。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def get_feature_reps(x, layer_names, model):
+    featMatrices = []
+    for ln in layer_names:
+        selectedLayer = model.get_layer(ln)
+        featRaw = selectedLayer.output
+        featRawShape = K.shape(featRaw).eval(session=tf_session)
+        N_l = featRawShape[-1]
+        M_l = featRawShape[1]*featRawShape[2]
+        featMatrix = K.reshape(featRaw, (M_l, N_l))
+        featMatrix = K.transpose(featMatrix)
+        featMatrices.append(featMatrix)
+    return featMatrices
+
+def get_content_loss(F, P):
+    cLoss = 0.5*K.sum(K.square(F - P))
+    return cLoss</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们看看不同层的特征如何影响图像。为此，我们将尝试仅对一个层最小化内容损失。我们将使用 SciPy 的 <code>fmin_l_bfgs_b</code> 函数，该函数接受需要最小化的函数及其梯度（在我们的例子中，<code>helper_loss</code> 函数同时返回损失函数和梯度）。</p>
+<p><strong>重要提示</strong>：在我们的案例中，所有计算都是通过支持 GPU 的 *TensorFlow* 框架完成的。<code>helper_loss</code> 函数返回一个计算图，该计算图可用于计算给定图像的损失，并且它使用 <code>K.gradients</code> 自动计算梯度。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>layer=&#x27;block4_conv2&#x27;
+P = get_feature_reps(x=img_content_var, layer_names=[layer], model=cModel)[0]
+x = img_result.flatten()
+def helper_loss(img):
+    R = get_feature_reps(img,[layer],gModel)[0]
+    return get_content_loss(R,P)
+  
+def help_loss(x):
+    if x.shape != (1, img_size, img_size, 3):
+        x = x.reshape((1,img_size, img_size, 3))
+    keras_fcn = K.function([gModel.input], [helper_loss(gModel.input)])
+    keras_grad = K.function([gModel.input], K.gradients(helper_loss(gModel.input),[gModel.input]))
+    return keras_fcn([x])[0].astype(&#x27;float64&#x27;),keras_grad([x])[0].flatten().astype(&#x27;float64&#x27;)
+
+x, _, _ = fmin_l_bfgs_b(help_loss, x, maxiter=30, disp=True)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def postprocess_array(x):
+    # Zero-center by mean pixel
+    if x.shape != (img_size, img_size, 3):
+        x = x.reshape((img_size, img_size, 3))
+    x[..., 0] += 103.939
+    x[..., 1] += 116.779
+    x[..., 2] += 123.68
+    # &#x27;BGR&#x27;-&gt;&#x27;RGB&#x27;
+    x = x[..., ::-1]
+    x = np.clip(x, 0, 255)
+    x = x.astype(&#x27;uint8&#x27;)
+    return x
+</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>plt.imshow(postprocess_array(x.copy()))
+plt.show()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;matplotlib.figure.Figure at 0x7fb265464b00&gt;</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>layer=&#x27;block3_conv2&#x27;
+P = get_feature_reps(x=img_content_var, layer_names=[layer], model=cModel)[0]
+x = img_result.flatten()
+x, _, _ = fmin_l_bfgs_b(help_loss, x, maxiter=30, disp=True)
+plt.imshow(postprocess_array(x.copy()))
+plt.show()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;matplotlib.figure.Figure at 0x7fb2620b26d8&gt;</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>layer=&#x27;block5_conv1&#x27;
+P = get_feature_reps(x=img_content_var, layer_names=[layer], model=cModel)[0]
+x = img_result.flatten()
+x, _, _ = fmin_l_bfgs_b(help_loss, x, maxiter=30, disp=True)
+plt.imshow(postprocess_array(x.copy()))
+plt.show()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;matplotlib.figure.Figure at 0x7fb2620b2908&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>风格损失</h2>
+<h3>什么是风格损失？</h3>
+<p>风格损失是一种用于评估生成图像与目标风格之间相似性的度量。它通常用于图像风格迁移任务中，通过比较图像的特征统计量来实现。</p>
+<h3>如何计算风格损失？</h3>
+<p>风格损失通常基于图像的特征图的统计信息，例如格拉姆矩阵。以下是计算风格损失的步骤：</p>
+<p>1. 提取输入图像和目标风格图像的特征图。</p>
+<p>2. 计算每个特征图的格拉姆矩阵。</p>
+<p>3. 比较输入图像和目标图像的格拉姆矩阵，计算它们之间的差异。</p>
+<h3>格拉姆矩阵是什么？</h3>
+<p>格拉姆矩阵是特征图的一个统计表示，用于捕捉图像的风格信息。它通过计算特征图的通道之间的内积来生成。格拉姆矩阵的公式如下：</p>
+<p>@@INLINE_CODE_1@@</p>
+<p>其中，@@INLINE_CODE_2@@ 是特征图的通道数，@@INLINE_CODE_3@@ 是特征图的空间维度。</p>
+<h3>为什么使用格拉姆矩阵？</h3>
+<p>格拉姆矩阵能够有效地捕捉图像的风格信息，而不关注图像的具体内容。这使得它成为风格迁移任务中的一个重要工具。</p>
+<h3>风格损失的公式</h3>
+<p>风格损失通常定义为输入图像和目标图像的格拉姆矩阵之间的均方误差（MSE）：</p>
+<p>@@INLINE_CODE_4@@</p>
+<p>其中，@@INLINE_CODE_5@@ 和 @@INLINE_CODE_6@@ 分别是输入图像和目标图像的格拉姆矩阵。</p>
+<h3>实现风格损失的注意事项</h3>
+<ul>
+<li>确保特征图的维度一致。</li>
+<li>使用预训练的神经网络（例如 VGG）来提取特征图。</li>
+<li>调整权重以平衡风格损失和内容损失。</li>
+</ul>
+<h3>示例代码</h3>
+<p>以下是一个计算风格损失的示例代码：</p>
+<p>@@CODE_BLOCK_1@@</p>
+<h3>常见问题</h3>
+<h4>风格损失会影响图像的内容吗？</h4>
+<p>风格损失主要关注图像的风格信息，但在风格迁移任务中，它通常与内容损失结合使用，以确保生成图像既保留目标风格，又保留输入图像的内容。</p>
+<h4>如何选择特征层来计算风格损失？</h4>
+<p>选择特征层时，可以考虑较浅层和较深层的特征。较浅层的特征捕捉低级风格信息（例如纹理），而较深层的特征捕捉高级风格信息（例如整体布局）。</p>
+<h4>风格损失的权重如何设置？</h4>
+<p>风格损失的权重需要根据具体任务进行调整。权重过高可能导致内容丢失，而权重过低可能导致风格迁移效果不明显。</p>
+<h3>总结</h3>
+<p>风格损失是图像风格迁移中的核心组件，通过比较格拉姆矩阵来评估图像的风格相似性。理解风格损失的计算方法和应用场景，可以帮助我们更好地实现风格迁移任务。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>风格损失是风格迁移的核心思想。我们比较的不是实际特征，而是它们的Gram矩阵，定义为 $$G=A\times A^T$$</p>
+<p>Gram矩阵类似于相关矩阵，它显示了一些滤波器如何依赖于其他滤波器。风格损失是从不同层计算的损失之和，这些损失通常会考虑加权系数。</p>
+<p>风格迁移的总损失函数是*内容损失*和*风格损失*的总和。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def get_Gram_matrix(F):
+    G = K.dot(F, K.transpose(F))
+    return G
+
+def get_style_loss(ws, Gs, As):
+    sLoss = K.variable(0.)
+    for w, G, A in zip(ws, Gs, As):
+        M_l = K.int_shape(G)[1]
+        N_l = K.int_shape(G)[0]
+        G_gram = get_Gram_matrix(G)
+        A_gram = get_Gram_matrix(A)
+        sLoss+= w*0.25*K.sum(K.square(G_gram - A_gram))/ (N_l**2 * M_l**2)
+    return sLoss
+  
+def get_total_loss(gImPlaceholder, alpha=1.0, beta=30.0):
+    F = get_feature_reps(gImPlaceholder, layer_names=[content_layer_name], model=gModel)[0]
+    Gs = get_feature_reps(gImPlaceholder, layer_names=style_layer_names, model=gModel)
+    contentLoss = get_content_loss(F, P)
+    styleLoss = get_style_loss(ws, Gs, As)
+    totalLoss = alpha*contentLoss + beta*styleLoss
+    return totalLoss
+ </code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>综合起来</h2>
+<p>这里的 <code>calualate_loss</code> 函数将计算总损失：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def calculate_loss(gImArr):
+  &quot;&quot;&quot;
+  Calculate total loss using K.function
+  &quot;&quot;&quot;
+  if gImArr.shape != (1, img_size, img_size, 3):
+        gImArr = gImArr.reshape((1,img_size, img_size, 3))
+  loss_fcn = K.function([gModel.input], [get_total_loss(gModel.input)])
+  grad_fcn = K.function([gModel.input], 
+                        K.gradients(get_total_loss(gModel.input), [gModel.input]))
+  return loss_fcn([gImArr])[0].astype(&#x27;float64&#x27;),grad_fcn([gImArr])[0].flatten().astype(&#x27;float64&#x27;)
+
+content_layer_name = &#x27;block4_conv2&#x27;
+style_layer_names = [&#x27;block1_conv1&#x27;,&#x27;block2_conv1&#x27;,&#x27;block3_conv1&#x27;,&#x27;block4_conv1&#x27;]
+
+P = get_feature_reps(x=img_content_var, layer_names=[content_layer_name], model=cModel)[0]
+As = get_feature_reps(x=img_style_var, layer_names=style_layer_names, model=sModel)
+ws = np.ones(len(style_layer_names))/float(len(style_layer_names))
+
+img_result = np.random.randint(256,size=(img_size,img_size,3)).astype(np.float64)
+img_result_1 = preprocess_input(np.expand_dims(img_result, axis=0))
+
+iterations = 10
+x_opt = img_result_1.flatten()</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>下面的代码执行实际的损失优化。请注意，即使使用 GPU，优化也需要相当长的时间。您可以多次运行下面的单元格以改善结果。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>xopt, f_val, info= fmin_l_bfgs_b(calculate_loss, x_opt, maxiter=iterations, disp=True)
+plt.imshow(postprocess_array(xopt.copy()))
+plt.show()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;matplotlib.figure.Figure at 0x7f43494f9630&gt;</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>iterations = 20
+xopt, f_val, info= fmin_l_bfgs_b(calculate_loss, xopt, fprime=get_grad,
+                            maxiter=iterations, disp=True)
+plt.imshow(postprocess_array(xopt.copy()))
+plt.show()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;matplotlib.figure.Figure at 0x7f28933be2d0&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>添加变化损失</h2>
+<p><strong>变化损失</strong>可以通过减少相邻像素之间的差异，使图像变得不那么嘈杂。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def total_variation_loss(x):
+    a = K.square(x[:,:img_size-1,:img_size-1,:] - x[:, 1:, :img_size-1,:])
+    b = K.square(x[:,:img_size-1,:img_size-1,:] - x[:, :img_size-1, 1:,:])
+    return K.sum(K.pow(a + b, 1.25))
+  
+def get_total_loss(gImPlaceholder, alpha=1.0, beta=30.0):
+    F = get_feature_reps(gImPlaceholder, layer_names=[content_layer_name], model=gModel)[0]
+    Gs = get_feature_reps(gImPlaceholder, layer_names=style_layer_names, model=gModel)
+    contentLoss = get_content_loss(F, P)
+    styleLoss = get_style_loss(ws, Gs, As)
+    variationLoss = total_variation_loss(gImPlaceholder)
+    totalLoss = alpha*contentLoss + beta*styleLoss + variationLoss
+    return totalLoss
+
+img_result = np.random.randint(256,size=(img_size,img_size,3)).astype(np.float64)
+img_result_1 = preprocess_input(np.expand_dims(img_result, axis=0))
+iterations = 10
+x_opt = img_result_1.flatten()
+</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>xopt, f_val, info= fmin_l_bfgs_b(calculate_loss, x_opt, maxiter=iterations, disp=True)
+plt.imshow(postprocess_array(xopt.copy()))
+plt.show()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;matplotlib.figure.Figure at 0x7fb25130ba58&gt;</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code></code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务<a href="https://github.com/Azure/co-op-translator">Co-op Translator</a>进行翻译。尽管我们努力确保准确性，但请注意，自动翻译可能包含错误或不准确之处。应以原始语言的文档作为权威来源。对于关键信息，建议使用专业人工翻译。因使用本翻译而导致的任何误解或误读，我们概不负责。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

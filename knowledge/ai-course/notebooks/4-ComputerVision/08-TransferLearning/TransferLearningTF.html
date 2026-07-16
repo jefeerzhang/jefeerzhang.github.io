@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TransferLearningTF</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 TransferLearningTF</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h1>预训练模型与迁移学习</h1>
+<p>训练卷积神经网络（CNN）可能需要大量时间，并且需要大量数据。然而，大部分时间花费在学习网络用来从图像中提取模式的最佳低级滤波器上。一个自然的问题是——我们能否使用在一个数据集上训练的神经网络，并将其调整为对不同图像进行分类，而无需完整的训练过程？</p>
+<p>这种方法称为&lt;strong&gt;迁移学习&lt;/strong&gt;，因为我们将部分知识从一个神经网络模型转移到另一个模型中。在迁移学习中，我们通常从一个预训练模型开始，该模型已在某个大型图像数据集上训练过，比如&lt;strong&gt;ImageNet&lt;/strong&gt;。这些模型已经能够很好地从通用图像中提取各种特征，在许多情况下，仅在这些提取的特征上构建一个分类器即可获得良好的结果。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import tensorflow as tf
+from tensorflow import keras
+import matplotlib.pyplot as plt
+import numpy as np
+import os
+from tfcv import *</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>猫狗数据集</h2>
+<p>在本单元中，我们将解决一个现实生活中的问题——分类猫和狗的图像。为此，我们将使用<a href="https://www.kaggle.com/c/dogs-vs-cats">Kaggle猫狗数据集</a>，也可以从<a href="https://www.microsoft.com/en-us/download/details.aspx?id=54765&amp;WT.mc_id=academic-77998-cacaste">微软</a>下载。</p>
+<p>让我们下载这个数据集并解压到 <code>data</code> 目录（这个过程可能需要一些时间！）：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>if not os.path.exists(&#x27;data/kagglecatsanddogs_5340.zip&#x27;):
+    !wget -P data https://download.microsoft.com/download/3/E/1/3E1C3F21-ECDB-4869-8368-6DEBA77B919F/kagglecatsanddogs_5340.zip</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import zipfile
+if not os.path.exists(&#x27;data/PetImages&#x27;):
+    with zipfile.ZipFile(&#x27;data/kagglecatsanddogs_5340.zip&#x27;, &#x27;r&#x27;) as zip_ref:
+        zip_ref.extractall(&#x27;data&#x27;)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>不幸的是，数据集中有一些损坏的图像文件。我们需要快速清理以检查是否有损坏的文件。为了不影响本教程，我们将验证数据集的代码移到了一个模块中。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>check_image_dir(&#x27;data/PetImages/Cat/*.jpg&#x27;)
+check_image_dir(&#x27;data/PetImages/Dog/*.jpg&#x27;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Corrupt image or wrong format: data/PetImages/Cat/12235.jpg
+Corrupt image or wrong format: data/PetImages/Cat/2663.jpg
+Corrupt image or wrong format: data/PetImages/Cat/4929.jpg
+Corrupt image or wrong format: data/PetImages/Cat/8183.jpg
+Corrupt image or wrong format: data/PetImages/Cat/11083.jpg
+Corrupt image or wrong format: data/PetImages/Cat/6435.jpg
+Corrupt image or wrong format: data/PetImages/Cat/6491.jpg
+Corrupt image or wrong format: data/PetImages/Cat/7968.jpg
+Corrupt image or wrong format: data/PetImages/Cat/6768.jpg
+Corrupt image or wrong format: data/PetImages/Cat/11397.jpg
+Corrupt image or wrong format: data/PetImages/Cat/8295.jpg
+Corrupt image or wrong format: data/PetImages/Cat/4874.jpg
+Corrupt image or wrong format: data/PetImages/Cat/23.jpg
+Corrupt image or wrong format: data/PetImages/Cat/11864.jpg
+Corrupt image or wrong format: data/PetImages/Cat/3491.jpg
+Corrupt image or wrong format: data/PetImages/Cat/11729.jpg
+Corrupt image or wrong format: data/PetImages/Cat/3197.jpg
+Corrupt image or wrong format: data/PetImages/Cat/10874.jpg
+Corrupt image or wrong format: data/PetImages/Cat/6376.jpg
+Corrupt image or wrong format: data/PetImages/Cat/9361.jpg
+Corrupt image or wrong format: data/PetImages/Cat/9328.jpg
+Corrupt image or wrong format: data/PetImages/Cat/910.jpg
+Corrupt image or wrong format: data/PetImages/Cat/2021.jpg
+Corrupt image or wrong format: data/PetImages/Cat/666.jpg
+Corrupt image or wrong format: data/PetImages/Cat/3710.jpg
+Corrupt image or wrong format: data/PetImages/Cat/9171.jpg
+Corrupt image or wrong format: data/PetImages/Cat/6906.jpg
+Corrupt image or wrong format: data/PetImages/Cat/11095.jpg
+Corrupt image or wrong format: data/PetImages/Cat/660.jpg
+Corrupt image or wrong format: data/PetImages/Cat/8415.jpg
+Corrupt image or wrong format: data/PetImages/Cat/3161.jpg
+Corrupt image or wrong format: data/PetImages/Cat/850.jpg
+Corrupt image or wrong format: data/PetImages/Cat/7003.jpg
+Corrupt image or wrong format: data/PetImages/Cat/1267.jpg
+Corrupt image or wrong format: data/PetImages/Cat/7642.jpg
+Corrupt image or wrong format: data/PetImages/Cat/8553.jpg
+Corrupt image or wrong format: data/PetImages/Cat/6900.jpg
+Corrupt image or wrong format: data/PetImages/Cat/4334.jpg
+Corrupt image or wrong format: data/PetImages/Cat/10404.jpg
+Corrupt image or wrong format: data/PetImages/Cat/6980.jpg
+Corrupt image or wrong format: data/PetImages/Cat/936.jpg
+Corrupt image or wrong format: data/PetImages/Cat/9619.jpg
+Corrupt image or wrong format: data/PetImages/Cat/3300.jpg
+Corrupt image or wrong format: data/PetImages/Cat/7647.jpg
+Corrupt image or wrong format: data/PetImages/Cat/2742.jpg
+Corrupt image or wrong format: data/PetImages/Cat/9565.jpg
+Corrupt image or wrong format: data/PetImages/Cat/1757.jpg
+Corrupt image or wrong format: data/PetImages/Cat/11874.jpg
+Corrupt image or wrong format: data/PetImages/Cat/1936.jpg
+Corrupt image or wrong format: data/PetImages/Cat/5077.jpg
+Corrupt image or wrong format: data/PetImages/Cat/7845.jpg
+Corrupt image or wrong format: data/PetImages/Cat/8832.jpg
+Corrupt image or wrong format: data/PetImages/Cat/11935.jpg
+Corrupt image or wrong format: data/PetImages/Cat/9208.jpg
+Corrupt image or wrong format: data/PetImages/Cat/4322.jpg
+Corrupt image or wrong format: data/PetImages/Cat/7978.jpg
+Corrupt image or wrong format: data/PetImages/Cat/10820.jpg
+Corrupt image or wrong format: data/PetImages/Cat/391.jpg
+Corrupt image or wrong format: data/PetImages/Cat/10073.jpg
+Corrupt image or wrong format: data/PetImages/Cat/8958.jpg
+Corrupt image or wrong format: data/PetImages/Cat/8470.jpg
+Corrupt image or wrong format: data/PetImages/Cat/445.jpg
+Corrupt image or wrong format: data/PetImages/Cat/4821.jpg
+Corrupt image or wrong format: data/PetImages/Cat/11565.jpg
+Corrupt image or wrong format: data/PetImages/Cat/4351.jpg
+Corrupt image or wrong format: data/PetImages/Cat/4833.jpg
+Corrupt image or wrong format: data/PetImages/Cat/140.jpg
+Corrupt image or wrong format: data/PetImages/Cat/3153.jpg
+Corrupt image or wrong format: data/PetImages/Cat/5370.jpg
+Corrupt image or wrong format: data/PetImages/Cat/5819.jpg
+Corrupt image or wrong format: data/PetImages/Cat/3649.jpg
+Corrupt image or wrong format: data/PetImages/Cat/4293.jpg
+Corrupt image or wrong format: data/PetImages/Cat/3967.jpg
+Corrupt image or wrong format: data/PetImages/Cat/1937.jpg
+Corrupt image or wrong format: data/PetImages/Cat/10125.jpg
+Corrupt image or wrong format: data/PetImages/Cat/1386.jpg
+Corrupt image or wrong format: data/PetImages/Cat/4750.jpg
+Corrupt image or wrong format: data/PetImages/Cat/6029.jpg
+Corrupt image or wrong format: data/PetImages/Cat/5614.jpg
+Corrupt image or wrong format: data/PetImages/Cat/2569.jpg
+Corrupt image or wrong format: data/PetImages/Cat/9778.jpg
+Corrupt image or wrong format: data/PetImages/Cat/6486.jpg
+Corrupt image or wrong format: data/PetImages/Cat/11210.jpg
+Corrupt image or wrong format: data/PetImages/Cat/7502.jpg
+Corrupt image or wrong format: data/PetImages/Cat/2189.jpg
+Corrupt image or wrong format: data/PetImages/Cat/1151.jpg
+Corrupt image or wrong format: data/PetImages/Cat/4629.jpg
+Corrupt image or wrong format: data/PetImages/Cat/12080.jpg
+Corrupt image or wrong format: data/PetImages/Cat/10501.jpg
+Corrupt image or wrong format: data/PetImages/Cat/1914.jpg
+Corrupt image or wrong format: data/PetImages/Cat/11086.jpg
+Corrupt image or wrong format: data/PetImages/Cat/4000.jpg
+Corrupt image or wrong format: data/PetImages/Cat/9100.jpg
+Corrupt image or wrong format: data/PetImages/Cat/5553.jpg
+Corrupt image or wrong format: data/PetImages/Cat/12269.jpg
+Corrupt image or wrong format: data/PetImages/Dog/5243.jpg
+Corrupt image or wrong format: data/PetImages/Dog/3288.jpg
+Corrupt image or wrong format: data/PetImages/Dog/11912.jpg
+Corrupt image or wrong format: data/PetImages/Dog/3320.jpg
+Corrupt image or wrong format: data/PetImages/Dog/11166.jpg
+Corrupt image or wrong format: data/PetImages/Dog/8194.jpg
+Corrupt image or wrong format: data/PetImages/Dog/2353.jpg
+Corrupt image or wrong format: data/PetImages/Dog/9026.jpg
+Corrupt image or wrong format: data/PetImages/Dog/8557.jpg
+Corrupt image or wrong format: data/PetImages/Dog/7969.jpg
+Corrupt image or wrong format: data/PetImages/Dog/8693.jpg
+Corrupt image or wrong format: data/PetImages/Dog/4367.jpg
+Corrupt image or wrong format: data/PetImages/Dog/1900.jpg
+Corrupt image or wrong format: data/PetImages/Dog/5730.jpg
+Corrupt image or wrong format: data/PetImages/Dog/9961.jpg
+Corrupt image or wrong format: data/PetImages/Dog/8126.jpg
+Corrupt image or wrong format: data/PetImages/Dog/8521.jpg
+Corrupt image or wrong format: data/PetImages/Dog/11560.jpg
+Corrupt image or wrong format: data/PetImages/Dog/11233.jpg
+Corrupt image or wrong format: data/PetImages/Dog/11675.jpg
+Corrupt image or wrong format: data/PetImages/Dog/8889.jpg
+Corrupt image or wrong format: data/PetImages/Dog/9414.jpg
+Corrupt image or wrong format: data/PetImages/Dog/3588.jpg
+Corrupt image or wrong format: data/PetImages/Dog/10353.jpg
+Corrupt image or wrong format: data/PetImages/Dog/10733.jpg
+Corrupt image or wrong format: data/PetImages/Dog/6238.jpg
+Corrupt image or wrong format: data/PetImages/Dog/5618.jpg
+Corrupt image or wrong format: data/PetImages/Dog/7743.jpg
+Corrupt image or wrong format: data/PetImages/Dog/10747.jpg
+Corrupt image or wrong format: data/PetImages/Dog/6503.jpg
+Corrupt image or wrong format: data/PetImages/Dog/11410.jpg
+Corrupt image or wrong format: data/PetImages/Dog/5955.jpg
+Corrupt image or wrong format: data/PetImages/Dog/2915.jpg
+Corrupt image or wrong format: data/PetImages/Dog/3136.jpg
+Corrupt image or wrong format: data/PetImages/Dog/4086.jpg
+Corrupt image or wrong format: data/PetImages/Dog/2905.jpg
+Corrupt image or wrong format: data/PetImages/Dog/2494.jpg
+Corrupt image or wrong format: data/PetImages/Dog/3546.jpg
+Corrupt image or wrong format: data/PetImages/Dog/5547.jpg
+Corrupt image or wrong format: data/PetImages/Dog/9851.jpg
+Corrupt image or wrong format: data/PetImages/Dog/9188.jpg
+Corrupt image or wrong format: data/PetImages/Dog/4203.jpg
+Corrupt image or wrong format: data/PetImages/Dog/8715.jpg
+Corrupt image or wrong format: data/PetImages/Dog/4640.jpg
+Corrupt image or wrong format: data/PetImages/Dog/1866.jpg
+Corrupt image or wrong format: data/PetImages/Dog/7718.jpg
+Corrupt image or wrong format: data/PetImages/Dog/7514.jpg
+Corrupt image or wrong format: data/PetImages/Dog/1017.jpg
+Corrupt image or wrong format: data/PetImages/Dog/12102.jpg
+Corrupt image or wrong format: data/PetImages/Dog/296.jpg
+Corrupt image or wrong format: data/PetImages/Dog/6718.jpg
+Corrupt image or wrong format: data/PetImages/Dog/11253.jpg
+Corrupt image or wrong format: data/PetImages/Dog/10173.jpg
+Corrupt image or wrong format: data/PetImages/Dog/11849.jpg
+Corrupt image or wrong format: data/PetImages/Dog/10383.jpg
+Corrupt image or wrong format: data/PetImages/Dog/10678.jpg
+Corrupt image or wrong format: data/PetImages/Dog/5790.jpg
+Corrupt image or wrong format: data/PetImages/Dog/6318.jpg
+Corrupt image or wrong format: data/PetImages/Dog/1884.jpg
+Corrupt image or wrong format: data/PetImages/Dog/4654.jpg
+Corrupt image or wrong format: data/PetImages/Dog/9145.jpg
+Corrupt image or wrong format: data/PetImages/Dog/2479.jpg
+Corrupt image or wrong format: data/PetImages/Dog/12289.jpg
+Corrupt image or wrong format: data/PetImages/Dog/2688.jpg
+Corrupt image or wrong format: data/PetImages/Dog/4134.jpg
+Corrupt image or wrong format: data/PetImages/Dog/10637.jpg
+</div><div class="jp-OutputArea-output">/anaconda/envs/py38_tensorflow/lib/python3.8/site-packages/PIL/TiffImagePlugin.py:793: UserWarning: Truncated File Read
+  warnings.warn(str(msg))
+</div><div class="jp-OutputArea-output">Corrupt image or wrong format: data/PetImages/Dog/543.jpg
+Corrupt image or wrong format: data/PetImages/Dog/8730.jpg
+Corrupt image or wrong format: data/PetImages/Dog/12114.jpg
+Corrupt image or wrong format: data/PetImages/Dog/522.jpg
+Corrupt image or wrong format: data/PetImages/Dog/10863.jpg
+Corrupt image or wrong format: data/PetImages/Dog/10401.jpg
+Corrupt image or wrong format: data/PetImages/Dog/7739.jpg
+Corrupt image or wrong format: data/PetImages/Dog/561.jpg
+Corrupt image or wrong format: data/PetImages/Dog/1308.jpg
+Corrupt image or wrong format: data/PetImages/Dog/9643.jpg
+Corrupt image or wrong format: data/PetImages/Dog/3155.jpg
+Corrupt image or wrong format: data/PetImages/Dog/5736.jpg
+Corrupt image or wrong format: data/PetImages/Dog/4257.jpg
+Corrupt image or wrong format: data/PetImages/Dog/11853.jpg
+Corrupt image or wrong format: data/PetImages/Dog/6855.jpg
+Corrupt image or wrong format: data/PetImages/Dog/1259.jpg
+Corrupt image or wrong format: data/PetImages/Dog/7652.jpg
+Corrupt image or wrong format: data/PetImages/Dog/573.jpg
+Corrupt image or wrong format: data/PetImages/Dog/11702.jpg
+Corrupt image or wrong format: data/PetImages/Dog/414.jpg
+Corrupt image or wrong format: data/PetImages/Dog/4301.jpg
+Corrupt image or wrong format: data/PetImages/Dog/9500.jpg
+Corrupt image or wrong format: data/PetImages/Dog/10726.jpg
+Corrupt image or wrong format: data/PetImages/Dog/9367.jpg
+Corrupt image or wrong format: data/PetImages/Dog/2877.jpg
+Corrupt image or wrong format: data/PetImages/Dog/10907.jpg
+Corrupt image or wrong format: data/PetImages/Dog/10972.jpg
+Corrupt image or wrong format: data/PetImages/Dog/7311.jpg
+Corrupt image or wrong format: data/PetImages/Dog/10797.jpg
+Corrupt image or wrong format: data/PetImages/Dog/2317.jpg
+Corrupt image or wrong format: data/PetImages/Dog/7128.jpg
+Corrupt image or wrong format: data/PetImages/Dog/6500.jpg
+Corrupt image or wrong format: data/PetImages/Dog/11285.jpg
+Corrupt image or wrong format: data/PetImages/Dog/6430.jpg
+Corrupt image or wrong format: data/PetImages/Dog/6032.jpg
+Corrupt image or wrong format: data/PetImages/Dog/10969.jpg
+Corrupt image or wrong format: data/PetImages/Dog/8364.jpg
+Corrupt image or wrong format: data/PetImages/Dog/11692.jpg
+Corrupt image or wrong format: data/PetImages/Dog/3038.jpg
+Corrupt image or wrong format: data/PetImages/Dog/5604.jpg
+Corrupt image or wrong format: data/PetImages/Dog/565.jpg
+Corrupt image or wrong format: data/PetImages/Dog/9640.jpg
+Corrupt image or wrong format: data/PetImages/Dog/7459.jpg
+Corrupt image or wrong format: data/PetImages/Dog/6305.jpg
+Corrupt image or wrong format: data/PetImages/Dog/6555.jpg
+Corrupt image or wrong format: data/PetImages/Dog/11590.jpg
+Corrupt image or wrong format: data/PetImages/Dog/6059.jpg
+Corrupt image or wrong format: data/PetImages/Dog/3927.jpg
+Corrupt image or wrong format: data/PetImages/Dog/10705.jpg
+Corrupt image or wrong format: data/PetImages/Dog/2384.jpg
+Corrupt image or wrong format: data/PetImages/Dog/3885.jpg
+Corrupt image or wrong format: data/PetImages/Dog/663.jpg
+Corrupt image or wrong format: data/PetImages/Dog/9043.jpg
+Corrupt image or wrong format: data/PetImages/Dog/8563.jpg
+Corrupt image or wrong format: data/PetImages/Dog/9556.jpg
+Corrupt image or wrong format: data/PetImages/Dog/9967.jpg
+Corrupt image or wrong format: data/PetImages/Dog/10158.jpg
+Corrupt image or wrong format: data/PetImages/Dog/5263.jpg
+Corrupt image or wrong format: data/PetImages/Dog/8641.jpg
+Corrupt image or wrong format: data/PetImages/Dog/7369.jpg
+Corrupt image or wrong format: data/PetImages/Dog/4924.jpg
+Corrupt image or wrong format: data/PetImages/Dog/10351.jpg
+Corrupt image or wrong format: data/PetImages/Dog/6213.jpg
+Corrupt image or wrong format: data/PetImages/Dog/5104.jpg
+Corrupt image or wrong format: data/PetImages/Dog/1356.jpg
+Corrupt image or wrong format: data/PetImages/Dog/7133.jpg
+Corrupt image or wrong format: data/PetImages/Dog/7112.jpg
+Corrupt image or wrong format: data/PetImages/Dog/1168.jpg
+Corrupt image or wrong format: data/PetImages/Dog/719.jpg
+Corrupt image or wrong format: data/PetImages/Dog/50.jpg
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>加载数据集</h2>
+<p>在之前的示例中，我们加载的是内置于 Keras 的数据集。现在我们将处理自己的数据集，需要从图像目录中加载。</p>
+<p>在现实中，图像数据集的大小可能非常大，无法保证所有数据都能装入内存。因此，数据集通常表现为可按小批量返回数据以供训练的&lt;strong&gt;生成器&lt;/strong&gt;。</p>
+<p>为了处理图像分类，Keras 包含特殊函数 <code>image_dataset_from_directory</code>，它可以从对应不同类别的子目录加载图像。此函数还会处理图像的缩放，并且可以将数据集划分为训练集和测试集：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>data_dir = &#x27;data/PetImages&#x27;
+batch_size = 64
+ds_train = keras.preprocessing.image_dataset_from_directory(
+    data_dir,
+    validation_split = 0.2,
+    subset = &#x27;training&#x27;,
+    seed = 13,
+    image_size = (224,224),
+    batch_size = batch_size
+)
+ds_test = keras.preprocessing.image_dataset_from_directory(
+    data_dir,
+    validation_split = 0.2,
+    subset = &#x27;validation&#x27;,
+    seed = 13,
+    image_size = (224,224),
+    batch_size = batch_size
+)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Found 24769 files belonging to 2 classes.
+Using 19816 files for training.
+Found 24769 files belonging to 2 classes.
+Using 4953 files for validation.
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>为两个调用设置相同的 <code>seed</code> 值非常重要，因为它会影响训练集和测试集中图像的划分。</p>
+<p>Dataset 会自动从目录中获取类别名称，如果需要，可以通过调用访问它们：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>ds_train.class_names</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[&#x27;Cat&#x27;, &#x27;Dog&#x27;]</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们获取的数据集可以直接传递给 <code>fit</code> 函数来训练模型。它们包含对应的图像和标签，可以使用如下结构进行遍历：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>for x,y in ds_train:
+    print(f&quot;Training batch shape: features={x.shape}, labels={y.shape}&quot;)
+    x_sample, y_sample = x,y
+    break
+    
+display_dataset(x_sample.numpy().astype(np.int),np.expand_dims(y_sample,1),classes=ds_train.class_names)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Training batch shape: features=(64, 224, 224, 3), labels=(64,)
+</div><div class="jp-OutputArea-output">&lt;Figure size 1080x216 with 10 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>&gt; &lt;strong&gt;注意&lt;/strong&gt;：数据集中所有图像都表示为范围在0-255之间的浮点张量。在将它们传递给神经网络之前，我们需要将这些值缩放到0-1范围内。绘制图像时，我们要么也这样做，要么将值转换为 <code>int</code> 类型（如上面代码中所做的），以告诉 <code>matplotlib</code> 我们想绘制的是原始未缩放的图像。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>预训练模型</h2>
+<p>对于许多图像分类任务，可以找到预训练的神经网络模型。许多这些模型可以在 <code>keras.applications</code> 命名空间中找到，甚至可以在互联网上找到更多的模型。让我们看看如何加载和使用最简单的 VGG-16 模型：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># SHA-256 of VGG16 weights (with top)
+VGG16_WEIGHTS_SHA256 = &#x27;64373286793e3c8b2b4e3219cbf3544bce2f55ab4682710a29f5e7af8f5e4f61&#x27;
+
+_weights_path = keras.utils.get_file(
+    &#x27;vgg16_weights_tf_dim_ordering_tf_kernels.h5&#x27;,
+    &#x27;https://storage.googleapis.com/tensorflow/keras-applications/vgg16/vgg16_weights_tf_dim_ordering_tf_kernels.h5&#x27;,
+    file_hash=VGG16_WEIGHTS_SHA256,
+    hash_algorithm=&#x27;sha256&#x27;,
+)
+
+vgg = keras.applications.VGG16(weights=_weights_path)
+inp = keras.applications.vgg16.preprocess_input(x_sample[:1])
+
+res = vgg(inp)
+print(f&quot;Most probable class = {tf.argmax(res,1)}&quot;)
+
+keras.applications.vgg16.decode_predictions(res.numpy())</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Downloading data from https://storage.googleapis.com/tensorflow/keras-applications/vgg16/vgg16_weights_tf_dim_ordering_tf_kernels.h5
+553467904/553467096 [==============================] - 6s 0us/step
+Most probable class = [208]
+Downloading data from https://storage.googleapis.com/download.tensorflow.org/data/imagenet_class_index.json
+40960/35363 [==================================] - 0s 0us/step
+</div><div class="jp-OutputArea-output">[[(&#x27;n02099712&#x27;, &#x27;Labrador_retriever&#x27;, 0.5340957),
+  (&#x27;n02100236&#x27;, &#x27;German_short-haired_pointer&#x27;, 0.0939442),
+  (&#x27;n02092339&#x27;, &#x27;Weimaraner&#x27;, 0.08160535),
+  (&#x27;n02099849&#x27;, &#x27;Chesapeake_Bay_retriever&#x27;, 0.057179328),
+  (&#x27;n02109047&#x27;, &#x27;Great_Dane&#x27;, 0.03733857)]]</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>这里有几点重要的事情：</p>
+<ul>
+<li>在将输入传递给任何预训练网络之前，必须以特定的方式对其进行预处理。这是通过调用对应的 `preprocess_input` 函数完成的，该函数接收一批图像，并返回它们的处理后形式。以 VGG-16 为例，图像会被归一化，并且每个通道会减去某个预定义的平均值。这是因为 VGG-16 最初就是使用这种预处理进行训练的。</li>
+<li>神经网络应用于输入批次后，我们得到的结果是一批包含1000个元素的张量，显示每个类别的概率。我们可以通过对该张量调用 `argmax` 来找到概率最高的类别编号。</li>
+<li>获得的结果是一个 [ImageNet 类别的编号](https://gist.github.com/yrevar/942d3a0ac09ec9e5eb3a)。为了理解这个结果，我们还可以使用 `decode_predictions` 函数，它返回排名前n的类别及其名称。</li>
+</ul></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们也看看VGG-16网络的架构：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>vgg.summary()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;vgg16&quot;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         [(None, 224, 224, 3)]     0         
+_________________________________________________________________
+block1_conv1 (Conv2D)        (None, 224, 224, 64)      1792      
+_________________________________________________________________
+block1_conv2 (Conv2D)        (None, 224, 224, 64)      36928     
+_________________________________________________________________
+block1_pool (MaxPooling2D)   (None, 112, 112, 64)      0         
+_________________________________________________________________
+block2_conv1 (Conv2D)        (None, 112, 112, 128)     73856     
+_________________________________________________________________
+block2_conv2 (Conv2D)        (None, 112, 112, 128)     147584    
+_________________________________________________________________
+block2_pool (MaxPooling2D)   (None, 56, 56, 128)       0         
+_________________________________________________________________
+block3_conv1 (Conv2D)        (None, 56, 56, 256)       295168    
+_________________________________________________________________
+block3_conv2 (Conv2D)        (None, 56, 56, 256)       590080    
+_________________________________________________________________
+block3_conv3 (Conv2D)        (None, 56, 56, 256)       590080    
+_________________________________________________________________
+block3_pool (MaxPooling2D)   (None, 28, 28, 256)       0         
+_________________________________________________________________
+block4_conv1 (Conv2D)        (None, 28, 28, 512)       1180160   
+_________________________________________________________________
+block4_conv2 (Conv2D)        (None, 28, 28, 512)       2359808   
+_________________________________________________________________
+block4_conv3 (Conv2D)        (None, 28, 28, 512)       2359808   
+_________________________________________________________________
+block4_pool (MaxPooling2D)   (None, 14, 14, 512)       0         
+_________________________________________________________________
+block5_conv1 (Conv2D)        (None, 14, 14, 512)       2359808   
+_________________________________________________________________
+block5_conv2 (Conv2D)        (None, 14, 14, 512)       2359808   
+_________________________________________________________________
+block5_conv3 (Conv2D)        (None, 14, 14, 512)       2359808   
+_________________________________________________________________
+block5_pool (MaxPooling2D)   (None, 7, 7, 512)         0         
+_________________________________________________________________
+flatten (Flatten)            (None, 25088)             0         
+_________________________________________________________________
+fc1 (Dense)                  (None, 4096)              102764544 
+_________________________________________________________________
+fc2 (Dense)                  (None, 4096)              16781312  
+_________________________________________________________________
+predictions (Dense)          (None, 1000)              4097000   
+=================================================================
+Total params: 138,357,544
+Trainable params: 138,357,544
+Non-trainable params: 0
+_________________________________________________________________
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>GPU 计算</h2>
+<p>深度神经网络，比如 VGG-16 以及其他更现代的架构，需要相当多的计算能力来运行。如果有可用的 GPU 加速，那使用它是很有意义的。幸运的是，Keras 会自动加速在 GPU 上的计算（如果 GPU 可用）。我们可以用以下代码检查 Tensorflow 是否能使用 GPU：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>tf.config.list_physical_devices(&#x27;GPU&#x27;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[PhysicalDevice(name=&#x27;/physical_device:GPU:0&#x27;, device_type=&#x27;GPU&#x27;)]</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>提取 VGG 特征</h2>
+<p>如果我们想使用 VGG-16 从图像中提取特征，我们需要一个没有最终分类层的模型。我们可以通过以下代码实例化没有顶层的 VGG-16 模型：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>vgg = keras.applications.VGG16(include_top=False)
+
+inp = keras.applications.vgg16.preprocess_input(x_sample[:1])
+res = vgg(inp)
+print(f&quot;Shape after applying VGG-16: {res[0].shape}&quot;)
+plt.figure(figsize=(15,3))
+plt.imshow(res[0].numpy().reshape(-1,512))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Shape after applying VGG-16: (7, 7, 512)
+</div><div class="jp-OutputArea-output">&lt;matplotlib.image.AxesImage at 0x7fafcc685ac0&gt;</div><div class="jp-OutputArea-output">&lt;Figure size 1080x216 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>特征张量的维度是7x7x512，但为了可视化，我们必须将其重塑为二维形式。</p>
+<p>现在让我们尝试看看这些特征是否可以用来分类图像。让我们手动取一部分图像（在我们的例子中是50个小批次），并预先计算它们的特征向量。我们可以使用Tensorflow的&lt;strong&gt;dataset&lt;/strong&gt; API来完成这项工作。<code>map</code>函数接受一个数据集并应用给定的lambda函数进行转换。我们利用这个机制构建了新的数据集，<code>ds_features_train</code>和<code>ds_features_test</code>，它们包含由VGG提取的特征，而不是原始图像。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>num = batch_size*50
+ds_features_train = ds_train.take(50).map(lambda x,y : (vgg(x),y))
+ds_features_test = ds_test.take(10).map(lambda x,y : (vgg(x),y))
+
+for x,y in ds_features_train:
+    print(x.shape,y.shape)
+    break</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">(64, 7, 7, 512) (64,)
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们使用了构造 <code>.take(50)</code> 来限制数据集大小，以加快演示速度。当然，你也可以在完整数据集上进行此实验。</p>
+<p>现在我们有了提取特征的数据集，就可以训练一个简单的全连接分类器来区分猫和狗。该网络将接受形状为 (7,7,512) 的特征向量，并产生一个输出，表示是狗还是猫。由于这是二分类问题，我们使用 <code>sigmoid</code> 激活函数和 <code>binary_crossentropy</code> 损失函数。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model = keras.models.Sequential([
+    keras.layers.Flatten(input_shape=(7,7,512)),
+    keras.layers.Dense(1,activation=&#x27;sigmoid&#x27;)
+])
+model.compile(optimizer=&#x27;adam&#x27;, loss=&#x27;binary_crossentropy&#x27;, metrics=[&#x27;acc&#x27;])
+hist = model.fit(ds_features_train, validation_data=ds_features_test)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">50/50 [==============================] - 1896s 38s/step - loss: 1.4845 - acc: 0.9144 - val_loss: 0.7220 - val_acc: 0.9516
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>结果非常好，我们可以以接近95%的概率区分猫和狗！然而，我们仅在所有图像的一个子集上测试了该方法，因为手动提取特征似乎需要花费大量时间。</p>
+<h2>使用一个VGG网络进行迁移学习</h2>
+<p>我们还可以通过在训练期间将原始VGG-16网络作为整体，并将特征提取器作为第一层添加到我们的网络中，来避免手动预计算特征。</p>
+<p>Keras架构的优势在于，我们上面定义的VGG-16模型也可以作为另一个神经网络中的一层使用！我们只需构建一个在其顶部带有密集分类器的网络，然后使用反向传播训练整个网络。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model = keras.models.Sequential()
+model.add(keras.applications.VGG16(include_top=False,input_shape=(224,224,3)))
+model.add(keras.layers.Flatten())
+model.add(keras.layers.Dense(1,activation=&#x27;sigmoid&#x27;))
+
+model.layers[0].trainable = False
+
+model.summary()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;sequential&quot;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+vgg16 (Functional)           (None, 7, 7, 512)         14714688  
+_________________________________________________________________
+flatten (Flatten)            (None, 25088)             0         
+_________________________________________________________________
+dense (Dense)                (None, 1)                 25089     
+=================================================================
+Total params: 14,739,777
+Trainable params: 25,089
+Non-trainable params: 14,714,688
+_________________________________________________________________
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>这个模型看起来像一个端到端的分类网络，它接收一张图片并返回类别。然而，棘手的是我们希望VGG16作为特征提取器，而不进行重新训练。因此，我们需要&lt;strong&gt;冻结卷积特征提取器的权重&lt;/strong&gt;。我们可以通过调用<code>model.layers[0]</code>访问网络的第一层，只需将<code>trainable</code>属性设置为<code>False</code>即可。</p>
+<p>&gt; &lt;strong&gt;注意&lt;/strong&gt;：需要冻结特征提取器的权重，否则未经训练的分类器层可能会破坏卷积提取器原本的预训练权重。</p>
+<p>你可以注意到，虽然我们网络中的参数总数约为1500万，但我们实际上只训练了2.5万个参数。所有其他顶层卷积滤波器的参数都是预训练的。这是好事，因为我们能够用更少的样本微调更少的参数。</p>
+<p>我们现在将训练我们的网络，看看效果如何。请预计训练时间较长，如果执行过程似乎卡住一段时间，也不必担心。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model.compile(optimizer=&#x27;adam&#x27;, loss=&#x27;binary_crossentropy&#x27;, metrics=[&#x27;acc&#x27;])
+hist = model.fit(ds_train, validation_data=ds_test)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">310/310 [==============================] - 265s 716ms/step - loss: 0.9917 - acc: 0.9512 - val_loss: 0.8156 - val_acc: 0.9671
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>看起来我们已经获得了相当准确的猫与狗分类器！</p>
+<h2>保存和加载模型</h2>
+<p>一旦我们训练好了模型，就可以将模型结构和训练好的权重保存到文件中以备将来使用：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model.save(&#x27;data/cats_dogs.tf&#x27;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">INFO:tensorflow:Assets written to: data/cats_dogs.tf/assets
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们可以随时从文件加载模型。 如果下一个实验破坏了模型，这可能会很有用——这样你就不必从头重新开始。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model = keras.models.load_model(&#x27;data/cats_dogs.tf&#x27;)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>微调迁移学习</h2>
+<p>在上一节中，我们训练了最终的分类器层来对我们自己的数据集中的图像进行分类。然而，我们没有重新训练特征提取器，模型依赖于在 ImageNet 数据上学到的特征。如果你的对象在视觉上与普通的 ImageNet 图像不同，这种特征组合可能效果不佳。因此，开始训练卷积层也是有意义的。</p>
+<p>为此，我们可以解冻之前冻结的卷积滤波器参数。</p>
+<p>&gt; <strong>注意：</strong> 重要的是要先冻结参数并进行几个周期的训练，以稳定分类层中的权重。如果你立即开始训练端到端的网络并解冻参数，较大的误差很可能会破坏卷积层中的预训练权重。</p>
+<p>我们的卷积 VGG-16 模型位于第一层中，并且它本身包含许多层。我们可以看看它的结构：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model.layers[0].summary()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;vgg16&quot;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+input_1 (InputLayer)         [(None, 224, 224, 3)]     0         
+_________________________________________________________________
+block1_conv1 (Conv2D)        (None, 224, 224, 64)      1792      
+_________________________________________________________________
+block1_conv2 (Conv2D)        (None, 224, 224, 64)      36928     
+_________________________________________________________________
+block1_pool (MaxPooling2D)   (None, 112, 112, 64)      0         
+_________________________________________________________________
+block2_conv1 (Conv2D)        (None, 112, 112, 128)     73856     
+_________________________________________________________________
+block2_conv2 (Conv2D)        (None, 112, 112, 128)     147584    
+_________________________________________________________________
+block2_pool (MaxPooling2D)   (None, 56, 56, 128)       0         
+_________________________________________________________________
+block3_conv1 (Conv2D)        (None, 56, 56, 256)       295168    
+_________________________________________________________________
+block3_conv2 (Conv2D)        (None, 56, 56, 256)       590080    
+_________________________________________________________________
+block3_conv3 (Conv2D)        (None, 56, 56, 256)       590080    
+_________________________________________________________________
+block3_pool (MaxPooling2D)   (None, 28, 28, 256)       0         
+_________________________________________________________________
+block4_conv1 (Conv2D)        (None, 28, 28, 512)       1180160   
+_________________________________________________________________
+block4_conv2 (Conv2D)        (None, 28, 28, 512)       2359808   
+_________________________________________________________________
+block4_conv3 (Conv2D)        (None, 28, 28, 512)       2359808   
+_________________________________________________________________
+block4_pool (MaxPooling2D)   (None, 14, 14, 512)       0         
+_________________________________________________________________
+block5_conv1 (Conv2D)        (None, 14, 14, 512)       2359808   
+_________________________________________________________________
+block5_conv2 (Conv2D)        (None, 14, 14, 512)       2359808   
+_________________________________________________________________
+block5_conv3 (Conv2D)        (None, 14, 14, 512)       2359808   
+_________________________________________________________________
+block5_pool (MaxPooling2D)   (None, 7, 7, 512)         0         
+=================================================================
+Total params: 14,714,688
+Trainable params: 0
+Non-trainable params: 14,714,688
+_________________________________________________________________
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们可以解冻卷积基础的所有层：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model.layers[0].trainable = True</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>但是，一次性解冻所有层并不是最好的主意。我们可以先只解冻几个最后的卷积层，因为它们包含与我们的图像相关的更高级别的模式。例如，开始时，我们可以冻结所有层，除了最后4层：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>for i in range(len(model.layers[0].layers)-4):
+    model.layers[0].layers[i].trainable = False
+model.summary()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;sequential&quot;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+vgg16 (Functional)           (None, 7, 7, 512)         14714688  
+_________________________________________________________________
+flatten (Flatten)            (None, 25088)             0         
+_________________________________________________________________
+dense (Dense)                (None, 1)                 25089     
+=================================================================
+Total params: 14,739,777
+Trainable params: 7,104,513
+Non-trainable params: 7,635,264
+_________________________________________________________________
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>注意，可训练参数数量显著增加，但仍约占所有参数的50%。</p>
+<p>解冻后，我们可以进行更多轮的训练（在我们的示例中，我们只进行一轮）。你也可以选择较低的学习率，以尽量减少对预训练权重的影响。然而，即使学习率较低，你也可以预期训练开始时准确率会下降，直到最终达到比固定权重时略高的水平。</p>
+<p>&gt; <strong>注意：</strong> 这个训练过程要慢得多，因为我们需要将梯度反向传播通过网络的许多层！</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>hist = model.fit(ds_train, validation_data=ds_test)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">310/310 [==============================] - 201s 645ms/step - loss: 0.5270 - acc: 0.9776 - val_loss: 1.4132 - val_acc: 0.9653
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们很可能会获得更高的训练准确率，因为我们使用了参数更多、更强大的网络，但验证准确率的提升不会那么显著。</p>
+<p>随意解冻网络的更多层并进行训练，看看是否能获得更高的准确率！</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>其他计算机视觉模型</h2>
+<p>VGG-16 是最简单的计算机视觉架构之一。Keras 提供了更多预训练网络。其中最常用的是微软开发的 <strong>ResNet</strong> 架构和谷歌的 <strong>Inception</strong>。例如，让我们探索最简单的 ResNet-50 模型的架构（ResNet 是一系列不同深度的模型，如果你想看看真正深层模型的样子，可以尝试 ResNet-152）：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>resnet = keras.applications.ResNet50()
+resnet.summary()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;resnet50&quot;
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to                     
+==================================================================================================
+input_3 (InputLayer)            [(None, 224, 224, 3) 0                                            
+__________________________________________________________________________________________________
+conv1_pad (ZeroPadding2D)       (None, 230, 230, 3)  0           input_3[0][0]                    
+__________________________________________________________________________________________________
+conv1_conv (Conv2D)             (None, 112, 112, 64) 9472        conv1_pad[0][0]                  
+__________________________________________________________________________________________________
+conv1_bn (BatchNormalization)   (None, 112, 112, 64) 256         conv1_conv[0][0]                 
+__________________________________________________________________________________________________
+conv1_relu (Activation)         (None, 112, 112, 64) 0           conv1_bn[0][0]                   
+__________________________________________________________________________________________________
+pool1_pad (ZeroPadding2D)       (None, 114, 114, 64) 0           conv1_relu[0][0]                 
+__________________________________________________________________________________________________
+pool1_pool (MaxPooling2D)       (None, 56, 56, 64)   0           pool1_pad[0][0]                  
+__________________________________________________________________________________________________
+conv2_block1_1_conv (Conv2D)    (None, 56, 56, 64)   4160        pool1_pool[0][0]                 
+__________________________________________________________________________________________________
+conv2_block1_1_bn (BatchNormali (None, 56, 56, 64)   256         conv2_block1_1_conv[0][0]        
+__________________________________________________________________________________________________
+conv2_block1_1_relu (Activation (None, 56, 56, 64)   0           conv2_block1_1_bn[0][0]          
+__________________________________________________________________________________________________
+conv2_block1_2_conv (Conv2D)    (None, 56, 56, 64)   36928       conv2_block1_1_relu[0][0]        
+__________________________________________________________________________________________________
+conv2_block1_2_bn (BatchNormali (None, 56, 56, 64)   256         conv2_block1_2_conv[0][0]        
+__________________________________________________________________________________________________
+conv2_block1_2_relu (Activation (None, 56, 56, 64)   0           conv2_block1_2_bn[0][0]          
+__________________________________________________________________________________________________
+conv2_block1_0_conv (Conv2D)    (None, 56, 56, 256)  16640       pool1_pool[0][0]                 
+__________________________________________________________________________________________________
+conv2_block1_3_conv (Conv2D)    (None, 56, 56, 256)  16640       conv2_block1_2_relu[0][0]        
+__________________________________________________________________________________________________
+conv2_block1_0_bn (BatchNormali (None, 56, 56, 256)  1024        conv2_block1_0_conv[0][0]        
+__________________________________________________________________________________________________
+conv2_block1_3_bn (BatchNormali (None, 56, 56, 256)  1024        conv2_block1_3_conv[0][0]        
+__________________________________________________________________________________________________
+conv2_block1_add (Add)          (None, 56, 56, 256)  0           conv2_block1_0_bn[0][0]          
+                                                                 conv2_block1_3_bn[0][0]          
+__________________________________________________________________________________________________
+conv2_block1_out (Activation)   (None, 56, 56, 256)  0           conv2_block1_add[0][0]           
+__________________________________________________________________________________________________
+conv2_block2_1_conv (Conv2D)    (None, 56, 56, 64)   16448       conv2_block1_out[0][0]           
+__________________________________________________________________________________________________
+conv2_block2_1_bn (BatchNormali (None, 56, 56, 64)   256         conv2_block2_1_conv[0][0]        
+__________________________________________________________________________________________________
+conv2_block2_1_relu (Activation (None, 56, 56, 64)   0           conv2_block2_1_bn[0][0]          
+__________________________________________________________________________________________________
+conv2_block2_2_conv (Conv2D)    (None, 56, 56, 64)   36928       conv2_block2_1_relu[0][0]        
+__________________________________________________________________________________________________
+conv2_block2_2_bn (BatchNormali (None, 56, 56, 64)   256         conv2_block2_2_conv[0][0]        
+__________________________________________________________________________________________________
+conv2_block2_2_relu (Activation (None, 56, 56, 64)   0           conv2_block2_2_bn[0][0]          
+__________________________________________________________________________________________________
+conv2_block2_3_conv (Conv2D)    (None, 56, 56, 256)  16640       conv2_block2_2_relu[0][0]        
+__________________________________________________________________________________________________
+conv2_block2_3_bn (BatchNormali (None, 56, 56, 256)  1024        conv2_block2_3_conv[0][0]        
+__________________________________________________________________________________________________
+conv2_block2_add (Add)          (None, 56, 56, 256)  0           conv2_block1_out[0][0]           
+                                                                 conv2_block2_3_bn[0][0]          
+__________________________________________________________________________________________________
+conv2_block2_out (Activation)   (None, 56, 56, 256)  0           conv2_block2_add[0][0]           
+__________________________________________________________________________________________________
+conv2_block3_1_conv (Conv2D)    (None, 56, 56, 64)   16448       conv2_block2_out[0][0]           
+__________________________________________________________________________________________________
+conv2_block3_1_bn (BatchNormali (None, 56, 56, 64)   256         conv2_block3_1_conv[0][0]        
+__________________________________________________________________________________________________
+conv2_block3_1_relu (Activation (None, 56, 56, 64)   0           conv2_block3_1_bn[0][0]          
+__________________________________________________________________________________________________
+conv2_block3_2_conv (Conv2D)    (None, 56, 56, 64)   36928       conv2_block3_1_relu[0][0]        
+__________________________________________________________________________________________________
+conv2_block3_2_bn (BatchNormali (None, 56, 56, 64)   256         conv2_block3_2_conv[0][0]        
+__________________________________________________________________________________________________
+conv2_block3_2_relu (Activation (None, 56, 56, 64)   0           conv2_block3_2_bn[0][0]          
+__________________________________________________________________________________________________
+conv2_block3_3_conv (Conv2D)    (None, 56, 56, 256)  16640       conv2_block3_2_relu[0][0]        
+__________________________________________________________________________________________________
+conv2_block3_3_bn (BatchNormali (None, 56, 56, 256)  1024        conv2_block3_3_conv[0][0]        
+__________________________________________________________________________________________________
+conv2_block3_add (Add)          (None, 56, 56, 256)  0           conv2_block2_out[0][0]           
+                                                                 conv2_block3_3_bn[0][0]          
+__________________________________________________________________________________________________
+conv2_block3_out (Activation)   (None, 56, 56, 256)  0           conv2_block3_add[0][0]           
+__________________________________________________________________________________________________
+conv3_block1_1_conv (Conv2D)    (None, 28, 28, 128)  32896       conv2_block3_out[0][0]           
+__________________________________________________________________________________________________
+conv3_block1_1_bn (BatchNormali (None, 28, 28, 128)  512         conv3_block1_1_conv[0][0]        
+__________________________________________________________________________________________________
+conv3_block1_1_relu (Activation (None, 28, 28, 128)  0           conv3_block1_1_bn[0][0]          
+__________________________________________________________________________________________________
+conv3_block1_2_conv (Conv2D)    (None, 28, 28, 128)  147584      conv3_block1_1_relu[0][0]        
+__________________________________________________________________________________________________
+conv3_block1_2_bn (BatchNormali (None, 28, 28, 128)  512         conv3_block1_2_conv[0][0]        
+__________________________________________________________________________________________________
+conv3_block1_2_relu (Activation (None, 28, 28, 128)  0           conv3_block1_2_bn[0][0]          
+__________________________________________________________________________________________________
+conv3_block1_0_conv (Conv2D)    (None, 28, 28, 512)  131584      conv2_block3_out[0][0]           
+__________________________________________________________________________________________________
+conv3_block1_3_conv (Conv2D)    (None, 28, 28, 512)  66048       conv3_block1_2_relu[0][0]        
+__________________________________________________________________________________________________
+conv3_block1_0_bn (BatchNormali (None, 28, 28, 512)  2048        conv3_block1_0_conv[0][0]        
+__________________________________________________________________________________________________
+conv3_block1_3_bn (BatchNormali (None, 28, 28, 512)  2048        conv3_block1_3_conv[0][0]        
+__________________________________________________________________________________________________
+conv3_block1_add (Add)          (None, 28, 28, 512)  0           conv3_block1_0_bn[0][0]          
+                                                                 conv3_block1_3_bn[0][0]          
+__________________________________________________________________________________________________
+conv3_block1_out (Activation)   (None, 28, 28, 512)  0           conv3_block1_add[0][0]           
+__________________________________________________________________________________________________
+conv3_block2_1_conv (Conv2D)    (None, 28, 28, 128)  65664       conv3_block1_out[0][0]           
+__________________________________________________________________________________________________
+conv3_block2_1_bn (BatchNormali (None, 28, 28, 128)  512         conv3_block2_1_conv[0][0]        
+__________________________________________________________________________________________________
+conv3_block2_1_relu (Activation (None, 28, 28, 128)  0           conv3_block2_1_bn[0][0]          
+__________________________________________________________________________________________________
+conv3_block2_2_conv (Conv2D)    (None, 28, 28, 128)  147584      conv3_block2_1_relu[0][0]        
+__________________________________________________________________________________________________
+conv3_block2_2_bn (BatchNormali (None, 28, 28, 128)  512         conv3_block2_2_conv[0][0]        
+__________________________________________________________________________________________________
+conv3_block2_2_relu (Activation (None, 28, 28, 128)  0           conv3_block2_2_bn[0][0]          
+__________________________________________________________________________________________________
+conv3_block2_3_conv (Conv2D)    (None, 28, 28, 512)  66048       conv3_block2_2_relu[0][0]        
+__________________________________________________________________________________________________
+conv3_block2_3_bn (BatchNormali (None, 28, 28, 512)  2048        conv3_block2_3_conv[0][0]        
+__________________________________________________________________________________________________
+conv3_block2_add (Add)          (None, 28, 28, 512)  0           conv3_block1_out[0][0]           
+                                                                 conv3_block2_3_bn[0][0]          
+__________________________________________________________________________________________________
+conv3_block2_out (Activation)   (None, 28, 28, 512)  0           conv3_block2_add[0][0]           
+__________________________________________________________________________________________________
+conv3_block3_1_conv (Conv2D)    (None, 28, 28, 128)  65664       conv3_block2_out[0][0]           
+__________________________________________________________________________________________________
+conv3_block3_1_bn (BatchNormali (None, 28, 28, 128)  512         conv3_block3_1_conv[0][0]        
+__________________________________________________________________________________________________
+conv3_block3_1_relu (Activation (None, 28, 28, 128)  0           conv3_block3_1_bn[0][0]          
+__________________________________________________________________________________________________
+conv3_block3_2_conv (Conv2D)    (None, 28, 28, 128)  147584      conv3_block3_1_relu[0][0]        
+__________________________________________________________________________________________________
+conv3_block3_2_bn (BatchNormali (None, 28, 28, 128)  512         conv3_block3_2_conv[0][0]        
+__________________________________________________________________________________________________
+conv3_block3_2_relu (Activation (None, 28, 28, 128)  0           conv3_block3_2_bn[0][0]          
+__________________________________________________________________________________________________
+conv3_block3_3_conv (Conv2D)    (None, 28, 28, 512)  66048       conv3_block3_2_relu[0][0]        
+__________________________________________________________________________________________________
+conv3_block3_3_bn (BatchNormali (None, 28, 28, 512)  2048        conv3_block3_3_conv[0][0]        
+__________________________________________________________________________________________________
+conv3_block3_add (Add)          (None, 28, 28, 512)  0           conv3_block2_out[0][0]           
+                                                                 conv3_block3_3_bn[0][0]          
+__________________________________________________________________________________________________
+conv3_block3_out (Activation)   (None, 28, 28, 512)  0           conv3_block3_add[0][0]           
+__________________________________________________________________________________________________
+conv3_block4_1_conv (Conv2D)    (None, 28, 28, 128)  65664       conv3_block3_out[0][0]           
+__________________________________________________________________________________________________
+conv3_block4_1_bn (BatchNormali (None, 28, 28, 128)  512         conv3_block4_1_conv[0][0]        
+__________________________________________________________________________________________________
+conv3_block4_1_relu (Activation (None, 28, 28, 128)  0           conv3_block4_1_bn[0][0]          
+__________________________________________________________________________________________________
+conv3_block4_2_conv (Conv2D)    (None, 28, 28, 128)  147584      conv3_block4_1_relu[0][0]        
+__________________________________________________________________________________________________
+conv3_block4_2_bn (BatchNormali (None, 28, 28, 128)  512         conv3_block4_2_conv[0][0]        
+__________________________________________________________________________________________________
+conv3_block4_2_relu (Activation (None, 28, 28, 128)  0           conv3_block4_2_bn[0][0]          
+__________________________________________________________________________________________________
+conv3_block4_3_conv (Conv2D)    (None, 28, 28, 512)  66048       conv3_block4_2_relu[0][0]        
+__________________________________________________________________________________________________
+conv3_block4_3_bn (BatchNormali (None, 28, 28, 512)  2048        conv3_block4_3_conv[0][0]        
+__________________________________________________________________________________________________
+conv3_block4_add (Add)          (None, 28, 28, 512)  0           conv3_block3_out[0][0]           
+                                                                 conv3_block4_3_bn[0][0]          
+__________________________________________________________________________________________________
+conv3_block4_out (Activation)   (None, 28, 28, 512)  0           conv3_block4_add[0][0]           
+__________________________________________________________________________________________________
+conv4_block1_1_conv (Conv2D)    (None, 14, 14, 256)  131328      conv3_block4_out[0][0]           
+__________________________________________________________________________________________________
+conv4_block1_1_bn (BatchNormali (None, 14, 14, 256)  1024        conv4_block1_1_conv[0][0]        
+__________________________________________________________________________________________________
+conv4_block1_1_relu (Activation (None, 14, 14, 256)  0           conv4_block1_1_bn[0][0]          
+__________________________________________________________________________________________________
+conv4_block1_2_conv (Conv2D)    (None, 14, 14, 256)  590080      conv4_block1_1_relu[0][0]        
+__________________________________________________________________________________________________
+conv4_block1_2_bn (BatchNormali (None, 14, 14, 256)  1024        conv4_block1_2_conv[0][0]        
+__________________________________________________________________________________________________
+conv4_block1_2_relu (Activation (None, 14, 14, 256)  0           conv4_block1_2_bn[0][0]          
+__________________________________________________________________________________________________
+conv4_block1_0_conv (Conv2D)    (None, 14, 14, 1024) 525312      conv3_block4_out[0][0]           
+__________________________________________________________________________________________________
+conv4_block1_3_conv (Conv2D)    (None, 14, 14, 1024) 263168      conv4_block1_2_relu[0][0]        
+__________________________________________________________________________________________________
+conv4_block1_0_bn (BatchNormali (None, 14, 14, 1024) 4096        conv4_block1_0_conv[0][0]        
+__________________________________________________________________________________________________
+conv4_block1_3_bn (BatchNormali (None, 14, 14, 1024) 4096        conv4_block1_3_conv[0][0]        
+__________________________________________________________________________________________________
+conv4_block1_add (Add)          (None, 14, 14, 1024) 0           conv4_block1_0_bn[0][0]          
+                                                                 conv4_block1_3_bn[0][0]          
+__________________________________________________________________________________________________
+conv4_block1_out (Activation)   (None, 14, 14, 1024) 0           conv4_block1_add[0][0]           
+__________________________________________________________________________________________________
+conv4_block2_1_conv (Conv2D)    (None, 14, 14, 256)  262400      conv4_block1_out[0][0]           
+__________________________________________________________________________________________________
+conv4_block2_1_bn (BatchNormali (None, 14, 14, 256)  1024        conv4_block2_1_conv[0][0]        
+__________________________________________________________________________________________________
+conv4_block2_1_relu (Activation (None, 14, 14, 256)  0           conv4_block2_1_bn[0][0]          
+__________________________________________________________________________________________________
+conv4_block2_2_conv (Conv2D)    (None, 14, 14, 256)  590080      conv4_block2_1_relu[0][0]        
+__________________________________________________________________________________________________
+conv4_block2_2_bn (BatchNormali (None, 14, 14, 256)  1024        conv4_block2_2_conv[0][0]        
+__________________________________________________________________________________________________
+conv4_block2_2_relu (Activation (None, 14, 14, 256)  0           conv4_block2_2_bn[0][0]          
+__________________________________________________________________________________________________
+conv4_block2_3_conv (Conv2D)    (None, 14, 14, 1024) 263168      conv4_block2_2_relu[0][0]        
+__________________________________________________________________________________________________
+conv4_block2_3_bn (BatchNormali (None, 14, 14, 1024) 4096        conv4_block2_3_conv[0][0]        
+__________________________________________________________________________________________________
+conv4_block2_add (Add)          (None, 14, 14, 1024) 0           conv4_block1_out[0][0]           
+                                                                 conv4_block2_3_bn[0][0]          
+__________________________________________________________________________________________________
+conv4_block2_out (Activation)   (None, 14, 14, 1024) 0           conv4_block2_add[0][0]           
+__________________________________________________________________________________________________
+conv4_block3_1_conv (Conv2D)    (None, 14, 14, 256)  262400      conv4_block2_out[0][0]           
+__________________________________________________________________________________________________
+conv4_block3_1_bn (BatchNormali (None, 14, 14, 256)  1024        conv4_block3_1_conv[0][0]        
+__________________________________________________________________________________________________
+conv4_block3_1_relu (Activation (None, 14, 14, 256)  0           conv4_block3_1_bn[0][0]          
+__________________________________________________________________________________________________
+conv4_block3_2_conv (Conv2D)    (None, 14, 14, 256)  590080      conv4_block3_1_relu[0][0]        
+__________________________________________________________________________________________________
+conv4_block3_2_bn (BatchNormali (None, 14, 14, 256)  1024        conv4_block3_2_conv[0][0]        
+__________________________________________________________________________________________________
+conv4_block3_2_relu (Activation (None, 14, 14, 256)  0           conv4_block3_2_bn[0][0]          
+__________________________________________________________________________________________________
+conv4_block3_3_conv (Conv2D)    (None, 14, 14, 1024) 263168      conv4_block3_2_relu[0][0]        
+__________________________________________________________________________________________________
+conv4_block3_3_bn (BatchNormali (None, 14, 14, 1024) 4096        conv4_block3_3_conv[0][0]        
+__________________________________________________________________________________________________
+conv4_block3_add (Add)          (None, 14, 14, 1024) 0           conv4_block2_out[0][0]           
+                                                                 conv4_block3_3_bn[0][0]          
+__________________________________________________________________________________________________
+conv4_block3_out (Activation)   (None, 14, 14, 1024) 0           conv4_block3_add[0][0]           
+__________________________________________________________________________________________________
+conv4_block4_1_conv (Conv2D)    (None, 14, 14, 256)  262400      conv4_block3_out[0][0]           
+__________________________________________________________________________________________________
+conv4_block4_1_bn (BatchNormali (None, 14, 14, 256)  1024        conv4_block4_1_conv[0][0]        
+__________________________________________________________________________________________________
+conv4_block4_1_relu (Activation (None, 14, 14, 256)  0           conv4_block4_1_bn[0][0]          
+__________________________________________________________________________________________________
+conv4_block4_2_conv (Conv2D)    (None, 14, 14, 256)  590080      conv4_block4_1_relu[0][0]        
+__________________________________________________________________________________________________
+conv4_block4_2_bn (BatchNormali (None, 14, 14, 256)  1024        conv4_block4_2_conv[0][0]        
+__________________________________________________________________________________________________
+conv4_block4_2_relu (Activation (None, 14, 14, 256)  0           conv4_block4_2_bn[0][0]          
+__________________________________________________________________________________________________
+conv4_block4_3_conv (Conv2D)    (None, 14, 14, 1024) 263168      conv4_block4_2_relu[0][0]        
+__________________________________________________________________________________________________
+conv4_block4_3_bn (BatchNormali (None, 14, 14, 1024) 4096        conv4_block4_3_conv[0][0]        
+__________________________________________________________________________________________________
+conv4_block4_add (Add)          (None, 14, 14, 1024) 0           conv4_block3_out[0][0]           
+                                                                 conv4_block4_3_bn[0][0]          
+__________________________________________________________________________________________________
+conv4_block4_out (Activation)   (None, 14, 14, 1024) 0           conv4_block4_add[0][0]           
+__________________________________________________________________________________________________
+conv4_block5_1_conv (Conv2D)    (None, 14, 14, 256)  262400      conv4_block4_out[0][0]           
+__________________________________________________________________________________________________
+conv4_block5_1_bn (BatchNormali (None, 14, 14, 256)  1024        conv4_block5_1_conv[0][0]        
+__________________________________________________________________________________________________
+conv4_block5_1_relu (Activation (None, 14, 14, 256)  0           conv4_block5_1_bn[0][0]          
+__________________________________________________________________________________________________
+conv4_block5_2_conv (Conv2D)    (None, 14, 14, 256)  590080      conv4_block5_1_relu[0][0]        
+__________________________________________________________________________________________________
+conv4_block5_2_bn (BatchNormali (None, 14, 14, 256)  1024        conv4_block5_2_conv[0][0]        
+__________________________________________________________________________________________________
+conv4_block5_2_relu (Activation (None, 14, 14, 256)  0           conv4_block5_2_bn[0][0]          
+__________________________________________________________________________________________________
+conv4_block5_3_conv (Conv2D)    (None, 14, 14, 1024) 263168      conv4_block5_2_relu[0][0]        
+__________________________________________________________________________________________________
+conv4_block5_3_bn (BatchNormali (None, 14, 14, 1024) 4096        conv4_block5_3_conv[0][0]        
+__________________________________________________________________________________________________
+conv4_block5_add (Add)          (None, 14, 14, 1024) 0           conv4_block4_out[0][0]           
+                                                                 conv4_block5_3_bn[0][0]          
+__________________________________________________________________________________________________
+conv4_block5_out (Activation)   (None, 14, 14, 1024) 0           conv4_block5_add[0][0]           
+__________________________________________________________________________________________________
+conv4_block6_1_conv (Conv2D)    (None, 14, 14, 256)  262400      conv4_block5_out[0][0]           
+__________________________________________________________________________________________________
+conv4_block6_1_bn (BatchNormali (None, 14, 14, 256)  1024        conv4_block6_1_conv[0][0]        
+__________________________________________________________________________________________________
+conv4_block6_1_relu (Activation (None, 14, 14, 256)  0           conv4_block6_1_bn[0][0]          
+__________________________________________________________________________________________________
+conv4_block6_2_conv (Conv2D)    (None, 14, 14, 256)  590080      conv4_block6_1_relu[0][0]        
+__________________________________________________________________________________________________
+conv4_block6_2_bn (BatchNormali (None, 14, 14, 256)  1024        conv4_block6_2_conv[0][0]        
+__________________________________________________________________________________________________
+conv4_block6_2_relu (Activation (None, 14, 14, 256)  0           conv4_block6_2_bn[0][0]          
+__________________________________________________________________________________________________
+conv4_block6_3_conv (Conv2D)    (None, 14, 14, 1024) 263168      conv4_block6_2_relu[0][0]        
+__________________________________________________________________________________________________
+conv4_block6_3_bn (BatchNormali (None, 14, 14, 1024) 4096        conv4_block6_3_conv[0][0]        
+__________________________________________________________________________________________________
+conv4_block6_add (Add)          (None, 14, 14, 1024) 0           conv4_block5_out[0][0]           
+                                                                 conv4_block6_3_bn[0][0]          
+__________________________________________________________________________________________________
+conv4_block6_out (Activation)   (None, 14, 14, 1024) 0           conv4_block6_add[0][0]           
+__________________________________________________________________________________________________
+conv5_block1_1_conv (Conv2D)    (None, 7, 7, 512)    524800      conv4_block6_out[0][0]           
+__________________________________________________________________________________________________
+conv5_block1_1_bn (BatchNormali (None, 7, 7, 512)    2048        conv5_block1_1_conv[0][0]        
+__________________________________________________________________________________________________
+conv5_block1_1_relu (Activation (None, 7, 7, 512)    0           conv5_block1_1_bn[0][0]          
+__________________________________________________________________________________________________
+conv5_block1_2_conv (Conv2D)    (None, 7, 7, 512)    2359808     conv5_block1_1_relu[0][0]        
+__________________________________________________________________________________________________
+conv5_block1_2_bn (BatchNormali (None, 7, 7, 512)    2048        conv5_block1_2_conv[0][0]        
+__________________________________________________________________________________________________
+conv5_block1_2_relu (Activation (None, 7, 7, 512)    0           conv5_block1_2_bn[0][0]          
+__________________________________________________________________________________________________
+conv5_block1_0_conv (Conv2D)    (None, 7, 7, 2048)   2099200     conv4_block6_out[0][0]           
+__________________________________________________________________________________________________
+conv5_block1_3_conv (Conv2D)    (None, 7, 7, 2048)   1050624     conv5_block1_2_relu[0][0]        
+__________________________________________________________________________________________________
+conv5_block1_0_bn (BatchNormali (None, 7, 7, 2048)   8192        conv5_block1_0_conv[0][0]        
+__________________________________________________________________________________________________
+conv5_block1_3_bn (BatchNormali (None, 7, 7, 2048)   8192        conv5_block1_3_conv[0][0]        
+__________________________________________________________________________________________________
+conv5_block1_add (Add)          (None, 7, 7, 2048)   0           conv5_block1_0_bn[0][0]          
+                                                                 conv5_block1_3_bn[0][0]          
+__________________________________________________________________________________________________
+conv5_block1_out (Activation)   (None, 7, 7, 2048)   0           conv5_block1_add[0][0]           
+__________________________________________________________________________________________________
+conv5_block2_1_conv (Conv2D)    (None, 7, 7, 512)    1049088     conv5_block1_out[0][0]           
+__________________________________________________________________________________________________
+conv5_block2_1_bn (BatchNormali (None, 7, 7, 512)    2048        conv5_block2_1_conv[0][0]        
+__________________________________________________________________________________________________
+conv5_block2_1_relu (Activation (None, 7, 7, 512)    0           conv5_block2_1_bn[0][0]          
+__________________________________________________________________________________________________
+conv5_block2_2_conv (Conv2D)    (None, 7, 7, 512)    2359808     conv5_block2_1_relu[0][0]        
+__________________________________________________________________________________________________
+conv5_block2_2_bn (BatchNormali (None, 7, 7, 512)    2048        conv5_block2_2_conv[0][0]        
+__________________________________________________________________________________________________
+conv5_block2_2_relu (Activation (None, 7, 7, 512)    0           conv5_block2_2_bn[0][0]          
+__________________________________________________________________________________________________
+conv5_block2_3_conv (Conv2D)    (None, 7, 7, 2048)   1050624     conv5_block2_2_relu[0][0]        
+__________________________________________________________________________________________________
+conv5_block2_3_bn (BatchNormali (None, 7, 7, 2048)   8192        conv5_block2_3_conv[0][0]        
+__________________________________________________________________________________________________
+conv5_block2_add (Add)          (None, 7, 7, 2048)   0           conv5_block1_out[0][0]           
+                                                                 conv5_block2_3_bn[0][0]          
+__________________________________________________________________________________________________
+conv5_block2_out (Activation)   (None, 7, 7, 2048)   0           conv5_block2_add[0][0]           
+__________________________________________________________________________________________________
+conv5_block3_1_conv (Conv2D)    (None, 7, 7, 512)    1049088     conv5_block2_out[0][0]           
+__________________________________________________________________________________________________
+conv5_block3_1_bn (BatchNormali (None, 7, 7, 512)    2048        conv5_block3_1_conv[0][0]        
+__________________________________________________________________________________________________
+conv5_block3_1_relu (Activation (None, 7, 7, 512)    0           conv5_block3_1_bn[0][0]          
+__________________________________________________________________________________________________
+conv5_block3_2_conv (Conv2D)    (None, 7, 7, 512)    2359808     conv5_block3_1_relu[0][0]        
+__________________________________________________________________________________________________
+conv5_block3_2_bn (BatchNormali (None, 7, 7, 512)    2048        conv5_block3_2_conv[0][0]        
+__________________________________________________________________________________________________
+conv5_block3_2_relu (Activation (None, 7, 7, 512)    0           conv5_block3_2_bn[0][0]          
+__________________________________________________________________________________________________
+conv5_block3_3_conv (Conv2D)    (None, 7, 7, 2048)   1050624     conv5_block3_2_relu[0][0]        
+__________________________________________________________________________________________________
+conv5_block3_3_bn (BatchNormali (None, 7, 7, 2048)   8192        conv5_block3_3_conv[0][0]        
+__________________________________________________________________________________________________
+conv5_block3_add (Add)          (None, 7, 7, 2048)   0           conv5_block2_out[0][0]           
+                                                                 conv5_block3_3_bn[0][0]          
+__________________________________________________________________________________________________
+conv5_block3_out (Activation)   (None, 7, 7, 2048)   0           conv5_block3_add[0][0]           
+__________________________________________________________________________________________________
+avg_pool (GlobalAveragePooling2 (None, 2048)         0           conv5_block3_out[0][0]           
+__________________________________________________________________________________________________
+predictions (Dense)             (None, 1000)         2049000     avg_pool[0][0]                   
+==================================================================================================
+Total params: 25,636,712
+Trainable params: 25,583,592
+Non-trainable params: 53,120
+__________________________________________________________________________________________________
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>正如您所见，该模型包含相同的熟悉构建块：卷积层、池化层和最终的密集分类器。我们可以用完全相同的方式使用此模型，就像我们一直使用 VGG-16 进行迁移学习一样。您可以尝试使用上面的代码，使用不同的 ResNet 模型作为基础模型，观察准确率如何变化。</p>
+<h2>批归一化</h2>
+<p>该网络包含另一种类型的层：&lt;strong&gt;批归一化&lt;/strong&gt;。批归一化的理念是将流经神经网络的值带到正确的区间。通常神经网络在所有值处于 [-1,1] 或 [0,1] 范围内时效果最好，这也是我们按此比例缩放/归一化输入数据的原因。然而，在训练深度网络时，值可能显著超出该范围，这会导致训练出现问题。批归一化层计算当前小批量的所有值的平均值和标准差，并在通过神经网络层之前使用它们来归一化信号。这显著提高了深度网络的稳定性。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>要点</h2>
+<p>通过使用迁移学习，我们能够快速搭建一个分类器来完成我们的自定义对象分类任务，并且实现了很高的准确率。然而，这个例子并不完全公平，因为原始的VGG-16网络是预训练用于识别猫和狗的，因此我们只是重用了网络中已经存在的大多数模式。对于更复杂的特定领域对象，比如工厂生产线上的细节或不同种类的树叶，准确率可能会更低。</p>
+<p>你可以看到，我们现在解决的更复杂任务需要更高的计算能力，无法轻易在CPU上完成。下一单元中，我们将尝试使用更轻量级的实现，以更低的计算资源训练同样的模型，结果仅略有准确率下降。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p>&lt;!-- CO-OP TRANSLATOR DISCLAIMER START --&gt;</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文件由 AI 翻译服务 <a href="https://github.com/Azure/co-op-translator">Co-op Translator</a> 翻译完成。尽管我们力求准确，但请注意，自动翻译可能包含错误或不准确之处。原始语言版文件应视为权威来源。对于重要信息，建议使用专业人工翻译。我们对因使用本翻译而产生的任何误解或误释不承担责任。</p>
+<p>&lt;!-- CO-OP TRANSLATOR DISCLAIMER END --&gt;</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

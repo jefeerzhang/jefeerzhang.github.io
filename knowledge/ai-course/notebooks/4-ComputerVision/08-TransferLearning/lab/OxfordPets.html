@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OxfordPets</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 OxfordPets</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h1>宠物真实生活图像分类</h1>
+<p>来自 <a href="https://github.com/microsoft/ai-for-beginners">AI for Beginners Curriculum</a> 的实验任务。</p>
+<p>现在是时候处理一个更具挑战性的任务了——对原始的 <a href="https://www.robots.ox.ac.uk/~vgg/data/pets/">Oxford-IIIT 数据集</a> 进行分类。让我们从加载和可视化数据集开始吧。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>!wget https://www.robots.ox.ac.uk/~vgg/data/pets/data/images.tar.gz
+!tar xfz images.tar.gz
+!rm images.tar.gz</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们将定义通用函数以从列表中显示一系列图像：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import matplotlib.pyplot as plt
+import os
+from PIL import Image
+import numpy as np
+
+def display_images(l,titles=None,fontsize=12):
+    n=len(l)
+    fig,ax = plt.subplots(1,n)
+    for i,im in enumerate(l):
+        ax[i].imshow(im)
+        ax[i].axis(&#x27;off&#x27;)
+        if titles is not None:
+            ax[i].set_title(titles[i],fontsize=fontsize)
+    fig.set_size_inches(fig.get_size_inches()*n)
+    plt.tight_layout()
+    plt.show()</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>您可以看到所有图像都位于一个名为<code>images</code>的目录中，并且它们的名称包含类别（品种）的名称：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>fnames = os.listdir(&#x27;images&#x27;)[:5]
+display_images([Image.open(os.path.join(&#x27;images&#x27;,x)) for x in fnames],titles=fnames,fontsize=30)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>为了简化分类并使用与上一部分相同的方法加载图像，让我们将所有图像排序到相应的目录中：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>for fn in os.listdir(&#x27;images&#x27;):
+    cls = fn[:fn.rfind(&#x27;_&#x27;)].lower()
+    os.makedirs(os.path.join(&#x27;images&#x27;,cls),exist_ok=True)
+    os.replace(os.path.join(&#x27;images&#x27;,fn),os.path.join(&#x27;images&#x27;,cls,fn))</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们也定义数据集中的类别数量：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>num_classes = len(os.listdir(&#x27;images&#x27;))
+num_classes</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">37</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>为深度学习准备数据集</h2>
+<p>在开始训练我们的神经网络之前，我们需要将所有图像转换为张量，同时创建与标签（类别编号）对应的张量。大多数神经网络框架都提供了处理图像的简单工具：</p>
+<ul>
+<li>在 Tensorflow 中，可以使用 `tf.keras.preprocessing.image_dataset_from_directory`</li>
+<li>在 PyTorch 中，可以使用 `torchvision.datasets.ImageFolder`</li>
+</ul>
+<p>正如你从上面的图片中看到的那样，所有图片的比例都接近正方形，因此我们需要将所有图像调整为正方形尺寸。此外，我们还可以将图像组织成小批量数据。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># PREPARE THE DATASET</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在我们需要将数据集分为训练集和测试集：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># SPLIT INTO TRAIN-TEST DATASETS</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在定义数据加载器：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># DEFINE DATA LOADERS if needed</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># [OPTIONAL] Plot the dataset</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 3024x2016 with 7 Axes&gt;</div><div class="jp-OutputArea-output">&lt;Figure size 3024x2016 with 7 Axes&gt;</div><div class="jp-OutputArea-output">&lt;Figure size 3024x2016 with 7 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>定义一个神经网络</h2>
+<p>对于图像分类，你可能需要定义一个具有多层的卷积神经网络。需要注意以下几点：</p>
+<ul>
+<li>牢记金字塔结构，也就是说，随着网络加深，滤波器的数量应该增加。</li>
+<li>不要忘记在层之间添加激活函数（如 ReLU）和最大池化（Max Pooling）。</li>
+<li>最终的分类器可以有隐藏层，也可以没有，但输出神经元的数量应该等于类别的数量。</li>
+</ul>
+<p>一个重要的点是要正确设置最后一层的激活函数和损失函数：</p>
+<ul>
+<li>在 Tensorflow 中，你可以使用 `softmax` 作为激活函数，并使用 `sparse_categorical_crossentropy` 作为损失函数。稀疏分类交叉熵和非稀疏的区别在于，前者期望输出为类别编号，而不是 one-hot 向量。</li>
+<li>在 PyTorch 中，最后一层可以不使用激活函数，直接使用 `CrossEntropyLoss` 作为损失函数。这个函数会自动应用 softmax。</li>
+</ul>
+<p>&gt; <strong>提示：</strong> 在 PyTorch 中，你可以使用 <code>LazyLinear</code> 层代替 <code>Linear</code>，以避免手动计算输入的数量。它只需要一个 <code>n_out</code> 参数，即该层的神经元数量，输入数据的维度会在第一次 <code>forward</code> 传递时自动确定。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># DEFINE NEURAL NETWORK ARCHITECTURE</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>训练神经网络</h2>
+<p>现在我们可以开始训练神经网络了。在训练过程中，请在每个训练周期收集训练数据和测试数据的准确率，然后绘制准确率图表，以观察是否存在过拟合现象。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># TRAIN THE NEURAL NETWORK</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># PLOT THE RESULT: Train and Test Accuracy</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>迁移学习</h2>
+<p>为了提高准确率，我们可以使用预训练的神经网络作为特征提取器。可以尝试使用 VGG-16/VGG-19 模型、ResNet50 等。</p>
+<p>&gt; 由于这种训练速度较慢，可以先尝试用较少的训练轮次（例如 3 轮）来训练模型。如果需要进一步提高准确率，可以随时继续训练。</p>
+<p>在迁移学习中，我们需要以不同的方式对数据进行归一化，因此需要使用一组不同的变换重新加载数据集：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># LOAD THE DATASET
+# Perform standard transformations for VGG-16/VGG-19 if needed </code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># vgg = ...</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在为您的问题定义分类模型：</p>
+<ul>
+<li>在 PyTorch 中，有一个名为 `classifier` 的模块，您可以将其替换为适用于目标类别数量的自定义分类器。</li>
+<li>在 TensorFlow 中，使用 VGG 网络作为特征提取器，并构建一个 `Sequential` 模型，将 VGG 作为第一层，并在其上添加您的自定义分类器。</li>
+</ul></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># BUILD MODEL for your problem with your own linear layers</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>确保将 VGG 特征提取器的所有参数设置为不可训练</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># MAKE VGG Layers not trainable</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在我们可以开始训练了。请非常耐心，因为训练需要很长时间，而且我们的训练函数在一个周期结束之前不会打印任何内容。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># TRAIN THE MODEL</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在看起来好多了！</p>
+<h2>可选：计算 Top 3 准确率</h2>
+<p>我们也可以使用之前练习中的相同代码来计算 Top 3 准确率。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># CALCULATE TOP-3 Accuracy of the model</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务<a href="https://github.com/Azure/co-op-translator">Co-op Translator</a>进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。原始语言的文档应被视为权威来源。对于关键信息，建议使用专业人工翻译。我们不对因使用此翻译而产生的任何误解或误读承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

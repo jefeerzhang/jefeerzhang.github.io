@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IntroKerasTF</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 IntroKerasTF</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>Tensorflow 和 Keras 简介</h2>
+<p>&gt; 本笔记本是 <a href="http://github.com/microsoft/ai-for-beginners">AI for Beginners Curricula</a> 的一部分。访问该仓库以获取完整的学习资料。</p>
+<h3>神经网络框架</h3>
+<p>我们已经了解到，要训练神经网络，你需要：</p>
+<ul>
+<li>快速进行矩阵（张量）运算</li>
+<li>计算梯度以执行梯度下降优化</li>
+</ul>
+<p>神经网络框架可以让你：</p>
+<ul>
+<li>在可用的计算设备上操作张量，无论是 CPU、GPU，甚至是 TPU</li>
+<li>自动计算梯度（所有内置张量函数都明确编程支持梯度计算）</li>
+</ul>
+<p>可选功能：</p>
+<ul>
+<li>神经网络构造器 / 高级 API（将网络描述为一系列层）</li>
+<li>简单的训练函数（如 Scikit Learn 中的 `fit`）</li>
+<li>除梯度下降之外的多种优化算法</li>
+<li>数据处理抽象（理想情况下也能在 GPU 上运行）</li>
+</ul></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>最受欢迎的框架</h3>
+<ul>
+<li>Tensorflow 1.x - 第一个广泛使用的框架（由 Google 开发）。允许定义静态计算图，将其推送到 GPU，并显式地进行评估</li>
+<li>PyTorch - 来自 Facebook 的框架，正在迅速流行起来</li>
+<li>Keras - 基于 Tensorflow/PyTorch 的高级 API，用于统一和简化神经网络的使用（由 Francois Chollet 开发）</li>
+<li>Tensorflow 2.x + Keras - Tensorflow 的新版本，集成了 Keras 功能，支持**动态计算图**，可以执行非常类似于 numpy（以及 PyTorch）的张量操作</li>
+</ul>
+<p>我们将重点学习 Tensorflow 2.x 和 Keras。请确保你已安装 Tensorflow 2.x.x 版本：</p>
+<pre><code>
+pip install tensorflow
+</code></pre>
+<p>或者</p>
+<pre><code>
+conda install tensorflow
+</code></pre></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import tensorflow as tf
+import numpy as np
+print(tf.__version__)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">2.7.0
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>基本概念：张量</h2>
+<p><strong>张量</strong>是一种多维数组。使用张量来表示不同类型的数据非常方便：</p>
+<ul>
+<li>400x400 - 黑白图片</li>
+<li>400x400x3 - 彩色图片</li>
+<li>16x400x400x3 - 包含16张彩色图片的小批量</li>
+<li>25x400x400x3 - 一秒钟的25帧视频</li>
+<li>8x25x400x400x3 - 包含8个1秒视频的小批量</li>
+</ul></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>简单张量</h3>
+<p>你可以轻松地通过 np-array 列表创建简单的张量，或者生成随机张量：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>a = tf.constant([[1,2],[3,4]])
+print(a)
+a = tf.random.normal(shape=(10,3))
+print(a)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">tf.Tensor(
+[[1 2]
+ [3 4]], shape=(2, 2), dtype=int32)
+tf.Tensor(
+[[-0.33552304 -1.8252622  -1.8532339 ]
+ [ 1.0871267  -1.2779568   0.5240014 ]
+ [-0.12793781 -1.8618349  -0.9020286 ]
+ [ 0.5948797   0.11144501 -2.0396452 ]
+ [ 0.47620854  1.1726047  -0.4405675 ]
+ [-0.27211484 -0.08985762 -0.03376012]
+ [ 0.64274263  0.53368104 -0.9006528 ]
+ [-0.43745974 -1.0081122  -0.13442488]
+ [ 0.36497566  1.3221073  -1.8739727 ]
+ [ 0.94821155 -0.02817811  1.3563292 ]], shape=(10, 3), dtype=float32)
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>您可以对张量进行算术运算，这些运算是逐元素执行的，就像在 numpy 中一样。如果需要，张量会自动扩展到所需的维度。要从张量中提取 numpy 数组，请使用 <code>.numpy()</code>：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>print(a-a[0])
+print(tf.exp(a)[0].numpy())</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">tf.Tensor(
+[[ 0.          0.          0.        ]
+ [ 1.4226497   0.54730535  2.3772354 ]
+ [ 0.20758523 -0.03657269  0.9512053 ]
+ [ 0.93040276  1.9367073  -0.18641126]
+ [ 0.8117316   2.9978669   1.4126664 ]
+ [ 0.0634082   1.7354046   1.8194739 ]
+ [ 0.97826564  2.3589432   0.9525811 ]
+ [-0.1019367   0.81715     1.718809  ]
+ [ 0.7004987   3.1473694  -0.02073872]
+ [ 1.2837346   1.7970841   3.2095633 ]], shape=(10, 3), dtype=float32)
+[0.71496403 0.16117539 0.15672949]
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>变量</h2>
+<p>变量用于表示可以通过 <code>assign</code> 和 <code>assign_add</code> 修改的张量值。它们通常用于表示神经网络的权重。</p>
+<p>例如，这里有一个简单的方法来计算张量 <code>a</code> 所有行的总和：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>s = tf.Variable(tf.zeros_like(a[0]))
+for i in a:
+  s.assign_add(i)
+
+print(s)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;tf.Variable &#x27;Variable:0&#x27; shape=(3,) dtype=float32, numpy=array([ 2.9411097, -2.9513645, -6.2979555], dtype=float32)&gt;
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>tf.reduce_sum(a,axis=0)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;tf.Tensor: shape=(3,), dtype=float32, numpy=array([ 2.9411097, -2.9513645, -6.2979555], dtype=float32)&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>计算梯度</h2>
+<p>为了进行反向传播，你需要计算梯度。这可以通过使用 <code>tf.GradientTape()</code> 来实现：</p>
+<ul>
+<li>在计算过程中添加 `with tf.GradientTape` 块</li>
+<li>使用 `tape.watch` 标记需要计算梯度的张量（所有变量会自动被监视）</li>
+<li>进行所需的计算（构建计算图）</li>
+<li>使用 `tape.gradient` 获取梯度</li>
+</ul></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>a = tf.random.normal(shape=(2, 2))
+b = tf.random.normal(shape=(2, 2))
+
+with tf.GradientTape() as tape:
+  tape.watch(a)  # Start recording the history of operations applied to `a`
+  c = tf.sqrt(tf.square(a) + tf.square(b))  # Do some math using `a`
+  # What&#x27;s the gradient of `c` with respect to `a`?
+  dc_da = tape.gradient(c, a)
+  print(dc_da)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">tf.Tensor(
+[[ 0.40935674 -0.3495818 ]
+ [ 0.94165146 -0.33209163]], shape=(2, 2), dtype=float32)
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>示例 1：线性回归</h2>
+<p>现在我们已经掌握了足够的知识来解决经典的<strong>线性回归</strong>问题。让我们生成一个小型的合成数据集：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import matplotlib.pyplot as plt
+from sklearn.datasets import make_classification, make_regression
+from sklearn.model_selection import train_test_split
+import random</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>np.random.seed(13) # pick the seed for reproducability - change it to explore the effects of random variations
+
+train_x = np.linspace(0, 3, 120)
+train_labels = 2 * train_x + 0.9 + np.random.randn(*train_x.shape) * 0.5
+
+plt.scatter(train_x,train_labels)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;matplotlib.collections.PathCollection at 0x12892776880&gt;</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>线性回归由一条直线 $f_{W,b}(x) = Wx+b$ 定义，其中 $W, b$ 是我们需要找到的模型参数。在数据集 $\{x_i,y_i\}_{i=1}^N$ 上的误差（也称为<strong>损失函数</strong>）可以定义为均方误差：</p>
+<p>$$</p>
+<p>\mathcal{L}(W,b) = {1\over N}\sum_{i=1}^N (f_{W,b}(x_i)-y_i)^2</p>
+<p>$$</p>
+<p>让我们定义我们的模型和损失函数：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>input_dim = 1
+output_dim = 1
+learning_rate = 0.1
+
+# This is our weight matrix
+w = tf.Variable([[100.0]])
+# This is our bias vector
+b = tf.Variable(tf.zeros(shape=(output_dim,)))
+
+def f(x):
+  return tf.matmul(x,w) + b
+
+def compute_loss(labels, predictions):
+  return tf.reduce_mean(tf.square(labels - predictions))</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们将通过一系列小批量数据来训练模型。我们将使用梯度下降法，根据以下公式调整模型参数：</p>
+<p>$$</p>
+<p>\begin{array}{l}</p>
+<p>W^{(n+1)}=W^{(n)}-\eta\frac{\partial\mathcal{L}}{\partial W} \\</p>
+<p>b^{(n+1)}=b^{(n)}-\eta\frac{\partial\mathcal{L}}{\partial b} \\</p>
+<p>\end{array}</p>
+<p>$$</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def train_on_batch(x, y):
+  with tf.GradientTape() as tape:
+    predictions = f(x)
+    loss = compute_loss(y, predictions)
+    # Note that `tape.gradient` works with a list as well (w, b).
+    dloss_dw, dloss_db = tape.gradient(loss, [w, b])
+  w.assign_sub(learning_rate * dloss_dw)
+  b.assign_sub(learning_rate * dloss_db)
+  return loss</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们进行训练。我们将多次遍历数据集（所谓的<strong>epochs</strong>），将其分成小批量并调用上面定义的函数：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># Shuffle the data.
+indices = np.random.permutation(len(train_x))
+features = tf.constant(train_x[indices],dtype=tf.float32)
+labels = tf.constant(train_labels[indices],dtype=tf.float32)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>batch_size = 4
+for epoch in range(10):
+  for i in range(0,len(features),batch_size):
+    loss = train_on_batch(tf.reshape(features[i:i+batch_size],(-1,1)),tf.reshape(labels[i:i+batch_size],(-1,1)))
+  print(&#x27;Epoch %d: last batch loss = %.4f&#x27; % (epoch, float(loss)))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 0: last batch loss = 94.5247
+Epoch 1: last batch loss = 9.3428
+Epoch 2: last batch loss = 1.4166
+Epoch 3: last batch loss = 0.5224
+Epoch 4: last batch loss = 0.3807
+Epoch 5: last batch loss = 0.3495
+Epoch 6: last batch loss = 0.3413
+Epoch 7: last batch loss = 0.3390
+Epoch 8: last batch loss = 0.3384
+Epoch 9: last batch loss = 0.3382
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们现在已经获得了优化后的参数 $W$ 和 $b$。注意，它们的值与生成数据集时使用的原始值相似（$W=2, b=1$）。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>w,b</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">(&lt;tf.Variable &#x27;Variable:0&#x27; shape=(1, 1) dtype=float32, numpy=array([[1.8616779]], dtype=float32)&gt;,
+ &lt;tf.Variable &#x27;Variable:0&#x27; shape=(1,) dtype=float32, numpy=array([1.0710956], dtype=float32)&gt;)</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>plt.scatter(train_x,train_labels)
+x = np.array([min(train_x),max(train_x)])
+y = w.numpy()[0,0]*x+b.numpy()[0]
+plt.plot(x,y,color=&#x27;red&#x27;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[&lt;matplotlib.lines.Line2D at 0x12892ae5eb0&gt;]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>计算图与GPU计算</h2>
+<p>每当我们计算张量表达式时，Tensorflow会构建一个可以在可用计算设备（例如CPU或GPU）上运行的计算图。由于我们在代码中使用了任意的Python函数，这些函数无法作为计算图的一部分，因此当我们在GPU上运行代码时，需要在CPU和GPU之间来回传递数据，并在CPU上计算自定义函数。</p>
+<p>Tensorflow允许我们使用<code>@tf.function</code>装饰器标记Python函数，这样可以将该函数作为同一计算图的一部分。这个装饰器可以应用于使用标准Tensorflow张量操作的函数。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>@tf.function
+def train_on_batch(x, y):
+  with tf.GradientTape() as tape:
+    predictions = f(x)
+    loss = compute_loss(y, predictions)
+    # Note that `tape.gradient` works with a list as well (w, b).
+    dloss_dw, dloss_db = tape.gradient(loss, [w, b])
+  w.assign_sub(learning_rate * dloss_dw)
+  b.assign_sub(learning_rate * dloss_db)
+  return loss</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>代码没有变化，但如果您在GPU上运行此代码并使用更大的数据集，您会注意到速度上的差异。</p>
+<h2>数据集 API</h2>
+<p>Tensorflow 提供了一个方便的 API 来处理数据。让我们尝试使用它。同时，我们也将从零开始训练我们的模型。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>w.assign([[10.0]])
+b.assign([0.0])
+
+# Create a tf.data.Dataset object for easy batched iteration
+dataset = tf.data.Dataset.from_tensor_slices((train_x.astype(np.float32), train_labels.astype(np.float32)))
+dataset = dataset.shuffle(buffer_size=1024).batch(256)
+
+for epoch in range(10):
+  for step, (x, y) in enumerate(dataset):
+    loss = train_on_batch(tf.reshape(x,(-1,1)), tf.reshape(y,(-1,1)))
+  print(&#x27;Epoch %d: last batch loss = %.4f&#x27; % (epoch, float(loss)))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 0: last batch loss = 173.4585
+Epoch 1: last batch loss = 13.8459
+Epoch 2: last batch loss = 4.5407
+Epoch 3: last batch loss = 3.7364
+Epoch 4: last batch loss = 3.4334
+Epoch 5: last batch loss = 3.1790
+Epoch 6: last batch loss = 2.9458
+Epoch 7: last batch loss = 2.7311
+Epoch 8: last batch loss = 2.5332
+Epoch 9: last batch loss = 2.3508
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>示例 2：分类</h2>
+<p>现在我们来考虑一个二分类问题。一个很好的例子是根据肿瘤的大小和年龄来区分恶性和良性。</p>
+<p>核心模型与回归类似，但我们需要使用不同的损失函数。让我们从生成样本数据开始：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>np.random.seed(0) # pick the seed for reproducibility - change it to explore the effects of random variations
+
+n = 100
+X, Y = make_classification(n_samples = n, n_features=2,
+                           n_redundant=0, n_informative=2, flip_y=0.05,class_sep=1.5)
+X = X.astype(np.float32)
+Y = Y.astype(np.int32)
+
+split = [ 70*n//100, (15+70)*n//100 ]
+train_x, valid_x, test_x = np.split(X, split)
+train_labels, valid_labels, test_labels = np.split(Y, split)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def plot_dataset(features, labels, W=None, b=None):
+    # prepare the plot
+    fig, ax = plt.subplots(1, 1)
+    ax.set_xlabel(&#x27;$x_i[0]$ -- (feature 1)&#x27;)
+    ax.set_ylabel(&#x27;$x_i[1]$ -- (feature 2)&#x27;)
+    colors = [&#x27;r&#x27; if l else &#x27;b&#x27; for l in labels]
+    ax.scatter(features[:, 0], features[:, 1], marker=&#x27;o&#x27;, c=colors, s=100, alpha = 0.5)
+    if W is not None:
+        min_x = min(features[:,0])
+        max_x = max(features[:,1])
+        min_y = min(features[:,1])*(1-.1)
+        max_y = max(features[:,1])*(1+.1)
+        cx = np.array([min_x,max_x],dtype=np.float32)
+        cy = (0.5-W[0]*cx-b)/W[1]
+        ax.plot(cx,cy,&#x27;g&#x27;)
+        ax.set_ylim(min_y,max_y)
+    fig.show()</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>plot_dataset(train_x, train_labels)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">C:\Users\dmitryso\AppData\Local\Temp/ipykernel_66184/2721537645.py:17: UserWarning: Matplotlib is currently using module://matplotlib_inline.backend_inline, which is a non-GUI backend, so cannot show the figure.
+  fig.show()
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>数据归一化</h2>
+<p>在训练之前，通常会将输入特征调整到标准范围 [0,1]（或 [-1,1]）。具体原因我们会在课程后面详细讨论，但简单来说，原因如下：我们希望通过网络传递的值不会变得过大或过小，通常会约定将所有值保持在接近 0 的小范围内。因此，我们用小的随机数初始化权重，并将信号保持在相同的范围内。</p>
+<p>在进行数据归一化时，需要减去最小值并除以范围。我们使用训练数据计算最小值和范围，然后用训练集的最小值和范围对测试/验证数据集进行归一化。这是因为在实际应用中，我们通常只知道训练集，而无法预知网络将要预测的所有新输入值。偶尔会有新值超出 [0,1] 范围，但这并不重要。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>train_x_norm = (train_x-np.min(train_x)) / (np.max(train_x)-np.min(train_x))
+valid_x_norm = (valid_x-np.min(train_x)) / (np.max(train_x)-np.min(train_x))
+test_x_norm = (test_x-np.min(train_x)) / (np.max(train_x)-np.min(train_x))</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>训练单层感知机</h2>
+<p>让我们使用 Tensorflow 的梯度计算机制来训练单层感知机。</p>
+<p>我们的神经网络将有两个输入和一个输出。权重矩阵 $W$ 的大小为 $2\times1$，偏置向量 $b$ 的大小为 $1$。</p>
+<p>核心模型与之前的例子相同，但损失函数将使用逻辑损失。为了应用逻辑损失，我们需要将网络输出的值转换为<strong>概率</strong>，即需要通过 <code>sigmoid</code> 激活函数将输出 $z$ 映射到 [0,1] 范围：$p=\sigma(z)$。</p>
+<p>如果我们得到第 i 个输入值对应的实际类别 $y_i\in\{0,1\}$ 的概率 $p_i$，我们可以计算损失为 $\mathcal{L_i}=-(y_i\log p_i + (1-y_i)\log(1-p_i))$。</p>
+<p>在 Tensorflow 中，这两个步骤（应用 sigmoid 和逻辑损失）可以通过调用 <code>sigmoid_cross_entropy_with_logits</code> 函数一次性完成。由于我们在小批量中训练网络，因此需要使用 <code>reduce_mean</code> 对小批量中的所有元素的损失进行平均：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>W = tf.Variable(tf.random.normal(shape=(2,1)),dtype=tf.float32)
+b = tf.Variable(tf.zeros(shape=(1,),dtype=tf.float32))
+
+learning_rate = 0.1
+
+@tf.function
+def train_on_batch(x, y):
+  with tf.GradientTape() as tape:
+    z = tf.matmul(x, W) + b
+    loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(labels=y,logits=z))
+  dloss_dw, dloss_db = tape.gradient(loss, [W, b])
+  W.assign_sub(learning_rate * dloss_dw)
+  b.assign_sub(learning_rate * dloss_db)
+  return loss</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们将使用包含16个元素的小批量，并进行几轮训练：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># Create a tf.data.Dataset object for easy batched iteration
+dataset = tf.data.Dataset.from_tensor_slices((train_x_norm.astype(np.float32), train_labels.astype(np.float32)))
+dataset = dataset.shuffle(128).batch(2)
+
+for epoch in range(10):
+  for step, (x, y) in enumerate(dataset):
+    loss = train_on_batch(x, tf.expand_dims(y,1))
+  print(&#x27;Epoch %d: last batch loss = %.4f&#x27; % (epoch, float(loss)))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 0: last batch loss = 0.3823
+Epoch 1: last batch loss = 0.5243
+Epoch 2: last batch loss = 0.4510
+Epoch 3: last batch loss = 0.3261
+Epoch 4: last batch loss = 0.4177
+Epoch 5: last batch loss = 0.3323
+Epoch 6: last batch loss = 0.6294
+Epoch 7: last batch loss = 0.6334
+Epoch 8: last batch loss = 0.2571
+Epoch 9: last batch loss = 0.3425
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>为了确保我们的训练有效，让我们绘制出分隔两类的直线。分隔线由方程 $W\times x + b = 0.5$ 定义。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>plot_dataset(train_x,train_labels,W.numpy(),b.numpy())</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">C:\Users\dmitryso\AppData\Local\Temp/ipykernel_66184/2721537645.py:17: UserWarning: Matplotlib is currently using module://matplotlib_inline.backend_inline, which is a non-GUI backend, so cannot show the figure.
+  fig.show()
+</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们看看我们的模型在验证数据上的表现。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>pred = tf.matmul(test_x,W)+b
+fig,ax = plt.subplots(1,2)
+ax[0].scatter(test_x[:,0],test_x[:,1],c=pred[:,0]&gt;0.5)
+ax[1].scatter(test_x[:,0],test_x[:,1],c=valid_labels)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;matplotlib.collections.PathCollection at 0x12892a01460&gt;</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 2 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>要计算验证数据的准确性，我们可以将布尔类型转换为浮点数，然后计算平均值：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>tf.reduce_mean(tf.cast(((pred[0]&gt;0.5)==test_labels),tf.float32))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;tf.Tensor: shape=(), dtype=float32, numpy=0.46666667&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们来解释这里发生了什么：</p>
+<ul>
+<li>`pred` 是网络预测的值。它们并不完全是概率，因为我们没有使用激活函数，但大于 0.5 的值对应于类别 1，而小于 0.5 的值对应于类别 0。</li>
+<li>`pred[0]&gt;0.5` 会创建一个布尔张量，其中 `True` 对应于类别 1，`False` 对应于类别 0。</li>
+<li>我们将该张量与期望的标签 `valid_labels` 进行比较，得到一个布尔向量，表示预测是否正确，其中 `True` 表示预测正确，`False` 表示预测错误。</li>
+<li>我们使用 `tf.cast` 将该张量转换为浮点数。</li>
+<li>然后我们使用 `tf.reduce_mean` 计算平均值——这正是我们想要的准确率。</li>
+</ul></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>使用 TensorFlow/Keras 优化器</h2>
+<p>TensorFlow 与 Keras 紧密集成，提供了许多实用功能。例如，我们可以使用不同的<strong>优化算法</strong>。让我们来试试，同时在训练过程中打印获得的准确率。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>optimizer = tf.keras.optimizers.Adam(0.01)
+
+W = tf.Variable(tf.random.normal(shape=(2,1)))
+b = tf.Variable(tf.zeros(shape=(1,),dtype=tf.float32))
+
+@tf.function
+def train_on_batch(x, y):
+  vars = [W, b]
+  with tf.GradientTape() as tape:
+    z = tf.sigmoid(tf.matmul(x, W) + b)
+    loss = tf.reduce_mean(tf.keras.losses.binary_crossentropy(z,y))
+    correct_prediction = tf.equal(tf.round(y), tf.round(z))
+    acc = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+    grads = tape.gradient(loss, vars)
+    optimizer.apply_gradients(zip(grads,vars))
+  return loss,acc
+
+for epoch in range(20):
+  for step, (x, y) in enumerate(dataset):
+    loss,acc = train_on_batch(tf.reshape(x,(-1,2)), tf.reshape(y,(-1,1)))
+  print(&#x27;Epoch %d: last batch loss = %.4f, acc = %.4f&#x27; % (epoch, float(loss),acc))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 0: last batch loss = 4.7787, acc = 1.0000
+Epoch 1: last batch loss = 8.4343, acc = 0.5000
+Epoch 2: last batch loss = 8.3255, acc = 0.5000
+Epoch 3: last batch loss = 7.5579, acc = 0.5000
+Epoch 4: last batch loss = 6.5254, acc = 0.5000
+Epoch 5: last batch loss = 7.3800, acc = 0.5000
+Epoch 6: last batch loss = 7.7586, acc = 0.5000
+Epoch 7: last batch loss = 10.4724, acc = 0.0000
+Epoch 8: last batch loss = 9.4423, acc = 0.5000
+Epoch 9: last batch loss = 4.1888, acc = 1.0000
+Epoch 10: last batch loss = 11.2127, acc = 0.0000
+Epoch 11: last batch loss = 9.0417, acc = 0.5000
+Epoch 12: last batch loss = 7.9847, acc = 0.5000
+Epoch 13: last batch loss = 3.7879, acc = 1.0000
+Epoch 14: last batch loss = 6.8455, acc = 0.5000
+Epoch 15: last batch loss = 6.5204, acc = 0.5000
+Epoch 16: last batch loss = 9.2386, acc = 0.5000
+Epoch 17: last batch loss = 6.2447, acc = 0.5000
+Epoch 18: last batch loss = 3.9107, acc = 1.0000
+Epoch 19: last batch loss = 5.7645, acc = 1.0000
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p><strong>任务 1</strong>：绘制训练过程中训练数据和验证数据的损失函数和准确率的图表</p>
+<p><strong>任务 2</strong>：尝试使用此代码解决 MNIST 分类问题。提示：使用 <code>softmax_crossentropy_with_logits</code> 或 <code>sparse_softmax_cross_entropy_with_logits</code> 作为损失函数。在第一种情况下，你需要以*独热编码*的形式提供期望的输出值；在第二种情况下，则以整数类别编号的形式提供。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>Keras</h2>
+<h3>人性化的深度学习</h3>
+<ul>
+<li>Keras 是由 Francois Chollet 开发的一个库，最初用于在 Tensorflow、CNTK 和 Theano 之上运行，以统一所有底层框架。虽然你仍然可以单独安装 Keras，但不建议这样做。</li>
+<li>现在 Keras 已经包含在 Tensorflow 库中</li>
+<li>你可以轻松通过层构建神经网络</li>
+<li>包含 `fit` 函数来完成所有训练，还有许多函数可以处理常见数据（图片、文本等）</li>
+<li>提供大量示例</li>
+<li>支持功能性 API 和顺序 API</li>
+</ul>
+<p>Keras 为神经网络提供了更高层次的抽象，使我们可以通过层、模型和优化器进行操作，而不是直接处理张量和梯度。</p>
+<p>Keras 创作者编写的经典深度学习书籍：<a href="https://www.manning.com/books/deep-learning-with-python">Deep Learning with Python</a></p>
+<h3>功能性 API</h3>
+<p>使用功能性 API 时，我们将网络的<strong>输入</strong>定义为 <code>keras.Input</code>，然后通过一系列计算得到<strong>输出</strong>。最后，我们定义<strong>模型</strong>为一个将输入转换为输出的对象。</p>
+<p>一旦获得了<strong>模型</strong>对象，我们需要：</p>
+<ul>
+<li>**编译模型**，通过指定损失函数和优化器来配置模型</li>
+<li>**训练模型**，通过调用 `fit` 函数并提供训练数据（以及可能的验证数据）</li>
+</ul></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>inputs = tf.keras.Input(shape=(2,))
+z = tf.keras.layers.Dense(1,kernel_initializer=&#x27;glorot_uniform&#x27;,activation=&#x27;sigmoid&#x27;)(inputs)
+model = tf.keras.models.Model(inputs,z)
+
+model.compile(tf.keras.optimizers.Adam(0.1),&#x27;binary_crossentropy&#x27;,[&#x27;accuracy&#x27;])
+model.summary()
+h = model.fit(train_x_norm,train_labels,batch_size=8,epochs=15)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;model&quot;
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ input_1 (InputLayer)        [(None, 2)]               0         
+                                                                 
+ dense (Dense)               (None, 1)                 3         
+                                                                 
+=================================================================
+Total params: 3
+Trainable params: 3
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/15
+9/9 [==============================] - 1s 2ms/step - loss: 0.7812 - accuracy: 0.2857
+Epoch 2/15
+9/9 [==============================] - 0s 2ms/step - loss: 0.7142 - accuracy: 0.4000
+Epoch 3/15
+9/9 [==============================] - 0s 2ms/step - loss: 0.6683 - accuracy: 0.6143
+Epoch 4/15
+9/9 [==============================] - 0s 2ms/step - loss: 0.6221 - accuracy: 0.8429
+Epoch 5/15
+9/9 [==============================] - 0s 2ms/step - loss: 0.5843 - accuracy: 0.8857
+Epoch 6/15
+9/9 [==============================] - 0s 2ms/step - loss: 0.5447 - accuracy: 0.9429
+Epoch 7/15
+9/9 [==============================] - 0s 2ms/step - loss: 0.5135 - accuracy: 0.9286
+Epoch 8/15
+9/9 [==============================] - 0s 2ms/step - loss: 0.4878 - accuracy: 0.9429
+Epoch 9/15
+9/9 [==============================] - 0s 2ms/step - loss: 0.4679 - accuracy: 0.9429
+Epoch 10/15
+9/9 [==============================] - 0s 2ms/step - loss: 0.4446 - accuracy: 0.9429
+Epoch 11/15
+9/9 [==============================] - 0s 2ms/step - loss: 0.4349 - accuracy: 0.8714
+Epoch 12/15
+9/9 [==============================] - 0s 2ms/step - loss: 0.4156 - accuracy: 0.9286
+Epoch 13/15
+9/9 [==============================] - 0s 2ms/step - loss: 0.4019 - accuracy: 0.9429
+Epoch 14/15
+9/9 [==============================] - 0s 2ms/step - loss: 0.3908 - accuracy: 0.9286
+Epoch 15/15
+9/9 [==============================] - 0s 2ms/step - loss: 0.3777 - accuracy: 0.9286
+</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>plt.plot(h.history[&#x27;accuracy&#x27;])</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[&lt;matplotlib.lines.Line2D at 0x12894b95250&gt;]</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>顺序式 API</h3>
+<p>或者，我们可以将模型视为一个<strong>层的序列</strong>，只需通过将这些层添加到 <code>model</code> 对象中来指定它们：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model = tf.keras.models.Sequential()
+model.add(tf.keras.layers.Dense(5,activation=&#x27;sigmoid&#x27;,input_shape=(2,)))
+model.add(tf.keras.layers.Dense(1,activation=&#x27;sigmoid&#x27;))
+
+model.compile(tf.keras.optimizers.Adam(0.1),&#x27;binary_crossentropy&#x27;,[&#x27;accuracy&#x27;])
+model.summary()
+model.fit(train_x_norm,train_labels,validation_data=(test_x_norm,test_labels),batch_size=8,epochs=15)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;sequential&quot;
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ dense_1 (Dense)             (None, 5)                 15        
+                                                                 
+ dense_2 (Dense)             (None, 1)                 6         
+                                                                 
+=================================================================
+Total params: 21
+Trainable params: 21
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/15
+9/9 [==============================] - 1s 64ms/step - loss: 0.6994 - accuracy: 0.5000 - val_loss: 0.6719 - val_accuracy: 0.4667
+Epoch 2/15
+9/9 [==============================] - 0s 6ms/step - loss: 0.6635 - accuracy: 0.5429 - val_loss: 0.6531 - val_accuracy: 0.4667
+Epoch 3/15
+9/9 [==============================] - 0s 5ms/step - loss: 0.6469 - accuracy: 0.5857 - val_loss: 0.5775 - val_accuracy: 1.0000
+Epoch 4/15
+9/9 [==============================] - 0s 4ms/step - loss: 0.5639 - accuracy: 0.9143 - val_loss: 0.5395 - val_accuracy: 0.7333
+Epoch 5/15
+9/9 [==============================] - 0s 5ms/step - loss: 0.5236 - accuracy: 0.7143 - val_loss: 0.4498 - val_accuracy: 0.9333
+Epoch 6/15
+9/9 [==============================] - 0s 5ms/step - loss: 0.4573 - accuracy: 0.8714 - val_loss: 0.3584 - val_accuracy: 1.0000
+Epoch 7/15
+9/9 [==============================] - 0s 5ms/step - loss: 0.3867 - accuracy: 0.8714 - val_loss: 0.2989 - val_accuracy: 0.9333
+Epoch 8/15
+9/9 [==============================] - 0s 7ms/step - loss: 0.3388 - accuracy: 0.8857 - val_loss: 0.2204 - val_accuracy: 1.0000
+Epoch 9/15
+9/9 [==============================] - 0s 6ms/step - loss: 0.2815 - accuracy: 0.9429 - val_loss: 0.1957 - val_accuracy: 1.0000
+Epoch 10/15
+9/9 [==============================] - 0s 6ms/step - loss: 0.2692 - accuracy: 0.8857 - val_loss: 0.1323 - val_accuracy: 1.0000
+Epoch 11/15
+9/9 [==============================] - 0s 5ms/step - loss: 0.2591 - accuracy: 0.9429 - val_loss: 0.1105 - val_accuracy: 1.0000
+Epoch 12/15
+9/9 [==============================] - 0s 6ms/step - loss: 0.2229 - accuracy: 0.9286 - val_loss: 0.1051 - val_accuracy: 1.0000
+Epoch 13/15
+9/9 [==============================] - 0s 5ms/step - loss: 0.2146 - accuracy: 0.9143 - val_loss: 0.0919 - val_accuracy: 1.0000
+Epoch 14/15
+9/9 [==============================] - 0s 5ms/step - loss: 0.2031 - accuracy: 0.9429 - val_loss: 0.0859 - val_accuracy: 1.0000
+Epoch 15/15
+9/9 [==============================] - 0s 5ms/step - loss: 0.1997 - accuracy: 0.9429 - val_loss: 0.0829 - val_accuracy: 1.0000
+</div><div class="jp-OutputArea-output">&lt;keras.callbacks.History at 0x12894cfba30&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>分类损失函数</h2>
+<p>正确指定网络最后一层的损失函数和激活函数非常重要。主要规则如下：</p>
+<ul>
+<li>如果网络有一个输出（**二分类**），我们使用 **sigmoid** 激活函数；对于 **多分类**，使用 **softmax**。</li>
+<li>如果输出类别以独热编码表示，损失函数应为 **交叉熵损失**（分类交叉熵）；如果输出包含类别编号，则使用 **稀疏分类交叉熵**。对于 **二分类**，使用 **二元交叉熵**（与 **对数损失** 相同）。</li>
+<li>**多标签分类** 是指一个对象可以同时属于多个类别。在这种情况下，我们需要使用独热编码对标签进行编码，并使用 **sigmoid** 作为激活函数，以确保每个类别的概率在 0 和 1 之间。</li>
+</ul>
+<p>| 分类类型       | 标签格式                 | 激活函数       | 损失函数                  |</p>
+<p>|---------------|-----------------------|-----------------|--------------------------|</p>
+<p>| 二分类        | 第一个类别的概率         | sigmoid         | binary crossentropy      |</p>
+<p>| 二分类        | 独热编码（2 个输出）     | softmax         | categorical crossentropy |</p>
+<p>| 多分类        | 独热编码                 | softmax         | categorical crossentropy |</p>
+<p>| 多分类        | 类别编号                 | softmax         | sparse categorical crossentropy |</p>
+<p>| 多标签        | 独热编码                 | sigmoid         | categorical crossentropy |</p>
+<p>&gt; 二分类也可以作为两输出的多分类的特殊情况处理。在这种情况下，我们需要使用 <strong>softmax</strong>。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p><strong>任务 3</strong>：</p>
+<p>使用 Keras 训练 MNIST 分类器：</p>
+<ul>
+<li>注意，Keras 包含一些标准数据集，包括 MNIST。要使用 Keras 中的 MNIST，只需要几行代码即可（更多信息请参考 [这里](https://www.tensorflow.org/api_docs/python/tf/keras/datasets/mnist)）。</li>
+<li>尝试多种网络配置，包括不同数量的层/神经元、激活函数。</li>
+</ul>
+<p>你能够达到的最高准确率是多少？</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>要点</h2>
+<ul>
+<li>Tensorflow 允许你在低层次上操作张量，提供了最大的灵活性。</li>
+<li>有一些方便的工具可以用来处理数据（`td.Data`）和层（`tf.layers`）。</li>
+<li>对于初学者或常见任务，推荐使用 **Keras**，它可以通过层来构建网络。</li>
+<li>如果需要非标准的架构，你可以实现自己的 Keras 层，然后在 Keras 模型中使用它。</li>
+<li>也可以考虑了解一下 PyTorch，并对比两者的实现方式。</li>
+</ul>
+<p>Keras 的创建者提供了一个关于 Keras 和 Tensorflow 2.0 的优秀示例笔记本，可以在<a href="https://t.co/k694J95PI8">这里</a>找到。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务 <a href="https://github.com/Azure/co-op-translator">Co-op Translator</a> 进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。应以原始语言的文档作为权威来源。对于关键信息，建议使用专业人工翻译。我们对因使用此翻译而引起的任何误解或误读不承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

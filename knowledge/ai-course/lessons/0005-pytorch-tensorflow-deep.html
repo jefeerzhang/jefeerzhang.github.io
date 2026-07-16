@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第 5 课：PyTorch 与 TensorFlow 深入</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <div class="lesson-container">
+    <div class="nav">
+      <a href="0004-build-your-own-framework.html">← 上一课</a>
+      <span class="breadcrumb">📍 Phase 2 · 核心深入</span>
+      <a href="0006-cnns-and-computer-vision.html">下一课：CNN 与计算机视觉 →</a>
+    </div>
+    <div class="progress-bar">
+      <div class="step done"></div><div class="step done"></div><div class="step done"></div>
+      <div class="step done"></div><div class="step current"></div><div class="step"></div>
+      <div class="step"></div><div class="step"></div><div class="step"></div>
+      <div class="step"></div><div class="step"></div><div class="step"></div>
+    </div>
+
+    <h1>第 5 课：PyTorch 与 TensorFlow 深入</h1>
+    <p class="meta">预计 45 分钟 · 目标：掌握框架核心概念，理解过拟合/欠拟合与正则化方法</p>
+
+    <div class="callout">
+      <strong>本课目标：</strong> 理解 PyTorch 和 TensorFlow 的核心抽象（Tensor、自动微分、计算图）；学会识别和对抗过拟合；掌握 Dropout、L2 正则化和早停等技巧。
+    </div>
+
+    <h2>1. 框架到底帮你做了什么？</h2>
+    <p>上一课你亲手写了前向传播和反向传播。框架的核心价值就是<strong>自动帮你算梯度</strong>（自动微分），让你专注于定义网络结构。</p>
+
+    <table>
+      <tr><th>概念</th><th>PyTorch</th><th>TensorFlow/Keras</th></tr>
+      <tr><td>张量</td><td><code>torch.Tensor</code></td><td><code>tf.Tensor</code></td></tr>
+      <tr><td>自动微分</td><td><code>autograd</code>（动态图）</td><td><code>GradientTape</code>（动态图）</td></tr>
+      <tr><td>模型定义</td><td><code>nn.Module</code></td><td><code>keras.Model</code> / Sequential</td></tr>
+      <tr><td>数据加载</td><td><code>DataLoader</code></td><td><code>tf.data.Dataset</code></td></tr>
+      <tr><td>训练循环</td><td>手动编写</td><td><code>model.fit()</code> 或自定义</td></tr>
+    </table>
+
+    <h2>2. PyTorch 核心：Tensor + autograd</h2>
+    <div class="code-title"><span>pytorch_basics.py</span><span class="lang-badge">Python</span></div>
+    <div class="code-block"><span class="keyword">import</span> torch
+
+<span class="comment"># 创建张量，requires_grad=True 让 autograd 追踪它的梯度</span>
+x = torch.tensor([[<span class="number">1.0</span>, <span class="number">2.0</span>], [<span class="number">3.0</span>, <span class="number">4.0</span>]], requires_grad=<span class="keyword">True</span>)
+
+<span class="comment"># 前向计算</span>
+y = (x ** <span class="number">2</span>).sum()  <span class="comment"># y = x1² + x2² + x3² + x4²</span>
+
+<span class="comment"># 反向传播：自动计算 dy/dx</span>
+y.backward()
+
+<span class="comment"># 梯度已自动填入 x.grad</span>
+print(x.grad)  <span class="comment"># tensor([[2., 4.], [6., 8.]])  ← dy/dx = 2x</span></div>
+
+    <h2>3. PyTorch 训练模板</h2>
+    <div class="code-title"><span>pytorch_train_template.py</span><span class="lang-badge">Python</span></div>
+    <div class="code-block"><span class="keyword">import</span> torch
+<span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn
+<span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> DataLoader, TensorDataset
+
+<span class="comment"># 1. 定义模型</span>
+model = nn.Sequential(
+    nn.Linear(<span class="number">784</span>, <span class="number">128</span>), nn.ReLU(),
+    nn.Linear(<span class="number">128</span>, <span class="number">10</span>)   <span class="comment"># MNIST 10 类</span>
+)
+
+<span class="comment"># 2. 定义损失和优化器</span>
+criterion = nn.CrossEntropyLoss()
+optimizer = torch.optim.Adam(model.parameters(), lr=<span class="number">1e-3</span>)
+
+<span class="comment"># 3. 训练循环</span>
+<span class="keyword">for</span> epoch <span class="keyword">in</span> range(<span class="number">10</span>):
+    <span class="keyword">for</span> xb, yb <span class="keyword">in</span> dataloader:
+        pred = model(xb)              <span class="comment"># 前向</span>
+        loss = criterion(pred, yb)    <span class="comment"># 算损失</span>
+        optimizer.zero_grad()         <span class="comment"># 清旧梯度</span>
+        loss.backward()               <span class="comment"># 反向传播</span>
+        optimizer.step()              <span class="comment"># 更新参数</span></div>
+
+    <h2>4. TensorFlow/Keras 对比</h2>
+    <div class="code-title"><span>keras_train_template.py</span><span class="lang-badge">Python</span></div>
+    <div class="code-block"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf
+
+<span class="comment"># Keras Sequential API：几行搞定</span>
+model = tf.keras.Sequential([
+    tf.keras.layers.Dense(<span class="number">128</span>, activation=<span class="string">'relu'</span>, input_shape=(<span class="number">784</span>,)),
+    tf.keras.layers.Dense(<span class="number">10</span>)
+])
+
+model.compile(
+    optimizer=<span class="string">'adam'</span>,
+    loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=<span class="keyword">True</span>),
+    metrics=[<span class="string">'accuracy'</span>]
+)
+
+model.fit(train_data, train_labels, epochs=<span class="number">10</span>, batch_size=<span class="number">32</span>)</div>
+
+    <h2>5. 过拟合 vs 欠拟合</h2>
+    <table>
+      <tr><th>现象</th><th>表现</th><th>原因</th><th>对策</th></tr>
+      <tr><td><strong>欠拟合</strong></td><td>训练集和测试集都差</td><td>模型太简单</td><td>加层、加神经元</td></tr>
+      <tr><td><strong>过拟合</strong></td><td>训练集好、测试集差</td><td>模型太复杂/数据太少</td><td>正则化、Dropout、加数据</td></tr>
+      <tr><td><strong>理想</strong></td><td>训练集和测试集都好</td><td>模型复杂度匹配</td><td>保持现状</td></tr>
+    </table>
+
+    <div class="callout tip">
+      <strong>💡 偏差-方差权衡：</strong> 欠拟合 = 高偏差（模型能力不够）；过拟合 = 高方差（模型对训练数据太敏感）。目标是找到两者之间的甜点。
+    </div>
+
+    <h2>6. 正则化方法</h2>
+    <div class="code-block"><span class="comment"># 1. Dropout：训练时随机丢弃一部分神经元</span>
+nn.Dropout(p=<span class="number">0.5</span>)  <span class="comment"># 50% 概率置零</span>
+
+<span class="comment"># 2. L2 正则化（权重衰减）：在损失中加入 ||w||² 惩罚</span>
+optimizer = torch.optim.Adam(model.parameters(), lr=<span class="number">1e-3</span>, weight_decay=<span class="number">1e-4</span>)
+
+<span class="comment"># 3. 早停（Early Stopping）：验证集 loss 不再下降时停止训练</span>
+<span class="comment"># PyTorch 需手动实现；Keras 有内置回调</span>
+early_stop = tf.keras.callbacks.EarlyStopping(patience=<span class="number">5</span>, restore_best_weights=<span class="keyword">True</span>)</div>
+
+    <div class="notebook-link">
+      <span class="icon">📓</span>
+      <div>
+        <strong>配套 Notebook：</strong>
+        <a href="../notebooks/3-NeuralNetworks/05-Frameworks/IntroPyTorch.html" target="_blank">IntroPyTorch.ipynb</a> ·
+        <a href="../notebooks/3-NeuralNetworks/05-Frameworks/IntroKerasTF.html" target="_blank">IntroKerasTF.ipynb</a>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-title">✍️ 动手练习：观察过拟合</div>
+      <p>1. 打开配套 Notebook，在 MNIST 数据集上训练一个较大的网络（如 3 层各 256 神经元）。</p>
+      <p>2. 只用 1000 张训练图片，训练 50 个 epoch，观察训练集和验证集准确率的差距——这就是过拟合。</p>
+      <p>3. 加入 Dropout(0.5) 和 weight_decay=1e-4，重新训练，观察差距是否缩小。</p>
+    </div>
+
+    <h2>7. 快速自测</h2>
+    <p id="quiz-question">PyTorch 中 <code>loss.backward()</code> 做了什么事情？</p>
+    <button class="quiz-option" onclick="check(this, false)">A. 只计算损失值，不涉及梯度。</button>
+    <button class="quiz-option" onclick="check(this, true)">B. 通过自动微分计算损失对所有参数的梯度。</button>
+    <button class="quiz-option" onclick="check(this, false)">C. 更新模型参数，相当于 optimizer.step()。</button>
+    <button class="quiz-option" onclick="check(this, false)">D. 清空之前的梯度，相当于 zero_grad()。</button>
+    <div id="quiz-feedback" class="feedback hidden"></div>
+
+    <p id="quiz-question2">以下哪种现象最典型地表示模型"过拟合"了？</p>
+    <button class="quiz-option" onclick="check2(this, false)">A. 训练集准确率和验证集准确率都很低。</button>
+    <button class="quiz-option" onclick="check2(this, true)">B. 训练集准确率很高，但验证集准确率明显更低。</button>
+    <button class="quiz-option" onclick="check2(this, false)">C. 训练集和验证集准确率都很高且接近。</button>
+    <button class="quiz-option" onclick="check2(this, false)">D. 损失函数始终为 NaN。</button>
+    <div id="quiz-feedback2" class="feedback hidden"></div>
+
+    <h2>8. 延伸阅读与参考</h2>
+    <ul>
+      <li><strong>Primary source:</strong> <a href="../AI-For-Beginners-zh-CN/lessons/3-NeuralNetworks/05-Frameworks/README.md" target="_blank">AI-For-Beginners：框架简介与过拟合</a></li>
+      <li><a href="../reference/0003-framework-choice.html" target="_blank">PyTorch vs TensorFlow 选择指南</a></li>
+      <li><a href="../reference/0002-python-ai-cheatsheet.html" target="_blank">Python AI 代码速查表</a></li>
+      <li><a href="https://pytorch.org/tutorials/" target="_blank">PyTorch 官方教程</a> · <a href="https://www.tensorflow.org/tutorials" target="_blank">TensorFlow 官方教程</a></li>
+    </ul>
+
+    <div class="footer">
+      <p>下一课：<a href="0006-cnns-and-computer-vision.html">CNN 与计算机视觉</a></p>
+    </div>
+  </div>
+
+  <script>
+    function check(btn, isCorrect) {
+      const opts = btn.parentElement.querySelectorAll(':scope > .quiz-option');
+      opts.forEach(o => { o.classList.remove('correct', 'wrong'); o.disabled = true; });
+      btn.classList.add(isCorrect ? 'correct' : 'wrong');
+      const fb = document.getElementById('quiz-feedback');
+      fb.classList.remove('hidden');
+      fb.style.background = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+      fb.innerHTML = isCorrect
+        ? '✅ 正确。backward() 利用 autograd 自动计算损失对全部 requires_grad=True 参数的梯度。'
+        : '❌ 不正确。backward() 的作用是自动计算梯度，不更新参数也不清空梯度。';
+    }
+    function check2(btn, isCorrect) {
+      const opts = btn.parentElement.querySelectorAll(':scope > .quiz-option');
+      opts.forEach(o => { o.classList.remove('correct', 'wrong'); o.disabled = true; });
+      btn.classList.add(isCorrect ? 'correct' : 'wrong');
+      const fb = document.getElementById('quiz-feedback2');
+      fb.classList.remove('hidden');
+      fb.style.background = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+      fb.innerHTML = isCorrect
+        ? '✅ 正确。训练集好但验证集差，说明模型记住了训练数据的细节而非学到通用规律，即过拟合。'
+        : '❌ 不正确。两者都低是欠拟合；两者都高且接近是理想状态。过拟合是训练好但验证差。';
+    }
+  </script>
+</body>
+</html>

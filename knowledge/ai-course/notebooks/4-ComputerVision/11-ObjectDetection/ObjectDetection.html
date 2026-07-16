@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ObjectDetection</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 ObjectDetection</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>目标检测</h2>
+<p>这是 <a href="http://aka.ms/ai-beginners">AI for Beginners Curriculum</a> 中的一个笔记本</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>!<a href="https://cdn-images-1.medium.com/max/840/1*Hz6t-tokG1niaUfmcysusw.jpeg">图像算法</a></p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>对象检测的简单方法</h2>
+<ul>
+<li>将图像分割成多个小块</li>
+<li>对每个小块运行 CNN 图像分类器</li>
+<li>选择激活值超过阈值的小块</li>
+</ul></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import cv2
+from tensorflow import keras
+import numpy as np
+import matplotlib.pyplot as plt
+import os</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们读取示例图像进行操作，并将其填充为正方形尺寸：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>img = cv2.imread(&#x27;images/1200px-Girl_and_cat.jpg&#x27;)
+img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+img = np.pad(img,((158,158),(0,0),(0,0)),mode=&#x27;edge&#x27;)
+plt.imshow(img)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;matplotlib.image.AxesImage at 0x1cb8a16e8e0&gt;</div><div class="jp-OutputArea-output">&lt;Figure size 432x288 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们将使用预训练的VGG-16 CNN：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>vgg = keras.applications.vgg16.VGG16(weights=&#x27;imagenet&#x27;)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们定义一个函数来预测图像中出现猫的概率。由于 ImageNet 包含多个猫类，其索引从 281 到 294，我们将把这些类别的概率相加以获得整体的“猫”概率：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def predict(img):
+  im = cv2.resize(img,(224,224))
+  im = keras.applications.vgg16.preprocess_input(im)
+  pr = vgg.predict(np.expand_dims(im,axis=0))[0]
+  return np.sum(pr[281:294]) # we know that VGG classes for cats are from 281 to 294
+
+predict(img)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">0.61825</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>下一个函数将构建一个概率热图，将图像划分为 $n\times n$ 方块：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def predict_map(img,n):
+  dx = img.shape[0] // n
+  res = np.zeros((n,n),dtype=np.float32)
+  for i in range(n):
+    for j in range(n):
+      im = img[dx*i:dx*(i+1),dx*j:dx*(j+1)]
+      r = predict(im)
+      res[i,j] = r
+  return res
+
+fig,ax = plt.subplots(1,2,figsize=(15,5))
+ax[1].imshow(img)
+ax[0].imshow(predict_map(img,10))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;matplotlib.image.AxesImage at 0x1cb8983a940&gt;</div><div class="jp-OutputArea-output">&lt;Figure size 1080x360 with 2 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>检测简单对象</h2>
+<p>为了更精确地定位边界框，我们需要运行<strong>回归模型</strong>来预测边界框的坐标。让我们从一个简单的例子开始：在32x32的图像中检测黑色矩形。这个想法和部分代码借鉴自<a href="https://towardsdatascience.com/object-detection-with-neural-networks-a4e2c46b4491">这篇博客文章</a>。</p>
+<p>以下函数将生成一组样本图像：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def generate_images(num_imgs, img_size=8, min_object_size = 1, max_object_size = 4):
+    bboxes = np.zeros((num_imgs, 4))
+    imgs = np.zeros((num_imgs, img_size, img_size))  # set background to 0
+
+    for i_img in range(num_imgs):
+        w, h = np.random.randint(min_object_size, max_object_size, size=2)
+        x = np.random.randint(0, img_size - w)
+        y = np.random.randint(0, img_size - h)
+        imgs[i_img, x:x+w, y:y+h] = 1.  # set rectangle to 1
+        bboxes[i_img] = [x, y, w, h]
+    return imgs, bboxes
+
+imgs, bboxes = generate_images(100000)
+print(f&quot;Images shape = {imgs.shape}&quot;)
+print(f&quot;BBoxes shape = {bboxes.shape}&quot;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Images shape = (100000, 8, 8)
+BBoxes shape = (100000, 4)
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>为了使网络的输出在范围 [0;1] 内，我们将用图像大小除以 <code>bboxes</code>：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>bb = bboxes/8.0
+bb[0]</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">array([0.   , 0.25 , 0.125, 0.25 ])</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>在我们的简单示例中，我们将使用密集神经网络。在现实生活中，当对象具有更复杂的形状时，使用卷积神经网络（CNN）来完成这样的任务肯定是有意义的。我们将使用随机梯度下降优化器和均方误差（MSE）作为指标，因为我们的任务是<strong>回归</strong>。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model = keras.Sequential([
+    keras.layers.Flatten(input_shape=(8,8)),
+    keras.layers.Dense(200, activation=&#x27;relu&#x27;),
+    keras.layers.Dropout(0.2),
+    keras.layers.Dense(4)
+])
+model.compile(&#x27;sgd&#x27;,&#x27;mse&#x27;)
+model.summary()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;sequential_25&quot;
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ flatten_24 (Flatten)        (None, 64)                0         
+                                                                 
+ dense_50 (Dense)            (None, 200)               13000     
+                                                                 
+ dropout_3 (Dropout)         (None, 200)               0         
+                                                                 
+ dense_51 (Dense)            (None, 4)                 804       
+                                                                 
+=================================================================
+Total params: 13,804
+Trainable params: 13,804
+Non-trainable params: 0
+_________________________________________________________________
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们训练我们的网络。我们还将对输入数据进行归一化处理（通过减去均值并除以标准差），以获得稍好的性能。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>imgs_norm = (imgs-np.mean(imgs))/np.std(imgs)
+model.fit(imgs_norm,bb,epochs=30)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 1/30
+3125/3125 [==============================] - 6s 2ms/step - loss: 0.0562
+Epoch 2/30
+3125/3125 [==============================] - 5s 2ms/step - loss: 0.0131
+Epoch 3/30
+3125/3125 [==============================] - 5s 1ms/step - loss: 0.0076
+Epoch 4/30
+3125/3125 [==============================] - 5s 2ms/step - loss: 0.0058
+Epoch 5/30
+3125/3125 [==============================] - 5s 2ms/step - loss: 0.0050
+Epoch 6/30
+3125/3125 [==============================] - 5s 2ms/step - loss: 0.0044
+Epoch 7/30
+3125/3125 [==============================] - 5s 2ms/step - loss: 0.0041
+Epoch 8/30
+3125/3125 [==============================] - 5s 2ms/step - loss: 0.0038
+Epoch 9/30
+3125/3125 [==============================] - 5s 2ms/step - loss: 0.0036
+Epoch 10/30
+3125/3125 [==============================] - 6s 2ms/step - loss: 0.0034
+Epoch 11/30
+3125/3125 [==============================] - 8s 3ms/step - loss: 0.0033
+Epoch 12/30
+3125/3125 [==============================] - 8s 3ms/step - loss: 0.0031
+Epoch 13/30
+3125/3125 [==============================] - 6s 2ms/step - loss: 0.0030
+Epoch 14/30
+3125/3125 [==============================] - 6s 2ms/step - loss: 0.0029
+Epoch 15/30
+3125/3125 [==============================] - 5s 2ms/step - loss: 0.0028
+Epoch 16/30
+3125/3125 [==============================] - 5s 2ms/step - loss: 0.0028
+Epoch 17/30
+3125/3125 [==============================] - 5s 2ms/step - loss: 0.0027
+Epoch 18/30
+3125/3125 [==============================] - 5s 2ms/step - loss: 0.0026
+Epoch 19/30
+3125/3125 [==============================] - 5s 2ms/step - loss: 0.0026
+Epoch 20/30
+3125/3125 [==============================] - 5s 2ms/step - loss: 0.0025
+Epoch 21/30
+3125/3125 [==============================] - 6s 2ms/step - loss: 0.0024
+Epoch 22/30
+3125/3125 [==============================] - 6s 2ms/step - loss: 0.0024
+Epoch 23/30
+3125/3125 [==============================] - 6s 2ms/step - loss: 0.0024
+Epoch 24/30
+3125/3125 [==============================] - 6s 2ms/step - loss: 0.0023
+Epoch 25/30
+3125/3125 [==============================] - 5s 2ms/step - loss: 0.0023
+Epoch 26/30
+3125/3125 [==============================] - 5s 2ms/step - loss: 0.0022
+Epoch 27/30
+3125/3125 [==============================] - 5s 2ms/step - loss: 0.0022
+Epoch 28/30
+3125/3125 [==============================] - 5s 2ms/step - loss: 0.0022
+Epoch 29/30
+3125/3125 [==============================] - 5s 2ms/step - loss: 0.0021
+Epoch 30/30
+3125/3125 [==============================] - 5s 2ms/step - loss: 0.0021
+</div><div class="jp-OutputArea-output">&lt;keras.callbacks.History at 0x1cbb7c499a0&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们似乎有相对较好的损失，让我们看看它如何转化为更具体的指标，例如mAP。首先，让我们定义两个边界框之间的IOU指标：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def IOU(bbox1, bbox2):
+    &#x27;&#x27;&#x27;Calculate overlap between two bounding boxes [x, y, w, h] as the area of intersection over the area of unity&#x27;&#x27;&#x27;
+    x1, y1, w1, h1 = bbox1[0], bbox1[1], bbox1[2], bbox1[3]
+    x2, y2, w2, h2 = bbox2[0], bbox2[1], bbox2[2], bbox2[3]
+    w_I = min(x1 + w1, x2 + w2) - max(x1, x2)
+    h_I = min(y1 + h1, y2 + h2) - max(y1, y2)
+    if w_I &lt;= 0 or h_I &lt;= 0:  # no overlap
+        return 0.
+    I = w_I * h_I
+    U = w1 * h1 + w2 * h2 - I
+    return I / U</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们现在将生成500张测试图像，并绘制其中前5张以可视化我们的准确性。我们还将打印出IOU指标。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import matplotlib
+
+test_imgs, test_bboxes = generate_images(500)
+bb_res = model.predict((test_imgs-np.mean(imgs))/np.std(imgs))*8
+
+plt.figure(figsize=(15,5))
+for i in range(5):
+    print(f&quot;pred={bb_res[i]},act={test_bboxes[i]}, IOU={IOU(bb_res[i],test_bboxes[i])}&quot;)
+    plt.subplot(1,5,i+1)
+    plt.imshow(test_imgs[i])
+    plt.gca().add_patch(matplotlib.patches.Rectangle((bb_res[i,1],bb_res[i,0]),bb_res[i,3],bb_res[i,2],ec=&#x27;r&#x27;))
+    #plt.annotate(&#x27;IOU: {:.2f}&#x27;.format(IOU(bb_res[i],test_bboxes[i])),(bb_res[i,1],bb_res[i,0]+bb_res[i,3]),color=&#x27;y&#x27;)
+</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">pred=[3.7325673 3.6551285 2.0126944 1.030895 ],act=[4. 4. 2. 1.], IOU=0.41607480412565545
+pred=[2.3762555 3.755858  1.1647941 1.0540264],act=[2. 4. 1. 1.], IOU=0.2932611042051458
+pred=[-0.04900682 -0.10628867  2.7881489   1.027148  ],act=[0. 0. 3. 1.], IOU=0.7548650953478908
+pred=[0.96806276 4.267275   1.3179774  1.1021365 ],act=[0. 5. 1. 1.], IOU=0.004833667961256898
+pred=[2.157959   0.94667876 2.7568097  0.96259   ],act=[2. 1. 3. 1.], IOU=0.7965311752734529
+</div><div class="jp-OutputArea-output">&lt;Figure size 1080x360 with 5 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在要计算所有案例的平均精度，我们只需要遍历所有测试样本，计算IoU，然后计算平均值：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>np.array([IOU(a,b) for a,b in zip(test_bboxes,bb_res)]).mean()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">0.7150587956049862</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>实际物体检测</h2>
+<p>实际的物体检测算法更加复杂。如果你想深入了解RetinaNet的实现，我们建议你参考<a href="https://keras.io/examples/vision/retinanet/">Keras关于使用RetinaNet进行物体检测的教程</a>。如果你只是想训练一个物体检测模型，可以使用<a href="https://github.com/fizyr/keras-retinanet">Keras RetinaNet库</a>。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务 <a href="https://github.com/Azure/co-op-translator">Co-op Translator</a> 进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。应以原始语言的文档作为权威来源。对于关键信息，建议使用专业人工翻译。我们不对因使用此翻译而产生的任何误解或误读承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TextRepresentationPyTorch</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 TextRepresentationPyTorch</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h1>文本分类任务</h1>
+<p>如前所述，我们将专注于基于 <strong>AG_NEWS</strong> 数据集的简单文本分类任务，该任务是将新闻标题分类为以下四个类别之一：国际、体育、商业和科技。</p>
+<h2>数据集</h2>
+<p>此数据集已集成到 <a href="https://github.com/pytorch/text"><code>torchtext</code></a> 模块中，因此我们可以轻松访问它。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import torch
+import torchtext
+import os
+import collections
+os.makedirs(&#x27;./data&#x27;,exist_ok=True)
+train_dataset, test_dataset = torchtext.datasets.AG_NEWS(root=&#x27;./data&#x27;)
+classes = [&#x27;World&#x27;, &#x27;Sports&#x27;, &#x27;Business&#x27;, &#x27;Sci/Tech&#x27;]</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>在这里，<code>train_dataset</code> 和 <code>test_dataset</code> 包含返回标签（类别编号）和文本对的集合，例如：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>list(train_dataset)[0]</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">(3,
+ &quot;Wall St. Bears Claw Back Into the Black (Reuters) Reuters - Short-sellers, Wall Street&#x27;s dwindling\\band of ultra-cynics, are seeing green again.&quot;)</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>那么，让我们打印出数据集中前10条新标题：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>for i,x in zip(range(5),train_dataset):
+    print(f&quot;**{classes[x[0]]}** -&gt; {x[1]}&quot;)
+</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">**Sci/Tech** -&gt; Wall St. Bears Claw Back Into the Black (Reuters) Reuters - Short-sellers, Wall Street&#x27;s dwindling\band of ultra-cynics, are seeing green again.
+**Sci/Tech** -&gt; Carlyle Looks Toward Commercial Aerospace (Reuters) Reuters - Private investment firm Carlyle Group,\which has a reputation for making well-timed and occasionally\controversial plays in the defense industry, has quietly placed\its bets on another part of the market.
+**Sci/Tech** -&gt; Oil and Economy Cloud Stocks&#x27; Outlook (Reuters) Reuters - Soaring crude prices plus worries\about the economy and the outlook for earnings are expected to\hang over the stock market next week during the depth of the\summer doldrums.
+**Sci/Tech** -&gt; Iraq Halts Oil Exports from Main Southern Pipeline (Reuters) Reuters - Authorities have halted oil export\flows from the main pipeline in southern Iraq after\intelligence showed a rebel militia could strike\infrastructure, an oil official said on Saturday.
+**Sci/Tech** -&gt; Oil prices soar to all-time record, posing new menace to US economy (AFP) AFP - Tearaway world oil prices, toppling records and straining wallets, present a new economic menace barely three months before the US presidential elections.
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>因为数据集是迭代器，如果我们想多次使用数据，则需要将其转换为列表：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>train_dataset, test_dataset = torchtext.datasets.AG_NEWS(root=&#x27;./data&#x27;)
+train_dataset = list(train_dataset)
+test_dataset = list(test_dataset)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>分词</h2>
+<p>现在我们需要将文本转换为可以表示为张量的<strong>数字</strong>。如果我们想要基于单词的表示，需要完成两件事：</p>
+<ul>
+<li>使用**分词器**将文本拆分为**标记**</li>
+<li>构建这些标记的**词汇表**。</li>
+</ul></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>tokenizer = torchtext.data.utils.get_tokenizer(&#x27;basic_english&#x27;)
+tokenizer(&#x27;He said: hello&#x27;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[&#x27;he&#x27;, &#x27;said&#x27;, &#x27;hello&#x27;]</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>counter = collections.Counter()
+for (label, line) in train_dataset:
+    counter.update(tokenizer(line))
+vocab = torchtext.vocab.vocab(counter, min_freq=1)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>使用词汇表，我们可以轻松地将标记化的字符串编码为一组数字：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>vocab_size = len(vocab)
+print(f&quot;Vocab size if {vocab_size}&quot;)
+
+stoi = vocab.get_stoi() # dict to convert tokens to indices
+
+def encode(x):
+    return [stoi[s] for s in tokenizer(x)]
+
+encode(&#x27;I love to play with my words&#x27;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Vocab size if 95810
+</div><div class="jp-OutputArea-output">[599, 3279, 97, 1220, 329, 225, 7368]</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>词袋文本表示法</h2>
+<p>由于单词代表了意义，有时我们可以通过仅仅查看单个单词，而不考虑它们在句子中的顺序，就能理解一段文本的含义。例如，在分类新闻时，像 *weather*（天气）、*snow*（雪）这样的单词可能表明是 *天气预报*，而像 *stocks*（股票）、*dollar*（美元）这样的单词则可能属于 *财经新闻*。</p>
+<p><strong>词袋</strong>（Bag of Words, BoW）向量表示法是最常用的传统向量表示法。每个单词都与一个向量索引相关联，向量的元素包含某个单词在给定文档中出现的次数。</p>
+<p>!<a href="../../../../../lessons/5-NLP/13-TextRep/images/bag-of-words-example.png">展示词袋向量表示在内存中如何表示的图片。</a></p>
+<p>&gt; <strong>Note</strong>: 你也可以将 BoW 理解为文本中每个单词的独热编码向量的总和。</p>
+<p>下面是一个使用 Scikit Learn Python 库生成词袋表示的示例：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>from sklearn.feature_extraction.text import CountVectorizer
+vectorizer = CountVectorizer()
+corpus = [
+        &#x27;I like hot dogs.&#x27;,
+        &#x27;The dog ran fast.&#x27;,
+        &#x27;Its hot outside.&#x27;,
+    ]
+vectorizer.fit_transform(corpus)
+vectorizer.transform([&#x27;My dog likes hot dogs on a hot day.&#x27;]).toarray()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">array([[1, 1, 0, 2, 0, 0, 0, 0, 0]], dtype=int64)</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>要从我们的 AG_NEWS 数据集的向量表示计算词袋向量，可以使用以下函数：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>vocab_size = len(vocab)
+
+def to_bow(text,bow_vocab_size=vocab_size):
+    res = torch.zeros(bow_vocab_size,dtype=torch.float32)
+    for i in encode(text):
+        if i&lt;bow_vocab_size:
+            res[i] += 1
+    return res
+
+print(to_bow(train_dataset[0][1]))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">tensor([2., 1., 2.,  ..., 0., 0., 0.])
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>&gt; <strong>注意：</strong> 这里我们使用全局变量 <code>vocab_size</code> 来指定默认的词汇表大小。由于词汇表的大小通常非常大，我们可以将词汇表的大小限制为最常用的词汇。尝试降低 <code>vocab_size</code> 的值并运行下面的代码，看看它如何影响准确性。你应该预期会有一些准确性的下降，但不会太剧烈，以换取更高的性能。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>训练 BoW 分类器</h2>
+<p>现在我们已经学习了如何构建文本的词袋表示，让我们在其基础上训练一个分类器。首先，我们需要将数据集转换为适合训练的形式，即将所有位置向量表示转换为词袋表示。这可以通过将 <code>bowify</code> 函数作为标准 torch <code>DataLoader</code> 的 <code>collate_fn</code> 参数传递来实现：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>from torch.utils.data import DataLoader
+import numpy as np 
+
+# this collate function gets list of batch_size tuples, and needs to 
+# return a pair of label-feature tensors for the whole minibatch
+def bowify(b):
+    return (
+            torch.LongTensor([t[0]-1 for t in b]),
+            torch.stack([to_bow(t[1]) for t in b])
+    )
+
+train_loader = DataLoader(train_dataset, batch_size=16, collate_fn=bowify, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=16, collate_fn=bowify, shuffle=True)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在让我们定义一个简单的分类器神经网络，它包含一个线性层。输入向量的大小等于 <code>vocab_size</code>，输出大小对应于类别的数量（4）。由于我们正在解决分类任务，最终的激活函数是 <code>LogSoftmax()</code>。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>net = torch.nn.Sequential(torch.nn.Linear(vocab_size,4),torch.nn.LogSoftmax(dim=1))</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在我们将定义标准的PyTorch训练循环。由于我们的数据集相当大，为了教学目的，我们将只训练一个周期，有时甚至少于一个周期（通过指定<code>epoch_size</code>参数可以限制训练）。我们还将在训练过程中报告累计的训练准确率；报告的频率通过<code>report_freq</code>参数指定。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def train_epoch(net,dataloader,lr=0.01,optimizer=None,loss_fn = torch.nn.NLLLoss(),epoch_size=None, report_freq=200):
+    optimizer = optimizer or torch.optim.Adam(net.parameters(),lr=lr)
+    net.train()
+    total_loss,acc,count,i = 0,0,0,0
+    for labels,features in dataloader:
+        optimizer.zero_grad()
+        out = net(features)
+        loss = loss_fn(out,labels) #cross_entropy(out,labels)
+        loss.backward()
+        optimizer.step()
+        total_loss+=loss
+        _,predicted = torch.max(out,1)
+        acc+=(predicted==labels).sum()
+        count+=len(labels)
+        i+=1
+        if i%report_freq==0:
+            print(f&quot;{count}: acc={acc.item()/count}&quot;)
+        if epoch_size and count&gt;epoch_size:
+            break
+    return total_loss.item()/count, acc.item()/count</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>train_epoch(net,train_loader,epoch_size=15000)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">3200: acc=0.8028125
+6400: acc=0.8371875
+9600: acc=0.8534375
+12800: acc=0.85765625
+</div><div class="jp-OutputArea-output">(0.026090790722161722, 0.8620069296375267)</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>二元组、三元组和N元组</h2>
+<p>词袋方法的一个局限性是，有些词是多词表达的一部分。例如，“热狗”这个词的含义与“热”和“狗”在其他语境中的含义完全不同。如果我们总是用相同的向量表示“热”和“狗”，可能会让模型感到困惑。</p>
+<p>为了解决这个问题，<strong>N元组表示</strong>通常用于文档分类方法中，其中每个单词、双词或三词的频率是训练分类器的有用特征。例如，在二元组表示中，我们会将所有的词对添加到词汇表中，除了原始单词之外。</p>
+<p>下面是一个使用Scikit Learn生成二元组词袋表示的示例：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>bigram_vectorizer = CountVectorizer(ngram_range=(1, 2), token_pattern=r&#x27;\b\w+\b&#x27;, min_df=1)
+corpus = [
+        &#x27;I like hot dogs.&#x27;,
+        &#x27;The dog ran fast.&#x27;,
+        &#x27;Its hot outside.&#x27;,
+    ]
+bigram_vectorizer.fit_transform(corpus)
+print(&quot;Vocabulary:\n&quot;,bigram_vectorizer.vocabulary_)
+bigram_vectorizer.transform([&#x27;My dog likes hot dogs on a hot day.&#x27;]).toarray()
+</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Vocabulary:
+ {&#x27;i&#x27;: 7, &#x27;like&#x27;: 11, &#x27;hot&#x27;: 4, &#x27;dogs&#x27;: 2, &#x27;i like&#x27;: 8, &#x27;like hot&#x27;: 12, &#x27;hot dogs&#x27;: 5, &#x27;the&#x27;: 16, &#x27;dog&#x27;: 0, &#x27;ran&#x27;: 14, &#x27;fast&#x27;: 3, &#x27;the dog&#x27;: 17, &#x27;dog ran&#x27;: 1, &#x27;ran fast&#x27;: 15, &#x27;its&#x27;: 9, &#x27;outside&#x27;: 13, &#x27;its hot&#x27;: 10, &#x27;hot outside&#x27;: 6}
+</div><div class="jp-OutputArea-output">array([[1, 0, 1, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+      dtype=int64)</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>N-gram方法的主要缺点是词汇量会迅速增长。在实际应用中，我们需要将N-gram表示与一些降维技术结合使用，例如*嵌入*，我们将在下一单元中讨论。</p>
+<p>为了在我们的<strong>AG News</strong>数据集中使用N-gram表示，我们需要构建一个特殊的N-gram词汇：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>counter = collections.Counter()
+for (label, line) in train_dataset:
+    l = tokenizer(line)
+    counter.update(torchtext.data.utils.ngrams_iterator(l,ngrams=2))
+    
+bi_vocab = torchtext.vocab.vocab(counter, min_freq=1)
+
+print(&quot;Bigram vocabulary length = &quot;,len(bi_vocab))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Bigram vocabulary length =  1308842
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们可以使用上述相同的代码来训练分类器，但这样会非常占用内存。在下一节中，我们将使用嵌入来训练二元分类器。</p>
+<p>&gt; <strong>注意:</strong> 你只能保留那些在文本中出现次数超过指定数量的n元组。这将确保不常见的二元组被省略，并显著减少维度。为此，可以将<code>min_freq</code>参数设置为更高的值，并观察词汇表长度的变化。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>词频-逆文档频率 TF-IDF</h2>
+<p>在 BoW 表示法中，单词的出现被均等对待，无论单词本身如何。然而，很明显，像 *a*、*in* 这样的常见词对于分类的作用远不如一些专业术语重要。实际上，在大多数 NLP 任务中，有些词比其他词更相关。</p>
+<p><strong>TF-IDF</strong> 是 <strong>词频-逆文档频率</strong> 的缩写。它是袋子模型的一种变体，其中不是用二进制的 0/1 值来表示单词是否出现在文档中，而是使用一个浮点值，该值与单词在语料库中的出现频率相关。</p>
+<p>更正式地说，单词 $i$ 在文档 $j$ 中的权重 $w_{ij}$ 定义为：</p>
+<p>$$</p>
+<p>w_{ij} = tf_{ij}\times\log({N\over df_i})</p>
+<p>$$</p>
+<p>其中：</p>
+<ul>
+<li>$tf_{ij}$ 是单词 $i$ 在文档 $j$ 中出现的次数，即我们之前看到的 BoW 值</li>
+<li>$N$ 是语料库中的文档总数</li>
+<li>$df_i$ 是整个语料库中包含单词 $i$ 的文档数量</li>
+</ul>
+<p>TF-IDF 值 $w_{ij}$ 随着单词在文档中出现的次数成比例增加，同时会受到语料库中包含该单词的文档数量的影响，从而调整某些单词出现频率较高的情况。例如，如果某个单词出现在语料库中的*每一篇*文档中，那么 $df_i=N$，且 $w_{ij}=0$，这些词将被完全忽略。</p>
+<p>你可以使用 Scikit Learn 轻松实现文本的 TF-IDF 向量化：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>from sklearn.feature_extraction.text import TfidfVectorizer
+vectorizer = TfidfVectorizer(ngram_range=(1,2))
+vectorizer.fit_transform(corpus)
+vectorizer.transform([&#x27;My dog likes hot dogs on a hot day.&#x27;]).toarray()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">array([[0.43381609, 0.        , 0.43381609, 0.        , 0.65985664,
+        0.43381609, 0.        , 0.        , 0.        , 0.        ,
+        0.        , 0.        , 0.        , 0.        , 0.        ,
+        0.        ]])</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>结论</h2>
+<p>尽管TF-IDF表示法为不同的单词提供了频率权重，但它无法表达意义或顺序。正如著名语言学家J.R. Firth在1935年所说：“一个词的完整意义总是与上下文相关，任何脱离上下文的意义研究都不应被认真对待。” 在课程的后续部分，我们将学习如何通过语言建模从文本中捕捉上下文信息。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务<a href="https://github.com/Azure/co-op-translator">Co-op Translator</a>进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。应以原始语言的文档作为权威来源。对于关键信息，建议使用专业人工翻译。我们对因使用本翻译而引起的任何误解或误读不承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

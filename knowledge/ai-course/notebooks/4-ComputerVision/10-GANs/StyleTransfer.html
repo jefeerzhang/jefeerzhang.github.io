@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StyleTransfer</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 StyleTransfer</h2></div>
+<div class="jp-Cell jp-MarkdownCell"></div>
+<div class="jp-Cell jp-MarkdownCell"><p>以下示例受<a href="https://www.tensorflow.org/tutorials/generative/style_transfer">TensorFlow 官方教程</a>的启发，同时也参考了<a href="https://medium.com/mlreview/making-ai-art-with-style-transfer-using-keras-8bb5fa44b216">这篇博客文章</a>。使用 CNTK 框架进行风格迁移的另一个优秀示例可以在<a href="https://github.com/Microsoft/CNTK/blob/master/Tutorials/CNTK_205_Artistic_Style_Transfer.ipynb">这里</a>找到。这是关于<a href="https://arxiv.org/abs/1508.06576">艺术风格迁移</a>的原始论文。</p>
+<p>风格迁移的主要思想如下：</p>
+<ul>
+<li>从白噪声开始，我们尝试优化当前图像 $x$，以最小化某个损失函数</li>
+<li>损失函数由三个部分组成 $\mathcal{L(x)} = \alpha\mathcal{L}_c(x,i) + \beta\mathcal{L}_s(x,s)+\gamma\mathcal{L}_t(x)$</li>
+<li>$\mathcal{L}_c$ - 内容损失 - 表示当前图像 $x$ 与原始图像 $i$ 的接近程度</li>
+<li>$\mathcal{L}_s$ - 风格损失 - 表示当前图像 $x$ 与风格图像 $s$ 的接近程度</li>
+<li>$\mathcal{L}_t$ - 总变分损失（在我们的示例中不会考虑） - 确保生成的图像是平滑的，即表示图像 $x$ 的相邻像素之间的均方误差</li>
+</ul>
+<p>这些损失函数需要以巧妙的方式设计，例如风格损失应对应于图像风格的相似性，而不是实际内容。为此，我们将比较一个 CNN 的一些深层特征层，这些特征层会对图像进行分析。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们先加载几张图片：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>!mkdir -p images
+!curl https://cdn.pixabay.com/photo/2016/05/18/00/27/franz-marc-1399594_960_720.jpg &gt; images/style.jpg
+!curl https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Golden_tabby_and_white_kitten_n01.jpg/1280px-Golden_tabby_and_white_kitten_n01.jpg &gt; images/image.jpg</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  210k  100  210k    0     0  2670k      0 --:--:-- --:--:-- --:--:-- 2670k
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  131k  100  131k    0     0   459k      0 --:--:-- --:--:-- --:--:--  459k
+</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+import tensorflow as tf
+from tensorflow.keras.applications.vgg16 import preprocess_input
+import IPython.display as display</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们加载这些图像并将它们调整为 $512\times512$。同时，我们将生成结果图像 <code>img_result</code> 作为一个随机数组。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>img_size = 256
+
+def load_image(fn):
+  x = cv2.imread(fn)
+  return cv2.cvtColor(x, cv2.COLOR_BGR2RGB)
+
+img_style = load_image(&#x27;images/style.jpg&#x27;)
+img_content = load_image(&#x27;images/image.jpg&#x27;)
+img_content = img_content[:,200:200+857,:]
+img_content = cv2.resize(img_content,(img_size,img_size))
+img_style = img_style[:,200:200+671,:]
+img_style = cv2.resize(img_style,(img_size,img_size))
+
+img_result = np.random.uniform(size=(img_size,img_size,3))
+
+matplotlib.rcParams[&#x27;figure.figsize&#x27;] = (12, 12)
+matplotlib.rcParams[&#x27;axes.grid&#x27;] = False
+
+fig,ax = plt.subplots(1,3)
+ax[0].imshow(img_content)
+ax[1].imshow(img_style)
+ax[2].imshow((255*img_result).astype(int))
+plt.show()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 864x864 with 3 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>要计算风格损失和内容损失，我们需要在由CNN提取的特征空间中进行操作。我们可以使用不同的CNN架构，但为了简单起见，在我们的案例中我们将选择预训练于*ImageNet*的VGG-19。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>vgg = tf.keras.applications.VGG16(include_top=False, weights=&#x27;imagenet&#x27;)
+vgg.trainable = False</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们来看看模型架构：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>vgg.summary()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;vgg16&quot;
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ input_3 (InputLayer)        [(None, None, None, 3)]   0         
+                                                                 
+ block1_conv1 (Conv2D)       (None, None, None, 64)    1792      
+                                                                 
+ block1_conv2 (Conv2D)       (None, None, None, 64)    36928     
+                                                                 
+ block1_pool (MaxPooling2D)  (None, None, None, 64)    0         
+                                                                 
+ block2_conv1 (Conv2D)       (None, None, None, 128)   73856     
+                                                                 
+ block2_conv2 (Conv2D)       (None, None, None, 128)   147584    
+                                                                 
+ block2_pool (MaxPooling2D)  (None, None, None, 128)   0         
+                                                                 
+ block3_conv1 (Conv2D)       (None, None, None, 256)   295168    
+                                                                 
+ block3_conv2 (Conv2D)       (None, None, None, 256)   590080    
+                                                                 
+ block3_conv3 (Conv2D)       (None, None, None, 256)   590080    
+                                                                 
+ block3_pool (MaxPooling2D)  (None, None, None, 256)   0         
+                                                                 
+ block4_conv1 (Conv2D)       (None, None, None, 512)   1180160   
+                                                                 
+ block4_conv2 (Conv2D)       (None, None, None, 512)   2359808   
+                                                                 
+ block4_conv3 (Conv2D)       (None, None, None, 512)   2359808   
+                                                                 
+ block4_pool (MaxPooling2D)  (None, None, None, 512)   0         
+                                                                 
+ block5_conv1 (Conv2D)       (None, None, None, 512)   2359808   
+                                                                 
+ block5_conv2 (Conv2D)       (None, None, None, 512)   2359808   
+                                                                 
+ block5_conv3 (Conv2D)       (None, None, None, 512)   2359808   
+                                                                 
+ block5_pool (MaxPooling2D)  (None, None, None, 512)   0         
+                                                                 
+=================================================================
+Total params: 14,714,688
+Trainable params: 0
+Non-trainable params: 14,714,688
+_________________________________________________________________
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们定义一个函数，以便我们从VGG网络中提取中间特征：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def layer_extractor(layers):
+    outputs = [vgg.get_layer(x).output for x in layers]
+    model = tf.keras.Model([vgg.input],outputs)
+    return model </code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>内容损失</h2>
+<p><strong>内容损失</strong> 用于衡量当前图像 $x$ 与原始图像的接近程度。它通过查看卷积神经网络（CNN）的中间特征层，并计算平方误差。在第 $l$ 层的内容损失定义为：</p>
+<p>$$</p>
+<p>\mathcal{L}_c = {1\over2}\sum_{i,j} (F_{ij}^{(l)}-P_{ij}^{(l)})^2</p>
+<p>$$</p>
+<p>其中 $F^{(l)}$ 和 $P^{(l)}$ 分别表示第 $l$ 层的特征。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>content_layers = [&#x27;block4_conv2&#x27;] 
+content_extractor = layer_extractor(content_layers)
+
+content_target = content_extractor(preprocess_input(tf.expand_dims(img_content,axis=0)))
+
+def content_loss(img):
+    z = content_extractor(preprocess_input(tf.expand_dims(255*img,axis=0))) 
+    return 0.5*tf.reduce_sum((z-content_target)**2)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在我们将实现风格迁移的主要技巧——<strong>优化</strong>。我们将从随机图像开始，然后使用 TensorFlow 优化器调整这张图像，以最小化内容损失。</p>
+<p><strong>重要提示</strong>：在我们的案例中，所有计算都是通过支持 GPU 的 *TensorFlow* 框架进行的，这使得代码在 GPU 上运行效率更高。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>img = tf.Variable(img_result)
+opt = tf.optimizers.Adam(learning_rate=0.002, beta_1=0.99, epsilon=1e-1)
+
+clip = lambda x : tf.clip_by_value(x,clip_value_min=0,clip_value_max=1)
+
+def optimize(img,loss_fn):
+    with tf.GradientTape() as tape:
+        loss = loss_fn(img)
+    grad = tape.gradient(loss,img)
+    opt.apply_gradients([(grad,img)])
+    #img.assign(tf.clip_by_value(img,clip_value_min=0,clip_value_max=1))
+
+def train(img,loss_fn,epochs=10,steps_per_epoch=100):
+    for _ in range(epochs):
+        display.clear_output(wait=True)
+        plt.imshow((255*clip(img)).numpy().astype(int))
+        plt.show()
+        for _ in range(steps_per_epoch):
+            optimize(img,loss_fn=loss_fn)
+
+train(img,content_loss)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 864x864 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>&gt; <strong>练习</strong>：尝试在网络中使用不同的层，看看会发生什么。你也可以尝试同时优化多个层，但需要稍微修改一下 <code>content_loss</code> 的代码。</p>
+<h2>风格损失</h2>
+<p>风格损失是风格迁移的核心思想。我们比较的不是实际的特征，而是它们的 Gram 矩阵，定义为 $$G=A\times A^T$$。</p>
+<p>Gram 矩阵类似于相关矩阵，它展示了某些滤波器之间的依赖关系。风格损失是从不同层计算的损失之和，这些损失通常会乘以加权系数。</p>
+<p>风格迁移的总损失函数是 *内容损失* 和 *风格损失* 的总和。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def gram_matrix(x):
+  result = tf.linalg.einsum(&#x27;bijc,bijd-&gt;bcd&#x27;, x, x)
+  input_shape = tf.shape(x)
+  num_locations = tf.cast(input_shape[1]*input_shape[2], tf.float32)
+  return result/(num_locations)
+
+style_layers = [&#x27;block1_conv1&#x27;,&#x27;block2_conv1&#x27;,&#x27;block3_conv1&#x27;,&#x27;block4_conv1&#x27;]
+
+def style_extractor(img):
+    return [gram_matrix(x) for x in layer_extractor(style_layers)(img)]
+
+style_target = style_extractor(preprocess_input(tf.expand_dims(img_style,axis=0)))
+
+def style_loss(img):
+    z = style_extractor(preprocess_input(tf.expand_dims(255*img,axis=0)))
+    loss = tf.add_n([tf.reduce_mean((x-target)**2) 
+                           for x,target in zip(z,style_target)])
+    return loss / len(style_layers)
+</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>综合起来</h2>
+<p>我们将定义 <code>total_loss</code> 函数来计算综合损失，并执行优化：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def total_loss(img):
+    return 2*content_loss(img)+style_loss(img)
+
+img.assign(img_result)
+
+train(img,loss_fn=total_loss)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 864x864 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>下面的代码执行实际的损失优化。请注意，即使使用 GPU，优化也需要相当长的时间。您可以多次运行下面的单元格以改善结果。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>添加变化损失</h2>
+<p><strong>变化损失</strong>可以减少图像中的噪点，通过最小化相邻像素之间的差异来实现。</p>
+<p>我们还将从原始内容图像开始优化，这样可以在图像中保留更多的内容细节，而不会使内容损失函数变得复杂。不过，我们会添加一些噪点。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def variation_loss(img):
+  img = tf.cast(img,tf.float32)
+  x_var = img[ :, 1:, :] - img[ :, :-1, :]
+  y_var = img[ 1:, :, :] - img[ :-1, :, :]
+  return tf.reduce_sum(tf.abs(x_var)) + tf.reduce_sum(tf.abs(y_var))
+  
+def total_loss_var(img):
+    return content_loss(img)+150*style_loss(img)+30*variation_loss(img)
+
+img.assign(clip(np.random.normal(-0.3,0.3,size=img_content.shape)+img_content/255.0))
+
+train(img,loss_fn=total_loss_var)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;Figure size 864x864 with 1 Axes&gt;</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>cv2.imwrite(&#x27;result.jpg&#x27;,(img.numpy()[:,:,::-1]*255))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">(256, 256, 3)
+</div><div class="jp-OutputArea-output">True</div></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code></code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务 <a href="https://github.com/Azure/co-op-translator">Co-op Translator</a> 进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。应以原始语言的文档作为权威来源。对于关键信息，建议使用专业人工翻译。我们对因使用此翻译而引起的任何误解或误读不承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

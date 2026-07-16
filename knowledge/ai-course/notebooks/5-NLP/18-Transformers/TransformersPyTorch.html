@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TransformersPyTorch</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 TransformersPyTorch</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h1>注意力机制与Transformer</h1>
+<p>循环神经网络的一个主要缺点是序列中的所有单词对结果的影响是相同的。这会导致标准的LSTM编码器-解码器模型在处理序列到序列任务（如命名实体识别和机器翻译）时表现不佳。实际上，输入序列中的某些特定单词往往对输出序列的影响更大。</p>
+<p>以序列到序列模型为例，比如机器翻译。它由两个循环神经网络实现，其中一个网络（<strong>编码器</strong>）将输入序列压缩成隐藏状态，另一个网络（<strong>解码器</strong>）将隐藏状态展开为翻译结果。这种方法的问题在于，网络的最终状态很难记住句子的开头部分，从而导致模型在处理长句子时质量较差。</p>
+<p><strong>注意力机制</strong>提供了一种方法，可以为每个输入向量对RNN每个输出预测的上下文影响赋予不同的权重。其实现方式是通过在输入RNN的中间状态和输出RNN之间创建快捷连接。这样，在生成输出符号$y_t$时，我们会考虑所有输入隐藏状态$h_i$，并赋予不同的权重系数$\alpha_{t,i}$。</p>
+<p>!<a href="../../../../../lessons/5-NLP/18-Transformers/images/encoder-decoder-attention.png">显示带有加性注意力层的编码器/解码器模型的图片</a></p>
+<p>*<a href="https://arxiv.org/pdf/1409.0473.pdf">Bahdanau等人，2015</a>中的加性注意力机制编码器-解码器模型，图片引自<a href="https://lilianweng.github.io/lil-log/2018/06/24/attention-attention.html">这篇博客</a>*</p>
+<p>注意力矩阵$\{\alpha_{i,j}\}$表示某些输入单词在生成输出序列中某个单词时的作用程度。以下是这样一个矩阵的示例：</p>
+<p>!<a href="../../../../../lessons/5-NLP/18-Transformers/images/bahdanau-fig3.png">显示RNNsearch-50找到的示例对齐的图片，取自Bahdanau - arviz.org</a></p>
+<p>*图片取自<a href="https://arxiv.org/pdf/1409.0473.pdf">Bahdanau等人，2015</a>（图3）*</p>
+<p>注意力机制是当前或接近当前自然语言处理领域最先进技术的核心原因之一。然而，添加注意力机制会显著增加模型参数的数量，这导致了RNN的扩展问题。RNN扩展的一个关键限制是模型的循环特性使得批量处理和并行化训练变得具有挑战性。在RNN中，序列的每个元素都需要按顺序处理，这意味着它无法轻松并行化。</p>
+<p>注意力机制的采用与这一限制相结合，促成了我们今天所熟知和使用的最先进的Transformer模型的诞生，从BERT到OpenGPT3。</p>
+<h2>Transformer模型</h2>
+<p>与将每次预测的上下文传递到下一步评估不同，<strong>Transformer模型</strong>使用<strong>位置编码</strong>和注意力机制，在给定的文本窗口内捕获输入的上下文。下图展示了位置编码与注意力机制如何在给定窗口内捕获上下文。</p>
+<p>!<a href="../../../../../lessons/5-NLP/18-Transformers/images/transformer-animated-explanation.gif">显示Transformer模型中如何进行评估的动画GIF</a></p>
+<p>由于每个输入位置可以独立映射到每个输出位置，Transformer比RNN更容易并行化，这使得构建更大、更具表现力的语言模型成为可能。每个注意力头可以用来学习单词之间的不同关系，从而改进下游的自然语言处理任务。</p>
+<p><strong>BERT</strong>（基于Transformer的双向编码器表示）是一个非常大的多层Transformer网络，*BERT-base*有12层，*BERT-large*有24层。该模型首先在大规模文本数据（维基百科+书籍）上进行无监督预训练（预测句子中的被遮掩单词）。在预训练过程中，模型吸收了大量的语言理解能力，这些能力可以通过微调其他数据集来利用。这一过程被称为<strong>迁移学习</strong>。</p>
+<p>!<a href="../../../../../lessons/5-NLP/18-Transformers/images/jalammarBERT-language-modeling-masked-lm.png">图片来源：http://jalammar.github.io/illustrated-bert/</a></p>
+<p>Transformer架构有许多变体，包括BERT、DistilBERT、BigBird、OpenGPT3等，这些模型都可以进行微调。<a href="https://github.com/huggingface/">HuggingFace包</a>提供了一个用于训练许多这些架构的PyTorch库。</p>
+<h2>使用BERT进行文本分类</h2>
+<p>让我们看看如何使用预训练的BERT模型来解决传统任务：序列分类。我们将对原始的AG News数据集进行分类。</p>
+<p>首先，加载HuggingFace库和我们的数据集：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import torch
+import torchtext
+from torchnlp import *
+import transformers
+train_dataset, test_dataset, classes, vocab = load_dataset()
+vocab_len = len(vocab)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Loading dataset...
+Building vocab...
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>由于我们将使用预训练的 BERT 模型，因此需要使用特定的分词器。首先，我们将加载与预训练 BERT 模型相关联的分词器。</p>
+<p>HuggingFace 库包含一个预训练模型的仓库，您只需在 <code>from_pretrained</code> 函数中指定模型名称作为参数即可使用。这些模型所需的所有二进制文件会自动下载。</p>
+<p>然而，在某些情况下，您可能需要加载自己的模型。在这种情况下，您可以指定包含所有相关文件的目录，包括分词器的参数、模型参数的 <code>config.json</code> 文件、二进制权重等。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># To load the model from Internet repository using model name. 
+# Use this if you are running from your own copy of the notebooks
+bert_model = &#x27;bert-base-uncased&#x27; 
+
+# To load the model from the directory on disk. Use this for Microsoft Learn module, because we have
+# prepared all required files for you.
+bert_model = &#x27;./bert&#x27;
+
+tokenizer = transformers.BertTokenizer.from_pretrained(bert_model)
+
+MAX_SEQ_LEN = 128
+PAD_INDEX = tokenizer.convert_tokens_to_ids(tokenizer.pad_token)
+UNK_INDEX = tokenizer.convert_tokens_to_ids(tokenizer.unk_token)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p><code>tokenizer</code> 对象包含 <code>encode</code> 函数，可直接用于编码文本：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>tokenizer.encode(&#x27;PyTorch is a great framework for NLP&#x27;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[101, 1052, 22123, 2953, 2818, 2003, 1037, 2307, 7705, 2005, 17953, 2361, 102]</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>然后，让我们创建在训练期间用于访问数据的迭代器。由于BERT使用其自己的编码函数，我们需要定义一个类似于之前定义的<code>padify</code>的填充函数：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def pad_bert(b):
+    # b is the list of tuples of length batch_size
+    #   - first element of a tuple = label, 
+    #   - second = feature (text sequence)
+    # build vectorized sequence
+    v = [tokenizer.encode(x[1]) for x in b]
+    # compute max length of a sequence in this minibatch
+    l = max(map(len,v))
+    return ( # tuple of two tensors - labels and features
+        torch.LongTensor([t[0] for t in b]),
+        torch.stack([torch.nn.functional.pad(torch.tensor(t),(0,l-len(t)),mode=&#x27;constant&#x27;,value=0) for t in v])
+    )
+
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=8, collate_fn=pad_bert, shuffle=True)
+test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=8, collate_fn=pad_bert)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>在我们的案例中，我们将使用名为<code>bert-base-uncased</code>的预训练BERT模型。让我们使用<code>BertForSequenceClassification</code>包加载模型。这确保了我们的模型已经具备分类所需的架构，包括最终的分类器。您会看到一条警告消息，指出最终分类器的权重尚未初始化，模型需要进行预训练——这完全没问题，因为这正是我们即将要做的！</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model = transformers.BertForSequenceClassification.from_pretrained(bert_model,num_labels=4).to(device)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Some weights of the model checkpoint at ./bert were not used when initializing BertForSequenceClassification: [&#x27;cls.predictions.bias&#x27;, &#x27;cls.predictions.transform.dense.weight&#x27;, &#x27;cls.predictions.transform.dense.bias&#x27;, &#x27;cls.predictions.decoder.weight&#x27;, &#x27;cls.seq_relationship.weight&#x27;, &#x27;cls.seq_relationship.bias&#x27;, &#x27;cls.predictions.transform.LayerNorm.weight&#x27;, &#x27;cls.predictions.transform.LayerNorm.bias&#x27;]
+- This IS expected if you are initializing BertForSequenceClassification from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing BertForSequenceClassification from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Some weights of BertForSequenceClassification were not initialized from the model checkpoint at ./bert and are newly initialized: [&#x27;classifier.weight&#x27;, &#x27;classifier.bias&#x27;]
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在我们可以开始训练了！由于 BERT 已经经过预训练，我们希望使用较小的学习率开始训练，以免破坏初始权重。</p>
+<p>所有的核心工作都由 <code>BertForSequenceClassification</code> 模型完成。当我们将训练数据传入模型时，它会返回输入小批量数据的损失值和网络输出。我们使用损失值进行参数优化（<code>loss.backward()</code> 执行反向传播），而使用 <code>out</code> 通过比较计算得到的标签 <code>labs</code>（使用 <code>argmax</code> 计算）与期望的 <code>labels</code> 来计算训练准确率。</p>
+<p>为了控制训练过程，我们会在若干次迭代中累积损失值和准确率，并在每 <code>report_freq</code> 个训练周期后打印它们。</p>
+<p>这次训练可能会花费相当长的时间，因此我们会限制迭代次数。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>optimizer = torch.optim.Adam(model.parameters(), lr=2e-5)
+
+report_freq = 50
+iterations = 500 # make this larger to train for longer time!
+
+model.train()
+
+i,c = 0,0
+acc_loss = 0
+acc_acc = 0
+
+for labels,texts in train_loader:
+    labels = labels.to(device)-1 # get labels in the range 0-3         
+    texts = texts.to(device)
+    loss, out = model(texts, labels=labels)[:2]
+    labs = out.argmax(dim=1)
+    acc = torch.mean((labs==labels).type(torch.float32))
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+    acc_loss += loss
+    acc_acc += acc
+    i+=1
+    c+=1
+    if i%report_freq==0:
+        print(f&quot;Loss = {acc_loss.item()/c}, Accuracy = {acc_acc.item()/c}&quot;)
+        c = 0
+        acc_loss = 0
+        acc_acc = 0
+    iterations-=1
+    if not iterations:
+        break</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Loss = 1.1254194641113282, Accuracy = 0.585
+Loss = 0.6194715118408203, Accuracy = 0.83
+Loss = 0.46665248870849607, Accuracy = 0.8475
+Loss = 0.4309701919555664, Accuracy = 0.8575
+Loss = 0.35427074432373046, Accuracy = 0.8825
+Loss = 0.3306886291503906, Accuracy = 0.8975
+Loss = 0.30340143203735354, Accuracy = 0.8975
+Loss = 0.26139299392700194, Accuracy = 0.915
+Loss = 0.26708646774291994, Accuracy = 0.9225
+Loss = 0.3667240524291992, Accuracy = 0.8675
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>你可以看到（特别是当你增加迭代次数并等待足够长的时间），BERT分类能够提供相当不错的准确率！这是因为BERT已经很好地理解了语言的结构，我们只需要微调最终的分类器。然而，由于BERT是一个大型模型，整个训练过程耗时较长，并且需要强大的计算能力！（GPU，最好是多块）。</p>
+<p>&gt; <strong>Note:</strong> 在我们的示例中，我们使用的是最小的预训练BERT模型之一。还有更大的模型可能会带来更好的结果。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>评估模型性能</h2>
+<p>现在我们可以在测试数据集上评估模型的性能了。评估循环与训练循环非常相似，但我们不能忘记通过调用 <code>model.eval()</code> 将模型切换到评估模式。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model.eval()
+iterations = 100
+acc = 0
+i = 0
+for labels,texts in test_loader:
+    labels = labels.to(device)-1      
+    texts = texts.to(device)
+    _, out = model(texts, labels=labels)[:2]
+    labs = out.argmax(dim=1)
+    acc += torch.mean((labs==labels).type(torch.float32))
+    i+=1
+    if i&gt;iterations: break
+        
+print(f&quot;Final accuracy: {acc.item()/i}&quot;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Final accuracy: 0.9047029702970297
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>关键点</h2>
+<p>在本单元中，我们了解到，从 <strong>transformers</strong> 库中获取预训练语言模型并将其适配到我们的文本分类任务是多么简单。同样，BERT 模型也可以用于实体抽取、问答以及其他 NLP 任务。</p>
+<p>Transformer 模型代表了当前 NLP 的最先进水平，在大多数情况下，它应该是你在实现自定义 NLP 解决方案时首先尝试的选项。然而，如果你想构建高级的神经网络模型，理解本模块中讨论的循环神经网络的基本原理是非常重要的。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务 <a href="https://github.com/Azure/co-op-translator">Co-op Translator</a> 进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。应以原始语言的文档作为权威来源。对于关键信息，建议使用专业人工翻译。我们对因使用此翻译而引起的任何误解或误读不承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第 4 课：自建神经网络框架</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <div class="lesson-container">
+    <div class="nav">
+      <a href="0003-first-neural-network.html">← 上一课</a>
+      <span class="breadcrumb">📍 Phase 2 · 核心深入</span>
+      <a href="0005-pytorch-tensorflow-deep.html">下一课：PyTorch 与 TensorFlow 深入 →</a>
+    </div>
+    <div class="progress-bar">
+      <div class="step done"></div><div class="step done"></div><div class="step done"></div>
+      <div class="step current"></div><div class="step"></div><div class="step"></div>
+      <div class="step"></div><div class="step"></div><div class="step"></div>
+      <div class="step"></div><div class="step"></div><div class="step"></div>
+    </div>
+
+    <h1>第 4 课：自建神经网络框架</h1>
+    <p class="meta">预计 45 分钟 · 目标：从零用 NumPy 实现一个可训练的多层感知器，真正理解前向传播、反向传播与 SGD</p>
+
+    <div class="callout">
+      <strong>本课目标：</strong> 不依赖 PyTorch/TensorFlow，只用 NumPy 搭建一个模块化神经网络框架。通过亲手实现线性层、激活函数、损失函数、反向传播和参数更新，彻底理解现代框架在背后做了什么。
+    </div>
+
+    <h2>1. 为什么要"造轮子"？</h2>
+    <p>上一课你用 <code>nn.Module</code> 几行就定义了一个网络，但 <code>loss.backward()</code> 到底做了什么？这一课我们拆开黑盒：自己写前向传播、自己推导梯度、自己更新参数。走通这条路后，任何框架都能心里有数。</p>
+
+    <h2>2. 损失函数：MSE 与交叉熵</h2>
+    <table>
+      <tr><th>任务类型</th><th>损失函数</th><th>输出层</th></tr>
+      <tr><td>回归</td><td>均方误差 MSE</td><td>线性</td></tr>
+      <tr><td>二分类</td><td>二元交叉熵</td><td>Sigmoid</td></tr>
+      <tr><td>多分类</td><td>交叉熵</td><td>Softmax</td></tr>
+    </table>
+
+    <div class="code-title"><span>losses.py</span><span class="lang-badge">Python</span></div>
+    <div class="code-block"><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+
+<span class="comment"># 均方误差：用于回归任务</span>
+<span class="keyword">def</span> mse_loss(y_pred, y_true):
+    <span class="keyword">return</span> np.mean((y_pred - y_true) ** <span class="number">2</span>)
+
+<span class="comment"># 交叉熵损失：配合 softmax 用于多分类</span>
+<span class="keyword">def</span> cross_entropy_loss(y_pred, y_true):
+    eps = <span class="number">1e-12</span>  <span class="comment"># 防止 log(0)</span>
+    y_pred = np.clip(y_pred, eps, <span class="number">1.0</span> - eps)
+    <span class="keyword">return</span> -np.mean(np.sum(y_true * np.log(y_pred), axis=<span class="number">1</span>))</div>
+
+    <div class="callout tip">
+      <strong>💡 关键直觉：</strong> 交叉熵衡量"预测概率分布"与"真实分布"的差异。模型对正确类别给出高概率时损失就低，给错类别高概率时损失被狠狠惩罚。
+    </div>
+
+    <h2>3. 反向传播：链式法则</h2>
+    <p>多层网络里，损失对深层参数的梯度要靠<strong>链式求导法则</strong>一层层往回算：</p>
+    <div class="code-block"><span class="comment"># 两层网络的梯度传播</span>
+∂ℒ/∂w2 = (∂ℒ/∂σ) · (∂σ/∂z2) · (∂z2/∂w2)
+∂ℒ/∂w1 = (∂ℒ/∂σ) · (∂σ/∂z2) · (∂z2/∂α) · (∂α/∂z1) · (∂z1/∂w1)</div>
+    <p>前向传播把数据从输入"流"到输出算出损失；反向传播把误差信号从输出"流"回输入算出每个参数的梯度。</p>
+
+    <h2>4. 从零构建：线性层</h2>
+    <div class="code-title"><span>own_framework.py</span><span class="lang-badge">Python</span></div>
+    <div class="code-block"><span class="keyword">class</span> Linear:
+    <span class="keyword">def</span> __init__(self, in_dim, out_dim):
+        self.W = np.random.randn(in_dim, out_dim) * <span class="number">0.1</span>
+        self.b = np.zeros((<span class="number">1</span>, out_dim))
+
+    <span class="keyword">def</span> forward(self, x):
+        self.x = x  <span class="comment"># 记住输入，反向传播要用</span>
+        <span class="keyword">return</span> x @ self.W + self.b
+
+    <span class="keyword">def</span> backward(self, dz):
+        self.dW = self.x.T @ dz
+        self.db = np.sum(dz, axis=<span class="number">0</span>, keepdims=<span class="keyword">True</span>)
+        <span class="keyword">return</span> dz @ self.W.T  <span class="comment"># 传给上一层</span></div>
+
+    <h2>5. 激活函数与 Softmax</h2>
+    <div class="code-block"><span class="keyword">def</span> relu_forward(z):
+    <span class="keyword">return</span> np.maximum(<span class="number">0</span>, z)
+
+<span class="keyword">def</span> relu_backward(dz, z):
+    <span class="keyword">return</span> dz * (z > <span class="number">0</span>)
+
+<span class="keyword">def</span> softmax(z):
+    z = z - np.max(z, axis=<span class="number">1</span>, keepdims=<span class="keyword">True</span>)  <span class="comment"># 数值稳定</span>
+    exp_z = np.exp(z)
+    <span class="keyword">return</span> exp_z / np.sum(exp_z, axis=<span class="number">1</span>, keepdims=<span class="keyword">True</span>)</div>
+
+    <div class="callout warn">
+      <strong>⚠️ 常见陷阱：</strong> softmax 实现必须先减最大值，否则 <code>np.exp</code> 容易溢出变成 <code>inf</code>。
+    </div>
+
+    <h2>6. 完整训练循环</h2>
+    <div class="code-title"><span>training_loop.py</span><span class="lang-badge">Python</span></div>
+    <div class="code-block"><span class="keyword">def</span> train(X, y, l1, l2, epochs=<span class="number">100</span>, lr=<span class="number">0.1</span>, batch_size=<span class="number">16</span>):
+    n = X.shape[<span class="number">0</span>]
+    <span class="keyword">for</span> epoch <span class="keyword">in</span> range(epochs):
+        idx = np.random.permutation(n)
+        <span class="keyword">for</span> start <span class="keyword">in</span> range(<span class="number">0</span>, n, batch_size):
+            xb = X[idx[start:start+batch_size]]
+            yb = y[idx[start:start+batch_size]]
+
+            <span class="comment"># 前向传播</span>
+            z1 = l1.forward(xb)
+            h  = relu_forward(z1)
+            z2 = l2.forward(h)
+            p  = softmax(z2)
+
+            <span class="comment"># 反向传播（softmax+交叉熵的梯度 = p - y）</span>
+            dz2 = (p - yb) / p.shape[<span class="number">0</span>]
+            dh  = l2.backward(dz2)
+            dz1 = relu_backward(dh, z1)
+            l1.backward(dz1)
+
+            <span class="comment"># 参数更新（SGD）</span>
+            l1.W -= lr * l1.dW;  l1.b -= lr * l1.db
+            l2.W -= lr * l2.dW;  l2.b -= lr * l2.db
+
+        <span class="keyword">if</span> epoch % <span class="number">10</span> == <span class="number">0</span>:
+            print(<span class="string">f"epoch {epoch}  loss={cross_entropy_loss(p, yb):.4f}"</span>)</div>
+
+    <div class="notebook-link">
+      <span class="icon">📓</span>
+      <div>
+        <strong>配套 Notebook：</strong>
+        <a href="../notebooks/3-NeuralNetworks/04-OwnFramework/OwnFramework.html" target="_blank">OwnFramework.ipynb</a>
+        — 完整框架实现，在二维分类数据集上训练验证。
+      </div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-title">✍️ 动手练习：扩展你的框架</div>
+      <p>1. 运行配套 Notebook，确认它能分开两类非线性可分点（如同心圆），观察 loss 是否稳定下降。</p>
+      <p>2. 把隐藏层激活函数从 ReLU 换成 Sigmoid 或 Tanh，记录达到同样准确率所需的 epoch 数。</p>
+      <p>3. 挑战：给框架增加第三层 Linear，让网络更深。层数变多后训练变快还是变慢？</p>
+    </div>
+
+    <h2>7. 快速自测</h2>
+    <p id="quiz-question">反向传播算法主要利用了哪个数学工具来计算多层网络中各参数的梯度？</p>
+    <button class="quiz-option" onclick="check(this, false)">A. 泰勒展开，用多项式逼近损失函数。</button>
+    <button class="quiz-option" onclick="check(this, true)">B. 链式求导法则，从损失函数出发沿计算图向后逐层求导。</button>
+    <button class="quiz-option" onclick="check(this, false)">C. 拉格朗日乘数法，把约束条件并入损失函数。</button>
+    <button class="quiz-option" onclick="check(this, false)">D. 蒙特卡洛采样，随机估计每个参数的影响。</button>
+    <div id="quiz-feedback" class="feedback hidden"></div>
+
+    <p id="quiz-question2">在多分类任务中，softmax + 交叉熵的起始梯度有什么简洁形式？</p>
+    <button class="quiz-option" onclick="check2(this, false)">A. 梯度等于零，因此不需要反向传播。</button>
+    <button class="quiz-option" onclick="check2(this, true)">B. 梯度等于预测概率减去真实标签（p − y）。</button>
+    <button class="quiz-option" onclick="check2(this, false)">C. 梯度等于损失函数值本身。</button>
+    <button class="quiz-option" onclick="check2(this, false)">D. 梯度等于输入特征的转置。</button>
+    <div id="quiz-feedback2" class="feedback hidden"></div>
+
+    <h2>8. 延伸阅读与参考</h2>
+    <ul>
+      <li><strong>Primary source:</strong> <a href="../AI-For-Beginners-zh-CN/lessons/3-NeuralNetworks/04-OwnFramework/README.md" target="_blank">AI-For-Beginners：自建神经网络框架</a></li>
+      <li><a href="../reference/0001-glossary.html" target="_blank">术语表：反向传播、SGD、交叉熵</a></li>
+      <li>3Blue1Brown《反向传播究竟在做什么》— <a href="https://www.bilibili.com/video/BV1bx411M7ZL/" target="_blank">B站</a></li>
+    </ul>
+
+    <div class="footer">
+      <p>下一课：<a href="0005-pytorch-tensorflow-deep.html">PyTorch 与 TensorFlow 深入</a></p>
+    </div>
+  </div>
+
+  <script>
+    function check(btn, isCorrect) {
+      const opts = btn.parentElement.querySelectorAll(':scope > .quiz-option');
+      opts.forEach(o => { o.classList.remove('correct', 'wrong'); o.disabled = true; });
+      btn.classList.add(isCorrect ? 'correct' : 'wrong');
+      const fb = document.getElementById('quiz-feedback');
+      fb.classList.remove('hidden');
+      fb.style.background = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+      fb.innerHTML = isCorrect
+        ? '✅ 正确。链式法则是反向传播的数学基础，让梯度能从输出层逐层传回输入层。'
+        : '❌ 不正确。反向传播的核心是链式求导法则。';
+    }
+    function check2(btn, isCorrect) {
+      const opts = btn.parentElement.querySelectorAll(':scope > .quiz-option');
+      opts.forEach(o => { o.classList.remove('correct', 'wrong'); o.disabled = true; });
+      btn.classList.add(isCorrect ? 'correct' : 'wrong');
+      const fb = document.getElementById('quiz-feedback2');
+      fb.classList.remove('hidden');
+      fb.style.background = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+      fb.innerHTML = isCorrect
+        ? '✅ 正确。softmax + 交叉熵的梯度恰好是 p − y，非常简洁，这也是它们搭配使用的原因之一。'
+        : '❌ 不正确。softmax + 交叉熵组合后的梯度有非常简洁的形式：p − y。';
+    }
+  </script>
+</body>
+</html>

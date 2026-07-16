@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EmbeddingsTF</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 EmbeddingsTF</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>嵌入</h2>
+<p>在之前的例子中，我们处理的是长度为 <code>vocab_size</code> 的高维词袋向量，并且我们将低维位置表示向量显式转换为稀疏的独热表示。这种独热表示并不节省内存。此外，每个单词都被独立对待，因此独热编码的向量无法表达单词之间的语义相似性。</p>
+<p>在本单元中，我们将继续探索 <strong>News AG</strong> 数据集。首先，让我们加载数据并获取上一单元中的一些定义。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import tensorflow as tf
+from tensorflow import keras
+import tensorflow_datasets as tfds
+import numpy as np
+
+ds_train, ds_test = tfds.load(&#x27;ag_news_subset&#x27;).values()</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>什么是嵌入？</h3>
+<p><strong>嵌入</strong>的核心思想是使用低维稠密向量来表示单词，这些向量能够反映单词的语义意义。稍后我们会讨论如何构建有意义的单词嵌入，但现在可以简单地将嵌入理解为一种降低单词向量维度的方法。</p>
+<p>嵌入层以单词作为输入，并输出一个指定的<code>embedding_size</code>向量。从某种意义上说，它与<code>Dense</code>层非常相似，但不同的是，嵌入层可以直接接受单词编号，而不是一个独热编码向量。</p>
+<p>通过将嵌入层作为网络的第一层，我们可以从词袋模型切换到<strong>嵌入袋</strong>模型。在嵌入袋模型中，我们首先将文本中的每个单词转换为对应的嵌入向量，然后对所有嵌入向量进行某种聚合操作，例如<code>sum</code>、<code>average</code>或<code>max</code>。</p>
+<p>!<a href="../../../../../lessons/5-NLP/14-Embeddings/images/embedding-classifier-example.png">展示五个序列单词的嵌入分类器的图片。</a></p>
+<p>我们的分类器神经网络由以下几层组成：</p>
+<ul>
+<li>`TextVectorization`层：该层以字符串作为输入，并生成一个包含标记编号的张量。我们会指定一个合理的词汇表大小`vocab_size`，并忽略使用频率较低的单词。输入形状为1，输出形状为$n$，因为结果中会有$n$个标记，每个标记包含从0到`vocab_size`的编号。</li>
+<li>`Embedding`层：该层接收$n$个编号，并将每个编号缩减为一个指定长度的稠密向量（在我们的例子中长度为100）。因此，形状为$n$的输入张量将被转换为一个$n\times 100$的张量。</li>
+<li>聚合层：该层沿着第一个轴对张量进行平均计算，即计算所有$n$个输入张量（对应不同单词）的平均值。为了实现这一层，我们会使用一个`Lambda`层，并传入计算平均值的函数。输出形状为100，它将是整个输入序列的数值表示。</li>
+<li>最后的`Dense`线性分类器。</li>
+</ul></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>vocab_size = 30000
+batch_size = 128
+
+vectorizer = keras.layers.experimental.preprocessing.TextVectorization(max_tokens=vocab_size,input_shape=(1,))
+
+model = keras.models.Sequential([
+    vectorizer,    
+    keras.layers.Embedding(vocab_size,100),
+    keras.layers.Lambda(lambda x: tf.reduce_mean(x,axis=1)),
+    keras.layers.Dense(4, activation=&#x27;softmax&#x27;)
+])
+model.summary()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;sequential&quot;
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ text_vectorization (TextVec  (None, None)             0         
+ torization)                                                     
+                                                                 
+ embedding (Embedding)       (None, None, 100)         3000000   
+                                                                 
+ lambda (Lambda)             (None, 100)               0         
+                                                                 
+ dense (Dense)               (None, 4)                 404       
+                                                                 
+=================================================================
+Total params: 3,000,404
+Trainable params: 3,000,404
+Non-trainable params: 0
+_________________________________________________________________
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>在 <code>summary</code> 输出中，<strong>output shape</strong> 列的第一个张量维度 <code>None</code> 表示小批量的大小，第二个维度表示标记序列的长度。小批量中的所有标记序列长度都不同。我们将在下一节讨论如何处理这个问题。</p>
+<p>现在让我们开始训练网络：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def extract_text(x):
+    return x[&#x27;title&#x27;]+&#x27; &#x27;+x[&#x27;description&#x27;]
+
+def tupelize(x):
+    return (extract_text(x),x[&#x27;label&#x27;])
+
+print(&quot;Training vectorizer&quot;)
+vectorizer.adapt(ds_train.take(500).map(extract_text))
+
+model.compile(loss=&#x27;sparse_categorical_crossentropy&#x27;,metrics=[&#x27;acc&#x27;])
+model.fit(ds_train.map(tupelize).batch(batch_size),validation_data=ds_test.map(tupelize).batch(batch_size))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Training vectorizer
+938/938 [==============================] - 20s 20ms/step - loss: 0.7891 - acc: 0.8155 - val_loss: 0.4470 - val_acc: 0.8642
+</div><div class="jp-OutputArea-output">&lt;keras.callbacks.History at 0x22255515100&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>&gt; <strong>注意</strong> 我们正在基于数据的一个子集构建向量化器。这是为了加快处理速度，但可能会导致我们的文本中并非所有的标记都出现在词汇表中。在这种情况下，这些标记将被忽略，这可能会导致准确性略有下降。然而，在实际情况下，文本的一个子集通常可以提供一个良好的词汇估计。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h3>处理变量序列长度</h3>
+<p>让我们来了解一下小批量训练的过程。在上面的例子中，输入张量的维度是1，我们使用长度为128的小批量，因此张量的实际大小是 $128 \times 1$。然而，每个句子中的标记数量是不同的。如果我们对单个输入应用 <code>TextVectorization</code> 层，返回的标记数量会有所不同，这取决于文本是如何被分词的：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>print(vectorizer(&#x27;Hello, world!&#x27;))
+print(vectorizer(&#x27;I am glad to meet you!&#x27;))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">tf.Tensor([ 1 45], shape=(2,), dtype=int64)
+tf.Tensor([ 112 1271    1    3 1747  158], shape=(6,), dtype=int64)
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>然而，当我们将向量化器应用于多个序列时，它必须生成一个矩形形状的张量，因此会用PAD标记（在我们的例子中是零）填充未使用的元素：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>vectorizer([&#x27;Hello, world!&#x27;,&#x27;I am glad to meet you!&#x27;])</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;tf.Tensor: shape=(2, 6), dtype=int64, numpy=
+array([[   1,   45,    0,    0,    0,    0],
+       [ 112, 1271,    1,    3, 1747,  158]], dtype=int64)&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>在这里我们可以看到嵌入：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model.layers[1](vectorizer([&#x27;Hello, world!&#x27;,&#x27;I am glad to meet you!&#x27;])).numpy()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">array([[[ 1.53059261e-02,  6.80514947e-02,  3.14026810e-02, ...,
+         -8.92002955e-02,  1.52911525e-04, -5.65562584e-02],
+        [ 2.57456154e-01,  2.79364467e-01, -2.03605562e-01, ...,
+         -2.07474351e-01,  8.31158683e-02, -2.03911960e-01],
+        [ 3.98201384e-02, -8.03454965e-03,  2.39790026e-02, ...,
+         -7.18549127e-04,  2.66963355e-02, -4.30646613e-02],
+        [ 3.98201384e-02, -8.03454965e-03,  2.39790026e-02, ...,
+         -7.18549127e-04,  2.66963355e-02, -4.30646613e-02],
+        [ 3.98201384e-02, -8.03454965e-03,  2.39790026e-02, ...,
+         -7.18549127e-04,  2.66963355e-02, -4.30646613e-02],
+        [ 3.98201384e-02, -8.03454965e-03,  2.39790026e-02, ...,
+         -7.18549127e-04,  2.66963355e-02, -4.30646613e-02]],
+
+       [[ 1.89674050e-01,  2.61548996e-01, -3.67433839e-02, ...,
+         -2.07366899e-01, -1.05442435e-01, -2.36952081e-01],
+        [ 6.16133213e-02,  1.80511594e-01,  9.77298319e-02, ...,
+         -5.46628237e-02, -1.07340455e-01, -1.06589928e-01],
+        [ 1.53059261e-02,  6.80514947e-02,  3.14026810e-02, ...,
+         -8.92002955e-02,  1.52911525e-04, -5.65562584e-02],
+        [-4.84890305e-02, -8.41715634e-02,  1.51529670e-01, ...,
+          1.28192469e-01, -7.77286515e-02,  1.26041949e-01],
+        [-4.17212099e-02, -5.60694858e-02,  4.08860669e-02, ...,
+          8.70475471e-02,  8.92383084e-02,  1.67974353e-01],
+        [ 2.85779923e-01,  4.57767487e-01,  4.52292450e-02, ...,
+         -1.97419018e-01, -2.04659685e-01, -2.79758364e-01]]],
+      dtype=float32)</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>&gt; <strong>注意</strong>：为了尽量减少填充量，在某些情况下，将数据集中所有序列按长度递增顺序（或更准确地说，按标记数量）排序是有意义的。这将确保每个小批量包含长度相似的序列。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>语义嵌入：Word2Vec</h2>
+<p>在之前的例子中，嵌入层学习了将单词映射到向量表示的方法，但这些表示并没有语义意义。如果能学习一种向量表示，使得相似的单词或同义词在某种向量距离（例如欧几里得距离）上彼此接近，那就更好了。</p>
+<p>为此，我们需要使用像 <a href="https://en.wikipedia.org/wiki/Word2vec">Word2Vec</a> 这样的技术，在大量文本集合上预训练嵌入模型。它基于两种主要架构，用于生成单词的分布式表示：</p>
+<ul>
+<li>**连续词袋模型** (CBoW)，我们训练模型通过上下文预测一个单词。给定 ngram $(W_{-2},W_{-1},W_0,W_1,W_2)$，模型的目标是通过 $(W_{-2},W_{-1},W_1,W_2)$ 预测 $W_0$。</li>
+<li>**连续跳词模型** (Skip-Gram) 与 CBoW 相反。模型使用上下文窗口中的单词来预测当前单词。</li>
+</ul>
+<p>CBoW 的速度更快，而 Skip-Gram 虽然较慢，但在表示不常见单词方面表现更好。</p>
+<p>!<a href="../../../../../lessons/5-NLP/14-Embeddings/images/example-algorithms-for-converting-words-to-vectors.png">展示 CBoW 和 Skip-Gram 算法如何将单词转换为向量的图片。</a></p>
+<p>为了试验在 Google News 数据集上预训练的 Word2Vec 嵌入，我们可以使用 <strong>gensim</strong> 库。下面我们找到与“neural”最相似的单词。</p>
+<p>&gt; <strong>注意:</strong> 当你首次创建单词向量时，下载可能需要一些时间！</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import gensim.downloader as api
+w2v = api.load(&#x27;word2vec-google-news-300&#x27;)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>for w,p in w2v.most_similar(&#x27;neural&#x27;):
+    print(f&quot;{w} -&gt; {p}&quot;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">neuronal -&gt; 0.7804799675941467
+neurons -&gt; 0.7326500415802002
+neural_circuits -&gt; 0.7252851724624634
+neuron -&gt; 0.7174385190010071
+cortical -&gt; 0.6941086649894714
+brain_circuitry -&gt; 0.6923246383666992
+synaptic -&gt; 0.6699118614196777
+neural_circuitry -&gt; 0.6638563275337219
+neurochemical -&gt; 0.6555314064025879
+neuronal_activity -&gt; 0.6531826257705688
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们还可以从单词中提取向量嵌入，用于训练分类模型。嵌入有300个组件，但这里为了清晰起见，我们只显示向量的前20个组件：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>w2v[&#x27;play&#x27;][:20]</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">array([ 0.01226807,  0.06225586,  0.10693359,  0.05810547,  0.23828125,
+        0.03686523,  0.05151367, -0.20703125,  0.01989746,  0.10058594,
+       -0.03759766, -0.1015625 , -0.15820312, -0.08105469, -0.0390625 ,
+       -0.05053711,  0.16015625,  0.2578125 ,  0.10058594, -0.25976562],
+      dtype=float32)</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>语义嵌入的伟大之处在于您可以根据语义操纵向量编码。例如，我们可以要求找到一个单词，其向量表示尽可能接近*国王*和*女人*，并尽可能远离*男人*：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>w2v.most_similar(positive=[&#x27;king&#x27;,&#x27;woman&#x27;],negative=[&#x27;man&#x27;])[0]</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">(&#x27;queen&#x27;, 0.7118192911148071)</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>上面的例子使用了一些内部的GenSym魔法，但其底层逻辑实际上非常简单。关于嵌入的一个有趣之处在于，你可以对嵌入向量执行正常的向量操作，这将反映出对单词<strong>意义</strong>的操作。上面的例子可以用向量操作来表达：我们计算出与<strong>KING-MAN+WOMAN</strong>对应的向量（对相应单词的向量表示执行<code>+</code>和<code>-</code>操作），然后找到字典中与该向量最接近的单词：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code># get the vector corresponding to kind-man+woman
+qvec = w2v[&#x27;king&#x27;]-1.7*w2v[&#x27;man&#x27;]+1.7*w2v[&#x27;woman&#x27;]
+# find the index of the closest embedding vector 
+d = np.sum((w2v.vectors-qvec)**2,axis=1)
+min_idx = np.argmin(d)
+# find the corresponding word
+w2v.index_to_key[min_idx]</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&#x27;queen&#x27;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>&gt; <strong>NOTE</strong>: 我们需要在 *man* 和 *woman* 向量上添加一个小系数——试着去掉它们，看看会发生什么。</p>
+<p>为了找到最接近的向量，我们使用 TensorFlow 的工具来计算我们的向量与词汇表中所有向量之间的距离向量，然后使用 <code>argmin</code> 找到最小值对应的单词索引。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>虽然 Word2Vec 是一种表达词语语义的好方法，但它存在许多缺点，包括以下几点：</p>
+<ul>
+<li>CBoW 和 skip-gram 模型都是**预测型嵌入**，它们仅考虑局部上下文。Word2Vec 没有利用全局上下文。</li>
+<li>Word2Vec 没有考虑词语的**形态学**，即词语的意义可能取决于词的不同部分，例如词根。</li>
+</ul>
+<p><strong>FastText</strong> 试图克服第二个限制，并在 Word2Vec 的基础上改进，通过学习每个词的向量表示以及词内的字符 n-gram。然后在每次训练步骤中，将这些表示的值平均成一个向量。虽然这增加了预训练的计算量，但它使词嵌入能够编码子词信息。</p>
+<p>另一种方法，<strong>GloVe</strong>，采用了一种不同的词嵌入方法，基于词-上下文矩阵的分解。首先，它构建了一个大型矩阵，记录词语在不同上下文中的出现次数，然后尝试以降低维度的方式表示该矩阵，同时最小化重构损失。</p>
+<p>gensim 库支持这些词嵌入方法，你可以通过修改上面的模型加载代码来尝试这些方法。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>在 Keras 中使用预训练的嵌入</h2>
+<p>我们可以修改上面的示例，在嵌入层的矩阵中预填充语义嵌入，例如 Word2Vec。预训练嵌入的词汇表和文本语料库的词汇表可能不匹配，因此我们需要选择一个。在这里，我们探讨两种可能的选项：使用分词器的词汇表，或者使用 Word2Vec 嵌入的词汇表。</p>
+<h3>使用分词器词汇表</h3>
+<p>当使用分词器的词汇表时，词汇表中的一些单词会有对应的 Word2Vec 嵌入，而另一些则没有。假设我们的词汇表大小为 <code>vocab_size</code>，Word2Vec 嵌入向量的长度为 <code>embed_size</code>，那么嵌入层将由一个形状为 <code>vocab_size</code>$\times$<code>embed_size</code> 的权重矩阵表示。我们将通过遍历词汇表来填充这个矩阵：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>embed_size = len(w2v.get_vector(&#x27;hello&#x27;))
+print(f&#x27;Embedding size: {embed_size}&#x27;)
+
+vocab = vectorizer.get_vocabulary()
+W = np.zeros((vocab_size,embed_size))
+print(&#x27;Populating matrix, this will take some time...&#x27;,end=&#x27;&#x27;)
+found, not_found = 0,0
+for i,w in enumerate(vocab):
+    try:
+        W[i] = w2v.get_vector(w)
+        found+=1
+    except:
+        # W[i] = np.random.normal(0.0,0.3,size=(embed_size,))
+        not_found+=1
+
+print(f&quot;Done, found {found} words, {not_found} words missing&quot;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Embedding size: 300
+Populating matrix, this will take some time...Done, found 4551 words, 784 words missing
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>对于不在 Word2Vec 词汇表中的单词，我们可以选择将它们保留为零向量，或者生成一个随机向量。</p>
+<p>现在我们可以定义一个带有预训练权重的嵌入层：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>emb = keras.layers.Embedding(vocab_size,embed_size,weights=[W],trainable=False)
+model = keras.models.Sequential([
+    vectorizer, emb,
+    keras.layers.Lambda(lambda x: tf.reduce_mean(x,axis=1)),
+    keras.layers.Dense(4, activation=&#x27;softmax&#x27;)
+])</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model.compile(loss=&#x27;sparse_categorical_crossentropy&#x27;,metrics=[&#x27;acc&#x27;])
+model.fit(ds_train.map(tupelize).batch(batch_size),
+          validation_data=ds_test.map(tupelize).batch(batch_size))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">938/938 [==============================] - 10s 10ms/step - loss: 1.1075 - acc: 0.7822 - val_loss: 0.9134 - val_acc: 0.8175
+</div><div class="jp-OutputArea-output">&lt;keras.callbacks.History at 0x2220226ef10&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>&gt; <strong>注意</strong>: 请注意，在创建 <code>Embedding</code> 时我们设置了 <code>trainable=False</code>，这意味着我们不会重新训练 Embedding 层。这可能会导致准确率略低，但可以加快训练速度。</p>
+<h3>使用嵌入词汇表</h3>
+<p>之前方法的一个问题是，TextVectorization 和 Embedding 使用的词汇表不同。为了解决这个问题，我们可以采用以下解决方案之一：</p>
+<ul>
+<li>使用我们的词汇表重新训练 Word2Vec 模型。</li>
+<li>使用预训练的 Word2Vec 模型中的词汇表加载我们的数据集。在加载时可以指定用于加载数据集的词汇表。</li>
+</ul>
+<p>后者看起来更简单，所以我们来实现它。首先，我们将创建一个 <code>TextVectorization</code> 层，并使用从 Word2Vec 嵌入中提取的指定词汇表：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>vocab = list(w2v.vocab.keys())
+vectorizer = keras.layers.experimental.preprocessing.TextVectorization(input_shape=(1,))
+vectorizer.set_vocabulary(vocab)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>gensim词嵌入库包含一个方便的函数<code>get_keras_embeddings</code>，它会自动为您创建相应的Keras嵌入层。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model = keras.models.Sequential([
+    vectorizer, 
+    w2v.get_keras_embedding(train_embeddings=False),
+    keras.layers.Lambda(lambda x: tf.reduce_mean(x,axis=1)),
+    keras.layers.Dense(4, activation=&#x27;softmax&#x27;)
+])
+model.compile(loss=&#x27;sparse_categorical_crossentropy&#x27;,metrics=[&#x27;acc&#x27;])
+model.fit(ds_train.map(tupelize).batch(128),validation_data=ds_test.map(tupelize).batch(128),epochs=5)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Epoch 1/5
+938/938 [==============================] - 20s 14ms/step - loss: 1.3377 - acc: 0.4978 - val_loss: 1.2995 - val_acc: 0.5647
+Epoch 2/5
+938/938 [==============================] - 10s 10ms/step - loss: 1.2587 - acc: 0.5722 - val_loss: 1.2339 - val_acc: 0.5842
+Epoch 3/5
+938/938 [==============================] - 10s 10ms/step - loss: 1.1980 - acc: 0.5884 - val_loss: 1.1826 - val_acc: 0.5954
+Epoch 4/5
+938/938 [==============================] - 12s 13ms/step - loss: 1.1503 - acc: 0.6002 - val_loss: 1.1417 - val_acc: 0.6018
+Epoch 5/5
+938/938 [==============================] - 11s 12ms/step - loss: 1.1120 - acc: 0.6097 - val_loss: 1.1083 - val_acc: 0.6104
+</div><div class="jp-OutputArea-output">&lt;keras.callbacks.History at 0x2220ccb81c0&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们未能看到更高准确率的原因之一是，因为我们数据集中的一些词在预训练的GloVe词汇表中缺失，因此它们实际上被忽略了。为了解决这个问题，我们可以基于我们的数据集训练自己的嵌入。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>上下文嵌入</h2>
+<p>传统预训练嵌入表示（如 Word2Vec）的一个主要局限是，尽管它们可以捕捉到一个词的一些含义，但无法区分不同的含义。这可能会在下游模型中引发问题。</p>
+<p>例如，单词“play”在以下两句话中有不同的含义：</p>
+<ul>
+<li>我去剧院看了一场**戏剧**。</li>
+<li>约翰想和他的朋友们一起**玩**。</li>
+</ul>
+<p>我们提到的预训练嵌入会用相同的嵌入表示“play”这个词的两种含义。为了克服这一局限，我们需要基于<strong>语言模型</strong>来构建嵌入。语言模型是在大规模文本语料库上训练的，它*知道*单词在不同上下文中如何组合。讨论上下文嵌入超出了本教程的范围，但我们将在下一单元讨论语言模型时回到这个话题。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务<a href="https://github.com/Azure/co-op-translator">Co-op Translator</a>进行翻译。尽管我们努力确保翻译的准确性，但请注意，自动翻译可能包含错误或不准确之处。原始语言的文档应被视为权威来源。对于重要信息，建议使用专业人工翻译。我们不对因使用此翻译而产生的任何误解或误读承担责任。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TextRepresentationTF</title>
+<style>
+body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 900px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #111; }
+.jp-Notebook { background: #fff; }
+.jp-Cell { margin: 1rem 0; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+.jp-CodeCell { background: #263238; }
+.jp-MarkdownCell { background: #fff; padding: 0.5rem 1rem; }
+.jp-Editor .jp-CodeMirror { background: #263238 !important; color: #eeffff; font-size: 0.85rem; }
+.jp-OutputArea { background: #fff; padding: 0.5rem 1rem; }
+.jp-OutputArea-output { background: #f8f9fa; padding: 0.3rem 0.5rem; margin: 0.2rem 0; border-radius: 3px; font-family: "SF Mono", Consolas, monospace; font-size: 0.82rem; }
+.jp-RenderedHTMLCommon { font-size: 0.9rem; }
+.jp-RenderedHTMLCommon table { border-collapse: collapse; width: 100%; }
+.jp-RenderedHTMLCommon th, .jp-RenderedHTMLCommon td { border: 1px solid #ddd; padding: 0.4rem 0.6rem; }
+.jp-RenderedHTMLCommon th { background: #f8f9fa; }
+.nb-header { border-bottom: 2px solid #2a7f62; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+.nb-header a { color: #0066cc; text-decoration: none; }
+.nb-back { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+pre { white-space: pre-wrap; word-wrap: break-word; }
+</style>
+</head>
+<body>
+<div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
+<div class="nb-header"><h2>📓 TextRepresentationTF</h2></div>
+<div class="jp-Cell jp-MarkdownCell"><h1>文本分类任务</h1>
+<p>在本模块中，我们将从一个简单的文本分类任务开始，基于 <strong><a href="http://www.di.unipi.it/~gulli/AG_corpus_of_news_articles.html">AG_NEWS</a></strong> 数据集：我们将把新闻标题分类为以下四个类别之一：国际、体育、商业和科技。</p>
+<h2>数据集</h2>
+<p>为了加载数据集，我们将使用 <strong><a href="https://www.tensorflow.org/datasets">TensorFlow Datasets</a></strong> API。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>import tensorflow as tf
+from tensorflow import keras
+import tensorflow_datasets as tfds
+
+# In this tutorial, we will be training a lot of models. In order to use GPU memory cautiously,
+# we will set tensorflow option to grow GPU memory allocation when required.
+physical_devices = tf.config.list_physical_devices(&#x27;GPU&#x27;) 
+if len(physical_devices)&gt;0:
+    tf.config.experimental.set_memory_growth(physical_devices[0], True)
+
+dataset = tfds.load(&#x27;ag_news_subset&#x27;)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们现在可以通过使用 <code>dataset[&#x27;train&#x27;]</code> 和 <code>dataset[&#x27;test&#x27;]</code> 分别访问数据集的训练和测试部分：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>ds_train = dataset[&#x27;train&#x27;]
+ds_test = dataset[&#x27;test&#x27;]
+
+print(f&quot;Length of train dataset = {len(ds_train)}&quot;)
+print(f&quot;Length of test dataset = {len(ds_test)}&quot;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Length of train dataset = 120000
+Length of test dataset = 7600
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>让我们打印出数据集中前10条新标题：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>classes = [&#x27;World&#x27;, &#x27;Sports&#x27;, &#x27;Business&#x27;, &#x27;Sci/Tech&#x27;]
+
+for i,x in zip(range(5),ds_train):
+    print(f&quot;{x[&#x27;label&#x27;]} ({classes[x[&#x27;label&#x27;]]}) -&gt; {x[&#x27;title&#x27;]} {x[&#x27;description&#x27;]}&quot;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">3 (Sci/Tech) -&gt; b&#x27;AMD Debuts Dual-Core Opteron Processor&#x27; b&#x27;AMD #39;s new dual-core Opteron chip is designed mainly for corporate computing applications, including databases, Web services, and financial transactions.&#x27;
+1 (Sports) -&gt; b&quot;Wood&#x27;s Suspension Upheld (Reuters)&quot; b&#x27;Reuters - Major League Baseball\\Monday announced a decision on the appeal filed by Chicago Cubs\\pitcher Kerry Wood regarding a suspension stemming from an\\incident earlier this season.&#x27;
+2 (Business) -&gt; b&#x27;Bush reform may have blue states seeing red&#x27; b&#x27;President Bush #39;s  quot;revenue-neutral quot; tax reform needs losers to balance its winners, and people claiming the federal deduction for state and local taxes may be in administration planners #39; sights, news reports say.&#x27;
+3 (Sci/Tech) -&gt; b&quot;&#x27;Halt science decline in schools&#x27;&quot; b&#x27;Britain will run out of leading scientists unless science education is improved, says Professor Colin Pillinger.&#x27;
+1 (Sports) -&gt; b&#x27;Gerrard leaves practice&#x27; b&#x27;London, England (Sports Network) - England midfielder Steven Gerrard injured his groin late in Thursday #39;s training session, but is hopeful he will be ready for Saturday #39;s World Cup qualifier against Austria.&#x27;
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>文本向量化</h2>
+<p>现在我们需要将文本转换为可以表示为张量的<strong>数字</strong>。如果我们想要词级别的表示，需要完成以下两件事：</p>
+<ul>
+<li>使用一个**分词器**将文本拆分为**标记**。</li>
+<li>构建这些标记的**词汇表**。</li>
+</ul>
+<h3>限制词汇表大小</h3>
+<p>在 AG News 数据集的例子中，词汇表的大小相当大，超过了 10 万个单词。一般来说，我们不需要那些在文本中很少出现的单词——只有少数句子会包含它们，而模型也无法从中学习。因此，通过向向量化器构造函数传递一个参数，将词汇表大小限制为一个较小的数字是合理的：</p>
+<p>以上两个步骤都可以通过 <strong>TextVectorization</strong> 层来处理。我们可以实例化一个向量化器对象，然后调用 <code>adapt</code> 方法来遍历所有文本并构建词汇表：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>vocab_size = 50000
+vectorizer = keras.layers.experimental.preprocessing.TextVectorization(max_tokens=vocab_size)
+vectorizer.adapt(ds_train.take(500).map(lambda x: x[&#x27;title&#x27;]+&#x27; &#x27;+x[&#x27;description&#x27;]))</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>&gt; <strong>注意</strong> 我们仅使用整个数据集的一部分来构建词汇表。这样做是为了加快执行速度，避免让您等待太久。然而，这样做存在一定风险，即整个数据集中的某些词可能不会被包含在词汇表中，并在训练过程中被忽略。因此，使用完整的词汇表大小并在<code>adapt</code>过程中遍历整个数据集应该可以提高最终的准确性，但提升幅度不会太大。</p>
+<p>现在我们可以访问实际的词汇表：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>vocab = vectorizer.get_vocabulary()
+vocab_size = len(vocab)
+print(vocab[:10])
+print(f&quot;Length of vocabulary: {vocab_size}&quot;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">[&#x27;&#x27;, &#x27;[UNK]&#x27;, &#x27;the&#x27;, &#x27;to&#x27;, &#x27;a&#x27;, &#x27;in&#x27;, &#x27;of&#x27;, &#x27;and&#x27;, &#x27;on&#x27;, &#x27;for&#x27;]
+Length of vocabulary: 5335
+</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>使用向量化器，我们可以轻松地将任何文本编码为一组数字：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>vectorizer(&#x27;I love to play with my words&#x27;)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">&lt;tf.Tensor: shape=(7,), dtype=int64, numpy=array([ 112, 3695,    3,  304,   11, 1041,    1], dtype=int64)&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>词袋文本表示法</h2>
+<p>由于单词承载着意义，有时我们可以通过单独查看单词，而不考虑它们在句子中的顺序，来理解一段文本的含义。例如，在新闻分类中，像 *天气* 和 *雪* 这样的词可能表明 *天气预报*，而像 *股票* 和 *美元* 这样的词则可能属于 *财经新闻*。</p>
+<p><strong>词袋</strong> (BoW) 向量表示法是最容易理解的传统向量表示法。每个单词都与一个向量索引相关联，向量中的元素表示某个文档中每个单词出现的次数。</p>
+<p>!<a href="../../../../../lessons/5-NLP/13-TextRep/images/bag-of-words-example.png">展示词袋向量表示法在内存中如何表示的图片。</a></p>
+<p>&gt; <strong>注意</strong>: 你也可以将 BoW 理解为文本中每个单词的独热编码向量的总和。</p>
+<p>下面是一个使用 Scikit Learn Python 库生成词袋表示法的示例：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>from sklearn.feature_extraction.text import CountVectorizer
+sc_vectorizer = CountVectorizer()
+corpus = [
+        &#x27;I like hot dogs.&#x27;,
+        &#x27;The dog ran fast.&#x27;,
+        &#x27;Its hot outside.&#x27;,
+    ]
+sc_vectorizer.fit_transform(corpus)
+sc_vectorizer.transform([&#x27;My dog likes hot dogs on a hot day.&#x27;]).toarray()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">array([[1, 1, 0, 2, 0, 0, 0, 0, 0]], dtype=int64)</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>我们还可以使用上面定义的Keras向量化器，将每个单词编号转换为独热编码，并将所有这些向量相加：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def to_bow(text):
+    return tf.reduce_sum(tf.one_hot(vectorizer(text),vocab_size),axis=0)
+
+to_bow(&#x27;My dog likes hot dogs on a hot day.&#x27;).numpy()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">array([0., 5., 0., ..., 0., 0., 0.], dtype=float32)</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>&gt; <strong>注意</strong>：您可能会惊讶地发现结果与之前的示例不同。原因在于，在 Keras 示例中，向量的长度对应于词汇表的大小，而该词汇表是基于整个 AG News 数据集构建的；而在 Scikit Learn 示例中，我们是根据示例文本动态构建词汇表的。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>训练 BoW 分类器</h2>
+<p>现在我们已经了解了如何构建文本的词袋表示，让我们训练一个使用它的分类器。首先，我们需要将数据集转换为词袋表示。这可以通过以下方式使用 <code>map</code> 函数来实现：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>batch_size = 128
+
+ds_train_bow = ds_train.map(lambda x: (to_bow(x[&#x27;title&#x27;]+x[&#x27;description&#x27;]),x[&#x27;label&#x27;])).batch(batch_size)
+ds_test_bow = ds_test.map(lambda x: (to_bow(x[&#x27;title&#x27;]+x[&#x27;description&#x27;]),x[&#x27;label&#x27;])).batch(batch_size)</code></pre></div><div class="jp-OutputArea"></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>现在让我们定义一个简单的分类器神经网络，它包含一个线性层。输入大小是<code>vocab_size</code>，输出大小对应于类别数量（4）。由于我们正在解决一个分类任务，最终的激活函数是<strong>softmax</strong>：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model = keras.models.Sequential([
+    keras.layers.Dense(4,activation=&#x27;softmax&#x27;,input_shape=(vocab_size,))
+])
+model.compile(loss=&#x27;sparse_categorical_crossentropy&#x27;,optimizer=&#x27;adam&#x27;,metrics=[&#x27;acc&#x27;])
+model.fit(ds_train_bow,validation_data=ds_test_bow)</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">938/938 [==============================] - 66s 70ms/step - loss: 0.6144 - acc: 0.8427 - val_loss: 0.4416 - val_acc: 0.8697
+</div><div class="jp-OutputArea-output">&lt;keras.callbacks.History at 0x20c70a947f0&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>由于我们有4个类别，超过80%的准确率是一个不错的结果。</p>
+<h2>将分类器训练为一个网络</h2>
+<p>因为向量化器也是一个 Keras 层，我们可以定义一个包含它的网络，并进行端到端的训练。这样我们就不需要使用 <code>map</code> 来向量化数据集，只需将原始数据集传递到网络的输入即可。</p>
+<p>&gt; <strong>注意</strong>: 我们仍然需要对数据集应用映射操作，以将字段从字典（例如 <code>title</code>、<code>description</code> 和 <code>label</code>）转换为元组。然而，当从磁盘加载数据时，我们可以一开始就构建一个具有所需结构的数据集。</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>def extract_text(x):
+    return x[&#x27;title&#x27;]+&#x27; &#x27;+x[&#x27;description&#x27;]
+
+def tupelize(x):
+    return (extract_text(x),x[&#x27;label&#x27;])
+
+inp = keras.Input(shape=(1,),dtype=tf.string)
+x = vectorizer(inp)
+x = tf.reduce_sum(tf.one_hot(x,vocab_size),axis=1)
+out = keras.layers.Dense(4,activation=&#x27;softmax&#x27;)(x)
+model = keras.models.Model(inp,out)
+model.summary()
+
+model.compile(loss=&#x27;sparse_categorical_crossentropy&#x27;,optimizer=&#x27;adam&#x27;,metrics=[&#x27;acc&#x27;])
+model.fit(ds_train.map(tupelize).batch(batch_size),validation_data=ds_test.map(tupelize).batch(batch_size))
+</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Model: &quot;model&quot;
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ input_1 (InputLayer)        [(None, 1)]               0         
+                                                                 
+ text_vectorization (TextVec  (None, None)             0         
+ torization)                                                     
+                                                                 
+ tf.one_hot (TFOpLambda)     (None, None, 5335)        0         
+                                                                 
+ tf.math.reduce_sum (TFOpLam  (None, 5335)             0         
+ bda)                                                            
+                                                                 
+ dense_2 (Dense)             (None, 4)                 21344     
+                                                                 
+=================================================================
+Total params: 21,344
+Trainable params: 21,344
+Non-trainable params: 0
+_________________________________________________________________
+938/938 [==============================] - 73s 77ms/step - loss: 0.6057 - acc: 0.8414 - val_loss: 0.4202 - val_acc: 0.8736
+</div><div class="jp-OutputArea-output">&lt;keras.callbacks.History at 0x20c721521f0&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>二元组、三元组和 n 元组</h2>
+<p>词袋模型的一个局限性在于，有些词是多词表达的一部分。例如，“hot dog”这个词的含义与单独的“hot”和“dog”在其他语境中的含义完全不同。如果我们始终用相同的向量表示“hot”和“dog”，可能会让模型感到困惑。</p>
+<p>为了解决这个问题，<strong>n 元组表示法</strong>常被用于文档分类方法中，其中每个单词、双词组或三词组的频率是训练分类器的一个有用特征。例如，在二元组表示中，我们会将所有的单词对添加到词汇表中，除了原始单词之外。</p>
+<p>以下是一个使用 Scikit Learn 生成二元组词袋表示的示例：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>bigram_vectorizer = CountVectorizer(ngram_range=(1, 2), token_pattern=r&#x27;\b\w+\b&#x27;, min_df=1)
+corpus = [
+        &#x27;I like hot dogs.&#x27;,
+        &#x27;The dog ran fast.&#x27;,
+        &#x27;Its hot outside.&#x27;,
+    ]
+bigram_vectorizer.fit_transform(corpus)
+print(&quot;Vocabulary:\n&quot;,bigram_vectorizer.vocabulary_)
+bigram_vectorizer.transform([&#x27;My dog likes hot dogs on a hot day.&#x27;]).toarray()
+</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Vocabulary:
+ {&#x27;i&#x27;: 7, &#x27;like&#x27;: 11, &#x27;hot&#x27;: 4, &#x27;dogs&#x27;: 2, &#x27;i like&#x27;: 8, &#x27;like hot&#x27;: 12, &#x27;hot dogs&#x27;: 5, &#x27;the&#x27;: 16, &#x27;dog&#x27;: 0, &#x27;ran&#x27;: 14, &#x27;fast&#x27;: 3, &#x27;the dog&#x27;: 17, &#x27;dog ran&#x27;: 1, &#x27;ran fast&#x27;: 15, &#x27;its&#x27;: 9, &#x27;outside&#x27;: 13, &#x27;its hot&#x27;: 10, &#x27;hot outside&#x27;: 6}
+</div><div class="jp-OutputArea-output">array([[1, 0, 1, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+      dtype=int64)</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>n-gram 方法的主要缺点是词汇表的大小会迅速增长。在实际应用中，我们需要将 n-gram 表示与降维技术（例如 *embeddings*）结合使用，这将在下一单元中讨论。</p>
+<p>为了在我们的 <strong>AG News</strong> 数据集中使用 n-gram 表示，我们需要将 <code>ngrams</code> 参数传递给 <code>TextVectorization</code> 构造函数。二元组词汇表的长度会<strong>显著增加</strong>，在我们的例子中，它超过了 130 万个标记！因此，将二元组标记限制在一个合理的数量范围内是有意义的。</p>
+<p>我们可以使用与上面相同的代码来训练分类器，但这样做会非常占用内存。在下一单元中，我们将使用 embeddings 来训练二元组分类器。同时，你可以在这个笔记本中尝试训练二元组分类器，看看是否能获得更高的准确率。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>自动计算 BoW 向量</h2>
+<p>在上面的例子中，我们通过手动将单个词的一次性编码相加来计算 BoW 向量。然而，最新版本的 TensorFlow 允许我们通过向向量化器构造函数传递 <code>output_mode=&#x27;count</code> 参数来自动计算 BoW 向量。这使得定义和训练我们的模型变得更加简单：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model = keras.models.Sequential([
+    keras.layers.experimental.preprocessing.TextVectorization(max_tokens=vocab_size,output_mode=&#x27;count&#x27;),
+    keras.layers.Dense(4,input_shape=(vocab_size,), activation=&#x27;softmax&#x27;)
+])
+print(&quot;Training vectorizer&quot;)
+model.layers[0].adapt(ds_train.take(500).map(extract_text))
+model.compile(loss=&#x27;sparse_categorical_crossentropy&#x27;,optimizer=&#x27;adam&#x27;,metrics=[&#x27;acc&#x27;])
+model.fit(ds_train.map(tupelize).batch(batch_size),validation_data=ds_test.map(tupelize).batch(batch_size))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Training vectorizer
+938/938 [==============================] - 7s 7ms/step - loss: 0.5929 - acc: 0.8486 - val_loss: 0.4168 - val_acc: 0.8772
+</div><div class="jp-OutputArea-output">&lt;keras.callbacks.History at 0x20c725217c0&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>词频-逆文档频率 (TF-IDF)</h2>
+<p>在 BoW 表示法中，无论单词本身如何，单词出现的权重都使用相同的技术进行计算。然而，很明显，像 *a* 和 *in* 这样的高频词对于分类的意义远不如一些专业术语。在大多数 NLP 任务中，有些词比其他词更重要。</p>
+<p><strong>TF-IDF</strong> 是 <strong>词频-逆文档频率</strong> 的缩写。它是袋子模型（bag-of-words）的一个变体，其中不是用二进制的 0/1 值来表示单词是否出现在文档中，而是使用一个浮点值，该值与单词在语料库中出现的频率相关。</p>
+<p>更正式地说，单词 $i$ 在文档 $j$ 中的权重 $w_{ij}$ 定义为：</p>
+<p>$$</p>
+<p>w_{ij} = tf_{ij}\times\log({N\over df_i})</p>
+<p>$$</p>
+<p>其中：</p>
+<ul>
+<li>$tf_{ij}$ 是单词 $i$ 在文档 $j$ 中出现的次数，即我们之前看到的 BoW 值</li>
+<li>$N$ 是语料库中的文档总数</li>
+<li>$df_i$ 是整个语料库中包含单词 $i$ 的文档数量</li>
+</ul>
+<p>TF-IDF 值 $w_{ij}$ 随着单词在文档中出现的次数成比例增加，同时会根据语料库中包含该单词的文档数量进行调整。这有助于解决某些单词比其他单词更频繁出现的问题。例如，如果某个单词出现在语料库的*每一篇*文档中，那么 $df_i=N$，且 $w_{ij}=0$，这些词将被完全忽略。</p>
+<p>你可以使用 Scikit Learn 轻松创建文本的 TF-IDF 向量化：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>from sklearn.feature_extraction.text import TfidfVectorizer
+vectorizer = TfidfVectorizer(ngram_range=(1,2))
+vectorizer.fit_transform(corpus)
+vectorizer.transform([&#x27;My dog likes hot dogs on a hot day.&#x27;]).toarray()</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">array([[0.43381609, 0.        , 0.43381609, 0.        , 0.65985664,
+        0.43381609, 0.        , 0.        , 0.        , 0.        ,
+        0.        , 0.        , 0.        , 0.        , 0.        ,
+        0.        ]])</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><p>在 Keras 中，通过传递参数 <code>output_mode=&#x27;tf-idf&#x27;</code>，<code>TextVectorization</code> 层可以自动计算 TF-IDF 频率。让我们重复上面的代码，看看使用 TF-IDF 是否能提高准确性：</p></div>
+<div class="jp-Cell jp-CodeCell"><div class="jp-Editor"><pre><code>model = keras.models.Sequential([
+    keras.layers.experimental.preprocessing.TextVectorization(max_tokens=vocab_size,output_mode=&#x27;tf-idf&#x27;),
+    keras.layers.Dense(4,input_shape=(vocab_size,), activation=&#x27;softmax&#x27;)
+])
+print(&quot;Training vectorizer&quot;)
+model.layers[0].adapt(ds_train.take(500).map(extract_text))
+model.compile(loss=&#x27;sparse_categorical_crossentropy&#x27;,optimizer=&#x27;adam&#x27;,metrics=[&#x27;acc&#x27;])
+model.fit(ds_train.map(tupelize).batch(batch_size),validation_data=ds_test.map(tupelize).batch(batch_size))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">Training vectorizer
+938/938 [==============================] - 12s 12ms/step - loss: 0.4197 - acc: 0.8662 - val_loss: 0.3432 - val_acc: 0.8849
+</div><div class="jp-OutputArea-output">&lt;keras.callbacks.History at 0x20c729dfd30&gt;</div></div></div>
+<div class="jp-Cell jp-MarkdownCell"><h2>结论</h2>
+<p>尽管TF-IDF表示法为不同的词赋予了频率权重，但它无法表达词语的含义或顺序。正如著名语言学家J.R. Firth在1935年所说：“一个词的完整含义总是与上下文相关，任何脱离上下文的意义研究都不值得认真对待。”在课程的后续部分，我们将学习如何通过语言模型从文本中捕捉上下文信息。</p></div>
+<div class="jp-Cell jp-MarkdownCell"><p>---</p>
+<p><strong>免责声明</strong>：</p>
+<p>本文档使用AI翻译服务<a href="https://github.com/Azure/co-op-translator">Co-op Translator</a>进行翻译。尽管我们努力确保准确性，但请注意，自动翻译可能包含错误或不准确之处。应以原始语言的文档作为权威来源。对于关键信息，建议使用专业人工翻译。因使用本翻译而导致的任何误解或误读，我们概不负责。</p></div>
+<div style="margin-top:2rem; padding-top:1rem; border-top:1px solid #e0e0e0; font-size:0.85rem; color:#555;">
+  ← <a href="../index.html">课程首页</a> · 本页面由 Jupyter Notebook 自动转换生成
+</div>
+</body>
+</html>
