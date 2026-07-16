@@ -47,7 +47,6 @@
       font-size: 0.85rem;
       line-height: 1.5;
       margin: 1rem 0;
-      border: 2px solid red;
     }
     .code-block .comment { color: #80cbc4; }
     .callout {
@@ -140,15 +139,14 @@
     <h2>1. 从一张地图开始</h2>
     <p>人工智能（AI）是最大的圈。机器学习（ML）是 AI 的一种方法：让计算机从数据里找规律，而不是靠人写死规则。深度学习（DL）是 ML 的一种方法，用多层神经网络自动学习特征。神经网络（NN）是 DL 的核心模型。</p>
 
-    <div class="code-block">AI
+    <pre class="code-block">AI
 ├── 符号 AI / 知识表示（规则、专家系统）
 ├── 机器学习 ML
 │   ├── 监督学习：有标签数据（分类、回归）
 │   ├── 无监督学习：无标签数据（聚类、降维）
 │   └── 强化学习：奖励驱动的学习
 │       └── 深度学习 DL ← 神经网络 NN
-└── 计算机视觉、自然语言处理、语音识别等应用
-    </div>
+└── 计算机视觉、自然语言处理、语音识别等应用</pre>
 
     <p><strong>为什么神经网络能行？</strong> 因为它可以自动从数据中学习“特征”。传统方法需要人工设计特征（比如识别猫时手动提取边缘、纹理），而深度学习让模型自己发现什么特征对任务最有用。</p>
 
@@ -167,7 +165,7 @@
     <p>课程中的代码以 Jupyter Notebook 形式提供。推荐两种运行方式：</p>
 
     <h3>方式 A：本地 Anaconda（推荐）</h3>
-    <div class="code-block"># 1. 安装 Miniconda 或 Anaconda
+    <pre class="code-block"># 1. 安装 Miniconda 或 Anaconda
 # 2. 创建环境
 conda create -n ai python=3.11
 conda activate ai
@@ -180,15 +178,14 @@ pip install torch torchvision          # PyTorch
 pip install tensorflow                 # TensorFlow
 
 # 5. 启动 Jupyter
-jupyter notebook
-    </div>
+jupyter notebook</pre>
 
     <h3>方式 B：Google Colab（零安装）</h3>
     <p>访问 <a href="https://colab.research.google.com/" target="_blank">colab.research.google.com</a>，上传课程 Notebook 即可运行。免费版提供 GPU 选项（运行时 → 更改运行时类型 → T4 GPU）。</p>
 
     <h2>4. 第一个程序：Hello AI</h2>
     <p>先不训练模型，只验证环境。运行下面代码，确认 NumPy 和 PyTorch/TensorFlow 已安装。</p>
-    <div class="code-block">import numpy as np
+    <pre class="code-block">import numpy as np
 import torch
 
 print("NumPy 版本:", np.__version__)
@@ -200,8 +197,7 @@ X = np.array([[1.0, 2.0]])
 W = np.array([[0.5], [1.5]])
 b = 1.0
 y = X @ W + b
-print("输出:", y)   # 输出: [[4.5]]
-    </div>
+print("输出:", y)   # 输出: [[4.5]]</pre>
 
     <div class="exercise">
       <div class="exercise-title">✍️ 动手练习：环境检查</div>
