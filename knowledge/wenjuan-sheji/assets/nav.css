@@ -190,3 +190,18 @@
   .wj-card-body h3 { font-size: 16px; }
   .hub-hero { padding: 16px 0 40px; }
 }
+@media (max-width: 640px) {
+  .wj-card { grid-template-columns: 1fr; gap: 10px; padding: 16px 14px; }
+  .wj-card-num { width: 36px; height: 36px; font-size: 17px; }
+  .wj-card-body h3 { font-size: 15px; }
+  .wj-card-body p { font-size: 12.5px; }
+  .wj-refs { grid-template-columns: 1fr; }
+  .hub-hero h1 { font-size: 32px; }
+}
+@media (max-width: 480px) {
+  .wj-card { padding: 14px 12px; }
+  .wj-card-num { width: 32px; height: 32px; font-size: 15px; }
+  .wj-card-body h3 { font-size: 14px; }
+  .wj-card-body p { font-size: 12px; }
+  .hub-hero h1 { font-size: 28px; }
+}
