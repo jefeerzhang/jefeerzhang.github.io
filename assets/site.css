@@ -2335,6 +2335,65 @@ li { font-weight: 500; }
   .pub-body {
     font-size: 14px;
   }
+
+  /* 移动端导航紧凑化 */
+  .site-header {
+    position: relative;
+  }
+
+  .nav-inner {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    height: auto;
+  }
+
+  .site-brand {
+    font-size: 0.85rem;
+    min-height: 0;
+    line-height: 1.2;
+  }
+
+  .nav-links {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .nav-links a {
+    font-size: 0.78rem;
+    min-height: 0;
+    padding: 2px 0;
+  }
+
+  .theme-toggle {
+    width: 30px;
+    height: 30px;
+    margin-left: auto;
+  }
+
+  .theme-toggle svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* 课节上一课/下一课导航 */
+  .nav {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .nav a {
+    text-align: center;
+    font-size: 0.85rem;
+  }
+
+  /* 课程首页/内页导航行 */
+  .nav-row {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
 }
 
 @media (max-width: 480px) {
