@@ -2286,6 +2286,72 @@ li { font-weight: 500; }
 }
 
 /* ============================================================
+ * 全站移动端统一补丁（640px 以下）
+ * 覆盖首页 / CV / 工具 / 知识学习 / fsQCA / 课程页等
+ * ============================================================ */
+@media (max-width: 640px) {
+  /* 首页 */
+  .home-hero {
+    padding-block: 36px 32px;
+  }
+  .home-hero .name {
+    font-size: clamp(36px, 8vw, 54px);
+  }
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* 工具页 */
+  .tools-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* 知识学习 / 通用栏卡片 */
+  .column-card {
+    min-height: auto;
+    padding: 22px 20px;
+  }
+
+  /* 通用卡片网格兜底 */
+  .entry-grid,
+  .columns-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* CV 页 */
+  .cv-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .section-nav {
+    position: static;
+  }
+  .metric-band {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .publication {
+    grid-template-columns: 48px 1fr;
+  }
+  .pub-body {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .metric-band {
+    grid-template-columns: 1fr;
+  }
+  .metric {
+    border-left: 0;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .metric:last-child {
+    border-bottom: 0;
+  }
+}
+
+/* ============================================================
    Dark mode (data-theme="dark")
    - 翻转 paper / surface / text 三个体系
    - accent 保持墨绿 (#7fb098, 比 light accent #245642 提亮一档),
