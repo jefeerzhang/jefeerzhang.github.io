@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第 1 课：AI 全景与课程导学</title>
+  <style>
+    :root {
+      --text: #111;
+      --muted: #555;
+      --link: #0066cc;
+      --bg: #fff;
+      --stripe: #f8f9fa;
+      --border: #e0e0e0;
+      --accent: #2a7f62;
+      --correct: #d4edda;
+      --wrong: #f8d7da;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Noto Serif SC", "Source Han Serif SC", Georgia, serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.65;
+      margin: 0;
+      padding: 2rem 1rem;
+    }
+    .container { max-width: 720px; margin: 0 auto; }
+    .nav { display: flex; justify-content: space-between; margin-bottom: 1.5rem; font-size: 0.9rem; }
+    .nav a { color: var(--link); }
+    h1 { font-weight: 400; margin-bottom: 0.25rem; }
+    .meta { color: var(--muted); font-style: italic; margin-bottom: 1.5rem; }
+    h2 { font-weight: 600; margin-top: 2.5rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.3rem; }
+    h3 { font-weight: 600; margin-top: 1.8rem; color: var(--text); }
+    p { margin: 0.8rem 0; }
+    ul, ol { padding-left: 1.5rem; }
+    li { margin: 0.4rem 0; }
+    a { color: var(--link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .code-block {
+      background: #263238;
+      color: #eeffff;
+      padding: 0.9rem 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: "SF Mono", Consolas, monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      margin: 1rem 0;
+    }
+    .code-block .comment { color: #80cbc4; }
+    .callout {
+      background: var(--stripe);
+      border-left: 4px solid var(--accent);
+      padding: 1rem 1.2rem;
+      margin: 1.2rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+    .exercise {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.2rem;
+      margin: 1.5rem 0;
+      background: #fff;
+    }
+    .exercise-title { font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; }
+    .quiz-option {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 0.7rem 1rem;
+      margin: 0.4rem 0;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .quiz-option:hover { background: var(--stripe); }
+    .quiz-option.correct { background: var(--correct); border-color: #28a745; }
+    .quiz-option.wrong { background: var(--wrong); border-color: #dc3545; }
+    .hidden { display: none; }
+    .feedback { margin-top: 0.8rem; padding: 0.8rem; border-radius: 4px; }
+    .footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.9rem; }
+  </style>
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=14">
+</head>
+<body>
+    <a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+          <a href="../../">首页</a>
+          <a href="../../cv/">个人简历</a>
+          <a href="https://jefeerzhang.github.io/master-course/">硕士课程</a>
+          <a href="../" aria-current="page">知识学习</a>
+          <a href="../../tools/">小工具</a>
+          <button type="button" class="theme-toggle" id="theme-toggle" aria-label="切换主题"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.9 4.9l1.4 1.4"/><path d="M17.7 17.7l1.4 1.4"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M4.9 19.1l1.4-1.4"/><path d="M17.7 6.3l1.4-1.4"/></svg></button>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <div class="container">
+    <div class="nav">
+      <span></span>
+      <a href="0002-ml-frameworks.html">下一课：机器学习基础 →</a>
+    </div>
+
+    <h1>第 1 课：AI 全景与课程导学</h1>
+    <p class="meta">预计 30 分钟 · 无需代码基础即可开始 · 动手目标：理解 AI 地图并准备好学习环境</p>
+
+    <div class="callout">
+      <strong>本课目标：</strong> 用一张地图搞清楚 AI、机器学习、深度学习、神经网络的关系；安装好 Python 环境；运行第一个“Hello AI”程序。
+    </div>
+
+    <h2>1. 从一张地图开始</h2>
+    <p>人工智能（AI）是最大的圈。机器学习（ML）是 AI 的一种方法：让计算机从数据里找规律，而不是靠人写死规则。深度学习（DL）是 ML 的一种方法，用多层神经网络自动学习特征。神经网络（NN）是 DL 的核心模型。</p>
+
+    <div class="code-block">AI
+├── 符号 AI / 知识表示（规则、专家系统）
+├── 机器学习 ML
+│   ├── 监督学习：有标签数据（分类、回归）
+│   ├── 无监督学习：无标签数据（聚类、降维）
+│   └── 强化学习：奖励驱动的学习
+│       └── 深度学习 DL ← 神经网络 NN
+└── 计算机视觉、自然语言处理、语音识别等应用
+    </div>
+
+    <p><strong>为什么神经网络能行？</strong> 因为它可以自动从数据中学习“特征”。传统方法需要人工设计特征（比如识别猫时手动提取边缘、纹理），而深度学习让模型自己发现什么特征对任务最有用。</p>
+
+    <h2>2. 课程路线</h2>
+    <p>Microsoft 原版课程有 24 课，我们将其浓缩为 6 节短课，每节课聚焦一个可交付的小目标：</p>
+    <ol>
+      <li><strong>AI 全景与课程导学</strong>（本课）：环境准备 + 概念地图</li>
+      <li><strong>机器学习基础与框架初探</strong>：线性回归、损失函数、梯度下降 + PyTorch/TensorFlow 对比</li>
+      <li><strong>第一个神经网络</strong>：感知器、多层感知器、激活函数、反向传播</li>
+      <li><strong>卷积神经网络与计算机视觉</strong>：CNN、迁移学习、图像分类</li>
+      <li><strong>自然语言处理与大语言模型</strong>：词嵌入、RNN、Transformer、提示工程</li>
+      <li><strong>AI 伦理与下一步</strong>：负责任 AI、公平性、隐私、课程复习与进阶路径</li>
+    </ol>
+
+    <h2>3. 环境准备</h2>
+    <p>课程中的代码以 Jupyter Notebook 形式提供。推荐两种运行方式：</p>
+
+    <h3>方式 A：本地 Anaconda（推荐）</h3>
+    <div class="code-block"># 1. 安装 Miniconda 或 Anaconda
+# 2. 创建环境
+conda create -n ai python=3.11
+conda activate ai
+
+# 3. 安装基础包
+pip install numpy pandas matplotlib scikit-learn jupyter
+
+# 4. 安装深度学习框架（二选一即可）
+pip install torch torchvision          # PyTorch
+pip install tensorflow                 # TensorFlow
+
+# 5. 启动 Jupyter
+jupyter notebook
+    </div>
+
+    <h3>方式 B：Google Colab（零安装）</h3>
+    <p>访问 <a href="https://colab.research.google.com/" target="_blank">colab.research.google.com</a>，上传课程 Notebook 即可运行。免费版提供 GPU 选项（运行时 → 更改运行时类型 → T4 GPU）。</p>
+
+    <h2>4. 第一个程序：Hello AI</h2>
+    <p>先不训练模型，只验证环境。运行下面代码，确认 NumPy 和 PyTorch/TensorFlow 已安装。</p>
+    <div class="code-block">import numpy as np
+import torch
+
+print("NumPy 版本:", np.__version__)
+print("PyTorch 版本:", torch.__version__)
+print("GPU 可用:", torch.cuda.is_available())
+
+# 用 NumPy 做一个简单的矩阵乘法：X @ W + b
+X = np.array([[1.0, 2.0]])
+W = np.array([[0.5], [1.5]])
+b = 1.0
+y = X @ W + b
+print("输出:", y)   # 输出: [[4.5]]
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-title">✍️ 动手练习：环境检查</div>
+      <p>1. 在本地或 Colab 创建一个新 notebook。</p>
+      <p>2. 运行上面的 Hello AI 代码，确认能输出版本号和 GPU 可用状态。</p>
+      <p>3. 尝试把 <code>X</code> 改成 <code>[[2.0, 3.0]]</code>，手动计算并验证输出是否为 <code>[[7.5]]</code>（2×0.5 + 3×1.5 + 1 = 7.5）。</p>
+      <p>4. 如果报错，请截图或复制错误信息，向 agent 提问。</p>
+    </div>
+
+    <h2>5. 快速自测</h2>
+    <p id="quiz-question">以下哪一项最准确地描述了深度学习与机器学习的关系？</p>
+    <button class="quiz-option" onclick="check(this, false)">A. 深度学习是机器学习的替代方法，两者互不相关。。</button>
+    <button class="quiz-option" onclick="check(this, true)">B. 深度学习是机器学习的一种方法，使用多层神经网络。。</button>
+    <button class="quiz-option" onclick="check(this, false)">C. 机器学习是深度学习的一种特殊形式，只用于图像任务。。</button>
+    <button class="quiz-option" onclick="check(this, false)">D. 人工智能、机器学习和深度学习是完全相同的概念。。</button>
+    <div id="quiz-feedback" class="feedback hidden"></div>
+
+    <h2>6. 延伸阅读与参考</h2>
+    <ul>
+      <li><strong>Primary source:</strong> <a href="../AI-For-Beginners-zh-CN/lessons/1-Intro/README.md" target="_blank">AI-For-Beginners 第 1 课：AI 简介</a>（若本地打开，请切换到对应 .md 文件）</li>
+      <li><a href="../reference/0001-glossary.html" target="_blank">AI 术语表</a>：先浏览一遍，遇到新概念时回来查。</li>
+      <li><a href="../reference/0003-framework-choice.html" target="_blank">PyTorch vs TensorFlow 选择指南</a></li>
+    </ul>
+
+    <div class="callout">
+      <strong>有问题？</strong> 如果本课中的概念、环境配置或代码运行有任何不清楚，直接向 agent 提问。把 agent 当作你的助教，描述你遇到的现象即可。
+    </div>
+
+    <div class="footer">
+      <p>下一课：<a href="0002-ml-frameworks.html">机器学习基础与框架初探</a></p>
+    </div>
+  </div>
+
+  <script>
+    function check(btn, isCorrect) {
+      const options = document.querySelectorAll('.quiz-option');
+      options.forEach(o => {
+        o.classList.remove('correct', 'wrong');
+        o.disabled = true;
+      });
+      if (isCorrect) btn.classList.add('correct');
+      else btn.classList.add('wrong');
+
+      const fb = document.getElementById('quiz-feedback');
+      fb.classList.remove('hidden');
+      fb.style.background = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+      fb.innerHTML = isCorrect
+        ? '正确。深度学习是机器学习的一种方法，核心是多层神经网络。'
+        : '不正确。再想想：机器学习包含多种方法，深度学习只是其中之一，且使用神经网络。';
+    }
+  </script>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+<script>
+  (function () {
+    var btn = document.getElementById("theme-toggle");
+    if (!btn || !window.Theme) return;
+    btn.addEventListener("click", function () { window.Theme.toggle(); });
+  })();
+</script>
+</body>
+</html>

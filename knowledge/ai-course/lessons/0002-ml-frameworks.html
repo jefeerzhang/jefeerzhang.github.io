@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第 2 课：机器学习基础与框架初探</title>
+  <style>
+    :root {
+      --text: #111;
+      --muted: #555;
+      --link: #0066cc;
+      --bg: #fff;
+      --stripe: #f8f9fa;
+      --border: #e0e0e0;
+      --accent: #2a7f62;
+      --correct: #d4edda;
+      --wrong: #f8d7da;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Noto Serif SC", "Source Han Serif SC", Georgia, serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.65;
+      margin: 0;
+      padding: 2rem 1rem;
+    }
+    .container { max-width: 720px; margin: 0 auto; }
+    .nav { display: flex; justify-content: space-between; margin-bottom: 1.5rem; font-size: 0.9rem; }
+    .nav a { color: var(--link); }
+    h1 { font-weight: 400; margin-bottom: 0.25rem; }
+    .meta { color: var(--muted); font-style: italic; margin-bottom: 1.5rem; }
+    h2 { font-weight: 600; margin-top: 2.5rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.3rem; }
+    h3 { font-weight: 600; margin-top: 1.8rem; }
+    p { margin: 0.8rem 0; }
+    ul, ol { padding-left: 1.5rem; }
+    li { margin: 0.4rem 0; }
+    a { color: var(--link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .code-block {
+      background: #263238;
+      color: #eeffff;
+      padding: 0.9rem 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: "SF Mono", Consolas, monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      margin: 1rem 0;
+    }
+    .code-block .comment { color: #80cbc4; }
+    .callout {
+      background: var(--stripe);
+      border-left: 4px solid var(--accent);
+      padding: 1rem 1.2rem;
+      margin: 1.2rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+    .exercise {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.2rem;
+      margin: 1.5rem 0;
+      background: #fff;
+    }
+    .exercise-title { font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; }
+    .quiz-option {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 0.7rem 1rem;
+      margin: 0.4rem 0;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .quiz-option:hover { background: var(--stripe); }
+    .quiz-option.correct { background: var(--correct); border-color: #28a745; }
+    .quiz-option.wrong { background: var(--wrong); border-color: #dc3545; }
+    .hidden { display: none; }
+    .feedback { margin-top: 0.8rem; padding: 0.8rem; border-radius: 4px; }
+    .footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.9rem; }
+  </style>
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=14">
+</head>
+<body>
+    <a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+          <a href="../../">首页</a>
+          <a href="../../cv/">个人简历</a>
+          <a href="https://jefeerzhang.github.io/master-course/">硕士课程</a>
+          <a href="../" aria-current="page">知识学习</a>
+          <a href="../../tools/">小工具</a>
+          <button type="button" class="theme-toggle" id="theme-toggle" aria-label="切换主题"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.9 4.9l1.4 1.4"/><path d="M17.7 17.7l1.4 1.4"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M4.9 19.1l1.4-1.4"/><path d="M17.7 6.3l1.4-1.4"/></svg></button>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <div class="container">
+    <div class="nav">
+      <a href="0001-ai-overview.html">← 上一课</a>
+      <a href="0003-first-neural-network.html">下一课：第一个神经网络 →</a>
+    </div>
+
+    <h1>第 2 课：机器学习基础与框架初探</h1>
+    <p class="meta">预计 40 分钟 · 目标：理解监督学习流程，能用 PyTorch 或 TensorFlow 跑通一个线性回归</p>
+
+    <div class="callout">
+      <strong>本课目标：</strong> 明白“数据 → 模型 → 损失 → 优化 → 评估”这五步；用 PyTorch 或 TensorFlow 实现一个最简单的线性回归。
+    </div>
+
+    <h2>1. 机器学习 = 用数据找函数</h2>
+    <p>传统编程：人写规则，输入数据，得到输出。</p>
+    <p>机器学习：人给数据（输入和期望输出），让计算机自动找到能把输入映射到输出的函数。</p>
+
+    <div class="code-block">传统编程： 规则 + 数据 → 输出
+机器学习： 数据 + 输出 → 规则（模型）
+    </div>
+
+    <h2>2. 监督学习 vs 无监督学习</h2>
+    <ul>
+      <li><strong>监督学习（Supervised Learning）：</strong> 训练数据有标签。例如：给房价数据（面积 → 价格），训练回归模型；给图片和类别标签，训练分类模型。</li>
+      <li><strong>无监督学习（Unsupervised Learning）：</strong> 数据没有标签。例如：把客户分成不同群体（聚类），或把高维数据降到二维可视化（降维）。</li>
+      <li><strong>强化学习（Reinforcement Learning）：</strong> 智能体在环境中通过奖励学习策略。本课程暂不深入。</li>
+    </ul>
+
+    <h2>3. 通用五步法</h2>
+    <ol>
+      <li><strong>准备数据：</strong> 收集、清洗、划分训练集/验证集/测试集。</li>
+      <li><strong>选择模型：</strong> 线性模型、神经网络、决策树等。</li>
+      <li><strong>定义损失函数：</strong> 衡量预测与真实值的差距。</li>
+      <li><strong>优化参数：</strong> 用梯度下降等方法让损失越来越小。</li>
+      <li><strong>评估模型：</strong> 在未见过的测试数据上检验泛化能力。</li>
+    </ol>
+
+    <h2>4. 线性回归：最小例子</h2>
+    <p>假设房价只和面积有关：<code>价格 = w × 面积 + b</code>。我们不知道 <code>w</code> 和 <code>b</code>，但有一组数据。机器学习就是找出最好的 <code>w</code> 和 <code>b</code>。</p>
+
+    <h3>PyTorch 版本</h3>
+    <div class="code-block">import torch
+
+# 数据：面积（平米）→ 房价（万元）
+x = torch.tensor([[50.0], [60.0], [80.0], [100.0]])
+y = torch.tensor([[300.0], [360.0], [480.0], [600.0]])
+
+# 模型参数：w 和 b，requires_grad=True 表示需要求梯度
+w = torch.randn(1, 1, requires_grad=True)
+b = torch.randn(1, requires_grad=True)
+
+optimizer = torch.optim.SGD([w, b], lr=0.0001)
+
+for epoch in range(1000):
+    y_pred = x @ w + b
+    loss = ((y_pred - y) ** 2).mean()   # 均方误差 MSE
+
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+
+print("w:", w.item(), "b:", b.item())
+# 理想情况下 w≈6, b≈0
+    </div>
+
+    <h3>TensorFlow / Keras 版本</h3>
+    <div class="code-block">import tensorflow as tf
+import numpy as np
+
+x = np.array([[50], [60], [80], [100]], dtype=np.float32)
+y = np.array([[300], [360], [480], [600]], dtype=np.float32)
+
+model = tf.keras.Sequential([
+    tf.keras.layers.Dense(1, input_shape=(1,))  # 1 个输入，1 个输出
+])
+
+model.compile(optimizer='sgd', loss='mse')
+model.fit(x, y, epochs=1000, verbose=0)
+
+print("w:", model.layers[0].weights[0].numpy())
+print("b:", model.layers[0].weights[1].numpy())
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-title">✍️ 动手练习：预测新房价</div>
+      <p>1. 选择 PyTorch 或 TensorFlow 版本，在 notebook 中运行上面的线性回归代码。</p>
+      <p>2. 用训练好的模型预测面积为 90 平米时的房价。手动计算应该是多少？模型输出是否接近？</p>
+      <p>3. 把学习率改成 0.001 或 0.00001，观察 loss 是否还能稳定下降。记录下来：学习率过大或过小会发生什么？</p>
+    </div>
+
+    <h2>5. 框架选择提示</h2>
+    <p>本课出现了两份实现相同任务的代码。不要两种都深挖，先选一种跑通。关于如何选择，请查看：</p>
+    <ul>
+      <li><a href="../reference/0003-framework-choice.html" target="_blank">PyTorch vs TensorFlow 选择指南</a></li>
+      <li><a href="../reference/0002-python-ai-cheatsheet.html" target="_blank">Python AI 代码速查表</a></li>
+    </ul>
+
+    <h2>6. 快速自测</h2>
+    <p id="quiz-question">在监督学习中，我们主要优化什么来让模型变得更好？</p>
+    <button class="quiz-option" onclick="check(this, false)">A. 优化数据量，让数据越大越好。</button>
+    <button class="quiz-option" onclick="check(this, true)">B. 优化模型参数，使损失函数值尽可能小。</button>
+    <button class="quiz-option" onclick="check(this, false)">C. 优化标签数量，每个样本必须有多个标签。</button>
+    <button class="quiz-option" onclick="check(this, false)">D. 优化输入特征的维度，使其尽可能高。</button>
+    <div id="quiz-feedback" class="feedback hidden"></div>
+
+    <h2>7. 延伸阅读与参考</h2>
+    <ul>
+      <li><strong>Primary source:</strong> <a href="../AI-For-Beginners-zh-CN/lessons/3-NeuralNetworks/README.md" target="_blank">AI-For-Beginners：机器学习与神经网络导论</a></li>
+      <li>补充视频：3Blue1Brown《But what is a neural network?》B站搜索即可。</li>
+    </ul>
+
+    <div class="callout">
+      <strong>有问题？</strong> 如果线性回归跑不通，或 loss 不下降，把代码和输出贴给 agent，描述你的学习率和训练轮数。
+    </div>
+
+    <div class="footer">
+      <p>下一课：<a href="0003-first-neural-network.html">第一个神经网络</a></p>
+    </div>
+  </div>
+
+  <script>
+    function check(btn, isCorrect) {
+      const options = document.querySelectorAll('.quiz-option');
+      options.forEach(o => {
+        o.classList.remove('correct', 'wrong');
+        o.disabled = true;
+      });
+      if (isCorrect) btn.classList.add('correct');
+      else btn.classList.add('wrong');
+      const fb = document.getElementById('quiz-feedback');
+      fb.classList.remove('hidden');
+      fb.style.background = isCorrect ? 'var(--correct)' : 'var(--wrong)';
+      fb.innerHTML = isCorrect
+        ? '正确。训练的核心就是调整模型参数，使损失函数在训练数据上尽可能小。'
+        : '不正确。监督学习中我们优化的是模型参数，使损失函数（如 MSE）最小化。';
+    }
+  </script>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+<script>
+  (function () {
+    var btn = document.getElementById("theme-toggle");
+    if (!btn || !window.Theme) return;
+    btn.addEventListener("click", function () { window.Theme.toggle(); });
+  })();
+</script>
+</body>
+</html>
