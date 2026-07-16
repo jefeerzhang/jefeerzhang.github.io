@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -139,7 +139,7 @@
     <h2>1. 感知器：最简单的神经元</h2>
     <p>感知器接收若干输入，每个输入乘以一个权重，求和后加上偏置，再通过一个阶跃函数输出 0 或 1。它能解决线性可分问题，比如“与门”和“或门”，但无法解决“异或门”（XOR）。</p>
 
-    <div class="code-block"># 感知器计算：输出 = sign(w1*x1 + w2*x2 + b)
+    <pre class="code-block"># 感知器计算：输出 = sign(w1*x1 + w2*x2 + b)
 # 如果结果 ≥ 0 输出 1，否则输出 0
 
 def perceptron(x1, x2, w1, w2, b):
@@ -148,8 +148,7 @@ def perceptron(x1, x2, w1, w2, b):
 
 # 与门：w1=1, w2=1, b=-1.5
 print(perceptron(1, 1, 1, 1, -1.5))  # 1
-print(perceptron(1, 0, 1, 1, -1.5))  # 0
-    </div>
+print(perceptron(1, 0, 1, 1, -1.5))  # 0</pre>
 
     <h2>2. 为什么需要激活函数？</h2>
     <p>如果没有激活函数，多层神经网络就等价于一层线性变换。激活函数引入非线性，让网络学习复杂边界。</p>
@@ -163,7 +162,7 @@ print(perceptron(1, 0, 1, 1, -1.5))  # 0
     <h2>3. 多层感知器（MLP）</h2>
     <p>把多个神经元按层组织：输入层 → 隐藏层 → 输出层。隐藏层越多，网络能拟合的函数越复杂，但也更容易过拟合。</p>
 
-    <div class="code-block">import torch
+    <pre class="code-block">import torch
 import torch.nn as nn
 
 class MLP(nn.Module):
@@ -180,8 +179,7 @@ class MLP(nn.Module):
         return self.layers(x)
 
 model = MLP()
-print(model)
-    </div>
+print(model)</pre>
 
     <h2>4. 反向传播：一句话理解</h2>
     <p>反向传播做的事情是：先让数据从输入走到输出（前向传播），计算损失；然后沿着网络从输出往回走，计算每个参数对损失的贡献（梯度），最后按梯度反方向更新参数。</p>

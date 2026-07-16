@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -140,9 +140,8 @@
     <p>传统编程：人写规则，输入数据，得到输出。</p>
     <p>机器学习：人给数据（输入和期望输出），让计算机自动找到能把输入映射到输出的函数。</p>
 
-    <div class="code-block">传统编程： 规则 + 数据 → 输出
-机器学习： 数据 + 输出 → 规则（模型）
-    </div>
+    <pre class="code-block">传统编程： 规则 + 数据 → 输出
+机器学习： 数据 + 输出 → 规则（模型）</pre>
 
     <h2>2. 监督学习 vs 无监督学习</h2>
     <ul>
@@ -164,7 +163,7 @@
     <p>假设房价只和面积有关：<code>价格 = w × 面积 + b</code>。我们不知道 <code>w</code> 和 <code>b</code>，但有一组数据。机器学习就是找出最好的 <code>w</code> 和 <code>b</code>。</p>
 
     <h3>PyTorch 版本</h3>
-    <div class="code-block">import torch
+    <pre class="code-block">import torch
 
 # 数据：面积（平米）→ 房价（万元）
 x = torch.tensor([[50.0], [60.0], [80.0], [100.0]])
@@ -185,11 +184,10 @@ for epoch in range(1000):
     optimizer.step()
 
 print("w:", w.item(), "b:", b.item())
-# 理想情况下 w≈6, b≈0
-    </div>
+# 理想情况下 w≈6, b≈0</pre>
 
     <h3>TensorFlow / Keras 版本</h3>
-    <div class="code-block">import tensorflow as tf
+    <pre class="code-block">import tensorflow as tf
 import numpy as np
 
 x = np.array([[50], [60], [80], [100]], dtype=np.float32)
@@ -203,8 +201,7 @@ model.compile(optimizer='sgd', loss='mse')
 model.fit(x, y, epochs=1000, verbose=0)
 
 print("w:", model.layers[0].weights[0].numpy())
-print("b:", model.layers[0].weights[1].numpy())
-    </div>
+print("b:", model.layers[0].weights[1].numpy())</pre>
 
     <div class="exercise">
       <div class="exercise-title">✍️ 动手练习：预测新房价</div>

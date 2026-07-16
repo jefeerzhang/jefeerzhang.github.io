@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -147,27 +147,24 @@
 
     <h2>建议路径</h2>
     <p><strong>路径 A（推荐）：PyTorch 主线</strong></p>
-    <div class="code-block">1. 第 3 课：运行 PyTorch 版感知器 notebook
+    <pre class="code-block">1. 第 3 课：运行 PyTorch 版感知器 notebook
 2. 第 5 课：用 PyTorch 完成框架简介实验
 3. 第 7 课：CNN 选择 PyTorch 版本
-4. 第 14 课及以后：NLP 任务使用 PyTorch 实现
-    </div>
+4. 第 14 课及以后：NLP 任务使用 PyTorch 实现</pre>
 
     <p><strong>路径 B：更喜欢快速上手</strong></p>
-    <div class="code-block">1. 第 5 课：从 Keras 顺序模型开始
+    <pre class="code-block">1. 第 5 课：从 Keras 顺序模型开始
 2. 第 7 课：CNN 用 TensorFlow 版本
-3. 后期若需要复现论文或本地跑大模型，再切到 PyTorch
-    </div>
+3. 后期若需要复现论文或本地跑大模型，再切到 PyTorch</pre>
 
     <h2>GPU 环境检查</h2>
-    <div class="code-block"># PyTorch
+    <pre class="code-block"># PyTorch
 import torch
 print(torch.cuda.is_available())  # True 表示可用 GPU
 
 # TensorFlow
 import tensorflow as tf
-print(tf.config.list_physical_devices('GPU'))
-    </div>
+print(tf.config.list_physical_devices('GPU'))</pre>
 
     <a class="back" href="../lessons/0002-ml-frameworks.html">返回第 2 课 →</a>
   </div>

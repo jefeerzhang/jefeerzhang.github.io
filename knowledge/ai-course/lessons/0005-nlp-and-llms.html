@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -144,7 +144,7 @@
       <li><strong>词嵌入（Word Embedding）：</strong> 把每个词映射为低维稠密向量，语义相近的词在向量空间中距离近。</li>
     </ul>
 
-    <div class="code-block"># 词袋模型示例（scikit-learn）
+    <pre class="code-block"># 词袋模型示例（scikit-learn）
 from sklearn.feature_extraction.text import CountVectorizer
 
 corpus = ["我喜欢猫", "我喜欢狗", "猫和狗都可爱"]
@@ -152,8 +152,7 @@ vectorizer = CountVectorizer()
 X = vectorizer.fit_transform(corpus)
 
 print(vectorizer.get_feature_names_out())
-print(X.toarray())
-    </div>
+print(X.toarray())</pre>
 
     <h2>2. 词嵌入：让语义有距离</h2>
     <p>Word2Vec 的核心思想是“一个词的意思由它周围的词决定”。训练时会学习：</p>
@@ -166,23 +165,21 @@ print(X.toarray())
     <p><strong>RNN（循环神经网络）：</strong> 按顺序处理单词，适合短句，但长句会出现“遗忘”问题。</p>
     <p><strong>Transformer：</strong> 使用“自注意力机制”（Self-Attention），一次性看整个句子，计算每个词与其他词的关系。它并行度高、长距离依赖能力强，是现代 NLP 的基础。</p>
 
-    <div class="code-block"># 自注意力直观理解：
+    <pre class="code-block"># 自注意力直观理解：
 # 句子："猫坐在垫子上，因为它很累"
 # 模型需要知道 "它" 指代 "猫" 而不是 "垫子"
-# 自注意力通过计算词与词之间的关联权重来实现
-    </div>
+# 自注意力通过计算词与词之间的关联权重来实现</pre>
 
     <h2>4. 大语言模型（LLM）与提示工程</h2>
     <p>大语言模型是在海量文本上训练的 Transformer。它不会“理解”语言，而是通过统计规律生成合理的下一个词。我们可以通过<strong>提示（prompt）</strong>引导它完成翻译、摘要、问答、写作等任务。</p>
 
-    <div class="code-block"># 一个简单但有效的提示结构
+    <pre class="code-block"># 一个简单但有效的提示结构
 """
 你是一位耐心的 AI 入门老师。请用通俗易懂的中文解释什么是梯度下降，
 并举一个生活中的例子。限制在 200 字以内。
 """
 
-# 好的提示通常包含：角色 + 任务 + 输出格式 + 约束
-    </div>
+# 好的提示通常包含：角色 + 任务 + 输出格式 + 约束</pre>
 
     <h2>5. 运行课程 Notebook</h2>
     <ul>
@@ -195,10 +192,9 @@ print(X.toarray())
     <div class="exercise">
       <div class="exercise-title">✍️ 动手练习：设计三个 prompt 并比较输出</div>
       <p>1. 在任意一个大语言模型（ChatGPT、Claude、Kimi、文心一言等）中输入以下三个 prompt，比较回答质量：</p>
-      <div class="code-block">A. 解释梯度下降。
+      <pre class="code-block">A. 解释梯度下降。
 B. 用中文解释梯度下降，给高中生听。
-C. 你是一位高中数学老师。用比喻和例子解释梯度下降，控制在 150 字内。
-      </div>
+C. 你是一位高中数学老师。用比喻和例子解释梯度下降，控制在 150 字内。</pre>
       <p>2. 记录哪个 prompt 输出最清晰、最符合你的要求。</p>
       <p>3. 尝试把同样的 prompt 技巧用到课程中的某个概念上（如反向传播、CNN、词嵌入）。</p>
     </div>

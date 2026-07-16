@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -107,7 +107,7 @@
 
     <h2>PyTorch 常用模式</h2>
     <h3>张量创建与运算</h3>
-    <div class="code-block">import torch
+    <pre class="code-block">import torch
 
 # 创建张量
 x = torch.tensor([[1.0, 2.0], [3.0, 4.0]])     # 从列表创建
@@ -122,11 +122,10 @@ x.to('cuda')     # 搬到 GPU（如果可用）
 x = torch.tensor(2.0, requires_grad=True)
 y = x ** 2
 y.backward()     # 反向传播
-x.grad           # 梯度值：4.0
-    </div>
+x.grad           # 梯度值：4.0</pre>
 
     <h3>定义神经网络</h3>
-    <div class="code-block">import torch.nn as nn
+    <pre class="code-block">import torch.nn as nn
 import torch.nn.functional as F
 
 class Net(nn.Module):
@@ -151,12 +150,11 @@ for data, target in dataloader:
     output = model(data)
     loss = criterion(output, target)
     loss.backward()                       # 反向传播
-    optimizer.step()                      # 更新参数
-    </div>
+    optimizer.step()                      # 更新参数</pre>
 
     <h2>TensorFlow / Keras 常用模式</h2>
     <h3>顺序模型</h3>
-    <div class="code-block">import tensorflow as tf
+    <pre class="code-block">import tensorflow as tf
 from tensorflow import keras
 
 model = keras.Sequential([
@@ -172,8 +170,7 @@ model.compile(
 )
 
 model.fit(x_train, y_train, epochs=5, validation_split=0.1)
-model.evaluate(x_test, y_test)
-    </div>
+model.evaluate(x_test, y_test)</pre>
 
     <h2>数据与可视化</h2>
     <table>
