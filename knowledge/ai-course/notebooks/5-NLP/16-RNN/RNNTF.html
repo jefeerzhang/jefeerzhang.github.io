@@ -23,7 +23,7 @@ body { font-family: -apple-system, "Noto Serif SC", Georgia, serif; max-width: 9
 pre { white-space: pre-wrap; word-wrap: break-word; }
 </style>
 </head>
-<body>
+<body class="course-body">
 <div class="nb-back">← <a href="../index.html">课程首页</a> · <a href="javascript:history.back()">返回上一页</a></div>
 <div class="nb-header"><h2>📓 RNNTF</h2></div>
 <div class="jp-Cell jp-MarkdownCell"><h1>循环神经网络</h1>
@@ -171,7 +171,8 @@ model.fit(ds_train.map(tupelize).batch(8),validation_data=ds_test.map(tupelize).
 
 model.compile(loss=&#x27;sparse_categorical_crossentropy&#x27;,metrics=[&#x27;acc&#x27;], optimizer=&#x27;adam&#x27;)
 model.fit(ds_train.map(tupelize).batch(batch_size),
-          validation_data=ds_test.map(tupelize).batch(batch_size))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">5044/7500 [===================&gt;..........] - ETA: 2:33 - loss: 0.3709 - acc: 0.87065045/7500 [===================&gt;..........] - ETA: 2:33 - loss: 0.3709 - acc: 0.8706</div></div></div>
+          validation_data=ds_test.map(tupelize).batch(batch_size))</code></pre></div><div class="jp-OutputArea"><div class="jp-OutputArea-output">5044/7500 [===================&gt;..........] - ETA: 2:33 - loss: 0.3709 - acc: 0.8706
+5045/7500 [===================&gt;..........] - ETA: 2:33 - loss: 0.3709 - acc: 0.8706</div></div></div>
 <div class="jp-Cell jp-MarkdownCell"><h2>RNN用于其他任务</h2>
 <p>到目前为止，我们主要关注使用RNN对文本序列进行分类。但它们还能处理许多其他任务，例如文本生成和机器翻译——我们将在下一单元中讨论这些任务。</p></div>
 <div class="jp-Cell jp-MarkdownCell"><p>---</p>
