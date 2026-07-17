@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>c-ABM 七条建模原则速查表</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<span class="section-tag">Reference · 速查卡</span>
+<h1>c-ABM 七条建模原则速查表</h1>
+
+<p>来源：Tesfatsion, L. "Agent-Based Computational Economics: Overview and Brief History" (2022). 配套 Lesson 03 使用。</p>
+
+<table>
+<tr>
+  <th>编号</th>
+  <th>原则名称</th>
+  <th>核心要求</th>
+  <th>违反示例</th>
+</tr>
+<tr>
+  <td><strong>MP1</strong></td>
+  <td>主体定义<br><em>Agent Definition</em></td>
+  <td>明确定义每个 Agent 及其局部状态</td>
+  <td>模糊地说"市场参与者"而不具体定义</td>
+</tr>
+<tr>
+  <td><strong>MP2</strong></td>
+  <td>主体范围<br><em>Agent Scope</em></td>
+  <td>所有动态过程都由 Agent 产生</td>
+  <td>引入全局拍卖人、社会规划者</td>
+</tr>
+<tr>
+  <td><strong>MP3</strong></td>
+  <td>主体局部建构性<br><em>Local Constructivity</em></td>
+  <td>Agent 只能使用自己的局部信息</td>
+  <td>让 Agent 直接获取全局状态</td>
+</tr>
+<tr>
+  <td><strong>MP4</strong></td>
+  <td>主体自主性<br><em>Agent Autonomy</em></td>
+  <td>每个 Agent 独立决策</td>
+  <td>外部强制指定 Agent 行为</td>
+</tr>
+<tr>
+  <td><strong>MP5</strong></td>
+  <td>系统建构性<br><em>System Constructivity</em></td>
+  <td>t+1 时刻状态完全由 t 时刻决定</td>
+  <td>"跳跃到均衡"而不走模拟过程</td>
+</tr>
+<tr>
+  <td><strong>MP6</strong></td>
+  <td>系统历史性<br><em>System Historicity</em></td>
+  <td>系统状态依赖历史路径</td>
+  <td>假设系统总能达到唯一均衡</td>
+</tr>
+<tr>
+  <td><strong>MP7</strong></td>
+  <td>建模者角色<br><em>Petri Dish Experimenter</em></td>
+  <td>设定条件、观察、不干预</td>
+  <td>模拟中途手动修改 Agent 行为</td>
+</tr>
+</table>
+
+<h2>核心思想一句话</h2>
+
+<blockquote>
+一切动态结果必须完全从 Agent 的局部交互中涌现——没有"上帝之手"。
+</blockquote>
+
+<h2>ACE = c-ABM + 经济学</h2>
+
+<p>ACE 把 c-ABM 的七条原则应用到经济系统。核心观点：</p>
+
+<ul>
+  <li>经济 = <strong>开放式</strong>（无预设均衡）的 <strong>本地建构</strong>（基于局部信息）<strong>序贯博弈</strong>（轮流行动）</li>
+  <li>Agent 是异质的、有限理性的、可学习的</li>
+  <li>均衡是涌现的结果，不是预设的前提</li>
+  <li>历史很重要——路径依赖是核心特征</li>
+</ul>
+
+<h2>自查清单：你的模型符合 c-ABM 吗？</h2>
+
+<ol>
+  <li>☐ 我能列出模型中所有 Agent 类型及其状态变量吗？（MP1）</li>
+  <li>☐ 模型中有没有"外部协调机制"偷偷替代了 Agent 的交互？（MP2）</li>
+  <li>☐ 每个 Agent 的决策是否只依赖它能看到的信息？（MP3）</li>
+  <li>☐ 有没有什么东西在强制 Agent 做特定选择？（MP4）</li>
+  <li>☐ 系统的每个时间步是否都经过完整的模拟过程？（MP5）</li>
+  <li>☐ 不同的初始条件/随机种子会导致不同结果吗？（MP6）</li>
+  <li>☐ 模拟过程中我有没有手动修改任何东西？（MP7）</li>
+</ol>
+
+<div class="lesson-footer">
+  <p>配套课程：<a href="../lessons/0003-c-abm-principles.html">Lesson 03: c-ABM 七条建模原则与 ACE</a></p>
+  <p>ABMS Teaching Workspace · Reference Card</p>
+</div>
+
+</body>
+</html>

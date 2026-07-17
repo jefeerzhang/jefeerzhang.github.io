@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 02: 涌现与 Schelling 隔离模型</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<span class="section-tag">Lesson 02 · 涌现与复杂性</span>
+<h1>涌现：为什么"整体大于部分之和"？</h1>
+
+<p>上一课我们知道了 ABM 的基本思想。现在来深入理解 ABM 最核心的概念：<strong>Emergence（涌现）</strong>。</p>
+
+<p>涌现是指：系统的某些属性或模式，<strong>无法通过分析单个 Agent 的属性来预测</strong>，而是在大量 Agent 交互的过程中"冒出来"的。</p>
+
+<div class="key-concept">
+<h3>涌现的两个特征</h3>
+<ol>
+  <li><strong>不可还原性</strong>：你不能把涌现现象拆分成单个 Agent 的属性来理解。交通堵塞不是任何一辆车的"属性"——它是所有车交互的结果。</li>
+  <li><strong>非线性</strong>：输入的小变化可能导致输出的大变化。一个人改变行为可能没什么，但一万个人同时改变就产生了社会运动。</li>
+</ol>
+</div>
+
+<h2>Schelling 隔离模型：一个令人震惊的发现</h2>
+
+<p>Thomas Schelling（2005 年诺贝尔经济学奖得主）在 1971 年提出了一个极其简单的模型，用来解释美国城市中的种族隔离现象。</p>
+
+<p>他的发现让人大吃一惊：<strong>即使每个人都只是"轻微地"偏好与同类做邻居，最终也可能导致完全的隔离。</strong></p>
+
+<h3>模型设定</h3>
+
+<div class="key-concept">
+<h3>Schelling 隔离模型的规则</h3>
+<ul>
+  <li>在一个 8×8 的棋盘上，放置两种颜色的棋子（比如黑色和白色），代表两类人群</li>
+  <li>还有一些空格子（代表空置房屋）</li>
+  <li>每个棋子有 8 个邻居（上下左右 + 四个对角）</li>
+  <li><strong>满意度规则</strong>：如果一个棋子的同色邻居比例低于某个阈值（比如 3/8 = 37.5%），它就"不满意"，想要搬家</li>
+  <li>不满意的棋子随机搬到一个空格子</li>
+  <li>重复直到所有人都满意</li>
+</ul>
+</div>
+
+<h3>反直觉的结果</h3>
+
+<p>假设你把阈值设为 30%——这意味着每个人都能容忍 70% 的异类邻居，相当宽容了吧？</p>
+
+<p>然而模拟运行的结果却是：<strong>最终形成的社区高度隔离</strong>，同色邻居比例远超 30%！</p>
+
+<div class="diagram">
+初始状态（随机分布）          最终状态（隔离）<br><br>
+○ ● ○ ● ○ ● ○ ●          ● ● ● ● ○ ○ ○ ○<br>
+● ○ ● ○ ● ○ ● ○          ● ● ● ● ○ ○ ○ ○<br>
+○ ● ○ ● ○ ● ○ ●          ● ● ● ● ○ ○ ○ ○<br>
+● ○ ● ○ ● ○ ● ○          ● ● ● ● ○ ○ ○ ○<br>
+○ ● ○ ● ○ ● ○ ●          ○ ○ ○ ○ ● ● ● ●<br>
+● ○ ● ○ ● ○ ● ○          ○ ○ ○ ○ ● ● ● ●<br>
+○ ● ○ ● ○ ● ○ ●          ○ ○ ○ ○ ● ● ● ●<br>
+● ○ ● ○ ● ○ ● ○          ○ ○ ○ ○ ● ● ● ●<br><br>
+微观偏好 → 宏观隔离
+</div>
+
+<p>这就是<strong>涌现</strong>：个体的温和偏好，经过链式反应（一个搬家引发另一个不满意），放大了成极端的宏观结果。</p>
+
+<h2>为什么传统方法难以研究这类问题？</h2>
+
+<p>传统的社会科学研究方法面临两个困难：</p>
+
+<ol>
+  <li><strong>数学分析困难</strong>：当 Agent 的行为依赖于过去的经验（路径依赖），且不断相互适应时，方程变得几乎无法求解。</li>
+  <li><strong>统计方法局限</strong>：观察到的宏观数据可能对应多种不同的微观机制——"同果异因"。</li>
+</ol>
+
+<p>ABM 的优势在于：你可以<strong>精确控制微观规则</strong>，运行实验，观察宏观结果如何随之变化。就像在实验室里做对照实验一样。</p>
+
+<h2>起立鼓掌问题 (Standing Ovation Problem)</h2>
+
+<p>Miller & Page (2004) 用另一个日常生活场景阐释了涌现：</p>
+
+<blockquote>
+一场演出结束了，观众中有人开始鼓掌，有些人犹豫着是否要站起来。最终——会不会形成全场起立鼓掌？
+</blockquote>
+
+<p>这个问题看似简单，但涉及：</p>
+<ul>
+  <li>每个人的<strong>内在评价</strong>（节目好不好？）</li>
+  <li>对<strong>社会信号</strong>的响应（别人站不站起来？）</li>
+  <li><strong>空间位置</strong>的影响（前排先站起来会带动后排）</li>
+  <li><strong>时间动态</strong>：什么时候做决定的？</li>
+</ul>
+
+<p>这就是 ABM 的核心方法论挑战：<em>如何在时间和空间中建模一群有思考能力的、相互作用的 Agent？</em></p>
+
+<h2>测验</h2>
+
+<div class="quiz">
+<h3>Q1: 在 Schelling 模型中，如果每个人的同色邻居阈值是 30%，最终结果通常是？</h3>
+<span class="quiz-option" data-correct="false">所有人混居，同色比例约 50%</span>
+<span class="quiz-option" data-correct="true">形成高度隔离的社区，同色比例远超阈值</span>
+<span class="quiz-option" data-correct="false">一半人搬家，一半人留下</span>
+<span class="quiz-option" data-correct="false">结果不可预测，每次都完全不同</span>
+<div class="quiz-feedback" data-success="正确！这就是 Schelling 模型的核心发现——微观的温和偏好被放大为宏观的极端隔离。" data-fail="提示：Schelling 模型最惊人的发现正是——即使人们很宽容，链式反应仍会导致隔离。"></div>
+</div>
+
+<div class="quiz">
+<h3>Q2: 以下哪个说法最准确地描述了"涌现"？</h3>
+<span class="quiz-option" data-correct="false">系统的行为可以被分解为各部分行为的简单加总</span>
+<span class="quiz-option" data-correct="true">系统的属性无法通过分析单个组成部分来预测</span>
+<span class="quiz-option" data-correct="false">系统总是趋向于均衡状态</span>
+<span class="quiz-option" data-correct="false">系统越复杂，涌现越不可能发生</span>
+<div class="quiz-feedback" data-success="正确！涌现 = 整体大于部分之和。不能通过分析个体来预测全局行为。" data-fail="提示：涌现的核心是"不可还原"——你无法通过研究单个 Agent 来预测群体现象。"></div>
+</div>
+
+<h2>本课小结</h2>
+<ul>
+  <li><strong>涌现</strong>是 ABM 最核心的概念：宏观模式从微观交互中产生，不可还原</li>
+  <li>Schelling 模型展示了<strong>微观动机与宏观行为的鸿沟</strong>：温和偏好 → 极端隔离</li>
+  <li>传统数学/统计方法在处理<strong>适应性、路径依赖的多主体系统</strong>时有局限</li>
+  <li>ABM 允许你做<strong>受控计算实验</strong>，精确探索微观规则与宏观结果的关系</li>
+</ul>
+
+<div class="reading-ref">
+<strong>推荐阅读：</strong>
+<ul>
+  <li>Schelling (1978): <em>Micromotives and Macrobehavior</em>, pp. 137–157（隔离模型原始出处）</li>
+  <li>Miller & Page (2004): "The Standing Ovation Problem"（<a href="https://www2.econ.iastate.edu/tesfatsi/StandingOvation.MillerPage.pdf">PDF</a>）</li>
+  <li>动手试试：<a href="https://www2.econ.iastate.edu/tesfatsi/demos/schelling/schellhp.htm" target="_blank">Schelling Tipping Game 演示软件</a></li>
+</ul>
+</div>
+
+<div class="lesson-footer">
+  <p>有不明白的地方？随时向 AI 导师提问。</p>
+  <p>ABMS Teaching Workspace · Lesson 02</p>
+</div>
+
+<div class="lesson-nav">
+  <a href="0001-what-is-abm.html">← 上一课：什么是 ABM</a>
+  <a href="0003-c-abm-principles.html">下一课：七条建模原则 →</a>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

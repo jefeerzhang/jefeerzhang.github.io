@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 06: ABM 市场模型——从零智能到人工股票市场</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<span class="section-tag">Lesson 06 · 经典 ACE 应用</span>
+<h1>ABM 市场模型：零智能交易者与人工股票市场</h1>
+
+<p>前几课建立了 ABM 的理论和方法论基础。现在我们来看 ABM 在经济学中最有影响力的两个经典应用——它们深刻改变了我们对"市场"的理解。</p>
+
+<h2>问题：市场为什么"有效"？</h2>
+
+<p>传统经济学认为市场之所以高效，是因为交易者是理性的——他们精于计算，能够准确评估商品价值，做出最优决策。但现实中的交易者真的这么"聪明"吗？</p>
+
+<p>ABM 研究者提出了一个大胆的挑战：<strong>如果交易者一点都不聪明，市场还能有效运作吗？</strong></p>
+
+<h2>Gode & Sunder (1993): 零智能交易者实验</h2>
+
+<p>Gode 和 Sunder 设计了一个极其精巧的实验。他们在连续双向拍卖市场（Continuous Double Auction）中放入了两种交易者：</p>
+
+<div class="key-concept">
+<h3>零智能交易者 (Zero Intelligence Trader, ZI)</h3>
+<p>ZI 交易者的行为规则：</p>
+<ul>
+  <li>买家：在 [0, 自己估值] 之间<strong>随机</strong>出价</li>
+  <li>卖家：在 [自己成本, 最大值] 之间<strong>随机</strong>报价</li>
+  <li>唯一的"智能"：不会做亏本交易（预算约束）</li>
+</ul>
+<p>除此之外，完全是随机行为——没有学习、没有策略、没有推理。</p>
+</div>
+
+<h3>令人震惊的结果</h3>
+
+<p>把这些"笨"交易者放入市场后，Gode & Sunder 发现：</p>
+
+<ul>
+  <li><strong>市场效率（Allocative Efficiency）接近 100%</strong>——几乎所有的互利交易都发生了</li>
+  <li>交易价格收敛到理论预测的均衡价格附近</li>
+  <li>这个结果在多种参数设置下都成立</li>
+</ul>
+
+<p>这意味着什么？<strong>市场的高效率不是因为交易者聪明，而是因为市场制度（双向拍卖规则）本身就足以产生效率。</strong></p>
+
+<div class="key-concept">
+<h3>核心启示</h3>
+<p>"市场作为制度，可以部分替代个体理性。" ——Gode & Sunder</p>
+<p>这是一个典型的 ABM 启发式发现：传统理论把市场效率归因于交易者的理性，但 ABM 实验揭示了一个完全不同的因果机制——<strong>制度结构</strong>才是关键。</p>
+</div>
+
+<h2>Santa Fe 人工股票市场 (Artificial Stock Market)</h2>
+
+<p>如果说 ZI 交易者展示了"没有智能的市场"，那么 Santa Fe Institute 的人工股票市场（SFI-ASM）则展示了"有智能的市场"。</p>
+
+<h3>模型设定</h3>
+
+<ul>
+  <li>市场中有 N 个投资者 Agent（通常 25–100 个）</li>
+  <li>一种无风险资产（债券，固定利率）和一种风险资产（股票，随机分红）</li>
+  <li>每个 Agent 持有一组<strong>预测规则</strong>（类似"如果过去 5 天涨了就预测明天也涨"）</li>
+  <li>Agent 使用<strong>分类器系统（Classifier System）</strong>或<strong>遗传算法</strong>来进化预测规则</li>
+  <li>表现好的规则被保留，差的被淘汰，新的规则通过交叉和变异产生</li>
+</ul>
+
+<h3>关键发现</h3>
+
+<p>SFI-ASM 最重要的发现是：</p>
+
+<ol>
+  <li><strong>当学习速度慢时</strong>：市场行为接近理性预期均衡（传统理论的预测）</li>
+  <li><strong>当学习速度快时</strong>：市场出现<strong>泡沫、崩盘、高波动</strong>——更接近真实股票市场！</li>
+  <li>市场会出现自发的"趋势追踪"和"均值回归"行为——这些不是假设的，而是涌现出来的</li>
+</ol>
+
+<div class="key-concept">
+<h3>SFI-ASM 的深层含义</h3>
+<p>传统金融理论假设所有投资者都是理性预期者，所以市场总是接近均衡。SFI-ASM 证明：<strong>当投资者真正在"学习"时，市场不一定趋向均衡——它可能进入更复杂、更有趣的动态状态。</strong></p>
+</div>
+
+<h2>两个模型的方法论对比</h2>
+
+<table>
+<tr><th>维度</th><th>ZI 交易者</th><th>SFI 人工股票市场</th></tr>
+<tr><td>Agent 智能程度</td><td>零智能（纯随机）</td><td>高度智能（学习+进化）</td></tr>
+<tr><td>核心问题</td><td>市场效率从何而来？</td><td>学习如何影响市场动态？</td></tr>
+<tr><td>关键发现</td><td>制度结构 → 效率</td><td>快速学习 → 偏离均衡</td></tr>
+<tr><td>对应研究目标</td><td>启发式 (Heuristic)</td><td>经验性 (Empirical)</td></tr>
+<tr><td>对传统的挑战</td><td>理性不是必要的</td><td>理性预期不是必然结果</td></tr>
+</table>
+
+<h2>测验</h2>
+
+<div class="quiz">
+<h3>Q1: Gode & Sunder 的零智能交易者实验中，市场效率接近 100% 的原因是？</h3>
+<span class="quiz-option" data-correct="false">交易者虽然随机出价，但暗中使用了复杂策略</span>
+<span class="quiz-option" data-correct="true">双向拍卖的制度结构本身就足以产生高效率</span>
+<span class="quiz-option" data-correct="false">实验参数设置使得供需恰好相等</span>
+<span class="quiz-option" data-correct="false">零智能交易者的预算约束等同于完全理性</span>
+<div class="quiz-feedback" data-success="正确！ZI 实验的核心发现：市场效率源于制度结构，而非个体理性。" data-fail="提示：ZI 交易者完全随机——效率来自市场规则本身，这就是 Gode & Sunder 的关键发现。"></div>
+</div>
+
+<div class="quiz">
+<h3>Q2: 在 Santa Fe 人工股票市场中，当学习速度快时，市场会？</h3>
+<span class="quiz-option" data-correct="false">迅速收敛到理性预期均衡</span>
+<span class="quiz-option" data-correct="true">出现泡沫、崩盘和高波动性</span>
+<span class="quiz-option" data-correct="false">所有 Agent 最终使用相同的预测规则</span>
+<span class="quiz-option" data-correct="false">市场交易量降为零</span>
+<div class="quiz-feedback" data-success="正确！快速学习导致市场偏离均衡，产生类似真实股市的复杂动态。" data-fail="提示：快速学习 → Agent 不断改变策略 → 市场不稳定 → 泡沫/崩盘。"></div>
+</div>
+
+<h2>本课小结</h2>
+<ul>
+  <li><strong>ZI 交易者</strong>证明：市场效率可以不依赖于交易者的理性——<strong>制度结构是关键</strong></li>
+  <li><strong>SFI 人工股票市场</strong>证明：当投资者真正学习时，市场不一定趋向均衡</li>
+  <li>这两个模型从两个方向挑战了传统理论：一个证明理性不必要，一个证明理性预期不是必然结果</li>
+  <li>ABM 的核心价值：能探索传统方法无法处理的<strong>动态、异质、适应性</strong>系统</li>
+</ul>
+
+<div class="reading-ref">
+<strong>推荐阅读：</strong>
+<ul>
+  <li>Gode & Sunder (1993): "Allocative Efficiency of Markets with Zero Intelligence Traders"（<a href="https://www2.econ.iastate.edu/tesfatsi/ZITraders.GodeSunder.JPE1993.pdf">PDF</a>）</li>
+  <li>LeBaron (2002): "Building the Santa Fe Artificial Stock Market"（<a href="https://www2.econ.iastate.edu/tesfatsi/blake.sfisum.pdf">PDF</a>）</li>
+  <li>Santa Fe Stock Market 演示软件：<a href="https://artstkmkt.sourceforge.net/" target="_blank">artstkmkt.sourceforge.net</a></li>
+  <li>术语表：<a href="../reference/glossary.html">Zero Intelligence Trader</a></li>
+</ul>
+</div>
+
+<div class="lesson-footer">
+  <p>有不明白的地方？随时向 AI 导师提问。</p>
+  <p>ABMS Teaching Workspace · Lesson 06</p>
+</div>
+
+<div class="lesson-nav">
+  <a href="0005-abm-software-tools.html">← 上一课：ABM 软件工具</a>
+  <a href="0007-networks-and-interaction.html">下一课：网络与交互结构 →</a>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

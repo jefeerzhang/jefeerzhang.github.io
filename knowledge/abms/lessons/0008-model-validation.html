@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 08: 模型验证与评价方法论</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<span class="section-tag">Lesson 08 · 方法论进阶</span>
+<h1>模型验证与评价：你怎么知道模型是对的？</h1>
+
+<p>你已经学会了设计、实现和运行 ABM 模型。但一个根本性的问题还没解决：<strong>你凭什么相信模型的结果是可信的？</strong></p>
+
+<p>ABM 模型面临一个独特的挑战：由于涌现现象的存在，你<strong>不能</strong>简单地把模型的预测与现实数据做回归比较——模型可能产生了正确的宏观结果，但微观机制完全错了。这就是著名的"<strong>同果异因</strong>"问题。</p>
+
+<h2>四种验证方法</h2>
+
+<p>Tesfatsion 在她的方法论文档中区分了<strong>四类验证</strong>，从最基础到最严格：</p>
+
+<h3>1. 输入验证 (Input Validation)</h3>
+
+<div class="key-concept">
+<h3>输入验证问的是：模型的输入合理吗？</h3>
+<p>检查 Agent 的属性、参数、初始条件是否有经验依据。</p>
+<ul>
+  <li>Agent 数量是否与现实匹配？</li>
+  <li>参数值是否基于经验估计？</li>
+  <li>初始条件是否反映了研究对象的真实状态？</li>
+</ul>
+</div>
+
+<p><em>例子</em>：如果你在模拟一个 100 人的村庄，但你放了 10000 个 Agent——这就违反了输入验证。</p>
+
+<p><strong>这是最基础的验证</strong>，但仅此不够——输入合理不代表输出正确。</p>
+
+<h3>2. 过程验证 (Process Validation)</h3>
+
+<div class="key-concept">
+<h3>过程验证问的是：模型的内部机制合理吗？</h3>
+<p>检查 Agent 的行为规则、交互方式、学习机制是否符合理论或经验。</p>
+<ul>
+  <li>Agent 的决策规则是否有行为科学依据？</li>
+  <li>交互结构（网络/空间）是否反映了现实？</li>
+  <li>时间步进机制是否合适？</li>
+</ul>
+</div>
+
+<p><em>例子</em>：如果你的消费者 Agent 在每步都以 100% 的概率选择效用最大的商品——这违反了有限理性假设。过程验证要求你说明为什么 Agent 这样行动是合理的。</p>
+
+<h3>3. 描述性验证 (Descriptive Validation)</h3>
+
+<div class="key-concept">
+<h3>描述性验证问的是：模型能重现已知的经验规律吗？</h3>
+<p>让模型运行，把输出的宏观统计特征与经验数据进行比较。</p>
+<ul>
+  <li>模型产生的价格序列是否与现实价格序列有类似的统计特征（波动率、自相关等）？</li>
+  <li>模型产生的网络结构是否与现实网络有类似的拓扑特征（度分布、聚集系数等）？</li>
+  <li>模型产生的不平等指标（基尼系数等）是否与现实数据一致？</li>
+</ul>
+</div>
+
+<p><strong>注意</strong>：描述性验证只能证明模型"看起来对"，不能证明模型"确实对"——因为同果异因问题。</p>
+
+<h3>4. 预测性验证 (Predictive Validation)</h3>
+
+<div class="key-concept">
+<h3>预测性验证问的是：模型能预测尚未观察到的现象吗？</h3>
+<p>这是最严格的验证：模型不仅要解释已知的数据，还要<strong>事先预测</strong>尚未发生的事件或<strong>样本外</strong>表现。</p>
+</div>
+
+<p><em>例子</em>：你用一个 ABM 模型分析电力市场，如果模型准确预测了一种新的拍卖规则实施后会出现的价格波动模式——而这是传统模型无法预测的——这就是强有力的预测性验证。</p>
+
+<p><strong>现实挑战</strong>：预测性验证在社会科学中很困难，因为我们很少有机会做真正的"受控实验"来测试预测。</p>
+
+<h2>ABM 模型的展示规范</h2>
+
+<p>Tesfatsion 的 <a href="../../data/ace_tesfatsi/method/AModGuide.htm">AModGuide</a> 建议 ABM 论文应包含以下要素：</p>
+
+<ol>
+  <li><strong>模型目的</strong>：你试图回答什么问题？</li>
+  <li><strong>Agent 定义</strong>：有哪些类型的 Agent？各自的属性和行为规则是什么？</li>
+  <li><strong>环境描述</strong>：Agent 在什么空间/网络中交互？</li>
+  <li><strong>调度机制</strong>：Agent 的行动顺序是怎样的？</li>
+  <li><strong>参数选择</strong>：参数值从何而来？为什么选这些值？</li>
+  <li><strong>实验设计</strong>：你做了哪些对照实验？如何控制变量？</li>
+  <li><strong>结果展示</strong>：统计图表 + 典型运行轨迹</li>
+  <li><strong>验证说明</strong>：你做了哪种验证？结果如何？</li>
+</ol>
+
+<h2>常见的评价陷阱</h2>
+
+<table>
+<tr><th>陷阱</th><th>问题</th><th>如何避免</th></tr>
+<tr><td>过度拟合</td><td>调参数让模型"完美"匹配一个特定数据集</td><td>留出样本外数据做预测验证</td></tr>
+<tr><td>同果异因</td><td>多个不同机制产生相同的宏观结果</td><td>用过程验证检查机制合理性</td></tr>
+<tr><td>单次运行</td><td>只展示一次运行的结果</td><td>多次运行，报告统计分布</td></tr>
+<tr><td>参数敏感性</td><td>结果只在特定参数下成立</td><td>做参数扫描/敏感性分析</td></tr>
+<tr><td>黑箱模型</td><td>模型太复杂无法理解因果关系</td><td>从简到繁，逐步增加复杂性</td></tr>
+</table>
+
+<h2>测验</h2>
+
+<div class="quiz">
+<h3>Q1: "检查 Agent 的行为规则是否有行为科学依据"属于哪种验证？</h3>
+<span class="quiz-option" data-correct="false">输入验证</span>
+<span class="quiz-option" data-correct="true">过程验证</span>
+<span class="quiz-option" data-correct="false">描述性验证</span>
+<span class="quiz-option" data-correct="false">预测性验证</span>
+<div class="quiz-feedback" data-success="正确！过程验证关注模型内部机制的合理性——Agent 为什么这样行动？" data-fail="提示：输入验证 = 参数合理？过程验证 = 机制合理？描述性 = 输出匹配数据？"></div>
+</div>
+
+<div class="quiz">
+<h3>Q2: "同果异因"问题主要威胁的是哪种验证的可信度？</h3>
+<span class="quiz-option" data-correct="false">输入验证</span>
+<span class="quiz-option" data-correct="false">过程验证</span>
+<span class="quiz-option" data-correct="true">描述性验证</span>
+<span class="quiz-option" data-correct="false">预测性验证</span>
+<div class="quiz-feedback" data-success="正确！描述性验证只看输出是否匹配数据，但不同微观机制可能产生相同的宏观结果。" data-fail="提示：同果异因 = 多个机制 → 相同输出。描述性验证只看输出，所以最容易被"蒙骗"。"></div>
+</div>
+
+<h2>本课小结</h2>
+<ul>
+  <li>ABM 验证分四类：输入验证 → 过程验证 → 描述性验证 → 预测性验证</li>
+  <li><strong>同果异因</strong>是 ABM 最大的方法论挑战——输出正确不等于机制正确</li>
+  <li>好的 ABM 论文应完整展示模型的目的、Agent、环境、参数、实验和验证</li>
+  <li>多次运行 + 敏感性分析 + 样本外预测是避免陷阱的关键手段</li>
+</ul>
+
+<div class="reading-ref">
+<strong>推荐阅读：</strong>
+<ul>
+  <li>Tesfatsion: "Empirical Validation of Agent-Based Models"（<a href="../../data/ace_tesfatsi/method/empvalid.htm">本地文件</a>）——四类验证的详细论述</li>
+  <li>Tesfatsion: "ABM Model Presentation and Evaluation Guide"（<a href="../../data/ace_tesfatsi/method/AModGuide.htm">本地文件</a>）——展示规范</li>
+</ul>
+</div>
+
+<div class="lesson-footer">
+  <p>有不明白的地方？随时向 AI 导师提问。</p>
+  <p>ABMS Teaching Workspace · Lesson 08</p>
+</div>
+
+<div class="lesson-nav">
+  <a href="0007-networks-and-interaction.html">← 上一课：网络与交互结构</a>
+  <a href="../reference/learning-roadmap.html">学习路线图 →</a>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

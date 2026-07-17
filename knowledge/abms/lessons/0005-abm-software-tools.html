@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 05: ABM 软件工具入门</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<span class="section-tag">Lesson 05 · 实践工具</span>
+<h1>ABM 软件工具入门</h1>
+
+<p>前四课建立了理论和概念基础。现在来学习如何<strong>动手搭建 ABM 模型</strong>。本课介绍两个最常用的工具，并给出一个简单的 Python + Mesa 代码示例。</p>
+
+<h2>工具概览</h2>
+
+<table>
+<tr><th>工具</th><th>语言</th><th>适合谁</th><th>特点</th></tr>
+<tr><td><strong>NetLogo</strong></td><td>Logo (可视化)</td><td>零基础、教育</td><td>拖拽式编程，内置大量模型库</td></tr>
+<tr><td><strong>Mesa</strong></td><td>Python</td><td>研究者、程序员</td><td>灵活、可扩展、与数据科学生态集成</td></tr>
+<tr><td><strong>Repast</strong></td><td>Java/C++</td><td>高级研究者</td><td>高性能、适合大规模仿真</td></tr>
+<tr><td><strong>Agents.jl</strong></td><td>Julia</td><td>高性能计算</td><td>速度快、语法优雅、较新</td></tr>
+</table>
+
+<h2>NetLogo：最快的入门方式</h2>
+
+<p><a href="https://ccl.northwestern.edu/netlogo/" target="_blank">NetLogo</a> 是 Northwestern University 开发的 ABM 平台，专为教育和研究设计。</p>
+
+<div class="key-concept">
+<h3>NetLogo 快速上手</h3>
+<ol>
+  <li>下载安装（免费）</li>
+  <li>打开 Models Library → 选择 Social Science → Segregation</li>
+  <li>点击 Setup，再点击 Go——你就能看到 Schelling 模型的实时运行！</li>
+  <li>调整 %similar-wanted 滑块，观察隔离程度如何变化</li>
+</ol>
+</div>
+
+<p>NetLogo 的优势是<strong>即时可视化</strong>：写几行代码就能看到 Agent 在屏幕上移动。缺点是对于复杂模型，编程能力有限。</p>
+
+<h2>Mesa：Python ABM 框架</h2>
+
+<p><a href="https://mesa.readthedocs.io/" target="_blank">Mesa</a> 是 Python 生态中最流行的 ABM 框架。它让你用 Python 代码定义 Agent、环境和调度器。</p>
+
+<h3>Mesa 的核心概念映射</h3>
+
+<table>
+<tr><th>ABM 概念</th><th>Mesa 中的对应</th></tr>
+<tr><td>Agent</td><td><code>mesa.Agent</code> 的子类</td></tr>
+<tr><td>Environment</td><td><code>mesa.Model</code> 的子类 + <code>mesa.space</code></td></tr>
+<tr><td>Scheduler</td><td><code>mesa.time</code>（控制 Agent 行动顺序）</td></tr>
+<tr><td>Data Collection</td><td><code>mesa.DataCollector</code></td></tr>
+</table>
+
+<h3>用 Mesa 实现 Schelling 模型（核心代码）</h3>
+
+<pre><code>import mesa
+
+class SchellingAgent(mesa.Agent):
+    def __init__(self, unique_id, model, agent_type):
+        super().__init__(unique_id, model)
+        self.type = agent_type  # 0 或 1
+
+    def step(self):
+        # 统计邻居中同类的比例
+        similar = 0
+        total = 0
+        for neighbor in self.model.grid.iter_neighbors(
+            self.pos, moore=True):
+            total += 1
+            if neighbor.type == self.type:
+                similar += 1
+
+        # 如果不满意（同类比例低于阈值），随机搬家
+        if similar / total < self.model.homophily:
+            self.model.grid.move_to_empty(self)
+
+
+class SchellingModel(mesa.Model):
+    def __init__(self, width=20, height=20, density=0.8,
+                 homophily=0.3, agent_type_ratio=0.5):
+        super().__init__()
+        self.homophily = homophily
+        self.grid = mesa.space.SingleGrid(width, height, torus=True)
+        self.schedule = mesa.time.RandomActivation(self)
+
+        # 放置 Agent
+        for _, pos in self.grid.coord_iter():
+            if self.random.random() < density:
+                a_type = 1 if self.random.random() < agent_type_ratio else 0
+                agent = SchellingAgent(
+                    self.next_id(), self, a_type)
+                self.grid.place_agent(agent, pos)
+                self.schedule.add(agent)
+
+    def step(self):
+        self.schedule.step()</code></pre>
+
+<h3>运行实验</h3>
+
+<pre><code># 运行 100 步
+model = SchellingModel(homophily=0.3)
+for _ in range(100):
+    model.step()
+
+# 用 Mesa 的可视化模块查看结果
+# 或者用 matplotlib 绘制 Agent 分布图</code></pre>
+
+<div class="reading-ref">
+<strong>动手练习！</strong> 修改 <code>homophily</code> 参数（0.1 → 0.3 → 0.5），分别运行模型，观察隔离程度的变化。这就是 ABM 的"受控实验"——改变一个变量，观察结果。
+</div>
+
+<h2>编程建议</h2>
+
+<div class="key-concept">
+<h3>给不同背景的新人建议</h3>
+<ul>
+  <li><strong>完全零基础</strong>：先玩 NetLogo，理解 ABM 逻辑后再学编程</li>
+  <li><strong>会一点 Python</strong>：直接用 Mesa，边学边做</li>
+  <li><strong>有编程经验</strong>：Mesa 或 Agents.jl，取决于你的语言偏好</li>
+  <li><strong>想做大模型</strong>：Repast 或 C++，注意计算效率</li>
+</ul>
+</div>
+
+<h2>测验</h2>
+
+<div class="quiz">
+<h3>Q1: 在 Mesa 中，Agent 的行为逻辑写在哪个方法里？</h3>
+<span class="quiz-option" data-correct="false">__init__() 方法</span>
+<span class="quiz-option" data-correct="true">step() 方法</span>
+<span class="quiz-option" data-correct="false">run() 方法</span>
+<span class="quiz-option" data-correct="false">observe() 方法</span>
+<div class="quiz-feedback" data-success="正确！step() 是每个 Agent 在每个时间步执行的行为逻辑。" data-fail="提示：在 Mesa 中，step() 是每个时间步 Agent 要做的事情。"></div>
+</div>
+
+<div class="quiz">
+<h3>Q2: 在 Schelling 的 Mesa 实现中，homophily=0.3 表示什么？</h3>
+<span class="quiz-option" data-correct="false">30% 的 Agent 是同一类型</span>
+<span class="quiz-option" data-correct="true">Agent 要求至少 30% 的邻居是同类才会满意</span>
+<span class="quiz-option" data-correct="false">模型运行 30 步后停止</span>
+<span class="quiz-option" data-correct="false">30% 的格子是空的</span>
+<div class="quiz-feedback" data-success="正确！homophily 是满意度阈值——低于此比例的同类邻居，Agent 就会搬家。" data-fail="提示：homophily = 同好性阈值，决定 Agent 对邻居的"宽容度"。"></div>
+</div>
+
+<h2>本课小结</h2>
+<ul>
+  <li><strong>NetLogo</strong> 最适合快速体验和教育演示</li>
+  <li><strong>Mesa</strong> 是 Python 生态的最佳选择，灵活且可扩展</li>
+  <li>ABM 的核心代码结构：<code>Agent类 + Model类 + Scheduler</code></li>
+  <li>ABM 研究的本质是<strong>做实验</strong>：改变参数、重复运行、对比结果</li>
+</ul>
+
+<div class="reading-ref">
+<strong>推荐阅读与练习：</strong>
+<ul>
+  <li>Mesa 官方文档：<a href="https://mesa.readthedocs.io/" target="_blank">mesa.readthedocs.io</a></li>
+  <li>NetLogo Models Library：<a href="https://ccl.northwestern.edu/netlogo/models/" target="_blank">ccl.northwestern.edu/netlogo/models</a></li>
+  <li>Alan G. Isaac 课程大纲（基于 NetLogo）：<a href="../../data/ace_tesfatsi/pdfs/ABMSyllabus.GrowingArtificialSocieties.AGIsaac2023.pdf">本地 PDF</a></li>
+  <li>Tesfatsion 的 ABM 软件索引：<a href="../../data/ace_tesfatsi/software/acecode.htm">本地文件</a></li>
+</ul>
+</div>
+
+<div class="lesson-footer">
+  <p>有不明白的地方？随时向 AI 导师提问。</p>
+  <p>ABMS Teaching Workspace · Lesson 05</p>
+</div>
+
+<div class="lesson-nav">
+  <a href="0004-agent-learning.html">← 上一课：Agent 学习与适应</a>
+  <a href="0006-market-models.html">下一课：ABM 市场模型 →</a>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

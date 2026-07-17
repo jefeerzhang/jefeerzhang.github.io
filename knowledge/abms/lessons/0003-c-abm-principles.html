@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 03: c-ABM 七条建模原则与 ACE</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<span class="section-tag">Lesson 03 · 方法论基础</span>
+<h1>c-ABM 七条建模原则与 ACE</h1>
+
+<p>前两课建立了直觉。现在来掌握 ABM 方法论的"宪法"——Tesfatsion 提出的 <strong>c-ABM（Completely Agent-Based Modeling，完全基于主体的建模）</strong>的七条建模原则。</p>
+
+<h2>什么是 c-ABM？</h2>
+
+<p>很多模型虽然包含"Agent"，但其实偷偷引入了外部协调机制（比如一个全局均衡条件、一个中央规划者）。c-ABM 要求：<strong>模型中的一切动态结果都必须完全由 Agent 之间的局部交互产生</strong>，不借助任何外部"上帝之手"。</p>
+
+<div class="key-concept">
+<h3>核心类比：培养皿实验</h3>
+<p>把 c-ABM 模型想象成一个培养皿。研究者设定初始条件（投放什么菌种、什么营养），然后观察培养皿里发生了什么。<strong>研究者不能伸手进去干预</strong>——一切结果都是菌种之间相互作用产生的。</p>
+</div>
+
+<h2>七条建模原则 (MP1–MP7)</h2>
+
+<p>以下每条原则用一句话概括核心要求，然后展开解释：</p>
+
+<h3>MP1: 主体定义 (Agent Definition)</h3>
+<p>模型必须明确定义什么是 Agent。Agent 可以是任何实体——个人、公司、政府、甚至天气现象。关键是：<strong>每个 Agent 都有一个"局部状态"（local state），描述它在任何时刻的状况。</strong></p>
+<p><em>例子</em>：在一个市场模型中，Agent 可能是买家和卖家，每个 Agent 的局部状态包括它持有的商品数量、资金、当前的报价策略。</p>
+
+<h3>MP2: 主体范围 (Agent Scope)</h3>
+<p>模型中<strong>所有</strong>有意义的动态过程都必须通过 Agent 的行为和交互来描述。不能偷偷引入一个"社会规划者"或"全局均衡求解器"。</p>
+<p><em>反例</em>：传统经济学模型经常假设存在一个 Walrasian Auctioneer（瓦尔拉斯拍卖人）来调整价格使供需平衡——这违反了 MP2。</p>
+
+<h3>MP3: 主体局部建构性 (Agent Local Constructivity)</h3>
+<p>每个 Agent 在时刻 t 的行为只能基于它自己的<strong>局部信息</strong>——它不知道全局状态，除非通过与其他 Agent 的交互间接获取。</p>
+<p><em>直觉</em>：你在超市购物时，只能看到你面前的货架和你手里的钱，你不知道全国的库存情况。</p>
+
+<h3>MP4: 主体自主性 (Agent Autonomy)</h3>
+<p>每个 Agent 独立做出决策。没有外部力量直接决定某个 Agent 的行为。</p>
+<p><em>注意</em>：Agent 可以受其他 Agent 影响（通过交流、观察），但最终的决策权在自己手里。</p>
+
+<h3>MP5: 系统建构性 (System Constructivity)</h3>
+<p>系统在任何时刻 t+1 的状态，<strong>完全由</strong>时刻 t 的所有 Agent 局部状态和它们的交互规则决定。不存在"跳跃到均衡"的捷径。</p>
+<p><em>含义</em>：模型必须是"一步步走"的——每一轮模拟都代表一次真实的交互过程。</p>
+
+<h3>MP6: 系统历史性 (System Historicity)</h3>
+<p>系统的当前状态<strong>依赖于它的历史路径</strong>。初始条件的不同可能导致完全不同的最终结果（路径依赖）。</p>
+<p><em>例子</em>：一个国家的经济制度深受其历史事件（战争、革命、技术引进）的影响，不能只从"当前最优"来解释。</p>
+
+<h3>MP7: 建模者角色 (Modeler as Petri Dish Experimenter)</h3>
+<p>建模者的角色是<strong>设定初始条件和观察</strong>，而不是在模拟过程中干预 Agent 的行为。</p>
+
+<h2>ACE = c-ABM 在经济系统的应用</h2>
+
+<p><strong>Agent-Based Computational Economics (ACE)</strong> 就是 c-ABM 方法在经济学领域的特化。它把真实经济视为：</p>
+
+<div class="key-concept">
+<h3>ACE 的核心观点</h3>
+<p>经济系统是一个<strong>开放式的、本地建构的序贯博弈 (Locally-Constructive Sequential Game)</strong>。</p>
+<ul>
+  <li><strong>开放式</strong>：没有预设的终点或均衡</li>
+  <li><strong>本地建构</strong>：每个决策基于局部信息</li>
+  <li><strong>序贯博弈</strong>：Agent 轮流行动，当前行动影响未来的可能行动</li>
+</ul>
+</div>
+
+<h2>对照表：传统方法 vs ACE 方法</h2>
+
+<table>
+<tr><th>维度</th><th>传统均衡分析</th><th>ACE (c-ABM)</th></tr>
+<tr><td>Agent 理性</td><td>完全理性 / 理性预期</td><td>有限理性、可学习</td></tr>
+<tr><td>协调机制</td><td>全局均衡条件</td><td>Agent 之间逐步交互</td></tr>
+<tr><td>时间处理</td><td>比较静态 / 稳态</td><td>动态历史过程</td></tr>
+<tr><td>异质性</td><td>通常假设代表性 Agent</td><td>天然支持异质 Agent</td></tr>
+<tr><td>均衡</td><td>预设存在</td><td>涌现的结果（可能不存在）</td></tr>
+<tr><td>路径依赖</td><td>通常忽略</td><td>核心特征</td></tr>
+</table>
+
+<h2>测验</h2>
+
+<div class="quiz">
+<h3>Q1: 以下哪个最违反了 c-ABM 的原则？</h3>
+<span class="quiz-option" data-correct="false">Agent 使用遗传算法学习策略</span>
+<span class="quiz-option" data-correct="true">引入一个全局"拍卖人"来确保市场出清</span>
+<span class="quiz-option" data-correct="false">Agent 根据过去经验调整期望</span>
+<span class="quiz-option" data-correct="false">Agent 通过网络结构进行局部交互</span>
+<div class="quiz-feedback" data-success="正确！全局拍卖人违反了 MP2（Agent 范围）和 MP5（系统建构性）——这是用外部机制替代了 Agent 的自主交互。" data-fail="提示：c-ABM 禁止任何"上帝之手"。全局拍卖人不是 Agent 的一部分，而是外部协调机制。"></div>
+</div>
+
+<div class="quiz">
+<h3>Q2: "系统的当前状态依赖于历史路径"对应哪条原则？</h3>
+<span class="quiz-option" data-correct="false">MP1: 主体定义</span>
+<span class="quiz-option" data-correct="false">MP3: 主体局部建构性</span>
+<span class="quiz-option" data-correct="true">MP6: 系统历史性</span>
+<span class="quiz-option" data-correct="false">MP7: 建模者角色</span>
+<div class="quiz-feedback" data-success="正确！MP6 强调路径依赖——历史很重要，初始条件的差异可能导致完全不同的结果。" data-fail="提示：路径依赖 = 历史性，对应 MP6。"></div>
+</div>
+
+<h2>本课小结</h2>
+<ul>
+  <li>c-ABM 有 <strong>7 条建模原则</strong>，核心是"一切结果必须从 Agent 局部交互中涌现"</li>
+  <li><strong>ACE</strong> 是 c-ABM 在经济学中的应用，视经济为"开放式本地建构序贯博弈"</li>
+  <li>与传统均衡分析的关键区别：有限理性、无全局协调、路径依赖、异质性</li>
+  <li>建模者的角色是<strong>培养皿实验员</strong>：设定条件、观察结果、不干预过程</li>
+</ul>
+
+<div class="reading-ref">
+<strong>推荐阅读：</strong>
+<ul>
+  <li>Tesfatsion (2022): "ACE: Overview and Brief History"（<a href="../../data/ace_tesfatsi/pdfs/Tesfatsion2022_ACE_Overview.pdf">本地 PDF</a>）</li>
+  <li>Tesfatsion (2017): "Modeling Economic Systems as Locally-Constructive Sequential Games"（<a href="../../data/ace_tesfatsi/pdfs/Tesfatsion2017_LCSGames_JEM.pdf">本地 PDF</a>）</li>
+  <li>参考速查卡：<a href="../reference/seven-principles.html">七条原则速查表</a></li>
+</ul>
+</div>
+
+<div class="lesson-footer">
+  <p>有不明白的地方？随时向 AI 导师提问。</p>
+  <p>ABMS Teaching Workspace · Lesson 03</p>
+</div>
+
+<div class="lesson-nav">
+  <a href="0002-emergence-and-schelling.html">← 上一课：涌现与 Schelling 模型</a>
+  <a href="0004-agent-learning.html">下一课：Agent 学习与适应 →</a>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

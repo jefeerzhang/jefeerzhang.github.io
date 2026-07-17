@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ABMS 专栏 · 知识学习</title>
+  <meta name="description" content="ABMS（基于主体的建模与计算经济学）系统课程，8 课时从入门到实战。">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <style>
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-block: 28px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .breadcrumb a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .breadcrumb a:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .breadcrumb .sep {
+      color: var(--line-strong);
+    }
+    .breadcrumb .current {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .column-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      align-items: center;
+      gap: clamp(40px, 6vw, 80px);
+      padding-block: 36px 56px;
+      border-bottom: 1px solid var(--line-strong);
+    }
+    .column-hero-copy .eyebrow {
+      margin: 0 0 14px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .column-hero-copy h1 {
+      font-family: var(--serif);
+      font-size: clamp(34px, 5vw, 50px);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .column-hero-copy .subtitle {
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.7;
+      max-width: 520px;
+    }
+    .column-meta {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .meta-item {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+    .meta-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      font-family: var(--mono);
+    }
+    .meta-value {
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .phase-heading {
+      margin: 48px 0 0;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .lesson-section {
+      padding-block: 12px 80px;
+    }
+    .lesson-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      margin-top: 24px;
+    }
+    .lesson-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 28px 26px;
+      transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .lesson-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 8px 30px rgba(31, 59, 45, 0.1);
+      transform: translateY(-3px);
+    }
+    .lesson-number {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      font-family: var(--mono);
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--surface-deep);
+      line-height: 1;
+      user-select: none;
+    }
+    .lesson-card h3 {
+      font-family: var(--serif);
+      font-size: 19px;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 8px;
+      position: relative;
+      max-width: 85%;
+    }
+    .lesson-card p {
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.65;
+      position: relative;
+    }
+    .lesson-tag {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 4px 12px;
+      background: var(--surface-soft);
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.3px;
+      position: relative;
+    }
+    .lesson-card:hover .lesson-tag {
+      background: var(--accent);
+      color: var(--accent-ink);
+    }
+
+    .ref-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .ref-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      text-decoration: none;
+      color: inherit;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+    }
+    .ref-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 6px 24px rgba(31, 59, 45, 0.08);
+      transform: translateY(-2px);
+    }
+    .ref-icon {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface-soft);
+      border-radius: 8px;
+      font-family: var(--mono);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .ref-card h3 {
+      font-family: var(--serif);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin: 0 0 4px;
+    }
+    .ref-card p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    @media (max-width: 760px) {
+      .column-hero {
+        grid-template-columns: 1fr;
+        padding-block: 28px 44px;
+      }
+      .lesson-grid {
+        grid-template-columns: 1fr;
+      }
+      .lesson-number {
+        font-size: 36px;
+        top: 14px;
+        right: 16px;
+      }
+      .ref-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="home-page">
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+          <a href="../../">首页</a>
+          <a href="../../cv/">个人简历</a>
+          <a href="https://jefeerzhang.github.io/master-course/">硕士课程</a>
+          <a href="../" aria-current="page">知识学习</a>
+          <a href="../../tools/">小工具</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="面包屑">
+        <a href="../">知识学习</a>
+        <span class="sep">/</span>
+        <span class="current">ABMS 专栏</span>
+      </nav>
+    </div>
+
+    <section class="container column-hero" aria-labelledby="column-title">
+      <div class="column-hero-copy">
+        <p class="eyebrow">知识学习 · 专栏</p>
+        <h1 id="column-title">基于主体的建模与计算经济学</h1>
+        <p class="subtitle">从什么是 ABM 到模型验证方法论，8 课时系统讲解 Agent-Based Modeling 的核心概念、经典模型与实践工具。适用于经济学、社会科学、复杂系统等领域的研究者与学生。</p>
+      </div>
+      <div class="column-meta">
+        <div class="meta-item">
+          <span class="meta-label">课时</span>
+          <span class="meta-value">8 节</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">难度</span>
+          <span class="meta-value">入门 → 实战</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">类型</span>
+          <span class="meta-value">理论 + 编程 + 模型</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">来源</span>
+          <span class="meta-value">Tesfatsion ACE 门户</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="container lesson-section" aria-labelledby="lessons-title">
+      <h2 id="lessons-title" class="section-heading" style="margin-bottom: 0;">
+        课程目录
+        <p>建议按顺序学习，每节课建立在前一节的基础上。</p>
+      </h2>
+
+      <div class="phase-heading">阶段一 · 建立直觉（1–2 周）</div>
+      <div class="lesson-grid">
+
+        <a class="lesson-card" href="lessons/0001-what-is-abm.html">
+          <span class="lesson-number">01</span>
+          <h3>什么是基于主体的建模（ABM）？</h3>
+          <p>三要素、四大研究目标、生命游戏、模拟作为第三种科学方法。</p>
+          <span class="lesson-tag">基础概念</span>
+        </a>
+
+        <a class="lesson-card" href="lessons/0002-emergence-and-schelling.html">
+          <span class="lesson-number">02</span>
+          <h3>涌现与 Schelling 隔离模型</h3>
+          <p>涌现的两个特征、Schelling 隔离模型的反直觉发现、起立鼓掌问题。</p>
+          <span class="lesson-tag">经典模型</span>
+        </a>
+
+        <a class="lesson-card" href="lessons/0003-c-abm-principles.html">
+          <span class="lesson-number">03</span>
+          <h3>c-ABM 七条建模原则与 ACE</h3>
+          <p>MP1–MP7 详解、ACE 定义、传统均衡分析 vs ACE 对比。</p>
+          <span class="lesson-tag">方法论</span>
+        </a>
+
+      </div>
+
+      <div class="phase-heading">阶段二 · 掌握机制（2–3 周）</div>
+      <div class="lesson-grid">
+
+        <a class="lesson-card" href="lessons/0004-agent-learning.html">
+          <span class="lesson-number">04</span>
+          <h3>Agent 学习与适应</h3>
+          <p>五层学习算法（强化→信念→前瞻→进化→连接主义）、个体 vs 群体学习、Axelrod 锦标赛。</p>
+          <span class="lesson-tag">学习算法</span>
+        </a>
+
+        <a class="lesson-card" href="lessons/0005-abm-software-tools.html">
+          <span class="lesson-number">05</span>
+          <h3>ABM 软件工具入门</h3>
+          <p>NetLogo / Mesa / Repast / Agents.jl 对比、Mesa 实现 Schelling 模型完整代码。</p>
+          <span class="lesson-tag">编程工具</span>
+        </a>
+
+        <a class="lesson-card" href="lessons/0006-market-models.html">
+          <span class="lesson-number">06</span>
+          <h3>ABM 市场模型</h3>
+          <p>Gode & Sunder 零智能实验、Santa Fe 人工股票市场、制度 vs 理性之争。</p>
+          <span class="lesson-tag">经典应用</span>
+        </a>
+
+      </div>
+
+      <div class="phase-heading">阶段三 · 深入应用（3–4 周）</div>
+      <div class="lesson-grid">
+
+        <a class="lesson-card" href="lessons/0007-networks-and-interaction.html">
+          <span class="lesson-number">07</span>
+          <h3>网络与交互结构</h3>
+          <p>小世界网络、Wilhite 贸易网络实验、马赛鱼市场忠诚度、信息级联。</p>
+          <span class="lesson-tag">网络科学</span>
+        </a>
+
+        <a class="lesson-card" href="lessons/0008-model-validation.html">
+          <span class="lesson-number">08</span>
+          <h3>模型验证与评价方法论</h3>
+          <p>四类验证（输入/过程/描述性/预测性）、展示规范、五大常见陷阱。</p>
+          <span class="lesson-tag">方法论</span>
+        </a>
+
+      </div>
+
+      <div class="phase-heading">参考文档</div>
+      <div class="ref-grid">
+
+        <a class="ref-card" href="reference/glossary.html">
+          <div class="ref-icon">A</div>
+          <div>
+            <h3>术语表</h3>
+            <p>35+ 条中英对照核心术语</p>
+          </div>
+        </a>
+
+        <a class="ref-card" href="reference/seven-principles.html">
+          <div class="ref-icon">7</div>
+          <div>
+            <h3>七条原则速查卡</h3>
+            <p>MP1–MP7 + 模型自查清单</p>
+          </div>
+        </a>
+
+        <a class="ref-card" href="reference/learning-roadmap.html">
+          <div class="ref-icon">☰</div>
+          <div>
+            <h3>学习路线图</h3>
+            <p>4 阶段学习路径 + 进阶方向</p>
+          </div>
+        </a>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

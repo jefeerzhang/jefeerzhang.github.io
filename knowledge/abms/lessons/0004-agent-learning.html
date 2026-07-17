@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 04: Agent 学习与适应</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<span class="section-tag">Lesson 04 · 学习机制</span>
+<h1>Agent 如何学习？从简单到深度</h1>
+
+<p>前三课建立了 ABM 的概念框架。现在来回答一个关键问题：<strong>Agent 如何适应不断变化的环境？</strong></p>
+
+<p>如果 Agent 只会重复固定行为，模型就太简单了。真正有趣的 ABM 模型中，Agent 会<strong>学习</strong>——根据过去的经验调整自己的行为。</p>
+
+<h2>学习的层次：从简单到深度</h2>
+
+<p>Tesfatsion (2024) 将 ABM 中常见的学习算法分为几个层次，从最简单的到最复杂的：</p>
+
+<h3>层次 1：强化学习 (Reinforcement Learning)</h3>
+
+<div class="key-concept">
+<h3>强化学习的核心思想</h3>
+<p>Agent 维护一组可选行为，每个行为有一个"吸引力分数"。每次选择某个行为后：</p>
+<ul>
+  <li>如果结果好（得到高回报）→ 增加该行为的吸引力</li>
+  <li>如果结果差 → 降低该行为的吸引力</li>
+</ul>
+<p>下次选择时，吸引力高的行为被选中的概率更大。</p>
+</div>
+
+<p><em>生活类比</em>：你去过几家餐厅吃饭。哪家好吃，下次就更倾向于去哪家。你不需要理解厨师的配方——你只是根据过去的体验来调整偏好。</p>
+
+<p>这是最简单的学习形式：Agent 只需要记住"哪个行为过去给过我好结果"。</p>
+
+<h3>层次 2：信念学习 (Belief Learning)</h3>
+
+<p>Agent 不仅跟踪自己行为的结果，还维护一个关于<strong>环境或其他 Agent 行为</strong>的"信念模型"。</p>
+
+<p><em>例子</em>：在一个重复博弈中，你观察到对手过去 70% 的时间选择了"合作"，于是你"相信"对手合作的概率大约是 70%，并据此选择自己的最优策略。</p>
+
+<p>信念学习比强化学习更"聪明"，因为 Agent 不仅知道"什么行为好用"，还试图理解"为什么好用"。</p>
+
+<h3>层次 3：前瞻学习 (Anticipatory / Forward-Looking Learning)</h3>
+
+<p>Agent 不仅回顾过去，还<strong>预测未来</strong>。它有一个关于环境的内部模型，可以在行动前"想象"可能的结果。</p>
+
+<p><em>例子</em>：一个投资者预测"如果利率上升，债券价格会下跌"，于是在利率上升前就卖出了债券。这需要 Agent 拥有某种"世界模型"。</p>
+
+<h3>层次 4：进化学习 (Evolutionary Learning)</h3>
+
+<p>受生物进化启发。一个"种群"中的策略经历<strong>选择、交叉、变异</strong>的过程：</p>
+<ol>
+  <li><strong>选择</strong>：表现好的策略被保留，差的被淘汰</li>
+  <li><strong>交叉</strong>：两个好策略的"片段"组合产生新策略</li>
+  <li><strong>变异</strong>：策略的某些部分随机改变，引入新探索</li>
+</ol>
+
+<p>Holland (1992) 的遗传算法（Genetic Algorithm）就是最经典的例子。</p>
+
+<h3>层次 5：连接主义学习 (Connectionist / Neural Network Learning)</h3>
+
+<p>使用神经网络作为 Agent 的"大脑"。Agent 通过与环境的交互训练神经网络，使输入（环境状态）到输出（行为选择）的映射不断优化。</p>
+
+<p>这是目前最"深度"的学习形式，但计算成本也最高。</p>
+
+<h2>个体学习 vs 群体学习</h2>
+
+<p>Vriend (2000) 指出了一个<strong>容易被忽视但极其重要</strong>的区别：</p>
+
+<table>
+<tr><th>学习类型</th><th>含义</th><th>例子</th></tr>
+<tr><td><strong>个体学习 (Individual)</strong></td><td>Agent 从<em>自己的</em>经验中学习</td><td>每个公司独立调整定价策略</td></tr>
+<tr><td><strong>群体学习 (Social/Population)</strong></td><td>Agent 从<em>其他 Agent</em>的经验中学习</td><td>公司模仿表现最好的竞争对手</td></tr>
+</table>
+
+<div class="key-concept">
+<h3>为什么这个区别很重要？</h3>
+<p>Vriend 用一个简单的市场模型证明：<strong>同样的遗传算法，用在个体层面和群体层面，会产生截然不同的结果。</strong></p>
+<p>个体学习时，每个公司独立进化，策略多样性保持得更好，市场更有竞争性。</p>
+<p>群体学习时，所有公司都模仿当前最好的策略，导致策略趋同，市场容易陷入"局部最优"。</p>
+</div>
+
+<h2>合作演化：Axelrod 锦标赛</h2>
+
+<p>Robert Axelrod 在 1980 年代组织了两场著名的计算机锦标赛，邀请学者们提交策略来参加重复囚徒困境博弈。结果出人意料：</p>
+
+<p><strong>获胜者是最简单的策略——Tit-for-Tat（以牙还牙）：</strong></p>
+<ul>
+  <li>第一轮：合作</li>
+  <li>之后每轮：做对手上一轮做的事</li>
+</ul>
+
+<p>Tit-for-Tat 获胜的原因不是它最"聪明"，而是它同时具备：</p>
+<ol>
+  <li><strong>善意</strong>：先合作</li>
+  <li><strong>报复</strong>：被背叛就反击</li>
+  <li><strong>宽容</strong>：对手回到合作就原谅</li>
+  <li><strong>清晰</strong>：策略简单到对手能"看懂"</li>
+</ol>
+
+<h2>测验</h2>
+
+<div class="quiz">
+<h3>Q1: Agent 根据"哪个行为过去给了好回报"来选择下一步行动，这属于哪种学习？</h3>
+<span class="quiz-option" data-correct="true">强化学习 (Reinforcement Learning)</span>
+<span class="quiz-option" data-correct="false">信念学习 (Belief Learning)</span>
+<span class="quiz-option" data-correct="false">前瞻学习 (Forward-Looking Learning)</span>
+<span class="quiz-option" data-correct="false">进化学习 (Evolutionary Learning)</span>
+<div class="quiz-feedback" data-success="正确！强化学习最简单——只需记住"什么行为给了我好回报"。" data-fail="提示：只看"过去回报"来调整选择 = 强化学习。信念学习需要维护对手/环境模型。"></div>
+</div>
+
+<div class="quiz">
+<h3>Q2: Vriend (2000) 的关键发现是什么？</h3>
+<span class="quiz-option" data-correct="false">遗传算法总是优于强化学习</span>
+<span class="quiz-option" data-correct="false">群体学习总是优于个体学习</span>
+<span class="quiz-option" data-correct="true">同一算法在个体层面和群体层面使用会产生不同结果</span>
+<span class="quiz-option" data-correct="false">Agent 不需要学习也能达到最优</span>
+<div class="quiz-feedback" data-success="正确！学习发生在哪个层面（个体 vs 群体）会根本性地改变系统行为。" data-fail="提示：Vriend 的核心洞察是学习"层面"的重要性——个体学习 ≠ 群体学习。"></div>
+</div>
+
+<h2>本课小结</h2>
+<ul>
+  <li>ABM 中的 Agent 可以使用从简单到复杂的多种<strong>学习算法</strong></li>
+  <li>五个层次：强化学习 → 信念学习 → 前瞻学习 → 进化学习 → 连接主义学习</li>
+  <li><strong>个体学习与群体学习</strong>的区别至关重要，会导致截然不同的宏观结果</li>
+  <li>Axelrod 锦标赛证明了：简单策略（Tit-for-Tat）在重复博弈中可以胜过复杂策略</li>
+</ul>
+
+<div class="reading-ref">
+<strong>推荐阅读：</strong>
+<ul>
+  <li>Tesfatsion (2024): "Learning Algorithm Illustrations"（<a href="../../data/ace_tesfatsi/pdfs/LearnAlgorithms.LT.pdf">本地 PDF</a>）——从简单到深度的图解教程</li>
+  <li>Holland (1992): "Genetic Algorithms"（<a href="https://www2.econ.iastate.edu/tesfatsi/holland.GAIntro.htm">在线</a>）</li>
+  <li>Vriend (2000): "Individual vs Social Learning"（<a href="https://www2.econ.iastate.edu/tesfatsi/Vriend.TwoTypesGALearning.pdf">PDF</a>）</li>
+  <li>Axelrod (1984): <em>The Evolution of Cooperation</em>, Ch. 1, 2, 9</li>
+</ul>
+</div>
+
+<div class="lesson-footer">
+  <p>有不明白的地方？随时向 AI 导师提问。</p>
+  <p>ABMS Teaching Workspace · Lesson 04</p>
+</div>
+
+<div class="lesson-nav">
+  <a href="0003-c-abm-principles.html">← 上一课：七条建模原则</a>
+  <a href="0005-abm-software-tools.html">下一课：ABM 软件工具 →</a>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

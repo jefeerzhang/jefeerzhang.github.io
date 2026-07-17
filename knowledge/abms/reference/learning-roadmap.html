@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>ABMS 学习路线图</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<span class="section-tag">Reference · 路线图</span>
+<h1>ABMS 学习路线图</h1>
+
+<p>本路线图基于 Tesfatsion ACE 资源门户和 Axelrod & Tesfatsion 新手指南设计。建议按阶段推进，每阶段完成后再进入下一阶段。</p>
+
+<h2>阶段一：建立直觉（1–2 周）</h2>
+
+<table>
+<tr><th>学习内容</th><th>配套课程</th><th>推荐阅读</th><th>实践</th></tr>
+<tr><td>什么是 ABM</td><td><a href="../lessons/0001-what-is-abm.html">Lesson 01</a></td><td>Axelrod & Tesfatsion 新手指南 §1–§3</td><td>玩 Conway 生命游戏 15 分钟</td></tr>
+<tr><td>涌现与复杂性</td><td><a href="../lessons/0002-emergence-and-schelling.html">Lesson 02</a></td><td>Schelling (1978) pp. 137–157</td><td>运行 Schelling 演示软件</td></tr>
+<tr><td>c-ABM 七原则</td><td><a href="../lessons/0003-c-abm-principles.html">Lesson 03</a></td><td>Tesfatsion (2022) ACE Overview</td><td>阅读速查卡，做自查清单</td></tr>
+</table>
+
+<p><strong>阶段一完成标志</strong>：你能用自己的话向朋友解释 ABM 是什么，能举例说明涌现现象，能说出 c-ABM 的核心思想。</p>
+
+<h2>阶段二：掌握机制（2–3 周）</h2>
+
+<table>
+<tr><th>学习内容</th><th>配套课程</th><th>推荐阅读</th><th>实践</th></tr>
+<tr><td>Agent 学习算法</td><td><a href="../lessons/0004-agent-learning.html">Lesson 04</a></td><td>Tesfatsion (2024) Learning Algorithms</td><td>用 NetLogo 跑 Axelrod 锦标赛</td></tr>
+<tr><td>软件工具入门</td><td><a href="../lessons/0005-abm-software-tools.html">Lesson 05</a></td><td>Mesa 官方教程 / Isaac 课程大纲</td><td>用 Mesa 实现 Schelling 模型</td></tr>
+<tr><td>市场模型</td><td><a href="../lessons/0006-market-models.html">Lesson 06</a></td><td>Gode & Sunder (1993) / LeBaron (2002)</td><td>阅读 SFI-ASM 论文</td></tr>
+</table>
+
+<p><strong>阶段二完成标志</strong>：你能用 Mesa 或 NetLogo 搭建一个简单的 ABM 模型，改变参数观察结果变化，能区分五种学习算法。</p>
+
+<h2>阶段三：深入应用（3–4 周）</h2>
+
+<table>
+<tr><th>学习内容</th><th>配套课程</th><th>推荐阅读</th><th>实践</th></tr>
+<tr><td>网络与交互结构</td><td><a href="../lessons/0007-networks-and-interaction.html">Lesson 07</a></td><td>Wilhite (2001) / Kirman & Vriend (2001)</td><td>在 Mesa 中实现不同网络拓扑</td></tr>
+<tr><td>模型验证</td><td><a href="../lessons/0008-model-validation.html">Lesson 08</a></td><td>empvalid.htm / AModGuide.htm</td><td>对自己的 Schelling 模型做四种验证</td></tr>
+</table>
+
+<p><strong>阶段三完成标志</strong>：你能设计一个有网络结构的 ABM 模型，并按照四类验证方法规范地展示和评价它。</p>
+
+<h2>阶段四：独立研究（持续）</h2>
+
+<table>
+<tr><th>方向</th><th>推荐资源</th><th>目标</th></tr>
+<tr><td>金融市场</td><td>SFI-ASM, LeBaron 系列论文</td><td>构建一个有人工学习投资者的市场模型</td></tr>
+<tr><td>制度演化</td><td>Axelrod (1986), Epstein (2001)</td><td>模拟社会规范如何从个体交互中涌现</td></tr>
+<tr><td>政策评估</td><td>APolicy.htm (本地文件)</td><td>用 ABM 评估某个经济政策的长期影响</td></tr>
+<tr><td>宏观经济</td><td>Tesfatsion 宏观模块 (syl502)</td><td>构建 Agent-based 宏观协调模型</td></tr>
+<tr><td>电力市场</td><td>aelect.htm (本地文件)</td><td>了解 Tesfatsion 的 AMES 模型</td></tr>
+</table>
+
+<h2>配套参考文档索引</h2>
+
+<ul>
+  <li><a href="glossary.html">术语表</a> — 30+ 核心术语中英对照</li>
+  <li><a href="seven-principles.html">七条建模原则速查卡</a> — 配套 Lesson 03</li>
+  <li><a href="../RESOURCES.md">资源清单 (RESOURCES.md)</a> — 所有推荐的论文、软件和社区</li>
+</ul>
+
+<h2>核心学术期刊（跟踪最新研究）</h2>
+
+<ul>
+  <li><em>Journal of Artificial Societies and Social Simulation</em> (JASSS) — 开放获取，ABM 领域旗舰</li>
+  <li><em>Journal of Economic Dynamics and Control</em> (JEDC) — 大量 ACE 论文</li>
+  <li><em>Computational Economics</em> (Springer)</li>
+  <li><em>Journal of Economic Behavior and Organization</em> (Elsevier)</li>
+  <li><em>Complexity</em> (Wiley/Hindawi) — 开放获取</li>
+</ul>
+
+<h2>学习社区</h2>
+
+<ul>
+  <li><a href="https://www.santafe.edu/" target="_blank">Santa Fe Institute</a> — 年度 Summer School</li>
+  <li><a href="https://socialsimulation.org/" target="_blank">European Social Simulation Association (ESSA)</a></li>
+  <li>Computational Social Science 相关 Twitter/X 账号</li>
+  <li>NetLogo User Community — 海量模型可学习</li>
+</ul>
+
+<div class="lesson-footer">
+  <p>ABMS Teaching Workspace · Learning Roadmap · 持续更新</p>
+</div>
+
+</body>
+</html>

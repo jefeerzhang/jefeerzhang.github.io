@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 01: 什么是基于主体的建模（ABM）</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<span class="section-tag">Lesson 01 · 基础概念</span>
+<h1>什么是基于主体的建模（ABM）？</h1>
+
+<p>想象你站在一座足球场的看台上。几万名观众同时做出"站起来"或"坐着"的决定。最终，可能整个球场出现一波壮观的"人浪"（Mexican Wave）。<strong>没有一个人指挥全局</strong>，每个人只是根据身边几个人的动作来决定自己该不该站起来——但整体上，一个漂亮的波浪就"涌现"出来了。</p>
+
+<p>这就是 <strong>Agent-Based Modeling（ABM，基于主体的建模）</strong>的核心思想：<em>从个体行为的规则出发，通过计算机模拟，观察大量个体交互后产生的宏观现象。</em></p>
+
+<h2>ABM 的三个基本要素</h2>
+
+<div class="key-concept">
+<h3>ABM 的基本要素</h3>
+<ol>
+  <li><strong>Agent（主体）</strong>——模型中的个体。可以是人、公司、国家，甚至天气系统中的一个粒子。</li>
+  <li><strong>Environment（环境）</strong>——主体生活和交互的空间。可以是一张网格、一个网络、或一个市场。</li>
+  <li><strong>Rules（规则）</strong>——主体在每个时间步如何感知环境、做出决策、改变状态。</li>
+</ol>
+</div>
+
+<p>用足球场类比：</p>
+<ul>
+  <li><strong>Agent</strong> = 每个观众</li>
+  <li><strong>环境</strong> = 球场的座位布局</li>
+  <li><strong>规则</strong> = "如果左边和前面的邻居都站起来了，我也站起来"</li>
+</ul>
+
+<h2>ABM 与其他方法有何不同？</h2>
+
+<p>科学研究有三种基本方法：</p>
+
+<table>
+<tr><th>方法</th><th>做什么</th><th>例子</th></tr>
+<tr><td><strong>演绎 (Deduction)</strong></td><td>从假设推导定理</td><td>从公理证明数学定理</td></tr>
+<tr><td><strong>归纳 (Induction)</strong></td><td>从数据中发现模式</td><td>统计回归分析</td></tr>
+<tr><td><strong>模拟 (Simulation)</strong></td><td>从假设生成数据，再分析</td><td>ABM 计算机实验</td></tr>
+</table>
+
+<p>模拟是<strong>第三条道路</strong>：它像演绎一样从严格的假设出发，但像归纳一样通过数据（模拟生成的数据）来发现模式。关键优势是：<em>你可以做受控实验</em>——改变参数、重复运行、对比结果。</p>
+
+<h2>ABM 的四大研究目标</h2>
+
+<p>ABM 研究者追求四种不同的目标：</p>
+
+<ol>
+  <li><strong>经验性理解 (Empirical)</strong>：解释现实中的宏观规律是如何从微观交互中涌现的。例如：为什么贸易网络会自发形成？为什么有些货币被广泛接受？</li>
+  <li><strong>规范性设计 (Normative)</strong>：用 ABM 做"实验室"，评估政策或制度设计。例如：一种新的拍卖规则在长期运行中是否公平高效？</li>
+  <li><strong>启发式洞察 (Heuristic)</strong>：发现反直觉的因果机制。例如：Schelling 模型证明，即使每个人都很宽容，种族隔离仍然可能出现。</li>
+  <li><strong>方法/工具推进 (Methodological)</strong>：为 ABM 研究者提供更好的方法、工具和验证标准。</li>
+</ol>
+
+<h2>一个最简单的例子：Conway 的生命游戏</h2>
+
+<p>John Conway 在 1970 年发明的 <strong>Game of Life</strong> 不是严格意义上的 ABM（因为没有真正的"决策"），但它是理解"简单规则 → 复杂结果"的最佳起点。</p>
+
+<div class="key-concept">
+<h3>生命游戏的规则（只有 3 条！）</h3>
+<p>在一个无限大的方格网格上，每个格子要么"存活"（黑色），要么"死亡"（白色）。每一轮：</p>
+<ul>
+  <li>存活格子：周围有 2 或 3 个存活邻居 → 继续存活；否则死亡</li>
+  <li>死亡格子：周围恰好有 3 个存活邻居 → 复活；否则保持死亡</li>
+</ul>
+<p>就这三条规则，却能产生滑翔机（Glider）、脉冲星（Pulsar）、甚至图灵完备的计算！</p>
+</div>
+
+<div class="reading-ref">
+<strong>动手试试！</strong> 访问 <a href="https://conwaylife.com/" target="_blank">conwaylife.com</a>，在交互界面上画几个格子，观察演化过程。花 5 分钟体验，你会直观感受到"涌现"的力量。
+</div>
+
+<h2>测验：检验你的理解</h2>
+
+<div class="quiz">
+<h3>Q1: ABM 属于科学方法中的哪一类？</h3>
+<span class="quiz-option" data-correct="false">演绎法——从一般原理推导具体结论</span>
+<span class="quiz-option" data-correct="false">归纳法——从观察数据中总结规律</span>
+<span class="quiz-option" data-correct="true">模拟法——从假设生成数据再分析</span>
+<span class="quiz-option" data-correct="false">实验法——在真实世界中做对照实验</span>
+<div class="quiz-feedback" data-success="正确！ABM 是模拟——从严格假设出发，用计算机生成数据，再归纳分析。" data-fail="提示：ABM 从假设出发（像演绎），但生成的是模拟数据（像归纳），所以它属于模拟法。"></div>
+</div>
+
+<div class="quiz">
+<h3>Q2: 以下哪项不是 ABM 的基本要素？</h3>
+<span class="quiz-option" data-correct="false">Agent（主体）</span>
+<span class="quiz-option" data-correct="false">Environment（环境）</span>
+<span class="quiz-option" data-correct="true">Equilibrium（均衡）</span>
+<span class="quiz-option" data-correct="false">Rules（规则）</span>
+<div class="quiz-feedback" data-success="正确！ABM 不需要预设均衡——均衡（如果存在）是系统运行的结果，不是模型输入。" data-fail="提示：Agent、Environment、Rules 是 ABM 的三要素。均衡是可能的结果，不是输入要素。"></div>
+</div>
+
+<div class="quiz">
+<h3>Q3: "用 ABM 评估一种新的拍卖机制是否高效公平"属于哪个研究目标？</h3>
+<span class="quiz-option" data-correct="false">经验性理解 (Empirical)</span>
+<span class="quiz-option" data-correct="true">规范性设计 (Normative)</span>
+<span class="quiz-option" data-correct="false">启发式洞察 (Heuristic)</span>
+<span class="quiz-option" data-correct="false">方法/工具推进 (Methodological)</span>
+<div class="quiz-feedback" data-success="正确！评估设计方案的好坏属于规范性目标——把 ABM 当做制度设计的实验室。" data-fail="提示：评估设计/政策的好坏 = 规范性（Normative）。经验性重在解释现象，启发式重在发现新机制。"></div>
+</div>
+
+<h2>本课小结</h2>
+
+<ul>
+  <li>ABM 从<strong>个体行为规则</strong>出发，通过计算机模拟观察<strong>宏观涌现现象</strong></li>
+  <li>ABM 是科学研究的<strong>第三条道路</strong>（模拟），兼有演绎的严谨和归纳的灵活性</li>
+  <li>ABM 有四个研究目标：经验性、规范性、启发式、方法论</li>
+  <li>即使最简单的规则（如生命游戏），也能产生惊人的复杂性</li>
+</ul>
+
+<div class="reading-ref">
+<strong>推荐阅读：</strong>
+<ul>
+  <li>Axelrod & Tesfatsion, "On-Line Guide for Newcomers to ABM" — 本文的 <em>Purpose</em> 和 <em>ABM and the Social Sciences</em> 两节（<a href="../../data/ace_tesfatsi/intro/abmread.htm">本地文件</a>）</li>
+  <li>访问 <a href="https://conwaylife.com/" target="_blank">conwaylife.com</a> 玩 15 分钟生命游戏</li>
+</ul>
+</div>
+
+<div class="lesson-footer">
+  <p>有不明白的地方？随时向 AI 导师提问，它会帮你进一步解释。</p>
+  <p>ABMS Teaching Workspace · Lesson 01</p>
+</div>
+
+<div class="lesson-nav">
+  <span>← 起始课</span>
+  <a href="0002-emergence-and-schelling.html">下一课：涌现与 Schelling 模型 →</a>
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
