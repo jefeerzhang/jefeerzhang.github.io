@@ -1,0 +1,1172 @@
+<html>
+<head>
+<title> Empirical Validation: Agent-Based Computational Economics
+     (Tesfatsion) </title>
+<!-- Matomo --><script>  var _paq = window._paq = window._paq || [];  _paq.push(['trackPageView']);  _paq.push(['enableLinkTracking']);  (function() {    var u='https://trends.ent.iastate.edu/';    _paq.push(['setTrackerUrl', u+'matomo.php']);    _paq.push(['setSiteId', '214']);    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);  })();</script><!-- End Matomo Code --></head>
+<body stylesrc="EmpValid.htm" background="images/WhiteTextured2Bak.gif" text=#000000
+link=#306eff >
+<img src="images/rainblok.gif" height=23 width=100%>
+
+<p>
+               <h1 align="center"> <font color="#306eff">
+              Empirical Validation and Verification<br>
+                            of Agent-Based Models
+                        </font></h1>
+
+<p>
+<img src="images/rainblok.gif" height=23 width=100%>
+
+<p>
+                         <dl>
+
+<dt><b>Last Updated:</b> 2 May 2026
+<p>
+<dt><b>Site Developed By:</b>
+ <dd><a href="https://www2.econ.iastate.edu/tesfatsi/">
+         <b>Leigh Tesfatsion</b></a>
+<dd>Professor Emerita of Economics
+<dd>Heady Hall 260
+<dd>Iowa State University
+ <dd>Ames, Iowa 50011-1054
+  <dd>https://www2.econ.iastate.edu/tesfatsi/
+  <dd><img src="images/email.gif" align=middle>
+      <a href="mailto:tesfatsi@iastate.edu">
+            <b>tesfatsi AT iastate.edu</b></a>
+
+<p>
+<dt><a href =
+"https://www2.econ.iastate.edu/tesfatsi/syl308.htm">
+<img src="images/backto.gif" align="top"></a>
+        <b>Online ACE Course (Self-Study eBook)</b>
+<dt><a href="https://www2.econ.iastate.edu/tesfatsi/ace.htm">
+<img src="images/backto.gif" align="top"></a>
+               <b>ACE Website</b>
+
+                         </dl>
+
+<p>
+<img src="images/bfadebar.gif" HEIGHT="12" WIDTH=100%>
+
+                        <dl>
+
+<p>
+<dd><b>Table of Contents:</b>
+
+<p>
+                <ul>
+
+ <li><a href = "#KeyIssues">
+                <b>Basic Issues</b></a>
+ <li><a href = "#BasicIntro">
+        <b>Introductory Materials on Empirical Validation</b></a>
+  <li><a href = "#Verification"> <b>Introductory Materials
+        on Verification</b></a>
+<li><a href = "#Additional">
+    <b>Additional Readings on Empirical 
+     Validation and Verification</b></a>
+<li><a href = "#Design"> 
+           <b>Design of Computational Experiments</b></a>
+<li><a href = "#IPM">
+           <b>Iterative Participatory Modeling (IPM)</b></a>
+  
+               </ul>
+
+                       </dl>
+
+
+<p>
+                       <dl>
+<dt>
+<img src="images/warning.gif" align=bottom>
+            <b> Site and Software Release Disclaimer:</b>
+<dd> 
+Unfortunately, links to many excellent empirical validation resources originally posted at this site are now broken and had to be removed. Below are still-available annotated links that visitors might find useful and/or of historical interest.
+</dd>
+                         </dl>
+
+
+
+
+
+
+
+
+<p>
+<img src="images/bfadebar.gif" HEIGHT="12" WIDTH=100%>
+
+<p>
+<h3>
+<img src="images/brtar.gif" align="top" HEIGHT="20" WIDTH="20">
+<a name="KeyIssues">
+B</a>asic Issues</h3>
+
+                          <ul>
+
+<p>
+
+<li>How to undertake <b><i>empirical validation</i></b> for an agent-based model; that is, how to ensure that an agent-based model is consistent with empirical data?
+        
+
+<li>Consider the following famous quote from G.E.P. Box (1987, p. 424):  "Essentially, all models are wrong, but some are useful." This quote leaves open the following critical ambiguity: useful for what? <b><i>Must the specific intended use of a model be known before meaningful empirical validation can proceed?</i></b>
+
+
+<li>
+Do the following four validation aspects, considered as a whole, provide a complete and comprehensive definition of empirical validation? Should agent-based modelers strive to achieve all four aspects? 
+                  <ol>
+<li> <i><b>Input Validation</b></i>: Are the exogenous inputs for the model empirically meaningful and appropriate for the purpose at hand?  Examples of exogenous model inputs include initial  state conditions, functional forms, random shock realizations, data-based parameter estimates, and/or parameter values imported from other studies.
+
+<li> <i><b>Process Validation</i></b>: How well do the physical, biological, institutional, and social processes represented within the model reflect real-world aspects important for the purpose at hand?  Are all process specifications consistent with essential scaffolding constraints, such as physical laws, stock-flow relationships, and accounting identities?
+
+<li> <i><b>Descriptive Output Validation</i></b>: How well are model-generated outputs able to capture the salient features of the sample data used for model identification? (in-sample fitting)  
+
+<li><b><i>Predictive Output Validation</i></b>: How well are model-generated outputs able to forecast distributions, or distribution moments, for sample data withheld from model identification or for new data acquired at a later time? (out-of-sample forecasting) 
+
+                     </ol>
+                   
+
+<li>How can agent-based researchers provide <b><i>summary reports of empirical validation results</i></b> to other researchers and to intended model users in an accurate, compelling, and clear manner?  What to do, in particular,
+when outcome <i>distributions</i> rather than point predictions are the main findings of a study?
+
+<li>How can agent-based researchers ensure <b><i>robustness of empirical validation findings</i></b>, i.e., how can they ensure that their model outcomes reflect persistent aspects of real-world systems under study rather than an overfitting of model parameters to temporary aspects of these systems?
+
+<li>How can agent-based researchers ensure the <b><i>accumulation of empirically supported findings</i></b>?
+
+<li>How to undertake <b><i>verification</i></b> for an agent-based model in computational form; that is, how to ensure that computations are being carried out in the way the modeler intends?
+
+
+<li> Some agent-based researchers are engaging in <b><i>iterative participatory modeling (IPM)</i></b>, a collaborative learning approach in which researchers join with stakeholders in a repeated looping through a four-stage process:  field study and data analysis; role-playing games; model development and implementation; and computational experiments. How might IPM contribute to the empirical validation of agent-based models?
+
+
+
+                     </ul>
+
+<p>
+<img src="images/turqmbar.gif" HEIGHT="4" WIDTH=100%>
+
+
+<p>
+<h3>
+<img src="images/brtar.gif" align="top" HEIGHT="20" WIDTH="20">
+<a name="BasicIntro">
+I</a>ntroductory Materials on Empirical Validation</h3>
+
+<ul>
+
+
+<p>
+<li>Ken Binmore and Avner Shaked, <b>"Experimental Economics: Where Next?"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/ExperEconWhatNext.KBinmoreAShakedMarch2009.JEBO2010.pdf">
+    <b>(pdf,1MB)</b></a>,
+<i>Journal of Economic Behavior and Organization</i> 73(1), January 2010, 87-100.  See also the 
+<a href = "https://www2.econ.iastate.edu/tesfatsi/F-S-Reply-JEBO.pdf">
+    <b>reply by Fehr and Schmidt (139KB)</b></a>
+and the
+<a href = "https://www2.econ.iastate.edu/tesfatsi/EckelsGintisReply.JEBO.pdf">
+    <b>reply by Eckels and Gintis (135KB)</b></a>
+
+    <dl><dd><b><i>Abstract:</i></b> Binmore and Shaked provide a controversial, scathing review of some well known human-subject experimental economics work by Ernst Fehr, Klaus Schmidt, and their collaborators. They conclude that experimental economists need to eliminate practices "that would be considered unscientific in other disciplines." Since researchers using agent-based modeling tools share many issues in common with human-subject experimenters (e.g., the need to construct rigorous informative experimental designs), it is strongly recommended that they carefully consider both the criticisms raised in this article and the rebuttal to these criticisms given by Fehr/Schmidt and Eckels/Gintis.
+                </dl>
+
+<p>
+<li>
+George E.P. Box and Norman R. Draper, <i>Empirical Model Building and Response Surfaces</i>, 1987, New York: John Wiley & Sons.
+
+<dl><dd><b><i>Abstract:</i></b> 
+The source (page 424) of Box's famous quote in the following specific form: "Essentially, all models are wrong, but some are useful." Box made many similar pronouncements in earlier work. 
+</dl>
+
+<p>
+<li>Kathleen M. Carley, <b>"Validating Computational Models"</b>
+   <a href = "https://www2.econ.iastate.edu/tesfatsi/EmpValid.Carley.pdf">
+              <b>(pdf, 105KB)</b></a>,
+Working Paper, Carnegie Mellon University, September 1996.
+   <dl>
+<dd><b><i>Abstract:</i></b> This paper provides many theoretical and practical insights regarding the empirical validation of computational models for social and organizational systems.
+</dl>
+
+<p>
+<li>Catherine C. Eckel and J. Barkley Rosser, Jr. (Guest Editors), <b>"Issues in the Methodology of Experimental Economics"</b>, <i>Journal of Economic Behavior and Organization (JEBO)</i>
+<a href = "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1883710">
+                <b>Special Issue </b></a>,
+73(1), January 2010.
+
+
+
+
+<p>
+<li>
+Joshua Epstein, 
+<b>"Agent-Based Computational Models and Generative Social Science"</b>, Vol. 4/No. 5, May/June 1999, 41-60. A powerpoint presentation of this paper by J. Epstein is available
+       <a href = "https://www2.econ.iastate.edu/tesfatsi/Epstein.ABMIntro.pdf">
+             <b>here</b></a>.        
+   <dl>
+ <dd><b><i>Abstract:</i></b>  The author argues that the agent-based computational model is a new tool for empirical research. The scientific enterprise is, first and foremost, <i>explanatory</i>, and the central contribution of agent-based modeling is the facilitation of <i>generative</i> explanation.  To explain an observed macroscopic social regularity, one must show how a population of cognitively plausible agents, interacting under plausible rules, could actually arrive at the pattern on time scales of interest.  In short, "if you didn't grow it, you didn't explain it."
+</dl>
+
+<p>
+<li>Giorgio Fagiolo, Christopher Birchenhall, and Paul Windrum (Eds.), <b>Special Issue on "Empirical Validation in Agent-Based Models"</b>, <i>Computational Economics</i>,Volume 30, Number 3, 2007.
+   <dl>
+<dd><b><i>Abstract:</i></b>  The papers included in this special issue explore the empirical validation of agent-based models (ABMs).  They demonstrate that this issue is far from settled and features many difficult but exciting 
+challenges.  Some are rooted in well-known and still-open problems of scientific methodology that concern empirical validation regardless of the particular family of models under scrutiny.  Others are strongly related to aspects particular to ABMs.
+</dl>
+
+<p>
+<li>Richard Feynman, <b>Cargo Cult Science</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/CargoCultScience.RichardFeynman1974.pdf">
+     <b>(pdf,139KB)</b></a>,
+From a Caltech commencement address given in 1974. Published in R. Feynman, <i>Surely You're Joking, Mr. Feynman!"</i>, W. W. Norton & Company, 1985.
+ <dl>
+<dd><b><i>Abstract:</i></b>  "...underneath all the merriment simmers a running commentary on what constitutes authentic knowledge: learning by understanding, not by rote; refusal to give up on seemingly insoluble problems; and total disrespect for fancy ideas that have no grounding in the real world."
+</dl> 
+
+
+<p>
+<li>Sergio Mario Focardi, <b>Is Economics an Empirical Science?  If Not, Can It Become One?</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/IsEconEmpiricalScience.SMFocardi2015.pdf">
+      <b>(pdf,574KB)</b></a>,
+<i>Frontiers in Applied Mathematics and Statistics</i> 1:7, 2015 (electronic), doi:10.3389/fams.2015.00007
+
+   <dl>
+<dd><b><i>Abstract:</i></b> "Today's mainstream economics, embodied in Dynamic Stochastic General Equilibrium (DSGE) models, cannot be considered an empirical science in the modern
+sense of the term: it is not based on empirical data, is not descriptive of the real-world economy, and has little forecasting power. In this paper, I begin with a review of the
+weaknesses of neoclassical economic theory and argue for a truly scientific theory based on data, the <i>sine qua non</i> of bringing economics into the realm of an empirical science.
+But I suggest that, before embarking on this endeavor, we first need to analyze the epistemological problems of economics to understand what research questions we can reasonably ask our theory to address. I then discuss new approaches which hold the
+promise of bringing economics closer to being an empirical science. Among the approaches discussed are the study of economies as complex systems, econometrics and econophysics, artificial economics made up of multiple interacting agents as well as attempts being made inside present mainstream theory to more closely align the theory with the real world."
+</dl>
+
+
+<p>
+<li>
+Marco Janssen and Elinor Ostrom organized a workshop on 
+   <a href = "https://www.ecologyandsociety.org/vol11/iss2/art37/">
+     <b>Empirically-Based Agent-Based Models</b></a>
+at Indiana University (Bloomington, IN), held June 2-4, 2005. 
+           <dl>
+<dd><b><i>Abstract:</i></b> The purpose of this workshop was to bring together a group of researchers who are using agent-based models (ABMs) to study empirically a variety of social-ecological and economic systems.  A major goal was to derive a state-of-the-art synthesis of the various approaches currently being used to test ABMs.  Another goal of the workshop was to examine the use of experimental and survey techniques for validating the assumptions made by ABM researchers regarding the internal learning and decision-making behavior of  computationally modeled agents. Presentation slides for all workshop presentations can be freely accessed at the above workshop site. 
+<p>
+       <dd>
+<b>Note:</b>
+See, in particular, the guest editorial of the same title by Marco A. Janssen and Elinor Ostrom subsequently published in <i>Ecology and Society</i> 11(2), 2006, also available at the above site.
+            </dl>
+
+<p>
+<li>
+Katerina Juselius, <b>Special Issue on Using Econometrics for Assessing Economic Models - An Introduction"</b> 
+   <a href = "https://www2.econ.iastate.edu/tesfatsi/UsingEconometricsForAssessingEconModelsIntro.KJuselius2009.pdf">
+                   <b>(pdf,279KB)</b></a>,
+<i>Economics: The Open-Access Open-Assessment E-Journal</i>, Vol. 3, 2009-28, June 18, 2009.
+ 
+<dl><dd><b><i>Abstract:</i></b>
+"Two methodological approaches to empirical economics which are labelled 'theory first' versus 'reality first' are introduced, building the background for the discussion of the individual contributions to this special issue."
+</dl>
+ 
+
+<p>
+<li>Charles M. Macal, <b>"Special Issue on Using Econometrics for Assessing Economic Models - An Introduction"</b>
+<a href =   
+"https://www2.econ.iastate.edu/tesfatsi/MASValidation.Macal2013.pdf"> <b>(pdf,6.8MB)</b></a>,
+Keynote Address, MABS 2013, 14th International Workshop on Multi-Agent-Based Simulation, May 7, 2013.
+        <dl><dd><b><i>Abstract:</i></b> This tutorial addresses three questions: (1) How should we <i>think about</i> model validation?  (2) How should we <i>do</i> model validation? (3) What should we <i>do about</i> model validation?   
+                    </dl>
+
+<p>
+<li>
+Robert E. Marks,
+<b>"Validating Simulation Models: A General Framework and Four Applied Examples"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/EmpValidACE.BobMarks.CompEcon2008.pdf">
+         <b>(pdf,152KB)</b></a>,
+<i>Computational Economics</i> 30(3), 2007, 265--290.
+
+<dl>
+<dd><b><i>Abstract:</i></b> 
+This paper provides a framework for discussing the empirical validation of
+simulation models of market phenomena, in particular of agent-based computational
+economics models. Such validation is difficult, perhaps because of their complexity;
+moreover, simulations can prove existence, but not in general necessity. The paper
+highlights the Energy Modeling Forum's benchmarking studies as an exemplar for
+simulators. A market of competing coffee brands is used to discuss the purposes and
+practices of simulation, including explanation. The paper discusses measures of
+complexity, and derives the functional complexity of an implementation of Schelling's
+segregation model. Finally, the paper discusses how courts might be convinced to trust
+simulation results, especially in merger policy.
+</dl>
+
+
+<p>
+<li>Robert E. Marks, <b>"Analysis and Synthesis: Multi-Agent Systems in the Social Sciences</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/EmpiricalValidation.ABMSocSciCompSci.RMarks2004.pdf">
+         <b>(pdf,195KB)</b></a>,
+<i>Knowledge Engineering Review</i>, 27(1), 2012.
+      <dl><dd><b><i>Abstract:</i></b> 
+Although they flow from a common source, the uses of multi-agent systems (or "agent-based
+computational systems") vary between the social sciences and computer science. The
+distinction can be broadly summarised as analysis versus synthesis, or explanation versus design.
+I compare and contrast these uses, and discuss sufficiency and necessity in simulations in general
+and in multi-agent systems in particular, with a computer science audience in mind.
+</dl>
+
+
+<p>
+<li>Robert E. Marks, <b>"Tutorial: Validating Simulation Models, and Multi-Agent Systems in the Social Sciences"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/ABMValidationTutorial.RMarks2013.pdf">
+   <b>(pdf,398K)</b></a>,
+CIFEr Singapore, IEEE SSCI 2013, April 19, 2013.
+   <dl><dd><b><i>Abstract:</i></b> This tutorial presentation discusses a number of key issues raised in the author's <i>KER</i> article, <i>op. cit.</i>
+           </dl>
+
+<p>
+<li>
+Robert E. Marks, <b>"Validation and Model Selection: Three Similarity Measures Compared"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/EmpValidModelSelection.RMarks2013.pdf">
+    <b>(pdf,196KB)</b></a>,
+<i>Complexity Economics</i>, Vol. 2, May 2013, 41-61.
+
+         <dl><dd><b><i>Abstract:</i></b> 
+"There are two types of simulation models: Demonstration models, essentially existence proofs for phenomena of interest, and Descriptive models, that attempt to track dynamic historical
+phenomena. Both types require verification. Descriptive models require validation against historical data as well. More broadly, we can think of a process of choosing the "best" of
+several models. This paper examines three measures of the similarity of two sets of vectors, here time series. The best known but flawed is the Kullback-Leibler information-theoretic construct. A second measure is what I have called the State Similarity Measure. The third measure is a set-theoretic measure of similarity, the Generalized Hartley Metric. For illustration, we use data from a dynamic simulation model of historical brand rivalry."
+               </dl>
+
+<p>
+<li>
+Donald E. Stokes, <b>Pasteur's Quadrant: Basic Science and Technological Innovation</b>, Brookings Institution Press, 1997.
+
+<dl><dd><b><i>Abstract:</i></b>
+"Stokes begins with an analysis of the goals of understanding and use in scientific research. He recasts the widely accepted view of the tension between understanding and use, citing as a model case the fundamental yet use-inspired studies by which Louis Pasteur laid the foundations of microbiology a century ago. ... On this revised, interactive view of science and technology, Stokes builds a convincing case that by recognizing the importance of use-inspired basic research we can frame a new compact between science and government."
+</dl>
+
+
+<p>
+<li>
+Klaus G. Troitzsch,
+<b>"Validating Simulation Models"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/EmpValidABM.Troitzsch.pdf">
+          <b>(pdf,100KB)</b></a>,
+<i>Proceedings of the 18th European Simulation Multiconference</i>, SCS Europe,
+2004.
+    <dl>
+<dd><b><i>Abstract:</i></b>  This paper discusses aspects of validating simulation models designed to describe, explain, and predict real-world phenomena.
+</dl>
+
+
+<p>
+<li>
+Tam&aacute;s Vicsek, 
+<b>"Complexity: The Bigger Picture"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/complexity.Vicsek.pdf">
+                 <b>(pdf,71KB)</b></a>,
+            
+Vol. 418, 11 July 2002, p. 131.
+    <dl>
+<dd><b><i>Abstract:</i></b>
+    In this short essay, Vicsek describes how computer simulation fits
+into the scientific enterprise.  The goal is to "capture the principal laws
+behind the exciting variety of new phenomena that become apparent when the
+many units of a complex system interact."
+</dl>
+
+<p>
+<li>
+Robert Wallace, Amy Geller, and V. Ayano Ogawa (Eds.), <b>Assessing the Use of Agent-Based Models for Tobacco Regulation</b>, 2015 Report, Institute of Medicine of the National Academies, Washington, D.C.  Available by title search from the 
+<a href = "https://www.nap.edu/">
+        <b>National Academies Press</b></a>.
+
+<dl>
+<dd><b><i>Note:</i></b> For a thoughtful constructive discussion of presentation and evaluation issues for agent-based models developed for policy use, see: 
+(i) <b>Chapter 3</b>: "Building Effective Models to Guide Policy Decision Making"
+<a href = "https://www2.econ.iastate.edu/tesfatsi/BuildingEffectiveABMsToGuidePolicyDecisionMaking.Ch3.2015NAPStudy.pdf">
+          <b>(pdf,275KB)</b></a>;
+(ii) <b>Chapter 4</b>: "An Evaluation Framework for Policy-Relevant Agent-Based Models"
+<a href = "https://www2.econ.iastate.edu/tesfatsi/EvaluationFrameworkForPolicyRelevantABMs.Ch4.2015NAPStudy.pdf">
+          <b>(pdf,309KB)</b></a>;
+and (iii) <b>Chapter 6</b>: "Data and Implementation Needs for Computational Modeling for Tobacco Control"
+<a href = "https://www2.econ.iastate.edu/tesfatsi/DataAndImplementationNeedsOfAbmForPolicyDecisions.Ch6.2015NAPStudy.pdf">
+          <b>(pdf,270KB)</b></a>.
+
+</dl>
+
+
+<p>
+<li> 
+Paul Windrum, 
+Giorgio Fagiolo, 
+and Alessio Moneta,
+<b>Empirical Validation of Agent-Based Models: Alternatives and Prospects</b>
+         <a href = "https://jasss.soc.surrey.ac.uk/10/2/8.html">
+        <b>(html)</b></a>,
+<i>Journal of Artificial Societies and Social Simulation</i>, Vol. 10, no. 2,8, March 31, 2007.
+    <dl>
+<dd><b><i>Abstract:</i></b> This paper addresses a set of methodological problems arising in the empirical validation of agent-based (AB) economics models and discusses how these are currently being tackled.  These problems are generic for all those enaged in AB modelling, not just economists.  The discussion is therefore of direct relevance to JASSS readers.  The paper has two objectives.  The first objective is the identification of a set of issues that are common to all modellers engaged in empirical validation.  This gives rise to a novel taxonomy that captures the relevant dimensions along which AB modellers differ.  The second objective is a focused discussion of three alternative methodological approaches being developed in AB economics -- indirect calibration, the Werker-Brenner approach, and the history-friendly approach -- and a set of (as yet) unresolved issues for empirical validation that require future research.
+</dl>
+
+                     </ul>
+
+<p>
+<img src="images/turqmbar.gif" HEIGHT="4" WIDTH=100%>
+
+
+<p>
+<h3>
+<img src="images/brtar.gif" align="top" HEIGHT="20" WIDTH="20">
+<a name="Verification">
+I</a>ntroductory Materials on Verification</h3>
+
+
+                        <ul>
+
+<p>
+<li>
+ Robert Axelrod, 
+<b>"Advancing the Art of Simulation in the Social Sciences"</b>
+  <a href = "https://www2.econ.iastate.edu/tesfatsi/AdvancingArtSim2003.Axelrod.pdf">
+                   <b>(pdf,119KB)</b></a>,
+University of Michigan, August 2003.
+     <dl>
+<dd><b><i>Abstract:</i></b> The author offers advice for doing social
+science simulation research, focusing on the programming of a simulation
+model, analyzing the results, and sharing the results with others.  
+</dl>
+
+<p>
+<li>
+Robert Axtell, 
+Robert Axelrod,  
+Joshua M. Epstein, and 
+Michael D. Cohen, 
+<b>Aligning Simulation Models: A Case Study and Results</b>
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/DockingSimModels.pdf">
+              <b>(pdf,53KB)</b></a>,
+<i>Computational and Mathematical Organization Theory</i>, Vol. 1, Number 1, 1996, pp. 123-141.
+   <dl>
+ <dd><b><i>Abstract:</i></b> This article develops the concepts and methods of an alignment process ("docking") for computational models.  Alignment is used to determine whether two models can produce the same outcomes, which in turn is the basis for critical experiments and tests to determine whether one model can subsume the other.  These concepts and methods are illustrated using a model of cultural transmission due to Robert Axelrod and the Sugarscape model developed by Epstein and Axtell.
+</dl>
+
+
+<p>
+<li>Kent Beck, <b>Test-Driven Development: By Example</b>, Addison-Wesley Professional, MA, 240pp., 2002. ISBN: 0-321-14653-0.
+    <dl><dd><b><i>Abstract:</i></b> This text discusses a software engineering methodology
+for code verification called <i>Test-Driven Development</i> that derives from the <i>Extreme Programming (XP)</i> 
+approach to programming. The basic idea is to write short pieces of code ("unit tests") in parallel with segments 
+of regular program code that  tests these segments to ensure they are running properly.  (One example discussed by Beck in the first section of his book is the JUnit facility for Java.)  Each time the regular 
+program code is modified, the unit tests are rerun to help ensure that the modification has not introduced bugs into the existing code.
+Unit testing would appear to be particularly important for the kind of iterative program development common in agent-based
+modeling due to the complexity of the systems under study.
+</dl>
+
+
+
+<p>
+<li> Jos&eacute; Manuel Gal&aacute;n, Luis R. Izquierdo, Segismundo S. Izquierdo, Jos&eacute;, Ignacio Santos, Ricardo del Olmo, Adolfo L&oacute;pez-Paredes, and Bruce Edmonds, <b>Errors and Artefacts in Agent-Based Modelling</b> 
+           <a href = "https://jasss.soc.surrey.ac.uk/12/1/1.html"> 
+                    <b>(html)</b></a>,
+<i>Journal of Artificial Societies and Social Simulation</i> 12(1)1, 2009.
+  <dl>
+<dd><b><i>Abstract:</i></b> "The objectives of this paper are to define and classify different types of errors and artefacts that can appear in the process of developing an agent-based model, and to propose activities aimed at avoiding them during the model construction and testing phases. To do this in a structured way, we review the main concepts of the process of developing such a model -- establishing a general framework that summarises the process of designing, implementing, and using agent-based models. Within this framework we identify the various stages where different types of errors and artefacts may appear. Finally we propose activities that could be used to detect (and hence eliminate) each type of error or artefact." 
+</dl>
+
+
+<p>
+<li>
+Kenneth L. Judd,,
+<b>"Computationally Intensive Analyses in Economics"</b>,
+       in Leigh Tesfatsion and Kenneth L. Judd (editors),
+<i>Handbook of Computational Economics, Vol. 2: Agent-Based Computational
+         Economics</i>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/hbace.htm">
+          <b>(Table of Contents & Abstracts)</b></a>, 
+Handbooks in Economics Series, North-Holland, Amsterdam,
+2006.
+   <dl>
+<dd><b>Abstract:</b>
+Computer technology presents economists with new tools, but also
+raises novel methodological issues.  This essay discusses the
+challenges faced by computational researchers, and proposes some
+solutions.
+</dl>
+
+
+              
+
+
+<p>
+<li>J. Gary Polhill, Luis R. Izquierdo, and Nicholas M. Gotts, <b>"The Ghost in the Model (and Other Effects of Floating Point Arithmetic)"</b>
+           <a href = "https://jasss.soc.surrey.ac.uk/8/1/5.html">
+                 <b>(html)</b></a>,
+<i>Journal of Artificial Societies and Social Simulation (JASSS)</i>, Vol. 8, No. 1, January 31, 2005, electronic journal.
+
+  <dl>
+<dd><b><i>Abstract:</i></b>
+This paper explores the effects of errors in floating point arithmetic in two published agent-based models: the first a model of land use change (Polhill et al. 2001; Gotts et al. 2003), the second a model of the stock market (LeBaron et al. 1999). The first example demonstrates how branching statements with floating point operands of comparison operators create a high degree of nonlinearity, leading in this case to the creation of 'ghost' agents -- visible to some parts of the program but not to others. A potential solution to this problem is proposed. The second example shows how mathematical descriptions of models in the literature are insufficient to enable exact replication of work since mathematically equivalent implementations in terms of real number arithmetic are not equivalent in terms of floating point arithmetic. 
+</dl>
+
+<p>
+                       <dl>
+<dt>
+<b>Additional Remarks on Floating Point Arithmetic and Agent-Based Models:</b>
+
+<p>
+    <dd>When doing arithmetic on a computer, the uncountably infinite set of
+real numbers must somehow be squeezed into a discrete set of isolated numbers
+represented in binary floating-point format.  The resulting floating-point
+errors can lead to some unpleasant surprises for the unwary.  For example,
+floating-point addition does not obey the associative law, e.g., (0.1 + 0.2)
++ 0.3 can fail to equal 0.1 + (0.2 + 0.3).  Moreover, summing 0.05 twenty
+times can yield a total that differs from 1.  In both cases the problem can
+be traced to the fact that simple-looking base-10 numbers such as 0.1 are not
+exactly representable on a computer in binary floating-point format because their exact binary number representation is infinite in extent.
+
+<p>
+    <dd>Researchers at the James Hutton Institute (previously the Macaulay Land Use Research Institute) in
+Aberdeen, Scotland, have conducted several important and interesting studies to investigate the effects of floating-point errors in agent-based models implemented in FEARLUS. A summary of these efforts, with pointers to related papers and demos, can be accessed
+      <a href = "https://www.mluri.sari.ac.uk/fearlus/floating-point/">
+                       <b>here</b></a>.
+(See, also, the above paper by Polhill et al.) On a personal note, I would like to warn about the need to be careful also about the casual use of downloaded software code such as pseudo-random number generators.  In my ISU electricity research group in 2005 we discovered that a major java source file (EmpiricalWalker.java) in the well-known and frequently imported cern.jet.random package was disastrously susceptible to floating-point addition errors.
+
+                 </dl>
+
+
+
+<p>
+<li>Uri Wilenski and Willian Rand, <b>"Making Models Match: Replicating an Agent-Based Model"</b>
+   <a href = "https://jasss.soc.surrey.ac.uk/10/4/2.html">
+                 <b>(html)</b></a>,
+<i>Journal of Artificial Societies and Social Simulation</i>, Vol. 10, No. 4(2), 2007 (electronic journal).
+   <dl>
+<dd><b><i>Abstract:</i></b>  The authors attempt to replicate a classic agent-based model from political science  developed by R. Axelrod and R. A. Hammond (2003). They detail their effort to replicate this model and the challenges that arose in recreating the model and in determining if the replication was successful. They conclude by discussing issues for (1) researchers attempting to replicate models and (2) researchers developing models in order to facilitate the replication of their results. 
+</dl>
+
+
+
+                      </ul>
+
+<p>
+<img src="images/turqmbar.gif" HEIGHT="4" WIDTH=100%>
+
+
+
+
+<p>
+<h3>
+<img src="images/brtar.gif" align="top" HEIGHT="20" WIDTH="20">
+<a name="Additional">
+A</a>dditional Readings on Empirical Validation and 
+Verification</h3>
+
+                           <ul>
+
+
+<p>
+<li>Simone Alfarano, Friedrich Wagner, and Thomas Lux, <b>"Estimation of Agent-Based Models: The Case of an Asymmetric
+Herding Model"</b>
+   <a href = "https://www2.econ.iastate.edu/tesfatsi/EmpValidACE.AlfaranoWagnerLux.pdf">
+         <b>(pdf,854KB)</b></a>,
+<i>Computational Economics</i>, Vol. 26, 2005, 19-49.
+    <dl>
+<dd><b><i>Abstract:</i></b> The authors introduce a simple agent-based model of herding behavior in financial markets in which the ubiquitous stylized facts of financial returns (fat tails, volatility clustering) are emergent properties of the interaction among the traders.  The simplicity of the model permits the authors to estimate the underlying parameters, since it is possible to derive a closed form solution for the distribution of returns.  
+</dl>
+
+<p>
+<li>
+Osman Balci, <b>"Verification, Validation, and Testing"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/EmpValidVerificationTesting.OsmanBalci.HandbookOfSimChapter10.1998.pdf">
+   <b>(pdf,2.2MB)</b></a>,
+Chapter 10 in J. Banks (Ed.), <i>The Handbook of Simulation</i>, John Wiley & Sons, New York, NY, 1998, 335-393.
+  <dl><dd><i><b>Abstract:</b></i>
+The purpose of this chapter is to present principles and techniques for the assessment of accuracy throughout the life cycle of a simulation study. The accuracy quality characteristic is
+assessed by conducting verification, validation and testing.
+</dl>
+
+<p>
+<li>
+Osman Balci, <b>"Verification, Validation, and Accreditation"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/VVAccreditationSimModels.OBalci1998.pdf">
+   <b>(pdf,1.3MB)</b></a>,
+in D.J. Medeiros, E.F. Watson, J.S. Carson, and M.S. Manivannan (Eds.), <i>Proceedings of the 1998 Winter Simulation Conference</i>, 41-48.
+      <dl><dd><i><b>Abstract:</b></i>
+"This paper presents guidelines for conducting verification,
+validation, and accreditation (VV&A) of modeling and simulation (M&S)
+applications. Fifteen guiding principles are introduced to
+help the researchers, practitioners and managers better
+comprehend what VV&A is all about. The VV&A activities
+are described in two M&S life cycles. Applicability
+of 77 V&V techniques is shown for the major stages of
+the two M&S life cycles. A methodology for accreditation
+of M&S applications is briefly introduced."
+</dl>
+
+
+<p>
+<li>Federico E. Bert, Santiago L. Rovere, Charles M. Macal, Michael J. North, Guillermo P. Podest&aacute;, <b>Lessons from a Comprehensive Validation of an Agent-Based Model: The Experience of the Pampas Model of Argentinean Agricultural Systems"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/ValidationABMLandUseModel.BertEtAl2014.pdf">
+     <b>(pdf,1.3MB)</b></a>,
+<i>Ecological Modeling</i> 273 (2014), 284-298.
+
+<dl><dd><i><b>Abstract:</b></i>
+"There are few published examples of comprehensively validated large-scale land-use agent-based models (ABMs). We present guidelines for doing so, and provide an example in the context of the Pampas Model (PM), an ABM aimed to explore the dynamics of structural and land use changes in the agricultural
+systems of the Argentine Pampas. Many complementary strategies are proposed for validation of ABM's. We adopted a validation framework that relies on two main streams: (a) validation of model processes and components during model development, which involved a literature survey, design based on similar models, involvement of stakeholders, and focused test scenarios; and (b) empirical validation, which involved comparisons of model outputs from multiple realistic simulations against real world data."
+</dl>
+
+
+<p>
+<li>Carlo Bianchi, Pasquale Cirillo, Mauro Gallegati, and Pietro A. Vagliasindi, <b>"Validation and Calibration in ACE Models: An Investigation of the CATS Model"</b>
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/EmpValidACE.BianchiEtAl.pdf">
+         <b>(pdf,217KB)</b></a>,
+Working Paper, Universit&aacute; di Parma, Italy, May 1, 2005.
+  <dl>
+<dd><b><i>Abstract:</i></b> This paper discusses validation experiments performed with the CATS model proposed by Gallegati et al. (2003,2004), a model of a dynamic economy comprising many firms and banks.  Staring from a sample of Italian firms included in the AIDA database, the authors perform several ex-post validation experiments for the CATS model over the simulation period 1996-2001. The simulation findings are then ex-post validated against actual data using several alternative validation techniques, with results the authors conclude are quite promising. 
+</dl> 
+
+
+<p>
+<li>H. Peter Boswijk, Cars H. Hommes, and Sebastiano Manzan, <b>Behavioral Heterogeneity in Stock Prices</b>
+       <a href = "https://www2.econ.iastate.edu/tesfatsi/EmpValid.BoswijkHommesManzan.pdf">
+                  <b>(pdf,292KB)</b></a>,
+CeNDEF Working Paper 05-12, University of Amsterdam, 2005.
+   <dl>
+<dd><b><i>Abstract:</i></b> The authors estimate a dynamic asset pricing model characterized by heterogenous boundedly rational agents using US stock price data from 1871 until 2003.  The estimation results support the existence of two expectations regimes: a "fundamentalist regime" in which agents believe in mean reversion of stock prices towards the benchmark fundamental value, and a "chartist trend-following regime" in which agents expect the deviations from the fundamental to trend.
+</dl>
+
+<p>
+<li>Daniel G. Brown, Scott Page, Rick Riolo, Moira Zellner, and William Rand, <b>"Path Dependence and the Validation of Agent-Based Spatial Models of Land Use"</b>
+  <a href = "https://www2.econ.iastate.edu/tesfatsi/EmpValidCaseStudy.Brown.pdf">
+              <b>(pdf, 570KB)</b></a>,
+<i>International Journal of Geographical Information Science</i>, Vol. 19, No. 2, February 2005, 153-174. A related
+<b>slide presentation</b> can be viewed
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/EmpValidCaseStudy.Brownslides.pdf">
+                 <b>here (pdf,253KB)</b></a>.
+    <dl>
+<dd><b><i>Abstract:</i></b> The authors identify two distinct notions of accuracy of land-use models -- predictive (output) accuracy and process (input) accuracy -- and highlight the tension between them. To balance these two potentially conflicting motivations, they introduce the concepts of an <i>invariant region</i> (where land-use type is almost certain and thus path independent) and a <i>variant region</i> (where land-use depends on a particular series of events and is therefore path dependent).  They demonstrate their methods using an agent-based land-use model based on multi-temporal land-use data collected for Washtenaw County, Michigan, USA. They conclude that their methods can help researchers improve their ability to communicate how well their models perform, the situations or instances in which their models do not perform well, and the cases in which their models are unlikely to predict well due to either path dependence or stochastic uncertainty.
+</dl>
+
+
+<p>
+<li>
+Joanna J. Bryson, Yasushi Ando, and Hagen Lehmann <b>"Agent-Based Modelling as Scientific Method: A Case Study Analysing Primate Social Behaviour"</b>,
+     <a href = "https://www.cs.bath.ac.uk/~jjb/web/uni.html">
+                    <b>(pdf,454KB)</b></a>,
+<i>Philosophical Transactions of the Royal Society, B -- Biology</i>, 362(1485):1685-1698, Sept 2007.
+    <dl>
+<dd><b><i>Abstract:</i></b> For a methodology to be useful to science, it should provide two things: first, a means of explanation, and second, a mechanism for improving that explanation.  Agent Based Modeling (ABMB) is a method that facilitates exploring the collective effects of individual action selection.  The explanatory force of the model is the extent to which an observed meta-level phenomenon can be accounted for by the behaviour of its micro-level actors.  This article demonstrates this methodology can be applied to the biological sciences, that agent-based models like any scientific hypotheses can be tested, critiqued, generalised, or specified.  We review the state of the art for ABM as a methodology for biology.  We then present a case study based on the most widely-published agent-based model in the biological sciences: Hemelrijk's DomWorld, a model of primate social behaviour.  
+</dl>     
+
+
+<p>
+<li>
+John Duffy,
+<b>"Agent-Based Models and Human-Subject Experiments"</b>,
+in Leigh Tesfatsion and Kenneth L. Judd (editors),
+<i>Handbook of Computational Economics, Vol. 2: Agent-Based Computational
+Economics</i>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/hbace.htm">
+        <b>(Table of Contents & Abstracts)</b></a>,
+Handbooks in Economics Series, North-Holland/Elsevier, Amsterdam,
+2006.
+     <dl>
+ <dd><b><i>Abstract:</i></b>
+This chapter examines the relationship between agent-based
+modeling and economic decision-making experiments with human
+subjects. Both approaches exploit controlled "laboratory" conditions
+as a means of isolating the sources of aggregate phenomena. Research
+findings from laboratory studies of human subject behavior have
+inspired studies using artificial agents in "computational
+laboratories" and vice versa. In certain cases, both methods have
+been used to examine the same phenomenon.  The focus of this chapter
+is on the empirical validity of agent-based modeling approaches in
+terms of explaining data from human subject experiments. We also
+point out synergies between the two methodologies that have been
+exploited as well as promising new possibilities.
+</dl>
+
+
+
+<p>
+<li><a href = "https://jasss.soc.surrey.ac.uk/8/4/contents.html">
+                 <b>"Epistemological Perspectives on Simulation"</b></a>,
+<i>Journal of Artificial Societies and Social Simulation (JASSS)</i>, Volume 8, Issue 4, October 2005.
+   <dl>
+<dd><b><i>Remark:</i></b> The eight articles in this JASSS special section were originally presented at a workshop of the same title held in July 2004 at the University of Koblenz.  A number of the articles address the empirical validation of computer simulation models, including, in particular, the empirical validation of agent-based computer simulations.  The contribution by K&uuml;ppers and Lenhard seems particularly useful in clarifying the differences and common grounds between computer simulation validation in the social and natural sciences.
+</dl>
+
+
+<p>
+<li>Manfred Gilli and Peter Winker, <b>"A Global Optimization Heuristic for Estimating Agent-Based Models"</b>
+   <a href = "https://www2.econ.iastate.edu/tesfatsi/EmpValidACE.GilliWinker.pdf">
+             <b>(pdf,410KB)</b></a>,
+<i>Computational Statistics and Data Analysis</i>, Vol. 42, 2003, 299-312. See also the 
+  <a href = "https://www2.econ.iastate.edu/tesfatsi/EmpValidACE.WinkerGilliJeleskovicTalk2006.pdf">
+             <b>Talk Slides (pdf,359KB)</b></a>
+by Winker, Gilli, and Jeleskovic titled "An Objective Function for Simulation Based Inference on Exchange Rate Data," presented at CEF'06, Limassol, Cyprus, June 23, 2006.
+    <dl>
+<dd><b><i>Abstract:</i></b> The authors introduce a global optimization algorithm for a "goodness of fit" objective function arising from the simulation-based indirect estimation of the parameters of agent-based financial market models.  As an illustration of the algorithm, the authors report parameter estimation results for a specific agent-based model of the DM/US-$ foreign exchange market.
+</dl>
+
+<p>
+<li>Jakob Grazzini and Matteo Richiardi, <b>"Consistent Estimation of Agent-Based Models by Minimum Distance"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/ConsistentEstimationABM.GrazziniRichiardi2013.pdf">
+     <b>(pdf,427KB)</b></a>,
+Working Paper No. 130, Laboratorio R. Revelli, Collegio Carlo Alberto, March 2013.
+
+<dl>
+<dd><b><i>Abstract:</i></b> 
+Two difficulties arise in the estimation of AB (Agent-Based) models: (i) the criterion function has no simple analytical expression, and (ii) the aggregate properties of the model cannot be analytically understood. The first one calls for 
+simulation-based estimation techniques; the second requires additional statistical testing in order to ensure that the simulated quantities are consistent estimators of the
+theoretical quantities. The possibly high number of parameters involved and the non-linearities in the theoretical quantities used for estimation add to the complexity of the problem. As these difficulties are also shared, though to a different extent, by DSGE models, we first look at the lessons that can be
+learned from this literature. We identify simulated minimum distance (SMD) as a practical approach to estimation of AB models, and we discuss the conditions which ensure consistency of SMD estimators in AB models."
+</dl>
+
+<p>
+<li>Volker Grimm, Uta Berger, Donald L. DeAngelis, J. Gary Polhill, Jarl Giske, and Steven J. Railsback, <b>"The ODD Protocol: A Review and First Update"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/Grimm_2010_The_ODD_protocol_.pdf">
+        <b>(pdf,229KB)</b></a>,
+<i>Ecological Modelling</i>, Vol. 221, 2010, 2760-2768.
+
+<dl>
+<dd><b><i>Abstract:</i></b> 
+The 'ODD' (Overview, Design concepts, and Details) protocol was published in 2006 to standardize the published descriptions of individual-based and agent-based models (ABMs). The primary objectives of ODD are to make model descriptions more understandable and complete, thereby making ABMs less
+subject to criticism for being irreproducible. We have systematically evaluated existing uses of the ODD protocol and identified, as expected, parts of ODD needing improvement and clarification. Accordingly, we revise the definition of ODD to clarify aspects of the original version and thereby facilitate future standardization of ABM descriptions. We discuss frequently raised critiques in ODD but also two emerging,
+and unanticipated, benefits: ODD improves the rigorous formulation of models and helps make the theoretical foundations of large models more visible. Although the protocol was designed for ABMs, it can help with documenting any large, complex model, alleviating some general objections against such models.
+</dl>
+
+
+
+<p>
+<li>Dominique Gross and Roger Strand, <b>"Can Agent-Based Models Assist
+Decisions on Large-Scale Practical Problems? A Philosophical Analysis"</b>, <i>Complexity</i>, Vol. 5/No. 6, July/August 2000, 26-33. This published article is available at
+   <a href = "https://dx.doi.org/10.1002/1099-0526(200007/08)5:6<26::AID-CPLX6>3.0.CO;2-G">
+              <b>Wiley Interscience</b></a>.
+
+
+<p>
+<li>Nicholas R. Jennings,
+  <b>"On Agent-Based Software Engineering"</b>
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/jennings.pdf">
+                      <b>(pdf,257KB)</b></a>,
+<i>Artificial Intelligence</i> 117 (2000), 277-296, copyright &copy 2002
+Elsevier Science B.V. All rights reserved.
+   <dl>
+<dd><b><i>Abstract:</i></b> "Agent-based computing represents an exciting new
+synthesis both for Artificial Intelligence (AI) and, more generally, Computer
+Science.  It has the potential to significantly improve the theory and the
+practice of modeling, designing, and implementing computer systems... The
+standpoint of this analysis is the role of agent-based software in solving
+complex, real-world problems.  In particular, it will be argued that the
+development of robust and scalable software systems requires autonomous
+agents that can complete their objectives while situated in a dynamic and
+uncertain environment, that can engage in rich, high-level social
+interactions, and that can operate within flexible organizational
+structures."
+</dl>
+
+<p>
+<li>
+Jack P.C. Kleijnen, <b>"Verification and Validation of Simulation Models"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/VVSimulationModels.JKleijnen1995.pdf">
+     <b>(pdf,1.7MB)</b></a>,
+<i>European Journal of Operational Research</i> 82, 1995, 145-162.
+ <dl>
+<dd><b><i>Abstract:</i></b> 
+"This paper surveys verification and validation of models, especially simulation models in operations research. ... A biography with 61 references is included."
+</dl>
+
+<p>
+<li>
+George B. Kleindorfer and Ram Ganeshan, <b>"The Philosophy of Science and Validation in Simulation"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/ValidationSimulationModels.Kliendorffer1993.pdf">
+    <b>(pdf,810KB)</b></a>,
+in G.W. Evans, M. Mollaghasemi, E.C. Russell, and W.E. Biles (Eds.), <i>Proceedings of the 1993 Winter Simulation Conference</i>, 50-57.
+<dl>
+<dd><b><i>Abstract:</i></b> 
+This study examines various relevant positions regarding validation for computer simulation models.
+</dl>
+
+
+<p>
+<li>Stephen Lansing and James N. Kremer (1993), <b>"Emergent Properties of
+Balinese Water Temple Networks: Coadaptation on a Rugged Fitness
+Landscape"</b>, <i>American Anthropologist</i>, Vol. 95, pp. 97-114.
+Published article available at
+           <a href = "https://www.jstor.org/">
+                 <b>JSTOR</b></a>.
+     <dl>
+<dd><b><i>Abstract:</i></b> Over hundreds of years, Balinese farmers
+have developed an intricate hierarchical network of "water temples" dedicated
+to agricultural deities in parallel with physical transformations of their
+island deliberately undertaken to make it more suitable for growing irrigated
+rice.  The water temple network plays an instrumental role in the
+coordination of activities related to rice production.  Representatives of
+different water temple congregations meet regularly to decide cropping
+patterns, planting times, and water usage, thus helping to synchronize
+harvests and control pest populations. Lansing and Kremer develop an
+ecological simulation model to illuminate the system-level effects of the
+water temple network, both social and ecological.  Their anthropological
+study illustrates many important agent-based modeling concepts, including 
+emergent properties, fitness landscapes, co-adaptation, and the effects 
+of different institutional designs.
+
+<p>
+     <dd><b>Note:</b> For an analysis and critique of this article, see Marco Janssen (2007),
+<b>"Coordination in Irrigation Systems: An Analysis of the Lansing-Kremer Model
+of Bali"</b>
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/LansingKremerModelCritique.MJanssen2006.pdf">
+                   <b>(pdf,1MB)</b></a>,
+<i>Agricultural Systems</i> 93: 170-190.
+</dl>
+
+
+<p>
+<li>Averill M. Law (2007), <b>Simulation Modelling and Analysis</b>, Fourth Edition, McGraw-Hill Higher Education.
+   <dl>
+<dd><i>Abstract (From the Publisher):</i></b> "This thoroughly up-to-date guide addresses all aspects of a simulation study, including modeling, simulation languages, validation, input probability distribution, and analysis of simulation output data. Full scale treatments of manufacturing systems simulation, simulation software, and animation are also included along with useful and instructive case studies." 
+</dl>
+
+
+<p>
+<li>Roberto Leombruni, Matteo Richiardi, Nicole J. Saam, and Michele Sonnessa, <b>"A Common Protocol for 
+Agent-Based Social Simulation"</b>
+   <a href = "https://www2.econ.iastate.edu/tesfatsi/EmpValidACE.LeombruniEtAl.CommonProtocol_JASSS.pdf">
+          <b>(pdf,380KB)</b></a>,
+<i>Journal of Artificial Societies and Social Simulation</i> 9(1), 2006.  The published article is available 
+              <a href = "https://jasss.soc.surrey.ac.uk/9/1/15.html">
+                         <b>here</b></a>.
+   <dl>
+<dd><b><i>Abstract:</i></b> Traditional (i.e. analytical) modelling practices in the social sciences rely on a very well established, although implicit, methodological protocol, both with respect to the way models are presented and to the kinds of analysis that are performed.  Unfortunately, computer-simulated models often lack such a reference to an accepted methodological standard.  This is one of the main reasons for the scepticism among mainstream social scientists that results in low acceptance of papers with agent-based methodology in top journals.  We identify some methodological pitfalls that, according to us, are common in papers employing agent-based simulations, and propose appropriate solutions.  We discuss each issue with reference to a general characterization of dynamic micro models, which encompasses both analytical and simulation models.  Along the way, we also clarify some confusing terminology.  We then propose a three-stage process that could lead to the establishment of methodological standards in social and economic simulation.
+</dl>
+
+<p>
+<li>Franco Malerba, Richard R. Nelson, Luigi Orsenigo, and Sidney G. Winter, <b>"`History-Friendly' Models of Industry Evolution: The Computer Industry"</b>
+   <a href = "https://icc.oxfordjournals.org/cgi/content/abstract/8/1/3">
+          <b>(html, abstract/URL)</b></a>,
+ <i>Industrial and Corporate Change</i>, Vol. 8, No. 1 (1999), 3-41.
+   <dl>
+<dd><b><i>Abstract:</i></b> "The model presented in this paper is the first of a new generation of evolutionary economic models: `history-friendly' models.  History-friendly models are formal models that aim to capture, in stylized form, qualitative and `appreciative' theories about the mechanisms and factors affecting industry evolution, technological advance, and institutional change put forth by empirical scholars of industrial economics, technological change, business organization and strategy, and other social scientists.  In this paper we have analyzed the long-term evolution of the computer industry... ."
+</dl>
+
+
+
+
+<p>
+<li>David Midgley, Robert E. Marks, and Dinesh Kunchamwar, <b>"The Building and Assurance of Agent-Based Models: An Example and Challenge to the Field"</b>
+  <a href = "https://www2.econ.iastate.edu/tesfatsi/EmpValidACE.Midgley-Marks-Kunchamwar.pdf">
+         <b>(pdf,175KB)</b></a>,
+<i>Journal of Business Research</i>, Special Issue: Complexities in Markets, Vol. 60 (2007), 884-893.
+   <dl>
+<dd><b><i>Abstract:</i></b>  "The assurance - the verification and validation - of agent-based models is difficult, because of the heterogeneity of the agents, and the possibility of the emergence of new patterns of macro behavior as a result of the interactions of agents at the micro level.  We use an agent-based model of the complex interactions among consumers, retailers, and manufacturers to explore issues of model assurance.  Our explorations indicate two challenges for the agent-based models field.  The first challenge is to address the critical issue of software verification.  The second challenge is to overcome the many methodological challenges that exist in empirically validating these models, some of which we will outline in our paper.  We will also propose a method based on the Genetic Algrorithm to address both these challenges, but our experiments, and the lack of good data for many kinds of agents, suggest a minimalist approach to building and assuring agent-based models in general."
+</dl>
+
+
+<p>
+<li>
+Tuncer I. Oren, <b>"Concepts and Criteria to Assess Acceptability of Simulation Studies: A Frame of Reference"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/SimModelAssessment.TuncerOren1981.pdf">
+   <b>(873KB)</b></a>,
+<i>Communications of the ACM</i>, Special Issue: Simulation Modeling and Statistical Computing, Guest Edited by N. Adam, Vol. 24, No. 4, April 1981, 180-189.
+<dl>
+<dd><b><i>Abstract:</i></b>  
+This study provides a comprehensive and systematic overview of the concepts and criteria related to the assessment of the acceptability of simulation studies.  
+</dl>  
+
+
+<p>
+<li>Hassan Qudrat-Ullah, <b>"Structural Validation of System Dynamics and Agent-Based Simulation Models"</b>
+          <a href = "https://www2.econ.iastate.edu/tesfatsi/EmpValidSDACE.Hassan.pdf">
+                  <b>(pdf,155KB)</b></a>,
+in Y. Merkuryev, R. Zobel, and E. Kerckhoffs (eds.), <i>Proceedings</i>, 19th European Conference on Modelling and Simulation (ECMS), 2005.
+     <dl>
+<dd><b><i>Abstract:</i></b>  "Simulation models are becoming increasingly popular in the analysis of important policy issues including global warming, population dynamics, energy systems, and urban planning.  The usefulness of these models is predicated on their ability to link observable patterns of behavior of a system to micro-level structures.  This paper argues that structural validity of a simulation model - right behavior for the right reasons - is a stringent measure to build confidence in a simulation model regardless of how well the model passes behavior validation tests. That leads to an outline of formal structural validity procedures available but less explored in the system dynamics `repertoire.' An illustration of a set of six tests for structural validity of both system dynamics and agent-based simulation models follows."
+</dl>
+
+
+<p>
+<li>Juliette Rouchier,       
+     <b>"Data Gathering to Build and Validate Small-Scale Social Models for Simulation. 
+        Two Ways: Strict Control and Stake-Holders Involvement"</b>     
+     <a href = "https://www2.econ.iastate.edu/tesfatsi/EmpValidABM.Rouchier.pdf">               
+                 <b>(pdf,75KB)</b></a>,
+Working Paper, GREQAM, Marseille, October 13, 2005.
+   <dl>
+<dd><b><i>Abstract:</i></b> Currently in agent-based modeling (ABM) it has become the norm to assess results against actual data and to build hypotheses by offering some empirical facts to justify the model construction. In this paper the author discusses two distinct approaches that researchers are taking to validate ABM representations of small-scale interaction settings: quantitative statistical validation through controlled human-subject experiments; and an iterative participatory modeling approach called "companion modeling" that engages stakeholders and researchers in repeated rounds of field study and data gathering, role-playing games, agent-based model development and implementation, and computational experiments.
+</dl>
+
+<p>
+<li>
+Robert G. Sargent, <b>"Some Approaches and Paradigms for Verifying and Validating Simulation Models"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/VVSimModels.RSargent2001.pdf">
+     <b>(pdf,356KB)</b></a>,
+in B.A. Peters, J.S. Smith, D.J. Medeiros, and M.W. Rohrer (Eds.), <i>Proceedings of the 2001 Winter Simulation Conference</i>, 106-114.
+ <dl>
+<dd><b><i>Abstract:</i></b> 
+"In this paper we discuss verification and validation of
+simulation models. The different approaches to deciding
+model validity are described, two different paradigms that
+relate verification and validation to the model development
+process are presented, the use of graphical data statistical
+references for operational validity is discussed, and a recommended
+procedure for model validation is given."
+</dl>
+
+<p>
+<li>Alexander Smajgl and Olivier Barreteau (Eds.), <b>Empirical Agent-Based Modelling -- Challenges and Solutions: Volume 1, the Characterisation and Parameterisation of Empirical Agent-Based Models</b>
+<a href = "https://jasss.soc.surrey.ac.uk/17/2/reviews/2.html#smajgl">
+        <b>(JASSS Book Review, HTML)</b></a>,
+Springer-Verlag, Berlin, 2014.
+ <dl>
+<dd><b><i>Abstract:</i></b> 
+This book poses the following challenge: How to develop large-scale complex models that are informed by empirical data both in the definition and the calibration phases? To address this challenge, the authors propose a <i>Characterisation and Parametrisation (CAP)</i> framework, i.e., a context-independent description of the key characterisation and parameterisation steps and decisions that modelers are confronted with while developing empirically-based agent-based models.
+   </dl>
+
+
+<p>
+<li>
+D.E. Stevenson, <b>"A Critical Look at Quality in Large-Scale Simulations"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/VVLargeScaleSimModels.DEStevenson1999.pdf">
+    <b>(pdf,155KB)</b></a>,
+<i>Computing in Science and Engineering</i>, 1(3), IEEE Computer Society, May-June 1999, 53-63.
+<dl>
+<dd><b><i>Abstract:</i></b> 
+"The role of management and science in simulation
+development must be changed. Software
+engineering is meant to produce software by a
+manufacturing paradigm, but this paradigm simply
+cannot deal with the scientific issues. This
+article examines the successes and failures of
+software engineering. I conclude that process does
+not develop software, people and their tools do.
+Second, software metrics are not meaningful
+when the software's purpose is to guarantee the
+world's safety in the nuclear era. Finally, the
+quality of simulations must be based on the quality
+of insights gained from the revealed science.
+Aristotle talked about it 2,300 years ago; it is
+time to listen. I propose a category-theory definition
+of validation."
+</dl>
+
+<p>
+<li> Claudia Werker and Thomas Brenner, <b>"An Advanced Methodology for Heterodox Simulation Models Based on Critical Realism"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/EmpValidACE.WerkerBrenner.0410.2006.pdf">
+        <b>(pdf,127KB)</b></a>,
+Working Paper 0401, Papers on Economics & Evolution, Max Planck Institute of Economics, Evolutionary Economics Group, Jena, Germany, 2004.
+    <dl>
+<dd><b><i>Abstract:</i></b> This paper develops an advanced methodology that makes the results of simulation models in heterodox economics more reliable and acceptable.  This methodology copes with the specific characteristics of simulation models in heterodox economics, in particular with inherent uncertainty.  The methodology is based on critical realism, because it treats inherent uncertainty by categorizing empirical events into underlying structural driving forces.  Data is center-stage in the methodology, because it is used to infer assumptions and implications.  Illustrative examples inlude the development of industries in different countries.
+</dl>
+
+<p>
+<li>Claudia Werker and Thomas Brenner, <b>"A Practical Guide to Inference in Simulation Models"</b>
+   <a href = "https://www2.econ.iastate.edu/tesfatsi/EmpValidACE.WerkerBrenner.0602.2006.pdf">
+             <b>(pdf,437KB)</b></a>,
+Working Paper 0602, Papers on Economics & Evolution, Max Planck Institute of Economics, Evolutionary Economics Group, Jena, Germany, 2006.
+   <dl>
+ <dd><b><i>Abstract:</i></b>  This paper introduces a categorization of simulation models.  It provides an explicit overview of the steps that lead to a simulation model.  We highlight the advantages and disadvantages of various simulation approaches by examining how they advocate different ways of constructing simulation moels.  To this end, the paper discusses a number of relevant methodological issues, such as how realistic simulation models are obtained and which kinds of inference can be used in a simulation approach.  Finally, the paper presents a practical guide on how simulation should and can be conducted.
+</dl>
+
+                   </ul>
+
+<p>
+<img src="images/turqmbar.gif" HEIGHT="4" WIDTH=100%>
+
+<p>
+<h3>
+<img src="images/brtar.gif" align="top" HEIGHT="20" WIDTH="20">
+<a name="Design">
+D</a>esign of Computational Experiments</h3>
+
+                           <ul>
+<p>
+<li>Bart Husslage, Gijs Rennen, Edwin R. van Dam, and Dick den Hertog,
+<b>Space-Filling Latin Hupercube Designs for Computer Experiments</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/ExperDesignABM.HyperCubeDesign.Husslage2006.pdf">
+              <b>(pdf,338KB)</b></a>,
+Working Paper No. 2006-18, ISSN 0924-7815, Department of Econometrics and Operations Research, Tilburg University, March 2006.
+
+<dl>
+<dd><b><i>Abstract:</i></b> In the area of computer simulation, Latin hypercube designs play an important role. 
+In this paper the class of maximin Latin hypercube designs is considered. Up to now only several two-dimensional
+designs and designs for some small number of points are known for this class. Using periodic designs and simulated annealing, we extend the known results and construct approximate maximin Latin hypercube designs for up to ten dimensions and for up to 100 design points. 
+</dl>
+
+<p>
+<li>
+Jack P.C. Kleijnen, <b>"An Overview of the Design and Analysis of Simulation Experiments for Sensitivity Analysis"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/DesignAnalysisSimExperiments.Kleijnen2004.pdf">
+   <b>(pdf,338KB)</b></a>,
+<i>European Journal of Operational Research</i> 164(2), September 2005, 826-834. 
+                  
+"This review surveys `classic' and `modern' designs for experiments with simulation models. Classic designs...assume `a few' factors (not more than 10 factors with only `a few' values per factor (no more than five values. ... Modern designs...allow `many factors' (more than 100), each with either a few or `many' (more than 100) values."
+</dl>
+
+<p>
+<li>
+Jack P.C. Kleijnen, <b>Design and Analysis of Simulation Experiments</b>, 2nd Revised Edition, Springer, 2015, 322pp.
+ 
+<dl>
+<dd><b><i>Abstract:</i></b>  
+"This is a new edition of Kleijnen's advanced expository book on statistical methods for the Design and Analysis of Simulation Experiments (DASE). Altogether, this new edition has approximately 50 percent new material not in the original book. More specifically, the author has made significant changes to the book's organization, including placing the chapter on Screening Designs immediately after the chapters on Classic Designs, and reversing the order of the chapters on Simulation Optimization and Kriging Metamodels. The latter two chapters reflect how active the research has been in these areas."
+</dl>
+
+<p>
+<li>Daniel Kornhauser, Uri Wilensky, and William Rand, <b>"Design Guidelines for Agent Based Model Visualization"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/ABMDesignGuidelinesVisualizationPrinciples.KornhauserWilenskiRand.JASSS2008.pdf">
+    <b>(pdf,820KB)</b></a>,
+<i>Journal of Artificial Societies and Social Simulation</i>, Vol. 12, No. 2 1, March 2009.
+
+ <dl>
+<dd><b><i>Abstract:</i></b> 
+This paper provides agent-based modeling visualization design guidelines in order to improve visual design with ABM toolkits.  The guidelines are illustrated using a simple redesign of a NetLogo agent-based modeling visualization.
+</dl>
+
+
+
+<p>
+<li>
+I. Salle, M. Yildizoglu, <b>"Efficient Sampling and Metamodeling for Computational Economic Models"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/EfficientSamplingMetamodelingCompEconModels.SalleYildizoglu2012.pdf">
+     <b>(pdf,1.1MB)</b></a>,
+Cahiers du GREThA, 2012-18.
+
+<dl>
+<dd><b><i>Abstract:</i></b> 
+"Extensive exploration of simulation models comes at a high computational cost, all the more when the model involves a lot of parameters. Economists usually rely on random explorations,
+such as Monte Carlo simulations, and basic econometric modelling to approximate the properties of computational models. This paper aims at providing guidelines for the use of a much more parsimonious method, based on an efficient sampling of the parameters space - a design of experiments (DOE), associated with a well-suited metamodel - kriging. We analyze two simple economic models using this approach to illustrate the possibilities offered by it. Our appendix gives a sample of the R-project code that can be used to apply this method on other models."
+</dl>
+
+
+</dl>
+ 
+<p>
+<li>Thomas J. Santner, Brian J. Williams, and William I. Notz, <b>The Design and Analysis of Computer Experiments</b>,
+Springer Series in Statistics, 2003, 283pp.  ISBN: 978-0-387-95420-2.
+
+<dl>
+<dd><b><i>Abstract:</i></b> This book describes methods for designing and analyzing experiments conducted using computer code in lieu of a physical experiment. It discusses how to select the values of the factors at which to run the code (the design of the computer experiment) in light of the research objectives of the experimenter. It also provides techniques for analyzing the resulting data so as to achieve these research goals. It illustrates these methods with code made available to the reader. 
+</dl>
+
+<p>
+<li>Leigh Tesfatsion, <b>Experimental Design: Basic Concepts and Terminology</b>
+   <a href = "https://www2.econ.iastate.edu/tesfatsi/ExpDesign.pdf">
+           <b>(pdf,45KB)</b></a>.
+These brief notes were prepared for an undergraduate class on agent-based computational economics with no previous exposure to running
+computational experiments.
+
+
+
+                           </ul>
+
+
+<p>
+<img src="images/turqmbar.gif" HEIGHT="4" WIDTH=100%>
+
+<p>
+<h3>
+<img src="images/brtar.gif" align="top" HEIGHT="20" WIDTH="20">
+<a name="IPM">
+I</a>terative Participatory Modeling</h3>
+
+                           <ul>
+
+
+<p>
+<li>Olivier Barreteau et al., <b>"Our Companion Modelling Approach"</b>
+           <a href = "https://jasss.soc.surrey.ac.uk/6/2/1.html">
+                 <b>(html)</b></a>,
+<i>Journal of Artificial Societies and Social Simulation (JASSS)</i>, Vol. 6, No. 1, 31 March 2003 (electronic journal).
+    <dl>
+<dd><b><i>Abstract:</i></b>  This article discusses an iterative participatory  approach to the modeling of complex systems, referred to as "companion modeling." The companion modeling approach envisions multidisciplinary researchers and stakeholders engaging together in repeated looping through a four-stage cycle: field study and data analysis; role-playing games; agent-based model design and implementation; and intensive computational experiments.  The new aspect of companion modeling relative to other participatory modeling approaches is the emphasis on modeling as an <i>open-ended</i> collaborative learning process.  The modeling objective is to help stakeholders manage complex problems over time through a continuous learning process rather than to attempt the delivery of a definitive problem solution.
+</dl>
+
+
+
+<p>
+<li>
+O. Barreteau, G. Abrami, W. Dar&eacute;, P. Garin, V. Souch&egrave;re, and C. Werey, <b>"Collaborative modelling as a boundary institution to handle institutional complexities in water management"</b>, in H. Karl et al. (eds.)
+<i>Restoring Lands -- Coordinating Science, Politics and Action</i>, Springer, 2012.
+
+<p>
+<li>
+O. Barreteau, P. W. G. Bots, and K. A. Daniell, <b>"A framework for
+clarifying `participation' in participatory research to prevent its
+rejection for the wrong reasons"</b>, <i>Ecology and Society</i> 15(2):1, 2010. Available online
+<a href = "https://www.ecologyandsociety.org/vol15/iss2/art1/">
+<b>here</b></a>
+
+<p>
+<li>
+O. Barreteau, F. Bousquet, M. Etienne, V. Souch&egrave;re, and P.
+d'Aquino, <b>"Companion modelling: a method of adaptive and participatory research"</b>, in: M. Etienne (Ed.), <i>Companion Modelling. A Participatory Approach to Support Sustainable Development</i>. QUAE, Versailles, France, 2011,
+pp. 21-44.
+
+
+<p>
+<li> 
+O. Barreteau, P.W.G. Bots, K.A. Daniell, M. Etienne, P. Perez, C. Barnaud, D. Bazile, N. Becu, J.-C. Castella, W. Dar&eacute;,and G. Trebuil, <b>"Participatory approaches and simulation of social complexity"</b>, in B. Edmonds and R. Meyer, R. (Eds.), <i>A Handbook on: Simulating Social Complexity</i>. Springer, 2013.
+
+<p>
+<li>
+O. Barreteau, C. Le Page, and P. Perez, P., <b>"Contribution of simulation and gaming to natural resource management issues: an introduction"</b>, <i>Simulation and Gaming</i> 38 (2007), 185-194
+
+<p>
+<li>
+Pierre Bommel et al., <b>"A Further Step Towards Participatory Modeling: Fostering Stakeholder Involvement in Designing Models by Using Executable UML"</b>, <i>Journal of Artificial Societies and Social Simulation</i>
+<a href = "https://jasss.soc.surrey.ac.uk/17/1/6.html">
+           <b>(html)</b></a>,
+17 (1) 6, published online 31 January 2014.
+
+<p>
+<li> M. Etienne (ed.), <b>Companion Modelling. A Participatory Approach to Support Sustainable Development</b>, QUAE, Versailles, France, 2011.
+
+<p>
+<li>
+R.L. McCown, <b>Locating agricultural decision support systems in the troubled past and socio-technical complexity of 'models for management'</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/LocatingAgDecisionSupport.RLMcCown2002.pdf">
+      <b>(pdf,234KB)</b></a>,
+<i>Agricultural Systems</i>, Vol. 74, 2002, 11--25.
+
+<dl>
+<dd><b><i>Abstract:</i></b>  
+This paper considers how knowledge about decision support systems determined in non-agricultural domains might help agricultural models to better serve farm management.
+</dl>
+
+<p>
+<li>Scott Moss, <b>"Alternative Approaches to the Empirical Validation of Agent-Based Models"</b>
+   <a href = "https://www2.econ.iastate.edu/tesfatsi/EmpValidOfABM.SMoss2008.JASSS.pdf">
+          <b>(pdf,2460KB)</b></a>,
+<i>Journal of Artificial Societies and Social Simulation</i> 11(15), 2008.  The published article is available 
+              <a href = "https://jasss.soc.surrey.ac.uk/11/1/5.html">
+                         <b>here</b></a>.
+
+<dl>
+<dd><b><i>Abstract:</i></b> 
+This paper draws on the metaphor of a spectrum of models ranging from the most theory-driven to the most evidence-driven. The issue of concern is the practice and criteria that will be
+appropriate to validation of different models. In order to address this concern, two modelling approaches are investigated in some detail - one from each end of our metaphorical
+spectrum. Windrum et al.(2007) (https://jasss.soc.surrey.ac.uk/10/2/8.html) claimed strong
+similarities between agent based social simulation and conventional social science - specifically econometric - approaches to empirical modelling and on that basis considered how econometric validation techniques might be used in empirical social simulations more broadly. An alternative, the approach of the French school of 'companion modelling' associated with Bousquet, Barreteau, Le Page and others, engages stakeholders in the modelling and validation process.
+</dl>
+
+
+
+<p>
+<li> Alexey Voinov and Francois Bousquet, <b>"Modelling with Stakeholders"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/ModelingWithStakeholders.VoinovBousquet2010.pdf">
+     <b>(pdf,3.4MB)</b></a>,
+<i>Environmental Modelling & Software</i> 25 (2010), 1268-1281.
+
+<p>
+<li> Alexey Voinov, <b>"Participatory Modeling: What, Why, and How?"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/ParticipatoryModelingWhatWhyHow.AVoinov.March2010.pdf">
+       <b>(pdf,622KB)</b></a>,
+ITC Faculty of Geo-Information Science and Earth Observation, University of Twente, March 2010.
+
+
+
+                           </ul>
+
+
+<p>
+<img src="images/rocksbar.gif" width=100%>
+
+<p>
+<h3 align="center">
+<font size="-1"> Copyright &copy Leigh Tesfatsion.  All Rights Reserved.
+</font></h3>
+
+</body>
+</html>

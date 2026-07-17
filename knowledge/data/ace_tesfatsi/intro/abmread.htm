@@ -1,0 +1,1621 @@
+<htm>
+<head>
+<title> On-Line Guide for Newcomers to ABM (Axelrod and Tesfatsion)</title>
+<!-- Matomo --><script>  var _paq = window._paq = window._paq || [];  _paq.push(['trackPageView']);  _paq.push(['enableLinkTracking']);  (function() {    var u='https://trends.ent.iastate.edu/';    _paq.push(['setTrackerUrl', u+'matomo.php']);    _paq.push(['setSiteId', '214']);    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);  })();</script><!-- End Matomo Code --></head>
+
+<body stylesrc="abmread.htm" background="images/WhiteTextured2Bak.gif" text=#000000
+link=#306eff >
+
+<p>
+<img src="images/rainblok.gif" height="30" width=100% >
+
+
+<p>
+             <h1 align="center"><font color="306eff">
+           On-Line Guide for Newcomers to<br>
+ Agent-Based Modeling in the Social Sciences<br> </font></h2>
+
+              <h2 align="center"><font color="#306eff">
+                Robert Axelrod and Leigh Tesfatsion
+                             </font> </h1>
+
+
+<p>
+<img src="images/rainblok.gif" height="30" width=100% >
+
+                        <dl>
+
+<p>
+<dt><b>Last Updated:</b> 21 April 2026</dt>
+
+<p>
+<dt><b>Site Maintained By:</b></dt>
+<dd><a href="https://www2.econ.iastate.edu/tesfatsi/">
+         <b>Leigh Tesfatsion</b></a>
+<dd>Professor Emerita of Economics
+<dd>Heady Hall 260
+<dd>Iowa State University
+ <dd>Ames, Iowa 50011-1054
+  <dd>https://www2.econ.iastate.edu/tesfatsi/
+  <dd><img src="images/email.gif" align=middle>
+      <a href="mailto:tesfatsi@iastate.edu">
+            <b>tesfatsi AT iastate.edu</b></a>
+</dd>
+
+<p>
+<dt>
+<b>Acknowledgements:</b></dt>
+
+<p>
+<dd> This site was originally designed to provide web support materials (readings and demonstration
+software) for Robert Axelrod and Leigh Tesfatsion, <b>"A Guide for Newcomers
+to Agent-Based Modeling in the Social Sciences"</b>
+    <a href="https://www2.econ.iastate.edu/tesfatsi/GuidetoABM.pdf">
+                   <b>(pdf)</b> </a>,
+Appendix A (pp. 1647-1659) in Leigh Tesfatsion and Kenneth L. Judd (Eds.), <i>Handbook of
+Computational Economics, Vol. 2:  Agent-Based Computational Economics</i>
+   <a href = "https://www2.econ.iastate.edu/tesfatsi/hbace.htm">
+                 <b>(Table of Contents,html)</b></a>,
+Handbooks in Economics Series, Elsevier/North-Holland, Amsterdam, the Netherlands, 2006.  
+The current site updates and extends these web support materials beyond the scope of the original handbook guide.
+</dd>
+
+<p>                    
+<dt>
+<a href="https://www2.econ.iastate.edu/tesfatsi/abmdemo.htm">
+<img src="images/backto.gif" align="top"></a>  
+<b>Annotated Linked Listing of ABM Social Science Demonstration Software</b></dt>
+
+<dt>
+<a href="https://www2.econ.iastate.edu/tesfatsi/syl308.htm">
+<img src="images/backto.gif" align="top"></a>  
+<b>ABM/ACE Online Self-Study Course Materials</b>
+</dt>
+
+                      </dl>
+
+<p>
+<img src="images/gldshbar.gif"  width=100%>
+
+
+<p>
+<h3>
+<img src="images/brtar.gif" align=top height="22" width="22">
+TABLE OF CONTENTS</h3>
+
+<dl>
+
+               <dd>  <ol TYPE=I>
+
+  <li><a href="#Purpose"> <b>Purpose of the On-Line Guide</b></a>
+  <li><a href="#ABMSocSci"><b>Agent-Based Modeling and the Social
+                               Sciences</b></a>
+  <li><a href="#Selection"> <b>Selection Criteria</b></a>
+  <li><a href="#Readings"> <b>Suggested Readings and Demonstration
+                          Software</b></a>
+                  <ol TYPE=A>
+  <li><a href = "#ComplexABM"> <b>Complexity and ABM</b>  </a>
+  <li><a href = "#Emergence">  <b>Emergence of Collective Behavior</b>  </a>
+  <li><a href = "#Evolution">  <b>Evolution</b>  </a>
+  <li><a href = "#Learning">   <b>Learning</b>   </a>
+  <li><a href = "#Norms">      <b>Norms</b>        </a>
+  <li><a href = "#Markets">    <b>Markets</b>          </a>
+  <li><a href = "#Design">     <b>Institutional Design</b>  </a>
+  <li><a href = "#Networks">   <b>Networks</b>           </a>
+  <li><a href = "#Modeling">   <b>Model Paradigms</b>  </a>
+  <li><a href = "#MethodTools"> <b>Method/Tool Tutorials</b> </a>
+
+                  </ol>
+
+   <li><a href="#WhatNext"> <b>What to Do Next</b></a>
+
+                 </ol>
+
+</dl>
+
+
+
+<p>
+                          <dl>
+
+<dt>
+<img src="images/warning.gif" align=bottom>
+<b> Software Release Disclaimer:</b>
+    <dd>All demonstration software provided below is unsupported and provided
+as-is, without warranty of any kind, unless otherwise specified by the
+provider.
+
+                         </dl>
+
+<p>
+<img src="images/goldbar2.gif" height="5" width=100%>
+
+<p>
+<h3>
+<a name="Purpose">
+<img src="images/brtar.gif" align=top height="22" width="22">
+</a>
+PURPOSE OF THE ON-LINE GUIDE</h3>
+
+<dl>
+
+<p>
+<dd>The purpose of this on-line guide is to suggest a short list of introductory
+readings and supporting materials to help newcomers become acquainted with
+<b><i>Agent-Based Modeling (ABM)</i></b>.  
+</dd>
+
+<p>
+<dd>
+Our primary intended audience is graduate students and advanced undergraduate students in the social sciences.  However,  researchers and teachers in a wide range of disciplines might also find the materials of use. 
+</dd> 
+
+<p>
+<dd>Unlike established methodologies such as statistics and mathematics, ABM has not yet developed a widely shared understanding of what a newcomer should
+learn.  For decades, concepts such as the level of significance in statistics and the derivative in mathematics have been common knowledge that newcomers could be expected to learn.  We hope that our selected readings and supporting materials will promote a shared understanding of ABM not only among newcomers to ABM but also among those who already use ABM.
+</dd>
+
+
+<p>
+<dd> Finally, this on-line guide includes a number of references to a particular variant of ABM called
+        <i><b>Agent-based Computational Economics (ACE)</b></i>.
+ACE is a specialization to economics of 
+    <i><b>Completely Agent-Based Modeling (c-ABM)</b></i>, 
+a fully agent-based modeling approach characterized by seven specific modeling principles.  Any model that adheres to these seven modeling principles, hence any ACE model, is a computational laboratory permitting users to explore how settings for initial agent states drive all subsequent agent interactions, hence all resulting dynamic outcomes.  This exploration process is analogous to biological experimentation with cultures in Petri dishes.  
+</dd>
+
+<p>
+<dd>
+Detailed information about ACE and c-ABM is provided in the following introductory materials:
+                     <ul>
+<p> 
+<li>
+<b>Agent-Based Computational Economics (ACE): A c-ABM Approach to the Study of Economic Systems</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/ace.htm">
+        <b>(ACE Homepage)</b></a>. 
+
+<p>
+<li>
+Leigh Tesfatsion (2023), <b>"Agent-Based Computational Economics: Overview and Brief History"</b>
+<a href = 
+   "https://lib.dr.iastate.edu/econ_workingpapers/126">
+              <b>(WP Preprint,pdf)</b></a>,
+Chapter 4 (pp. 41-58) in: Ragupathy Venkatachalam (Ed.), 
+<i>Artificial Intelligence, Learning, and Computation in Economics and Finance</i>, Springer Cham, 1st Edition (Feb 2023),  325pp.
+
+
+<dl>
+<dd><b><i>Abstract:</i></b> 
+Scientists and engineers seek to understand how real-world systems work, and how real-world systems could work better. Any modeling method devised for such purposes must simplify reality.  Ideally, however, the modeling method should be flexible as well as logically rigorous; it should permit model simplifications to be appropriately tailored for the specific purpose at hand.  Flexibility and logical rigor have been two key goals motivating the development of <i>Agent-Based Computational Economics (ACE)</i>, a completely agent-based modeling method adhering to seven specific modeling principles.  This perspective provides an overview of ACE, a brief history of its development, and its role within a broader spectrum of experiment-based modeling methods. 
+</dd>
+</dl>
+
+<p>
+<li> Leigh Tesfatsion, <b>"Agent-Based Modeling: The Right Mathematics for Social Science?"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/KeynoteAddress.LTesfatsion.SSC2021.22Sept2021.pdf">
+             <b>(SlideSet,pdf)</b></a>, 
+Keynote Address, 16th Annual Social Simulation Conference (SSC 2021, Virtual), sponsored by the European Social Simulation Association (ESSA), September 20-24, 2021.
+
+ 
+                        </ul>
+                    
+
+</dl>
+
+<p>
+<img src="images/goldbar2.gif" height="5" width=100%>
+
+<p>
+<h3>
+<a name="ABMSocSci">
+<img src="images/brtar.gif" align=top height="22" width="22">
+</a>
+AGENT-BASED MODELING AND THE SOCIAL SCIENCES</h3>
+
+<dl>
+
+
+<p>
+<dd>
+The social sciences seek to understand not only how individuals behave but
+also how the interaction of many individuals leads to large-scale outcomes.
+Understanding a political or economic system requires more than an
+understanding of the individuals that comprise the system.  It also requires
+understanding how the individuals interact with each other, and how the
+results can be more than the sum of the parts.
+
+<p>
+<dd>
+ABM is well suited for this social science objective.  It is a method for
+studying systems exhibiting the following two properties: (1) the system is
+composed of interacting agents; and (2) the system exhibits emergent
+properties, that is, properties arising from the interactions of the agents
+that cannot be deduced simply by aggregating the properties of the agents.
+When the interaction of the agents is contingent on past experience, and
+especially when the agents continually adapt to that experience, mathematical
+analysis is typically very limited in its ability to derive the dynamic
+consequences.  In this case, ABM might be the only practical method of
+analysis.
+
+<p>
+<dd>
+ABM begins with assumptions about agents and their interactions and then uses
+computer simulation to generate "histories" that can reveal the dynamic
+consequences of these assumptions.  Thus, ABM researchers can investigate how
+large-scale effects arise from the micro-processes of interactions among many
+agents.  These agents can represent people (say consumers, sellers, or
+voters), but they can also represent social groupings such as families,
+firms, communities, government agencies and nations.
+
+
+<p>
+<dd>
+Simulation in general and ABM in particular is a third way of doing science 
+in addition to deduction and induction.  Scientists use deduction to derive 
+theorems from assumptions, and induction to find patterns in empirical data. 
+Simulation, like deduction, starts with a rigorously specified set of assumptions 
+regarding an actual or proposed system of interest; but, unlike deduction, simulation 
+does not prove theorems with generality.  Rather, simulation generates data suitable 
+for analysis by induction. In contrast to typical induction, however, the simulated 
+data comes from controlled experiments rather than from direct measurements of the 
+real world.  
+
+
+<p>
+<dd>
+Consequently, simulation differs from standard deduction and induction 
+in both its implementation and its goals.  Simulation permits increased understanding 
+of systems through controlled computational experiments.
+
+
+<p>
+<dd>
+The specific goals pursued by ABM researchers take four forms: empirical,
+normative, heuristic, and methodological. The goal of <b>empirical
+understanding</b> asks: Why have particular large-scale regularities evolved
+and persisted, even when there is little top-down control? Examples of such
+regularities include standing ovations, trade networks, socially accepted
+monies, mutual cooperation based on reciprocity, and social norms.  ABM
+researchers seek possible explanations grounded in the repeated interactions of
+agents operating in specified environments. In particular, they ask whether
+particular types of observed global regularities can be reliably generated
+from particular types of agent-based models.
+
+<p>
+<dd>
+A second goal is <b>normative understanding</b>: How can agent-based models
+be used as laboratories for the discovery of good designs?  ABM researchers
+pursuing this objective are interested in evaluating whether designs proposed
+for social policies, institutions, or processes will result in socially
+desirable system performance over time.  Examples include design of auction
+systems, voting rules, and law enforcement. The general approach is akin to
+filling a bucket with water to determine if it leaks. An agent-based world is
+constructed that captures the salient aspects of a social system operating
+under the design. The world is then populated with privately motivated agents
+with learning capabilities and allowed to develop over time. The key issue is
+the extent to which the resulting world outcomes are efficient, fair, and
+orderly, despite attempts by these privately motivated agents to gain
+individual advantage through strategic behavior.
+
+<p>
+<dd>
+A third goal is <b>heuristic</b>: How can greater insight be attained about
+the fundamental causal mechanisms in social systems? Even if the assumptions
+used to model a social system are simple, the consequences can be far from
+obvious if the system is composed of many interacting agents. The large-scale
+effects of interacting agents are often surprising because it can be hard to
+anticipate the full consequences of even simple forms of interaction.  For
+example, one of the earliest and most elegant agent-based models - the city
+segregation (or "tipping") model developed by Thomas Schelling (see below)  -
+demonstrates how residential segregation can emerge from individual choices
+even when everyone is fairly tolerant.
+
+<p>
+<dd>
+A fourth goal is <b>method/tool advancement</b>: How best to provide ABM
+researchers with the methods and tools they need to undertake the rigorous 
+study of social systems through controlled computational experiments, 
+and to examine the compatibility of  experimentally-generated theories 
+with real-world data?  ABM researchers are exploring a variety of ways to 
+address this goal ranging from careful consideration of methodological 
+principles to the practical  development of programming, visualization, 
+and empirical validation tools.
+
+<p>
+<dd>
+In summary, ABM applied to social processes uses concepts and tools from
+social science and computer science.  It represents a methodological approach
+that could ultimately permit two important developments:  (1) the rigorous
+testing, refinement, and extension of existing theories that have proved to
+be difficult to formulate and evaluate using standard statistical and
+mathematical tools; and (2) a deeper understanding of fundamental causal
+mechanisms in multi-agent systems whose study is currently separated by
+artificial disciplinary boundaries.
+
+<p>
+<dd>
+For more detailed discussions of many of the points raised in this section, see:
+
+
+                   <ul>
+
+
+<p>
+<li> Robert Axelrod (1997), 
+<a href = 
+"https://websites.umich.edu/~axe/research/Software/ComplexCoop.html">
+<b>Complexity of Cooperation</b></a>
+(Princeton University Press, Princeton, NJ, pp. 206-221.
+
+<p>
+<li> Robert Axelrod (2023), <i>A Passion for Cooperation: Adventures of a Wide-Ranging Scientist</i>
+<a href = "https://press.umich.edu/Books/A/A-Passion-for-Cooperation2">
+                              <b>(Book Site)</b></a>,
+University of Michigan Press, Ann Arbor, MI. 
+
+                
+<p>
+<li> Leigh Tesfatsion (2006), "Agent-Based Computational Economics: A Constructive Approach to Economic Theory"
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/hbintlt.pdf">
+                <b>(IntroChapter,pdf)</b></a>,
+in Leigh Tesfatsion and Kenneth L. Judd (Eds.), <i>Handbook of
+Computational Economics, Vol. 2:  Agent-Based Computational Economics</i>
+      <a href = "https://www2.econ.iastate.edu/tesfatsi/hbace.htm">
+              <b>(Table of Contents and Abstracts)</b></a>,
+Handbooks in Economics Series, North-Holland/Elsevier, Amsterdam, the Netherlands, 2006, 904pp.
+
+               </ul> 
+</dl>
+
+
+<p>
+<img src="images/goldbar2.gif" height="5" width=100%>
+
+<p>
+<h3>
+<a name="Selection">
+<img src="images/brtar.gif" align=top height="22" width="22">
+</a>
+SELECTION CRITERIA</h3>
+
+<dl>
+
+<p>
+<dd>
+We decided at the outset to offer a short list of readings rather than make
+any attempt at comprehensiveness. We based our selections on two criteria:
+(i) the educational value of the reading for newcomers to ABM in the social
+sciences; and (ii) the accessibility of the reading. The specific choice of
+topics and readings is our own. We recognize that our selections are personal
+and necessarily somewhat arbitrary.
+
+</dl>
+
+<p>
+<img src="images/goldbar2.gif" height="5" width=100%>
+
+<p>
+<h3>
+<a name="Readings">
+<img src="images/brtar.gif" align=top height="22" width="22">
+</a>
+SUGGESTED READINGS AND DEMONSTRATION SOFTWARE</h3>
+
+                       <dl>
+
+<p>
+<dt>
+<a name="ComplexABM">
+<img src="images/raincube.gif" align=top>
+</a>
+<b>COMPLEXITY AND ABM</b>
+
+                       </dl>
+
+
+                        <ul>
+
+
+
+<p>
+<li>Callahan, Paul, <b>"What is the Game of Life?"</b>
+   <a href = 
+"https://www.cs.kent.edu/~farrell/cg05/ass/hw1/life.html">
+                  <b>(html)</b></a>.
+                     
+<dl>
+<dd>
+<b><i>Note:</i></b> The delightful "Game of Life," invented by John Conway in 1970, is not an agent-based model.  However, it is a fascinating illustration of how just three simple behavioral rules can lead to extremely complicated outcomes.
+<br>
+
+    <p>
+    <dd>
+    <img src="images/rrightar.gif" align=top height="18" width="25">
+    <b><i>Game of Life Demonstration Software</i></b>
+        <a href = "https://conwaylife.com/">
+                     <b>(Homepage)</b></a>
+ </dl>
+
+<p>
+<li>
+Chen, Shu-Heng (2012), <b>"Varieties of Agents in Agent-Based Computational Economics: A Historical and an Interdisciplinary Perspective"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/ACEHistoricalSurvey.SHCheng2011.pdf">
+    <b>(Preprint,pdf)</b></a>,
+<i>Journal of Economic Dynamics and Control</i>, Vol. 36, Issue 1, 1-25.
+  
+<dl>
+<dd><b><i>Abstract:</i></b> This thoughtful and comprehensive study traces the origins of agent-based computational economics (ACE) through four different gateways: namely, study of market processes; study of cellular automata with fixed rules of behavior; evolution-of-cooperation tournaments with programmed strategies; and experiments with autonomous human-like agents (artificial life).
+</dl>
+
+<p>
+<li>de Marchi, Scott, and Scott E. Page, <b>Agent-Based Models</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/ABMSurvey.DeMarchiPage2014.pdf">
+   <b>(pdf)</b></a>,
+<i>Annual Review of Political Science</i> 17 (2014), 1-20.
+
+<dl>
+<dd><b><i>Abstract:</i></b> Although slanted towards political science, this wide-ranging ABM survey provides a useful general discussion of ABM capabilities.
+</dl>
+
+
+<p>
+<li>Schelling, Thomas C. (1978), <b>Micromotives and Macrobehavior</b>,
+Norton, New York, NY, pp. 137-157.
+     <dl>
+<dd><b><i>Abstract:</i></b> This classic work demonstrates what can
+happen when behavior in the aggregate is more than the simple summation of
+individual behaviors.  The highlighted pages present an agent-based model, commonly 
+referred to as either the <b>Schelling Segregation Model</b> or the <b>Shelling Tipping Game</b>, 
+that shows how a high degree of 
+residential segregation can emerge from the location choices of fairly tolerant individuals.<br>
+
+<p>
+    <dd><b>Note:</b> Schelling is a co-recipient of the 2005 Bank of 
+Sweden Prize in Economic Sciences in Honor of Alfred Nobel (also known as the Nobel Prize in Economics).  
+
+</dl>
+    
+
+<p>
+<li> Tesfatsion, Leigh (2008), <b>Agent-Based Modeling: A Bridge Between Games & Social Sciences</b>
+     <a href = "https://www2.econ.iastate.edu/tesfatsi/ABMIntro.SchellingDemo.TAG2008.pdf">
+                  <b>(SlideSet,pdf)</b></a>.
+    <dl>
+<dd><b><i>Abstract:</i></b> This short presentation, designed for younger newcomers to <i>Agent-Based Modeling (ABM)</i>, starts by giving a brief introduction to ABM using examples from the movies.  It next invites readers to participate in a "hands on" demonstration of ABM by playing a version of the <b>Schelling Tipping Game</b> using a checkerboard and tokens. (The Schelling Tipping Game was first introduced in 1978 by Tom Schelling in <i>Micromotives and MacroBehavior</i> --- see the previous entry.) It then introduces readers to the <b>Schelling Tipping Game Demonstration Software</b> 
+developed by Chris Cook (see below) as well as the SimSeg test bed, an elaboration of the Schelling Tipping Game suitable for serious social science research.  It concludes by pointing readers to a website where numerous commercial applications of ABM are discussed.
+           <p><dd>
+     <img src="images/rrightar.gif" align=top height="18" width="25">
+     <b><i>Schelling Tipping Game Demonstration Software</i></b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/demos/schelling/schellhp.htm">
+           <b>(Homepage)</b></a>
+</dl>
+
+<p>
+<li>
+Vicsek, Tam&aacute;s (2000), <b>"Complexity: The Bigger Picture"</b>
+    <a href = "https://www2.econ.iastate.edu/classes/econ308/tesfatsion/complexity.Vicsek.pdf">
+                 <b>(pdf)</b></a>,            
+Vol. 418, July 11, p. 131. 
+    <dl>
+<dd><b><i>Abstract:</i></b>
+    In this short essay, Vicsek describes how computer simulation fits
+into the scientific enterprise.  The goal is to "capture the principal laws
+behind the exciting variety of new phenomena that become apparent when the
+many units of a complex system interact".
+</dl>
+
+
+<p>
+<li>
+<b>Other Introductory Materials on Complexity and Agent-Based Modeling</b>
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/aintro.htm">
+                <b>(Resource Site)</b></a>
+<p>
+<li>
+<b>Other Demonstration Software</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/abmdemo.htm#ComplexABM">
+              <b>(Resource Site)</b></a>
+
+                    </ul>
+
+
+<p>
+<img src="images/bfadebar.gif" height="4" width=100%>
+
+<dl>
+
+<p>
+<dt>
+<a name="Emergence">
+<img src="images/raincube.gif" align=top>
+<b>EMERGENCE OF COLLECTIVE BEHAVIOR</b>
+
+</dl>
+
+                        <ul>
+
+
+<p>
+<li>
+Cederman, Lars-Erik (2003), <b>"Modeling the Size of Wars"</b>
+     <a href = "https://www2.econ.iastate.edu/tesfatsi/LarsErikCederman.ModelingSizeOfWars.pdf">
+                <b>(pdf)</b></a>,
+<i>American Political Science Review</i>, Vol. 97, pp. 135-150.
+The published article is available from 
+<a href = "https://www.jstor.org/">
+                 <b>JSTOR</b></a>.
+
+
+    <dl>
+ <dd><b><i>Abstract:</i></b> Power-law distributions, scaling laws, and
+self-organized criticality are features of many frequency distributions, from
+word usage to avalanches, and from firms to cities.  A set of events is said
+to behave in accordance with a <i>power law distribution</i> if large events
+are rarer than small events, and specifically if the frequency of an event is
+<i>inversely</i> proportional to its size.  An example is the distribution of
+the sizes of wars.  Cederman uses an agent-based model of war and state
+formation in the context of technological change to account for this observed
+regularity.  His paper is a good example of how a fairly complicated model
+and its implications can be clearly presented, with details left to an
+appendix.
+</dl>
+
+
+<p>
+<li>
+Epstein, Joshua M. (2002), <b>"Modeling Civil Violence: An Agent-Based
+Computational Approach"</b>
+     <a href = "https://www2.econ.iastate.edu/tesfatsi/Epstein.CivilViolence.pdf">
+                <b>(pdf)</b></a>,
+<i>Proceedings of the National Academy of
+Sciences, U.S.A.</i>, Vol. 99, pp. 7243-7250.
+The published article is available from 
+<a href = "https://www.jstor.org/">
+                 <b>JSTOR</b></a>.
+
+
+
+    <dl>
+ <dd><b><i>Abstract:</i></b> Epstein uses a spatial agent-based model to
+explore civil violence.  A central authority uses "cops" to arrest (remove)
+actively rebelling citizens from the society for a specified jail term.  In
+each time step, each agent (cop or citizen) randomly moves to a new
+unoccupied site within its limited vision.  A rebelling citizen's estimated
+arrest probability is assumed to fall as the ratio of actively rebelling
+citizens to cops that the citizen perceives in its vicinity increases.  Each
+citizen in each time step decides whether to actively rebel or not depending
+on this perceived ratio.  Epstein shows how the complex dynamics resulting
+from these simple assumptions can generate empirically interesting
+macroscopic regularities that are difficult to analyze using more standard
+modeling approaches.
+</dl>
+
+
+<p>
+<li>
+Granovetter, Mark (1978), <b>"Threshold Models of Collective Behavior"</b>,
+<i>American Sociological Review</i>, Vol. 83, pp. 1420-1442.
+The published article is available from 
+<a href = "https://www.jstor.org/">
+                 <b>JSTOR</b></a>.
+
+
+
+
+     <dl>
+<dd><b><i>Abstract:</i></b> Threshold models are a class of
+mathematically tractable models that do not require ABM to determine the
+global behavior that will emerge from individual choices.  In a threshold
+model, the key specification is each agent's <i>threshold</i> for each of its
+possible actions, i.e., the proportion of agents who must prefer to take a
+particular action before the given agent will prefer to take this action.
+Granovetter develops a threshold model in which each agent has the same two
+alternative actions and the thresholds for these actions differ across
+agents.  For a given frequency distribution of thresholds, the model
+calculates the equilibrium number of agents taking each action.  One
+suggested application is to civil violence, in which each agent must decide
+whether or not to join a riot.  It is interesting to compare Granovetter's
+threshold model outcomes to the richer outcomes obtained for an agent-based
+model of civil violence in the following article by Joshua Epstein.
+</dl>
+
+
+<p>
+<li>
+Miller, John, and Scott E. Page (2004), <b>"The Standing Ovation
+Problem"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/StandingOvation.MillerPage.pdf">  <b>(pdf)</b></a>, Vol. 9, No. 5, May/June, pp. 8-16.   
+
+     <dl>
+<dd><b><i>Abstract:</i></b> Miller and Page use audience ovation to
+introduce many key ABM themes, in particular the emergence of collective
+behavior, and to provide specific modeling suggestions suitable for
+implementation by newcomers to the field.  As a public performance draws to a
+close, and audience members begin to applaud and some even tentatively to
+stand, will a standing ovation ensue or not?  This is the famous <i>Standing
+Ovation Problem (SOP)</i> inspired by the seminal work of Thomas Schelling on
+the relationship between micro decisions and macro behaviors (see the Section
+on Complexity and ABM, above).  Miller and Page use the SOP to illustrate how
+complex social dynamics can arise from the interactions among simple personal
+choices, in this case to stand or not.  They argue (p. 9) that the success of
+the SOP as an expository device is that it forces modelers "to confront the
+core methodological issue in complex adaptive social systems, namely, how
+does one model a system of thoughtful, interacting agents in time and space?"
+</dl>
+
+<p>
+<li>
+<b>Demonstration Software</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/abmdemo.htm#Emergence">
+                    <b>(Resource Site)</b></a>
+
+                        </ul>
+
+<p>
+<img src="images/bfadebar.gif" height="4" width=100%>
+
+<dl>
+
+<p>
+<dt>
+<a name="Evolution">
+<img src="images/raincube.gif" align=top>
+<b>EVOLUTION</b>
+
+</dl>
+
+               <ul>
+
+<p>
+<li>
+Dawkins, Richard (1989), <b>The Selfish Gene</b>, Oxford University Press,
+New Edition, Oxford, UK, pp. 1-45.
+  <dl>
+ <dd><b><i>Abstract:</i></b> If you are going to read only one book on evolution, this delightful and insightful book is a good choice.  You will be amazed at the implications of the inclusive fitness perspective.
+
+
+    <p><dd>
+     <img src="images/rrightar.gif" align=top height="18" width="25">
+     <b><i>Evolution of Dawkins Biomorphs: Interactive Demo</i></b>
+       <a href = "https://www.rennard.org/alife/english/biomgb.html">
+                      <b>(html)</b></a>
+</dl>
+
+<p>
+<li>
+Orr, H. Allen (1996), 
+<a href = 
+"https://academic.oup.com/evolut/article/50/1/467/6870855">
+       <b>"Dennett's Strange Idea"</b></a>, 
+<i>Boston Review</i>, Summer.  In the course of reviewing Daniel C. Dennett's book <i>Darwin's Dangerous Idea</i> (Simon and Schuster, 1996), Orr provides a provocative wide-ranging discussion of natural selection in relation to both biological and cultural evolution. 
+
+
+<p>
+<li>
+Sigmund, Karl (1993), <b>Games of Life: Explorations in Ecology, Evolution, and Behavior</b>, Oxford University Press, Oxford, UK, pp. 155-206.
+    <dl> <dd><b><i>Abstract:</i></b> Writing in a lively and engaging style, Sigmund provides a non-technical introduction to models of evolution.  Topics include population ecology and chaos, random drift and chain reactions, population genetics, evolutionary game theory, and the evolution of cooperation based on reciprocity.  The highlighted pages cover the latter two topics, of most relevance to social scientists.
+</dl>
+
+
+<p>
+<li>
+Other Readings on <b>Biological Evolution</b>
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/bioevol.htm">
+                <b>(Resource Site)</b></a>
+and <b>Social Evolution</b>
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/socevol.htm">
+              <b>(Resource Site)</b></a>.
+
+<p>
+<li>
+<b>Other Demonstration Software</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/abmdemo.htm#Evolution">
+                <b>(Resource Site)</b></a>
+
+             </ul>
+
+<p>
+<img src="images/bfadebar.gif" height="4" width=100%>
+
+<dl>
+
+<p>
+<dt>
+<a name="Learning">
+<img src="images/raincube.gif" align=top>
+<b>LEARNING</b>
+
+</dl>
+
+                       <ul>
+
+<p>
+<li>
+<b>Artificial Intelligence Best Books List</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/AI.BestBooksList.NYT.2024.pdf">
+            <b>(pdf)</b></a>,
+assembled in January 2024 by Stephen Marche for the <i>New York Times</i>.
+
+
+
+<p>
+<li>Clark, Andy (1997), <b>Being There: Putting Brain, Body, and World Together Again</b>
+                <a href = "https://www2.econ.iastate.edu/tesfatsi/BeingThere.AClark1998.Chapter1.pdf">
+           <b>(Chapter 1,pdf)</b></a>,
+                 <a href = "https://www2.econ.iastate.edu/tesfatsi/BeingThere.AClark1998.EntireBook.pdf">
+           <b>(EntireBook,pdf)</b></a>,
+MIT Press, 308 pp., ISBN 0-262-53156-9.
+    <dl> <dd><b><i>Abstract:</i></b> In this delightfully written book, Clark addresses foundational questions about how people (and robots) can make sense of the confusing world in which they live.  He brings together ideas and techniques from robotics, neuroscience, infant psychology, and artificial intelligence.  He addresses a broad range of adaptive behaviors, from cockroach locomotion to the role of linguistic artifacts in higher-level thought.
+</dl>
+
+<p>
+<li>
+Holland, John (1992), <b>"Genetic Algorithms"</b>
+ <a href = "https://www2.econ.iastate.edu/tesfatsi/holland.GAIntro.htm">
+                   <b>(html)</b></a>,
+<i>Scientific American</i>, Vol. 267, July, pp. 66-72.   
+     <dl>
+<dd><b><i>Abstract:</i></b> The genetic algorithm is a search technique inspired by the evolutionary effectiveness of mutation and differential reproduction.  The algorithm provides a convenient way to model agents of limited rationality that adapt and/or evolve over time.  Each agent might be responding to a fixed environment, or to an every-changing social environment consisting of many agents who are continually adapting to each other.  The article by Rick Riolo in the same issue shows how to incorporate a genetic algorithm in one's own agent-based model.
+</dl>
+
+
+<p>
+<dl>
+<dd>
+  <img src="images/rrightar.gif" align=top height="18" width="25">
+  <b><i>The Trade Network Game Demo: Genetic Algorithm Learning</i></b>
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/tnghome.htm">
+                     <b>(Homepage)</b></a>
+</dd></dl>
+
+
+
+<p>
+<li>
+Platas-Lopez, Alejandro, Guerra-Hernandez, Alejandro, Quiroz-Castellanos, Marcela, and Cruz-Ramirez, Nicandro (2023), <b>"A Survey on Agent-Based Modelling Assisted by Machine Learning"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/ABMAssistedByML.APlatasLopez2023.pdf">
+                <b>(pdf,3MB)</b></a>,
+<i>Expert Systems</i>, John Wiley & Sons, April 2023, 23pp. DOI: 10.1111/exsy.13325 (online)
+
+ <dl>
+<dd><b><i>Abstract:</i></b> 
+This study argues that the incorporation of Machine Learning (ML) in the various stages of agent-based model development presents a promising approach for current and future ABM research. The study first explains the fundamental features of ML.  It then surveys current uses of ML in ABM studies, and discusses prospects and challenges for further integration of ML with ABM in the near future. 
+</dl>
+
+
+
+
+<p>
+<li>
+Tesfatsion, Leigh (2024), <b>Learning Algorithm Illustrations: From Simple to Deep</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/LearnAlgorithms.LT.pdf">
+               <b>(SlideSet,pdf)</b></a>.
+
+<p>
+<li>
+Tesfatsion, Leigh (2023), <b>Learning and the Embodied Mind</b>
+       <a href = "https://www2.econ.iastate.edu/tesfatsi/aemind.htm">
+                <b>(Resource Site)</b></a>
+
+
+<p>
+<li>
+Vriend, Nicolaas (2000), <b>"An Illustration of the Essential Difference Between Individual and Social Learning, and its Consequence for Computational Analyses"</b>  <a href = "https://www2.econ.iastate.edu/tesfatsi/Vriend.TwoTypesGALearning.pdf">
+                  <b>(pdf)</b></a>,
+<i>Journal of Economic Dynamics and Control</i>, Vol. 24, pp. 1-19.   
+
+     <dl>
+<dd><b><i>Abstract:</i></b> Vriend focuses on the importance of the <i>level</i> of learning for computational agents.  An agent is said to employ <i>individual-level learning</i> when it learns from its own past experiences, and to employ <i>population-level learning</i> when it learns from other agents, e.g., through mimicry of their observed behaviors.  Using a simple market model for concrete illustration, Vriend demonstrates that substantially different outcomes can result when firms use individual-level genetic algorithm learning versus population-level genetic algorithm learning.
+</dl>
+
+<p>
+<li>
+Wolfram, Stephen (2024), <b>What Is ChatGPT Doing ... and Why Does It Work?</b>
+    <a href =
+
+"https://www2.econ.iastate.edu/tesfatsi/ChatGPT.WhatIsItWhyDoesItWork.SWolfram.2024.pdf">
+                <b>(pdf)</b></a>,
+posted online at the following site:
+   <a href = "https://writings.stephenwolfram.com">
+           <b>Writings of Stephen Wolfram</b></a>.  
+
+
+
+<p>
+<li><b>Other Introductory ABM Materials on Learning</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/aemind.htm">
+                <b>(Resource Site)</b></a>
+
+
+
+<p>
+<li>
+<b>Other Demonstration Software</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/abmdemo.htm#Learning">
+                  <b>(Resource Site)</b></a>
+
+              </ul>
+
+
+<p>
+<img src="images/bfadebar.gif" height="4" width=100%>
+
+<dl>
+
+<p>
+<dt>
+<a name="Norms">
+<img src="images/raincube.gif" align=top>
+<b>NORMS</b>
+
+</dl>
+
+                    <ul>
+
+<p>
+<li>Axelrod, Robert (1984), <b>The Evolution of Cooperation</b>
+   <a href =
+"https://www2.econ.iastate.edu/tesfatsi/Axelrod_Evol_of_Coop_excerpts.pdf">
+          <b>(Chapters 1,2,9;pdf)</b></a>,
+Basic Books Inc., New York, NY.
+     <dl>
+<dd><b><i>Abstract:</i></b> Robert Axelrod conducted two computer tournaments to find an effective strategy for the Iterated Prisoner's Dilemma (IPD).  Surprisingly, the simplest strategy submitted was the winner in both tournaments. The winning strategy was Tit-For-Tat, the strategy that cooperates on the first move and thereafter does whatever the other player did in the previous move.  The selected chapters explain why understanding the IPD is important, how tournament results reveal what it takes to be successful in this context, and why reciprocity works well when paired with a wide range of strategies.  Other chapters describe applications (including the "live and let live" system in trench warfare in World War I), provide theorems about the evolution of cooperation, and offer advice on how to promote cooperation. 
+
+<p>
+<dd> Documentation materials explaining the rules used in Axelrod's second computer IPD tournament, plus source code for these rules, can be accessed
+ <a href = "https://websites.umich.edu/~axe/CC/CC2.html">
+  <b>here</b></a>. 
+ 
+
+<p>
+<dd>
+<img src="images/rrightar.gif" align=top height="18" width="25">
+  <b><i>Axelrod Tournament Demonstration Software</i></b>
+  <a href = "https://www2.econ.iastate.edu/tesfatsi/demos/Axelrod/axelrodt.htm">
+                  <b>(Homepage)</b></a>
+
+</dl>
+
+<p>
+<li>Axelrod, Robert (1986), <b>"An Evolutionary Approach to Norms"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/Axelrod_An_Evolutionary_Approach.pdf">
+                <b>(pdf)</b></a>,
+<i>American Political Science Review</i>, Vol. 80, pp. 1095-1111.
+
+     <dl>
+<dd><b><i>Abstract:</i></b> This article develops an agent-based model
+with a simple form of learning using the genetic algorithm to explore what
+can happen when many agents adapt to each other's behavior over time.  Agents
+can be more or less bold (say by cheating), and more or less vengeful (say by
+reporting cheaters).  The model shows the conditions under which a collective
+action problem can be solved by a self-sustaining metanorm: punish those who
+do not enforce the norm because others might punish you for <i>not</i> doing so.
+</dl>
+
+<p>
+<li>
+Epstein, Joshua M. (2001), <b>"Learning to be Thoughtless: Social Norms and
+Individual Competition"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/LearningToBeThoughtless.JEpstein2001.pdf">
+       <b>(pdf)</b></a>,
+<i>Computational Economics</i> Vol. 18, 9-24.
+
+    <dl>
+ <dd><b><i>Abstract:</i></b> Epstein uses an agent-based model to study
+experimentally an important observed aspect of social norm evolution: namely,
+that the amount of time an individual devotes to thinking about a behavior
+tends to be inversely related to the strength of the social norms that relate
+to this behavior. In the limit, once a behavioral norm is firmly entrenched
+in a society, individuals tend to conform to the norm without explicit
+thought.  Epstein's innovative model permits agents to learn how to behave
+(what behavioral norm to adopt) but it also permits agents to learn how much
+to think about how to behave.
+</dl>
+
+
+
+<p>
+<li>Nowak, Martin A., Page, Karen M., and Karl Sigmund (2000), <b>"Fairness
+Versus Reason in the Ultimatum Game"</b>, <i>Science</i>, Vol. 289, September
+8, pp. 1773-1775.
+Published article freely available at
+  <a href = "https://www.sciencemag.org/">
+               <b>The Science Magazine</b></a>.
+
+     <dl>
+<dd><b><i>Abstract:</i></b> The authors consider the <i>Ultimatum
+Game</i> in which two players are offered a chance to win a certain sum of
+money.  One player, the proposer, gets to offer a portion of the sum to the
+other player, retaining the rest.  The second player gets to accept or reject
+the offer, with rejection resulting in no money for either player.  The
+rational solution, according to game theory, is for the proposer to offer as
+little as possible and for the other player to accept.  When humans play the
+game, however, the most frequent offer is an equal ("fair") share.  The
+authors employ evolutionary dynamics to explain how this "irrational"
+anchoring on fair shares might have evolved among humans in part through a
+rational concern for reputation.  Specifically, accepting low offers, if
+generally known and remembered, increases the chances of receiving low offers
+in subsequent encounters; and making low offers becomes irrational if low
+offers are not accepted.
+</dl>
+
+
+<p>
+<li><b>Other Introductory ABM Materials on Norms</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/asocnorm.htm">
+                <b>(Resource Site)</b></a>
+
+<p>
+<li><b>Other Demonstration Software</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/abmdemo.htm#Norms">
+             <b>(Resource Site)</b></a>
+
+                  </ul>
+
+<p>
+<img src="images/bfadebar.gif" height="4" width=100%>
+
+<dl>
+
+<p>
+<dt>
+<a name="Markets">
+<img src="images/raincube.gif" align=top>
+<b>MARKETS</b>
+
+</dl>
+
+
+             <ul>
+
+<p>
+<li>Albin, Peter, and Duncan K. Foley (1992), <b>"Decentralized, Dispersed Exchange Without an Auctioneer"</b>, <i>Journal of Economic Behavior and Organization</i>, Vol. 18, pp. 27-51.
+Published article available from
+         <a href = "https://www.sciencedirect.com">
+                 <b>Science Direct</b></a>.
+
+     <dl>
+<dd><b><i>Abstract:</i></b> Albin and Foley simulate pure exchange among geographically dispersed utility-seeking agents with endowments of two distinct types of goods, and with bounds to rationality and calculation. Exchange is entirely decentralized.  The authors show that this decentralized exchange process achieves a substantial improvement in trader welfare relative to randomly allocated goods.
+</dl>
+
+<p>
+<li>Gode, Dhananjay K., and Shyam Sunder (1993), <b>"Allocative Efficiency of Markets with Zero Intelligence Traders: Market as a partial substitute for individual rationality"</b>
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/ZITraders.GodeSunder.JPE1993.pdf">
+           <b>(pdf)</b></a>,
+<i>Journal of Political Economy</i>, Vol. 101, pp. 119-137.
+     <dl>
+<dd><b><i>Abstract:</i></b> Gode and Sunder report on continuous double auction experiments with computational traders.  They find that high market efficiency is generally obtained even when traders randomly select bids and offers from within their budget sets as long as these "zero intelligence" traders abide by certain protocols restricting the order of executed trades.  The authors conclude that the high market efficiency typically observed in continuous double auction experiments with human subjects is due to the structure of the auction and not to learning.  Their seminal work has highlighted an important issue now being actively pursued by many other researchers:  what are the relative roles of learning and institutional arrangements in the determination of economic, social, and political outcomes?
+
+<!--
+ <p>
+    <dd>
+    <img src="images/rrightar.gif" align=top height="18" width="25">
+    <b><i>Zero-Intelligence Trading Demonstration Software (Java Applet/NetLogo)</i></b>
+        <a href = 
+"https://www.memcbride.net/models/2014/7/11/zi-trading">
+                     <b>(Homepage)</b></a>
+-->
+
+</dl>
+
+<p>
+<li>LeBaron, Blake (2002), <b>"Building the Santa Fe Artificial Stock Market"</b>
+      <a href = "https://www2.econ.iastate.edu/tesfatsi/blake.sfisum.pdf">
+                <b>(Paper,pdf)</b></a>,
+<a href = 
+"https://www2.econ.iastate.edu/tesfatsi/SFIStockMarketModel.LTOverview.pdf">
+                 <b>(SlideSet,pdf)</b></a>, 
+Working Paper, Brandeis University, June.
+     <dl>
+<dd><b><i>Abstract:</i></b> LeBaron provides an insider's look at the
+construction of the Santa Fe Artificial Stock Market model.  He considers the
+many design questions that went into building the model from the perspective
+of a decade of experience with agent-based financial markets.  He also
+provides an assessment of the model's overall strengths and weaknesses.
+
+    <p><dd>
+    <img src="images/rrightar.gif" align=top height="18" width="25">
+    <b><i>Santa Fe Stock Market Demonstration Software</i></b>
+             <a href = "https://artstkmkt.sourceforge.net/">
+                          <b>(Homepage)</b></a>
+</dl>
+
+<p>
+<li>Other Introductory ABM Materials on <b>Market Design</b>
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/aauction.htm">
+                    <b>(Resource Site)</b></a>,
+<b>Industrial Organization</b>
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/aindorg.htm">
+                    <b>(Resource Site)</b></a>,
+<b>Macroeconomics</b>
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/amulmark.htm">
+                    <b>(Resource Site)</b></a>,
+and <b>Automated Markets for Internet Commerce</b>
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/aamarket.htm">
+                    <b>(Resource Site)</b></a>.
+
+<p>
+<li>
+<b>Other Demonstration Software</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/abmdemo.htm#Markets">
+                <b>(Resource Site)</b></a>
+
+                     </ul>
+
+<p>
+<img src="images/bfadebar.gif" height="4" width=100%>
+
+<dl>
+
+<p>
+<dt>
+<a name="Design">
+<img src="images/raincube.gif" align=top>
+<b>INSTITUTIONAL DESIGN</b>
+
+</dl>
+
+               <ul>
+
+<p>
+<li>Kollman, Kenneth, John H. Miller, and Scott E. Page (1997), <b>"Political
+Institutions and Sorting in a Tiebout Model"</b>,  <i>American Economic
+Review</i>, Volume 87, 977-992.  
+The published article is available from 
+<a href = "https://www.jstor.org/">
+                 <b>JSTOR</b></a>.
+
+     <dl>
+<dd><b><i>Abstract:</i></b> The authors develop an agent-based model to
+explore how social outcomes are affected by the political institutions used
+to aggregate individual choices on local public goods issues, such as whether
+or not to finance a community swimming pool.  Examples of such political
+institutions are referenda, two-party competition, and proportional
+representation.  For each tested political institution, assumed to be
+commonly in use across all jurisdictions, citizens "vote with their feet" in
+each time period regarding which jurisdiction they wish to inhabit.  The
+policy positions resulting in any given jurisdiction depend on the
+preferences of the citizens located within that jurisdiction, in a manner
+determined by the political institution in force.  Citizens can continue to
+relocate in response to changing local policy positions, and local policy
+positions can continue to change in response to citizen relocations. The
+authors find that social efficiency is highest under political institutions
+such as two-party competition or proportional representation that initially
+induce citizens to undertake a suitable degree of experimentation among
+alternative jurisdictions.
+</dl>
+
+<p>
+<li>Lansing, J. Stephen, and James N. Kremer (1993), <b>"Emergent Properties of
+Balinese Water Temple Networks: Coadaptation on a Rugged Fitness
+Landscape"</b>
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/LansingKremer.BaliWaterTemples.pdf">
+           <b>(pdf)</b></a>,
+<i>American Anthropologist</i>, Vol. 95, pp. 97-114.
+The published article is available from 
+<a href = "https://www.jstor.org/">
+                 <b>JSTOR</b></a>.
+
+
+    <dl>
+ <dd><b><i>Abstract:</i></b> Over hundreds of years, Balinese farmers
+have developed an intricate hierarchical network of "water temples" dedicated
+to agricultural deities in parallel with physical transformations of their
+island deliberately undertaken to make it more suitable for growing irrigated
+rice.  The water temple network plays an instrumental role in the
+coordination of activities related to rice production.  Representatives of
+different water temple congregations meet regularly to decide cropping
+patterns, planting times, and water usage, thus helping to synchronize
+harvests and control pest populations. Lansing and Kremer develop an
+ecological simulation model to illuminate the system-level effects of the
+water temple network, both social and ecological.  Their anthropological
+study illustrates many important ABM concepts, including emergent properties,
+fitness landscapes, co-adaptation, and the effects of different institutional
+designs.
+</dl>
+
+<p>
+<li>Simon, Herbert (1982), 
+<b>"The Architecture of Complexity"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/ArchitectureOfComplexity.HSimon1962.pdf">
+    <b>(pdf)</b></a>,
+pp. 193-230 in <i>The Sciences of the Artificial</i>, Second Edition, The MIT Press, Cambridge, MA.
+    <dl>
+ <dd><b><i>Abstract:</i></b> Simon informally defines a "complex system"
+to be a system made up of a large number of parts that interact in a
+non-simple way.  He considers a number of complex systems encountered in the
+behavioral sciences, from families to formal organizations, and describes
+features that are common in a wide variety of such systems. His central theme
+(p. 196) is that "complexity frequently takes the form of hierarchy and that
+hierarchic systems have some common properties independent of their specific
+content."  He discusses the design advantages of nearly decomposable
+subsystems with a hierarchical organization of their parts.  He also
+conjectures that complex systems evolve from simple systems much more rapidly
+if there are stable intermediate forms along the way, hence evolution favors
+hierarchic over non-hierarchic systems.
+</dl>
+
+<p>
+<li>Other Introductory ABM Materials on Institutional Design for
+<b>Political Systems</b>
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/apolecon.htm">
+                    <b>(Resource Site)</b></a>,
+<b>Management of Natural Resources</b>
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/aagric.htm">
+                    <b>(Resource Site)</b></a>,
+and <b>Organizations</b>
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/acomporg.htm">
+                    <b>(Resource Site)</b></a>.
+
+                  </ul>
+
+
+<p>
+<img src="images/bfadebar.gif" height="4" width=100%>
+
+<p>
+<dt>
+<a name="Networks">
+<img src="images/raincube.gif" align=top>
+<b>NETWORKS</b>
+
+             <ul>
+
+<p>
+<li>Kirman, Alan P., and Nicolaas J. Vriend (2001), <b>"Evolving Market Structure: An ACE Model of Price Dispersion and Loyalty"</b>
+     <a href = "https://www2.econ.iastate.edu/tesfatsi/KirmanVriend.EvolvingMarketStructure.pdf">
+                 <b>(pdf)</b></a>,
+<i>Journal of Economic Dynamics and Control</i>, Vol. 25, Nos. 3-4, pp. 459-502.
+                <dl>
+<dd><b><i>Abstract:</i></b> Social scientists typically study the
+implications of given interaction networks, e.g., friendship or trade
+networks.  An important aspect of many social systems, however, is how agents
+come to form interaction networks. Kirman and Vriend address this issue in
+the context of an agent-based computational model capturing salient
+structural aspects of the actual wholesale fish market in Marseilles, France.
+Two features characterizing this actual market are: (a) loyalty relationships
+(persistent trade partnerships) between particular buyers and sellers; and
+(b) persistent price dispersion unexplainable by observable characteristics
+of the fish.  The simulation results show that loyalty relationships can
+indeed emerge naturally between particular buyer-seller pairs as the buyers
+and sellers co-evolve their trading rules over time.   Buyers learn to become
+loyal to particular sellers while, at the same time, sellers learn to offer
+higher payoffs (lower prices and more reliable supplies) to their more loyal
+buyers.  Moreover, this evolving trade network supports persistent price
+dispersion over time.
+                   </dl>
+
+
+<p>
+<li> 
+Tesfatsion, Leigh (2009), <b>"Notes on Wilhite (2001)"</b>
+   <a href = "https://www2.econ.iastate.edu/classes/econ308/tesfatsion/WilhiteNotes.LT.pdf">
+          <b>(SlideSet,pdf)</b></a>.  
+           
+    <dl>
+<dd><b>NOTE:</b> These presentation slides summarize key points from the article by Wilhite (2001), linked below.
+    </dl>
+
+
+
+<p>
+<li>Wilhite, Allen (2001), <b>"Bilateral Trade and `Small-World'
+Networks"</b> 
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/SmallWorldNetworksBilateralTrade.Wilhite.pdf">
+                       <b>(pdf)</b></a>,
+<i>Computational Economics</i>,
+Vol. 18, No. 1, August, pp. 49-64.
+
+            <dl>
+<dd><b><i>Abstract:</i></b> Wilhite develops an agent-based
+computational model of a bilateral exchange economy.  He uses this model to
+explore the consequences of restricting trade to different types of networks,
+including a "small-world network" with both local connectivity and global
+reach. His key finding is that small-world networks provide most of the
+market-efficiency advantages of completely connected networks while retaining
+almost all of the transaction cost economies of locally connected networks.
+              </dl>
+
+<!--
+<p>
+                 <dl>
+<dd>
+  <img src="images/rrightar.gif" align=top height="18" width="25">
+  <b><i>Wilhite Small-World Trade Network Demo</i></b>
+     <a href = 
+"https://www.memcbride.net/models/2014/7/11/wilhite-small-world-model">
+                  <b>(Homepage)</b></a>
+
+          </dl>
+-->
+
+    
+
+
+<p>
+                  <dl>
+<dd>
+  <img src="images/rrightar.gif" align=top height="18" width="25">
+  <b><i>The Trade Network Game Demo: Network Formation</i></b>
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/tnghome.htm">
+                  <b>(Homepage)</b></a>
+
+                  </dl>
+
+<p>
+<li><b>Other Introductory Materials on ABM Network Research</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/anetwork.htm">
+               <b>(Resource Site)</b></a>
+
+<p>
+<li>
+<b>General Introductory Materials on Network Formation</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/netgroup.htm">
+              <b>(Resource Site)</b></a>
+
+                 </ul>
+
+
+<p>
+<img src="images/bfadebar.gif" height="4" width=100%>
+
+<dl>
+
+<p>
+<dt>
+<a name="Modeling">
+<img src="images/raincube.gif" align=top>
+<b>MODEL PARADIGMS</b>
+
+</dl>
+
+                            <ul>
+
+
+
+<p>
+<li>Macy, Michael W., and Robert Willer (2002), <b>"From Factors to Actors:
+Computational Sociology and Agent-Based Modeling"</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/Macy_Factors_2001.pdf">
+         <b>(pdf)</b></a>,
+<i>Annual Review of Sociology</i>, Vol. 28, pp. 143-166.
+Published article available at
+           <a href = "https://www.jstor.org/">
+                 <b>JSTOR</b></a>.
+     <dl>
+<dd><b><i>Abstract:</i></b> While written for sociologists, this review article should be of value to all agent-based modelers.  It places ABM in its historical context, explains its meaning and goals, provides many good examples, and offers useful advice to those who want to try it for themselves.  
+   </dl>
+
+<p>
+<li>Tesfatsion, Leigh (2017), <b>"Modeling Economic Systems as 
+Locally-Constructive Sequential Games"</b>
+<a href = "https://lib.dr.iastate.edu/econ_workingpapers/23/">
+         <b>(Working Paper,pdf)</b></a>,
+<a href = "https://www2.econ.iastate.edu/tesfatsi/EconSystemsAsLCSGames.LTesfatsion.pdf">
+    <b>(SlideSet,pdf)</b></a>,
+<i>Journal of Economic Methodology</i> Vol. 24, Issue 4, 384-409. 
+
+<dl>
+<dd><b><i>Abstract:</i></b> 
+Real-world economies are open-ended dynamic systems consisting of heterogeneous interacting participants. Human participants are decision-makers who strategically take into account the past actions and potential future actions of other participants. All participants are forced to be locally constructive, meaning their actions at any given time must be based on their local states; and participant actions at any given time affect future local states.  Taken together, these essential properties imply real-world economies are locally-constructive sequential games.  This paper discusses a modeling approach, <i>Agent-based Computational Economics (ACE)</i>, that permits researchers to study economic systems from this point of view.  ACE modeling principles and objectives are first concisely presented and explained. The remainder of the paper then highlights challenging issues and edgier explorations that ACE researchers are currently pursuing.  
+</dl>
+
+           </ul>
+
+<p>
+<img src="images/bfadebar.gif" height="4" width=100%>
+
+<dl>
+
+<p>
+<dt>
+<a name="MethodTools">
+<img src="images/raincube.gif" align=top>
+<b>METHOD/TOOL TUTORIALS</b>
+
+</dl>
+
+<ul>
+
+
+<p>
+<dl>
+<dt> 
+<img src="images/bludiam3.gif" align=top>
+<b>Dynamic Modeling</b>
+</dl>
+
+                            <ul>
+
+<p>
+<li>Astr&ouml;m, Karl Johan, and Richard M. Murray (2008), <b>Feedback Systems</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/feedbacksystems.astrommurray.pdf">
+               <b>(Entire Book,pdf)</b></a>,
+Princeton University Press, Princeton, NJ.
+
+                           <dl>
+<dd><b><i>Abstract:</i></b> "This book provides an introduction to the basic principles and tools for the design and analysis of feedback systems. It is intended to serve a diverse audience of
+scientists and engineers who are interested in understanding and utilizing feedback in physical, biological, information and social systems.  We have attempted to keep the mathematical prerequisites to a minimum while being careful not to sacrifice
+rigor in the process. We have also attempted to make use of examples from a variety of disciplines, illustrating the generality of many of the tools while at the same time showing how they can be applied in specific application domains."
+                           </dl>
+
+
+
+<p>
+<li>Tesfatsion, Leigh (2016), <b>Elements of Dynamic Economic Modeling: Presentation and Analysis</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/DynamicEconomicModelingBasics.WPVersion.pdf">
+    <b>(WP,pdf)</b></a>,
+<i>Eastern Economic Journal</i> Vol. 43, Issue 2, 192-216. doi:10.1057/eej.2016.2
+
+   <dl>
+<dd><b><i>Abstract:</i></b> The primary goal of these introductory notes is to promote the clear presentation and rigorous analysis of dynamic economic models, whether expressed in equation or agent-based form.  A secondary goal is to promote the use of initial-value state space modeling with its regard for historical process, for cause leading to effect without the external imposition of global coordination constraints on agent actions. 
+   </dl>
+
+              </ul>
+
+<p>
+<dl>
+<dt> 
+<img src="images/bludiam3.gif" align=top>
+<b>Game Theory Tutorial</b>
+</dl>
+
+    <ul>
+
+<p>
+<li>Tesfatsion, Leigh (2017), <b>Game Theory: Basic Concepts and Terminology</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/GameDef.pdf">
+           <b>(Notes/Slides,pdf)</b></a>.
+
+          </ul>
+
+
+<p>
+<dl>
+<dt> 
+<img src="images/bludiam3.gif" align=top>
+<b>Learning Tutorials</b>
+</dl>
+
+    <ul>
+
+
+<p>
+<li>Cheung, Vincent, and Kevin Cannons (2002), <b>An Introduction to Neural Networks</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/NeuralNetworks.CheungCannonNotes.pdf">
+           <b>(SlideSet,pdf)</b></a>.
+
+
+<p>
+<li>Smart, Bill (2005), <b>Reinforcement Learning: Users Guide</b> <a href = "https://www2.econ.iastate.edu/tesfatsi/RLUsersGuide.icac2005.pdf">
+           <b>(SlideSet,pdf)</b></a>.
+
+<p>
+<li>Tesfatsion, Leigh (2024), <b>Learning Algorithm Illustrations: From Simple to Deep</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/LearnAlgorithms.LT.pdf">
+           <b>(SlideSet,pdf)</b></a>.
+
+     </ul>
+
+<p>
+<dl>
+<dt> 
+<img src="images/bludiam3.gif" align=top>
+<b>Network Tutorials</b>
+</dl>
+
+    <ul>
+
+<p>
+<li>Tesfatsion, Leigh (2009), <b>Cellular Automata: Basic Introduction</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/CellularAutomataIntro.LT.pdf">
+           <b>(SlideSet,pdf)</b></a>.
+
+<p>
+<li>Tesfatsion, Leigh (2009), <b>Notes on Network Formation</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/NetworkFormation.LT.pdf">
+           <b>(SlideSet,pdf)</b></a>.
+
+
+<p>
+<li>Zhou, Changsong, with extensive edits by Leigh Tesfatsion (2009), <b>Introductory Notes on the Structural and Dynamical Analysis of Networks</b>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/NetworkNotes.ModifiedZhou.pdf">
+           <b>(SlideSet,pdf)</b></a>.
+
+
+
+
+     </ul>
+
+<p>
+<dl>
+<dt> 
+<img src="images/bludiam3.gif" align=top>
+<b>Software and Toolkit Development</b>
+</dl>
+
+                        <ul>
+
+<p>
+<li>
+Annotated Pointers to ABM Software and Toolkits
+<a href = "https://www2.econ.iastate.edu/tesfatsi/acecode.htm">
+                   <b>(Resource Site)</b></a>
+
+                        </ul>
+
+
+
+     </ul>
+
+
+
+
+
+<p>
+<img src="images/goldbar2.gif" height="5" width=100%>
+
+<p>
+<h3>
+<a name="WhatNext">
+<img src="images/brtar.gif" align=top height="22" width="22">
+</a>
+WHAT TO DO NEXT</h3>
+
+                          <ul>
+
+<p>
+<li>
+<a href = "https://www2.econ.iastate.edu/tesfatsi/ace.htm">
+       <b>Browse a comprehensive repository</b></a>
+of annotated posted materials stressing <i>Agent-based Computational Economics (ACE)</i> but including many general ABM resources as well.  At this site you will find ABM/ACE researchers in your neck of the woods, links to specific ABM/ACE research sites, course syllabi, demonstration software, and much more.
+
+<p>
+<li>
+ <a href = "https://www2.econ.iastate.edu/tesfatsi/aintro.htm">
+<b>Directly access introductory ABM/ACE materials</b></a>,
+posted with annotated links.
+
+<p>
+<li>
+ <a href = "https://www2.econ.iastate.edu/tesfatsi/publish.htm">
+             <b>Explore journals</b></a> 
+that publish a good deal of ABM/ACE research.  Journals of particular interest for ACE researchers include:   
+<i>Games and Economic Behavior</i> (Elsevier); 
+<i>Journal of Economic Behavior and Organization</i> (Elsevier); 
+<i>Journal of Economic Dynamics and Control</i> (Elsevier);
+<i>Journal of Economic Interaction and Coordination</i> (Springer); 
+<i>Computational Economics</i> (Springer); 
+<i>Journal of Artificial Societies and Social Simulation</i> (online, open access); 
+and <i>Complexity</i> (Wiley/Hindawi, open access). 
+   
+
+<p>
+<li><b>Master mathematical and statistical tools</b> commonly
+used in ABM studies by taking (or self-studying) rigorous coursework in: (i) classical mathematics (especially real analysis, probability theory, and non-linear dynamics); (ii) game theory (especially dynamic games in extensive form); and (iii) statistics (e.g., regression, time series analysis, hypothesis testing, and treatment of model misspecification errors).
+
+<p>
+<li> 
+       <a href = "https://www2.econ.iastate.edu/tesfatsi/acecode.htm">
+         <b>Learn a programming language</b></a>
+so that you can try your hand at
+building and running your own ABM models.<br>
+
+<dl>
+    <p>
+<dd>For <i>younger first-time programmers</i>, we recommend
+   <a href = "https://www.slnova.org/">
+                 <b>StarLogo Nova</b></a>,
+a visual programming tool that lets students and teachers create 3D games and simulations for understanding complex systems.
+StarLogo Nova has been specifically designed to be
+user-friendly for K-12 students.  It can be used to model many
+real-life phenomena such as bird flocks, traffic jams, ant colonies, and
+simple market economies.  Extensive support materials (tutorials, demos, users discussion group,...) are provided at the StarLogo Nova website.
+
+<p>
+ <dd>For <i>older first-time programmers</i>, we recommend an <b>Object-Oriented Programming (OOP)</b> language such as 
+<a href = "https://java.sun.com/docs/books/tutorial/">
+             <b>Java</b></a> 
+or 
+           <a href = "https://www.python.org/">
+                   <b>Python</b></a>,  
+possibly supplemented with an ABM toolkit (see below). 
+
+
+<p>
+<dd>
+An excellent basic introduction to OOP for beginners is Matt Weisfeld, 
+<a href = "https://www.amazon.com/Object-Oriented-Thought-Process-Developers-Library/dp/0321861272">
+      <b>The Object-Oriented Thought Process</b></a>,
+Developer's Library Series, Fourth Edition 2013 (or latest edition), Addison-Wesley, ISBN-13: 978-0321861276.  
+
+<p>
+<dd>
+Another programming language possibility for older beginners is
+<a href = "https://www.mathworks.com/products/matlab.html">
+               <b>MATLAB</b></a>,
+which is steadily increasing its agent-oriented programming capabilities. 
+
+
+<p>
+<dd>
+For <i>experienced programmers new to ABM</i>, who are interested in using ABM for serious research purposes, we recommend using a high-powered OOP language such as 
+    <a href = "https://java.sun.com/docs/books/tutorial/">
+             <b>Java</b></a> 
+or 
+           <a href = "https://www.python.org/">
+                   <b>Python</b></a>
+or 
+<a href = 
+"https://juliadynamics.github.io/Agents.jl/stable/">
+         <b>Julia's ABM framework (Agents.jl)</b></a>.
+See, also, the January 2024 arXiv-posted report by J. Chen et al. on how to learn ABM programming using Large Language Modeling (LLM).  
+  <a href = "https://doi.org/10.1145/3613904.3642377">
+          <b>DOI: 10.1145/3613904.3642377</b></a>.
+
+
+<p>
+<dd>
+To attain needed computational speed and accuracy for more complex ABM applications, such as larger-scale ABM for coupled human, natural, and/or physical systems, recourse to C/C++ or other languages for implementation of some model components might be required.  
+                  <a href = 
+"https://en.wikipedia.org/wiki/Co-simulation">
+           <b>Co-simulation frameworks</b></a>
+(high-level architectures) can be used to facilitate coordination and communication among model components developed in multiple different languages.
+
+</dl>
+
+
+
+<p>
+<li>
+ <a href = "https://www2.econ.iastate.edu/tesfatsi/acecode.htm">
+       <b>Explore the many ABM toolkits</b></a> 
+available to assist agent-based modelers with common tasks such as constructing agents and displaying output in the form of tables, charts, graphs, and movies.  
+
+           
+
+<p>
+<li>
+Browse through Alan G. Isaac, <b>"The ABM Template Models: A Reformulation with Reference Implementations"</b>
+     <a href = "https://jasss.soc.surrey.ac.uk/14/2/5.html">
+               <b>(html)</b></a>,
+<i>Journal of Artificial Societies and Social Simulation</i> 14 (2) 5, March 2011.  The author refines a sequence of increasingly enhanced templates for an agent-based model, in multiple languages, that were originally developed by Steven Railsback; and he provides new reference implementations.  He also addresses some issues of design, flexibility, and ease of use that are relevant to the choice of an agent-based modeling platform.
+
+           
+    
+<p>
+<li>
+     <a href = "https://www2.econ.iastate.edu/tesfatsi/acedemos.htm">
+     <b>Start building ABM models</b></a> 
+with the aid of software, toolkits, and computational laboratories accessible online, accompanied by tutorials and set-up documentation.
+
+<p>
+<li> 
+  <a href = "https://www2.econ.iastate.edu/tesfatsi/avolumes.htm">
+   <b>Explore special journal issues
+     and volumes of readings</b></a>
+devoted to ABM related themes.  
+  
+
+<p>
+<li> 
+                <a href = "https://www2.econ.iastate.edu/tesfatsi/CompBeautyOfNatureReview.MosesForrest2001.pdf">
+      <b>Read a wonderful introduction to computational aspects
+             of complex systems</b></a> 
+by Gary William Flake, titled <i>The Computational Beauty of Nature</i> (MIT Press, Cambridge, MA, 1998 or latest edition).
+Covered topics including fractals, chaos, cellular automata, neural networks, and a helpful glossary of terms. 
+Detailed information about Flake's book, along with source code and other supporting materials, can be found at the above site.
+  
+                        </ul>
+
+<p>
+<img src="images/gldshbar.gif"  width=100%>
+
+<p>
+<center>
+Copyright &copy Robert Axelrod and Leigh Tesfatsion.
+All Rights Reserved. 
+</cener>
+
+</body>
+</html>

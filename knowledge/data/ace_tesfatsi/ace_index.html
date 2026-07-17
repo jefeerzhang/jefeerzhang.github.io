@@ -1,0 +1,981 @@
+<html>
+<head>
+<title> ACE: A Completely Agent-Based 
+Modeling Approach (Tesfatsion)</title>
+<!-- Matomo --><script>  var _paq = window._paq = window._paq || [];  _paq.push(['trackPageView']);  _paq.push(['enableLinkTracking']);  (function() {    var u='https://trends.ent.iastate.edu/';    _paq.push(['setTrackerUrl', u+'matomo.php']);    _paq.push(['setSiteId', '214']);    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);  })();</script><!-- End Matomo Code --></head>
+
+<body stylesrc="ace.htm" background="images/WhiteTextured2Bak.gif" text=#000000
+link=#306eff >
+
+<p>
+<img src="images/rainblok.gif" height="30" width=100% >
+
+<p>
+                <h1 align="center"> <font color="#306eff">
+                           Agent-Based<br>
+                   Computational Economics<br> </font></h1>
+
+                <h2 align="center"><font color="#306eff">
+              A Completely Agent-Based Modeling Approach<br>
+                to the Study of Economic Systems</font>
+                            </h2>
+
+
+<p>
+<img src="images/rainblok.gif" height="30" width=100% >
+
+
+
+              
+<p>
+<TABLE BORDER=0 ALIGN=CENTER CELLSPACING=0 CELLPADDING=0 WIDTH=95%>
+
+<TR>
+
+<TD ALIGN=LEFT VALIGN=TOP WIDTH=70%>
+            
+              <dl>
+
+<p>
+<dt><h3><b>Last Updated:</b></h3>
+     <dd> 21 April 2026 </dd>
+     
+
+<p>
+<dt><h3><b>Site Developed By:</b></h3>
+ <dd><a href="https://www2.econ.iastate.edu/tesfatsi/">
+         <b>Leigh Tesfatsion</b></a>
+<dd>Professor Emerita of Economics
+<dd>IEEE Life Senior Member
+<dd>Heady Hall 260
+<dd>Iowa State University
+ <dd>Ames, Iowa 50011-1054
+<dd> ORCID ID: 0000-0002-7783-2708
+  <dd>https://www2.econ.iastate.edu/tesfatsi/
+  <dd><img src="images/email.gif" align=middle>
+      <a href="mailto:tesfatsi@iastate.edu">
+            <b>tesfatsi AT iastate.edu</b></a>
+
+
+                    </dl>
+
+</TD>
+
+<TD ALIGN=RIGHT VALIGN=MIDDLE WIDTH=30%>
+
+<img src="images/acetri5.gif"  ALT="ACE Logo"
+    height=250 width=250 align=bottom><br>
+<p>
+<div align=right>
+<address>
+<font size="2"><em>(Graphic by T. Eymann)</em></font><br>
+</address>
+</div>
+
+</TD>
+
+</TR>
+</TABLE>
+
+
+<p>
+<img src="images/bfadebar.gif" height=12 width=100%>
+
+<p>
+<TABLE BORDER=0 ALIGN=CENTER CELLSPACING=0 CELLPADDING=0 WIDTH=95%>
+
+<TR>
+
+<TD ALIGN=LEFT VALIGN=TOP WIDTH=70%>
+
+<p>
+<h3><b>Table of Contents:</b></h3>
+
+                <ul>
+       <li> <a href="#Welcome">
+           <b>ACE Overview</b></a>
+                 <ul>
+       <li> <a href="#cABM">
+           <b>Completely Agent-Based Modeling (c-ABM)</b>
+       <li> <a href="#cABMasMath">
+           <b>c-ABM: A Mathematics for the Real World?</b></a>
+       <li><a href="#ACEasCABM">
+        <b>ACE: The specialization of c-ABM 
+              to Economic Systems</b></a>
+       <li> <a href="#AgentRationality">
+           <b>ACE Agent Rationality</b></a>
+       <li> <a href="#Stochasticity">
+           <b>ACE Agent Stochasticity</b></a>
+       <li> <a href="#ACEObject">
+           <b>ACE Research Objectives</b>
+       <li> <a href="#ACEWebManage">
+           <b>ACE Website Management</b>
+                </ul>
+   <li> <a href="#Links">
+        <b>Materials Linked to Date</b></a>
+             <ul>
+   <li> <a href="#Intro">
+           <b>Introductory Materials</b>
+    <li><a href="#Methods">
+          <b>Methodology Resources</b></a>
+   <li> <a href="#Teach">
+           <b>Teaching & Self-Study Resources</b></a>
+   <li> <a href="#Software">
+           <b>Software Resources</b></a>
+   <li> <a href="#ResearchAreas">
+           <b>Research Area Sites</b></a>
+   <li> <a href="#Resources">
+           <b>Other Research Resources</b></a>
+   <li> <a href="#News">
+           <b>News Notes</b></a>
+                </ul>
+</td>
+
+<TD ALIGN=RIGHT VALIGN=MIDDLE WIDTH=30%>
+
+
+</TD>
+
+</TR>
+</TABLE>
+
+
+<p>
+<img src="images/bfadebar.gif" height=6 width=100%>
+
+
+<p>
+<h2>
+<a name="Welcome">
+<img src="images/raincube.gif" width="23" height="23">
+</a><b>ACE Overview</b>
+</h2>
+
+
+<h3>
+<a name="cABM">
+<img src="images/rdshball.gif" >
+</a>Completely Agent-Based Modeling (c-ABM)</h3>
+
+<dl>
+
+<p>
+<dd>
+Roughly defined, 
+                   <a href = "https://www2.econ.iastate.edu/tesfatsi/CompleteABM.SSC2021Keynote.LTesfatsion.pdf">
+       <b>completely Agent-Based Modeling (c-ABM)</b></a>  
+is the computational modeling of processes as open-ended dynamic systems of interacting agents.  Here an "agent" for a system is broadly construed (in a traditional dictionary sense) to be any entity capable of affecting the trajectory of outcomes for this system.  Agents can thus range from sophisticated strategic decision-making entities (e.g., "humans") to physical phenomena with no cognitive function (e.g., "weather").
+
+<p>
+<d>
+An axiomatic characterization of c-ABM is given below in terms of seven modeling principles (MP1)-(MP7).  These seven modeling principles are not strictly independent of each other.  However, each principle stresses a distinct c-ABM feature, as indicated by its caption.  Together, these seven modeling principles reflect the primary goal of many agent-based modelers: namely, to be able to study real-world dynamic systems as historically unfolding events, driven by agent interactions. 
+</dd>
+
+           <dl>
+
+<p>
+<dd>
+<b>(MP1)</b>&nbsp;
+<b>Agent Definition:</b>  An <i>agent</i> is a software entity within a computationally-constructed world that can affect world outcomes through expressed actions.
+
+<p>
+<dd> 
+<b>(MP2)</b>&nbsp;
+<b>Agent Scope:</b> Agents can represent a broad range of entities, e.g., individual life-forms, social groupings, institutions, and/or physical phenomena. 
+</dd>
+
+<p>
+<dd>
+<b>(MP3)</b>&nbsp;
+<b>Agent Local Constructivity:</b> An intended action of an agent at a given instant is determined by the agent's 
+<i>state</i> (<i>data, attributes, and/or methods</i>) 
+at this instant.  
+</dd>
+
+ 
+<p>
+<dd>
+<b>(MP4)</b>&nbsp;
+<b>Agent Autonomy:</b>  All <i>agent interactions</i> 
+(<i>expressed agent actions</i>) at a given instant are determined by the ensemble of agent states at this instant.  
+</dd>
+
+<p>
+<dd>
+<b>(MP5)</b>&nbsp;
+<b>System Constructivity:</b>  The state of the world at a given instant is determined by the ensemble of agent states at this instant.
+ </dd>
+               
+<p>
+<dd>
+<b>(MP6)</b>&nbsp;
+<b>System Historicity:</b> Given an initial ensemble of agent states, any subsequent <i>world event</i> (<i>change in agent states</i>) is induced by prior and/or concurrent agent interactions.
+</dd>
+
+<p>
+<dd>
+<b>(MP7)</b>&nbsp;
+<b>Modeler as Culture-Dish Experimenter:</b> The role of the modeler is limited to the configuration and setting of initial agent states, and to the non-perturbational observation, analysis, and reporting of world outcomes.
+</dd>
+
+           </dl>                
+
+<p>
+<dd> 
+The first six modeling principles (MP1)-(MP6) characterize an agent-based model in initial-value state-space form.
+More precisely, they specify how an ensemble of agent states dynamically evolves, starting from an initially given ensemble of agent states, where each agent state consists of data, attributes, and/or methods.  
+This dynamic evolution is required to exhibit four essential real-world properties: namely, agent local constructivity, agent autonomy, system constructivity, and system historicity.   
+The seventh modeling principle (MP7) limits the role of the modeler in the modeling process to the configuration and setting of initial agent states.  
+</dd>
+
+<p>
+<dd>
+Considered as a whole, the seven modeling principles (MP1)-(MP7) thus characterize a completely agent-based model as a computational laboratory permitting the exploration of a 
+computationally-constructed world. This exploration process is analogous to biological experimentation with cultures in Petri dishes.  The modeler configures and sets initial conditions for the world. The modeler then steps back, assuming the role of pure observer, as subsequent world events are driven solely by the interactions of the world's constituent entities.
+</dd>
+
+
+            </dl>
+
+<h3>
+<a name="cABMasMath">
+<img src="images/rdshball.gif" >
+</a>c-ABM:  A Mathematics for the Real World?</h3>
+
+              <dl>
+<p>
+<dd>
+Scientists and engineers seek to understand how real-world systems work, and how real-world systems could work better.  Any modeling method devised for such purposes must simplify reality. Ideally, however, the modeling method should be flexible as well as logically rigorous; it should permit model simplifications to be appropriately tailored for the specific purpose at hand.
+</dd>
+
+<p>
+<dd>
+Modeling flexibility and logical rigor have been two key goals motivating development of the modeling 
+principles (MP1)-(MP7) for the study of real-world 
+<i>economic</i> systems. An interesting speculative question is the extent to which these principles also achieve these two goals for the study of real-world systems <i>in general</i>.
+</dd>
+
+<p>
+<dd>  
+Any system modeled in accordance with (MP1)-(MP7) is an 
+open-ended dynamic system of interacting agents, each characterized by its own state (data, attributes, and/or methods).  These agents can represent any entity capable of affecting the trajectory of system outcomes: e.g., individual life-forms, social groupings, institutions, and/or physical phenomena.  The interactions of these agents induce all dynamics (state changes) for the modeled system, starting from initial agent states configured and set by the modeler. As a result of these interactions: 
+          <ul>
+<li> each agent experiences "time" locally, as an unfolding
+     sequence of events;
+<li> the dimension and content of agent states 
+     can change; 
+<li> agents can subsume other agents as components; 
+<li> agents can break apart into smaller component agents; 
+<li> new agents can be created;
+<li> existing agents can be destroyed.
+         </ul>
+</dd>
+
+
+<p>
+<dd>
+Examples of state-changes for real-world agents include: 
+changes in sensed surroundings; 
+changes in recorded observations;
+changes in physical attributes; 
+changes in beliefs; and 
+belief-induced changes in action rules.
+
+<p>
+<dd>
+Examples of real-world agent subsumption include: 
+the formation of molecules through atomic bonding; 
+the transition from prokaryotic to eukaryotic forms of organisms; 
+the parasitism of one organism by another;  
+the hiring of employees by corporate firms; 
+the acquisition of new members by existing organizations;
+and the merger of organizations.
+</dd>
+
+<p>
+<dd>
+Examples of real-world agent creation and destruction include: volcanic eruptions; natural birth and death; the invention and obsolescence of products; and the establishment and disbanding of organizations. Creation and destruction events for populations of agents can be computationally modeled by means of evolutionary algorithms taking various forms.
+</dd>
+
+
+<p>
+<dd>
+Note, in particular, that models adhering to (MP1)-(MP7) permit the study of real-world systems that evolve from initial conditions with:
+           <ul>
+<li> no fixed "space" apart from persistent spatial
+  agents (if any) that modelers initially configure; 
+<li> no fixed "time process" apart from persistent
+     event-scheduler agents (if any) that modelers 
+     initially configure; 
+<li> no fixed "physical laws" apart from persistent agent methods (if any) that modelers initially configure.
+           </ul>
+</dd>
+
+<p>
+<dd>
+The ability to model real-world systems without having to presuppose a fixed externally given "space" or "time process" permits the study of open perplexing questions in physics regarding the existence (or not) of these concepts as fundamental fixed aspects of the physical universe.  
+</dd>
+
+<p>
+<dd>
+Persistent agent methods that a researcher might want to initially configure for a modeled real-world system include methods that support self-organization and natural selection processes.  These types of processes appear to be a basic driver of real-world agent interactions at all levels of agent encapsulation that humans can currently perceive.  An interesting question is whether they also drive agent interactions at levels beyond current human perception, such as at a quantum level. 
+</dd>
+
+<p>
+<dd>
+Finally, c-ABM permits the "thickly constructive" modeling of real-world systems in the following sense:  Given initial agent states, to an external observer the model might appear to consist of successive <i>changes</i> in agent states constructively determined by successive agent interactions. In actuality, these successive agent interactions are determined by successive agent states whose evolution can entail 
+non-constructive "leaps of faith." 
+</dd>
+
+<p>
+<dd>
+A more precise characterization of c-ABM as a <i>thickly constructive</i> modeling method is as follows. By definition, the state of an agent at a given instant consists of data, attributes, and/or methods.
+By agent local constructivity and autonomy, all agent interactions at a given instant are determined by the ensemble of agent states at this instant. 
+By system historicity, any world event (change in agent states) at a given instant is induced by prior or concurrent agent interactions. 
+However, an agent's state at a given instant can include 
+acquired or evolved attributes taking the form of 
+<i>non-constructive beliefs</i>, i.e., beliefs that assign truth values to propositions that are not constructively decidable. Consequently, non-constructive agent beliefs ("leaps of faith") at a given instant can affect future world events.
+</dd>
+ 
+<p>
+<dd>
+Models satisfying the seven c-ABM modeling principles (MP1)-(MP7) thus permit non-constructive agent beliefs to function as possible causal factors for Gilbert Ryle's "ghost in the machine" [1, pp. 11-24], Lee Smolin's "seers" [2, Part IV.18], and Carlo Rovelli's "world...of events, not things" [3, Ch. 6]."  
+</dd>
+
+<p>
+<dd>
+[1] Gilbert Ryle, <i>The Concept of Mind</i>, London:Hutchinson, 1949.
+</dd>
+
+<p>
+<dd>
+[2] Lee Smolin, <i>The Trouble with Physics: The Rise of String Theory, the Fall of Science, and What Comes Next</i>, Houghton Mifflin:Boston, 2007. 
+</dd>
+
+<p>
+<dd>
+[3] Carlo Rovelli, <i>The Order of Time</i> (English translation by Simon Carnell and Erica Segre), Riverhead Books:New York, May 2018.
+</dd>
+
+
+
+              </dl>
+
+
+
+<h3>
+<a name="ACEasCABM">
+<img src="images/rdshball.gif" >
+</a>ACE: The Specialization of c-ABM to Economic Systems</h3>
+
+<dl>
+
+<p>
+<dd>
+ Real-world economies exhibit five essential properties:
+              <ul>
+<li> They consist of <i>heterogeneous interacting entities</i> encapsulating distinct states (data, attributes, and/or methods).  
+
+<li> They are <i>open-ended dynamic systems</i> whose dynamics are driven by the successive interactions of their participant entities.  
+
+<li>  They are <i>reflexive systems</i>, i.e., the actions of participant entities can affect their own future states as well as the future states of other participant entities.
+
+
+<li> Human decision-making participants are <i>strategic</i> entities whose decision processes take into account both the remembered past actions and the envisioned future actions of other entities. 
+
+<li>  All participant entities are <i>locally constructive</i>, i.e., their intended actions are determined by their current states.  
+
+                </ul> 
+</dd>
+
+<p> 
+<dd>
+These five essential properties together imply that real-world economies are <i>open-ended locally-constructive sequential games</i>.
+</dd>
+
+<p>
+<dd>
+<i>Agent-based Computational Economics (ACE)</i> is the specialization of c-ABM to economic systems.  More precisely, 
+ACE is the modeling of <i>economic</i> systems in accordance with the seven c-ABM modeling principles (MP1)-(MP7).  
+
+<p>
+<dd>
+Each ACE model must therefore be an initial-value state-space economic model satisfying the agent definition (MP1), the agent scope requirement (MP2), and the five additional requirements (MP3)-(MP7): namely, agent local constructivity; agent autonomy; system constructivity; system historicity; and modeler as culture-dish experimenter.  As detailed in the following paper, ACE thus permits economists to study real-world economies as open-ended locally-constructive sequential games: 
+
+<p>        
+                        <ul>
+<li>Leigh Tesfatsion (2017), <b>"Modeling Economic Systems as 
+Locally-Constructive Sequential Games"</b>
+<a href = "https://lib.dr.iastate.edu/econ_workingpapers/23/">
+              <b>(WP,pdf,605KB)</b></a>,
+<a href = "https://www2.econ.iastate.edu/tesfatsi/EconSystemsAsLCSGames.LTesfatsion.pdf">
+    <b>(Keynote,SlideSet,pdf,1MB)</b></a>,
+<i>Journal of Economic Methodology</i>, Vol. 24, Issue 4, 384-409.
+                       </ul>
+</dd>
+
+<p>
+<dd>
+Modern economic theory also relies heavily on state-space models.  However, these models typically incorporate modeler-imposed rationality, optimality, and/or equilibrium conditions that could not (or would not) be met by locally-constructive and autonomous agents interacting within economic systems that satisfy system constructivity and system historicity. For example, strong-form rational expectations assumptions require the ex ante expectations of decision-makers to be consistent with ex post model outcomes.  The determination of a rational expectations solution is therefore a global fixed-point problem that requires the simultaneous consideration of all modeled decision periods without regard for local constructivity, autonomy, and historical process constraints.   
+</dd>
+
+<p>
+<dd>
+In contrast, ACE permits the <i>open-ended</i> dynamic modeling of economic systems <i>without external imposition</i> of rationality, optimality, or equilibrium conditions.  ACE models can therefore be used to conduct systematic investigations of these conditions as testable prior hypotheses.  This capability  fundamentally distinguishes ACE from all currently standard dynamic economic modeling approaches.
+</dd>
+
+<p>
+<dd>
+Finally, the requirement that ACE models satisfy the seven c-ABM modeling principles (MP1)-(MP7) permits ACE to be distinguished more clearly and carefully from other variants of agent-based modeling, and from important related modeling approaches such as microsimulation, system dynamics, and econophysics. 
+
+
+</dl>
+
+
+
+<h3>
+<a name="AgentRationality">
+<img src="images/rdshball.gif" >
+</a> ACE Agent Rationality</h3>
+
+          <dl>
+
+<p>
+<dd> 
+For ACE researchers, as for economists in general, the modeling of decision-makers is a primary concern.  Consequently, it is important to correct a major misconception still being expressed by some economic commentators uninformed about the powerful capabilities of modern software: namely, the misconception that ACE decision-making agents cannot be as rational (or irrational) as real-world decision-makers.  
+</dd>
+
+<p>
+<dd>
+To the contrary, the constraints on agent decision-making implied by the seven c-ABM modeling principles (MP1)-(MP7) are constraints inherent in every real-world dynamic system.  As demonstrated concretely in 
+<a href = "https://www2.econ.iastate.edu/tesfatsi/MacroConstructiveRationalityWP.SinitskayaTesfatsion.pdf">
+                <b>this macroeconomic study</b></a>,
+the methods used by ACE decision-making agents can range from simple behavioral rules to sophisticated anticipatory learning algorithms for the approximate achievement of intertemporal objectives.  
+</dd>
+
+
+<p>
+<dd>
+Extensive annotated pointers to introductory materials on the implementation of learning and decision methods for ACE agents can be accessed at the following repository:
+<a href = "https://www2.econ.iastate.edu/tesfatsi/aemind.htm">
+  <b>ACE Research Area: Learning and the Embodied Mind</b></a>. 
+For example, the tutorial  
+<a href = "https://www2.econ.iastate.edu/tesfatsi/LearnAlgorithms.LT.pdf">
+       <b>Learning Algorithm Illustrations: From Simple to Deep</b></a>
+available at this repository covers:
+             <ul>  
+<li> <i>Reactive reinforcement learning:</i> 
+       Roth-Erev reactive reinforcement learning, ... ; 
+<li> <i>Belief-based learning:</i>    
+     Fictitious play, Camerer/Ho EWA algorithm, ... ; 
+<li> <i>Anticipatory learning:</i> 
+      Q-learning, adaptive dynamic programming, ... ; 
+<li> <i>Evolutionary learning:</i> 
+      Genetic algorithms, genetic programming, ... ; 
+<li> <i>Connectionist learning:</i> 
+     Associative memory learning, artificial neural net (ANN) learning, deep learning by means of ANNs with multiple hidden layers, ... . 
+             </ul>
+</dd>
+
+
+            </dl>
+
+<h3>
+<a name="Stochasticity">
+<img src="images/rdshball.gif" >
+</a> ACE Agent Stochasticity</h3>
+
+          <dl>
+
+
+
+<p>
+<dd>
+Stochastic aspects can easily be represented within ACE models. ACE agent data can include past or run-time realizations for real-world random events, ACE agent attributes can include beliefs based on probabilistic assessments, and ACE agent methods can include <i>Pseudo-Random Number Generators (PRNGs)</i>.  
+</dd>
+
+<p>
+<dd>
+A PRNG is a deterministic algorithm <i>A</i>, initialized by a seed value <i>s</i>, able to generate a sequence <i>A(s)</i> of numbers with the following property:  Over some finite initial length <i>L(s)</i>, the sequence <i>A(s)</i> closely mimics the properties of a random number sequence.  The typical length of 
+<i>L(s)</i> across admissible seed values <i>s</i> is a key metric used to evaluate the performance quality of 
+a PRNG <i>A</i>. 
+</dd>
+
+
+<p>
+<dd>
+PRNGs can be included among the methods of ACE decision-making agents, thus permitting these agents to "randomize" their behaviors.  For example, an ACE decision-making agent can use PRNGs to choose among equally preferred actions or action delays, to construct mixed strategies in game situations to avoid exploitable predictability, and/or to induce perturbations in action routines in order to explore new action possibilities.  
+</dd>
+
+<p>
+<dd>
+PRNGs can also be included among the methods of other types of ACE agents, such as ACE physical or biological agents, in order to model stochastic phenomena external to ACE decision-making agents.  For example, an ACE weather agent can use a PRNG to generate a weather pattern for its computational world during a simulated time-interval <i>T</i> that affects the actions expressed by ACE decision-making agents during <i>T</i>. 
+</dd>
+
+<p>
+<dd>
+An additional important point is that ACE agents are
+<i>encapsulated</i> in the following sense: The internal data, attributes, and/or methods of each ACE agent A can be partially or completely hidden from any other ACE agent B, either by the deliberate choice of agent A, or by initial modeler specification.  Thus, ACE agents can be unpredictable to one another even if they make no use of random event realizations, probabilistic assessments, or PRNGs.
+</dd>
+
+<p>
+<dd>
+Finally, the seven c-ABM modeling principles (MP1)-(MP7), considered as a whole, require ACE models to be 
+<i>stochastically complete</i> in the following sense: If an ACE modeler desires to include a simulated stochastic shock process within their computationally-constructed world, the source (originating point) and sinks (impact points) for this shock process must be explicitly represented as agents that reside and interact within this world. Stochastic completeness thus encourages ACE modelers to think carefully about the intended empirical referents for any simulated stochastic shock processes. This, in turn, should help to reduce or eliminate reliance on <i>ad hoc</i> external shock terms as the sources of dynamic persistence and the drivers of dynamic interactions.
+</dd>
+
+                           </dl>
+
+
+<h3>
+<a name="ACEObject">
+<img src="images/rdshball.gif" >
+</a> ACE Research Objectives </h3>
+
+<dl>
+
+<p>
+<dd>
+Current ACE research divides roughly into four branches, each corresponding to a different objective.
+</dd>
+
+<P>
+<dd>
+One primary objective is <b>understanding the appearance and persistence of empirical regularities</b>. Examples include adherence to social norms, socially accepted monies, widely instituted market protocols, business cycles, persistent wealth inequality, and the common adoption and use of technological innovations.
+
+<p>
+<dd>
+An ACE model capable of generating an empirical regularity based on empirically credible agent specifications provides a candidate explanation for this regularity.  As discussed more carefully at the research repository
+<a href = "https://www2.econ.iastate.edu/tesfatsi/empvalid.htm">
+  <b>Empirical Validation and Verification 
+     of Agent-Based Models</b></a>,
+the empirical validation of these agent specifications should ideally encompass four distinct aspects:  
+(i) <i>Input Validation:</i> Validation of initially specified agent data and attributes; 
+(ii) <i>Process Validation:</i> Validation of initially specified agent methods; 
+(iii) <i>Descriptive Output Validation:</i> In-sample model fitting; and
+(iv) <i>Predictive Output Validation:</i> Out-of-sample model forecasting. 
+</dd>
+
+<P>
+<dd>
+A second primary objective is <b>normative design</b>. 
+How can ACE models facilitate the design of structures, institutions, policies, and/or regulations intended to improve the performance of economic systems?  The ACE approach to normative design is akin to filling a bucket with water to determine if it leaks. An ACE researcher computationally constructs a world capturing salient aspects of an economic system operating under a proposed design. The researcher identifies a range of initial agent state specifications of interest, including seed values for agent PRNG methods.  For each such specification the researcher permits the world to develop forward, driven solely by agent interactions.  Recorded world outcomes are then used to evaluate design performance.
+</dd>
+
+<p>
+<dd>   
+A critical issue for ACE normative design studies is the extent to which outcomes resulting under a tested design are efficient, fair, and orderly, despite possible attempts by ACE decision-making agents to game the design for personal advantage. A related issue is a cautionary concern for adverse unintended consequences.  
+<i>Optimal</i> design might not be achievable, especially for large complex systems; but ACE modeling can facilitate 
+<i>robust</i> design for increased system reliability and resiliency, a goal that is both feasible and highly desirable. 
+</dd>
+
+<P>
+<dd>
+A third primary objective is <b>qualitative insight and theory generation</b>. How can ACE modeling be used to study the 
+<i>potential</i> future behavior of an economic system?  
+A quintessential example of this line of research is an old but still unresolved concern of economists such as Adam Smith (1723-1790), Ludwig von Mises (1881-1973), John Maynard Keynes (1883-1946), Joseph Schumpeter (1883-1950), and Friedrich von Hayek (1899-1992): namely, what are the self-organizing capabilities of decentralized market economies? 
+</dd>
+
+<p>
+<dd>
+Ideally, what is needed for this objective is the <i>phase portrait</i> of the economic system, i.e., a representation of the system's potential state trajectories starting from each possible initial system state.  This phase portrait would help to clarify which regions of the system's state space are credibly reachable, hence of empirical interest, and which are not. It would also reveal the possible existence of equilibrium state trajectories E, however "equilibrium" is defined. Finally, it would reveal the <i>basin of attraction</i> for any such E, that is, the (possibly empty) subset of system states which, if reached, would result in progression to E.
+
+<p>
+<dd>
+An ACE modeling of an economic system permits the modeler to conduct batched model runs, starting from multiple initial agent-state specifications.  The modeler can thus generate a rough approximation of the system's phase portrait.
+</dd>
+
+
+<P>
+<dd>
+A fourth primary objective is <b>method/tool advancement</b>. How best to provide ACE researchers with the methods and tools they need to undertake theoretical studies of dynamic economic systems through systematic sensitivity studies, and to examine the compatibility of sensitivity-generated theories with real-world data?  ACE researchers are exploring a variety of ways to address this objective ranging from careful consideration of methodological principles to the practical development of programming, verification, empirical validation, and visualization tools.
+</dd>
+
+</dl>
+
+
+<h3>
+<a name="ACEWebManage">
+<img src="images/rdshball.gif" >
+</a> ACE Website Management</h3>
+
+<dl>
+
+<p>
+<dd>
+Linked below are materials of possible interest to ACE researchers, and to researchers who wish to explore the potential usefulness of c-ABM for science and engineering purposes more generally.  These materials are updated on a regular basis, and suggestions for additional materials to include are welcome.
+</dd>
+
+<p>
+<dd>
+Thank you.
+</dd>
+
+               </dl>
+
+<p>
+<img src="images/bfadebar.gif" height="6" width=100%>
+
+<p>
+<h2>
+<a name="Links">
+<img src="images/raincube.gif" width="23" height="23">
+</a>     <b>Materials Linked to Date</b>
+</h2>
+
+                   <dl>
+
+<p>
+<dd>
+<h3>
+<a name="Intro">
+<img src="images/rdshball.gif" >
+</a> Introductory Materials </h3>
+
+
+                  <ul>
+
+
+
+
+<p>
+<li>Robert Axelrod and Leigh Tesfatsion, "On-Line Guide for Newcomers to Agent-Based Modeling in the Social Sciences,
+           with Links to Demonstration Software"
+                     <A href = "https://www2.econ.iastate.edu/tesfatsi/abmread.htm">
+                      <b>(html)</b></a>
+
+<p>
+<li>
+Leigh Tesfatsion (2022), "Agent-Based Computational Economics: Overview and Brief History"
+  <a href = "https://lib.dr.iastate.edu/econ_workingpapers/126">
+           <b>(Preprint,pdf,170KB)</b></a>,
+Chapter 4 (pp. 41-58) in: Ragupathy Venkatachalam (Ed.), <i>Artificial Intelligence, Learning and Computation in Economics and Finance</i>, Springer, February, 325pp.
+
+<p>
+<li>
+Leigh Tesfatsion (2021), "Agent-Based Modeling: The Right Mathematics for Social Science?," Keynote Address, 16th Annual Social Simulation Conference (virtual), sponsored by the European Social Simulation Association (ESSA), September 20-24.  
+                      <a href = 
+"https://www2.econ.iastate.edu/tesfatsi/CompleteABM.SSC2021Keynote.LTesfatsion.pdf">
+             <b>(SlideSet,pdf,1.5MB)</b></a>.
+
+
+
+
+<p>
+<li>
+Leigh Tesfatsion (2016), "Modeling Economic Systems as Locally-Constructive Sequential Games: The Places We Could Go!," Keynote Address, Duke Forest Conference, Durham, NC, Nov. 11-13.
+                 <a href = "https://www2.econ.iastate.edu/tesfatsi/EconSystemsAsLCSGames.LTesfatsion.pdf">
+          <b>(SlideSet,pdf,850KB)</b></a>
+
+
+<p>
+<li>Annotated pointers to ACE introductory materials
+<a href = "https://www2.econ.iastate.edu/tesfatsi/aintro.htm">
+                <b>(html)</b></a>
+
+
+                 </ul>
+</dd>
+
+<p>
+<dd>
+<h3>
+<a name="Methods">
+<img src="images/rdshball.gif" >
+</a> Methodology Resources </h3>
+
+
+               <ul>
+
+<p>
+<li>
+Leigh Tesfatsion (2017), Modeling Economic Systems as Locally-Constructive Sequential Games
+<a href = "https://lib.dr.iastate.edu/econ_workingpapers/23/">
+          <b>(WP,pdf,605KB)</b></a>,
+<i>Journal of Economic Methodology</i> 24(4), 384-409.
+
+
+<p>
+<li> 
+Leigh Tesfatsion (2021), Elements of Dynamic Economic Modeling
+<a href = "https://www2.econ.iastate.edu/tesfatsi/DynamicEconomicModelingBasics.WPVersion.pdf">
+          <b>(updated WP version, pdf,633KB)</b></a>
+
+<p>
+<li>
+Presentation and Evaluation Guidelines for Agent-Based Models
+<a href = "https://www2.econ.iastate.edu/tesfatsi/AModGuide.htm">
+             <b>(html)</b></a>
+
+<p>
+<li> 
+Empirical Validation and Verification of Agent-Based Models 
+<a href = "https://www2.econ.iastate.edu/tesfatsi/empvalid.htm">
+              <b>(html)</b></a>
+
+
+
+                </ul>
+</dd>
+
+
+
+<p>
+<dd><h3>
+<a name="Teach">
+<img src="images/rdshball.gif" >
+</a>Teaching and Self-Study Resources</h3>
+
+                    <ul>
+
+<p>
+<li>Alan G. Isaac (American University) has developed a comprehensive introductory agent-based modeling and simulation course titled
+<a href = 
+"https://www2.econ.iastate.edu/tesfatsi/ABMSyllabus.GrowingArtificialSocieties.AGIsaac2023.pdf">
+      <b>Growing Artificial Societies (Econ 450/650)</b></a>.
+Participants in this course explore, modify, and create virtual worlds whose purpose is to shed light on complex real-world economic phenomena. Graduate/undergraduate students interested in taking this course for credit (or pursuing this course via self-study) should have a basic principles-level understanding of microeconomics. There are no programming prerequisites apart from having a genuine interest in learning to program; the course includes a NetLogo programming component covering all programming skills needed for course purposes.
+
+
+
+<p>
+<li>Illustrative ACE Creative Modeling Exercise: Thomas Piketty (and His Critics) on Wealth Inequality
+<a href = "https://www2.econ.iastate.edu/tesfatsi/CreativeModelingExerciseOnPiketty.Econ502.pdf">
+         <b>(pdf,117KB)</b></a>
+
+
+<p>
+<li> 
+ACE Course: Self-Study eBook
+    <a href = "https://www2.econ.iastate.edu/tesfatsi/syl308.htm">
+             <b>(html)</b></a>.
+
+<p>
+<li>Other ACE/CAS-Related Courses and Programs
+    <a href="https://www2.econ.iastate.edu/tesfatsi/teachsyl.htm">
+                   <b>(html)</b></a>
+
+</ul>
+
+<p>
+<dd><h3>
+<a name="Software">
+<img src="images/rdshball.gif" >
+</a>Software Resources</h3>
+
+<ul>
+
+
+<p>
+<li>Computational Laboratories and Demonstration Software
+   <a href="https://www2.econ.iastate.edu/tesfatsi/acedemos.htm">
+              <b>(html)</b></a>
+
+<p>
+<li>Software and Toolkits for Agent-Based Modeling
+<a href="https://www2.econ.iastate.edu/tesfatsi/acecode.htm">
+             <b>(html)</b></a>
+
+<p>
+<li> Repast Toolkit for Agent-Based Modeling: A Self-Study Guide
+   <a href = "https://www2.econ.iastate.edu/tesfatsi/repastsg.htm">
+                    <b>(html)</b></a>
+
+</ul>
+</dd>
+
+
+
+<p>
+<dd><h3>
+<a name="ResearchAreas">
+<img src="images/rdshball.gif" >
+</a>Research Area Sites</h3>
+
+                  <ul>
+
+
+<p>
+<li>
+ACE Research Area Sites: Linked Listing
+<a href = "https://www2.econ.iastate.edu/tesfatsi/aapplic.htm">
+                <b>(html)</b></a>
+
+
+<p>
+<li> Auction Market Design
+<a href = "https://www2.econ.iastate.edu/tesfatsi/aauction.htm">
+             <b>(html)</b></a>
+
+
+
+
+<p>
+<li>
+Automated Markets 
+<a href = "https://www2.econ.iastate.edu/tesfatsi/aamarket.htm">
+             <b>(html)</b></a>
+
+<p>
+<li>
+Business and Management 
+<a href = "https://www2.econ.iastate.edu/tesfatsi/abusiness.htm">
+             <b>(html)</b></a>
+
+<p>
+<li>
+Coupled Natural and Human Systems 
+<a href = "https://www2.econ.iastate.edu/tesfatsi/aagric.htm">
+             <b>(html)</b></a>
+
+
+<p>
+<li>
+Economic Policy 
+<a href = "https://www2.econ.iastate.edu/tesfatsi/APolicy.htm">
+             <b>(html)</b></a>
+
+<p>
+<li>
+Electric Power System Design 
+<a href = "https://www2.econ.iastate.edu/tesfatsi/aelect.htm">
+             <b>(html)</b></a>
+
+
+<p>
+<li>Evolution of Institutions and Social Norms 
+<a href = "https://www2.econ.iastate.edu/tesfatsi/asocnorm.htm">
+             <b>(html)</b></a>
+
+
+<p>
+<li> Experiments with Real and Computational Agents
+<a href = "https://www2.econ.iastate.edu/tesfatsi/aexper.htm">
+        <b>(html)</b></a>
+
+<p>
+<li>Financial Economics 
+<a href = "https://www2.econ.iastate.edu/tesfatsi/afinance.htm">
+             <b>(html)</b></a>
+
+<p>
+<li>Industrial Organization 
+<a href = "https://www2.econ.iastate.edu/tesfatsi/aindorg.htm">
+             <b>(html)</b></a>
+
+<p>
+<li>Labor Markets
+<a href = "https://www2.econ.iastate.edu/tesfatsi/alabor.htm">
+             <b>(html)</b></a>
+
+
+<p>
+<li> Learning and the Embodied Mind
+<a href = "https://www2.econ.iastate.edu/tesfatsi/aemind.htm">
+        <b>(html)</b></a>
+
+<p>
+<li> Macroeconomics 
+<a href = "https://www2.econ.iastate.edu/tesfatsi/amulmark.htm">
+             <b>(html)</b></a>
+
+<p>
+<li> Network Formation and Evolution
+<a href = "https://www2.econ.iastate.edu/tesfatsi/anetwork.htm">
+             <b>(html)</b></a>
+
+<p>
+<li> Organizations
+<a href = "https://www2.econ.iastate.edu/tesfatsi/acomporg.htm">
+             <b>(html)</b></a>
+
+
+<p>
+<li> Path Dependence and Network Lock-In Effects
+<a href = "https://www2.econ.iastate.edu/tesfatsi/apathdep.htm">
+             <b>(html)</b></a>
+
+<p>
+<li> Political Economy 
+<a href = "https://www2.econ.iastate.edu/tesfatsi/apolecon.htm">
+             <b>(html)</b></a>
+
+
+
+
+<p>
+<li> Technological Change and Economic Development 
+<a href = "https://www2.econ.iastate.edu/tesfatsi/atechevo.htm">
+             <b>(html)</b></a>
+
+
+
+                  </ul>
+</dd>
+
+
+<p>
+<dd><h3>
+<a name="Resources">
+<img src="images/rdshball.gif" >
+</a>Other Research Resources</h3>
+
+                  <ul>
+
+<p>
+<li> 
+ACE Edited Volumes and Special Journal Issues
+<a href= "https://www2.econ.iastate.edu/tesfatsi/avolumes.htm">
+              <b>(html)</b></a>
+
+<p>
+<li>ACE Research Sites and Groups
+<a href="https://www2.econ.iastate.edu/tesfatsi/allist.htm">
+             <b>(html)</b></a>
+
+
+<p>
+<li>Journals and Publishers that welcome research making use of ACE/c-ABM/ABM and complex adaptive systems (CAS) methods and tools
+<a href="https://www2.econ.iastate.edu/tesfatsi/publish.htm">
+                 <b>(html)</b></a>.
+
+<p>
+<li>SCE and SimSoc Mailing List Subscription Instructions
+<a href= "https://www2.econ.iastate.edu/tesfatsi/cfp.htm">
+              <b>(html)</b></a>
+
+ 
+                  </ul>
+</dd>
+
+
+
+<p>
+<dd><h3>
+<a name="News">
+<img src="images/rdshball.gif" >
+</a>News Notes</h3>
+
+                   <ul>
+
+
+<p>
+<li>ACE News Notes: 1997-2017
+<a href="https://www2.econ.iastate.edu/tesfatsi/acepast.htm">
+              <b>(html)</b></a>
+
+                  </ul>
+</dd>
+
+                   </dl>
+
+<p>
+<img src="images/bfadebar.gif" width=100%>
+
+<p>
+<h3 align="center">
+<font size="-1"> Copyright &copy Leigh Tesfatsion.  All Rights Reserved.
+</font></h3>
+<p>
+
+</body>
+</html>
