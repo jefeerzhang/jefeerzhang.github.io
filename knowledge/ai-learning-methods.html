@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<script>
+window.contextInfo = {"files":[],"materials":[],"crafts":[]};
+// 处理锚点链接跳转（srcDoc iframe 中锚点链接默认行为不正确）
+document.addEventListener('click', function(e) {
+  var anchor = e.target.closest('a');
+  if (anchor) {
+    var href = anchor.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      e.preventDefault();
+      var targetId = href.slice(1);
+      var target = document.getElementById(targetId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }
+});
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 时代的学习方法 · 操作流程图</title>
+<style>
+  :root {
+    --primary: #1a3a5c;
+    --primary-light: #2a5a8c;
+    --primary-pale: #e8f0f8;
+    --ai-green-bg: #e8f5e9;
+    --ai-green-border: #2e7d32;
+    --ai-green-text: #1b5e20;
+    --ai-red-bg: #fce4e4;
+    --ai-red-border: #c62828;
+    --ai-red-text: #7f0000;
+    --arrow-color: #1a3a5c;
+    --loop-color: #b45309;
+    --box-a-bg: #f0f7ff;
+    --box-b-bg: #f5f0ff;
+    --box-c-bg: #fff8f0;
+    --banner-bg: #1a3a5c;
+    --text-main: #1a1a2e;
+    --text-sub: #3a3a5a;
+    --border-light: #d0d8e8;
+    --step-num-bg: #1a3a5c;
+    --step-num-text: #ffffff;
+    --font: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: #f4f6fa;
+    color: var(--text-main);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .page-wrapper {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 16px 40px;
+  }
+
+  /* ===== HEADER ===== */
+  .page-header {
+    text-align: center;
+    margin-bottom: 24px;
+    padding: 24px 20px 20px;
+    background: #fff;
+    border: 1.5px solid var(--border-light);
+    border-top: 4px solid var(--primary);
+  }
+  .page-header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+  }
+  .page-header .subtitle {
+    font-size: 13px;
+    color: #555;
+    font-style: italic;
+    letter-spacing: 0.02em;
+  }
+  .header-note {
+    font-size: 12px;
+    color: #888;
+    font-weight: normal;
+    font-style: normal;
+    margin-top: 6px;
+    letter-spacing: 0.01em;
+  }
+
+  /* ===== BOX A ===== */
+  .box-a {
+    background: var(--box-a-bg);
+    border: 1.5px solid #90b8e0;
+    border-left: 4px solid var(--primary-light);
+    padding: 14px 16px;
+    margin-bottom: 20px;
+  }
+  .box-a .box-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #b8d0e8;
+    padding-bottom: 6px;
+  }
+  .box-a .tags-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    margin-bottom: 10px;
+  }
+  .box-a .tag {
+    font-size: 12px;
+    color: var(--text-sub);
+    padding: 3px 0;
+    white-space: nowrap;
+  }
+  .box-a .tag.yes { color: #1b5e20; }
+  .box-a .tag.no { color: #7f0000; }
+  .box-a .tag.warn { color: #7a4a00; }
+  .box-a .verdict {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--primary);
+    border-top: 1px solid #b8d0e8;
+    padding-top: 8px;
+    margin-top: 4px;
+  }
+
+  /* ===== MAIN FLOW ===== */
+  .flow-container {
+    display: flex;
+    gap: 0;
+    position: relative;
+  }
+
+  /* Loop arrows column */
+  .loop-col {
+    width: 96px;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .flow-main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Step node */
+  .step-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 0;
+  }
+
+  .step-node {
+    background: #fff;
+    border: 1.5px solid var(--border-light);
+    border-left: 4px solid var(--primary);
+    display: grid;
+    grid-template-columns: 160px 1fr 220px;
+    gap: 0;
+    position: relative;
+  }
+
+  .step-left {
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-right: 1px solid var(--border-light);
+    background: var(--primary-pale);
+  }
+  .step-num {
+    display: inline-block;
+    background: var(--step-num-bg);
+    color: var(--step-num-text);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 7px;
+    letter-spacing: 0.05em;
+    margin-bottom: 5px;
+    width: fit-content;
+  }
+  .step-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1.3;
+  }
+
+  .step-mid {
+    padding: 12px 14px;
+    border-right: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+  }
+  .step-mid p {
+    font-size: 12.5px;
+    color: var(--text-sub);
+    line-height: 1.65;
+  }
+
+  .step-right {
+    display: flex;
+    flex-direction: column;
+  }
+  .ai-cell {
+    padding: 8px 11px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .ai-cell.can {
+    background: var(--ai-green-bg);
+    border-bottom: 1px solid #c8e6c9;
+  }
+  .ai-cell.cannot {
+    background: var(--ai-red-bg);
+  }
+  .ai-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 3px;
+  }
+  .ai-label.can { color: var(--ai-green-border); }
+  .ai-label.cannot { color: var(--ai-red-border); }
+  .ai-text {
+    font-size: 11.5px;
+    line-height: 1.55;
+  }
+  .ai-text.can { color: var(--ai-green-text); }
+  .ai-text.cannot { color: var(--ai-red-text); }
+
+  /* Arrow between steps */
+  .step-arrow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 28px;
+    position: relative;
+  }
+  .step-arrow::before {
+    content: '';
+    display: block;
+    width: 2px;
+    height: 14px;
+    background: var(--arrow-color);
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .step-arrow::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 10px solid var(--arrow-color);
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* ===== SIDE BOXES (B and C) ===== */
+  .side-box-wrapper {
+    position: relative;
+  }
+  .side-box-connector {
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 2px;
+    background: #999;
+    border-top: 1.5px dashed #999;
+  }
+
+  .box-b, .box-c {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    padding: 12px 14px;
+    border: 1.5px solid #c0b0e0;
+    border-left: 4px solid #7c4dbc;
+    background: var(--box-b-bg);
+    font-size: 11.5px;
+  }
+  .box-c {
+    border-color: #e0c090;
+    border-left-color: #c07a20;
+    background: var(--box-c-bg);
+  }
+  .box-b .box-title, .box-c .box-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #4a2a8a;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #d0c0f0;
+  }
+  .box-c .box-title {
+    color: #7a4a00;
+    border-bottom-color: #e8d0a0;
+  }
+
+  .box-b table, .box-c table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .box-b td, .box-c td {
+    padding: 4px 6px;
+    vertical-align: top;
+    font-size: 11.5px;
+    line-height: 1.55;
+    border-bottom: 1px solid #e8e0f8;
+  }
+  .box-c td {
+    border-bottom-color: #f0e4c8;
+  }
+  .box-b td:first-child {
+    font-weight: 700;
+    color: #4a2a8a;
+    white-space: nowrap;
+    width: 80px;
+  }
+  .box-c td:first-child {
+    font-weight: 700;
+    color: #7a4a00;
+    white-space: nowrap;
+    width: 80px;
+  }
+  .box-b tr:last-child td, .box-c tr:last-child td {
+    border-bottom: none;
+  }
+  .box-b .box-footer, .box-c .box-footer {
+    font-size: 11px;
+    color: #666;
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px solid #d0c0f0;
+    font-style: italic;
+  }
+
+  /* ── Box B redesign: 5-column card grid ── */
+  .box-b-cards {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .test-card {
+    background: #faf7ff;
+    border: 1px solid #d0c0f0;
+    border-top: 3px solid #7c4dbc;
+    border-radius: 4px;
+    padding: 8px 9px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .test-card-head {
+    line-height: 1.35;
+  }
+  .test-card-name {
+    font-weight: 700;
+    color: #3d1f80;
+    font-size: 12px;
+  }
+  .test-card-term {
+    font-size: 10px;
+    color: #999;
+    margin-left: 4px;
+    font-weight: 400;
+  }
+  .test-card-template {
+    background: #ede8fa;
+    border-left: 3px solid #9c6fdc;
+    border-radius: 2px;
+    padding: 5px 7px;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #2d1060;
+    font-family: 'Courier New', 'Menlo', 'Consolas', monospace;
+  }
+  .test-card-examples {
+    font-size: 10.5px;
+    color: #555;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .test-card-ex {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .test-card-ex-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    color: #7c4dbc;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .test-card-ex-text {
+    font-size: 10.5px;
+    color: #444;
+    line-height: 1.45;
+  }
+  .box-b-diagnosis {
+    margin-top: 10px;
+    padding: 8px 10px;
+    background: #f0ebff;
+    border: 1px solid #c8b8f0;
+    border-radius: 4px;
+    font-size: 11px;
+    color: #3d1f80;
+  }
+  .box-b-diagnosis-title {
+    font-weight: 700;
+    font-size: 11px;
+    color: #3d1f80;
+    margin-bottom: 5px;
+  }
+  .box-b-diagnosis-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px 8px;
+  }
+  .box-b-diagnosis-row {
+    font-size: 10.5px;
+    color: #444;
+    line-height: 1.4;
+  }
+  .box-b-diagnosis-row .diag-from {
+    font-weight: 600;
+    color: #3d1f80;
+  }
+  .box-b-diagnosis-row .diag-arrow {
+    color: #9c6fdc;
+    margin: 0 2px;
+  }
+  .box-b-diagnosis-row .diag-to {
+    color: #7a4a00;
+    font-weight: 600;
+  }
+  .box-b-tip {
+    margin-top: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #3d1f80;
+    font-style: italic;
+  }
+  @media (max-width: 900px) {
+    .box-b-cards {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .box-b-diagnosis-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 540px) {
+    .box-b-cards {
+      grid-template-columns: 1fr;
+    }
+    .box-b-diagnosis-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media print {
+    .box-b-cards {
+      grid-template-columns: repeat(5, 1fr);
+    }
+    .box-b-diagnosis-grid {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+  .box-c .box-footer {
+    border-top-color: #e8d0a0;
+  }
+  .box-c tr.dim td {
+    color: #999;
+  }
+  .box-c tr.dim td:first-child {
+    color: #aaa;
+  }
+  .dim-note {
+    font-size: 10px;
+    color: #bbb;
+    font-style: italic;
+  }
+
+  /* ===== BOX C REDESIGN: 7 diagnostic cards ===== */
+  .box-c-intro {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #7a4a00;
+    background: #fff3e0;
+    border: 1px solid #e8c070;
+    border-left: 4px solid #c07a20;
+    border-radius: 3px;
+    padding: 7px 10px;
+    margin-bottom: 10px;
+    line-height: 1.55;
+  }
+  .diag-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .diag-card {
+    background: #fffbf5;
+    border: 1px solid #e0c090;
+    border-top: 3px solid #c07a20;
+    border-radius: 5px;
+    padding: 9px 11px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+  }
+  .diag-card.card-dim {
+    background: #f7f7f7;
+    border-color: #ccc;
+    border-top-color: #aaa;
+    opacity: 0.82;
+  }
+  .diag-card-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    line-height: 1.35;
+  }
+  .diag-card-num {
+    font-size: 13px;
+    font-weight: 700;
+    color: #7a4a00;
+    flex-shrink: 0;
+  }
+  .diag-card.card-dim .diag-card-num {
+    color: #888;
+  }
+  .diag-card-name {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #5a3000;
+  }
+  .diag-card.card-dim .diag-card-name {
+    color: #777;
+  }
+  .diag-card-subtitle {
+    font-size: 11px;
+    color: #8a6030;
+    font-weight: 400;
+  }
+  .diag-card.card-dim .diag-card-subtitle {
+    color: #999;
+  }
+  .diag-badge {
+    display: inline-block;
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 10px;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+  .diag-badge.badge-top {
+    background: #fff3cd;
+    color: #7a4a00;
+    border: 1px solid #e8c070;
+  }
+  .diag-badge.badge-social {
+    background: #e8f4fd;
+    color: #1a5276;
+    border: 1px solid #aed6f1;
+  }
+  .diag-badge.badge-dim {
+    background: #eee;
+    color: #888;
+    border: 1px solid #ccc;
+  }
+  .diag-card-quote {
+    background: #fef9ec;
+    border: 1px solid #e8d090;
+    border-left: 3px solid #c09040;
+    border-radius: 3px;
+    padding: 6px 9px;
+    font-size: 11px;
+    color: #4a3000;
+    line-height: 1.55;
+    font-style: italic;
+  }
+  .diag-card.card-dim .diag-card-quote {
+    background: #f5f5f5;
+    border-color: #ddd;
+    border-left-color: #bbb;
+    color: #888;
+  }
+  .diag-card-quote-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    color: #a07030;
+    font-style: normal;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .diag-card.card-dim .diag-card-quote-label {
+    color: #aaa;
+  }
+  .diag-card-problem {
+    font-size: 11px;
+    color: #3a2000;
+    line-height: 1.55;
+  }
+  .diag-card.card-dim .diag-card-problem {
+    color: #777;
+  }
+  .diag-card-problem strong {
+    color: #7a4a00;
+    font-weight: 700;
+  }
+  .diag-card.card-dim .diag-card-problem strong {
+    color: #888;
+  }
+  .diag-card-fix {
+    font-size: 11px;
+    color: #1a4a1a;
+    line-height: 1.55;
+    background: #f0faf0;
+    border-left: 3px solid #4caf50;
+    border-radius: 2px;
+    padding: 5px 8px;
+  }
+  .diag-card.card-dim .diag-card-fix {
+    background: #f5f5f5;
+    border-left-color: #bbb;
+    color: #888;
+  }
+  .diag-card-fix strong {
+    color: #2e7d32;
+    font-weight: 700;
+  }
+  .diag-card.card-dim .diag-card-fix strong {
+    color: #aaa;
+  }
+  @media (max-width: 700px) {
+    .diag-cards-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media print {
+    .diag-cards-grid {
+      grid-template-columns: repeat(2, 1fr);
+      break-inside: avoid;
+    }
+    .diag-card {
+      break-inside: avoid;
+    }
+  }
+
+  /* ===== 证伪者协议 CODE BLOCK ===== */
+  .falsi-protocol {
+    margin-top: 28px;
+    background: #1e2a3a;
+    border-radius: 6px;
+    padding: 0;
+    overflow: hidden;
+    break-inside: avoid;
+  }
+  .falsi-protocol-header {
+    background: #162030;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .falsi-protocol-header-dots {
+    display: flex;
+    gap: 5px;
+  }
+  .falsi-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .falsi-dot.red { background: #ff5f57; }
+  .falsi-dot.yellow { background: #febc2e; }
+  .falsi-dot.green { background: #28c840; }
+  .falsi-protocol-title {
+    font-size: 11px;
+    color: #8a9ab0;
+    font-family: 'Courier New', 'Menlo', 'Consolas', monospace;
+    margin-left: 4px;
+  }
+  .falsi-protocol-body {
+    padding: 14px 18px;
+    font-family: 'Courier New', 'Menlo', 'Consolas', monospace;
+    font-size: 11.5px;
+    line-height: 1.7;
+    color: #c8d8e8;
+  }
+  .falsi-line {
+    display: flex;
+    gap: 10px;
+  }
+  .falsi-line-num {
+    color: #4a6080;
+    min-width: 20px;
+    text-align: right;
+    user-select: none;
+    flex-shrink: 0;
+  }
+  .falsi-line-content {
+    flex: 1;
+  }
+  .falsi-key {
+    color: #79b8ff;
+  }
+  .falsi-val {
+    color: #9ecbff;
+  }
+  .falsi-str {
+    color: #9ecbff;
+  }
+  .falsi-comment {
+    color: #6a8a6a;
+    font-style: italic;
+  }
+  .falsi-bracket {
+    color: #e8c070;
+  }
+  .falsi-highlight {
+    color: #ffd700;
+    font-weight: 700;
+  }
+
+  /* ===== LOOP ARROWS SVG ===== */
+  .loop-svg-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 56px;
+    pointer-events: none;
+  }
+
+  /* ===== BANNER ===== */
+  .banner {
+    background: var(--banner-bg);
+    color: #fff;
+    padding: 18px 24px;
+    margin-top: 24px;
+    text-align: center;
+  }
+  .banner .banner-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #a0c0e0;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .banner .banner-text {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.6;
+    color: #fff;
+  }
+  .banner .banner-text em {
+    font-style: normal;
+    color: #ffd54f;
+  }
+
+  /* ===== INTERACTIVE HINT ===== */
+  .hint-bar {
+    text-align: center;
+    font-size: 11px;
+    color: #999;
+    padding: 10px;
+    margin-top: 10px;
+    font-style: italic;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 700px) {
+    .step-node {
+      grid-template-columns: 1fr;
+    }
+    .step-left {
+      border-right: none;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .step-mid {
+      border-right: none;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .loop-col { display: none; }
+    .box-b td:first-child, .box-c td:first-child {
+      width: 70px;
+    }
+  }
+
+  .loop-mobile-note {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    color: #7c3a00;
+    background: #fff4e6;
+    border-left: 4px solid #b45309;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 4px 0;
+    text-align: left;
+  }
+
+  /* ===== PRINT ===== */
+  @media print {
+    body { background: #fff; font-size: 11px; }
+    .page-wrapper { padding: 0; max-width: 100%; }
+    .page-header { box-shadow: none; border-top: 3px solid #1a3a5c; }
+    .step-node { box-shadow: none; break-inside: avoid; }
+    .box-a, .box-b, .box-c { box-shadow: none; break-inside: avoid; }
+    .banner { break-inside: avoid; }
+    .hint-bar { display: none; }
+    .loop-svg-container svg { filter: none; }
+    .falsi-protocol { break-inside: avoid; }
+    .loop-mobile-note { break-inside: avoid; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <h1>AI 时代的学习方法</h1>
+    <div class="subtitle">讲不出来的地方，才是你真正要学的</div>
+    <div class="header-note">撤走 AI 后成绩掉 17% —— 解法只有一句：不许 AI 生成解释，只许它生成问题。俗称"费曼学习法"，真正的要求是合上资料讲</div>
+  </div>
+
+  <!-- BOX A -->
+  <div class="box-a">
+    <div class="box-title">第 0 步：先判断该不该用</div>
+    <div class="tags-grid">
+      <span class="tag yes">✅ 复杂因果机制（加息压通胀、双边平台赢家通吃、委托代理催生短期主义）</span>
+      <span class="tag yes">✅ 有推导结构的模型（供需均衡、贴现现金流、纳什均衡、会计恒等式）</span>
+      <span class="tag yes">✅ 制度与历史的因果</span>
+      <span class="tag no">❌ 事实清单（会计科目、法条编号、财报数字）→ 用间隔重复</span>
+      <span class="tag no">❌ 交互技能（谈判、路演、绩效面谈）→ 用刻意练习</span>
+      <span class="tag warn">⚠️ 巨型主题（「看懂中国经济」）→ 先切成单个概念</span>
+      <span class="tag no">❌ 零基础陌生领域 → 先读教材</span>
+    </div>
+    <div class="verdict">判据一句话——只对「有因果链可跑」的东西做。</div>
+  </div>
+
+  <!-- MAIN FLOW -->
+  <div class="flow-container">
+
+    <!-- Loop arrows column -->
+    <div class="loop-col" id="loopCol">
+      <!-- SVG drawn by JS after layout -->
+    </div>
+
+    <div class="flow-main" id="flowMain">
+
+      <!-- LEGEND -->
+      <div style="display:flex;align-items:center;gap:8px;padding:5px 10px 5px 4px;margin-bottom:6px;font-size:13px;color:#555;flex-wrap:wrap;">
+        <span style="display:inline-flex;align-items:center;gap:5px;">
+          <span style="display:inline-block;width:28px;height:3px;background:repeating-linear-gradient(to right,#b45309 0,#b45309 9px,transparent 9px,transparent 14px);border-radius:2px;"></span>
+          <span style="color:#7c3a00;font-weight:600;">橙色虚线 = 回炉重讲循环</span>
+        </span>
+        <span style="color:#aaa;">（补完漏洞 / 几周后复讲 → 回到 STEP 04 闭卷讲）</span>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="step-wrapper" id="step1">
+        <div class="step-node">
+          <div class="step-left">
+            <span class="step-num">STEP 01</span>
+            <span class="step-name">输入</span>
+          </div>
+          <div class="step-mid">
+            <p>读 / 看 / 听，先建立基本表征</p>
+          </div>
+          <div class="step-right">
+            <div class="ai-cell can">
+              <div class="ai-label can">AI 可以做</div>
+              <div class="ai-text can">列概念清单和依赖关系，标出哪几个是「机制型」概念</div>
+            </div>
+            <div class="ai-cell cannot">
+              <div class="ai-label cannot">绝对不许</div>
+              <div class="ai-text cannot">生成讲解。索引可以要，内容不能要</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-arrow"></div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step-wrapper" id="step2">
+        <div class="step-node">
+          <div class="step-left">
+            <span class="step-num">STEP 02</span>
+            <span class="step-name">选概念</span>
+          </div>
+          <div class="step-mid">
+            <p>名字具体到能被证伪。不是「宏观经济学」，是「央行加息为什么能压低通胀」</p>
+          </div>
+          <div class="step-right">
+            <div class="ai-cell can">
+              <div class="ai-label can">AI 可以做</div>
+              <div class="ai-text can">给 5 个候选的机制型问题，你挑最没底的</div>
+            </div>
+            <div class="ai-cell cannot">
+              <div class="ai-label cannot">绝对不许</div>
+              <div class="ai-text cannot">替你回答其中任何一个</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-arrow"></div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step-wrapper" id="step3">
+        <div class="step-node">
+          <div class="step-left">
+            <span class="step-num">STEP 03</span>
+            <span class="step-name">打分 + 把话说死</span>
+          </div>
+          <div class="step-mid">
+            <p>给理解打 1—7 分写下来；表态用「我认为就是这样」</p>
+          </div>
+          <div class="step-right">
+            <div class="ai-cell can">
+              <div class="ai-label can">AI 可以做</div>
+              <div class="ai-text can">不参与</div>
+            </div>
+            <div class="ai-cell cannot">
+              <div class="ai-label cannot">绝对不许</div>
+              <div class="ai-text cannot">一句「这个不难」就把基线抬高了，讲完根本看不出变化</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-arrow"></div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="step-wrapper" id="step4">
+        <div class="step-node">
+          <div class="step-left">
+            <span class="step-num">STEP 04</span>
+            <span class="step-name">闭卷讲</span>
+          </div>
+          <div class="step-mid">
+            <p>合上资料，写下来或说出口，只讲机制，不许用术语搭桥</p>
+          </div>
+          <div class="step-right">
+            <div class="ai-cell can">
+              <div class="ai-label can">AI 可以做</div>
+              <div class="ai-text can">沉默旁听；语音转文字帮你外化</div>
+            </div>
+            <div class="ai-cell cannot">
+              <div class="ai-label cannot">绝对不许</div>
+              <div class="ai-text cannot">打断、补全、纠正</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-arrow"></div>
+      </div>
+
+      <!-- STEP 5 + BOX B -->
+      <div class="step-wrapper" id="step5">
+        <div class="step-node">
+          <div class="step-left">
+            <span class="step-num">STEP 05</span>
+            <span class="step-name">跑五个测试</span>
+          </div>
+          <div class="step-mid">
+            <p>抽掉一环 / 倒着问 / 半路起讲 / 换个地方用 / 什么时候不灵</p>
+          </div>
+          <div class="step-right">
+            <div class="ai-cell can">
+              <div class="ai-label can">AI 可以做</div>
+              <div class="ai-text can">主力环节。按五类连续追问，可指定听众水平</div>
+            </div>
+            <div class="ai-cell cannot">
+              <div class="ai-label cannot">绝对不许</div>
+              <div class="ai-text cannot">在你答不上来时给答案</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOX B -->
+        <div class="box-b" style="margin-left:0; margin-right:0;">
+          <div class="box-title">盒 B · 五个判定测试</div>
+
+          <div class="box-b-cards">
+
+            <!-- ① 抽掉一环 -->
+            <div class="test-card">
+              <div class="test-card-head">
+                <span class="test-card-name">① 抽掉一环</span>
+                <span class="test-card-term">反事实</span>
+              </div>
+              <div class="test-card-template">把 ___ 这一步拿掉，或者改成相反的，后面还成立吗？</div>
+              <div class="test-card-examples">
+                <div class="test-card-ex">
+                  <span class="test-card-ex-label">加息压通胀</span>
+                  <span class="test-card-ex-text">银行拿到降息不降贷款利率，链条断在哪儿？后面的事还会发生吗？</span>
+                </div>
+                <div class="test-card-ex">
+                  <span class="test-card-ex-label">公司变大变慢</span>
+                  <span class="test-card-ex-text">层级照样多，但每一层都不许改动下面报上来的方案，还会慢吗？</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ② 倒着问 -->
+            <div class="test-card">
+              <div class="test-card-head">
+                <span class="test-card-name">② 倒着问</span>
+                <span class="test-card-term">逆向</span>
+              </div>
+              <div class="test-card-template">结果已经出现了，除了你说的这条路，还有哪几条路能造出同样的结果？</div>
+              <div class="test-card-examples">
+                <div class="test-card-ex">
+                  <span class="test-card-ex-label">加息压通胀</span>
+                  <span class="test-card-ex-text">通胀确实回落了，但如果是油价自己跌了、或者外需塌了，看到的数据一模一样。你凭什么说是加息干的？</span>
+                </div>
+                <div class="test-card-ex">
+                  <span class="test-card-ex-label">公司变大变慢</span>
+                  <span class="test-card-ex-text">决策确实变慢了，会不会是业务本身变复杂了，跟规模无关？</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ③ 半路起讲 -->
+            <div class="test-card">
+              <div class="test-card-head">
+                <span class="test-card-name">③ 半路起讲</span>
+                <span class="test-card-term">中途切入</span>
+              </div>
+              <div class="test-card-template">别从头讲，直接从 ___ 这一步开始，往后接到结果。</div>
+              <div class="test-card-examples">
+                <div class="test-card-ex">
+                  <span class="test-card-ex-label">加息压通胀</span>
+                  <span class="test-card-ex-text">从「企业开始砍投资项目」讲起，接到物价。</span>
+                </div>
+                <div class="test-card-ex">
+                  <span class="test-card-ex-label">公司变大变慢</span>
+                  <span class="test-card-ex-text">从「方案报到第三层」讲起，接到决策周期。</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ④ 换个地方用 -->
+            <div class="test-card">
+              <div class="test-card-head">
+                <span class="test-card-name">④ 换个地方用</span>
+                <span class="test-card-term">跨域迁移</span>
+              </div>
+              <div class="test-card-template">同样这套道理，换到 ___ 上面，会变成什么样？</div>
+              <div class="test-card-examples">
+                <div class="test-card-ex">
+                  <span class="test-card-ex-label">加息压通胀</span>
+                  <span class="test-card-ex-text">一家公司调高内部投资的回报率门槛，公司内部会发生什么？</span>
+                </div>
+                <div class="test-card-ex">
+                  <span class="test-card-ex-label">公司变大变慢</span>
+                  <span class="test-card-ex-text">换成政府部门、大学、军队，这套解释还套得上吗？套不上是因为什么变了？</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ⑤ 什么时候不灵 -->
+            <div class="test-card">
+              <div class="test-card-head">
+                <span class="test-card-name">⑤ 什么时候不灵</span>
+                <span class="test-card-term">失效边界</span>
+              </div>
+              <div class="test-card-template">这条规律在什么情况下就不成立了？举一个反例。</div>
+              <div class="test-card-examples">
+                <div class="test-card-ex">
+                  <span class="test-card-ex-label">加息压通胀</span>
+                  <span class="test-card-ex-text">通胀来自供给冲击时、利率已经触到零下限时、汇率被钉住时。</span>
+                </div>
+                <div class="test-card-ex">
+                  <span class="test-card-ex-label">公司变大变慢</span>
+                  <span class="test-card-ex-text">业务高度标准化、决策能下沉成规则的时候，规模反而不拖慢速度。</span>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- end box-b-cards -->
+
+          <!-- 答不上来 = 卡在哪一型 -->
+          <div class="box-b-diagnosis">
+            <div class="box-b-diagnosis-title">答不上来 = 卡在哪一型</div>
+            <div class="box-b-diagnosis-grid">
+              <div class="box-b-diagnosis-row"><span class="diag-from">抽掉一环</span><span class="diag-arrow">→</span><span class="diag-to">断链型</span></div>
+              <div class="box-b-diagnosis-row"><span class="diag-from">倒着问</span><span class="diag-arrow">→</span><span class="diag-to">单向型 或 方向型</span></div>
+              <div class="box-b-diagnosis-row"><span class="diag-from">半路起讲</span><span class="diag-arrow">→</span><span class="diag-to">单向型</span></div>
+              <div class="box-b-diagnosis-row"><span class="diag-from">换个地方用</span><span class="diag-arrow">→</span><span class="diag-to">迁移型</span></div>
+              <div class="box-b-diagnosis-row"><span class="diag-from">什么时候不灵</span><span class="diag-arrow">→</span><span class="diag-to">边界型</span></div>
+            </div>
+            <div class="box-b-tip">优先用「半路起讲」，三十秒出结果，而且骗不了人。</div>
+          </div>
+
+        </div>
+
+        <div class="step-arrow"></div>
+      </div>
+
+      <!-- STEP 6 -->
+      <div class="step-wrapper" id="step6">
+        <div class="step-node">
+          <div class="step-left">
+            <span class="step-num">STEP 06</span>
+            <span class="step-name">再打分</span>
+          </div>
+          <div class="step-mid">
+            <p>重新打 1—7 分。分数掉了 = 方法生效了</p>
+          </div>
+          <div class="step-right">
+            <div class="ai-cell can">
+              <div class="ai-label can">AI 可以做</div>
+              <div class="ai-text can">不参与</div>
+            </div>
+            <div class="ai-cell cannot">
+              <div class="ai-label cannot">绝对不许</div>
+              <div class="ai-text cannot">说「讲得不错」。分数掉没掉是唯一能看出这轮有没有做成的地方，被捧一句就白做了</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-arrow"></div>
+      </div>
+
+      <!-- STEP 7 + BOX C -->
+      <div class="step-wrapper" id="step7">
+        <div class="step-node">
+          <div class="step-left">
+            <span class="step-num">STEP 07</span>
+            <span class="step-name">卡壳分型</span>
+          </div>
+          <div class="step-mid">
+            <p>把每个卡住的地方归到七型之一</p>
+          </div>
+          <div class="step-right">
+            <div class="ai-cell can">
+              <div class="ai-label can">AI 可以做</div>
+              <div class="ai-text can">输出卡壳清单 + 分型</div>
+            </div>
+            <div class="ai-cell cannot">
+              <div class="ai-label cannot">绝对不许</div>
+              <div class="ai-text cannot">顺手把洞补上</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOX C -->
+        <div class="box-c" style="margin-left:0; margin-right:0;">
+          <div class="box-title">盒 C · 七种卡壳（按诊断价值从高到低）</div>
+
+          <div class="box-c-intro">
+            <strong>分型的用处是决定怎么补。</strong>断链型要回去查资料，术语替代型根本不用查、当场重讲就行。不分型，你只会笼统地「再看一遍」，那是最浪费时间的补法。
+          </div>
+
+          <div class="diag-cards-grid">
+
+            <!-- ① 断链型 -->
+            <div class="diag-card">
+              <div class="diag-card-head">
+                <span class="diag-card-num">①</span>
+                <span class="diag-card-name">断链型</span>
+                <span class="diag-card-subtitle">— 说得出两头，接不上中间</span>
+                <span class="diag-badge badge-top">价值最高</span>
+              </div>
+              <div class="diag-card-quote">
+                <span class="diag-card-quote-label">原话听起来像这样</span>
+                「公司大了以后层级变多，所以决策就慢了。」
+              </div>
+              <div class="diag-card-problem">
+                <strong>问题：</strong>层级多和决策慢之间是空的。一份方案每往上过一层，具体是什么被改掉了？改它的人出于什么考虑要改？为什么走一层要三天而不是三小时？这三问答不出来，说明你手上只有两个端点，中间那条链你从来没有过。
+              </div>
+              <div class="diag-card-fix">
+                <strong>怎么补：</strong>回原始资料只查 A→C 之间那一段，别重读全文。
+              </div>
+            </div>
+
+            <!-- ② 方向型 -->
+            <div class="diag-card">
+              <div class="diag-card-head">
+                <span class="diag-card-num">②</span>
+                <span class="diag-card-name">方向型</span>
+                <span class="diag-card-subtitle">— 因果方向站不住</span>
+                <span class="diag-badge badge-social">社科专属</span>
+              </div>
+              <div class="diag-card-quote">
+                <span class="diag-card-quote-label">原话听起来像这样</span>
+                「这家公司文化好，所以业绩好。」
+              </div>
+              <div class="diag-card-problem">
+                <strong>问题：</strong>反过来说「业绩好才养得起这种文化」同样成立；也可能是它踩中了一个高毛利赛道，高毛利同时带来了好业绩和松弛的文化。三种说法解释同一批事实，你选了其中一种却没说为什么。同类：「名校毕业生收入高」（学校的增值，还是入学时就筛过一遍？）、「投广告的公司销量高」（还是销量好的公司才有钱投广告？）。
+              </div>
+              <div class="diag-card-fix">
+                <strong>怎么补：</strong>必须交代你凭什么排除反向因果和共同原因——时间先后对不对得上，有没有一次外部冲击（政策变动、突发事件、领导层更替）刚好把两者分开过。自然科学里这一型少见，社科里它是默认状态。
+              </div>
+            </div>
+
+            <!-- ③ 术语替代型 -->
+            <div class="diag-card">
+              <div class="diag-card-head">
+                <span class="diag-card-num">③</span>
+                <span class="diag-card-name">术语替代型</span>
+                <span class="diag-card-subtitle">— 拿名字冒充解释</span>
+              </div>
+              <div class="diag-card-quote">
+                <span class="diag-card-quote-label">原话听起来像这样</span>
+                「大公司决策慢，是因为官僚主义。」「通胀降不下来，是因为预期没锚定。」
+              </div>
+              <div class="diag-card-problem">
+                <strong>问题：</strong>这句话的信息量等于「决策慢是因为决策慢」。术语是压缩包，你以为自己解压了，其实只念了一遍文件名。
+              </div>
+              <div class="diag-card-fix">
+                <strong>怎么补：</strong>不用查资料。当场自测——把那个词从讲述里整个删掉，剩下的还站得住吗？站不住说明它在承重。换成不含这个词的说法重讲那一段。
+              </div>
+            </div>
+
+            <!-- ④ 单向型 -->
+            <div class="diag-card">
+              <div class="diag-card-head">
+                <span class="diag-card-num">④</span>
+                <span class="diag-card-name">单向型</span>
+                <span class="diag-card-subtitle">— 只能顺着播</span>
+              </div>
+              <div class="diag-card-quote">
+                <span class="diag-card-quote-label">原话听起来像这样</span>
+                顺着讲「变大 → 层级多 → 慢」非常流畅；一问「哪些大公司没变慢、它们做对了什么」就哑了。
+              </div>
+              <div class="diag-card-problem">
+                <strong>问题：</strong>让你从中间某一步开始讲，你必须先回到开头才能启动。那是一段录音，不是一条链。
+              </div>
+              <div class="diag-card-fix">
+                <strong>怎么补：</strong>反复做「倒着问」和「半路起讲」，直到从链条上任意一点都能启动。
+              </div>
+            </div>
+
+            <!-- ⑤ 迁移型 -->
+            <div class="diag-card">
+              <div class="diag-card-head">
+                <span class="diag-card-num">⑤</span>
+                <span class="diag-card-name">迁移型</span>
+                <span class="diag-card-subtitle">— 换个场景就废</span>
+              </div>
+              <div class="diag-card-quote">
+                <span class="diag-card-quote-label">原话听起来像这样</span>
+                讲公司很顺，换成政府部门、大学、军队就套不上去；或者硬套上去了，但说不出这几个场景之间到底什么变了。
+              </div>
+              <div class="diag-card-problem">
+                <strong>问题：</strong>你记住的是这个案例，不是那条机制。
+              </div>
+              <div class="diag-card-fix">
+                <strong>怎么补：</strong>找这个机制在另一个场景里的对应物，并且指名道姓说出哪个变量换了。
+              </div>
+            </div>
+
+            <!-- ⑥ 边界型 -->
+            <div class="diag-card">
+              <div class="diag-card-head">
+                <span class="diag-card-num">⑥</span>
+                <span class="diag-card-name">边界型</span>
+                <span class="diag-card-subtitle">— 不知道它什么时候不灵</span>
+              </div>
+              <div class="diag-card-quote">
+                <span class="diag-card-quote-label">原话听起来像这样</span>
+                说不出这条规律在什么情况下不成立。比如业务高度标准化、决策能下沉成规则的时候，规模反而不拖慢速度——麦当劳几万家店，开一家新店的决策并不慢。
+              </div>
+              <div class="diag-card-problem">
+                <strong>问题：</strong>不知道边界的人会一路用到失效区，还以为自己在用规律。这是迁移失败最常见的死法，不是没记住，是不知道什么时候该停。
+              </div>
+              <div class="diag-card-fix">
+                <strong>怎么补：</strong>专门去查这条规律的适用条件和已知反例。
+              </div>
+            </div>
+
+            <!-- ⑦ 空白型 -->
+            <div class="diag-card card-dim">
+              <div class="diag-card-head">
+                <span class="diag-card-num">⑦</span>
+                <span class="diag-card-name">空白型</span>
+                <span class="diag-card-subtitle">— 完全说不出下一步</span>
+                <span class="diag-badge badge-dim">唯一没有诊断价值</span>
+              </div>
+              <div class="diag-card-quote">
+                <span class="diag-card-quote-label">原话听起来像这样</span>
+                （一片空白）
+              </div>
+              <div class="diag-card-problem">
+                <strong>问题：</strong>只告诉你「这里没存东西」，不给任何坐标。
+              </div>
+              <div class="diag-card-fix">
+                <strong>怎么补：</strong>回去读。但它有个元用途——如果清单上全是空白型，说明问题不在这一轮，在第 1 步：输入没做够，或者概念选得太大。
+              </div>
+            </div>
+
+          </div><!-- end diag-cards-grid -->
+        </div>
+
+        <div class="step-arrow"></div>
+      </div>
+
+      <!-- STEP 8 -->
+      <div class="step-wrapper" id="step8">
+        <div class="step-node">
+          <div class="step-left">
+            <span class="step-num">STEP 08</span>
+            <span class="step-name">定向回炉</span>
+          </div>
+          <div class="step-mid">
+            <p>只回原始资料补卡住的那几处，不要重读全文</p>
+          </div>
+          <div class="step-right">
+            <div class="ai-cell can">
+              <div class="ai-label can">AI 可以做</div>
+              <div class="ai-text can">给检索词</div>
+            </div>
+            <div class="ai-cell cannot">
+              <div class="ai-label cannot">绝对不许</div>
+              <div class="ai-text cannot">代替原始资料本身</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loop mobile note -->
+        <div class="loop-mobile-note">↑ 补完就重讲 → 回到 STEP 04 闭卷讲</div>
+
+        <div class="step-arrow"></div>
+      </div>
+
+      <!-- STEP 9 -->
+      <div class="step-wrapper" id="step9">
+        <div class="step-node">
+          <div class="step-left">
+            <span class="step-num">STEP 09</span>
+            <span class="step-name">补例子 + 标边界</span>
+          </div>
+          <div class="step-mid">
+            <p>自造 2—3 个新例子；写下类比在哪里失效</p>
+          </div>
+          <div class="step-right">
+            <div class="ai-cell can">
+              <div class="ai-label can">AI 可以做</div>
+              <div class="ai-text can">抛新场景让你判断适不适用</div>
+            </div>
+            <div class="ai-cell cannot">
+              <div class="ai-label cannot">绝对不许</div>
+              <div class="ai-text cannot">替你造例子、替你标边界</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-arrow"></div>
+      </div>
+
+      <!-- STEP 10 -->
+      <div class="step-wrapper" id="step10">
+        <div class="step-node">
+          <div class="step-left">
+            <span class="step-num">STEP 10</span>
+            <span class="step-name">交给间隔重复</span>
+          </div>
+          <div class="step-mid">
+            <p>简明解释 + 关键事实做成卡片</p>
+          </div>
+          <div class="step-right">
+            <div class="ai-cell can">
+              <div class="ai-label can">AI 可以做</div>
+              <div class="ai-text can">生成卡片题干；复用同一份追问清单重测</div>
+            </div>
+            <div class="ai-cell cannot">
+              <div class="ai-label cannot">绝对不许</div>
+              <div class="ai-text cannot">生成卡片答案</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loop mobile note -->
+        <div class="loop-mobile-note">↑ 几周后不看笔记重讲一遍，看哪里又塌了 → 回到 STEP 04 闭卷讲</div>
+
+      </div>
+
+    </div><!-- end flow-main -->
+  </div><!-- end flow-container -->
+
+  <!-- BANNER -->
+  <div class="banner">
+    <div class="banner-label">唯一的验收标准</div>
+    <div class="banner-text">
+      验收只看一件事——这一轮结束，你手上有没有一张<em>写着自己哪几处真正说不清楚的清单</em>。<br>
+      有就成了；只讲出一段漂亮的解释，等于<em>白做</em>。
+    </div>
+  </div>
+
+  <div class="hint-bar">← 宽屏下左侧显示回流箭头 · 打印时隐藏此提示 →</div>
+
+  <!-- 证伪者协议 CODE BLOCK -->
+  <div class="falsi-protocol">
+    <div class="falsi-protocol-header">
+      <div class="falsi-protocol-header-dots">
+        <div class="falsi-dot red"></div>
+        <div class="falsi-dot yellow"></div>
+        <div class="falsi-dot green"></div>
+      </div>
+      <span class="falsi-protocol-title">证伪者协议 · AI 追问清单模板</span>
+    </div>
+    <div class="falsi-protocol-body">
+      <div class="falsi-line"><span class="falsi-line-num">1</span><span class="falsi-line-content"><span class="falsi-comment">// 把下面这段发给 AI，替换 [概念] 和 [你的讲述]</span></span></div>
+      <div class="falsi-line"><span class="falsi-line-num">2</span><span class="falsi-line-content">&nbsp;</span></div>
+      <div class="falsi-line"><span class="falsi-line-num">3</span><span class="falsi-line-content"><span class="falsi-key">我在学：</span><span class="falsi-str">[概念]</span></span></div>
+      <div class="falsi-line"><span class="falsi-line-num">4</span><span class="falsi-line-content"><span class="falsi-key">我的讲述：</span><span class="falsi-str">[你的讲述]</span></span></div>
+      <div class="falsi-line"><span class="falsi-line-num">5</span><span class="falsi-line-content">&nbsp;</span></div>
+      <div class="falsi-line"><span class="falsi-line-num">6</span><span class="falsi-line-content"><span class="falsi-key">请按顺序追问我：</span></span></div>
+      <div class="falsi-line"><span class="falsi-line-num">7</span><span class="falsi-line-content"><span class="falsi-bracket">①</span> <span class="falsi-val">抽掉一环</span>：把 ___ 这一步拿掉，后面还成立吗？</span></div>
+      <div class="falsi-line"><span class="falsi-line-num">8</span><span class="falsi-line-content"><span class="falsi-bracket">②</span> <span class="falsi-val">倒着问</span>：结果已经出现了，除了你说的这条路，还有哪几条路能造出同样的结果？</span></div>
+      <div class="falsi-line"><span class="falsi-line-num">9</span><span class="falsi-line-content"><span class="falsi-bracket">③</span> <span class="falsi-val">半路起讲</span>：别从头讲，直接从 ___ 这一步开始，往后接到结果。</span></div>
+      <div class="falsi-line"><span class="falsi-line-num">10</span><span class="falsi-line-content"><span class="falsi-bracket">④</span> <span class="falsi-val">换个地方用</span>：同样这套道理，换到 ___ 上面，会变成什么样？</span></div>
+      <div class="falsi-line"><span class="falsi-line-num">11</span><span class="falsi-line-content"><span class="falsi-bracket">⑤</span> <span class="falsi-val">什么时候不灵</span>：这条规律在什么情况下就不成立了？举一个反例。</span></div>
+      <div class="falsi-line"><span class="falsi-line-num">12</span><span class="falsi-line-content">&nbsp;</span></div>
+      <div class="falsi-line"><span class="falsi-line-num">13</span><span class="falsi-line-content"><span class="falsi-key">每次我答不上来，</span><span class="falsi-comment">// 记录卡住的地方，不要给答案</span></span></div>
+      <div class="falsi-line"><span class="falsi-line-num">14</span><span class="falsi-line-content"><span class="falsi-key">输出格式：</span></span></div>
+      <div class="falsi-line"><span class="falsi-line-num">15</span><span class="falsi-line-content">&nbsp;&nbsp;<span class="falsi-bracket">{</span></span></div>
+      <div class="falsi-line"><span class="falsi-line-num">16</span><span class="falsi-line-content">&nbsp;&nbsp;&nbsp;&nbsp;<span class="falsi-key">卡住的地方：</span><span class="falsi-str">[原话或「空白」]</span><span class="falsi-comment">,</span></span></div>
+      <div class="falsi-line"><span class="falsi-line-num">17</span><span class="falsi-line-content">&nbsp;&nbsp;&nbsp;&nbsp;<span class="falsi-key">归类：</span><span class="falsi-highlight">断链 / 方向 / 术语替代 / 单向 / 迁移 / 边界 / 空白 中的哪一型</span></span></div>
+      <div class="falsi-line"><span class="falsi-line-num">18</span><span class="falsi-line-content">&nbsp;&nbsp;<span class="falsi-bracket">}</span></span></div>
+    </div>
+  </div>
+
+</div><!-- end page-wrapper -->
+
+<script>
+// Draw loop arrows as SVG after layout
+function drawLoopArrows() {
+  const loopCol = document.getElementById('loopCol');
+  const flowMain = document.getElementById('flowMain');
+  const step4 = document.getElementById('step4');
+  const step8 = document.getElementById('step8');
+  const step10 = document.getElementById('step10');
+
+  if (!loopCol || !step4 || !step8 || !step10) return;
+
+  // Check if loop col is visible (not hidden by CSS)
+  const loopColStyle = window.getComputedStyle(loopCol);
+  if (loopColStyle.display === 'none') return;
+
+  const loopColRect = loopCol.getBoundingClientRect();
+  const flowMainRect = flowMain.getBoundingClientRect();
+
+  // Get step node elements (first child of step-wrapper)
+  const step4Node = step4.querySelector('.step-node');
+  const step8Node = step8.querySelector('.step-node');
+  const step10Node = step10.querySelector('.step-node');
+
+  if (!step4Node || !step8Node || !step10Node) return;
+
+  const step4Rect = step4Node.getBoundingClientRect();
+  const step8Rect = step8Node.getBoundingClientRect();
+  const step10Rect = step10Node.getBoundingClientRect();
+
+  // Convert to relative coordinates within loopCol
+  const containerTop = loopColRect.top;
+  const containerLeft = loopColRect.left;
+
+  // Y positions relative to loopCol top
+  const s4Top = step4Rect.top - containerTop;
+  const s4Mid = step4Rect.top + step4Rect.height / 2 - containerTop;
+  const s4Bottom = step4Rect.bottom - containerTop;
+
+  const s8Mid = step8Rect.top + step8Rect.height / 2 - containerTop;
+  const s8Bottom = step8Rect.bottom - containerTop;
+
+  const s10Mid = step10Rect.top + step10Rect.height / 2 - containerTop;
+  const s10Bottom = step10Rect.bottom - containerTop;
+
+  const totalHeight = s10Bottom + 20;
+  const colWidth = 96;
+
+  // Remove existing SVG
+  const existing = loopCol.querySelector('svg');
+  if (existing) existing.remove();
+
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('width', colWidth);
+  svg.setAttribute('height', totalHeight);
+  svg.style.position = 'absolute';
+  svg.style.left = '0';
+  svg.style.top = '0';
+  svg.style.overflow = 'visible';
+
+  const color1 = '#b45309';
+  const color2 = '#d97706';
+  const strokeW = 3.2;
+
+  // ---- Loop 1: step8 -> step4 ----
+  const x1Right = colWidth - 4;
+  const x1Left = 10;
+
+  const loop1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  const l1y_start = s8Mid;
+  const l1y_end = s4Mid;
+
+  loop1.setAttribute('d', `
+    M ${x1Right} ${l1y_start}
+    L ${x1Left + 14} ${l1y_start}
+    Q ${x1Left} ${l1y_start} ${x1Left} ${l1y_start - 10}
+    L ${x1Left} ${l1y_end + 10}
+    Q ${x1Left} ${l1y_end} ${x1Left + 14} ${l1y_end}
+    L ${x1Right} ${l1y_end}
+  `);
+  loop1.setAttribute('fill', 'none');
+  loop1.setAttribute('stroke', color1);
+  loop1.setAttribute('stroke-width', strokeW);
+  loop1.setAttribute('stroke-dasharray', '9,5');
+  loop1.setAttribute('stroke-linecap', 'round');
+  svg.appendChild(loop1);
+
+  // Arrowhead at end (pointing right toward step4) — enlarged
+  const arr1 = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+  arr1.setAttribute('points', `${x1Right},${l1y_end} ${x1Right-14},${l1y_end-9} ${x1Right-14},${l1y_end+9}`);
+  arr1.setAttribute('fill', color1);
+  svg.appendChild(arr1);
+
+  // Start dot at step8 side
+  const dot1 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  dot1.setAttribute('cx', x1Right);
+  dot1.setAttribute('cy', l1y_start);
+  dot1.setAttribute('r', '5');
+  dot1.setAttribute('fill', color1);
+  svg.appendChild(dot1);
+
+  // ---- Loop 2: step10 -> step4 ----
+  const x2Right = colWidth - 4;
+  const x2Left = 38;
+
+  const loop2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  const l2y_start = s10Mid;
+  const l2y_end = s4Mid;
+
+  loop2.setAttribute('d', `
+    M ${x2Right} ${l2y_start}
+    L ${x2Left + 14} ${l2y_start}
+    Q ${x2Left} ${l2y_start} ${x2Left} ${l2y_start - 10}
+    L ${x2Left} ${l2y_end + 10}
+    Q ${x2Left} ${l2y_end} ${x2Left + 14} ${l2y_end}
+    L ${x2Right} ${l2y_end}
+  `);
+  loop2.setAttribute('fill', 'none');
+  loop2.setAttribute('stroke', color2);
+  loop2.setAttribute('stroke-width', strokeW);
+  loop2.setAttribute('stroke-dasharray', '9,5');
+  loop2.setAttribute('stroke-linecap', 'round');
+  loop2.setAttribute('opacity', '1');
+  svg.appendChild(loop2);
+
+  // Arrowhead at end (pointing right toward step4) — enlarged
+  const arr2 = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+  arr2.setAttribute('points', `${x2Right},${l2y_end} ${x2Right-14},${l2y_end-9} ${x2Right-14},${l2y_end+9}`);
+  arr2.setAttribute('fill', color2);
+  svg.appendChild(arr2);
+
+  // Start dot at step10 side
+  const dot2 = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  dot2.setAttribute('cx', x2Right);
+  dot2.setAttribute('cy', l2y_start);
+  dot2.setAttribute('r', '5');
+  dot2.setAttribute('fill', color2);
+  svg.appendChild(dot2);
+
+  loopCol.appendChild(svg);
+  loopCol.style.height = totalHeight + 'px';
+}
+
+// Run after layout
+window.addEventListener('load', () => {
+  setTimeout(drawLoopArrows, 100);
+});
+window.addEventListener('resize', () => {
+  setTimeout(drawLoopArrows, 100);
+});
+</script>
+</body>
+</html>
