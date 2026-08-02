@@ -2672,3 +2672,65 @@ article.entry-card .meta { font-size: 0.8rem; margin-top: 4px; }
 /* 20. Metric band — slightly lighter */
 .metric-value { font-size: clamp(20px, 2.2vw, 26px); }
 .metric-label { font-size: 10.5px; letter-spacing: 0.04em; }
+
+/* dark-card-visibility-fix */
+:root[data-theme="dark"] {
+  --paper: #0f1316;
+  --surface: #1c2126;
+  --surface-soft: #252c32;
+  --line: #333e47;
+  --line-strong: #4e5d68;
+}
+
+:root[data-theme="dark"] .tool-card {
+  background: #1c2126;
+  border-color: #333e47;
+}
+:root[data-theme="dark"] .tool-card:hover {
+  background: #212830;
+  border-color: var(--accent);
+}
+:root[data-theme="dark"] .tool-card.is-coming {
+  background: transparent;
+  border-color: #333e47;
+}
+:root[data-theme="dark"] .tool-card.is-coming .tool-icon--placeholder {
+  background: var(--surface-soft);
+}
+:root[data-theme="dark"] .tool-icon {
+  background: rgba(127, 176, 152, 0.15);
+}
+
+:root[data-theme="dark"] .column-card {
+  background: #1c2126;
+  border-color: #333e47;
+}
+:root[data-theme="dark"] .column-card:hover {
+  background: #212830;
+  border-color: var(--accent);
+}
+:root[data-theme="dark"] .column-card.is-coming {
+  background: transparent;
+  border-color: #333e47;
+}
+
+:root[data-theme="dark"] .entry-card,
+:root[data-theme="dark"] article.entry-card {
+  background: #1c2126;
+  border-color: #333e47;
+}
+
+:root[data-theme="dark"] .contact-card {
+  background: #1c2126;
+  border-color: #333e47;
+}
+
+:root[data-theme="dark"] .site-header {
+  background: #141920;
+  border-bottom-color: #252c32;
+}
+
+:root[data-theme="dark"] footer.site-footer {
+  background: #141920;
+  border-top-color: #252c32;
+}
