@@ -2570,3 +2570,105 @@ li { font-weight: 500; }
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
 }
 .theme-toggle--fab svg { width: 18px; height: 18px; }
+
+/* ============================================================
+   make-ui-not-ai overrides — specific to jefeerzhang.github.io
+   An academic homepage should scan like a reference card, not
+   a SaaS landing page.  These overrides strip template tells
+   while preserving the existing token system and component HTML.
+   ============================================================ */
+
+/* 1. Kill the large soft shadow globally */
+:root { --shadow: 0 1px 3px rgba(31, 59, 45, 0.06); }
+:root[data-theme="dark"] { --shadow: 0 1px 3px rgba(0, 0, 0, 0.20); }
+
+/* 2. Cards: remove hover-lift, keep only border-color transition */
+.column-card:hover,
+.tool-card:hover,
+article.entry-card:hover,
+article.entry-card:focus-within,
+.contact-card:hover,
+.fsqca-card:hover,
+.lesson-nav a:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--accent);
+}
+
+/* 3. Hide the 01/02/03/04 sequence numbers on entry cards */
+.entry-card .num { display: none; }
+
+/* 4. Brand mark — add a subtle left accent bar */
+.site-brand {
+  padding-left: 14px;
+  border-left: 3px solid var(--accent);
+  letter-spacing: -0.01em;
+}
+
+/* 5. Tighten hero sections */
+.home-hero { padding-block: 48px 36px; }
+.home-hero .name { font-size: clamp(42px, 6vw, 64px); letter-spacing: -0.025em; }
+.home-hero .subtitle { font-size: clamp(14px, 1.2vw, 16px); color: var(--text); }
+
+/* 6. Contact cards — remove staggered entry animation */
+.contact-card { animation: none; }
+
+/* 7. Contact card hover — subtle shadow, no lift */
+.contact-card:hover { box-shadow: 0 2px 8px rgba(27, 59, 45, 0.08); }
+
+/* 8. Entry section heading — tighten */
+.entry-section .section-heading { margin-bottom: 18px; }
+.entry-section .section-heading .label { display: none; }
+
+/* 9. Entry cards — tighter, more like a nav list */
+.entry-grid { gap: 12px; }
+article.entry-card > a { min-height: auto; padding: 18px 20px 16px; gap: 4px; }
+article.entry-card h3 { font-size: 1.15rem; font-weight: 700; margin: 0; }
+article.entry-card .meta { font-size: 0.8rem; margin-top: 4px; }
+
+/* 10. Tool cards — smaller icon */
+.tool-icon { width: 36px; height: 36px; padding: 7px; border-radius: 8px; background: var(--surface-soft); filter: none; }
+
+/* 11. Knowledge column cards — tighter */
+.column-card { padding: 24px 22px; min-height: 180px; }
+.column-card h3 { font-size: 1.35rem; font-weight: 700; }
+
+/* 12. Footer — lighter */
+.site-footer { background: transparent; border-top: 1px solid var(--line); }
+.footer-inner { min-height: 64px; }
+
+/* 13. Nav — slightly tighter */
+.nav-links { gap: 18px; }
+.nav-links a { font-size: 12.5px; letter-spacing: 0.02em; }
+
+/* 14. CV hero — tighten */
+.cv-hero { padding: 18px 0 28px; margin-bottom: 24px; }
+.cv-identity h1 { font-size: clamp(40px, 5.5vw, 60px); }
+
+/* 15. fsQCA hero gradient — clean paper */
+.fsqca-hero, .lesson-hero { background: var(--paper); }
+
+/* 16. fsqca card animations — remove */
+.fsqca-card { animation: none; }
+
+/* 17. Contact icon hover — no rotation */
+.contact-card:hover .contact-icon { transform: none; }
+
+/* 18. Dark mode shadow overrides */
+:root[data-theme="dark"] .column-card:hover,
+:root[data-theme="dark"] .tool-card:hover,
+:root[data-theme="dark"] article.entry-card:hover,
+:root[data-theme="dark"] .contact-card:hover,
+:root[data-theme="dark"] .fsqca-card:hover,
+:root[data-theme="dark"] .lesson-nav a:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* 19. Publication list — bibliography feel */
+.publication { padding: 10px 0; }
+.pub-body { font-size: 15.5px; }
+
+/* 20. Metric band — slightly lighter */
+.metric-value { font-size: clamp(20px, 2.2vw, 26px); }
+.metric-label { font-size: 10.5px; letter-spacing: 0.04em; }
