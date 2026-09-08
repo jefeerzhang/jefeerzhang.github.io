@@ -11,18 +11,18 @@
     /* ---- 课程中心专属样式 ---- */
 
     .courses-hero {
-      padding: 72px 0 48px;
+      padding: 56px 0 36px;
       border-bottom: 1px solid var(--line-strong);
     }
 
     .courses-hero .eyebrow {
-      margin-bottom: 18px;
+      margin-bottom: 14px;
     }
 
     .courses-hero h1 {
       margin: 0;
       font-family: var(--display);
-      font-size: clamp(48px, 6.5vw, 72px);
+      font-size: clamp(40px, 5.5vw, 60px);
       font-weight: 700;
       line-height: 1.05;
       letter-spacing: -0.02em;
@@ -30,30 +30,30 @@
     }
 
     .courses-hero .hero-summary {
-      max-width: 620px;
-      margin: 20px 0 0;
+      max-width: 560px;
+      margin: 16px 0 0;
       color: var(--text);
-      font-size: clamp(16px, 2vw, 18px);
-      line-height: 1.8;
+      font-size: clamp(15px, 1.8vw, 17px);
+      line-height: 1.75;
     }
 
     /* 学历 Tab */
     .level-tabs {
       display: flex;
-      gap: 28px;
-      margin-top: 36px;
-      padding-top: 24px;
+      gap: 24px;
+      margin-top: 28px;
+      padding-top: 18px;
       border-top: 1px solid var(--line);
     }
 
     .level-tab {
       position: relative;
-      padding: 8px 2px;
+      padding: 6px 2px;
       background: none;
       border: 0;
       color: var(--muted);
       font-family: var(--serif);
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 600;
       cursor: pointer;
       transition: color 180ms ease;
@@ -93,11 +93,11 @@
 
     /* 课程分组区 */
     .courses-section {
-      padding: 64px 0 96px;
+      padding: 48px 0 72px;
     }
 
     .course-group {
-      margin-bottom: 56px;
+      margin-bottom: 40px;
     }
 
     .course-group:last-child {
@@ -107,16 +107,16 @@
     .course-group-header {
       display: flex;
       align-items: baseline;
-      gap: 14px;
-      margin-bottom: 22px;
-      padding-bottom: 14px;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
       border-bottom: 1px solid var(--line);
     }
 
     .course-group-header h2 {
       margin: 0;
       font-family: var(--display);
-      font-size: clamp(24px, 3vw, 32px);
+      font-size: clamp(20px, 2.4vw, 26px);
       font-weight: 700;
       line-height: 1.25;
       letter-spacing: -0.015em;
@@ -124,7 +124,7 @@
 
     .course-group-header .group-num {
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       color: var(--accent);
       letter-spacing: 0.08em;
@@ -133,23 +133,23 @@
     .course-group-header .group-desc {
       margin: 0 0 0 auto;
       color: var(--muted);
-      font-size: 14px;
+      font-size: 13px;
     }
 
     /* 课程卡片网格 */
     .course-group-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
     }
 
     .course-card {
       position: relative;
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      padding: 28px 26px 20px;
-      min-height: 200px;
+      gap: 12px;
+      padding: 22px 20px 16px;
+      min-height: 160px;
       background: var(--surface);
       border: 1px solid var(--line);
       border-radius: var(--radius);
@@ -177,9 +177,9 @@
       align-items: center;
       gap: 6px;
       align-self: flex-start;
-      padding: 4px 10px;
+      padding: 3px 9px;
       font-family: var(--mono);
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 700;
       letter-spacing: 0.06em;
       text-transform: uppercase;
@@ -196,7 +196,7 @@
     .course-card h3 {
       margin: 0;
       font-family: var(--display);
-      font-size: 22px;
+      font-size: 19px;
       font-weight: 700;
       line-height: 1.3;
       letter-spacing: -0.01em;
@@ -210,8 +210,8 @@
     .course-card p {
       margin: 0;
       color: var(--text);
-      font-size: 14.5px;
-      line-height: 1.7;
+      font-size: 13.5px;
+      line-height: 1.65;
     }
 
     .course-card--featured p {
@@ -224,10 +224,10 @@
       justify-content: space-between;
       gap: 12px;
       margin-top: auto;
-      padding-top: 14px;
+      padding-top: 10px;
       border-top: 1px solid var(--line);
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.02em;
       color: var(--accent);
@@ -239,7 +239,7 @@
     }
 
     .course-card-arrow {
-      font-size: 16px;
+      font-size: 14px;
       transition: transform 180ms ease;
     }
 
@@ -290,21 +290,21 @@
 
     @media (max-width: 760px) {
       .courses-hero {
-        padding: 48px 0 36px;
+        padding: 40px 0 28px;
       }
 
       .courses-hero h1 {
-        font-size: 44px;
+        font-size: 36px;
       }
 
       .level-tabs {
-        gap: 24px;
-        margin-top: 28px;
-        padding-top: 18px;
+        gap: 20px;
+        margin-top: 22px;
+        padding-top: 14px;
       }
 
       .level-tab {
-        font-size: 16px;
+        font-size: 15px;
       }
 
       .level-tab .tab-en {
@@ -312,11 +312,11 @@
       }
 
       .courses-section {
-        padding: 42px 0 64px;
+        padding: 32px 0 48px;
       }
 
       .course-group {
-        margin-bottom: 40px;
+        margin-bottom: 32px;
       }
 
       .course-group-header {
@@ -327,7 +327,7 @@
       .course-group-header .group-desc {
         width: 100%;
         margin-left: 0;
-        font-size: 13px;
+        font-size: 12.5px;
       }
 
       .course-group-grid {
@@ -422,25 +422,6 @@
           <div class="course-group">
             <div class="course-group-header">
               <span class="group-num">03</span>
-              <h2>思维训练</h2>
-              <span class="group-desc">从概念分解到研究迁移</span>
-            </div>
-            <div class="course-group-grid">
-              <a class="course-card" href="https://jefeerzhang.github.io/master-course/%E7%AC%AC%E4%B8%80%E6%80%A7%E5%8E%9F%E7%90%86/" target="_blank" rel="noopener">
-                <span class="course-card-tag">思维 · Thinking</span>
-                <h3>第一性原理思维</h3>
-                <p>从概念分解到研究迁移，训练独立判断。</p>
-                <div class="course-card-meta">
-                  <span>10 张认知锚点</span>
-                  <span class="course-card-arrow" aria-hidden="true">↗</span>
-                </div>
-              </a>
-            </div>
-          </div>
-
-          <div class="course-group">
-            <div class="course-group-header">
-              <span class="group-num">04</span>
               <h2>专题课程</h2>
               <span class="group-desc">特定领域的深度专题</span>
             </div>
