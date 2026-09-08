@@ -97,6 +97,11 @@ td .mono,th .mono{font-family:var(--mono);font-size:13px}
 .check li::before{content:"☐";position:absolute;left:2px;font-size:17px;color:var(--accent);font-weight:700}
 .check li:last-child{border-bottom:none}
 
+.video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:18px}
+.video-card{background:#fff;border:1px solid var(--grey-2);border-radius:10px;overflow:hidden}
+.video-title{padding:10px 14px;font-size:14px;font-weight:600;color:var(--text);border-bottom:1px solid var(--grey-2);background:var(--grey-0)}
+.video-card video{width:100%;display:block;background:#000}
+
 /* ===== footer ===== */
 footer{margin-top:48px;padding:28px 0 48px;border-top:2px solid var(--accent);color:var(--grey-3);font-size:13.5px}
 footer .mono{font-size:12.5px}
@@ -133,6 +138,7 @@ footer strong{color:var(--ink)}
     <a href="#cases">案例块</a>
     <a href="#demo">方法演示</a>
     <a href="#concept">概念落地</a>
+    <a href="#videos">视频</a>
     <a href="01-asset-portfolio-theory.pptx" target="_blank" rel="noopener">课件</a>
   </div>
 </nav>
@@ -298,6 +304,36 @@ B组=跨行业10只（从上面30只中取前10只）。
     <li>卡 2：① 权重和 = 1？② 有无单只 &gt; 40%？若有，追问原因；③ 夏普的 rf 与年化口径是否一致？</li>
   </ul>
   <p class="note">产出要求：1 张图 + 3 句话结论（风险集中于何处、何组合更优、原因）。教师巡场引导性提问："Agent 是否报告年化系数？""权重之和是否为 1？""所选 6 只股票是否构成案例 1 所述的行业内组合？"</p>
+</section>
+
+<!-- ============ 视频 ============ -->
+<section id="videos">
+  <h2><span class="no">06</span> 视频</h2>
+  <p>课前预习视频，快速建立基本概念。</p>
+
+  <div class="video-grid">
+    <div class="video-card">
+      <div class="video-title">什么是 AI Agent</div>
+      <video controls preload="metadata" poster="">
+        <source src="videos/what-is-ai-agent.mp4" type="video/mp4">
+        您的浏览器不支持视频播放。
+      </video>
+    </div>
+    <div class="video-card">
+      <div class="video-title">什么是 MCP</div>
+      <video controls preload="metadata" poster="">
+        <source src="videos/what-is-mcp.mp4" type="video/mp4">
+        您的浏览器不支持视频播放。
+      </video>
+    </div>
+    <div class="video-card">
+      <div class="video-title">什么是 Harness</div>
+      <video controls preload="metadata" poster="">
+        <source src="videos/what-is-harness.mp4" type="video/mp4">
+        您的浏览器不支持视频播放。
+      </video>
+    </div>
+  </div>
 </section>
 
 
