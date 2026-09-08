@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>课程中心 · 张剑</title>
+  <meta name="description" content="张剑的课程中心，按学历层次（硕士、本科）与课程类型组织的教学资料。">
+  <script src="../assets/theme.js"></script>
+  <link rel="stylesheet" href="../assets/site.css?v=20">
+  <style>
+    /* ---- 课程中心专属样式 ---- */
+
+    .courses-hero {
+      padding: 72px 0 48px;
+      border-bottom: 1px solid var(--line-strong);
+    }
+
+    .courses-hero .eyebrow {
+      margin-bottom: 18px;
+    }
+
+    .courses-hero h1 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(48px, 6.5vw, 72px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      text-wrap: balance;
+    }
+
+    .courses-hero .hero-summary {
+      max-width: 620px;
+      margin: 20px 0 0;
+      color: var(--text);
+      font-size: clamp(16px, 2vw, 18px);
+      line-height: 1.8;
+    }
+
+    /* 学历 Tab */
+    .level-tabs {
+      display: flex;
+      gap: 28px;
+      margin-top: 36px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+    }
+
+    .level-tab {
+      position: relative;
+      padding: 8px 2px;
+      background: none;
+      border: 0;
+      color: var(--muted);
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 180ms ease;
+    }
+
+    .level-tab:hover {
+      color: var(--accent);
+    }
+
+    .level-tab.is-active {
+      color: var(--ink);
+    }
+
+    .level-tab.is-active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 2px;
+      background: var(--accent);
+    }
+
+    .level-tab .tab-en {
+      margin-left: 8px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .level-tab.is-active .tab-en {
+      color: var(--accent);
+    }
+
+    /* 课程分组区 */
+    .courses-section {
+      padding: 64px 0 96px;
+    }
+
+    .course-group {
+      margin-bottom: 56px;
+    }
+
+    .course-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .course-group-header {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      margin-bottom: 22px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .course-group-header h2 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(24px, 3vw, 32px);
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.015em;
+    }
+
+    .course-group-header .group-num {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+    }
+
+    .course-group-header .group-desc {
+      margin: 0 0 0 auto;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* 课程卡片网格 */
+    .course-group-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .course-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 28px 26px 20px;
+      min-height: 200px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      color: inherit;
+      text-decoration: none;
+      transition: border-color 200ms ease;
+    }
+
+    .course-card:hover {
+      border-color: var(--accent);
+    }
+
+    .course-card--featured {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: var(--accent-ink);
+    }
+
+    .course-card--featured:hover {
+      border-color: var(--accent-hover);
+    }
+
+    .course-card-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      align-self: flex-start;
+      padding: 4px 10px;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      background: var(--surface-soft);
+      color: var(--accent);
+    }
+
+    .course-card--featured .course-card-tag {
+      background: rgba(246, 251, 248, 0.16);
+      color: var(--accent-ink);
+    }
+
+    .course-card h3 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+
+    .course-card--featured h3 {
+      color: var(--accent-ink);
+    }
+
+    .course-card p {
+      margin: 0;
+      color: var(--text);
+      font-size: 14.5px;
+      line-height: 1.7;
+    }
+
+    .course-card--featured p {
+      color: rgba(246, 251, 248, 0.78);
+    }
+
+    .course-card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: var(--accent);
+    }
+
+    .course-card--featured .course-card-meta {
+      border-color: rgba(246, 251, 248, 0.24);
+      color: var(--accent-ink);
+    }
+
+    .course-card-arrow {
+      font-size: 16px;
+      transition: transform 180ms ease;
+    }
+
+    .course-card:hover .course-card-arrow {
+      transform: translateX(3px);
+    }
+
+    /* 即将上线卡片 */
+    .course-card.is-coming {
+      background: transparent;
+      border-style: dashed;
+      border-color: var(--line-strong);
+      color: var(--muted);
+      cursor: default;
+    }
+
+    .course-card.is-coming:hover {
+      border-color: var(--line-strong);
+    }
+
+    .course-card.is-coming h3 {
+      color: var(--muted);
+    }
+
+    .course-card.is-coming p {
+      color: var(--muted);
+    }
+
+    .course-card.is-coming .course-card-meta {
+      color: var(--muted);
+      border-top-color: var(--line);
+    }
+
+    /* 内容面板切换 */
+    .level-panel {
+      display: none;
+    }
+
+    .level-panel.is-active {
+      display: block;
+      animation: fade-in 280ms var(--ease) both;
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 760px) {
+      .courses-hero {
+        padding: 48px 0 36px;
+      }
+
+      .courses-hero h1 {
+        font-size: 44px;
+      }
+
+      .level-tabs {
+        gap: 24px;
+        margin-top: 28px;
+        padding-top: 18px;
+      }
+
+      .level-tab {
+        font-size: 16px;
+      }
+
+      .level-tab .tab-en {
+        display: none;
+      }
+
+      .courses-section {
+        padding: 42px 0 64px;
+      }
+
+      .course-group {
+        margin-bottom: 40px;
+      }
+
+      .course-group-header {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .course-group-header .group-desc {
+        width: 100%;
+        margin-left: 0;
+        font-size: 13px;
+      }
+
+      .course-group-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="home-page">
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+          <a href="../">首页</a>
+          <a href="../cv/">个人简历</a>
+          <a href="./" aria-current="page">课程中心</a>
+          <a href="../knowledge/">知识学习</a>
+          <a href="https://jefeerzh.github.io" target="_blank" rel="noopener">个人学习站</a>
+          <button type="button" class="theme-toggle" id="theme-toggle" aria-label="切换主题">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.9 4.9l1.4 1.4"/><path d="M17.7 17.7l1.4 1.4"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M4.9 19.1l1.4-1.4"/><path d="M17.7 6.3l1.4-1.4"/></svg>
+          </button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content">
+
+    <section class="courses-hero" aria-labelledby="courses-title">
+      <div class="container">
+        <p class="eyebrow">Courses · 课程中心</p>
+        <h1 id="courses-title">课程中心</h1>
+        <p class="hero-summary">按学历层次与课程类型组织的教学资料。围绕研究问题、方法选择与写作表达三件事，把方法、案例和判断沉淀成可复用的学习路径。</p>
+
+        <div class="level-tabs" role="tablist" aria-label="学历层次切换">
+          <button type="button" class="level-tab is-active" role="tab" aria-selected="true" aria-controls="panel-graduate" id="tab-graduate" data-level="graduate">
+            硕士课程<span class="tab-en">Graduate</span>
+          </button>
+          <button type="button" class="level-tab" role="tab" aria-selected="false" aria-controls="panel-undergraduate" id="tab-undergraduate" data-level="undergraduate">
+            本科课程<span class="tab-en">Undergraduate</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="courses-section">
+      <div class="container">
+
+        <!-- 硕士课程 -->
+        <div class="level-panel is-active" id="panel-graduate" role="tabpanel" aria-labelledby="tab-graduate">
+
+          <div class="course-group">
+            <div class="course-group-header">
+              <span class="group-num">01</span>
+              <h2>论文写作</h2>
+              <span class="group-desc">从选题到答辩的完整写作方法</span>
+            </div>
+            <div class="course-group-grid">
+              <a class="course-card course-card--featured" href="https://jefeerzhang.github.io/master-course/yuan-yunfen-writing/" target="_blank" rel="noopener">
+                <span class="course-card-tag">主推 · Featured</span>
+                <h3>硕士论文框架讲座</h3>
+                <p>用一篇 94 页论文样本拆解选题、结构与答辩。</p>
+                <div class="course-card-meta">
+                  <span>94 页样本 · 5 章拆解 · 答辩指南</span>
+                  <span class="course-card-arrow" aria-hidden="true">↗</span>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div class="course-group">
+            <div class="course-group-header">
+              <span class="group-num">02</span>
+              <h2>研究方法</h2>
+              <span class="group-desc">按问题与数据条件选方法</span>
+            </div>
+            <div class="course-group-grid">
+              <a class="course-card" href="https://jefeerzhang.github.io/master-course/research-methods/" target="_blank" rel="noopener">
+                <span class="course-card-tag">方法 · Methods</span>
+                <h3>核心研究方法指南</h3>
+                <p>按问题与数据条件选方法，让证据可被检验。</p>
+                <div class="course-card-meta">
+                  <span>方法选择路径图</span>
+                  <span class="course-card-arrow" aria-hidden="true">↗</span>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div class="course-group">
+            <div class="course-group-header">
+              <span class="group-num">03</span>
+              <h2>思维训练</h2>
+              <span class="group-desc">从概念分解到研究迁移</span>
+            </div>
+            <div class="course-group-grid">
+              <a class="course-card" href="https://jefeerzhang.github.io/master-course/%E7%AC%AC%E4%B8%80%E6%80%A7%E5%8E%9F%E7%90%86/" target="_blank" rel="noopener">
+                <span class="course-card-tag">思维 · Thinking</span>
+                <h3>第一性原理思维</h3>
+                <p>从概念分解到研究迁移，训练独立判断。</p>
+                <div class="course-card-meta">
+                  <span>10 张认知锚点</span>
+                  <span class="course-card-arrow" aria-hidden="true">↗</span>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div class="course-group">
+            <div class="course-group-header">
+              <span class="group-num">04</span>
+              <h2>专题课程</h2>
+              <span class="group-desc">特定领域的深度专题</span>
+            </div>
+            <div class="course-group-grid">
+              <a class="course-card" href="https://jefeerzhang.github.io/master-course/agri-finance/" target="_blank" rel="noopener">
+                <span class="course-card-tag">专题 · Topic</span>
+                <h3>农业信贷的硬科技</h3>
+                <p>把卫星、物联、区块链串成可验证的信贷闭环。</p>
+                <div class="course-card-meta">
+                  <span>6 张认知锚点</span>
+                  <span class="course-card-arrow" aria-hidden="true">↗</span>
+                </div>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 本科课程 -->
+        <div class="level-panel" id="panel-undergraduate" role="tabpanel" aria-labelledby="tab-undergraduate">
+
+          <div class="course-group">
+            <div class="course-group-header">
+              <span class="group-num">01</span>
+              <h2>论文写作</h2>
+              <span class="group-desc">本科阶段论文写作入门</span>
+            </div>
+            <div class="course-group-grid">
+              <div class="course-card is-coming" aria-disabled="true">
+                <span class="course-card-tag">筹备中</span>
+                <h3>本科论文写作入门</h3>
+                <p>从选题到初稿的完整写作指南，适合本科阶段入门。</p>
+                <div class="course-card-meta">
+                  <span>即将上线</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="course-group">
+            <div class="course-group-header">
+              <span class="group-num">02</span>
+              <h2>研究方法</h2>
+              <span class="group-desc">本科阶段方法入门</span>
+            </div>
+            <div class="course-group-grid">
+              <div class="course-card is-coming" aria-disabled="true">
+                <span class="course-card-tag">筹备中</span>
+                <h3>研究方法基础</h3>
+                <p>面向本科生的研究方法入门，理解证据与论证的基本逻辑。</p>
+                <div class="course-card-meta">
+                  <span>即将上线</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="course-group">
+            <div class="course-group-header">
+              <span class="group-num">03</span>
+              <h2>专题课程</h2>
+              <span class="group-desc">本科阶段专题内容</span>
+            </div>
+            <div class="course-group-grid">
+              <div class="course-card is-coming" aria-disabled="true">
+                <span class="course-card-tag">筹备中</span>
+                <h3>更多专题</h3>
+                <p>本科阶段的专题课程正在筹备中。</p>
+                <div class="course-card-meta">
+                  <span>即将上线</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  // 学历 Tab 切换
+  (function () {
+    var tabs = document.querySelectorAll('.level-tab');
+    var panels = document.querySelectorAll('.level-panel');
+
+    function activate(level) {
+      tabs.forEach(function (tab) {
+        var isActive = tab.getAttribute('data-level') === level;
+        tab.classList.toggle('is-active', isActive);
+        tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+      panels.forEach(function (panel) {
+        var isActive = panel.id === 'panel-' + level;
+        panel.classList.toggle('is-active', isActive);
+      });
+    }
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        activate(tab.getAttribute('data-level'));
+      });
+    });
+  })();
+
+  // 主题切换
+  (function () {
+    var btn = document.getElementById('theme-toggle');
+    if (!btn || !window.Theme) return;
+    btn.addEventListener('click', function () { window.Theme.toggle(); });
+  })();
+</script>
+</body>
+</html>
