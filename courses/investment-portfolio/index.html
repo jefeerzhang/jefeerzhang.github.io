@@ -196,6 +196,35 @@
       border-top-color: var(--line);
     }
 
+    .page-card.opening-card {
+      background: linear-gradient(135deg, #0e131c 0%, #1a2130 100%);
+      border-color: #2a3446;
+      color: #e8edf5;
+      grid-column: 1 / -1;
+    }
+    .page-card.opening-card:hover {
+      border-color: #ff6a2b;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(255,106,43,.12);
+    }
+    .page-card.opening-card .page-tag {
+      color: #ff6a2b;
+      background: rgba(255,106,43,.12);
+    }
+    .page-card.opening-card h3 {
+      color: #fff;
+    }
+    .page-card.opening-card p {
+      color: #8b96a8;
+    }
+    .page-card.opening-card .page-meta {
+      border-top-color: #2a3446;
+      color: #8b96a8;
+    }
+    .page-card.opening-card .page-arrow {
+      color: #ff6a2b;
+    }
+
     @media (max-width: 760px) {
       .page-hero {
         padding: 40px 0 24px;
@@ -257,6 +286,16 @@
     <section class="page-content">
       <div class="container">
         <div class="page-grid">
+
+          <a class="page-card opening-card" href="./opening.html" target="_blank">
+            <span class="page-tag">课程开场白</span>
+            <h3>394 亿 Tokens 与我们的投资组合课</h3>
+            <p>开学前我先让 AI 工作了 160 天。烧掉的 token 不是聊天记录，是一份工作日志。</p>
+            <div class="page-meta">
+              <span>沉浸式页面 · 新窗口打开</span>
+              <span class="page-arrow" aria-hidden="true">→</span>
+            </div>
+          </a>
 
           <a class="page-card" href="./01-asset-portfolio-theory.html">
             <span class="page-tag">第 01 讲</span>
