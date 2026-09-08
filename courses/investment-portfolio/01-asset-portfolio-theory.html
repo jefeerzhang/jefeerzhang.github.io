@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第1课时 · 资产组合理论的应用 — 学生自读讲义</title>
+<style>
+/* ===== 瑞士国际主义 · 克莱因蓝 IKB ===== */
+:root{
+  --paper:#fafaf8;
+  --paper-rgb:250,250,248;
+  --ink:#0a0a0a;
+  --ink-rgb:10,10,10;
+  --grey-1:#f0f0ee;
+  --grey-2:#d4d4d2;
+  --grey-3:#737373;
+  --accent:#002FA7;
+  --accent-rgb:0,47,167;
+  --accent-on:#ffffff;
+  --mono:"JetBrains Mono","Cascadia Code",Consolas,"Courier New",monospace;
+  --sans:"Inter","Helvetica Neue","Noto Sans SC","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+.container{max-width:880px;margin:0 auto;padding:0 24px}
+
+/* ===== header（纯色，无渐变） ===== */
+header{background:var(--ink);color:#fff;padding:56px 0 40px;border-bottom:6px solid var(--accent)}
+header .tag{font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;font-weight:600}
+header .tag::before{content:"// "}
+header h1{font-size:38px;line-height:1.22;font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+header .sub{font-size:16.5px;color:var(--grey-2);margin-bottom:22px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:12.5px;color:#fff;border:1px solid var(--grey-3);padding:4px 12px;background:rgba(255,255,255,.03);font-weight:500}
+
+/* ===== nav（直角 hairline） ===== */
+nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--grey-2);margin-bottom:28px}
+nav .links{display:flex;gap:0;flex-wrap:wrap;padding:6px 0}
+nav a{font-size:14px;color:var(--grey-3);text-decoration:none;padding:8px 14px;border-left:1px solid var(--grey-2);transition:color .15s;font-weight:500}
+nav a:first-child{border-left:none}
+nav a:hover{color:var(--accent)}
+nav a.on{color:var(--accent);font-weight:600}
+
+/* ===== sections ===== */
+section{margin-bottom:44px}
+h2{font-size:23px;font-weight:700;color:var(--ink);margin:36px 0 16px;padding:0 0 10px 14px;border-left:6px solid var(--accent);display:flex;align-items:baseline;gap:12px;letter-spacing:-.01em}
+h2 .no{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.12em;font-weight:600}
+h3{font-size:17.5px;font-weight:700;margin:24px 0 10px;color:var(--ink)}
+p{margin:8px 0}
+ul,ol{margin:8px 0 8px 24px}
+li{margin:5px 0}
+code{font-family:var(--mono);font-size:.86em;background:var(--grey-1);padding:1px 6px;color:var(--ink);font-weight:500}
+strong{font-weight:700}
+
+/* ===== 卡片（直角纯色） ===== */
+.panel{background:var(--grey-1);border:1px solid var(--grey-2);padding:20px 22px;margin:14px 0}
+.takeaway{border-left:4px solid var(--accent);background:var(--grey-1);padding:12px 18px;font-weight:600;color:var(--ink);margin:14px 0}
+.warnbox{border-left:4px solid var(--ink);background:var(--grey-1);padding:12px 18px;margin:14px 0;font-size:14.5px}
+.note{font-size:14px;color:var(--grey-3);margin:6px 0}
+.case{border:1px solid var(--grey-2);margin:16px 0;background:var(--paper)}
+.case .case-head{background:var(--grey-1);padding:10px 20px;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--grey-2);font-size:15.5px}
+.case .case-head .dur{font-family:var(--mono);font-size:12px;color:var(--grey-3);font-weight:500;display:none}
+.case .case-body{padding:14px 20px 18px}
+.prompt{background:var(--ink);color:#e8e8e8;padding:14px 18px;font-family:var(--mono);font-size:13.5px;line-height:1.65;margin:10px 0;white-space:pre-wrap;font-weight:400}
+.prompt .plabel{display:block;color:var(--accent);font-size:12px;letter-spacing:.12em;margin-bottom:6px;font-weight:600}
+.verdict{font-family:var(--mono);font-size:13.5px;background:var(--grey-1);padding:12px 16px;margin:10px 0;color:var(--ink)}
+.verdict b{color:var(--accent);font-weight:600}
+
+/* ===== 统一图片槽位（瑞士风硬规则：同组图同槽位同高度） ===== */
+.figure{height:320px;display:flex;align-items:center;justify-content:center;background:var(--grey-1);border:1px solid var(--grey-2);margin:12px 0;overflow:hidden}
+.figure img{max-height:100%;max-width:100%;object-fit:contain}
+.figure figcaption{display:none}
+.figcap{font-family:var(--mono);font-size:12px;color:var(--grey-3);margin:-6px 0 12px;font-weight:500}
+
+/* ===== 数字强调 ===== */
+.statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0;margin:14px 0;border:1px solid var(--grey-2)}
+.stat{border-right:1px solid var(--grey-2);border-bottom:1px solid var(--grey-2);padding:14px 16px;background:var(--paper)}
+.stat:nth-child(4n){border-right:none}
+.stat .k{font-family:var(--mono);font-size:12px;color:var(--grey-3);letter-spacing:.08em;margin-bottom:6px;font-weight:600}
+.stat .v{font-size:24px;font-weight:700;font-family:var(--mono);color:var(--ink)}
+.stat .v .ac{color:var(--accent)}
+.stat .d{font-size:12.5px;color:var(--grey-3);margin-top:4px;line-height:1.5}
+
+/* ===== 表格（hairline） ===== */
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px}
+th,td{border:1px solid var(--grey-2);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--grey-1);color:var(--ink);font-weight:600;font-size:14px}
+td .mono,th .mono{font-family:var(--mono);font-size:13px}
+/* 根号渲染：√ 字符 + 上划线覆盖被开方数 */
+.sqrt{white-space:nowrap}
+.sqrt .rad{text-decoration:overline;text-decoration-thickness:1px}
+
+/* ===== 清单 ===== */
+.check{list-style:none;margin-left:0}
+.check li{padding:8px 0 8px 30px;position:relative;border-bottom:1px solid var(--grey-2)}
+.check li::before{content:"☐";position:absolute;left:2px;font-size:17px;color:var(--accent);font-weight:700}
+.check li:last-child{border-bottom:none}
+
+/* ===== footer ===== */
+footer{margin-top:48px;padding:28px 0 48px;border-top:2px solid var(--accent);color:var(--grey-3);font-size:13.5px}
+footer .mono{font-size:12.5px}
+footer strong{color:var(--ink)}
+@media print{
+  nav{display:none}
+  body{background:#fff}
+  .prompt{background:#f0f0f0;color:#222}
+  .figure{height:300px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="tag">第7章 · 课时 1 / 3</div>
+    <h1>资产组合理论的应用</h1>
+    <div class="sub">案例驱动的分散化教学：三个案例 → 两种演示 → 公式阐释 → 小组实践</div>
+    <div class="chips">
+      <span class="chip">45 min</span>
+      <span class="chip">本科大三</span>
+      <span class="chip">案例块</span>
+      <span class="chip">Agent 现场验证</span>
+      <span class="chip">小组自带电脑</span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="container links">
+    <a href="#goals">学习目标</a>
+    <a href="#params">参数约定</a>
+    <a href="#cases">案例块</a>
+    <a href="#demo">方法演示</a>
+    <a href="#concept">概念落地</a>
+    <a href="#practice">小组实践</a>
+    <a href="#project">项目里程碑</a>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- ============ 学习目标 ============ -->
+<section id="goals">
+  <h2><span class="no">01</span> 本课时学习目标</h2>
+  <div class="panel">
+    <p>本课时结束后应能：</p>
+    <ol>
+      <li>能解释<strong>"分散化有边际递减"</strong>，并说出 A 股大致在多少只股票后趋平；</li>
+      <li>能读懂<strong>协方差矩阵 / 有效前沿图</strong>，并判断一个组合权重是否合理；</li>
+      <li>能用自然语言向 Agent 提出一个<strong>可执行的组合优化需求</strong>，并核查其输出。</li>
+    </ol>
+    <div class="takeaway">本课分工：Agent 负责计算，学生负责提问、核查与表述。</div>
+  </div>
+</section>
+
+<!-- ============ 相关参数约定 ============ -->
+<section id="params">
+  <h2><span class="no">02</span> 相关参数约定（演示与全章共用）</h2>
+  <table>
+    <tr><th>参数</th><th>约定</th></tr>
+    <tr><td class="mono">主样本窗</td><td>2024-09-01 ~ 2026-08-31（近 2 年）</td></tr>
+    <tr><td class="mono">回测窗</td><td>2023-01-01 ~ 2026-08-31（必须覆盖 2024-02 微盘崩盘 与 2024-09 "924行情"）</td></tr>
+    <tr><td class="mono">频率</td><td>组合方差 = 周频；β/CAPM = 日频；因子与归因 = 月频</td></tr>
+    <tr><td class="mono">价格调整</td><td>前复权（qfq）——不复权将因分红产生价格假性跳跃</td></tr>
+    <tr><td class="mono">无风险利率 rf</td><td>中债 10 年期国债收益率（期初值，2026 上半年约 1.6%–1.9%）。<strong>输出时必须注明取值</strong>；课堂预跑用 2.0%，live 建议 1.8% 并声明</td></tr>
+    <tr><td class="mono">年化系数</td><td>日 ×<span class="sqrt">√<span class="rad">252</span></span>，周 ×<span class="sqrt">√<span class="rad">52</span></span>，月 ×<span class="sqrt">√<span class="rad">12</span></span> —— Agent 必须报告用了哪个</td></tr>
+    <tr><td class="mono">市场组合</td><td>沪深300（000300.SH / 399300.SZ）</td></tr>
+  </table>
+  <div class="note">统一股票池：跨行业 8 只（600519 茅台 · 300750 宁德 · 002594 比亚迪 · 600036 招行 · 600030 中信 · 600276 恒瑞 · 002415 海康 · 601668 中国建筑）＋ 高β 5 只 ＋ 低β 5 只，详见总大纲。</div>
+</section>
+
+<!-- ============ 案例块 ============ -->
+<section id="cases">
+  <h2><span class="no">03</span> 案例块：分散化的三个真实教训</h2>
+  <p class="note">每个案例对应一个"仅有数据方能回答"的问题，由 Agent 现场验证，验证结论衔接后续知识点。</p>
+
+  <!-- 案例1 -->
+  <div class="case">
+    <div class="case-head"><span>案例 1 · 2021"双减"：持有 10 只教育股也没用</span></div>
+    <div class="case-body">
+      <p><strong>案例背景</strong>：2021 年 7 月 23 日晚"双减"政策落地，新东方当夜跌幅超 47%，美股教育板块整体下挫；自 2021 年峰值至谷底累计回撤约 -90%（公开报道口径，课堂由 Agent 现场核实）。分散持有数只教育股的投资者与全仓单一标的者，最终结果几乎一致。</p>
+      <div class="prompt"><span class="plabel">现场验证 PROMPT C1</span>取美股新东方(EDU)、好未来(TAL)、高途(GOTU) 2021-01-01至2022-06-30日线
+（AkShare美股接口；失败则改港股新东方-S 09901.HK等并声明）。
+计算：①2021-07-23至2021-12-31各股累计跌幅；
+②政策前60个交易日与政策后60个交易日三只股票日收益的两两相关系数；
+③一句话结论：政策后同时持有三只教育股，分散化起作用了吗？</div>
+      <div class="verdict"><b>实测结论（Plan B，2026-09-07，港股替代口径）</b>：政策后 60 日两两相关均值 <b>0.38</b>（政策前仅 0.08）；2021-07-23~12-31 累计 <b>-20.8%~-53.5%</b>；全期最大回撤 <b>-59%~-96%</b>。<br>美股口径报道约 -90%；港股替代量级较弱，课堂引用时已说明口径。</div>
+      <div class="figure"><img src="images/s1c1.jpg" alt="案例1：教育股双减前后的相关性变化"></div>
+      <div class="figcap">S1_C1 · 2021 双减：行业内分散化失效（港股替代口径 · 前复权）</div>
+      <div class="takeaway">同一政策冲击下，行业内相关系数趋近 1，分散化失效。</div>
+    </div>
+  </div>
+
+  <!-- 案例2 -->
+  <div class="case">
+    <div class="case-head"><span>案例 2 · 2024-02 量化踩踏：持有一千只股票照样一起跌停</span></div>
+    <div class="case-body">
+      <p><strong>案例背景</strong>：2024 年 1–2 月微盘股流动性危机期间，量化私募集体回撤，2 月 28 日一度约 300 家个股跌停；此类基金平均持仓逾千只，仍同步下跌。监管随后限制 DMA 杠杆。2026 年 7 月幻方九只产品再度单月跌超 20%，表明因子拥挤具有复发性。</p>
+      <div class="prompt"><span class="plabel">现场验证 PROMPT C2</span>自选一个可获取的A股微盘代理指数（优先中证2000，声明代码），取2023-12-01至2024-03-31日线；
+计算2024-01-02至2024-02-08累计涨跌与最大回撤，与沪深300同窗对比；
+再取30只微盘股计算该窗口内两两平均相关系数，与2023全年对比。
+一句话结论：为什么持仓上千只仍被一起踩踏？</div>
+      <div class="verdict"><b>实测结论（Plan B）</b>：中证2000 危机窗（2024-01-02~02-08）<b>-27.6%</b>、最大回撤 -33.4%，沪深300 同窗仅 <b>-0.6%</b>；30 只微盘股平均两两相关：2023 年 <b>0.23</b> → 危机窗 <b>0.56</b>。</div>
+      <div class="figure"><img src="images/s1c2.jpg" alt="案例2：微盘股危机窗的相关性抬升"></div>
+      <div class="figcap">S1_C2 · 数量分散挡不住因子集中（中证2000 代理 · 声明代码）</div>
+      <div class="note"><b>延伸现场</b>：2021 年春节后 A 股核心资产抱团瓦解——机构历史上共出现 4 次抱团，瓦解期相关板块显著跑输市场；2026-07 幻方再度下跌系因子拥挤复发。公募抱团与量化同质化实为同一结构性风险的两种表现。</div>
+      <div class="takeaway">数量分散无法抵消因子集中——该结论为课时 3 的展开作铺垫。</div>
+    </div>
+  </div>
+
+  <!-- 案例3 -->
+  <div class="case">
+    <div class="case-head"><span>案例 3 · 2025"代际断层"：50/50 到底降不降波动</span></div>
+    <div class="case-body">
+      <p><strong>案例背景</strong>：2025 年 A 股呈现"代际断层"：AI 链小盘股（寒武纪等）大幅上涨，传统蓝筹（长江电力、银行等）滞涨。市场争论集中于成长与价值配置之取舍，等权配置（50/50）能否降低波动成为核心问题。</p>
+      <div class="prompt"><span class="plabel">现场验证 PROMPT C3</span>计算2025-01-01至2025-12-31涨幅：沪深300、创业板指、中证红利，
+以及个股寒武纪688256.SH、长江电力600900.SH；
+再构造三个组合：全寒武纪、全长电、50/50，输出三者全年收益与年化波动率。
+一句话回答：50/50是否降低了波动？降了多少？收益被"平均"掉了吗？</div>
+      <div class="verdict"><b>实测结论（Plan B）</b>：寒武纪 <b>+110.2%</b>、长电 <b>-3.9%</b>；50/50 组合收益 <b>51.3%</b>、波动 <b>35.9%</b>（全寒武纪 71.7% / 全长电 12.6%），回撤 -14.4%（全寒武纪 -34.3%）。</div>
+      <div class="figure"><img src="images/s1c3.jpg" alt="案例3：50/50 组合与单持的收益波动对比"></div>
+      <div class="figcap">S1_C3 · 2025 代际断层：50/50 的降波动效果（2025-01-02 ~ 12-31）</div>
+      <div class="takeaway">低相关资产间的分散化可有效降低波动，但收益为加权平均，不会因此增加。</div>
+      <div class="note"><b>适用边界</b>：2020-03 流动性危机中，美债一度与美股同步下跌（股债双杀），风险平价策略集体受挫——即便两类"名义低相关"的大类资产，在极端流动性事件中亦会同向波动。分散化提供概率意义上的风险缓释，而非绝对保障。</div>
+    </div>
+  </div>
+
+  <p class="note">三个案例分别检验：行业内相关性是否趋 1（案例 1）、持仓数量能否抵御系统性风险（案例 2）、资产配置能否降低波动（案例 3）。以下由 Agent 系统演示回答。</p>
+  <div class="warnbox"><strong>延伸：分散化的三类失效情形</strong>——既有研究归纳表明，"相关性在危机中上升，分散化在最需要时失效"（When Diversification Fails）。三次实证：① <strong>行业同质</strong>（案例 1）；② <strong>因子/风格集中</strong>（案例 2）；③ <strong>宏观流动性</strong>——2008 信贷危机（股票/地产/信用债同跌）、2020-03 流动性危机（股债同跌）、2022 通胀紧缩（股债双杀）。资产数量与类别再多，风险因子一致时分散化亦失效。</div>
+</section>
+
+<!-- ============ 方法演示 ============ -->
+<section id="demo">
+  <h2><span class="no">04</span> 方法演示</h2>
+
+  <h3>演示 A · 分散化曲线：多少只才够</h3>
+  <div class="prompt"><span class="plabel">PROMPT P1</span>从沪深300当前成分股中随机抽30只（固定随机种子42，先输出代码列表），
+用前复权周收盘价计算 2024-09-01 至 2026-08-31 的周对数收益率。
+对 N = 1,2,3,5,8,10,15,20,25,30，每个N随机抽样200次等权组合，
+计算组合年化波动率均值（周收益率标准差×√52），
+画"N vs 组合年化波动率"曲线，并画单只股票平均波动率水平线作对照。
+最后用一句话输出结论，并报告：样本期、股票列表、年化系数。</div>
+  <div class="verdict"><b>实测结论（Plan B）</b>：单股平均年化波动 <b>37.8%</b> → N=30 平台 <b>≈18.1%</b>，<b>N≈15-20 后趋平</b>。平台高度由平均两两相关系数（A 股常见 0.25–0.45）决定。</div>
+  <div class="figure"><img src="images/s1p1.jpg" alt="分散化曲线：N vs 组合年化波动率"></div>
+  <div class="figcap">S1_P1 · 分散化曲线：单股 37.8% → N=30 平台 ≈18.1%（周对数收益 · √52 年化）</div>
+  <div class="warnbox">呼应案例 2：量化基金持仓逾千只仍同步回撤，因其处于分散化曲线"平台"之上，而平台整体随共同因子抬升。</div>
+
+  <h3>追问 P2 · 同行业是"假分散"</h3>
+  <div class="prompt"><span class="plabel">PROMPT P2</span>保持其他设置不变，改为两组各10只：
+A组=新能源链（宁德时代、比亚迪、隆基绿能、通威股份、阳光电源、亿纬锂能、天赐材料、赣锋锂业、恩捷股份、先导智能）；
+B组=跨行业10只（从上面30只中取前10只）。
+同一张图画两条"N vs 波动率"曲线，输出两组的平均两两相关系数。</div>
+  <div class="verdict"><b>实测结论（Plan B）</b>：新能源链平均两两相关 <b>0.51</b> vs 跨行业 <b>0.21</b>；N=10 时波动 <b>37.0% vs 19.3%</b>。A 组曲线整体更高且平台更高。</div>
+  <div class="takeaway">行业内分散为"伪分散"——与案例 1 的教育股结构同构。</div>
+
+  <h3>演示 B · 最小方差组合与有效前沿</h3>
+  <div class="prompt"><span class="plabel">PROMPT P3</span>取8只股票：600519.SH、300750.SZ、002594.SZ、600036.SH、600030.SH、600276.SH、002415.SZ、601668.SH。
+前复权周收益率，2024-09-01至2026-08-31。
+输出：①各股年化收益与年化波动率表；②8×8相关系数热力图；
+③最小方差组合权重（约束：权重≥0、和为1）与等权组合的年化收益/波动/夏普（rf=1.8%）对比；
+④权重条形图。报告求解器与是否收敛。</div>
+  <div class="verdict"><b>实测结论（Plan B）</b>：最小方差 σ <b>18.2%</b> / 夏普 0.74 vs 等权 σ <b>22.0%</b> / 夏普 0.74（收益 15.4% vs 18.3%）；最大权重 <b>招商银行 47.4%</b> —— 要点：最小方差组合并非收益最大化，且权重高度集中。</div>
+  <div class="prompt"><span class="plabel">PROMPT P4</span>在同样8只股票上，目标年化收益从样本最小扫到最大（20个点），
+逐点求最小方差权重，画有效前沿（σ-E(r)平面）；
+加入无风险资产rf=1.8%，画与前沿相切的CAL，标出切点组合的权重与夏普比率。</div>
+  <div class="verdict"><b>实测结论（Plan B）</b>：切点组合夏普 <b>1.28</b>（σ 24.7%、E(r) 33.6%），权重 = 宁德时代 49.2% + 招商银行 40.6% + 海康 10.2%；前沿 σ 18.2%~36.8%。</div>
+  <div class="figure"><img src="images/s1p4.jpg" alt="有效前沿与 CAL 切点组合"></div>
+  <div class="figcap">S1_P4 · 有效前沿 + CAL 切点组合（夏普 1.28 · rf=1.8%）</div>
+  <div class="warnbox">思考：切点组合夏普比率最高，是否应全仓配置？因估计误差的存在，模型输出不等同于投资决策；案例 3 表明，朴素等权配置在部分情形下较"最优"组合更为稳健。<br><strong>历史参照 · LTCM（1998）</strong>：该基金团队含诺奖得主，首年回报超 40%，其模型假设"历史相关关系稳定"；1998 年俄罗斯债务危机中相关性突变叠加高杠杆，约 4 个月内亏损 46 亿美元、净值跌约 90%，由美联储协调 14 家银行救助。业界应对方案为对协方差矩阵采用 <b>Ledoit–Wolf 收缩估计</b>，而非直接使用样本矩阵——样本内"最优权重"仅对特定股票、样本期与抽样成立。</div>
+</section>
+
+<!-- ============ 概念落地 ============ -->
+<section id="concept">
+  <h2><span class="no">05</span> 概念落地：公式的直观阐释</h2>
+  <table>
+    <tr><th>公式</th><th>直观阐释</th></tr>
+    <tr><td class="mono">式 7-1 / 7-2<br>期望收益</td><td>期望收益 = 历史周对数收益均值。Agent 计算即基于此；小幅变动下对数收益近似简单收益。</td></tr>
+    <tr><td class="mono">式 7-3<br>方差</td><td>方差 = 样本方差——注意分母为 <strong>n-1</strong>。</td></tr>
+    <tr><td class="mono">式 7-4<br>组合收益</td><td>组合收益 = 权重加权，属线性关系，计算高效。</td></tr>
+    <tr><td class="mono">教材未述但决定组合风险的<br>协方差矩阵</td><td>组合风险并非各方差之加权平均，而是<strong>权重 × 协方差矩阵 × 权重</strong>。上述三个案例的教训均可由此矩阵解释。</td></tr>
+  </table>
+  <div class="takeaway">常见误解澄清：分散化降低的是<strong>波动率</strong>，而非保证提高收益；等权组合虽非最优，但通常足够稳健。</div>
+  <div class="note"><b>现代视角 · 权重确定方法的拓展</b>：<strong>风险平价</strong>按"风险贡献相等"而非金额等权分配；<strong>Black–Litterman</strong> 将投资者观点经贝叶斯框架融入均衡收益，避免纯历史数据的过度拟合。二者共同指向同一局限——<strong>估计误差是均值-方差模型的固有弱点</strong>。</div>
+</section>
+
+<!-- ============ 小组实践 ============ -->
+<section id="practice">
+  <h2><span class="no">06</span> 小组实践：6 股主题组合构建</h2>
+  <p>各组自选主题（AI 链 / 高股息 / 消费 / 医药等）并选取 6 只股票，使用 <code>04_学生Prompt模板卡</code> 卡 1、卡 2：</p>
+  <div class="prompt"><span class="plabel">卡 1 · 分散化曲线</span>从【沪深300/中证500】中随机抽【30】只股票（固定种子【42】，先列代码），
+前复权周收益率，区间【2024-09-01~2026-08-31】。
+对N=1,2,3,5,8,10,15,20,25,30各抽样【200】次等权组合，算年化波动率均值，
+画"N vs 波动率"曲线+单股均值水平线，一句话结论，并报告样本期与年化系数。</div>
+  <div class="prompt"><span class="plabel">卡 2 · 最小方差组合</span>股票池：【6只代码】。前复权周收益率，区间【同上】。
+输出相关系数热力图、最小方差组合权重（≥0、和为1）、等权组合对比
+（年化收益/波动/夏普，rf=【1.8%】），权重条形图，报告求解器与收敛状态。</div>
+  <h3>必查 3 问（审查者对照）</h3>
+  <ul class="check">
+    <li>卡 1：① 前复权了吗？② 年化系数写了吗？③ 平台出现在 N≈多少，与教材数字差多少、为何？</li>
+    <li>卡 2：① 权重和 = 1？② 有无单只 &gt; 40%？若有，追问原因；③ 夏普的 rf 与年化口径是否一致？</li>
+  </ul>
+  <p class="note">产出要求：1 张图 + 3 句话结论（风险集中于何处、何组合更优、原因）。教师巡场引导性提问："Agent 是否报告年化系数？""权重之和是否为 1？""所选 6 只股票是否构成案例 1 所述的行业内组合？"</p>
+</section>
+
+<!-- ============ 项目里程碑 ============ -->
+<section id="project">
+  <h2><span class="no">07</span> 小组项目 · Part 1：配置方案</h2>
+  <div class="panel">
+    <p><strong>项目总览</strong>：全章小组项目《季度组合策略建议书（Investment Memo）》，2–3 人/组，分三部分推进（课时 1 交 Part 1，课时 2 交 Part 2，课时 3 交 Part 3）。本课时完成并提交 <strong>Part 1 配置方案</strong>。</p>
+  </div>
+
+  <h3>本课时任务：给出一个组合配置方案</h3>
+  <p>扮演公募基金助理研究员，回答投资总监（教师）的问题：<strong>"本季度我该把钱按什么比例配到哪些股票上？"</strong> 全程用自然语言驱动 Agent 完成数据与计算；你们负责提问、审查、判断与表达。</p>
+
+  <h3>执行步骤（按序完成，共 4 步）</h3>
+  <ol>
+    <li><strong>确定候选池（≥20 只）</strong>：自选主题（AI 链 / 高股息 / 消费 / 医药等）＋ 跨行业补足，列出代码并<strong>写明筛选逻辑</strong>（如"高股息：股息率前 20 且市值 &gt; 500 亿"）。</li>
+    <li><strong>跑分散化曲线与最小方差</strong>：用 <code>04_学生Prompt模板卡</code> 卡 1、卡 2 驱动 Agent，确认前复权、年化系数、rf 取值（统一口径见 §02）。</li>
+    <li><strong>构造三个方案</strong>：在同一候选池上分别给出<strong>保守 / 平衡 / 激进</strong> 三套权重（保守=低波动，激进=高收益目标），各自标注预期年化收益、波动率与夏普比率。</li>
+    <li><strong>画有效前沿 + 写配置逻辑</strong>：用卡 2 的 P4 流程生成前沿图，标出三方案在前沿上的位置；附<strong>半页配置逻辑说明</strong>（为什么选这三档、各档押注的是什么风险）。</li>
+  </ol>
+
+  <h3>提交物与格式要求</h3>
+  <ul>
+    <li>候选池清单（≥20 只代码 + 筛选逻辑）；</li>
+    <li>有效前沿图（含三方案标记）；</li>
+    <li>三方案权重表 + 半页配置逻辑说明；</li>
+    <li><strong>硬性要求：每张图/表注明 数据来源、样本区间、频率、复权方式、rf 取值</strong>，缺一项视为审查不合格；</li>
+    <li>里程碑：<strong>第 1 课后提交 Part 1 草稿</strong>。</li>
+  </ul>
+</section>
+
+</div>
+
+<footer>
+  <div class="container">
+    <p><strong>数据与口径声明</strong></p>
+    <p class="note">本页"实测结论"均来自 <code>PlanB包</code> 于 2026-09-07 实际运行所得（腾讯前复权 / 中证官网 / 天天基金口径，13/13 项成功；案例 1 按规格启用港股替代并声明）。课堂以 Agent 现场实时结果为准，网络中断时切换 Plan B 图表继续教学。</p>
+    <p class="note">案例背景中的数字（如美股 -90%、幻方 -22%）为公开报道口径，课堂由 Agent 现场核实——该过程本身即"核实数据来源"的教学环节。本讲义为教学演练材料，不构成投资建议。</p>
+    <p class="mono">rf 预跑 2.0% · live 建议 1.8% · 年化 周×<span class="sqrt">√<span class="rad">52</span></span> / 日×<span class="sqrt">√<span class="rad">252</span></span> · 前复权 qfq · 市场组合 沪深300</p>
+  </div>
+</footer>
+
+</body>
+</html>
