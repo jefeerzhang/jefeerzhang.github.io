@@ -283,6 +283,18 @@
       animation: fade-in 280ms var(--ease) both;
     }
 
+    /* 本科占位 */
+    .undergrad-placeholder {
+      padding: 40px 0 20px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .undergrad-placeholder p {
+      margin: 0;
+    }
+
     @keyframes fade-in {
       from { opacity: 0; transform: translateY(8px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -442,61 +454,9 @@
 
         <!-- 本科课程 -->
         <div class="level-panel" id="panel-undergraduate" role="tabpanel" aria-labelledby="tab-undergraduate">
-
-          <div class="course-group">
-            <div class="course-group-header">
-              <span class="group-num">01</span>
-              <h2>论文写作</h2>
-              <span class="group-desc">本科阶段论文写作入门</span>
-            </div>
-            <div class="course-group-grid">
-              <div class="course-card is-coming" aria-disabled="true">
-                <span class="course-card-tag">筹备中</span>
-                <h3>本科论文写作入门</h3>
-                <p>从选题到初稿的完整写作指南，适合本科阶段入门。</p>
-                <div class="course-card-meta">
-                  <span>即将上线</span>
-                </div>
-              </div>
-            </div>
+          <div class="undergrad-placeholder">
+            <p>本科课程正在筹备中，敬请期待。</p>
           </div>
-
-          <div class="course-group">
-            <div class="course-group-header">
-              <span class="group-num">02</span>
-              <h2>研究方法</h2>
-              <span class="group-desc">本科阶段方法入门</span>
-            </div>
-            <div class="course-group-grid">
-              <div class="course-card is-coming" aria-disabled="true">
-                <span class="course-card-tag">筹备中</span>
-                <h3>研究方法基础</h3>
-                <p>面向本科生的研究方法入门，理解证据与论证的基本逻辑。</p>
-                <div class="course-card-meta">
-                  <span>即将上线</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="course-group">
-            <div class="course-group-header">
-              <span class="group-num">03</span>
-              <h2>专题课程</h2>
-              <span class="group-desc">本科阶段专题内容</span>
-            </div>
-            <div class="course-group-grid">
-              <div class="course-card is-coming" aria-disabled="true">
-                <span class="course-card-tag">筹备中</span>
-                <h3>更多专题</h3>
-                <p>本科阶段的专题课程正在筹备中。</p>
-                <div class="course-card-meta">
-                  <span>即将上线</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div>
 
       </div>
