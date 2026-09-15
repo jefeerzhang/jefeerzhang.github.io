@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第2课时 · 资本资产定价模型的应用 — 学生自读讲义</title>
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+:root{
+  --ink:#1a2e4b; --ink-soft:#2b2b2b; --muted:#6b7280; --line:#d1d5db;
+  --bg:#f7f5f0; --card:#fff; --accent:#c87533; --accent-soft:rgba(200,117,51,.1);
+  --blue:#1a2e4b; --blue-soft:rgba(26,46,75,.06);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans SC',system-ui,sans-serif;background:var(--bg);color:var(--ink-soft);line-height:1.8;font-size:16px}
+.wrap{max-width:880px;margin:0 auto;padding:0 24px}
+
+/* header */
+.hero{padding:60px 0 32px;border-bottom:1px solid var(--line)}
+.hero .crumb{font-size:13px;color:var(--muted);letter-spacing:.05em;margin-bottom:16px}
+.hero h1{font-family:'Noto Serif SC',serif;font-size:38px;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:12px}
+.hero .subtitle{font-size:17px;color:var(--muted);margin-bottom:24px}
+.meta-tags{display:flex;flex-wrap:wrap;gap:8px}
+.meta-tags span{font-size:12px;padding:4px 12px;border:1px solid var(--line);border-radius:20px;color:var(--muted);background:var(--card)}
+
+/* nav */
+.nav{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);z-index:100;padding:12px 0}
+.nav .wrap{display:flex;flex-wrap:wrap;gap:16px;font-size:13px}
+.nav a{color:var(--muted);text-decoration:none;white-space:nowrap}
+.nav a:hover{color:var(--accent)}
+
+/* sections */
+section{padding:48px 0;border-bottom:1px solid var(--line)}
+section:last-child{border-bottom:none}
+.sec-num{font-family:'Noto Serif SC',serif;font-size:14px;color:var(--accent);font-weight:700;letter-spacing:.1em;margin-bottom:8px}
+.sec-title{font-family:'Noto Serif SC',serif;font-size:26px;font-weight:700;color:var(--ink);margin-bottom:24px}
+
+/* lists */
+ol,ul{padding-left:24px;margin:12px 0}
+li{margin:6px 0}
+li strong{color:var(--ink)}
+
+/* tables */
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px}
+table th{background:var(--ink);color:#fff;padding:10px 12px;text-align:left;font-weight:500}
+table td{padding:10px 12px;border-bottom:1px solid var(--line)}
+table tr:nth-child(even) td{background:rgba(26,46,75,.02)}
+table .num{text-align:right;font-family:'JetBrains Mono',monospace}
+table .center{text-align:center}
+
+/* code blocks */
+pre{background:#1e1e2e;color:#cdd6f4;padding:20px;border-radius:8px;overflow-x:auto;margin:16px 0;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.7}
+code{font-family:'JetBrains Mono',monospace;font-size:13px}
+p code,li code{background:var(--blue-soft);padding:2px 6px;border-radius:4px;color:var(--ink)}
+
+/* blockquote */
+blockquote{border-left:3px solid var(--accent);background:var(--accent-soft);padding:16px 20px;margin:16px 0;border-radius:0 6px 6px 0}
+blockquote p{margin:4px 0}
+
+/* case block */
+.case{margin:32px 0}
+.case-header{display:flex;align-items:baseline;gap:12px;margin-bottom:16px}
+.case-tag{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.05em}
+.case-title{font-family:'Noto Serif SC',serif;font-size:20px;font-weight:700;color:var(--ink)}
+.case-sub{font-size:14px;color:var(--muted);margin-top:4px}
+.case-section{margin:20px 0}
+.case-section h4{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
+.result-box{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:16px 20px;margin:16px 0}
+.result-box .label{font-size:12px;color:var(--accent);font-weight:700;margin-bottom:8px}
+.highlight{background:var(--accent-soft);padding:2px 6px;border-radius:4px;font-weight:500}
+
+/* formula display */
+.formula-block{text-align:center;margin:20px 0;padding:16px;background:var(--card);border:1px solid var(--line);border-radius:8px}
+.formula-block .tag{font-size:11px;color:var(--muted);margin-top:8px}
+
+/* footer */
+footer{padding:40px 0;text-align:center;font-size:13px;color:var(--muted)}
+
+@media(max-width:640px){
+  .hero h1{font-size:28px}
+  .sec-title{font-size:22px}
+  table{font-size:12px}
+  pre{font-size:11px}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+<div class="wrap">
+<div class="crumb">第7章 · 课时 2 / 3</div>
+<h1>资本资产定价模型的应用</h1>
+<p class="subtitle">案例驱动的定价教学：三个案例 → 回归演示 → 两类策略回测 → β 调整与预测</p>
+<div class="meta-tags">
+<span>45 min</span><span>本科大三</span><span>案例块</span><span>Agent 现场验证</span><span>小组自带电脑</span>
+</div>
+</div>
+</header>
+
+<!-- ===== NAV ===== -->
+<nav class="nav">
+<div class="wrap">
+<a href="#goals">学习目标</a>
+<a href="#params">参数约定</a>
+<a href="#cases">案例块</a>
+<a href="#demo">方法演示</a>
+<a href="#strategies">策略回测</a>
+<a href="#beta-adj">β 调整</a>
+<a href="#summary">小结与任务</a>
+</div>
+</nav>
+
+<!-- ===== 01 学习目标 ===== -->
+<section id="goals">
+<div class="wrap">
+<div class="sec-num">01</div>
+<h2 class="sec-title">本课时学习目标</h2>
+<p>本课时结束后应能：</p>
+<ol>
+<li>能解释 <strong>β 与 α 的投资含义</strong>，并判断一个 α 是否可用（显著性、窗口稳定性）；</li>
+<li>能比较 <strong>趋势性（调β）与价值性（追α）</strong> 两类积极策略的适用条件；</li>
+<li>会用 <strong>Blume 调整</strong> 处理 β 的不稳定性，并说明其适用条件；</li>
+<li>能独立驱动 Agent 完成 <strong>CAPM 回归、SML 绘制与组合分析</strong>，并核查其输出。</li>
+</ol>
+<p style="margin-top:16px;color:var(--muted);font-size:14px">本课分工：Agent 负责计算，学生负责提问、核查与表述。</p>
+</div>
+</section>
+
+<!-- ===== 02 参数约定 ===== -->
+<section id="params">
+<div class="wrap">
+<div class="sec-num">02</div>
+<h2 class="sec-title">相关参数约定（演示与全章共用）</h2>
+<table>
+<colgroup><col style="width:25%"><col style="width:75%"></colgroup>
+<tr><th>参数</th><th>约定</th></tr>
+<tr><td>主样本窗</td><td>2024-09-01 ~ 2026-08-31（近 2 年，日频）</td></tr>
+<tr><td>回测窗</td><td>2023-01-01 ~ 2026-08-31（必须覆盖 2024-02 微盘崩盘与 2024-09 "924行情"）</td></tr>
+<tr><td>频率</td><td>β/CAPM = 日频；因子与归因 = 月频</td></tr>
+<tr><td>价格调整</td><td>前复权（qfq）——不复权将因分红产生价格假性跳跃</td></tr>
+<tr><td>无风险利率 $r_f$</td><td><strong>2.12%</strong>（Shibor-1Y 五年均值，实测）。输出时必须注明取值</td></tr>
+<tr><td>市场风险溢价 MRP</td><td><strong>6.39%</strong>（沪深300月频超额收益算术平均 ×12 年化，2006-10~2026-08，239个月）</td></tr>
+<tr><td>年化系数</td><td>日 ×√252，月 ×√12 —— Agent 必须报告用了哪个</td></tr>
+<tr><td>市场组合</td><td>沪深300（000300.SH）</td></tr>
+</table>
+<p style="margin-top:16px;font-size:14px;color:var(--muted)">统一股票池：跨行业 8 只（600519 茅台 · 300750 宁德 · 002594 比亚迪 · 600036 招行 · 600030 中信 · 600276 恒瑞 · 002415 海康 · 601668 中国建筑）＋ 高β 5 只 ＋ 低β 5 只，详见总大纲。</p>
+</div>
+</section>
+
+<!-- ===== 03 理论框架 ===== -->
+<section id="theory">
+<div class="wrap">
+<div class="sec-num">03</div>
+<h2 class="sec-title">CAPM 公式从哪来：三步推导</h2>
+
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:24px 0">
+<div style="background:var(--blue-soft);padding:20px;border-radius:8px">
+<div style="font-family:'Noto Serif SC',serif;font-size:24px;color:var(--accent);font-weight:700;margin-bottom:8px">01</div>
+<div style="font-weight:700;color:var(--ink);margin-bottom:8px">有效前沿 + 无风险资产</div>
+<p style="font-size:13px;color:var(--ink-soft)">给定风险资产画出有效前沿。引入 $r_f$ 后，投资者持有"无风险资产 + 一个风险组合"。从 $r_f$ 作前沿的切线，切点记为 T——最优风险组合只有一个。</p>
+</div>
+<div style="background:var(--blue-soft);padding:20px;border-radius:8px">
+<div style="font-family:'Noto Serif SC',serif;font-size:24px;color:var(--accent);font-weight:700;margin-bottom:8px">02</div>
+<div style="font-weight:700;color:var(--ink);margin-bottom:8px">同质预期 → T = M</div>
+<p style="font-size:13px;color:var(--ink-soft)">如果所有投资者看到的期望收益、方差、协方差都一样（同质预期），每个人算出的切点 T 都相同。所有人只买 T，T 就必须等于市场组合 M——所有资产的市值加权组合。</p>
+</div>
+<div style="background:var(--accent-soft);padding:20px;border-radius:8px">
+<div style="font-family:'Noto Serif SC',serif;font-size:24px;color:var(--accent);font-weight:700;margin-bottom:8px">03</div>
+<div style="font-weight:700;color:var(--ink);margin-bottom:8px">推论：证券市场线</div>
+<p style="font-size:13px;color:var(--ink-soft)">既然人人只持有 M，任何资产的期望超额收益，只能来自它对 M 波动的贡献——即 β。</p>
+</div>
+</div>
+
+<div class="formula-block">
+$$E(r_i)-r_f=\beta_i[E(r_m)-r_f]$$
+<div class="tag">证券市场线（SML）· 其中 $\beta_i = \frac{\text{Cov}(r_i,r_m)}{\text{Var}(r_m)}$</div>
+</div>
+
+<blockquote>
+<p><strong>一句话理解：</strong>CAPM 把"该资产应提供多高的期望回报"这一问题，归结为一个数字——它与市场共同波动的程度（β）。</p>
+</blockquote>
+
+<h3 style="font-family:'Noto Serif SC',serif;font-size:20px;color:var(--ink);margin:32px 0 16px">CAPM 公式与符号</h3>
+<div class="formula-block">
+$$E(r_i)=r_f+\beta_i\times MRP,\quad MRP\equiv E(r_m)-r_f$$
+</div>
+<table>
+<colgroup><col style="width:12%"><col style="width:18%"><col style="width:42%"><col style="width:28%"></colgroup>
+<tr><th>符号</th><th>名称</th><th>含义</th><th>本课时取值</th></tr>
+<tr><td class="center">$E(r_i)$</td><td>期望收益率</td><td>投资者要求（并预期获得）的年化回报</td><td class="center">由模型算出</td></tr>
+<tr><td class="center">$r_f$</td><td>无风险利率</td><td>时间价值，不承担风险也能拿到的回报</td><td class="center"><strong style="color:var(--accent)">2.12%</strong></td></tr>
+<tr><td class="center">$MRP$</td><td>市场风险溢价</td><td>承担一单位"市场风险"的价格</td><td class="center"><strong style="color:var(--accent)">6.39%</strong></td></tr>
+<tr><td class="center">$\beta_i$</td><td>贝塔</td><td>相对市场的敏感度；$\beta=1$ 与市场同涨同跌</td><td class="center">逐股估计</td></tr>
+<tr><td class="center">$\alpha_i$</td><td>阿尔法</td><td>模型解释不了的那部分收益，"能力"的候选证据</td><td class="center">逐股检验显著性</td></tr>
+<tr><td class="center">$\varepsilon_i$</td><td>残差</td><td>个股特有风险（可分散，市场不给补偿）</td><td class="center">—</td></tr>
+</table>
+
+<h3 style="font-family:'Noto Serif SC',serif;font-size:20px;color:var(--ink);margin:32px 0 16px">三条常被忽略的性质</h3>
+<ol>
+<li><strong>β 衡量的是"不可分散"的那部分风险。</strong>特有风险（残差）不进入定价——投资者可以分散掉它，市场不会为可被分散消除的风险提供补偿。</li>
+<li><strong>SML 的斜率是 MRP，不是市场组合的收益。</strong>市场涨 20%，不等于 MRP 是 20%。</li>
+<li><strong>CAPM 是单期模型。</strong>用它计算 1 年、3 年还是 10 年的必要回报，必须显式声明期限与频率。</li>
+</ol>
+
+<h3 style="font-family:'Noto Serif SC',serif;font-size:20px;color:var(--ink);margin:32px 0 16px">MRP 的窗口敏感性</h3>
+<p>同为"历史法"，换一个窗口即得到不同结论：</p>
+<table>
+<colgroup><col style="width:50%"><col style="width:25%"><col style="width:25%"></colgroup>
+<tr><th>窗口</th><th>频率</th><th>MRP 实测值</th></tr>
+<tr><td>2006-10 ~ 2026-08（239个月，长期口径）</td><td class="center">月</td><td class="num"><strong style="color:var(--accent)">+6.39%/年</strong></td></tr>
+<tr><td>2016-01 ~ 2026-08（127个月）</td><td class="center">月</td><td class="num">+0.85%/年</td></tr>
+<tr><td>2021-09 ~ 2026-08（59个月，本讲义样本窗）</td><td class="center">月</td><td class="num"><strong>−1.48%/年</strong></td></tr>
+</table>
+<blockquote>
+<p>沪深300 在最近 5 年累计 −7.83%。若直接以"过去 5 年"的实测值作为 MRP，CAPM 将给出"高β股票应获得负超额收益"的预测——这正是该参数最受批评之处。</p>
+</blockquote>
+</div>
+</section>
+
+<!-- ===== 04 案例块 ===== -->
+<section id="cases">
+<div class="wrap">
+<div class="sec-num">04</div>
+<h2 class="sec-title">案例块：β 的三重实证特征</h2>
+<p style="margin-bottom:24px">每个案例对应一个"仅有数据方能回答"的问题，由 Agent 现场验证，验证结论衔接后续知识点。</p>
+
+<!-- 案例1 -->
+<div class="case">
+<div class="case-header">
+<span class="case-tag">案例 1</span>
+<span class="case-title">924 行情：β 是放大器，两个方向都放大</span>
+</div>
+<div class="case-sub">β 可以直接观测——涨幅排序与 β 排序高度一致</div>
+
+<div class="case-section">
+<h4>案例背景</h4>
+<p>2024 年 9 月 24 日一揽子政策出台后，市场急速反转：约两周内创业板指、科创50 的涨幅数倍于沪深300，券商、IT、半导体等高弹性板块领涨，而银行、公用事业明显落后。同一区间内，不同股票的涨跌幅相差数倍——这是 β 最直观的一次实证展示。</p>
+</div>
+
+<div class="case-section">
+<h4>现场验证 PROMPT（可直接复制给 Agent 执行）</h4>
+<pre>计算2024-09-24至2024-10-08累计涨幅：沪深300、创业板指、科创50、中证银行，
+以及个股东方财富300059.SZ、寒武纪688256.SH、长江电力600900.SH；
+按涨幅排序，并用2024全年日收益对沪深300回归给出每只的β，两列并排输出。
+一句话结论：这两周的涨幅排序与β排序一致吗？</pre>
+</div>
+
+<div class="case-section">
+<h4>实测结论</h4>
+<div class="result-box">
+<div class="label">实测结论（2024-09-24 ~ 2024-10-08）</div>
+<p>涨幅排序与 β 排序高度一致（<strong>Spearman 秩相关系数 = 0.91</strong>）：</p>
+<p style="margin-top:8px;font-size:14px">东方财富 +129.0%（β=2.1）＞ 创业板指 +66.6% ＞ 寒武纪 +63.7% ＞ 科创50 +59.2% ＞ 沪深300 +32.5% ＞ 中证银行 +17.4% ＞ 长江电力 +3.9%（β=0.14）</p>
+<p style="margin-top:12px"><span class="highlight">β 不只是模型中的抽象参数，也可以直接在市场数据中观测到。</span></p>
+</div>
+</div>
+</div>
+
+<!-- 案例2 -->
+<div class="case">
+<div class="case-header">
+<span class="case-tag">案例 2</span>
+<span class="case-title">微盘危机：β 向 1 收敛</span>
+</div>
+<div class="case-sub">β 并不稳定——平静期估出的 β，到压力期会系统失真</div>
+
+<div class="case-section">
+<h4>案例背景</h4>
+<p>2024 年 1–2 月微盘股流动性危机（以及 2015 年股灾）中，平时低相关的股票同步下跌——相关性向 1 收敛，平静期估出的 β 在压力期系统失真。教材指出 β 有向 1 变动的趋势，而危机把这一过程加速呈现。</p>
+</div>
+
+<div class="case-section">
+<h4>现场验证 PROMPT</h4>
+<pre>用20只股票池，计算三个窗口日收益的平均两两相关系数：
+2024-01-02~2024-02-08（崩盘）、2024-09-24~2024-10-08（急涨）、2025-03-01~2025-08-31（平静）；
+并分别用崩盘窗与平静窗估计每只股票的β，列出变化最大的3只。
+一句话结论：平静期估的β，能在压力期用吗？</pre>
+</div>
+
+<div class="case-section">
+<h4>实测结论</h4>
+<div class="result-box">
+<div class="label">实测结论</div>
+<p>三个窗口的平均两两相关系数——平静期 <strong>0.24</strong>、急涨期 <strong>0.29</strong>、崩盘期 <strong>0.31</strong>；个股层面的 β 位移更为剧烈：</p>
+<p style="margin-top:8px;font-size:14px">光迅科技 <strong>+1.09</strong>、恒瑞医药 <strong>+1.07</strong>、中国神华 <strong>−0.63</strong></p>
+<p style="margin-top:12px"><span class="highlight">相关性的抬升幅度温和，但个股 β 的位移相当剧烈——平静期估出的 β，在压力期不能直接使用。</span></p>
+</div>
+</div>
+</div>
+
+<!-- 案例3 -->
+<div class="case">
+<div class="case-header">
+<span class="case-tag">案例 3</span>
+<span class="case-title">张坤：超额收益是选股 α 还是消费风格 β？</span>
+</div>
+<div class="case-sub">α 难以核实——多数 α 无法通过 t 检验</div>
+
+<div class="case-section">
+<h4>案例背景</h4>
+<p>易方达张坤 2019–2021 年因重仓消费/白酒获得广泛追捧，管理规模一度接近千亿，蓝筹精选成为当时的代表性产品；2021 年高点后，基金净值最大回撤一度接近腰斩，2026 年媒体标题已是《从基金"顶流"到选股"老炮"》；2026 年 7 月他进行了较大幅度调整：白酒持仓减半、股票仓位降至 75%——即使此前最坚定的持有者也最终调整了持仓。问题在于：2019–2021 年的超额收益来自选股 α，还是消费风格 β？</p>
+</div>
+
+<div class="case-section">
+<h4>现场验证 PROMPT</h4>
+<pre>取易方达蓝筹精选005827.OF单位净值2019-01-01至2026-08-31，画出净值曲线，
+标注历史高点日期与之后最大回撤；
+用月收益对沪深300月收益与一个消费风格指数（自选代码并声明，如中证消费）月收益做回归，
+输出系数、t值、R²。
+一句话回答：2019-2021他的超额收益更像α还是风格β？要下定论还缺什么证据？</pre>
+</div>
+
+<div class="case-section">
+<h4>实测结论</h4>
+<div class="result-box">
+<div class="label">实测结论</div>
+<p>R² 高（0.7–0.9）、消费类指数系数大于 1 → 这段超额业绩的大部分可由风格暴露解释；更严格的因子归因见第 3 课时：005827 在 2023-01 ~ 2026-08 的月频四因子 α 为 <strong>−29.8%/年，t = −3.95</strong>。</p>
+<p style="margin-top:12px"><span class="highlight">没有 t 值的 α 不得写入投资分析报告。</span></p>
+</div>
+</div>
+</div>
+
+<blockquote style="margin-top:32px">
+<p><strong>三个案例合起来是一句话：</strong>β 可以直接观测（案例1）、β 并不稳定（案例2）、α 难以核实（案例3）。CAPM 在投资中的应用价值，正建立在这三条判断之上。</p>
+</blockquote>
+</div>
+</section>
+
+<!-- ===== 05 方法演示 ===== -->
+<section id="demo">
+<div class="wrap">
+<div class="sec-num">05</div>
+<h2 class="sec-title">Agent 实操（一）：CAPM 回归与 SML</h2>
+<p>把下面的提示词交给你的 Agent 执行，再对照本文档的实测结论核对输出。</p>
+
+<div class="case-section">
+<h4>验证任务 P1（可直接复制给 Agent 执行）</h4>
+<pre>市场组合=沪深300（000300.SH）日收益，样本2024-09-01至2026-08-31，前复权。
+rf=中债10年期国债期初收益率（先查询并报告取值；查不到则用1.8%并声明）。
+对以下20只股票做CAPM时间序列回归 r_i - rf = α + β(r_m - rf) + ε：
+600519.SH 300750.SZ 002594.SZ 600036.SH 600030.SH 600276.SH 002415.SH 601668.SH
+688256.SH 300308.SZ 688041.SH 300502.SZ 002281.SH
+600900.SH 601088.SH 600941.SH 601398.SH 600887.SH 000858.SZ 601899.SH
+输出表格：β、α（年化，注明换算方式）、α的t值、R²；
+画SML图：横轴β，纵轴 rf + β×样本市场超额收益均值（理论线），
+散点=各股样本平均年化超额收益；标注线上方（α>0）与线下方（α<0）的股票名。</pre>
+</div>
+
+<div class="case-section">
+<h4>实测结论（2 年日频）</h4>
+<div class="result-box">
+<div class="label">实测结论</div>
+<p>高 β 组平均 β = <strong>1.93</strong>，低 β 组 <strong>0.20</strong>；20 只股票中 |t(α)| > 2 的仅 <strong>4 只（4/20）</strong>；样本期市场超额收益年化 +19.3% → <strong>统计上"免费的午餐"很少</strong>。</p>
+</div>
+</div>
+
+<div class="case-section">
+<h4>核查要点（小组互查时逐条核对）</h4>
+<ul>
+<li>α 是年化值还是样本期累计值？换算公式必须写出。<strong>注意区分：年化 α = 日/月 α × 年化系数；累计 α = 样本期内 α 的简单累加。两者不可混用。</strong></li>
+<li>只保留 |t| > 2 的股票重组 SML，还剩几只？</li>
+</ul>
+</div>
+
+<div class="case-section">
+<h4>从回归结果到决策：α 与 β 的决策含义</h4>
+<ul>
+<li><strong>β = 对市场的敏感度</strong> → 趋势性策略的操作变量（案例1）；<strong>α = 实际收益与 SML 之差</strong> → 价值性策略的筛选目标（案例3）。</li>
+<li>教材第二节给出的两条积极策略：<strong>调β（趋势）</strong> 与 <strong>追α（价值）</strong>。</li>
+<li>关键判断框架：<strong>策略有效性 = 信号真实性 × 执行成本 × 持续性</strong>。回测只能验证其中第一条的一半。</li>
+<li>β 具有时变性（案例2）—— 这正是 Blume 调整与 β 预测模型存在的理由。</li>
+</ul>
+</div>
+</div>
+</section>
+
+<!-- ===== 06 策略回测 ===== -->
+<section id="strategies">
+<div class="wrap">
+<div class="sec-num">06</div>
+<h2 class="sec-title">Agent 实操（二）：两类积极策略的回测</h2>
+<p style="margin-bottom:24px">回测窗：2023-01-01 ~ 2026-08-31。用年化收益、最大回撤、换手次数三个指标审视结果。</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+<div style="background:var(--card);border:1px solid var(--line);border-radius:8px;padding:20px">
+<h4 style="color:var(--ink);margin-bottom:12px">P2 · 趋势性：调 β</h4>
+<pre style="font-size:11px;padding:12px">策略：沪深300收盘价 > 其60日均线
+→ 持有高β 5只等权
+（688256 300308 688041 300502 002281）；
+否则持有低β 5只等权
+（600900 601088 600941 601398 600887）。
+信号日收盘切换，双边成本各0.1%。
+回测2023-01-01至2026-08-31，
+输出：累计净值曲线（vs 沪深300买入持有）、
+年化收益、年化波动、最大回撤、换手次数；
+并单独输出2024-01-01~2024-02-08与
+2024-09-24~2024-10-08两个子区间的
+策略与基准收益。</pre>
+<div class="result-box" style="margin-top:12px">
+<div class="label">回测结论</div>
+<p style="font-size:13px">策略年化 <strong>79.7%</strong>、最大回撤 <strong>−31.7%</strong>、换手 43 次（基准沪深300 年化 6.8%、最大回撤 −24.8%）。</p>
+<p style="font-size:13px;margin-top:8px">2024-02 下跌段：策略 +10.1% vs 基准 −5.9%（已提前切换至低β，防御有效）；924 段：策略 +56.8% vs 基准 +32.5%（均线信号滞后，未参与前几日反弹）。</p>
+<p style="font-size:13px;margin-top:8px"><span class="highlight">趋势策略需为等待信号确认付出成本。</span></p>
+</div>
+</div>
+
+<div style="background:var(--card);border:1px solid var(--line);border-radius:8px;padding:20px">
+<h4 style="color:var(--ink);margin-bottom:12px">P3 · 价值性：追 α</h4>
+<pre style="font-size:11px;padding:12px">每月末用过去60个交易日对20只股票池
+做CAPM回归，选α最大的5只等权持有1个月；
+双边成本各0.1%，回测同区间；
+输出同上指标，并与P2策略、基准三线同图对比。</pre>
+<div class="result-box" style="margin-top:12px">
+<div class="label">思考题</div>
+<p style="font-size:13px">α 轮动策略跑赢或跑输基准，能否证明"追α"有效或无效？要下定论还缺哪些证据？</p>
+<p style="font-size:13px;margin-top:8px;color:var(--muted)">（提示：样本外检验、多窗口对比、成本敏感性。回看案例3——张坤在 2019–2021 样本内的 α 同样显著。）</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ===== 07 β 调整 ===== -->
+<section id="beta-adj">
+<div class="wrap">
+<div class="sec-num">07</div>
+<h2 class="sec-title">Agent 实操（三）：β 的调整与预测</h2>
+<p>本节把前面所有关于 β 不稳定性的讨论，落到一个操作问题：下个季度的 β 应选用哪一个？</p>
+
+<div class="formula-block" style="text-align:left">
+<p style="font-size:14px;color:var(--muted);margin-bottom:8px">回归方程：</p>
+$$r_{i,t}-r_{f,t}=\alpha_i+\beta_i(r_{m,t}-r_{f,t})+\varepsilon_{i,t}$$
+<p style="font-size:14px;color:var(--muted);margin:12px 0 8px">Blume 调整（Blume, 1971, <em>Journal of Finance</em>）：</p>
+$$\beta_{\text{adj}}=\frac{2}{3}\beta_{\text{sample}}+\frac{1}{3}\times 1$$
+</div>
+
+<div class="case-section">
+<h4>Blume 调整的来龙去脉</h4>
+<ul>
+<li><strong>来源：</strong>Blume (1971) 对 NYSE 股票做子期间回归，发现前期估出的 β 对后期 β 的预测系数约为 2/3，截距约为 1/3——即 $\beta_{\text{后期}} \approx \frac{2}{3}\beta_{\text{前期}} + \frac{1}{3}$。</li>
+<li><strong>本质：</strong>这是一种<strong>贝叶斯收缩</strong>——将样本 β 向先验均值 1 收缩。估计窗口越短、误差越大，越应该使用。</li>
+<li><strong>两种机制：</strong>β 向 1 收敛的原因包括经营多元化（公司业务变化导致 β 趋同）与估计误差（极端 β 含有更多噪声）。案例2 展示了第三种力量——危机期相关结构的突变。</li>
+</ul>
+</div>
+
+<div class="case-section">
+<h4>验证任务 P4</h4>
+<pre>对300750.SZ和688256.SH：分别用1年/2年/3年窗口（截至2026-08-31）估计β，列表对比；
+计算Blume调整β = 2/3×样本β + 1/3×1；
+再用20只股票池做横截面回归：
+当期β = a + b1×上期β + b2×ln(市值) + b3×资产负债率
+（市值与负债率用daily_basic/财报接口，报告数据来源与日期），输出系数与R²。
+最后回答：为下季度投资决策，你会用哪个β？为什么？</pre>
+</div>
+
+<div class="case-section">
+<h4>要点</h4>
+<ul>
+<li>Rosenberg &amp; Guy (1976) 的六因子模型（收入、现金流、EPS 增长、市值、股债、负债率）——本任务的横截面回归是它的简化版本。</li>
+<li>三种选择：<strong>样本 β</strong>（最新但含噪声）、<strong>Blume 调整后</strong>（保守先验）、<strong>横截面预测</strong>（利用基本面信息）。为下季度的组合决策明确选用哪一个，并写出理由——这条判断将直接进入投资分析报告的方法说明。</li>
+</ul>
+</div>
+</div>
+</section>
+
+<!-- ===== 08 小结 ===== -->
+<section id="summary">
+<div class="wrap">
+<div class="sec-num">08</div>
+<h2 class="sec-title">小结与课后任务</h2>
+
+<blockquote>
+<p><strong>一句话总结：</strong>CAPM 给出的不是最终结论，而是一套风险定价语言——β 是需要滚动重估的敏感度参数，α 是待检验的差额（多数无法通过 t 检验）。</p>
+</blockquote>
+
+<h3 style="font-family:'Noto Serif SC',serif;font-size:18px;color:var(--ink);margin:24px 0 12px">课后任务（投资分析报告 Part 2）</h3>
+<ol>
+<li>自选 10 只股票，计算 α 与 β、绘制 SML 图，给出 2 只买入、2 只回避的建议。</li>
+<li>结果下方注明数据来源、样本窗、频率、复权方式与 $r_f$ 取值。</li>
+<li>α 必须报告 t 值；未报告 t 值的 α 不得写入报告。</li>
+<li>明确区分年化 α 与累计 α，换算公式必须写出。</li>
+</ol>
+</div>
+</section>
+
+<footer>
+<div class="wrap">
+<p>第7章 · 第2课时 · 资本资产定价模型的应用 — 学生自读讲义</p>
+<p style="margin-top:8px;font-size:12px">数据口径：r_f = 2.12%（Shibor-1Y 五年均值）；MRP = 6.39%（沪深300月频超额收益算术平均 ×12 年化，2006-10~2026-08）</p>
+</div>
+</footer>
+
+</body>
+</html>
