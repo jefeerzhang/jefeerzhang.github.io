@@ -82,7 +82,7 @@
     --color-ring-primary,
     light-dark(rgb(51 156 255), rgb(131 195 255 / 76%))
   );
-  --font-size-base: var(--font-text-md-size, 14px);
+  --font-size-base: var(--font-text-md-size, 17px);
   --blue: light-dark(rgb(51 156 255), rgb(51 156 255));
   --orange: light-dark(rgb(226 85 7), rgb(251 106 34));
   --green: light-dark(rgb(0 162 64), rgb(64 201 119));
@@ -1052,8 +1052,8 @@ svg.lucide {
 html>body{padding:0}
 
 html,body{margin:0;min-width:280px}
-body{padding:clamp(12px,4vw,40px);background:var(--background);color:var(--foreground);font-size:16px;line-height:1.8}
-main{max-width:860px;margin:0 auto}
+body{padding:clamp(12px,4vw,40px);background:var(--background);color:var(--foreground);font-size:18px;line-height:1.8}
+main{max-width:960px;margin:0 auto}
 .page-intro{padding-bottom:24px}
 .eyebrow{color:var(--muted-foreground);letter-spacing:.08em}
 .page-intro h1{margin:8px 0}
@@ -1063,17 +1063,26 @@ main{max-width:860px;margin:0 auto}
 .lesson p{max-width:74ch;margin:12px 0}
 .page-intro p{margin:12px 0}
 .lesson h2{margin-top:28px}
-.formula{padding:16px 18px;background:var(--muted);color:var(--foreground);border-radius:8px;overflow-wrap:anywhere}
+.formula{display:grid;grid-template-columns:max-content 1fr;gap:9px 16px;align-items:baseline;padding:16px 18px;background:var(--muted);color:var(--foreground);border-radius:8px;overflow-wrap:anywhere}
+.formula .frow{display:contents}
+.formula .flabel{white-space:nowrap;color:var(--muted-foreground)}
+.formula .fwide{grid-column:1 / -1}
+.formula .katex-display{margin:0}
+.no-katex .formula{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em}
+@media (max-width:640px){.formula{grid-template-columns:1fr;gap:5px}.formula .frow{display:block}.formula .flabel{display:block;margin-bottom:2px}}
 .note{color:var(--muted-foreground)}
 details{margin:18px 0}
 summary{cursor:pointer;font-weight:500}
 .ledger{padding-top:12px;border-top:1px solid var(--border)}
 .table caption{text-align:left;color:var(--muted-foreground);margin-bottom:10px}
 #cash-net{font-weight:500}
-#capm-apt-bridge .figure svg{font-size:12px}
+#capm-apt-bridge .figure svg{font-size:14px}
 a{color:var(--foreground);text-underline-offset:3px}
 @media print{body{padding:0}details{break-inside:avoid}.viz-controls{display:none}}
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 </head>
 <body><main><div id="capm-apt-bridge">
 <style>
@@ -1089,7 +1098,7 @@ a{color:var(--foreground);text-underline-offset:3px}
   <p class="eyebrow">资产定价 · 互动课堂</p>
   <h1>从 CAPM 到 APT</h1>
   <p class="lead">先找出遗漏的共同风险，再理解“无套利”怎样约束收益。</p>
-  <p>把投资组合想成几条船：<strong>市场像潮水，β 是每条船受潮水影响的程度。</strong>但船还会受风影响。即使受潮水影响一样，遇到同一阵风，也可能有的受益、有的受损。</p>
+  <p>把投资组合想成几条船：<strong>市场像潮水，\(\beta\) 是每条船受潮水影响的程度。</strong>但船还会受风影响。即使受潮水影响一样，遇到同一阵风，也可能有的受益、有的受损。</p>
   <p>这个比喻帮助我们理解“多种共同影响”。下面用明确的收益和现金流计算，解释它怎样成为定价关系。</p>
   <div class="reading-route"><span>① 一把尺不够</span><span>② 加入第二把尺</span><span>③ 无套利约束全部资产</span></div>
 </header>
@@ -1115,15 +1124,15 @@ a{color:var(--foreground);text-underline-offset:3px}
 
 <section class="lesson" id="lesson-1">
   <h2>① CAPM：为什么这三个组合都应该是 8%？</h2>
-  <p>假设无风险收益是 2%，承担一单位市场风险的补偿是 6%。A、B、C 的市场 β 都是 1，CAPM 就给它们相同的期望收益：</p>
-  <div class="formula">期望收益 = 2% + 1 × 6% = 8%</div>
-  <p>可是，我们设定的教学市场里，A 的期望收益是 11%，C 是 8%，B 是 5%。<strong>同一个市场 β，没能解释全部差异。</strong></p>
+  <p>假设无风险收益是 2%，承担一单位市场风险的补偿是 6%。A、B、C 的市场 \(\beta\) 都是 1，CAPM 就给它们相同的期望收益：</p>
+  <div class="formula"><div class="fwide">\[ \mathbb{E}[r] = 2\% + 1 \times 6\% = 8\% \]</div></div>
+  <p>可是，我们设定的教学市场里，A 的期望收益是 11%，C 是 8%，B 是 5%。<strong>同一个市场 \(\beta\)，没能解释全部差异。</strong></p>
   <p class="note">这里比较的是“期望收益”，不是某一天的涨跌。真实市场里两只股票短期收益不同，完全可能只是随机波动，不能据此推翻 CAPM。</p>
 </section>
 <section class="lesson" id="lesson-2" hidden>
   <h2>② 多因子：原来还有一阵共同的“风”</h2>
   <p>现在揭示这个虚构市场的第二个共同因子。A 对它的暴露为 +1，B 为 −1，C 为 0。我们设定每单位暴露对应 3 个百分点的期望收益补偿：</p>
-  <div class="formula">A：2% + 6% + 3% = 11%<br>C：2% + 6% + 0% = 8%<br>B：2% + 6% − 3% = 5%</div>
+  <div class="formula"><div class="fwide">\[ \begin{aligned} A &: 2\% + 6\% + 3\% = 11\% \\ C &: 2\% + 6\% + 0\% = 8\% \\ B &: 2\% + 6\% - 3\% = 5\% \end{aligned} \]</div></div>
   <p><strong>原来没解释的收益差异，被第二种暴露解释了。</strong>负暴露意味着反向承受这类冲击，可能有对冲价值；不是说某个组合“风险越少就越差”。</p>
   <p>拖动上方滑块：第二因子意外增加 1 个百分点，A 的当期收益增加 1 个百分点，B 减少 1 个百分点，C 不变。</p>
   <p class="note"><strong>补偿与冲击不同：</strong>3 个百分点是期望收益中的风险补偿；滑块是本期偏离预期的意外变化。为突出机制，市场意外冲击固定为 0，第二因子冲击与市场冲击设为独立且均值为 0。本页没有拿真实数据估计参数，也没有证明“加入任何因子都有效”。</p>
@@ -1134,25 +1143,37 @@ a{color:var(--foreground);text-underline-offset:3px}
     <li><strong>指定</strong>：先想清楚有哪些共同风险源，拿它们的实现值当因子。Fama-French 三因子就是这条路——市场、规模、价值。</li>
     <li><strong>统计</strong>：拿一堆资产的历史收益做主成分分析，第一主成分就是“最能解释共同变动的那个方向”，第二主成分是与它正交的下一个方向。</li>
   </ul>
-  <p>而<strong>暴露 β 就是回归斜率</strong>：这个因子变动 1 单位，资产 i 的收益变动多少。所以本页那个“第二因子”，具体就是<strong>那件让 A 涨 1%、同时让 B 跌 1% 的事</strong>。它叫油价、汇率还是政策，APT 并不关心——结论对任何因子都成立，这正是 APT 比 CAPM 宽松的地方。</p>
+
+  <p>而<strong>暴露 \(\beta\) 就是回归斜率</strong>：这个因子变动 1 单位，资产 i 的收益变动多少。所以本页那个“第二因子”，具体就是<strong>那件让 A 涨 1%、同时让 B 跌 1% 的事</strong>。它叫油价、汇率还是政策，APT 并不关心——结论对任何因子都成立，这正是 APT 比 CAPM 宽松的地方。</p>
 </section>
 <section class="lesson" id="lesson-3" hidden>
   <h2>③ APT：相同风险，为什么不能凭空多一份回报？</h2>
   <p>用 50 元买 A，再用 50 元买 B，就拼出一个 100 元的替代组合 D。A、B 的第二因子暴露一正一负，刚好抵消：</p>
-  <div class="formula">D 的市场暴露：½ × 1 + ½ × 1 = 1<br>D 的第二暴露：½ × (+1) + ½ × (−1) = 0</div>
+  <div class="formula">
+    <div class="frow"><span class="flabel">D 的市场暴露：</span><span>\(\tfrac{1}{2}\times 1 + \tfrac{1}{2}\times 1 = 1\)</span></div>
+    <div class="frow"><span class="flabel">D 的第二暴露：</span><span>\(\tfrac{1}{2}\times(+1) + \tfrac{1}{2}\times(-1) = 0\)</span></div>
+  </div>
   <p>D 与 C 的共同风险暴露都是“市场 1、第二因子 0”。在本例<strong>没有其他随机风险</strong>的条件下，二者面对共同冲击时，收益变化完全一致。</p>
   <p>如果同样投入 100 元，C 却在所有状态下都比 D 多付 2 元，便可以<strong>买 C，同时卖空 D</strong>。共同风险互相抵消，剩下的是确定的 2 元。</p>
   <p class="note">这里“各投 100 元、C 多付 2 元”是收益形式的定价偏离演示，不是在假装已经模拟了价格调整。若固定未来现金流，实际买卖会推动相对价格变化、压缩套利空间。上面的偏离滑块只是展示差异收敛，不代表真实价格路径。</p>
-  <h3>那两个 ½ 是怎么来的？</h3>
-  <p>暴露是权重的<strong>线性函数</strong>，所以那两个 ½ 不是凑巧设的，是解方程解出来的。要拼 D = w_A·A + w_B·B，让它跟 C 的暴露完全一样（市场 1、第二因子 0）：</p>
-  <div class="formula">市场暴露：w_A × (+1) + w_B × (+1) = w_A + w_B = 1<br>第二暴露：w_A × (+1) + w_B × (−1) = w_A − w_B = 0<br>解得：w_A = w_B = ½</div>
-  <p>而风险之所以真的归零，是因为共同风险进入收益的方式也是线性的。第二因子意外变动 v 时：</p>
-  <div class="formula">A 贡献：½ × (+1) × v = +½v<br>B 贡献：½ × (−1) × v = −½v<br>合计：0，与 v 取多少无关</div>
+  <h3>那两个 \(\tfrac{1}{2}\) 是怎么来的？</h3>
+  <p>暴露是权重的<strong>线性函数</strong>，所以那两个 \(\tfrac{1}{2}\) 不是凑巧设的，是解方程解出来的。要拼 \(D = w_A A + w_B B\)，让它跟 \(C\) 的暴露完全一样（市场 1、第二因子 0）：</p>
+  <div class="formula">
+    <div class="frow"><span class="flabel">市场暴露：</span><span>\(w_A\times(+1) + w_B\times(+1) = w_A + w_B = 1\)</span></div>
+    <div class="frow"><span class="flabel">第二暴露：</span><span>\(w_A\times(+1) + w_B\times(-1) = w_A - w_B = 0\)</span></div>
+    <div class="frow"><span class="flabel">解得：</span><span>\(w_A = w_B = \tfrac{1}{2}\)</span></div>
+  </div>
+  <p>而风险之所以真的归零，是因为共同风险进入收益的方式也是线性的。第二因子意外变动 \(v\) 时：</p>
+  <div class="formula">
+    <div class="frow"><span class="flabel">A 贡献：</span><span>\(\tfrac{1}{2}\times(+1)\times v = +\tfrac{1}{2}v\)</span></div>
+    <div class="frow"><span class="flabel">B 贡献：</span><span>\(\tfrac{1}{2}\times(-1)\times v = -\tfrac{1}{2}v\)</span></div>
+    <div class="frow"><span class="flabel">合计：</span><span>\(0\)，与 \(v\) 取多少无关</span></div>
+  </div>
   <p><strong>不是概率上变小，是代数上恒等于 0。</strong></p>
   <p class="note"><strong>两条边界：</strong>① 归零的只是<strong>共同</strong>风险，资产自己的特质风险消不掉——这正是下方“公司意外”开关演示的内容。② 需要原料够多、能张成整个暴露空间；原料不够就复制不出来，这就是 APT 的“大规模资产市场”条件。</p>
 </section>
 
-<div class="text-small gap" id="bridge-fixed">无风险收益2% · 市场风险补偿6% · 三个组合市场β均为1</div>
+<div class="text-small gap" id="bridge-fixed">无风险收益 2% · 市场风险补偿 6% · 三个组合市场 β 均为 1</div>
 <div class="figure gap" id="bridge-chart"></div>
 <div class="text-small" id="bridge-chart-note"></div>
 <div class="table-responsive gap">
@@ -1191,9 +1212,14 @@ a{color:var(--foreground);text-underline-offset:3px}
   <p id="cash-status" aria-live="polite"></p>
   <details open>
     <summary>为什么换任何共同冲击都一样？</summary>
-    <p>用 u 表示市场意外冲击，v 表示第二因子意外冲击，λ 表示第二因子风险补偿，δ 表示 C 多出的收益；它们都以“百分点”为单位。暂时不加入公司意外：</p>
-    <div class="formula">100 元 C 到期：108 + δ + u<br>50 元 A 到期：½ × (108 + λ + u + v)<br>50 元 B 到期：½ × (108 − λ + u − v)<br><strong>买 C − ½A − ½B 的净现金流 = δ 元</strong></div>
-    <p>u、v、λ 都抵消了。因此结论不是“试了几次没亏”，而是这组设定下<strong>所有允许状态的共同冲击都不影响净结果</strong>。当 δ &gt; 0，净结果确定为正；当 δ = 0，套利差消失。</p>
+    <p>用 \(u\) 表示市场意外冲击，\(v\) 表示第二因子意外冲击，\(\lambda\) 表示第二因子风险补偿，\(\delta\) 表示 C 多出的收益；它们都以“百分点”为单位。暂时不加入公司意外：</p>
+    <div class="formula">
+      <div class="frow"><span class="flabel">100 元 C 到期：</span><span>\(108 + \delta + u\)</span></div>
+      <div class="frow"><span class="flabel">50 元 A 到期：</span><span>\(\tfrac{1}{2}\times(108 + \lambda + u + v)\)</span></div>
+      <div class="frow"><span class="flabel">50 元 B 到期：</span><span>\(\tfrac{1}{2}\times(108 - \lambda + u - v)\)</span></div>
+      <div class="fwide"><strong>买 \(C - \tfrac{1}{2}A - \tfrac{1}{2}B\) 的净现金流 \(= \delta\) 元</strong></div>
+    </div>
+    <p>\(u\)、\(v\)、\(\lambda\) 都抵消了。因此结论不是“试了几次没亏”，而是这组设定下<strong>所有允许状态的共同冲击都不影响净结果</strong>。当 \(\delta > 0\)，净结果确定为正；当 \(\delta = 0\)，套利差消失。</p>
   </details>
   <h3>再加一个公司意外，结论就变了</h3>
   <label class="form-check">
@@ -1211,41 +1237,47 @@ a{color:var(--foreground);text-underline-offset:3px}
 </section>
 <section class="lesson">
   <h2>“无套利”到底要求什么？</h2>
-  <p>一个常用的套利定义是：<strong>初始净投入为 0，不再追加外部资金；到期在所有可能状态下都不亏，且至少有正概率赚钱。</strong>本页没有公司意外且 δ &gt; 0 的例子更强：每个状态都赚。</p>
+  <p>一个常用的套利定义是：<strong>初始净投入为 0，不再追加外部资金；到期在所有可能状态下都不亏，且至少有正概率赚钱。</strong>本页没有公司意外且 \(\delta > 0\) 的例子更强：每个状态都赚。</p>
   <p>无套利就是说：市场中不应持续存在这样的机会。它不保证人人赚钱，也不保证没有高收益策略；它约束的是<strong>不承担剩余风险就能获得的免费收益差</strong>。</p>
   <details>
     <summary>与“一价定律”有什么关系？</summary>
     <p>若两组资产在每个状态下的未来现金流完全相同，却有不同价格，就可以买便宜的、卖贵的，把今天收到的差额存入无风险资产；到期两边义务抵消。这是一价定律背后的套利逻辑。</p>
-    <p>注意：未来现金流相同，比市场 β 相同、总波动相同，或几个估计出来的因子暴露接近，都更强。遗漏风险、融资限制和交易成本会影响能否真正构造套利。</p>
+    <p>注意：未来现金流相同，比市场 \(\beta\) 相同、总波动相同，或几个估计出来的因子暴露接近，都更强。遗漏风险、融资限制和交易成本会影响能否真正构造套利。</p>
   </details>
   <h2>为什么每个资产的“补偿”是同一个数？</h2>
   <p>上面那笔交易只涉及 C 一个资产。现在把它对<strong>每一个</strong>资产各做一遍——这是唯一的新动作，也是“无套利”升级成定价公式的那一步。</p>
   <p>关键点：<strong>复制任何资产用的都是同一套原料。</strong>本页的原料是 A、B 和无风险资产；用它们能拼出任意目标暴露向量，变的只是配比。</p>
   <ol>
-    <li>取任意资产 i，它的暴露是 (β_i1, β_i2)</li>
-    <li>用同一套 A、B、无风险资产，拼出一个暴露一模一样的复制组合 R_i</li>
-    <li>i 与 R_i 暴露一样，就该一样值钱；若不一样，差额就是上面那笔套利</li>
-    <li>无套利要求差额为 0，所以对每个 i 都有：期望收益(i) = 期望收益(R_i)</li>
+    <li>取任意资产 \(i\)，它的暴露是 \((\beta_{i1}, \beta_{i2})\)</li>
+    <li>用同一套 \(A\)、\(B\)、无风险资产，拼出一个暴露一模一样的复制组合 \(R_i\)</li>
+    <li>\(i\) 与 \(R_i\) 暴露一样，就该一样值钱；若不一样，差额就是上面那笔套利</li>
+    <li>无套利要求差额为 0，所以对每个 \(i\) 都有：\(\mathbb{E}[r_i] = \mathbb{E}[R_i]\)</li>
   </ol>
   <p>再看等号右边是什么：</p>
-  <div class="formula">期望收益(R_i) = w_A × 期望收益(A) + w_B × 期望收益(B) + w_f × 无风险收益</div>
-  <p>其中期望收益(A)、期望收益(B)、无风险收益是<strong>三个固定的数</strong>，不随 i 变；随 i 变的只有权重，而权重只由 i 的暴露决定。所以期望收益(i) 必然能写成：</p>
-  <div class="formula">期望收益(i) = 无风险收益 + β_i1 × λ_1 + β_i2 × λ_2</div>
-  <p><strong>λ 为什么不带 i？</strong>因为 λ_k 是<strong>因子模仿组合</strong>的期望超额收益——专门造出来让第 k 个暴露等于 1、其他暴露等于 0 的组合。它只跟因子有关，跟具体哪个资产无关。<strong>带 i 的只有配比，没有价格。</strong></p>
-  <p><strong>这就是无套利与多因子模型的接缝：</strong>没有无套利，A、B、C 可以各自拥有一套自己的 λ，那只是一个统计分解（②讲的东西）；有了无套利，所有资产被迫共用同一组 λ，它才变成定价模型。②里那句“每单位暴露补 3%”是直接给的假设，这一节就是把它变成结论。</p>
+  <div class="formula"><div class="fwide">\[ \mathbb{E}[R_i] = w_A\,\mathbb{E}[r_A] + w_B\,\mathbb{E}[r_B] + w_f\,r_f \]</div></div>
+  <p>其中 \(\mathbb{E}[r_A]\)、\(\mathbb{E}[r_B]\)、\(r_f\) 是<strong>三个固定的数</strong>，不随 \(i\) 变；随 \(i\) 变的只有权重，而权重只由 \(i\) 的暴露决定。所以 \(\mathbb{E}[r_i]\) 必然能写成：</p>
+  <div class="formula"><div class="fwide">\[ \mathbb{E}[r_i] = r_f + \beta_{i1}\lambda_1 + \beta_{i2}\lambda_2 \]</div></div>
+  <p><strong>\(\lambda\) 为什么不带 \(i\)？</strong>因为 \(\lambda_k\) 是<strong>因子模仿组合</strong>的期望超额收益——专门造出来让第 \(k\) 个暴露等于 1、其他暴露等于 0 的组合。它只跟因子有关，跟具体哪个资产无关。<strong>带 \(i\) 的只有配比，没有价格。</strong></p>
+  <p><strong>这就是无套利与多因子模型的接缝：</strong>没有无套利，\(A\)、\(B\)、\(C\) 可以各自拥有一套自己的 \(\lambda\)，那只是一个统计分解（②讲的东西）；有了无套利，所有资产被迫共用同一组 \(\lambda\)，它才变成定价模型。②里那句“每单位暴露补 3%”是直接给的假设，这一节就是把它变成结论。</p>
 
   <h2>从这个小实验，到真正的 APT</h2>
-  <p>CAPM 在特定均衡假设下，用市场 β 定价。APT 则从<strong>收益的因子结构、特质风险可以充分分散，以及无套利</strong>出发，约束期望收益与因子暴露的关系：</p>
-  <div class="formula">期望收益 ≈ 无风险收益 + 暴露₁ × 补偿₁ + 暴露₂ × 补偿₂ + …</div>
+  <p>CAPM 在特定均衡假设下，用市场 \(\beta\) 定价。APT 则从<strong>收益的因子结构、特质风险可以充分分散，以及无套利</strong>出发，约束期望收益与因子暴露的关系：</p>
+  <div class="formula"><div class="fwide">\[ \mathbb{E}[r_i] \approx r_f + \beta_{i1}\lambda_1 + \beta_{i2}\lambda_2 + \cdots \]</div></div>
   <p>本例为了把抵消过程讲清楚，先把特质风险设为 0，所以可以精确展示套利。一般 APT 在大规模资产市场及相应技术条件下利用分散化，得到近似定价约束；<strong>不是说每只个股都能被精确复制，也不是说回归里出现正 α 就存在无风险套利。</strong>使用无风险收益作截距，还假设存在相应的可交易无风险资产。</p>
   <p><strong>一条清晰的学习路径：</strong>CAPM 提供一把市场风险尺 → 多因子模型增加共同风险维度 → APT 解释为什么相同暴露的定价应受到一致性约束。它们是不同的理论与建模层次，不能仅凭“加了几个回归变量”就说推导出了 APT。</p>
   <details>
     <summary>本例的设定与参考来源</summary>
     <p>全部数字为虚构教学数据；单期简单收益；期望冲击为 0；市场与第二因子冲击独立；基准情形无特质风险；允许按所需数量卖空；忽略交易、借券与融资成本。公司意外开关只改变 C 的剩余风险，不改变其期望收益。</p>
     <p>APT 不直接指定因子名单，也不保证每个因子的风险补偿都为正。这里的 2%、6%、3% 是为了心算设置的参数。</p>
-    <p>理论参考：Huberman 与 Wang，<a href="https://www.newyorkfed.org/medialibrary/media/research/staff_reports/sr216.pdf" target="_blank" rel="noopener noreferrer">《Arbitrage Pricing Theory》，纽约联储 Staff Report 216</a>。本页可离线运行，打开参考文献才需要网络。</p>
+    <p>理论参考：Huberman 与 Wang，<a href="https://www.newyorkfed.org/medialibrary/media/research/staff_reports/sr216.pdf" target="_blank" rel="noopener noreferrer">《Arbitrage Pricing Theory》，纽约联储 Staff Report 216</a>。本页除公式排版（KaTeX，首次需联网）与参考文献外均可离线运行。</p>
   </details>
 </section>
+
+  <h3>附：三因子（SMB / HML）是怎么构建出来的？</h3>
+  <figure style="margin:18px 0;">
+    <img src="factor-construction.png" alt="Fama-French 三因子中规模因子 SMB 与价值因子 HML 的构建流程" style="width:100%;height:auto;border-radius:8px;">
+    <figcaption class="note">SMB / HML 构建流程：每年 6 月底分组 → 规模与账面市值比两套排序独立进行后取交集，形成六个市值加权组合 → 持有至次年 6 月并逐月记录收益 → 跨维度平均得到因子月度收益序列，用作回归解释变量。</figcaption>
+  </figure>
 
 <div class="text-small text-muted gap">教学演示 · 基准无特质风险，公司意外可单独开启 · 无成本、允许卖空</div>
 </div>
@@ -1365,4 +1397,19 @@ a{color:var(--foreground);text-underline-offset:3px}
 </script>
 </main>
 <noscript>本页的互动模拟需要启用 JavaScript；理论讲解文字仍可阅读。</noscript>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof renderMathInElement === 'function') {
+      renderMathInElement(document.body, {
+        delimiters: [
+          { left: '\\[', right: '\\]', display: true },
+          { left: '\\(', right: '\\)', display: false }
+        ],
+        throwOnError: false
+      });
+    } else {
+      document.documentElement.classList.add('no-katex');
+    }
+  });
+</script>
 </body></html>
