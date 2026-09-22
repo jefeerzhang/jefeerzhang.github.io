@@ -803,7 +803,7 @@ textarea.form-control {
   height: 20px;
   border: 0;
   border-radius: var(--radius-full);
-  background: var(--muted);
+  background: color-mix(in srgb, var(--foreground) 22%, transparent);
   box-shadow: none;
   transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
 }
@@ -815,10 +815,10 @@ textarea.form-control {
   width: 16px;
   height: 16px;
   box-sizing: border-box;
-  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border: 1px solid color-mix(in srgb, var(--foreground) 35%, transparent);
   border-radius: var(--radius-full);
   background: light-dark(var(--primary-foreground), var(--foreground));
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 28%);
   content: "";
   transform: translate(2px, -50%);
   transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
@@ -847,11 +847,13 @@ textarea.form-control {
   outline: none;
   border: 0;
   accent-color: var(--primary);
+  cursor: var(--cursor-interaction, pointer);
+  /* Rail: thick and dark enough to read on a white page. */
   background: linear-gradient(
-      color-mix(in srgb, var(--foreground) 7%, transparent),
-      color-mix(in srgb, var(--foreground) 7%, transparent)
+      color-mix(in srgb, var(--foreground) 26%, transparent),
+      color-mix(in srgb, var(--foreground) 26%, transparent)
     )
-    center / 100% 2px no-repeat;
+    center / 100% 4px no-repeat;
 }
 
 .form-range::-webkit-slider-runnable-track {
@@ -864,14 +866,26 @@ textarea.form-control {
   width: 20px;
   height: 20px;
   margin-top: 4px;
-  border: 1px solid var(--border);
+  border: 0;
   border-radius: var(--radius-full);
-  background: light-dark(var(--primary-foreground), var(--foreground));
+  /* Filled accent handle + dark edge: visible on white and on dark. */
+  background: var(--primary);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--foreground) 45%, transparent),
+    0 0 0 3px light-dark(rgb(255 255 255), rgb(24 24 24)),
+    0 1px 3px rgb(0 0 0 / 28%);
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.form-range:is(:hover, :active)::-webkit-slider-thumb {
+  transform: scale(1.08);
 }
 
 .form-range:focus-visible::-webkit-slider-thumb {
-  border-color: var(--ring);
-  box-shadow: inset 0 0 0 1px var(--ring);
+  box-shadow:
+    0 0 0 2px var(--ring),
+    0 0 0 4px light-dark(rgb(255 255 255), rgb(24 24 24)),
+    0 1px 3px rgb(0 0 0 / 28%);
 }
 
 .form-range::-moz-range-track {
@@ -882,14 +896,25 @@ textarea.form-control {
 .form-range::-moz-range-thumb {
   width: 20px;
   height: 20px;
-  border: 1px solid var(--border);
+  border: 0;
   border-radius: var(--radius-full);
-  background: light-dark(var(--primary-foreground), var(--foreground));
+  background: var(--primary);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--foreground) 45%, transparent),
+    0 0 0 3px light-dark(rgb(255 255 255), rgb(24 24 24)),
+    0 1px 3px rgb(0 0 0 / 28%);
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+.form-range:is(:hover, :active)::-moz-range-thumb {
+  transform: scale(1.08);
 }
 
 .form-range:focus-visible::-moz-range-thumb {
-  border-color: var(--ring);
-  box-shadow: inset 0 0 0 1px var(--ring);
+  box-shadow:
+    0 0 0 2px var(--ring),
+    0 0 0 4px light-dark(rgb(255 255 255), rgb(24 24 24)),
+    0 1px 3px rgb(0 0 0 / 28%);
 }
 
 .form-range:disabled {
@@ -1066,7 +1091,7 @@ a{color:var(--foreground);text-underline-offset:3px}
   <p class="lead">先找出遗漏的共同风险，再理解“无套利”怎样约束收益。</p>
   <p>把投资组合想成几条船：<strong>市场像潮水，β 是每条船受潮水影响的程度。</strong>但船还会受风影响。即使受潮水影响一样，遇到同一阵风，也可能有的受益、有的受损。</p>
   <p>这个比喻帮助我们理解“多种共同影响”。下面用明确的收益和现金流计算，解释它怎样成为定价关系。</p>
-  <div class="reading-route"><span>① 一把尺不够</span><span>② 加入第二把尺</span><span>③ 无套利约束</span></div>
+  <div class="reading-route"><span>① 一把尺不够</span><span>② 加入第二把尺</span><span>③ 无套利约束全部资产</span></div>
 </header>
 
 <div class="viz-controls">
@@ -1102,6 +1127,14 @@ a{color:var(--foreground);text-underline-offset:3px}
   <p><strong>原来没解释的收益差异，被第二种暴露解释了。</strong>负暴露意味着反向承受这类冲击，可能有对冲价值；不是说某个组合“风险越少就越差”。</p>
   <p>拖动上方滑块：第二因子意外增加 1 个百分点，A 的当期收益增加 1 个百分点，B 减少 1 个百分点，C 不变。</p>
   <p class="note"><strong>补偿与冲击不同：</strong>3 个百分点是期望收益中的风险补偿；滑块是本期偏离预期的意外变化。为突出机制，市场意外冲击固定为 0，第二因子冲击与市场冲击设为独立且均值为 0。本页没有拿真实数据估计参数，也没有证明“加入任何因子都有效”。</p>
+  <h3>「因子」到底是什么？</h3>
+  <p>因子不是抽象概念，它有一个可操作的定义：<strong>一个数字，当它变动时，很多资产的收益会同时按各自的系数变动。</strong>油价涨 10%，航空公司跌、石油公司涨——这个共同变动的方向就是一个因子。</p>
+  <p>找因子有两条路：</p>
+  <ul>
+    <li><strong>指定</strong>：先想清楚有哪些共同风险源，拿它们的实现值当因子。Fama-French 三因子就是这条路——市场、规模、价值。</li>
+    <li><strong>统计</strong>：拿一堆资产的历史收益做主成分分析，第一主成分就是“最能解释共同变动的那个方向”，第二主成分是与它正交的下一个方向。</li>
+  </ul>
+  <p>而<strong>暴露 β 就是回归斜率</strong>：这个因子变动 1 单位，资产 i 的收益变动多少。所以本页那个“第二因子”，具体就是<strong>那件让 A 涨 1%、同时让 B 跌 1% 的事</strong>。它叫油价、汇率还是政策，APT 并不关心——结论对任何因子都成立，这正是 APT 比 CAPM 宽松的地方。</p>
 </section>
 <section class="lesson" id="lesson-3" hidden>
   <h2>③ APT：相同风险，为什么不能凭空多一份回报？</h2>
@@ -1110,6 +1143,13 @@ a{color:var(--foreground);text-underline-offset:3px}
   <p>D 与 C 的共同风险暴露都是“市场 1、第二因子 0”。在本例<strong>没有其他随机风险</strong>的条件下，二者面对共同冲击时，收益变化完全一致。</p>
   <p>如果同样投入 100 元，C 却在所有状态下都比 D 多付 2 元，便可以<strong>买 C，同时卖空 D</strong>。共同风险互相抵消，剩下的是确定的 2 元。</p>
   <p class="note">这里“各投 100 元、C 多付 2 元”是收益形式的定价偏离演示，不是在假装已经模拟了价格调整。若固定未来现金流，实际买卖会推动相对价格变化、压缩套利空间。上面的偏离滑块只是展示差异收敛，不代表真实价格路径。</p>
+  <h3>那两个 ½ 是怎么来的？</h3>
+  <p>暴露是权重的<strong>线性函数</strong>，所以那两个 ½ 不是凑巧设的，是解方程解出来的。要拼 D = w_A·A + w_B·B，让它跟 C 的暴露完全一样（市场 1、第二因子 0）：</p>
+  <div class="formula">市场暴露：w_A × (+1) + w_B × (+1) = w_A + w_B = 1<br>第二暴露：w_A × (+1) + w_B × (−1) = w_A − w_B = 0<br>解得：w_A = w_B = ½</div>
+  <p>而风险之所以真的归零，是因为共同风险进入收益的方式也是线性的。第二因子意外变动 v 时：</p>
+  <div class="formula">A 贡献：½ × (+1) × v = +½v<br>B 贡献：½ × (−1) × v = −½v<br>合计：0，与 v 取多少无关</div>
+  <p><strong>不是概率上变小，是代数上恒等于 0。</strong></p>
+  <p class="note"><strong>两条边界：</strong>① 归零的只是<strong>共同</strong>风险，资产自己的特质风险消不掉——这正是下方“公司意外”开关演示的内容。② 需要原料够多、能张成整个暴露空间；原料不够就复制不出来，这就是 APT 的“大规模资产市场”条件。</p>
 </section>
 
 <div class="text-small gap" id="bridge-fixed">无风险收益2% · 市场风险补偿6% · 三个组合市场β均为1</div>
@@ -1178,6 +1218,22 @@ a{color:var(--foreground);text-underline-offset:3px}
     <p>若两组资产在每个状态下的未来现金流完全相同，却有不同价格，就可以买便宜的、卖贵的，把今天收到的差额存入无风险资产；到期两边义务抵消。这是一价定律背后的套利逻辑。</p>
     <p>注意：未来现金流相同，比市场 β 相同、总波动相同，或几个估计出来的因子暴露接近，都更强。遗漏风险、融资限制和交易成本会影响能否真正构造套利。</p>
   </details>
+  <h2>为什么每个资产的“补偿”是同一个数？</h2>
+  <p>上面那笔交易只涉及 C 一个资产。现在把它对<strong>每一个</strong>资产各做一遍——这是唯一的新动作，也是“无套利”升级成定价公式的那一步。</p>
+  <p>关键点：<strong>复制任何资产用的都是同一套原料。</strong>本页的原料是 A、B 和无风险资产；用它们能拼出任意目标暴露向量，变的只是配比。</p>
+  <ol>
+    <li>取任意资产 i，它的暴露是 (β_i1, β_i2)</li>
+    <li>用同一套 A、B、无风险资产，拼出一个暴露一模一样的复制组合 R_i</li>
+    <li>i 与 R_i 暴露一样，就该一样值钱；若不一样，差额就是上面那笔套利</li>
+    <li>无套利要求差额为 0，所以对每个 i 都有：期望收益(i) = 期望收益(R_i)</li>
+  </ol>
+  <p>再看等号右边是什么：</p>
+  <div class="formula">期望收益(R_i) = w_A × 期望收益(A) + w_B × 期望收益(B) + w_f × 无风险收益</div>
+  <p>其中期望收益(A)、期望收益(B)、无风险收益是<strong>三个固定的数</strong>，不随 i 变；随 i 变的只有权重，而权重只由 i 的暴露决定。所以期望收益(i) 必然能写成：</p>
+  <div class="formula">期望收益(i) = 无风险收益 + β_i1 × λ_1 + β_i2 × λ_2</div>
+  <p><strong>λ 为什么不带 i？</strong>因为 λ_k 是<strong>因子模仿组合</strong>的期望超额收益——专门造出来让第 k 个暴露等于 1、其他暴露等于 0 的组合。它只跟因子有关，跟具体哪个资产无关。<strong>带 i 的只有配比，没有价格。</strong></p>
+  <p><strong>这就是无套利与多因子模型的接缝：</strong>没有无套利，A、B、C 可以各自拥有一套自己的 λ，那只是一个统计分解（②讲的东西）；有了无套利，所有资产被迫共用同一组 λ，它才变成定价模型。②里那句“每单位暴露补 3%”是直接给的假设，这一节就是把它变成结论。</p>
+
   <h2>从这个小实验，到真正的 APT</h2>
   <p>CAPM 在特定均衡假设下，用市场 β 定价。APT 则从<strong>收益的因子结构、特质风险可以充分分散，以及无套利</strong>出发，约束期望收益与因子暴露的关系：</p>
   <div class="formula">期望收益 ≈ 无风险收益 + 暴露₁ × 补偿₁ + 暴露₂ × 补偿₂ + …</div>
