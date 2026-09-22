@@ -1,0 +1,1312 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="通过三个组合的互动模拟，理解CAPM如何扩展到多因子模型，以及APT的无套利定价约束。">
+<title>从 CAPM 到 APT｜互动教学</title>
+<style>:root {
+  color-scheme: light dark;
+  background-color: var(
+    --background,
+    var(--color-background-primary, light-dark(rgb(255 255 255), rgb(24 24 24)))
+  ) !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(
+    --color-background-primary,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --card: color-mix(in oklab, var(--foreground) 5%, var(--background));
+  --card-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --popover: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255), rgb(45 45 45))
+  );
+  --popover-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --primary: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --primary-foreground: var(
+    --color-text-inverse,
+    light-dark(rgb(255 255 255), rgb(13 13 13))
+  );
+  --secondary: var(
+    --color-background-secondary,
+    light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%))
+  );
+  --secondary-foreground: var(
+    --color-text-primary,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: var(
+    --color-text-secondary,
+    light-dark(rgb(26 28 31 / 49.4%), rgb(255 255 255 / 49.8%))
+  );
+  --accent: var(
+    --color-background-info,
+    light-dark(rgb(229 242 255), rgb(13 39 63))
+  );
+  --accent-foreground: var(
+    --color-text-info,
+    light-dark(rgb(51 156 255), rgb(131 195 255))
+  );
+  --destructive: var(
+    --color-text-warning,
+    light-dark(rgb(226 85 7), rgb(255 133 73))
+  );
+  --border: var(
+    --color-border-secondary,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+  --input: var(
+    --color-border-primary,
+    light-dark(
+      rgb(26 28 31 / 11.8%),
+      color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+    )
+  );
+  --ring: var(
+    --color-ring-primary,
+    light-dark(rgb(51 156 255), rgb(131 195 255 / 76%))
+  );
+  --font-size-base: var(--font-text-md-size, 14px);
+  --blue: light-dark(rgb(51 156 255), rgb(51 156 255));
+  --orange: light-dark(rgb(226 85 7), rgb(251 106 34));
+  --green: light-dark(rgb(0 162 64), rgb(64 201 119));
+  --red: light-dark(rgb(224 46 42), rgb(255 103 100));
+  --purple: light-dark(rgb(146 79 247), rgb(173 123 249));
+  --yellow: light-dark(rgb(255 195 0), rgb(255 210 64));
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(rgb(243 136 59), rgb(245 154 86));
+  --viz-series-3: light-dark(rgb(93 201 119), rgb(116 213 139));
+  --viz-series-4: light-dark(rgb(235 119 177), rgb(240 143 192));
+  --viz-series-5: light-dark(rgb(155 121 236), rgb(170 145 239));
+  --viz-series-6: light-dark(rgb(58 185 177), rgb(90 203 194));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, "Segoe UI", sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono",
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --icon-size: 16px;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --corner-shape: round;
+  --radius: var(--border-radius-lg, 10px);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 17 17'%3E%3Cpath d='M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z'/%3E%3C/svg%3E");
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html > body {
+  /* Preserve MCP aliases for older inline renderers without creating :root cycles. */
+  --color-background-primary: var(
+    --background,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --color-text-primary: var(
+    --foreground,
+    light-dark(rgb(26 28 31), rgb(255 255 255))
+  );
+  --color-border-secondary: var(
+    --border,
+    light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%))
+  );
+
+  margin: 0;
+  padding: var(--visualize-paint-gutter, 0px);
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans) !important;
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+.cursor-interaction {
+  cursor: var(--cursor-interaction, pointer);
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: var(--cursor-interaction, pointer);
+  font-weight: var(--font-weight-medium, 500);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  corner-shape: var(--corner-shape);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+}
+
+.table :is(th, td) {
+  padding-block: 10px;
+  padding-inline: 0 24px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table-responsive > .table :is(th, td) {
+  overflow-wrap: break-word;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table :is(caption, thead th) {
+  font-weight: 600;
+}
+
+.table thead th {
+  padding-block: 8px;
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.table.table-sm :is(th, td) {
+  padding-block: 6px;
+}
+
+.table.table-sm :is(th, td):not(:last-child) {
+  padding-inline-end: 16px;
+}
+
+.table :is(.text-end, [align="right"]) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(.text-center, [align="center"]) {
+  text-align: center;
+}
+
+.table .text-nowrap {
+  white-space: nowrap;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  corner-shape: var(--corner-shape);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget > :not(.card, .progress) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+hr {
+  width: 100%;
+  height: 1px;
+  margin-block: 6px;
+  border: 0;
+  background: var(--border);
+}
+
+.nav {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+.progress {
+  display: flex;
+  height: 8px;
+  margin-block: calc((var(--line-height-normal, 1.5em) - 8px) / 2);
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+}
+
+.progress-bar:only-child {
+  border-radius: var(--radius-full);
+}
+
+.progress-bar {
+  height: 100%;
+  flex-shrink: 0;
+  border: 0;
+  background: var(--viz-series-1);
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls > .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls > .form-label > :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.nav-link,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn,
+.nav-link {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: var(--cursor-interaction, pointer);
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover,
+.nav-link:not(:disabled):not([aria-disabled="true"]):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--primary-foreground);
+  background: var(--foreground);
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(in srgb, var(--primary-foreground) 50%, transparent);
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.nav-pills .nav-link {
+  min-width: 0;
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.nav-justified .nav-link {
+  flex: 1 1 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.nav-pills .nav-link.active {
+  color: var(--foreground);
+  background: var(--muted);
+}
+
+.btn:disabled,
+.nav-link:disabled,
+.nav-link[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type="file"] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type="file"]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type="file"]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type="color"] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type="color"]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+  corner-shape: var(--corner-shape);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: var(--corner-shape);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  corner-shape: var(--corner-shape);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type="checkbox"]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: "";
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type="radio"] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type="radio"]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: "";
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+  [aria-pressed="true"],
+  [aria-selected="true"],
+  .is-selected
+) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed="true"], [aria-selected="true"], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible,
+.nav-link:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@media (pointer: coarse) {
+  .btn,
+  .nav-link,
+  .form-control,
+  .form-select {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Keep small-screen WebKit from zooming when a text field receives focus. */
+  .form-control,
+  .form-select {
+    font-size: max(16px, var(--font-size-normal));
+  }
+
+  .form-control[type="file"]::file-selector-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .form-control-color[type="color"] {
+    width: 44px;
+    height: 44px;
+  }
+
+  .form-control:is(
+    [type="date"],
+    [type="datetime-local"],
+    [type="month"],
+    [type="time"],
+    [type="week"]
+  ) {
+    min-width: 0;
+    max-width: 100%;
+    padding-block: 8px;
+  }
+
+  .form-check {
+    min-height: 44px;
+    padding-inline: 15px;
+  }
+
+  .form-check-input {
+    position: relative;
+  }
+
+  .form-check-input::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    content: "";
+    transform: translate(-50%, -50%);
+  }
+
+  .form-check-label {
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .form-range {
+    height: 44px;
+    touch-action: pan-y;
+  }
+
+  .form-range::-webkit-slider-runnable-track {
+    height: 44px;
+  }
+
+  .form-range::-moz-range-track {
+    height: 44px;
+  }
+
+  .form-range::-webkit-slider-thumb {
+    margin-top: 12px;
+  }
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget > svg {
+  width: 100%;
+}
+
+/* Model-authored chart rules can otherwise stretch icons after these styles load. */
+svg.lucide {
+  display: block;
+  width: var(--icon-size) !important;
+  height: var(--icon-size) !important;
+  flex: none;
+  margin: 0 !important;
+  stroke-width: 1.6;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+
+html>body{padding:0}
+
+html,body{margin:0;min-width:280px}
+body{padding:clamp(12px,4vw,40px);background:var(--background);color:var(--foreground);font-size:16px;line-height:1.8}
+main{max-width:860px;margin:0 auto}
+.page-intro{padding-bottom:24px}
+.eyebrow{color:var(--muted-foreground);letter-spacing:.08em}
+.page-intro h1{margin:8px 0}
+.lead{color:var(--muted-foreground)}
+.reading-route{display:flex;gap:12px 28px;flex-wrap:wrap;margin-top:24px}
+.lesson{margin:28px 0}
+.lesson p{max-width:74ch;margin:12px 0}
+.page-intro p{margin:12px 0}
+.lesson h2{margin-top:28px}
+.formula{padding:16px 18px;background:var(--muted);color:var(--foreground);border-radius:8px;overflow-wrap:anywhere}
+.note{color:var(--muted-foreground)}
+details{margin:18px 0}
+summary{cursor:pointer;font-weight:500}
+.ledger{padding-top:12px;border-top:1px solid var(--border)}
+.table caption{text-align:left;color:var(--muted-foreground);margin-bottom:10px}
+#cash-net{font-weight:500}
+#capm-apt-bridge .figure svg{font-size:12px}
+a{color:var(--foreground);text-underline-offset:3px}
+@media print{body{padding:0}details{break-inside:avoid}.viz-controls{display:none}}
+</style>
+</head>
+<body><main><div id="capm-apt-bridge">
+<style>
+  #capm-apt-bridge {color:var(--foreground);}
+  #capm-apt-bridge .gap {margin-top:16px;}
+  #capm-apt-bridge .figure {width:100%;}
+  #capm-apt-bridge .figure svg {display:block;width:100%;}
+  #capm-apt-bridge .figure text {fill:var(--foreground);}
+  #capm-apt-bridge [hidden] {display:none !important;}
+</style>
+
+<header class="page-intro">
+  <p class="eyebrow">资产定价 · 互动课堂</p>
+  <h1>从 CAPM 到 APT</h1>
+  <p class="lead">先找出遗漏的共同风险，再理解“无套利”怎样约束收益。</p>
+  <p>把投资组合想成几条船：<strong>市场像潮水，β 是每条船受潮水影响的程度。</strong>但船还会受风影响。即使受潮水影响一样，遇到同一阵风，也可能有的受益、有的受损。</p>
+  <p>这个比喻帮助我们理解“多种共同影响”。下面用明确的收益和现金流计算，解释它怎样成为定价关系。</p>
+  <div class="reading-route"><span>① 一把尺不够</span><span>② 加入第二把尺</span><span>③ 无套利约束</span></div>
+</header>
+
+<div class="viz-controls">
+  <label class="form-label">演示阶段
+    <select class="form-select" id="bridge-stage">
+      <option value="1">① CAPM：相同市场 β，解释不完收益差异</option>
+      <option value="2">② 多因子：揭示遗漏的共同风险</option>
+      <option value="3">③ APT：用无套利约束期望收益</option>
+    </select>
+  </label>
+  <label class="form-label" id="bridge-shock-field" hidden>第二因子意外冲击：<span id="bridge-shock-value"></span> 个百分点
+    <input class="form-range" id="bridge-shock" type="range" min="-10" max="10" step="1" value="0">
+  </label>
+  <label class="form-label" id="bridge-premium-field" hidden>第二因子风险补偿：<span id="bridge-premium-value"></span> 个百分点
+    <input class="form-range" id="bridge-premium" type="range" min="0" max="6" step="0.5" value="3">
+  </label>
+  <label class="form-label" id="bridge-gap-field" hidden>C 偏离定价关系：<span id="bridge-gap-value"></span> 个百分点
+    <input class="form-range" id="bridge-gap" type="range" min="0" max="4" step="0.5" value="2">
+  </label>
+</div>
+
+<section class="lesson" id="lesson-1">
+  <h2>① CAPM：为什么这三个组合都应该是 8%？</h2>
+  <p>假设无风险收益是 2%，承担一单位市场风险的补偿是 6%。A、B、C 的市场 β 都是 1，CAPM 就给它们相同的期望收益：</p>
+  <div class="formula">期望收益 = 2% + 1 × 6% = 8%</div>
+  <p>可是，我们设定的教学市场里，A 的期望收益是 11%，C 是 8%，B 是 5%。<strong>同一个市场 β，没能解释全部差异。</strong></p>
+  <p class="note">这里比较的是“期望收益”，不是某一天的涨跌。真实市场里两只股票短期收益不同，完全可能只是随机波动，不能据此推翻 CAPM。</p>
+</section>
+<section class="lesson" id="lesson-2" hidden>
+  <h2>② 多因子：原来还有一阵共同的“风”</h2>
+  <p>现在揭示这个虚构市场的第二个共同因子。A 对它的暴露为 +1，B 为 −1，C 为 0。我们设定每单位暴露对应 3 个百分点的期望收益补偿：</p>
+  <div class="formula">A：2% + 6% + 3% = 11%<br>C：2% + 6% + 0% = 8%<br>B：2% + 6% − 3% = 5%</div>
+  <p><strong>原来没解释的收益差异，被第二种暴露解释了。</strong>负暴露意味着反向承受这类冲击，可能有对冲价值；不是说某个组合“风险越少就越差”。</p>
+  <p>拖动上方滑块：第二因子意外增加 1 个百分点，A 的当期收益增加 1 个百分点，B 减少 1 个百分点，C 不变。</p>
+  <p class="note"><strong>补偿与冲击不同：</strong>3 个百分点是期望收益中的风险补偿；滑块是本期偏离预期的意外变化。为突出机制，市场意外冲击固定为 0，第二因子冲击与市场冲击设为独立且均值为 0。本页没有拿真实数据估计参数，也没有证明“加入任何因子都有效”。</p>
+</section>
+<section class="lesson" id="lesson-3" hidden>
+  <h2>③ APT：相同风险，为什么不能凭空多一份回报？</h2>
+  <p>用 50 元买 A，再用 50 元买 B，就拼出一个 100 元的替代组合 D。A、B 的第二因子暴露一正一负，刚好抵消：</p>
+  <div class="formula">D 的市场暴露：½ × 1 + ½ × 1 = 1<br>D 的第二暴露：½ × (+1) + ½ × (−1) = 0</div>
+  <p>D 与 C 的共同风险暴露都是“市场 1、第二因子 0”。在本例<strong>没有其他随机风险</strong>的条件下，二者面对共同冲击时，收益变化完全一致。</p>
+  <p>如果同样投入 100 元，C 却在所有状态下都比 D 多付 2 元，便可以<strong>买 C，同时卖空 D</strong>。共同风险互相抵消，剩下的是确定的 2 元。</p>
+  <p class="note">这里“各投 100 元、C 多付 2 元”是收益形式的定价偏离演示，不是在假装已经模拟了价格调整。若固定未来现金流，实际买卖会推动相对价格变化、压缩套利空间。上面的偏离滑块只是展示差异收敛，不代表真实价格路径。</p>
+</section>
+
+<div class="text-small gap" id="bridge-fixed">无风险收益2% · 市场风险补偿6% · 三个组合市场β均为1</div>
+<div class="figure gap" id="bridge-chart"></div>
+<div class="text-small" id="bridge-chart-note"></div>
+<div class="table-responsive gap">
+  <table class="table table-sm">
+    <caption class="sr-only">三个组合的因子暴露与模型未解释部分</caption>
+    <thead><tr><th scope="col">组合</th><th scope="col">市场 β</th><th scope="col" id="bridge-exposure-title">第二暴露</th><th scope="col" id="bridge-residual-title">未解释差异</th></tr></thead>
+    <tbody id="bridge-table"></tbody>
+  </table>
+</div>
+<div class="text-small gap" id="bridge-conclusion" aria-live="polite"></div>
+
+<section class="lesson ledger" id="bridge-ledger" hidden>
+  <h2>把“无套利”变成一张收付款账本</h2>
+  <p><strong>卖空</strong>可以理解为：先借来资产卖掉、收到现金，到期再归还资产并承担期间应付的现金流。本例用到期价值统一结算这些义务，暂不计融券费、保证金和交易限制。</p>
+  <p>今天卖空 50 元 A 和 50 元 B，收到 100 元；恰好用来买入 100 元 C。<strong>今天净投入为 0。</strong>再看未来发生什么：</p>
+  <div class="viz-controls">
+    <label class="form-label">市场意外冲击：<span id="cash-market-value"></span> 个百分点
+      <input class="form-range" type="range" id="cash-market" min="-20" max="20" step="1" value="-10">
+    </label>
+    <label class="form-label">第二因子意外冲击：<span id="cash-factor-value"></span> 个百分点
+      <input class="form-range" type="range" id="cash-factor" min="-10" max="10" step="1" value="-6">
+    </label>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-sm">
+      <caption>现金流账本：正数为收到，负数为支付（元）</caption>
+      <thead><tr><th scope="col">交易</th><th scope="col">今天</th><th scope="col">到期</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">买入 C</th><td>−100.00</td><td id="cash-c"></td></tr>
+        <tr><th scope="row">卖空 A</th><td>+50.00</td><td id="cash-a"></td></tr>
+        <tr><th scope="row">卖空 B</th><td>+50.00</td><td id="cash-b"></td></tr>
+        <tr><th scope="row">净现金流</th><td>0.00</td><td id="cash-net"></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p id="cash-status" aria-live="polite"></p>
+  <details open>
+    <summary>为什么换任何共同冲击都一样？</summary>
+    <p>用 u 表示市场意外冲击，v 表示第二因子意外冲击，λ 表示第二因子风险补偿，δ 表示 C 多出的收益；它们都以“百分点”为单位。暂时不加入公司意外：</p>
+    <div class="formula">100 元 C 到期：108 + δ + u<br>50 元 A 到期：½ × (108 + λ + u + v)<br>50 元 B 到期：½ × (108 − λ + u − v)<br><strong>买 C − ½A − ½B 的净现金流 = δ 元</strong></div>
+    <p>u、v、λ 都抵消了。因此结论不是“试了几次没亏”，而是这组设定下<strong>所有允许状态的共同冲击都不影响净结果</strong>。当 δ &gt; 0，净结果确定为正；当 δ = 0，套利差消失。</p>
+  </details>
+  <h3>再加一个公司意外，结论就变了</h3>
+  <label class="form-check">
+    <input class="form-check-input" type="checkbox" id="cash-risk">
+    <span class="form-check-label">让 C 额外存在无法对冲的公司意外：−4 或 +4 个百分点，各 50% 概率</span>
+  </label>
+  <div id="cash-risk-control" hidden class="viz-controls gap">
+    <label class="form-label">当前展示的公司意外
+      <select class="form-select" id="cash-residual"><option value="-4">坏消息：−4个百分点</option><option value="4">好消息：+4个百分点</option></select>
+    </label>
+  </div>
+  <p id="cash-risk-result" class="note"></p>
+  <p class="note">公司意外的均值为 0，因此不改变上方期望收益图；它只改变下方账本的当期结果与是否可能亏损。</p>
+  <p>因此，<strong>相同因子暴露并不自动意味着无风险套利</strong>。如果仍有剩余风险，单凭“C 平均回报更高”不能断定可以稳赚。</p>
+</section>
+<section class="lesson">
+  <h2>“无套利”到底要求什么？</h2>
+  <p>一个常用的套利定义是：<strong>初始净投入为 0，不再追加外部资金；到期在所有可能状态下都不亏，且至少有正概率赚钱。</strong>本页没有公司意外且 δ &gt; 0 的例子更强：每个状态都赚。</p>
+  <p>无套利就是说：市场中不应持续存在这样的机会。它不保证人人赚钱，也不保证没有高收益策略；它约束的是<strong>不承担剩余风险就能获得的免费收益差</strong>。</p>
+  <details>
+    <summary>与“一价定律”有什么关系？</summary>
+    <p>若两组资产在每个状态下的未来现金流完全相同，却有不同价格，就可以买便宜的、卖贵的，把今天收到的差额存入无风险资产；到期两边义务抵消。这是一价定律背后的套利逻辑。</p>
+    <p>注意：未来现金流相同，比市场 β 相同、总波动相同，或几个估计出来的因子暴露接近，都更强。遗漏风险、融资限制和交易成本会影响能否真正构造套利。</p>
+  </details>
+  <h2>从这个小实验，到真正的 APT</h2>
+  <p>CAPM 在特定均衡假设下，用市场 β 定价。APT 则从<strong>收益的因子结构、特质风险可以充分分散，以及无套利</strong>出发，约束期望收益与因子暴露的关系：</p>
+  <div class="formula">期望收益 ≈ 无风险收益 + 暴露₁ × 补偿₁ + 暴露₂ × 补偿₂ + …</div>
+  <p>本例为了把抵消过程讲清楚，先把特质风险设为 0，所以可以精确展示套利。一般 APT 在大规模资产市场及相应技术条件下利用分散化，得到近似定价约束；<strong>不是说每只个股都能被精确复制，也不是说回归里出现正 α 就存在无风险套利。</strong>使用无风险收益作截距，还假设存在相应的可交易无风险资产。</p>
+  <p><strong>一条清晰的学习路径：</strong>CAPM 提供一把市场风险尺 → 多因子模型增加共同风险维度 → APT 解释为什么相同暴露的定价应受到一致性约束。它们是不同的理论与建模层次，不能仅凭“加了几个回归变量”就说推导出了 APT。</p>
+  <details>
+    <summary>本例的设定与参考来源</summary>
+    <p>全部数字为虚构教学数据；单期简单收益；期望冲击为 0；市场与第二因子冲击独立；基准情形无特质风险；允许按所需数量卖空；忽略交易、借券与融资成本。公司意外开关只改变 C 的剩余风险，不改变其期望收益。</p>
+    <p>APT 不直接指定因子名单，也不保证每个因子的风险补偿都为正。这里的 2%、6%、3% 是为了心算设置的参数。</p>
+    <p>理论参考：Huberman 与 Wang，<a href="https://www.newyorkfed.org/medialibrary/media/research/staff_reports/sr216.pdf" target="_blank" rel="noopener noreferrer">《Arbitrage Pricing Theory》，纽约联储 Staff Report 216</a>。本页可离线运行，打开参考文献才需要网络。</p>
+  </details>
+</section>
+
+<div class="text-small text-muted gap">教学演示 · 基准无特质风险，公司意外可单独开启 · 无成本、允许卖空</div>
+</div>
+<script>
+(()=>{
+  const root=document.getElementById('capm-apt-bridge');
+  const q=id=>root.querySelector('#bridge-'+id);
+  const NS='http://www.w3.org/2000/svg';
+  let state={stage:1,shock:0,premium:3,gap:2};
+  const exposures=[1,0,-1],names=['A','C','B'];
+  function fmt(v){return (v>0?'+':'')+v.toFixed(1);}
+  function load(saved){
+    const s=saved?.privateContent;if(!s)return;
+    if([1,2,3].includes(s.stage))state.stage=s.stage;
+    for(const [key,min,max] of [['shock',-10,10],['premium',0,6],['gap',0,4]]){
+      if(Number.isFinite(s[key])&&s[key]>=min&&s[key]<=max)state[key]=s[key];
+    }
+  }
+  function save() {}
+  function data(){
+    const st=state.stage,p=st===3?state.premium:3,u=st===2?state.shock:0;
+    return names.map((name,i)=>{
+      const justified=8+exposures[i]*p;
+      const observed=justified+exposures[i]*u+(st===3&&i===1?state.gap:0);
+      const model=st===1?8:justified+exposures[i]*u;
+      return {name,b2:exposures[i],model,observed,residual:observed-model};
+    });
+  }
+  function el(tag,attrs={},text){
+    const n=document.createElementNS(NS,tag);
+    Object.entries(attrs).forEach(([k,v])=>n.setAttribute(k,v));
+    if(text!==undefined)n.textContent=text;return n;
+  }
+  function draw(){
+    const rows=data(),width=Math.max(260,q('chart').clientWidth),height=300;
+    const left=66,right=60,top=20,bottom=54,plotW=width-left-right;
+    const values=rows.flatMap(d=>[d.model,d.observed,0]);
+    let low=Math.min(...values),high=Math.max(...values),pad=Math.max(1,(high-low)*.12);
+    low-=pad;high+=pad;
+    const x=v=>left+(v-low)/(high-low)*plotW;
+    const svg=el('svg',{viewBox:'0 0 '+width+' '+height,role:'img','aria-label':rows.map(d=>d.name+'模型值'+d.model+'%，设定收益'+d.observed+'%').join('；')});
+    svg.appendChild(el('title',{},'三个组合的模型值与教学市场收益'));
+    svg.appendChild(el('rect',{'data-chart-frame':'',x:left,y:top,width:plotW,height:height-top-bottom,fill:'none',stroke:'var(--border)'}));
+    svg.appendChild(el('line',{x1:x(0),x2:x(0),y1:top,y2:height-bottom,stroke:'var(--border)'}));
+    rows.forEach((d,i)=>{
+      const y=top+18+i*73;
+      svg.appendChild(el('text',{x:8,y:y+16},'组合'+d.name));
+      [[d.model,'模型',y,'var(--viz-series-1)'],[d.observed,'设定',y+27,'var(--viz-series-2)']].forEach(([v,label,yy,color])=>{
+        const bar=el('rect',{x:Math.min(x(v),x(0)),y:yy,width:Math.max(.5,Math.abs(x(v)-x(0))),height:20,fill:color});
+        bar.setAttribute('data-tooltip',d.name+' '+label+'：'+fmt(v)+'%');svg.appendChild(bar);
+        svg.appendChild(el('text',{x:width-right+7,y:yy+15},fmt(v)+'%'));
+      });
+    });
+    [low+(high-low)*.12,(low+high)/2,high-(high-low)*.12].forEach(t=>{
+      svg.appendChild(el('text',{x:x(t),y:height-bottom+20,'text-anchor':'middle'},t.toFixed(0)));
+    });
+    svg.appendChild(el('text',{x:left+plotW/2,y:height-6,'text-anchor':'middle',class:'axis-title','data-axis':'x'},state.stage===2?'单期收益率（%）':'期望收益率（%）'));
+    svg.appendChild(el('text',{x:8,y:12,class:'axis-title','data-axis':'y'},'组合'));
+    q('chart').replaceChildren(svg);
+  }
+
+  function renderLedger() {
+    const m=+document.getElementById('cash-market').value;
+    const f=+document.getElementById('cash-factor').value;
+    const risk=document.getElementById('cash-risk').checked;
+    const e=risk?+document.getElementById('cash-residual').value:0;
+    const cash=(v)=>(v>0?'+':'')+v.toFixed(2);
+    const set=(id,v)=>document.getElementById(id).textContent=v;
+    set('cash-market-value',fmt(m));set('cash-factor-value',fmt(f));
+    set('cash-c',cash(108+state.gap+m+e));
+    set('cash-a',cash(-.5*(108+state.premium+m+f)));
+    set('cash-b',cash(-.5*(108-state.premium+m-f)));
+    set('cash-net',cash(state.gap+e));
+    document.getElementById('cash-risk-control').hidden=!risk;
+    set('cash-status',risk?'本状态净现金流为 '+cash(state.gap+e)+' 元；这只是所选状态，不能单凭它判断套利。':
+      state.gap>0?'共同冲击怎样改变，两边都抵消；到期确定净收入 '+cash(state.gap)+' 元。':'定价偏离已归零，两个方向的现金流完全抵消。');
+    set('cash-risk-result',risk?
+      '加入公司意外后，坏状态净结果 '+cash(state.gap-4)+' 元，好状态 '+cash(state.gap+4)+' 元，期望净结果 '+cash(state.gap)+' 元。'+
+      (state.gap<4?'坏状态可能亏损，因此不满足无风险套利条件。':'此刻坏状态恰好不亏，好状态盈利；在这些设定下仍构成套利。'):
+      '当前未加入公司意外。试着勾选：默认偏离2个百分点时，会出现亏2元与赚6元两种结果，平均赚2元，却不能保证不亏。');
+  }
+  function render(){
+
+    const st=state.stage;
+    [1,2,3].forEach(n=>document.getElementById('lesson-'+n).hidden=n!==st);
+    q('ledger').hidden=st!==3;
+    renderLedger();
+    q('stage').value=st;q('shock').value=state.shock;q('premium').value=state.premium;q('gap').value=state.gap;
+    q('shock-field').hidden=st!==2;q('premium-field').hidden=st!==3;q('gap-field').hidden=st!==3;
+    q('shock-value').textContent=fmt(state.shock);q('premium-value').textContent=state.premium.toFixed(1);q('gap-value').textContent=state.gap.toFixed(1);
+    q('exposure-title').textContent=st===1?'遗漏的暴露':'第二因子暴露';
+    q('residual-title').textContent=st===2?'分解残差':'定价差异';
+    q('table').replaceChildren();
+    data().forEach(d=>{
+      const tr=document.createElement('tr');
+      [d.name,'1',st===1?'未纳入':fmt(d.b2),fmt(d.residual)+'个百分点'].forEach((v,i)=>{
+        const td=document.createElement(i===0?'th':'td');td.textContent=v;if(i===0)td.scope='row';else td.className='tabular-nums';tr.appendChild(td);
+      });q('table').appendChild(tr);
+    });
+    q('chart-note').textContent=st===1?'每组上条：CAPM定价值；下条：教学市场期望收益。':st===2?'每组上条：双因子分解；下条：教学市场单期收益。市场意外冲击固定为0。':'每组上条：APT定价值；下条：含设定偏离的期望收益。';
+    q('conclusion').textContent=st===1?'A与B的市场β相同，期望收益却相差6个百分点。':st===2?'同一次第二因子冲击：A同向、B反向、C不受影响。':state.gap>0?'在无特质风险的基准设定下，买100元C、卖空各50元A/B，各状态净赚'+state.gap.toFixed(1)+'元。':'C与½A＋½B的期望收益一致，匹配暴露的套利差已消失。';
+    draw();
+  }
+  q('stage').addEventListener('change',()=>{state.stage=+q('stage').value;render();save();});
+  for(const key of ['shock','premium','gap']){
+    q(key).addEventListener('input',()=>{state[key]=+q(key).value;render();});
+    q(key).addEventListener('change',save);
+  }
+  render();
+
+  ['cash-market','cash-factor','cash-risk','cash-residual'].forEach(id=>{
+    document.getElementById(id).addEventListener('input',renderLedger);
+    document.getElementById(id).addEventListener('change',renderLedger);
+  });
+  new ResizeObserver(draw).observe(q('chart'));
+})();
+</script>
+</main>
+<noscript>本页的互动模拟需要启用 JavaScript；理论讲解文字仍可阅读。</noscript>
+</body></html>
