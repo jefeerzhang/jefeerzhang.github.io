@@ -91,6 +91,12 @@ td .mono,th .mono{font-family:var(--mono);font-size:13px}
 .sqrt{white-space:nowrap}
 .sqrt .rad{text-decoration:overline;text-decoration-thickness:1px}
 
+/* ===== 视频 ===== */
+.video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:18px}
+.video-card{background:#fff;border:1px solid var(--grey-2);border-radius:10px;overflow:hidden}
+.video-title{padding:10px 14px;font-size:14px;font-weight:600;color:var(--ink);border-bottom:1px solid var(--grey-2);background:var(--grey-1)}
+.video-card video{width:100%;display:block;background:#000}
+
 /* ===== footer ===== */
 footer{margin-top:48px;padding:28px 0 48px;border-top:2px solid var(--accent);color:var(--grey-3);font-size:13.5px}
 footer .mono{font-size:12.5px}
@@ -134,6 +140,7 @@ footer strong{color:var(--ink)}
     <a href="#exposure">观点与压力</a>
     <a href="#summary">小结与任务</a>
     <a href="#calibration">口径声明</a>
+    <a href="#videos">视频</a>
     <a href="capm-to-apt.html" target="_blank" rel="noopener">互动演示</a>
     <a href="03-arbitrage-pricing-theory.pptx" target="_blank" rel="noopener">课件</a>
   </div>
@@ -580,6 +587,28 @@ universe（复现本课结果的固定教学口径）＝ 20只股票池 + 抓取
     <li>基金口径：<a href="https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins/fund-distributions-investor-bulletin" target="_blank" rel="noopener">美国 SEC 投资者教育材料关于分红使单位净值下降、总回报需计入分红的说明</a>。这只是净值计算的通用定义，本课 005827 的分红史仍须核对基金公告。</li>
     <li><strong>本地数字证据</strong>：第七节所列脚本、<code>results3.txt</code> 与 CSV 可说明"表格如何由缓存计算出来"，不能替代独立行情源的逐项验证。若新取数出现差异，先核对成分时点、复权/分红、停牌、月末收盘与交易日边界，不应强行调参凑本讲稿数字。</li>
   </ul>
+</section>
+
+<!-- ============ 视频 ============ -->
+<section id="videos">
+  <h2><span class="no">视频</span> 视频</h2>
+  <p>课前预习视频，快速建立本课时基本概念。</p>
+  <div class="video-grid">
+    <div class="video-card">
+      <div class="video-title">APT 套利定价：教学讲解</div>
+      <video controls preload="metadata">
+        <source src="videos/apt_arbitrage_pricing__teaching.mp4" type="video/mp4">
+        您的浏览器不支持视频播放。
+      </video>
+    </div>
+    <div class="video-card">
+      <div class="video-title">三因子模型：什么是因子</div>
+      <video controls preload="metadata">
+        <source src="videos/three_factor_what_is_factor__teaching.mp4" type="video/mp4">
+        您的浏览器不支持视频播放。
+      </video>
+    </div>
+  </div>
 </section>
 
 </div>
