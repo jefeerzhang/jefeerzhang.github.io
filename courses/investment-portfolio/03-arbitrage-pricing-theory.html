@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23002FA7'/%3E%3Ctext x='32' y='46' font-size='36' text-anchor='middle' fill='white' font-family='Georgia,serif'%3E%CE%BB%3C/text%3E%3C/svg%3E">
+<title>第3课时 · 套利定价理论的应用 — 学生自读讲义</title>
+<style>
+/* ===== 瑞士国际主义 · 克莱因蓝 IKB（与第1课时讲义同款） ===== */
+:root{
+  --paper:#fafaf8;
+  --paper-rgb:250,250,248;
+  --ink:#0a0a0a;
+  --ink-rgb:10,10,10;
+  --grey-1:#f0f0ee;
+  --grey-2:#d4d4d2;
+  --grey-3:#737373;
+  --accent:#002FA7;
+  --accent-rgb:0,47,167;
+  --accent-on:#ffffff;
+  --mono:"JetBrains Mono","Cascadia Code",Consolas,"Courier New",monospace;
+  --sans:"Inter","Helvetica Neue","Noto Sans SC","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+.container{max-width:880px;margin:0 auto;padding:0 24px}
+
+/* ===== header（纯色，无渐变） ===== */
+header{background:var(--ink);color:#fff;padding:56px 0 40px;border-bottom:6px solid var(--accent)}
+header .tag{font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;font-weight:600}
+header .tag::before{content:"// "}
+header h1{font-size:38px;line-height:1.22;font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+header .sub{font-size:16.5px;color:var(--grey-2);margin-bottom:22px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:12.5px;color:#fff;border:1px solid var(--grey-3);padding:4px 12px;background:rgba(255,255,255,.03);font-weight:500}
+
+/* ===== nav（直角 hairline） ===== */
+nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--grey-2);margin-bottom:28px}
+nav .links{display:flex;gap:0;flex-wrap:wrap;padding:6px 0}
+nav a{font-size:14px;color:var(--grey-3);text-decoration:none;padding:8px 14px;border-left:1px solid var(--grey-2);transition:color .15s;font-weight:500}
+nav a:first-child{border-left:none}
+nav a:hover{color:var(--accent)}
+nav a.on{color:var(--accent);font-weight:600}
+nav a.back{color:var(--accent);font-weight:500;margin-right:8px}
+
+/* ===== sections ===== */
+section{margin-bottom:44px}
+h2{font-size:23px;font-weight:700;color:var(--ink);margin:36px 0 16px;padding:0 0 10px 14px;border-left:6px solid var(--accent);display:flex;align-items:baseline;gap:12px;letter-spacing:-.01em}
+h2 .no{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.12em;font-weight:600}
+h3{font-size:17.5px;font-weight:700;margin:24px 0 10px;color:var(--ink)}
+p{margin:8px 0}
+ul,ol{margin:8px 0 8px 24px}
+li{margin:5px 0}
+code{font-family:var(--mono);font-size:.86em;background:var(--grey-1);padding:1px 6px;color:var(--ink);font-weight:500}
+strong{font-weight:700}
+a{color:var(--accent)}
+a:hover{color:#0047d0}
+
+/* ===== 卡片（直角纯色） ===== */
+.panel{background:var(--grey-1);border:1px solid var(--grey-2);padding:20px 22px;margin:14px 0}
+.takeaway{border-left:4px solid var(--accent);background:var(--grey-1);padding:12px 18px;font-weight:600;color:var(--ink);margin:14px 0}
+.warnbox{border-left:4px solid var(--ink);background:var(--grey-1);padding:12px 18px;margin:14px 0;font-size:14.5px}
+.note{font-size:14px;color:var(--grey-3);margin:6px 0}
+.case{border:1px solid var(--grey-2);margin:16px 0;background:var(--paper)}
+.case .case-head{background:var(--grey-1);padding:10px 20px;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--grey-2);font-size:15.5px}
+.case .case-body{padding:14px 20px 18px}
+.prompt{background:var(--ink);color:#e8e8e8;padding:14px 18px;font-family:var(--mono);font-size:13.5px;line-height:1.65;margin:10px 0;white-space:pre-wrap;font-weight:400}
+.prompt .plabel{display:block;color:var(--accent);font-size:12px;letter-spacing:.12em;margin-bottom:6px;font-weight:600}
+.verdict{font-family:var(--mono);font-size:13.5px;background:var(--grey-1);padding:12px 16px;margin:10px 0;color:var(--ink)}
+.verdict b{color:var(--accent);font-weight:600}
+
+/* ===== 公式块（本课时推导主线） ===== */
+.formula{background:var(--paper);border:1px solid var(--grey-2);border-left:4px solid var(--ink);padding:14px 18px;margin:10px 0;font-family:var(--mono);font-size:14.5px;line-height:1.8;overflow-x:auto}
+.formula .eq{color:var(--grey-3);font-size:12.5px;white-space:nowrap}
+.formula .cap{color:var(--grey-3);font-size:13px;margin-top:4px}
+
+/* ===== 统一图片槽位（瑞士风硬规则：同组图同槽位同高度） ===== */
+.figure{height:320px;display:flex;align-items:center;justify-content:center;background:var(--grey-1);border:1px solid var(--grey-2);margin:12px 0;overflow:hidden}
+.figure img{max-height:100%;max-width:100%;object-fit:contain}
+.figcap{font-family:var(--mono);font-size:12px;color:var(--grey-3);margin:-6px 0 12px;font-weight:500}
+
+/* ===== 表格（hairline；宽表横向滚动） ===== */
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px}
+th,td{border:1px solid var(--grey-2);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--grey-1);color:var(--ink);font-weight:600;font-size:14px}
+td .mono,th .mono{font-family:var(--mono);font-size:13px}
+.tablewrap{overflow-x:auto;margin:4px 0}
+.tablewrap table{margin:8px 0}
+/* 根号渲染：√ 字符 + 上划线覆盖被开方数 */
+.sqrt{white-space:nowrap}
+.sqrt .rad{text-decoration:overline;text-decoration-thickness:1px}
+
+/* ===== footer ===== */
+footer{margin-top:48px;padding:28px 0 48px;border-top:2px solid var(--accent);color:var(--grey-3);font-size:13.5px}
+footer .mono{font-size:12.5px}
+footer strong{color:var(--ink)}
+@media print{
+  nav{display:none}
+  body{background:#fff}
+  .prompt{background:#f0f0f0;color:#222}
+  .figure{height:300px}
+}
+@media (max-width:640px){
+  nav a{padding-top:12px;padding-bottom:12px;font-size:13.5px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="tag">第7章 · 课时 3 / 3</div>
+    <h1>套利定价理论的应用</h1>
+    <div class="sub">案例驱动的多因子教学：理论推导 → 三个风格案例 → 四因子构建 → 归因与压力测试</div>
+    <div class="chips">
+      <span class="chip">45 min</span>
+      <span class="chip">本科大三</span>
+      <span class="chip">案例块</span>
+      <span class="chip">Agent 现场验证</span>
+      <span class="chip">小组自带电脑</span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="container links">
+    <a href="index.html" class="back">← 课程主页</a>
+    <a href="#goals">学习目标</a>
+    <a href="#theory">理论推导</a>
+    <a href="#cases">案例块</a>
+    <a href="#factors">因子构建</a>
+    <a href="#attribution">归因</a>
+    <a href="#exposure">观点与压力</a>
+    <a href="#summary">小结与任务</a>
+    <a href="#calibration">口径声明</a>
+    <a href="capm-to-apt.html" target="_blank" rel="noopener">互动演示</a>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- ============ 学习目标 ============ -->
+<section id="goals">
+  <h2><span class="no">目标</span> 本课时学习目标</h2>
+  <div class="panel">
+    <p>本课时结束后应能：</p>
+    <ol>
+      <li>能区分 CAPM 的单一市场 β、APT 的多因子定价关系，以及用于归因的经验四因子回归；</li>
+      <li>能读懂因子暴露表与收益分解，回答"这只股票/这只基金的收益从何而来"；</li>
+      <li>能理解因子倾斜的两面性——定向配置风险的工具，同时也是新的风险来源（因子会拥挤、会崩溃、会反转）；</li>
+      <li>能独立驱动 Agent 完成因子构建、归因回归、定向选股与压力测试，并对每一个数字审查口径。</li>
+    </ol>
+    <div class="takeaway">本课推进顺序：理论（第一节）→ 风格案例（第二节）→ 构建四条代理因子（第三节）→ 个股与基金归因（第四节）→ 观点、暴露与情景演示（第五节）。每个环节都以"运行、核对口径、说明证据边界"收尾。</div>
+  </div>
+</section>
+
+<!-- ============ 一、理论：从 CAPM 到 APT ============ -->
+<section id="theory">
+  <h2><span class="no">一</span> 理论：从 CAPM 到 APT</h2>
+  <div class="warnbox">教材第三节的概念与推导；后面的四因子回归是教学应用，不能仅凭回归拟合就证明 APT 的定价关系成立。</div>
+
+  <h3>1.1 为什么一个 β 不够</h3>
+  <p>CAPM 用资产对市场组合的 β 描述其期望超额收益。β 衡量与市场共同波动的程度，却不直接指出收益差异可能关联的其他特征。实证研究记录过以下经验现象：</p>
+  <ul>
+    <li>某些样本和时期出现小市值股票相对大市值股票的超额收益（<strong>规模效应</strong>）；</li>
+    <li>某些样本和时期出现高账面市值比股票相对低账面市值比股票的超额收益（<strong>价值效应</strong>）；</li>
+    <li>某些样本和时期出现过去赢家在随后数月继续相对领先（<strong>动量效应</strong>）。</li>
+  </ul>
+  <p class="note">这些是相对于特定基准的经验规律，可能涉及风险、投资者行为或样本选择；不能仅凭其存在认定因果性的风险补偿。Ross（1976）的<strong>套利定价理论（APT）</strong>在因子结构与分散等条件下给出近似线性定价关系；本课使用的规模、价值、动量是后来的经验因子示例，不能说 Ross 已指定这些因子。<a href="https://www.newyorkfed.org/research/staff_reports/sr216.html" target="_blank" rel="noopener">纽约联储 APT 综述</a></p>
+
+  <h3>1.2 从收益结构到定价公式（推导主线）</h3>
+  <p><strong>第一步：收益的因子结构。</strong> 假设任何资产的收益由少数共同因子驱动：</p>
+  <div class="formula">r<sub>i</sub> = E(r<sub>i</sub>) + b<sub>i1</sub>·F<sub>1</sub> + b<sub>i2</sub>·F<sub>2</sub> + … + b<sub>iK</sub>·F<sub>K</sub> + ε<sub>i</sub><span class="eq">&nbsp;&nbsp;……(1)</span>
+  <div class="cap">F<sub>k</sub>：因子意外（E(F<sub>k</sub>)=0）；b<sub>ik</sub>：资产的因子暴露（敏感度）；ε<sub>i</sub>：特质波动，与所有因子不相关，且组合中可分散掉。</div></div>
+  <p><strong>第二步：无套利论证。</strong> 如果资产足够多、特质风险在分散组合中趋小，具有相同因子暴露的充分分散组合不应长期存在不同的期望收益；否则可构造接近无因子暴露的多空组合。由此得到<strong>近似</strong>线性定价关系。有限样本、无法完全对冲的特质风险和交易摩擦下，这不是现实中零风险、零成本的套利保证：<a href="https://www.newyorkfed.org/medialibrary/media/research/staff_reports/sr216.pdf" target="_blank" rel="noopener">纽约联储 APT 综述（PDF）</a></p>
+  <div class="formula">E(r<sub>i</sub>) − r<sub>f</sub> = b<sub>i1</sub>·λ<sub>1</sub> + b<sub>i2</sub>·λ<sub>2</sub> + … + b<sub>iK</sub>·λ<sub>K</sub><span class="eq">&nbsp;&nbsp;……(2)</span>
+  <div class="cap">λ<sub>k</sub>：因子 k 的风险溢价（承担一单位因子暴露的补偿）。</div></div>
+  <p><strong>第三步：与 CAPM 的关系。</strong> 若在形式上令 K=1、因子取市场组合，且相应溢价等于市场超额期望收益，(2) 与 CAPM 的证券市场线（SML）同形：</p>
+  <div class="formula">E(r<sub>i</sub>) − r<sub>f</sub> = β<sub>i</sub> × [E(r<sub>m</sub>) − r<sub>f</sub>]，其中 λ<sub>M</sub> = E(r<sub>m</sub>) − r<sub>f</sub></div>
+  <p>这是<strong>定价公式在特定设定下同形</strong>，不等于 CAPM 的均值—方差均衡假设从 APT 的无套利假设中完整推出。两者比较：</p>
+  <table>
+    <tr><th>&nbsp;</th><th>CAPM</th><th>APT</th></tr>
+    <tr><td><strong>风险描述</strong></td><td>一个数字 β</td><td>一张暴露向量表 (b<sub>1</sub>,…,b<sub>K</sub>)</td></tr>
+    <tr><td><strong>市场组合</strong></td><td>理论上需要市场组合；实证通常只能用指数代理，真正的总市场组合难以观测</td><td>不预先指定唯一市场组合；因子仍须有明确经济或统计定义，并检验定价能力</td></tr>
+    <tr><td><strong>理论性质</strong></td><td>精确的均衡定价</td><td>近似（近似套利），因子清单不唯一</td></tr>
+  </table>
+
+  <h3>1.3 实证里怎么做：两步法与收益分解</h3>
+  <p><strong>第一步（时间序列回归，估暴露）</strong>：对每只资产跑</p>
+  <div class="formula">r<sub>i</sub> − r<sub>f</sub> = α<sub>i</sub> + b<sub>i1</sub>·F<sub>1</sub> + b<sub>i2</sub>·F<sub>2</sub> + … + b<sub>iK</sub>·F<sub>K</sub> + ε<sub>i</sub><span class="eq">&nbsp;&nbsp;……(3)</span>
+  <div class="cap">输出：暴露 b（要 t 值）、截距 α（年化，要 t 值）、R²。</div></div>
+  <p><strong>第二步（样本内归因）</strong>：用同一组月份对含截距的普通最小二乘回归取均值，可得到下式的<strong>算术分解恒等式</strong>。它成立于样本内，不能单凭此式证明风险溢价、因果归因或模型定价能力；若要检验 APT 的截面定价，需要另做跨资产检验。只有把因子定义为可交易组合的收益，并在额外条件下，样本均值才可作为其期望溢价的估计。这里的代理因子未扣交易成本，也未检验可交易性。</p>
+  <div class="formula">月均超额收益×12 = 月截距 α×12 + Σ [ b<sub>k</sub> × (因子k月均收益×12) ]<span class="eq">&nbsp;&nbsp;……(4)</span></div>
+  <div class="takeaway">(4) 把样本内<strong>算术月均超额收益</strong>分解为模型中的因子贡献和未被模型解释的截距。截距 α 不等于纯粹的选股能力或特质收益；它还可能包含遗漏因子、基准不匹配、分红口径差异及估计误差。<strong>先核对模型与口径，再评价。</strong></div>
+
+  <h3>1.4 本课使用的因子：市场、规模、价值、动量</h3>
+  <p>教材列举的因子示例分两类：宏观因子（GDP 意外、利率意外…）与交易组合类因子（规模、价值、动量…）。本课借鉴 Fama–French 三因子加动量的<strong>四因子框架</strong>，但以下序列均为<strong>本地教学代理</strong>，构造方法与标准因子不同，不能标作正式的 Fama–French／Carhart 因子。<a href="https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/Data_Library/f-f_factors.html" target="_blank" rel="noopener">Kenneth French 标准因子定义</a></p>
+  <table>
+    <tr><th>因子</th><th>含义</th><th>预期溢价方向的"教科书说法"</th></tr>
+    <tr><td class="mono"><strong>RM</strong>（教学代理）</td><td>固定混合股票池等权收益 − 固定无风险利率；并非全市场组合</td><td>历史上常见正值，样本可变</td></tr>
+    <tr><td class="mono"><strong>SMB</strong>（教学代理）</td><td>固定中证2000样本股组 − 固定沪深300样本股组</td><td>不保证为正</td></tr>
+    <tr><td class="mono"><strong>HML</strong>（教学代理）</td><td>中证红利 − 创业板指；<strong>不是</strong>按账面市值比分组的标准 HML</td><td>方向不确定</td></tr>
+    <tr><td class="mono"><strong>MOM</strong>（教学代理）</td><td>样本池第 t−12 至 t−3 月赢家 − 输家；标准口径通常取 t−12 至 t−2 月</td><td>方向不确定</td></tr>
+  </table>
+  <p class="note"><strong>注意：</strong>P1 中三个代理序列在这一样本期的<strong>实现样本均值</strong>为负，只能说明本口径、本窗口内的结果，不能据此证伪长期因子溢价，更不能推断下一季度方向。标准动量的 t−12 至 t−2 月口径见 <a href="https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/Data_Library/f-f_developed.html" target="_blank" rel="noopener">Kenneth French 的构造说明</a>。</p>
+  <div class="figure" style="height:400px"><img src="factor-construction.png" alt="标准 Fama–French 三因子构建流程：规模与账面市值比独立排序取交集"></div>
+  <div class="figcap">文献参照 · 标准 Fama–French 构造流程（SMB / HML 独立排序取交集）——本课的 HML 代理并非按此构造</div>
+
+  <h3>1.5 APT 的三种用途（决策语言）</h3>
+  <table>
+    <tr><th>用途</th><th>做法</th><th>对应内容</th></tr>
+    <tr><td><strong>更自由地构建组合</strong></td><td>风险 = 暴露向量 → 组合构建 = 选择暴露结构</td><td>教材第三节："组合策略=选择最佳的因子敏感系数组合"；见第五节 P3</td></tr>
+    <tr><td><strong>定向配置风险</strong></td><td>观点 → 目标暴露 → 按暴露选股，并加约束防集中</td><td>第五节 P3、P4</td></tr>
+    <tr><td><strong>诊断基金收益</strong></td><td>将截距与暴露分开；再检查基准、分红、投资范围与稳健性，避免把 α 直接等同个人能力</td><td>第四节 P2</td></tr>
+  </table>
+  <div class="takeaway">课后必须记住的一条：多因子模型中的每个暴露都是相对于某条已定义因子序列的回归系数；因子收益、风格回撤和组合集中风险都依赖样本与构造方法。</div>
+</section>
+
+<!-- ============ 二、案例：风格集中、规模差异与轮动 ============ -->
+<section id="cases">
+  <h2><span class="no">二</span> 案例：风格集中、规模差异与轮动</h2>
+  <p class="note">三个案例分别观察风格集中后的回撤、小盘相对大盘的下跌、以及阶段性风格轮动。价格走势能说明风险表现；若要证明"拥挤"及其因果作用，还需持仓集中度、资金流或交易行为证据。</p>
+  <p class="note"><strong>口径预告：</strong>本节及全课时实测数字统一为——前复权日线；因子与回归用月频；年化=月×12；r<sub>f</sub>=2.0%/年（固定值，声明）；样本窗与各图表的备注口径随文标注。</p>
+
+  <!-- 案例1 -->
+  <div class="case">
+    <div class="case-head"><span>案例 1 · 2021 抱团瓦解：个股分散难以对冲风格集中</span></div>
+    <div class="case-body">
+      <p><strong>背景</strong>：2019–2021 年初，消费、医药等"核心资产"上涨明显，之后部分相关指数大幅回撤。该价格路径适合讨论<strong>风格集中风险</strong>；"公募整体拥挤持有导致回撤"属于需要基金持仓与资金流证据检验的机制假说。</p>
+      <div class="prompt"><span class="plabel">验证任务 C1（可直接复制给 Agent 执行）</span>自选代表"核心资产/消费风格"的指数（建议至少取两个，声明代码，如中证消费000932、中证白酒399997），
+计算 2019-01-01 至 2021-02-10 的累计涨幅、2021-02-10 至 2022-04-26 的最大回撤，
+以及"2021-02-10 收盘买入持有至 2026-08-31"的累计收益；与沪深300(000300)同窗对比。
+一句话结论：多个股票共享同一风格时，个股分散能否消除风格回撤？指数走势本身能否证明拥挤成因？</div>
+      <div class="verdict"><b>验证结论（实测）</b>：</div>
+      <div class="tablewrap"><table>
+        <tr><th>对象</th><th>2019-01~2021-02-10 累计</th><th>2021-02-10~2022-04-26 最大回撤</th><th>2021-02-10 收盘持有至 2026-08-31</th></tr>
+        <tr><td class="mono">中证消费 000932</td><td><b>+227.8%</b></td><td><b>−37.0%</b></td><td><b>−60.7%</b></td></tr>
+        <tr><td class="mono">中证白酒 399997</td><td><b>+388.2%</b></td><td>−38.1%</td><td><b>−69.5%</b></td></tr>
+        <tr><td class="mono">中证医疗 399989</td><td>+231.4%</td><td><b>−48.7%</b></td><td>−65.8%</td></tr>
+        <tr><td class="mono">创业板指 399006</td><td>+177.8%</td><td>−39.6%</td><td>+0.7%</td></tr>
+        <tr><td class="mono">沪深300 000300</td><td>+95.6%</td><td>−34.8%</td><td>−20.4%</td></tr>
+      </table></div>
+      <p class="note">*来源：本地缓存的中证指数/腾讯行情；样本区间见表头；指数点位不涉及股票复权，计算为日频收盘点位累计变化。指数价格收益未加计分红。*</p>
+      <p class="note"><strong>如何解读</strong>：在所选起点与终点，消费、白酒、医疗的累计收益明显低于沪深300；这说明只分散个股、却共同暴露于某类行业或风格时，组合仍可能承受较大共同回撤。指数不是"因子"本身，这张表也不能识别下跌究竟由拥挤、盈利预期变化还是估值变化主导。</p>
+    </div>
+  </div>
+
+  <!-- 案例2 -->
+  <div class="case">
+    <div class="case-head"><span>案例 2 · 2024 年 1–2 月小盘承压：两种 SMB 代理给出不同最差月</span></div>
+    <div class="case-body">
+      <p><strong>背景</strong>：2024 年 1–2 月小市值股票相对大市值股票明显承压。证监会后来说明，部分 DMA 产品在市场波动中回撤，相关机构主动降杠杆、降规模；这支持把杠杆和流动性列入机制讨论，但不足以单独证明"雪球敲入→DMA→微盘下跌"的完整因果链。<a href="https://www.csrc.gov.cn/csrc/c100028/c7465086/content.shtml" target="_blank" rel="noopener">证监会 2024-02-28 答记者问</a></p>
+      <div class="prompt"><span class="plabel">验证任务 C2（可直接复制给 Agent 执行）</span>计算中证2000(932000，小市值代理，并非纯微盘指数) 与沪深300(000300) 的月度收益差（2023-01 至 2026-08，共44个月），
+给出 2024-01 与 2024-02 两个月的差值，以及各自在44个月分布中的分位数；
+再计算两个事件窗两指数的累计涨跌与差值：2024-01-02~2024-02-08（危机窗）、2024-09-24~2024-10-08（急涨窗）。
+一句话结论：这次相对跌幅在本课 44 个月窗口里有多极端？</div>
+      <div class="verdict"><b>验证结论（实测）</b>：</div>
+      <div class="tablewrap"><table>
+        <tr><th>时点/窗口</th><th>中证2000</th><th>沪深300</th><th>差值（SMB 代理）</th></tr>
+        <tr><td class="mono">2024-01 月度</td><td>—</td><td>—</td><td><b>−14.68 个百分点</b>（44 个月经验排序第 1／44）</td></tr>
+        <tr><td class="mono">2024-02 月度</td><td>—</td><td>—</td><td>−3.38 个百分点（44 个月经验排序第 9／44）</td></tr>
+        <tr><td class="mono">危机窗 2024-01-02~2024-02-08</td><td><b>−27.49%</b></td><td>−1.93%</td><td><b>−25.6 个百分点</b></td></tr>
+        <tr><td class="mono">急涨窗 2024-09-24~2024-10-08</td><td>+36.11%</td><td>+32.47%</td><td>+3.6 个百分点</td></tr>
+      </table></div>
+      <p class="note">*来源：中证指数公司行情；月度=月末收盘对月末收盘；区间=首尾交易日收盘；前复权（指数）。*</p>
+      <div class="figure"><img src="images/s3c2.png" alt="S3_C2：SMB 代理月差值序列与分布，2024-01 为44个月最极端"></div>
+      <div class="figcap">S3_C2 · 2024-01/02 SMB 单月崩溃有多极端（指数差口径：中证2000 − 沪深300）</div>
+      <p class="note"><strong>一句结论</strong>：指数差口径的最差月是 2024-01，而本课固定样本股差口径的最差月是 2024-02（见 P1）。两者定义不同，不能互相验证；44 个月里出现极端负值也不足以证明统计意义上的"厚尾"。压力测试可同时使用真实事件窗、假设冲击和反向情景，并明确各自用途。<a href="https://oss-ch.csindex.com.cn/static/html/csindex/public/uploads/indices/detail/files/zh_CN/20231208180041-932000_Index_Methodology_cn.pdf" target="_blank" rel="noopener">中证2000编制方案</a></p>
+    </div>
+  </div>
+
+  <!-- 案例3 -->
+  <div class="case">
+    <div class="case-head"><span>案例 3 · 2025–2026 风格轮动：同一基金，两段实现收益</span></div>
+    <div class="case-body">
+      <p><strong>背景</strong>：所选 2025–2026 年窗口里，多个风格指数表现差异明显。第2课时讨论过 005827，这里换一个提问方式：<strong>区间收益是否变化？仅凭区间收益能否评价同一管理人的能力？</strong></p>
+      <div class="prompt"><span class="plabel">验证任务 C3（可直接复制给 Agent 执行）</span>分别计算两个区间：2025-01-01~2025-06-30 与 2025-07-01~2026-08-31，
+中证2000(932000)、中证红利(000922)、科创50(000688)、沪深300(000300) 的区间涨幅，输出 2×4 轮动表；
+再给出易方达蓝筹精选 005827.OF 在两区间的涨幅。
+一句话结论：基金相对指数的表现如何变化？评价经理之前还要核对哪些口径？</div>
+      <div class="verdict"><b>验证结论（实测）</b>：</div>
+      <div class="tablewrap"><table>
+        <tr><th>对象</th><th>2025-01~2025-06</th><th>2025-07~2026-08</th><th>全窗 2025-01~2026-08</th></tr>
+        <tr><td class="mono">中证2000（小市值代理）</td><td>+15.2%</td><td>+17.5%</td><td>+35.4%</td></tr>
+        <tr><td class="mono">中证红利</td><td>−3.1%</td><td>+5.7%</td><td>+2.5%</td></tr>
+        <tr><td class="mono">科创50</td><td>+1.5%</td><td><b>+67.9%</b></td><td>+70.3%</td></tr>
+        <tr><td class="mono">沪深300</td><td>0.0%</td><td>+17.5%</td><td>+17.5%</td></tr>
+        <tr><td class="mono"><b>005827 易方达蓝筹</b></td><td><b>+0.8%</b></td><td><b>−13.5%</b></td><td><b>−12.8%</b></td></tr>
+      </table></div>
+      <p class="note">*来源：中证/上交所指数行情 + 天天基金单位净值；区间=首尾交易日；日频收益累计。005827 为单位净值变动，未核对分红再投后的总回报；与指数价格收益比较须先统一分红口径。*</p>
+      <p class="note">本课代理因子也呈现窗口差异（P1）：第一窗 SMB +6.1%、MOM −3.5%；第二窗 SMB −8.3%、MOM +32.0%、HML −46.3%。005827 的单位净值第一窗 +0.8%、第二窗 −13.5%，但单凭两段净值不能判断经理能力；还需核对分红、基金持仓范围、经理任期、基准与风险暴露。</p>
+    </div>
+  </div>
+
+  <h3>文献对照 A：2007 年美国量化策略共同去杠杆</h3>
+  <p>Khandani 与 Lo 对 2007 年 8 月美国量化基金波动进行研究：他们的<strong>模拟多空组合</strong>显示，基于相近估值特征的策略在 7 月已开始平仓；交易数据及模拟做市策略显示，8 月第一周流动性提供能力也受到冲击。作者提出共同去杠杆与做市资本暂时退出的解释。这里有"策略持仓/交易机制"层面的证据，比只看风格指数涨跌更接近"拥挤"机制，但模拟组合的收益仍不能写成某家基金真实亏损。<a href="https://www.nber.org/papers/w14465" target="_blank" rel="noopener">Khandani 与 Lo，NBER 工作论文</a></p>
+  <div class="warnbox"><strong>课堂追问</strong>：若几只策略买的是不同股票，却共同"买低估值、卖高估值"，个股名称不同能否保证多空组合独立？当资金同时减仓时，哪一项风险是静态四因子回归可能漏掉的？</div>
+
+  <h3>文献对照 B：2009 年美国动量策略反转</h3>
+  <p>Daniel 与 Moskowitz 研究发现，动量策略在市场大幅下跌后的反弹阶段可能出现显著负收益。论文举出的 2009 年 3–5 月例子里，<strong>过去输家组合涨约 163%，过去赢家组合涨约 8%</strong>；"买赢家、卖输家"的多空策略因此遭遇剧烈反转。这是论文所用美国市场、特定分组和窗口的结果，不能套到本课中国股票池的 MOM 代理上。<a href="https://doi.org/10.1016/j.jfineco.2015.12.002" target="_blank" rel="noopener">Daniel 与 Moskowitz，《Momentum Crashes》</a></p>
+  <div class="warnbox"><strong>课堂追问</strong>：动量多空组合的市场 β 如果在下跌后反弹阶段改变，为什么"过去一年回归得到的平均 β"可能低估当期风险？应怎样用分窗或滚动暴露检查？</div>
+
+  <p class="note"><strong>本地三例与文献两例共同说明</strong>：风格和规模暴露可能带来共同回撤，不同样本窗的实现收益也会变化。下一节用统一口径的经验因子模型描述暴露；模型提供描述与待检验假说，不自动识别价格变化的成因。</p>
+
+  <h3>学生任务（用 Agent 实现）</h3>
+  <div class="panel">
+    <p>把 C1 / C2 / C3 的提示词交给你的 Agent 执行，至少完整跑通两个，并用独立来源或本地缓存核对结果；两种证据级别要分开写。每张表下注明数据来源、样本区间、频率、价格/总回报口径，以及 r<sub>f</sub> 是否参与。若选择 C1 的"拥挤"解释，额外找同一时期公开基金季报的重仓股重合度或持仓占比；找不到时只陈述指数共同回撤。任选一篇文献对照，写出它比本地指数表<strong>多提供了什么机制证据</strong>。</p>
+  </div>
+</section>
+
+<!-- ============ 三、Agent 实操（一）：构建四因子 ============ -->
+<section id="factors">
+  <h2><span class="no">三</span> Agent 实操（一）：构建四因子（2023-01 ~ 2026-08）</h2>
+  <p class="note">本节先构建四条<strong>教学代理收益序列</strong>。它们可作为后续样本内归因与选股练习的统一标尺，但由于股票池抽样、当期成分回看历史和交易成本缺失，不能直接当作全市场风险溢价或可投资策略业绩。</p>
+
+  <div class="prompt"><span class="plabel">验证任务 P1（可直接复制给 Agent 执行）</span>目标：构建 RM / SMB / HML / MOM 四因子的月度收益（2023-01 至 2026-08），前复权，按月调仓。
+universe（复现本课结果的固定教学口径）＝ 20只股票池 + 抓取时的沪深300成分中随机种子42抽30只 + 抓取时的中证2000成分按代码升序取前30只；去重、剔除缺失后实际76只（其中大盘组28只、小盘组30只）。
+注意：代码升序前30只并非随机样本，不代表中证2000整体；当期成分回看历史含前视/幸存者偏差。若要做规范历史回测，须逐月使用当时成分、时点可得财务数据并处理退市。
+因子定义：
+  RM  = universe 等权月收益 − r_f/12（r_f=2.0%/年，声明；不是全市场收益）
+  SMB = 固定中证2000样本股组等权月收益 − 固定沪深300样本股组等权月收益
+  HML_proxy = 中证红利(000922)月收益 − 创业板指(399006)月收益（本地脚本列名 HML；并非标准账面市值比 HML）
+  MOM = universe 中 t−12 至 t−3 月累计收益前30% − 后30%，在 t 月持有（逐月调仓；非标准 t−12 至 t−2 口径）
+输出：① 四条代理序列的算术年化均值、年化波动；② 相关系数矩阵；③ 四条累计因子收益曲线（同图，不称可投资净值）；
+④ 每个因子的"单月最差月份及数值"。</div>
+
+  <p class="verdict"><b>本地缓存复现结果</b>（本课时教学代理口径，2023-01~2026-08，44 个月；独立行情真值与历史可交易性尚未逐项校验）：</p>
+  <div class="tablewrap"><table>
+    <tr><th>因子</th><th>年化收益%</th><th>年化波动%</th><th>44个月累计%</th><th>单月最差</th></tr>
+    <tr><td class="mono"><strong>RM</strong></td><td><b>+18.63</b></td><td>15.48</td><td>+89.3</td><td>2026-06：−6.0%</td></tr>
+    <tr><td class="mono"><strong>SMB</strong></td><td><b>−9.65</b></td><td>19.93</td><td>−34.9</td><td><b>2024-02：−18.5%</b></td></tr>
+    <tr><td class="mono"><strong>HML_proxy</strong>（脚本列名 HML）</td><td><b>−10.66</b></td><td>34.18</td><td>−45.3</td><td>2025-08：−23.2%</td></tr>
+    <tr><td class="mono"><strong>MOM</strong></td><td><b>−3.97</b></td><td>26.05</td><td>−23.8</td><td>2026-07：−19.5%</td></tr>
+  </table></div>
+
+  <p>相关系数矩阵（低相关有利于分散——各因子携带不同的信息）：</p>
+  <table>
+    <tr><th>&nbsp;</th><th class="mono">RM</th><th class="mono">SMB</th><th class="mono">HML</th><th class="mono">MOM</th></tr>
+    <tr><td class="mono">RM</td><td>1.00</td><td>0.08</td><td>−0.42</td><td>−0.22</td></tr>
+    <tr><td class="mono">SMB</td><td>0.08</td><td>1.00</td><td>−0.02</td><td>−0.22</td></tr>
+    <tr><td class="mono">HML</td><td>−0.42</td><td>−0.02</td><td>1.00</td><td>−0.43</td></tr>
+    <tr><td class="mono">MOM</td><td>−0.22</td><td>−0.22</td><td>−0.43</td><td>1.00</td></tr>
+  </table>
+
+  <p>分年度复合收益（本地代理序列正负变化；不代表总体溢价估计）：</p>
+  <div class="tablewrap"><table>
+    <tr><th>年份</th><th class="mono">RM</th><th class="mono">SMB</th><th class="mono">HML</th><th class="mono">MOM</th></tr>
+    <tr><td class="mono">2023</td><td>+12.9</td><td>−13.9</td><td>+22.8</td><td>−31.8</td></tr>
+    <tr><td class="mono">2024</td><td>+24.7</td><td>−22.2</td><td>−12.6</td><td>−12.2</td></tr>
+    <tr><td class="mono">2025</td><td>+27.2</td><td>+0.8</td><td>−40.4</td><td>+5.5</td></tr>
+    <tr><td class="mono">2026（至8月）</td><td>+5.7</td><td>−3.6</td><td>−14.5</td><td>+20.7</td></tr>
+  </table></div>
+
+  <p class="note">*来源：本地缓存的腾讯行情/中证指数数据与 <code>lesson3.py</code>；成分名单抓取时点未在缓存中完整保留，不能将其视为逐月历史成分；样本区间 2023-01~2026-08；月频；r<sub>f</sub>=2.0%/年固定；universe=76 只。表内"年化收益"是月收益算术均值×12，"44个月累计"是逐月复利，两者不可直接互换。*</p>
+
+  <h3>审查要点（对照《学生Prompt模板卡》失败模式清单逐条核对）</h3>
+  <ol>
+    <li><strong>universe 的覆盖与偏差</strong>：样本共76只，固定小盘组30只、大盘组28只；按代码顺序取中证2000前30只高度依赖排序，不能推广为"微盘整体"。改变抽样法并比较结果，是本课最重要的敏感性检查。</li>
+    <li><strong>HML 的命名</strong>：本课"红利指数 − 创业板指"同时混入分红、行业、规模等差异，不能称为按账面市值比分组的价值因子；报告时写 <code>HML_proxy</code>。</li>
+    <li><strong>均值与溢价</strong>：SMB、HML_proxy、MOM 在44个月中的算术均值为负，是本样本的实现收益，既不能证明长期溢价为负，也不能用来预测未来；样本外与不同构造须单独检验。</li>
+    <li><strong>单月最差依赖口径</strong>：固定个股组差口径的 SMB 最差月是 2024-02（−18.5 个百分点；小盘组 −3.5%、大盘组 +14.9%），指数差口径的最差月是 2024-01（−14.7 个百分点）。两条序列并非同一对象。</li>
+  </ol>
+
+  <h3>学生任务（用 Agent 实现）</h3>
+  <div class="panel">
+    <ol>
+      <li><strong>复现 P1</strong>：核对四个因子的年化收益/波动与单月最差；逐条解释与你结果的主要差异来源（universe、HML 口径、调仓日、频度）。</li>
+      <li><strong>换一个 universe 重跑一次</strong>：例如用固定随机种子从中证2000抽取30只替换"代码升序前30只"，观察 SMB 序列如何变化；若可取得历史成分，再做时点一致的版本。</li>
+      <li><strong>写入 Memo Part 3</strong>：这张四因子表（含口径标注）就是风险归因章节的"标尺说明"。</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ 四、Agent 实操（二）：个股与基金归因 ============ -->
+<section id="attribution">
+  <h2><span class="no">四</span> Agent 实操（二）：个股与基金归因——收益从何而来</h2>
+  <p class="note">有了代理因子，就可以对有足够同频收益数据的资产做<strong>样本内统计归因</strong>：把月均超额收益分解为四个回归因子贡献与截距 α。它不直接等于经济因果解释。</p>
+
+  <div class="prompt"><span class="plabel">验证任务 P2（可直接复制给 Agent 执行）</span>对以下对象做月频四因子回归（r_i − r_f/12 对 RM, SMB, HML, MOM），样本 2023-01 至 2026-08：
+个股：600519.SH 贵州茅台、300750.SZ 宁德时代、688256.SH 寒武纪、600900.SH 长江电力、600036.SH 招商银行；
+基金/ETF：510300.SH 沪深300ETF（用于检验基准不匹配）、005827.OF 易方达蓝筹精选（现有缓存为单位净值；需核对分红）。
+输出表格：四个暴露系数+t值、α（年化，注明换算）、α 的 t 值、R²。
+再做收益分解：对每个对象验证恒等式 "年化超额收益 = α + Σ(暴露×因子年化收益)"。
+对每个对象用一句话回答：在这一模型内，月均超额收益主要分配给哪一项？α 的普通 OLS t 值如何？哪些解释仍无法确定？</div>
+
+  <p class="verdict"><b>现有脚本输出——归因表</b>（α 为月截距×12，暴露系数后括号内为普通 OLS t 值；未用异方差/自相关稳健标准误）：</p>
+  <div class="tablewrap"><table>
+    <tr><th>对象</th><th class="mono">α年化%</th><th class="mono">α_t</th><th class="mono">R²</th><th class="mono">b_RM(t)</th><th class="mono">b_SMB(t)</th><th class="mono">b_HML(t)</th><th class="mono">b_MOM(t)</th></tr>
+    <tr><td class="mono">贵州茅台</td><td><b>−25.66</b></td><td><b>−2.92</b></td><td>0.575</td><td>1.24 (6.3)</td><td>−0.09 (−0.7)</td><td>0.24 (2.5)</td><td>−0.00 (−0.0)</td></tr>
+    <tr><td class="mono">宁德时代</td><td>−8.91</td><td>−0.55</td><td>0.511</td><td>1.08 (3.0)</td><td>−0.45 (−2.0)</td><td>−0.46 (−2.6)</td><td>−0.31 (−1.4)</td></tr>
+    <tr><td class="mono">寒武纪</td><td>+87.80</td><td>1.54</td><td>0.263</td><td>1.46 (1.1)</td><td>−1.23 (−1.5)</td><td>−1.23 (−2.0)</td><td>−0.27 (−0.3)</td></tr>
+    <tr><td class="mono">长江电力</td><td>+9.41</td><td>1.49</td><td>0.453</td><td>0.17 (1.2)</td><td>−0.27 (−3.0)</td><td>0.28 (4.0)</td><td>0.06 (0.6)</td></tr>
+    <tr><td class="mono">招商银行</td><td>−4.49</td><td>−0.34</td><td>0.280</td><td>0.91 (3.1)</td><td>0.01 (0.1)</td><td>0.27 (1.9)</td><td>−0.04 (−0.2)</td></tr>
+    <tr><td class="mono">510300ETF</td><td>−13.34</td><td>−2.91</td><td>0.851</td><td>0.90 (8.8)</td><td>−0.15 (−2.4)</td><td>−0.22 (−4.4)</td><td>0.04 (0.6)</td></tr>
+    <tr><td class="mono"><b>005827 易方达蓝筹</b></td><td><b>−29.79</b></td><td><b>−3.95</b></td><td>0.622</td><td>0.95 (5.6)</td><td>−0.14 (−1.3)</td><td>−0.08 (−1.0)</td><td>−0.06 (−0.6)</td></tr>
+  </table></div>
+
+  <p class="verdict"><b>现有脚本输出——样本均值分解</b>（算术年化%，因四舍五入，等式有时相差约 0.01 个百分点；这些数不是复合年收益）：</p>
+  <div class="tablewrap"><table>
+    <tr><th>对象</th><th class="mono">年化超额</th><th class="mono">= α</th><th class="mono">+ RM贡献</th><th class="mono">+ SMB贡献</th><th class="mono">+ HML贡献</th><th class="mono">+ MOM贡献</th></tr>
+    <tr><td class="mono">贵州茅台</td><td>−4.29</td><td>−25.66</td><td>+23.04</td><td>+0.86</td><td>−2.55</td><td>+0.01</td></tr>
+    <tr><td class="mono">宁德时代</td><td>+21.55</td><td>−8.91</td><td>+20.04</td><td>+4.32</td><td>+4.89</td><td>+1.21</td></tr>
+    <tr><td class="mono">寒武纪</td><td>+141.05</td><td>+87.80</td><td>+27.15</td><td>+11.90</td><td>+13.11</td><td>+1.08</td></tr>
+    <tr><td class="mono">长江电力</td><td>+12.11</td><td>+9.41</td><td>+3.24</td><td>+2.62</td><td>−2.94</td><td>−0.22</td></tr>
+    <tr><td class="mono">招商银行</td><td>+9.61</td><td>−4.49</td><td>+16.95</td><td>−0.10</td><td>−2.90</td><td>+0.16</td></tr>
+    <tr><td class="mono">510300ETF</td><td>+7.08</td><td>−13.34</td><td>+16.74</td><td>+1.48</td><td>+2.35</td><td>−0.15</td></tr>
+    <tr><td class="mono">005827 易方达蓝筹</td><td>−9.63</td><td>−29.79</td><td>+17.69</td><td>+1.33</td><td>+0.89</td><td>+0.25</td></tr>
+  </table></div>
+
+  <p class="note">代理因子样本均值（月均×12，%）：<strong>RM +18.63 / SMB −9.65 / HML_proxy −10.66 / MOM −3.97</strong>。这里的"均值"不能直接称为总体因子风险溢价。</p>
+  <p class="note">*来源：本地缓存的腾讯行情/天天基金/中证指数数据；样本区间 2023-01~2026-08；月频；股票/ETF 前复权，基金使用单位净值且未核对分红再投；r<sub>f</sub>=2.0%/年固定；α 年化=月 α×12。t 值依据普通 OLS、约44个月和4个解释变量，仅作课堂初筛。*</p>
+
+  <h3>怎么读这张表（四个示范）</h3>
+  <div class="figure"><img src="images/s3p2.png" alt="S3_P2：四因子累计净值与月频 APT 因子暴露"></div>
+  <div class="figcap">S3_P2 · 四因子累计净值（教学代理，n=76）与各对象因子暴露（rf=2.0%/12，α 年化=月 α×12）</div>
+  <ol>
+    <li><strong>005827</strong>：在本课代理模型中，b_RM=0.95，月截距×12=−29.79%，普通 OLS t=−3.95；样本内分解为市场代理贡献 +17.69% 与截距 −29.79% 等项。该 t 值只表示在当前模型和标准误假设下截距明显偏离零；<strong>不能据此判断经理选股能力</strong>。基金可能持有港股，且单位净值、分红、基准、费用和时变持仓都可能影响截距。先换成匹配投资范围的基准、核对总回报，再评价。</li>
+    <li><strong>寒武纪</strong>：月均超额收益×12 为 +141.05%，这不是实际持有一年的复合收益；截距×12 为 +87.80%，t=1.54。R²=0.263，说明这四条代理序列对<strong>样本内月收益波动</strong>的拟合有限，不能仅凭该结果断定未解释部分全是特质风险或"来源无法归因"。</li>
+    <li><strong>贵州茅台</strong>：在本课代理模型中截距×12=−25.66%（普通 OLS t=−2.92），b_RM=1.24；R²=0.575。结论限于该样本和模型，不能单独当成错误定价证据。</li>
+    <li><strong>510300ETF</strong>：b_RM=0.90、R²=0.851，但本课 RM 是76只样本股等权超额收益，ETF 跟踪市值加权沪深300。α×12=−13.34% 首先提示<strong>基准不匹配</strong>；是否还包含跟踪误差、分红或费用差异，需改用沪深300总收益口径重新回归后再判断。</li>
+  </ol>
+
+  <h3>审查要点</h3>
+  <ol>
+    <li><strong>不要混淆 α 与实现超额收益</strong>：报告回归截距时附 t 值、样本量、R² 和标准误方法；报告某段实际收益时不需要机械地给出 α 的 t 值。</li>
+    <li><strong>基准口径</strong>：RM 是 universe 等权口径；拿它与市值加权指数型产品比 α，会把口径差读成"能力差"。</li>
+    <li><strong>R² 低 ≠ 模型错</strong>：R²=0.26 仅表明四条代理因子在这组月度样本中解释了约26%的收益波动；其余可能含特质波动、遗漏因子和测量误差。</li>
+    <li><strong>窗口单一</strong>：本表约44个月，4个解释变量另加截距；拆成前后两段后自由度更少，t 值会很不稳定。分窗仅用于观察方向变化，不宜重新给经理贴"显著能力"标签。可补做匹配基准、稳健标准误和样本外检查。</li>
+  </ol>
+
+  <h3>学生任务（用 Agent 实现）</h3>
+  <div class="panel">
+    <ol>
+      <li><strong>复现 P2</strong>：核对 005827 与 510300ETF 两行（α、t 值、R²），并复算收益分解恒等式（任选一行自行验算）。然后说明单位净值与基准口径会怎样影响解释。</li>
+      <li><strong>换成"你们组"的对象</strong>：自选 2 只股票 + 1 只基金/ETF，跑同一张表；对每只写一句"在本模型内哪项贡献较大 + α 的 t 值及限制"。</li>
+      <li><strong>写入口径</strong>：结果下方注明数据来源、样本窗、频率、复权、r<sub>f</sub>——作为 Memo Part 3 的归因表（模板卡5）。</li>
+    </ol>
+  </div>
+
+  <h3>课堂手算 A：分解的是月均值，不是某个月的确定收益</h3>
+  <p>假设某资产的月度回归估计为 α=0.5%、<code>b_RM=1.2</code>、<code>b_SMB=−0.4</code>，样本内两个因子的月均收益分别为 1.0% 与 −0.5%。那么样本内月均超额收益为 <code>0.5% + 1.2×1.0% + (−0.4)×(−0.5%) = 1.9%</code>，算术年化为 <code>1.9%×12=22.8%</code>。这里"SMB 贡献 +0.2 个百分点"只因为负暴露遇到负样本均值，<strong>不表示下一月一定赚 0.2%</strong>；22.8% 也不是逐月复利回报。</p>
+  <div class="warnbox"><strong>课堂追问</strong>：若换一个基准或多加一个遗漏因子，α 可能怎样变化？学生应回答"数值可能变化，原来分给截距的部分可能转入新因子"，不能把 α 固定解释为经理能力。</div>
+</section>
+
+<!-- ============ 五、Agent 实操（三）：观点 → 暴露 → 压力测试 ============ -->
+<section id="exposure">
+  <h2><span class="no">五</span> Agent 实操（三）：观点 → 暴露 → 压力测试</h2>
+  <p class="note">归因是事后的收益分解。本节示范如何把观点写成目标暴露，并用既定规则排序。由于名单是用截至 2026-08 的数据选出，后文 2024 年事件窗只是<strong>把事后名单放回历史的情景演示</strong>，不属于事前选股记录或无前视偏差的回测。</p>
+
+  <div class="prompt"><span class="plabel">验证任务 P3（可直接复制给 Agent 执行）</span>假设性观点：下一季度偏好"小盘 + 动量"、回避"红利相对成长"；这是课堂情景，并非根据历史均值作出的收益预测。
+选股口径：从沪深300成分（当期名单，约300只，属前视简化，声明）中，
+用最近24个自然月（2024-09 至 2026-08）月频四因子回归估计每只股票的暴露，
+按 score = b_SMB + b_MOM − b_HML_proxy 降序取前10；这是任意设定的等系数启发式排序，三个暴露的经济含义和波动尺度不同，score 高不等于预期收益高。
+再加约束"每个行业最多2只"重新选一遍（行业用数据源行业字段，近似口径，声明）。
+输出：两次（无约束/有约束）名单与暴露表、两次名单的行业分布对比。</div>
+
+  <p class="verdict"><b>现有脚本输出</b>（基于 2026-08 可得的股票池与历史数据）：</p>
+  <ul>
+    <li>可选样本 298 只。无约束前10 名单的行业分布：半导体×3、通信设备×2、元器件×2、小金属×1、玻璃×1、专用机械×1；按此粗分类，十只中有七只处于半导体、通信或元器件链条。行业划分来自近似字段，不能当成正式行业风险测度。</li>
+    <li>加"每个行业最多2只"约束后：剔除第 7 名长电科技（半导体第 3 只），补入第 15 名厦门钨业（小金属第 2 只）。半导体、通信、元器件仍占六只，单一行业上限没有消除产业链共同风险。</li>
+  </ul>
+
+  <p><strong>最终名单（行业约束版，每行业≤2只）与暴露</strong>：</p>
+  <div class="tablewrap"><table>
+    <tr><th>#</th><th>代码</th><th>名称</th><th>行业</th><th class="mono">b_RM</th><th class="mono">b_SMB</th><th class="mono">b_HML</th><th class="mono">b_MOM</th><th class="mono">score</th></tr>
+    <tr><td>1</td><td class="mono">300394</td><td>天孚通信</td><td>通信设备</td><td>2.23</td><td>1.42</td><td>−0.68</td><td>1.15</td><td>3.25</td></tr>
+    <tr><td>2</td><td class="mono">000657</td><td>中钨高新</td><td>小金属</td><td>1.11</td><td>1.00</td><td>−0.46</td><td>1.29</td><td>2.74</td></tr>
+    <tr><td>3</td><td class="mono">600460</td><td>士兰微</td><td>半导体</td><td><b>−0.99</b></td><td>1.13</td><td>−1.37</td><td>0.17</td><td>2.67</td></tr>
+    <tr><td>4</td><td class="mono">600522</td><td>中天科技</td><td>通信设备</td><td>−0.63</td><td>0.73</td><td>−1.09</td><td>0.63</td><td>2.45</td></tr>
+    <tr><td>5</td><td class="mono">600183</td><td>生益科技</td><td>元器件</td><td>0.71</td><td>0.27</td><td>−0.70</td><td>1.47</td><td>2.44</td></tr>
+    <tr><td>6</td><td class="mono">688521</td><td>芯原股份</td><td>半导体</td><td>0.74</td><td>0.53</td><td>−1.00</td><td>0.86</td><td>2.40</td></tr>
+    <tr><td>7</td><td class="mono">300433</td><td>蓝思科技</td><td>元器件</td><td>−0.35</td><td>0.56</td><td>−1.12</td><td>0.63</td><td>2.31</td></tr>
+    <tr><td>8</td><td class="mono">600176</td><td>中国巨石</td><td>玻璃</td><td>−0.22</td><td>0.06</td><td>−1.03</td><td>1.19</td><td>2.29</td></tr>
+    <tr><td>9</td><td class="mono">002837</td><td>英维克</td><td>专用机械</td><td>1.73</td><td>0.46</td><td>−0.97</td><td>0.80</td><td>2.23</td></tr>
+    <tr><td>10</td><td class="mono">600549</td><td>厦门钨业</td><td>小金属</td><td>0.21</td><td>0.42</td><td>−0.82</td><td>0.64</td><td>1.88</td></tr>
+  </table></div>
+  <p class="note">*来源：腾讯行情（前复权日线）+ Tushare 行业字段（近似口径）；回归窗 2024-09~2026-08；月频；r<sub>f</sub>=2.0%/年固定；score=b_SMB+b_MOM−b_HML。*</p>
+
+  <h3>审查要点</h3>
+  <ol>
+    <li><strong>看名单的第 3 行</strong>：士兰微 b_RM = <strong>−0.99</strong>。其 2026-06、07 月收益分别约 +58.1%、−48.2%，提示短窗口估计可能受极端月份影响；但要证明"由这两个月导致反号"，还须剔除该月重估作敏感性检查。<strong>暴露是样本估计量，不是股票的永久性质</strong>；Blume β 调整也不能解决多因子模型中的遗漏因子、代理误差或前视偏差。</li>
+    <li><strong>score 公式里没有 α</strong>：它只按历史估计暴露排序。要把观点变为情景收益，应另行明确未来因子冲击 ΔF，并计算 <code>Σ b_k×ΔF_k</code>；未知的未来因子收益不能由 score 自动生成。</li>
+    <li><strong>行业分布的对比</strong>：无约束 vs 有约束必须都报；还要检查跨行业的共同产业链暴露，不能把"每行业≤2只"说成已经消除了集中风险。</li>
+    <li><strong>前视与估计不稳</strong>：用较新沪深300成分回看历史，有成分调整与幸存者偏差；24个月只估4个暴露和截距，普通 OLS 残差自由度约19。教学名单可以用于讨论排序规则，不能作为真实历史推荐记录。</li>
+  </ol>
+
+  <div class="prompt"><span class="plabel">验证任务 P4（可直接复制给 Agent 执行）</span>对 P3 的最终 10 只（行业约束版）等权组合做<strong>事后历史情景演示</strong>。说明名单直到 2026-08 才由全窗数据确定，故下列所有历史窗口均带未来信息；不允许称为当时可执行回测。
+区间1 = 2024-01-01~2024-02-08（微盘流动性危机，案例2窗口）；
+区间2 = 2024-09-24~2024-10-08（急涨段）；
+对照区间 = 2024-09-01~2026-08-31（与选股回归窗重合，标注 in-sample）。
+输出：组合与沪深300在各区间的累计收益与最大回撤；说明等权方式是"每日持有期收益取平均"（相当于每日再平衡、未扣成本），并解释该情景能说明什么、不能说明什么。</div>
+
+  <p class="verdict"><b>现有脚本输出</b>（事后选定名单、每日等权再平衡、未扣交易成本；非历史可实现业绩）：</p>
+  <div class="tablewrap"><table>
+    <tr><th>区间</th><th>组合累计</th><th>组合最大回撤</th><th>沪深300累计</th><th>沪深300最大回撤</th></tr>
+    <tr><td class="mono">小盘承压窗 2024-01-01~2024-02-08</td><td>−2.46%</td><td><b>−16.94%</b></td><td>−1.93%</td><td>−7.33%</td></tr>
+    <tr><td class="mono">急涨窗 2024-09-24~2024-10-08</td><td><b>+42.94%</b></td><td>−0.25%</td><td>+32.47%</td><td>0.00%</td></tr>
+    <tr><td class="mono">估计窗 2024-09-01~2026-08-31（in-sample）</td><td>+462.81%</td><td>−48.84%</td><td>+39.25%</td><td>−15.66%</td></tr>
+  </table></div>
+  <p class="note">*来源：本地缓存腾讯行情（前复权日线）；脚本逐日对10只股票收益取等权平均，再逐日复利；区间首日收益从前一个交易日收盘算起；最大回撤含区间起始净值1；r<sub>f</sub> 不参与本表。修正前脚本漏掉起始净值，使危机窗沪深300最大回撤误报为 −6.10%，现已重算为 −7.33%；其余表值未变。脚本未逐项处理停牌、成交量、涨跌停、冲击成本及分红总回报。*</p>
+
+  <p><strong>三行数字，三个结论</strong>：</p>
+  <ol>
+    <li><strong>危机窗</strong>：这个事后名单的终点收益差距约 0.5 个百分点，而脚本报告的区间内最大回撤差距更大；这是"终点收益会掩盖路径风险"的例子，不能倒推出该组合当时可选或其回撤由 SMB 独立造成。</li>
+    <li><strong>急涨窗</strong>：在该历史窗口，事后名单的涨幅高于沪深300；不能由一个窗口推断未来必有"高弹性"。</li>
+    <li><strong>估计窗 +462.81% 不是业绩</strong>：名单由含该窗口的收益数据估计后才确定，三个窗口均有事后选股问题，其中估计窗还直接重叠。报告只能写"事后情景"，不可写成策略回测或可实现收益。</li>
+  </ol>
+
+  <h3>学生任务（用 Agent 实现）</h3>
+  <div class="panel">
+    <ol>
+      <li><strong>复现 P3 + P4</strong>：核对最终名单（10 只）与三个区间的数字；解释"行业约束"改变了哪两只。</li>
+      <li><strong>换一个观点</strong>：把观点改为"偏好红利相对成长、回避小盘动量"（score = b_HML_proxy − b_SMB − b_MOM），重跑名单与历史情景；比较结果是否变化，不预设一定"翻转"。</li>
+      <li><strong>写入 Memo Part 3</strong>：暴露表 + 压力测试结果 + 一句话"因子倾斜的风险声明"（模板卡6）。</li>
+    </ol>
+  </div>
+
+  <h3>课堂手算 B：用明确的因子冲击做前瞻情景</h3>
+  <p>设组合暴露为 <code>b_RM=1.1、b_SMB=0.5、b_HML_proxy=−0.3、b_MOM=0.2</code>；只为练习，假设下月四条代理因子分别为 <code>−8%、−12%、+5%、−10%</code>。模型给出的超额收益冲击为 <code>1.1×(−8%) + 0.5×(−12%) + (−0.3)×5% + 0.2×(−10%) = −18.3%</code>。这个数是<strong>给定假设下的线性情景估算</strong>，实际收益还会受截距、残差、暴露变化和交易条件影响。让学生再改动一个冲击，观察结论是否敏感；不要把假设情景写成历史事实。</p>
+
+  <h3>课堂实施建议（45分钟；与配套课件时长一致）</h3>
+  <div class="tablewrap"><table>
+    <tr><th>环节</th><th>时间</th><th>最小可交付物</th></tr>
+    <tr><td>APT 与经验回归的区别、手算 A</td><td class="mono">8分钟</td><td>一句说明"定价关系"与"样本内分解"不同</td></tr>
+    <tr><td>C2 与文献对照选一例</td><td class="mono">7分钟</td><td>一张带起止日和价格/总回报口径的对照表</td></tr>
+    <tr><td>P1 展示预计算因子与抽样偏差</td><td class="mono">8分钟</td><td>指出代码升序抽样和标准 HML 的差别</td></tr>
+    <tr><td>P2 核对 510300 一行归因</td><td class="mono">9分钟</td><td>一行可对账的分解表和一条 α 限制说明</td></tr>
+    <tr><td>P3/P4、手算 B 与提交</td><td class="mono">13分钟</td><td>观点、暴露、假设冲击、事后情景四栏</td></tr>
+  </table></div>
+  <p class="note">课前先确认缓存 CSV、脚本依赖和至少一个案例数据可读；接口不可用时直接用现有缓存完成<strong>口径审查</strong>，不在课堂上等待全市场批量抓取。P1 全因子重建、P3 对近300只股票逐一回归、P4 日线情景及 C1–C3 全部独立取数均移到课前或课后；课堂使用教师预计算表核对关键一行。若要让学生现场运行 P3，缩到约20只候选股票。课堂产物必须区分"现有脚本复算""重新取数验证""假设情景"。</p>
+</section>
+
+<!-- ============ 六、小结与课后任务 ============ -->
+<section id="summary">
+  <h2><span class="no">六</span> 小结与课后任务</h2>
+  <p><strong>三个工具的分工</strong>（本课时落在第三行）：</p>
+  <div class="tablewrap"><table>
+    <tr><th>工具</th><th>回答什么</th><th>人负责</th><th>Agent 负责</th></tr>
+    <tr><td class="mono">MPT</td><td>配置几只、如何配置</td><td>股票池、约束、解读前沿</td><td>数据、协方差、优化</td></tr>
+    <tr><td class="mono">CAPM</td><td>定价是否合理</td><td>窗口选择、α 可用性判断、决策</td><td>回归、SML、回测</td></tr>
+    <tr><td class="mono"><strong>APT／经验多因子模型</strong></td><td><strong>期望收益如何定价、样本收益如何分解</strong></td><td><strong>选因子、检验口径、解读限制</strong></td><td><strong>构代理因子、回归、排序与情景计算</strong></td></tr>
+  </table></div>
+  <div class="takeaway">一句话总结：APT 提供多因子近似定价的理论框架；本课的经验回归提供一张可核验的<strong>样本内分解表</strong>。暴露与 α 均依赖因子、窗口和数据口径，α 是模型截距，不能直接称为"特质收益"或经理能力。</div>
+  <h3>课后任务（Memo Part 3 + 全稿；即任务书交付结构第 4 节"风险归因与因子观点"）</h3>
+  <ol>
+    <li>用本文档四因子（或你们组自己声明的因子集）对小组最终组合做<strong>四因子暴露表</strong>；</li>
+    <li>至少完成<strong>一个历史区间的压力测试</strong>（建议 2024-01~2024-02，自选第二个区间）；</li>
+    <li>按《小组项目任务书》合并全稿（8–10页）：每张图/表注明 数据来源、样本区间、频率、复权方式、r<sub>f</sub> 取值——缺一项视为审查不合格；</li>
+    <li>页脚必须写"本建议书为教学演练，不构成真实投资建议"。</li>
+  </ol>
+</section>
+
+<!-- ============ 七、口径声明与复现 ============ -->
+<section id="calibration">
+  <h2><span class="no">七</span> 口径声明与复现（本课时全部实测数字）</h2>
+  <div class="tablewrap"><table>
+    <tr><th>项目</th><th>取值/口径</th></tr>
+    <tr><td class="mono">数据源</td><td>腾讯行情（A股/ETF 前复权日线，qfq）、中证指数公司/腾讯（指数）、天天基金（005827 单位净值）、Tushare（行业字段）</td></tr>
+    <tr><td class="mono">样本区间</td><td>因子与归因：2023-01~2026-08（44个月）；选股回归窗：2024-09~2026-08（24个月）；压力测试：见表内标注</td></tr>
+    <tr><td class="mono">频率</td><td>月频（因子、归因、选股）；日频（压力测试累计与回撤）</td></tr>
+    <tr><td class="mono">收益口径</td><td>A股/ETF 前复权价格；指数收盘点位为价格指数口径；基金用单位净值变动，<strong>未核对分红再投的总回报</strong>。跨对象比较应补核对分红、费用和全收益口径</td></tr>
+    <tr><td class="mono">r_f</td><td><strong>本文表格与本地脚本用 2.0%/年固定值</strong>，月频取 /12；配套幻灯片的课堂 live 口径写 1.8%/年，不能与本文 α、RM 数字逐格对比，演示前应统一为 2.0%或另做 1.8% 版本并标注。第2课时深化材料另有 2.12% 口径，并列引用时须说明</td></tr>
+    <tr><td class="mono">年化系数</td><td>月均收益或月 α ×12 是算术年化；月收益标准差×<span class="sqrt">√<span class="rad">12</span></span> 是年化波动；44个月累计收益逐月复利，三者不可互换</td></tr>
+    <tr><td class="mono">因子 universe</td><td>原始名单为20+30+30；经去重、缺失筛选后实际76只，小盘组30只、大盘组28只；中证2000"代码升序前30只"不具代表性</td></tr>
+    <tr><td class="mono">HML 代理</td><td>中证红利(000922) − 创业板指(399006)，月频，脚本列名 HML；应在文稿中称 <code>HML_proxy</code>，不等于按账面市值比构造的标准价值因子</td></tr>
+    <tr><td class="mono">行业分类</td><td>Tushare industry 字段（近似口径，非严格申万一级）</td></tr>
+    <tr><td class="mono">前视说明</td><td>P1 的固定成分回看历史和 P3 的较新沪深300成分均有前视/幸存者偏差；P4 的三个历史窗口全部使用事后名单，均不是可交易回测</td></tr>
+    <tr><td class="mono">统计限制</td><td>回归 t 值为普通 OLS 同方差标准误，未做稳健误差、多重比较和样本外定价检验；P2 的 α 不能单独评价经理能力</td></tr>
+    <tr><td class="mono">复现脚本</td><td>因子与归因：<code>第7章教学包/PlanB包/scripts/lesson3.py</code>（build_factors / S3_C2 / S3_P2）；公共数据层：<code>第7章教学包/PlanB包/scripts/common.py</code>；本课时全部实测数字（C1–C3、P1–P4）：<code>_apt_work/analysis3.py</code>（结果：<code>_apt_work/results3.txt</code>、<code>_apt_work/out3/*.csv</code>）</td></tr>
+    <tr><td class="mono">运行环境</td><td>原脚本预设 <code>第7章教学包/PlanB包/.venv/Scripts/python</code>；<code>NO_PROXY='*'</code> 只记录原环境取数做法，课堂复算已有 CSV 不依赖此设置</td></tr>
+  </table></div>
+
+  <h3>核查依据与证据边界</h3>
+  <ul>
+    <li>理论与构造：<a href="https://www.newyorkfed.org/research/staff_reports/sr216.html" target="_blank" rel="noopener">纽约联储《Arbitrage Pricing Theory》综述</a>、<a href="https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/Data_Library/f-f_factors.html" target="_blank" rel="noopener">Kenneth French 三因子定义</a>及<a href="https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/Data_Library/f-f_developed.html" target="_blank" rel="noopener">动量构造说明</a>。</li>
+    <li>指数与事件：<a href="https://oss-ch.csindex.com.cn/static/html/csindex/public/uploads/indices/detail/files/zh_CN/20231208180041-932000_Index_Methodology_cn.pdf" target="_blank" rel="noopener">中证2000指数编制方案</a>、<a href="https://oss-ch.csindex.com.cn/static/html/csindex/public/uploads/indices/detail/files/zh_CN/20231208175433-000922_Index_Methodology_cn.pdf" target="_blank" rel="noopener">中证红利指数编制方案</a>、<a href="https://www.csrc.gov.cn/csrc/c100028/c7465086/content.shtml" target="_blank" rel="noopener">证监会 DMA 答记者问</a>。</li>
+    <li>延伸案例：<a href="https://www.nber.org/papers/w14465" target="_blank" rel="noopener">Khandani 与 Lo 对 2007 年量化策略冲击的原研究</a>、<a href="https://doi.org/10.1016/j.jfineco.2015.12.002" target="_blank" rel="noopener">Daniel 与 Moskowitz 对动量崩溃的原研究</a>。</li>
+    <li>基金口径：<a href="https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins/fund-distributions-investor-bulletin" target="_blank" rel="noopener">美国 SEC 投资者教育材料关于分红使单位净值下降、总回报需计入分红的说明</a>。这只是净值计算的通用定义，本课 005827 的分红史仍须核对基金公告。</li>
+    <li><strong>本地数字证据</strong>：第七节所列脚本、<code>results3.txt</code> 与 CSV 可说明"表格如何由缓存计算出来"，不能替代独立行情源的逐项验证。若新取数出现差异，先核对成分时点、复权/分红、停牌、月末收盘与交易日边界，不应强行调参凑本讲稿数字。</li>
+  </ul>
+</section>
+
+</div>
+
+<footer>
+  <div class="container">
+    <p><strong>数据与口径声明</strong></p>
+    <p class="note">本页"实测结论"均来自本地缓存（腾讯行情 / 中证指数 / 天天基金 / Tushare 行业字段），由 <code>lesson3.py</code> 与 <code>analysis3.py</code> 计算；独立行情真值与历史可交易性尚未逐项校验。课堂以 Agent 现场实时结果为准，网络中断时切换 Plan B 图表继续教学。</p>
+    <p class="note">本页前视说明：P1 固定成分回看历史、P3 较新沪深300成分、P4 事后名单均含前视 / 幸存者偏差，不是可交易回测。本讲义为教学演练材料，不构成投资建议。</p>
+    <p class="mono">rf 固定 2.0% · 年化 月×12（收益）/ 月×<span class="sqrt">√<span class="rad">12</span></span>（波动） · 前复权 qfq · 因子 universe 76 只</p>
+  </div>
+</footer>
+
+</body>
+</html>
