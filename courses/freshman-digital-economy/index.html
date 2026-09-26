@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>新生专业概论 · 课程中心</title>
-  <meta name="description" content="新生专业概论·第一课：数字经济专业导论——用蒲江猕猴桃、安岳柠檬两个真实案例认识数字经济专业。">
+  <meta name="description" content="新生专业概论·第一课：数字经济专业导论——课件下载。">
   <script src="../../assets/theme.js"></script>
   <link rel="stylesheet" href="../../assets/site.css?v=20">
   <style>
@@ -82,21 +82,20 @@
     }
 
     .hero-submit a::after {
-      content: "→";
-      font-size: 14px;
+      content: "\2193";
+      font-size: 15px;
       font-weight: 700;
       transition: transform 180ms ease;
     }
 
     .hero-submit a:hover::after {
-      transform: translateX(3px);
+      transform: translateY(2px);
     }
 
     .page-content {
       padding: 40px 0 72px;
     }
 
-    /* 课程信息条 */
     .course-meta-row {
       display: flex;
       flex-wrap: wrap;
@@ -115,12 +114,10 @@
       color: var(--accent);
     }
 
-    /* 章节导航网格 */
     .page-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 12px;
-      margin: 34px 0 48px;
     }
 
     .page-card {
@@ -224,239 +221,10 @@
       color: #4caf50;
     }
 
-    /* 章节正文 */
-    .lesson-section {
-      margin: 56px 0 0;
-      scroll-margin-top: 90px;
-    }
-
-    .lesson-section > .sec-head {
-      display: flex;
-      align-items: baseline;
-      gap: 14px;
-      margin-bottom: 18px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .lesson-section > .sec-head .sec-num {
-      font-family: var(--mono);
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--accent);
-      letter-spacing: 0.08em;
-    }
-
-    .lesson-section > .sec-head h2 {
-      margin: 0;
-      font-family: var(--display);
-      font-size: clamp(22px, 2.6vw, 28px);
-      font-weight: 700;
-      line-height: 1.25;
-      letter-spacing: -0.015em;
-    }
-
-    .lesson-section .sec-sub {
-      margin: 0 0 20px;
+    .note-line {
+      margin: 26px 0 0;
       color: var(--muted);
-      font-size: 14.5px;
-      line-height: 1.7;
-    }
-
-    .lesson-body {
-      color: var(--text);
-      font-size: 15px;
-      line-height: 1.85;
-    }
-
-    .lesson-body p {
-      margin: 0 0 14px;
-    }
-
-    .lesson-body strong {
-      color: var(--ink);
-      font-weight: 700;
-    }
-
-    .lesson-body ul {
-      margin: 0 0 16px;
-      padding-left: 22px;
-    }
-
-    .lesson-body li {
-      margin-bottom: 8px;
-    }
-
-    /* 概念卡 */
-    .concept-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 12px;
-      margin: 18px 0;
-    }
-
-    .concept-card {
-      padding: 18px 18px 16px;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-    }
-
-    .concept-card h4 {
-      margin: 0 0 8px;
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--ink);
-    }
-
-    .concept-card p {
-      margin: 0;
-      font-size: 13.5px;
-      line-height: 1.7;
-      color: var(--text);
-    }
-
-    /* 提示块 */
-    .callout {
-      margin: 18px 0;
-      padding: 14px 18px;
-      border-left: 3px solid var(--accent);
-      background: var(--surface-soft);
-      border-radius: 0 var(--radius) var(--radius) 0;
-      font-size: 14px;
-      line-height: 1.75;
-      color: var(--text);
-    }
-
-    .callout .callout-label {
-      display: block;
-      margin-bottom: 4px;
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      color: var(--accent);
-    }
-
-    .callout--warn {
-      border-left-color: #e0a020;
-    }
-
-    .callout--warn .callout-label {
-      color: #e0a020;
-    }
-
-    /* 数据表 */
-    .data-table {
-      width: 100%;
-      margin: 18px 0;
-      border-collapse: collapse;
-      font-size: 13.5px;
-    }
-
-    .data-table th,
-    .data-table td {
-      padding: 10px 12px;
-      border: 1px solid var(--line);
-      text-align: left;
-      vertical-align: top;
-    }
-
-    .data-table th {
-      background: var(--accent);
-      color: var(--accent-ink);
-      font-weight: 700;
-    }
-
-    .data-table td {
-      color: var(--text);
-    }
-
-    .data-table tr:nth-child(even) td {
-      background: var(--surface-soft);
-    }
-
-    /* 条形占比（简化柱状图） */
-    .bar-list {
-      margin: 18px 0;
-    }
-
-    .bar-row {
-      display: grid;
-      grid-template-columns: 150px 1fr 64px;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 10px;
-      font-size: 13px;
-    }
-
-    .bar-row .bar-label {
-      color: var(--text);
-      text-align: right;
-    }
-
-    .bar-row .bar-track {
-      height: 18px;
-      background: var(--surface-soft);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .bar-row .bar-fill {
-      height: 100%;
-      background: var(--accent);
-      border-radius: 999px;
-    }
-
-    .bar-row .bar-val {
-      font-family: var(--mono);
-      font-weight: 700;
-      color: var(--ink);
-    }
-
-    /* 案例步骤 */
-    .step-list {
-      margin: 16px 0 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .step-list li {
-      position: relative;
-      padding: 12px 12px 12px 46px;
-      margin-bottom: 10px;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      font-size: 14px;
-      line-height: 1.7;
-      color: var(--text);
-    }
-
-    .step-list li::before {
-      content: attr(data-step);
-      position: absolute;
-      left: 12px;
-      top: 12px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      border-radius: 999px;
-      background: var(--accent);
-      color: var(--accent-ink);
-      font-family: var(--mono);
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .source-note {
-      margin-top: 26px;
-      padding-top: 14px;
-      border-top: 1px dashed var(--line);
-      color: var(--muted);
-      font-size: 12px;
+      font-size: 12.5px;
       line-height: 1.8;
     }
 
@@ -475,11 +243,6 @@
 
       .page-grid {
         grid-template-columns: 1fr;
-      }
-
-      .bar-row {
-        grid-template-columns: 96px 1fr 52px;
-        gap: 8px;
       }
     }
   </style>
@@ -518,7 +281,7 @@
         <p class="eyebrow">Freshman Overview · 本科课程</p>
         <h1>新生专业概论</h1>
         <p class="hero-submit">
-          <a href="#sec-1">第一课：从一笔水果订单说起</a>
+          <a href="./数字经济专业导论-第一课.pptx" download>下载课件</a>
         </p>
         <div class="course-meta-row">
           <span class="course-meta-chip">2026 级新生</span>
@@ -530,390 +293,18 @@
 
     <section class="page-content">
       <div class="container">
-
-        <div class="page-grid" aria-label="本课导航">
-          <a class="page-card opening-card" href="#sec-1">
-            <span class="page-tag">引题</span>
-            <h3>买的人嫌贵，种的人没赚到——差价去哪了？</h3>
-            <p>一笔水果订单的三种买法，先在心里选一个，下课揭晓答案。</p>
+        <div class="page-grid">
+          <a class="page-card opening-card" href="./数字经济专业导论-第一课.pptx" download>
+            <span class="page-tag">第一课 · 课件</span>
+            <h3>数字经济专业导论 · 第一课</h3>
+            <p>从一笔水果订单说起——用蒲江猕猴桃、安岳柠檬两个真实案例，认识数字经济专业。</p>
             <div class="page-meta">
-              <span>第 01 节 · 问题牵引</span>
-              <span class="page-arrow" aria-hidden="true">→</span>
-            </div>
-          </a>
-          <a class="page-card" href="#sec-2">
-            <span class="page-tag">概念</span>
-            <h3>数字经济是什么</h3>
-            <p>数据 + 网络 + 数字技术：一个定义，三个关键词。</p>
-            <div class="page-meta">
-              <span>第 02 节</span>
-              <span class="page-arrow" aria-hidden="true">→</span>
-            </div>
-          </a>
-          <a class="page-card" href="#sec-3">
-            <span class="page-tag">框架</span>
-            <h3>两条路：造数字的，与用数字的</h3>
-            <p>数字产业化与产业数字化，把四个例子放对栏位。</p>
-            <div class="page-meta">
-              <span>第 03 节</span>
-              <span class="page-arrow" aria-hidden="true">→</span>
-            </div>
-          </a>
-          <a class="page-card" href="#sec-4">
-            <span class="page-tag">体量</span>
-            <h3>数字经济核心产业，已占 GDP 一成</h3>
-            <p>14.09 万亿元增加值，内部构成怎么分。</p>
-            <div class="page-meta">
-              <span>第 04 节</span>
-              <span class="page-arrow" aria-hidden="true">→</span>
-            </div>
-          </a>
-          <a class="page-card" href="#sec-5">
-            <span class="page-tag">机制</span>
-            <h3>平台：市场的撮合者</h3>
-            <p>搜寻匹配、网络效应、激励分配——平台解决三件事。</p>
-            <div class="page-meta">
-              <span>第 05 节</span>
-              <span class="page-arrow" aria-hidden="true">→</span>
-            </div>
-          </a>
-          <a class="page-card" href="#sec-6">
-            <span class="page-tag">案例一</span>
-            <h3>一颗蒲江猕猴桃的数字化之旅</h3>
-            <p>生产、分选、冷链、销售——一项技术，一个经济结果。</p>
-            <div class="page-meta">
-              <span>第 06 节 · 真实案例</span>
-              <span class="page-arrow" aria-hidden="true">→</span>
-            </div>
-          </a>
-          <a class="page-card" href="#sec-7">
-            <span class="page-tag">案例二</span>
-            <h3>AI 给柠檬树开「电子处方」</h3>
-            <p>生产端数字化：数据像医生看诊，AI 像医生开方。</p>
-            <div class="page-meta">
-              <span>第 07 节 · 真实案例</span>
-              <span class="page-arrow" aria-hidden="true">→</span>
-            </div>
-          </a>
-          <a class="page-card" href="#sec-8">
-            <span class="page-tag">概念</span>
-            <h3>数据要素：数字经济的「新生产要素」</h3>
-            <p>可复制、可共享、越用越准；从记录到资产。</p>
-            <div class="page-meta">
-              <span>第 08 节</span>
-              <span class="page-arrow" aria-hidden="true">→</span>
-            </div>
-          </a>
-          <a class="page-card" href="#sec-9">
-            <span class="page-tag">职业</span>
-            <h3>四年后，你会成为哪一类人？</h3>
-            <p>四个岗位对应四个真实场景，加一个课堂讨论。</p>
-            <div class="page-meta">
-              <span>第 09 节 · 讨论</span>
-              <span class="page-arrow" aria-hidden="true">→</span>
+              <span>PPT 课件 · 1.0 MB · 15 页</span>
+              <span class="page-arrow" aria-hidden="true">↓</span>
             </div>
           </a>
         </div>
-
-        <!-- 第 01 节 引题 -->
-        <section class="lesson-section" id="sec-1">
-          <div class="sec-head">
-            <span class="sec-num">01</span>
-            <h2>买的人嫌贵，种的人没赚到——差价去哪了？</h2>
-          </div>
-          <p class="sec-sub">课堂情境（模拟）：同一盒猕猴桃，从蒲江果园到你手里——三种买法，先选一个：</p>
-          <div class="concept-grid">
-            <div class="concept-card">
-              <h4>01 校园超市自提</h4>
-              <p>楼下就有，一盒 9.9 元；代价是自己跑一趟，还要赶在打烊前。</p>
-            </div>
-            <div class="concept-card">
-              <h4>02 即时配送</h4>
-              <p>30 分钟送到宿舍门口；一盒 12.9 元，另加 3 元配送费。</p>
-            </div>
-            <div class="concept-card">
-              <h4>03 平台下单</h4>
-              <p>同一盒只要 7.9 元；但页面写着「明日达」——今晚还想吃吗？</p>
-            </div>
-          </div>
-          <div class="lesson-body">
-            <p>先在心里选一个，并记下理由——答案与解释，这堂课后半段揭晓。</p>
-            <div class="callout">
-              <span class="callout-label">先别急着下结论</span>
-              2025 年蒲江猕猴桃产地均价约 <strong>8.9 元/公斤</strong>（10.07 亿元产值 ÷ 11.32 万吨）——你这盒 9.9 元，差价去哪了？
-            </div>
-            <p class="source-note">课堂模拟 · 非真实报价；产地均价为教案数据演算，不等于果农到手价。</p>
-          </div>
-        </section>
-
-        <!-- 第 02 节 定义 -->
-        <section class="lesson-section" id="sec-2">
-          <div class="sec-head">
-            <span class="sec-num">02</span>
-            <h2>数字经济是什么？你刚才的每一次点击，都在产生数据</h2>
-          </div>
-          <p class="sec-sub">先记住基本概念：</p>
-          <div class="callout">
-            <span class="callout-label">定义</span>
-            <strong>数字经济</strong>：以数据资源为关键要素、以现代信息网络为主要载体、以数字技术应用为驱动，对生产、交换、分配、消费产生影响的经济形态。
-          </div>
-          <div class="concept-grid">
-            <div class="concept-card">
-              <h4>数据资源</h4>
-              <p>你的选择、位置、评价，都在变成可记录、可分析的数据——刚才那笔订单就是。</p>
-            </div>
-            <div class="concept-card">
-              <h4>现代信息网络</h4>
-              <p>手机、基站、云端，把分散在各处的数据连成一张网，让信息即时流动。</p>
-            </div>
-            <div class="concept-card">
-              <h4>数字技术应用</h4>
-              <p>算法把数据变成推荐、定价、调度与决策——比如平台给你的优惠券。</p>
-            </div>
-          </div>
-          <div class="callout callout--warn">
-            <span class="callout-label">易错点</span>
-            别把「网上卖东西」当成数字经济——网上交易额不等于数字经济增加值，网店与外卖只是它的一角。
-          </div>
-          <p class="source-note">教学转述 · 口径依据：国家统计局《数字经济及其核心产业统计分类（2021）》</p>
-        </section>
-
-        <!-- 第 03 节 两分法 -->
-        <section class="lesson-section" id="sec-3">
-          <div class="sec-head">
-            <span class="sec-num">03</span>
-            <h2>数字经济分两条路：造数字的，与用数字的</h2>
-          </div>
-          <p class="sec-sub">两种数字化，对应国家统计分类中的两个方向：</p>
-          <div class="concept-grid">
-            <div class="concept-card">
-              <h4>数字产业化</h4>
-              <p>提供数字产品与服务本身——云服务、芯片、软件、互联网平台，把数字能力本身做成产业。<br><strong>例：云服务、芯片制造</strong></p>
-            </div>
-            <div class="concept-card">
-              <h4>产业数字化</h4>
-              <p>用数字能力改造原有产业——农业、制造、物流、金融，用数据提升效率、质量与收益。<br><strong>例：果园智能灌溉、商家线上订单分析</strong></p>
-            </div>
-          </div>
-          <div class="callout">
-            <span class="callout-label">课堂提问</span>
-            请问：云服务、芯片制造、果园智能灌溉、商家线上订单分析，分别放进哪一栏？
-          </div>
-          <p class="source-note">分类口径参考：国家统计局《数字经济及其核心产业统计分类（2021）》</p>
-        </section>
-
-        <!-- 第 04 节 体量 -->
-        <section class="lesson-section" id="sec-4">
-          <div class="sec-head">
-            <span class="sec-num">04</span>
-            <h2>数字经济核心产业，已占全国 GDP 的一成</h2>
-          </div>
-          <p class="sec-sub">国家统计局：2024 年数字经济核心产业增加值 140,891 亿元，占 GDP 的 10.5%。</p>
-          <div class="concept-grid">
-            <div class="concept-card">
-              <h4>14.09 万亿元</h4>
-              <p>2024 年数字经济核心产业增加值。</p>
-            </div>
-            <div class="concept-card">
-              <h4>占当年 GDP 10.5%</h4>
-              <p>平均每 100 元 GDP 中，约 10.5 元来自数字经济核心产业——它已是国民经济的重要支柱。</p>
-            </div>
-          </div>
-          <div class="bar-list" role="img" aria-label="核心产业内部构成条形图">
-            <div class="bar-row"><span class="bar-label">数字技术应用业</span><span class="bar-track"><span class="bar-fill" style="width:44%"></span></span><span class="bar-val">44.0%</span></div>
-            <div class="bar-row"><span class="bar-label">数字产品制造业</span><span class="bar-track"><span class="bar-fill" style="width:34.2%"></span></span><span class="bar-val">34.2%</span></div>
-            <div class="bar-row"><span class="bar-label">数字要素驱动业</span><span class="bar-track"><span class="bar-fill" style="width:18.8%"></span></span><span class="bar-val">18.8%</span></div>
-            <div class="bar-row"><span class="bar-label">数字产品服务业</span><span class="bar-track"><span class="bar-fill" style="width:3.1%"></span></span><span class="bar-val">3.1%</span></div>
-          </div>
-          <p class="source-note">口径：数字经济核心产业，不含全部数字经济相关活动。来源：国家统计局 2024 年国民经济核算（2025-12 发布）｜国家统计局统计分类解读</p>
-        </section>
-
-        <!-- 第 05 节 平台 -->
-        <section class="lesson-section" id="sec-5">
-          <div class="sec-head">
-            <span class="sec-num">05</span>
-            <h2>平台不是中间商，是市场的撮合者</h2>
-          </div>
-          <p class="sec-sub">回到水果订单：平台同时服务消费者、商家与配送者——它和数字经济，到底是什么关系？</p>
-          <div class="callout">
-            <span class="callout-label">平台与数字经济的关系</span>
-            平台不是旁观者，它就是数字经济的主角：<strong>① 本身就是数字产业</strong>（回看第 03 节）｜<strong>② 产业数字化的入口</strong>（农业、零售、物流借平台完成数字化交易）｜<strong>③ 数据要素的集散地</strong>（撮合产生数据、数据再反哺撮合）。
-          </div>
-          <div class="lesson-body">
-            <p><strong>平台解决三件事：</strong></p>
-            <ul>
-              <li><strong>01 搜寻与匹配成本</strong>：评价、搜索、算法，让买卖双方更快找到彼此。</li>
-              <li><strong>02 网络效应</strong>：用的人越多，平台对每个人越有价值。</li>
-              <li><strong>03 激励与利益分配</strong>：佣金、补贴、运费怎么分，决定平台生态。</li>
-            </ul>
-            <p class="source-note">课堂讲解 · 平台经济学基础概念；关系图为示意结构</p>
-          </div>
-        </section>
-
-        <!-- 第 06 节 蒲江案例 -->
-        <section class="lesson-section" id="sec-6">
-          <div class="sec-head">
-            <span class="sec-num">06</span>
-            <h2>一颗蒲江猕猴桃的数字化之旅</h2>
-          </div>
-          <p class="sec-sub">真实案例（四川·成都蒲江）：从果园到餐桌，四个环节都在被数据重新组织。</p>
-          <ol class="step-list">
-            <li data-step="01"><strong>生产监测</strong>：土壤大数据平台采集 130 万余条数据；物联网基地 20 余个、节水灌溉 5 万亩，亩均人力成本降 30% 以上。</li>
-            <li data-step="02"><strong>智能分选</strong>：自动分选线单果每秒拍 56 张照片、做 12 项品质检测，瑕疵识别准确度 90%，二维码成为猕猴桃「身份证」。</li>
-            <li data-step="03"><strong>冷链保鲜</strong>：114 间气调保鲜库、静态库容超 20 万吨；智慧气调加即食催熟把销售周期从 3 个月延长到 8 个月。</li>
-            <li data-step="04"><strong>线上销售</strong>：电商主体 8050 余家，年发货超 1 亿件，品牌价值 131.02 亿元。</li>
-          </ol>
-          <div class="lesson-body">
-            <p>2025 年种植 6 万亩、年产 11.32 万吨、产值 10.07 亿元。一个环节一项技术，每个环节都对应可量化的经济结果——下一页算这笔账。</p>
-          </div>
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>数字化环节</th>
-                <th>技术动作</th>
-                <th>经济结果（数据年份）</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>物联网监测</td>
-                <td>土壤与气象传感器＋大数据平台</td>
-                <td>亩均人力成本 -30% 以上（2022 省厅）</td>
-              </tr>
-              <tr>
-                <td>智能分选</td>
-                <td>单果每秒 56 张照片＋12 项品质检测</td>
-                <td>瑕疵识别准确度 90%（2024 红星新闻）</td>
-              </tr>
-              <tr>
-                <td>气调冷库</td>
-                <td>智慧气调＋精准温控＋即食催熟</td>
-                <td>销售周期 3→8 个月，6 万吨错峰上市（2026 人民网）</td>
-              </tr>
-              <tr>
-                <td>电商平台</td>
-                <td>线上订单＋产地直发＋冷链物流</td>
-                <td>年发货超 1 亿件，产地均价预计 +30%（2026 蒲江答复函）</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="callout">
-            <span class="callout-label">算得清这笔账</span>
-            成本、时间、价格，处处可计量——这就是数字经济专业的看家本领。
-          </div>
-          <p class="source-note">来源：蒲江县农业农村局答复函（2026）｜四川省农业农村厅（2022）｜红星新闻（2024）｜人民网四川（2026）</p>
-        </section>
-
-        <!-- 第 07 节 安岳案例 -->
-        <section class="lesson-section" id="sec-7">
-          <div class="sec-head">
-            <span class="sec-num">07</span>
-            <h2>AI 给柠檬树开「电子处方」</h2>
-          </div>
-          <p class="sec-sub">真实案例（四川·资阳安岳）：数字化发生在生产端，AI 直接参与农事决策。种植面积 48 万亩，产量占全国约 70%。</p>
-          <ol class="step-list">
-            <li data-step="01">「天-空-地-人」四维监测网采集果园数据。</li>
-            <li data-step="02">柠檬作物模型平台生成个性化农事处方。</li>
-            <li data-step="03">AI「电子处方」推送到农户手机，像医生开方一样。</li>
-          </ol>
-          <div class="lesson-body">
-            <p><strong>成效（示范园一年）</strong>：人力成本 -30%、农资 -25%、单产 +35%、商品果率 85% 以上；曾提前预警红蜘蛛，帮农户避免数十万元损失。</p>
-            <p><strong>地位</strong>：2026 年 1 月入选《2025 年全国智慧农业典型案例汇编》，是资阳市首个国家级智慧农业样板。</p>
-            <p>「数据像医生一样看诊，AI 像处方一样开方」——生产端的数字化，同样落到成本与产量上。</p>
-            <p class="source-note">来源：农业农村部农产品质量安全中心（2026-01）｜四川在线（2026-01）｜安岳县政府（2025）</p>
-          </div>
-        </section>
-
-        <!-- 第 08 节 数据要素 -->
-        <section class="lesson-section" id="sec-8">
-          <div class="sec-head">
-            <span class="sec-num">08</span>
-            <h2>数据要素：数字经济的「新生产要素」</h2>
-          </div>
-          <p class="sec-sub">与土地、劳动、资本并列，数据是驱动数字经济的第四类生产要素。</p>
-          <div class="callout">
-            <span class="callout-label">定义</span>
-            <strong>数据要素</strong>，是能以数据形态参与生产、被记录、复用与交易的生产要素——数字经济定义里的「关键要素」，说的就是它。
-          </div>
-          <div class="concept-grid">
-            <div class="concept-card">
-              <h4>01 可复制，不消耗</h4>
-              <p>同一份数据可被反复使用，不像土地、设备那样越用越少。</p>
-            </div>
-            <div class="concept-card">
-              <h4>02 可共享，不排他</h4>
-              <p>数据能同时供多方使用，用得越多、价值越大。</p>
-            </div>
-            <div class="concept-card">
-              <h4>03 越用越准</h4>
-              <p>在使用中不断积累与校正，数据价值随规模上升。</p>
-            </div>
-          </div>
-          <div class="callout">
-            <span class="callout-label">从记录到资产</span>
-            <strong>蒲江</strong>：130 万余条土壤数据 → 精准灌溉（记录→决策）；<strong>南充</strong>：柑橘数据产品挂牌深数所、获银行授信 1.1 亿元（数据→资产，第二节展开）。
-          </div>
-          <div class="callout callout--warn">
-            <span class="callout-label">易错提醒</span>
-            别混淆——第 03 节统计分类里的「数字要素驱动业」（占 18.8%）是产业类别，指由数据要素驱动的产业；这里讲的是「数据要素」本身。两者相关，但不是一回事。
-          </div>
-        </section>
-
-        <!-- 第 09 节 职业与讨论 -->
-        <section class="lesson-section" id="sec-9">
-          <div class="sec-head">
-            <span class="sec-num">09</span>
-            <h2>四年后，你会成为哪一类人？</h2>
-          </div>
-          <p class="sec-sub">第一课的案例里，已经藏着职业方向——四类岗位，对应四个真实场景：</p>
-          <div class="concept-grid">
-            <div class="concept-card">
-              <h4>数据运营分析</h4>
-              <p>蒲江电商团队：看数据决定上架什么、卖给谁、怎么定价。</p>
-            </div>
-            <div class="concept-card">
-              <h4>供应链管理</h4>
-              <p>冷链与物流：让水果在 48 小时内从田间到餐桌（即食猕猴桃实践）。</p>
-            </div>
-            <div class="concept-card">
-              <h4>数字金融</h4>
-              <p>数据产品获银行授信 1.1 亿元（南充案例）——谁来评估它的价值与风险？</p>
-            </div>
-            <div class="concept-card">
-              <h4>政策评估研究</h4>
-              <p>国家级智慧农业样板如何推广、效果如何评估——谁来研究并制定规则？</p>
-            </div>
-          </div>
-          <div class="callout callout--warn">
-            <span class="callout-label">课堂讨论</span>
-            <strong>电商平台抽成——是「帮农民卖货」，还是「薅农民羊毛」？</strong><br>和同桌讨论 1 分钟：正反各说一个理由，再回到岗位话题。
-          </div>
-          <p class="source-note">南充数据产品授信：南充市政府（2026）</p>
-        </section>
-
-        <!-- 小结 -->
-        <section class="lesson-section" id="sec-10">
-          <div class="sec-head">
-            <span class="sec-num">10</span>
-            <h2>小结：数字经济专业，是让传统产业变聪明的学问</h2>
-          </div>
-          <p class="sec-sub">回到开头的提问：你的水果订单选择，今天解释清楚了吗？三个判断收束本课：</p>
-          <div class="concept-grid">
-            <div class="concept-card">
-              <h4>01</h4>
-              <p>数字经济 = 数据 + 网络 + 数字技术，改变生产与交易。</p>
-            </div>
-            <div class="concept-card">
-              <h4>02</h4>
-              <p>平台解决三件事：找人、聚人、分钱。</p>
-            </div>
-            <div class="concept-card">
-              <h4>03</h4>
-              <p>数字农业就在我们身边：蒲江的猕猴桃、安岳的柠檬。</p>
-            </div>
-          </div>
-        </section>
-
+        <p class="note-line">课件含课堂视频链接与讲稿备注，建议在 PowerPoint / 飞书幻灯片中打开放映。</p>
       </div>
     </section>
 
