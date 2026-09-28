@@ -7,6 +7,30 @@
   <meta name="description" content="张剑的知识学习专栏，涵盖研究方法、实证分析等系列课程。">
   <script src="../assets/theme.js"></script>
   <link rel="stylesheet" href="../assets/site.css?v=19">
+  <style>
+    /* 置顶专栏卡：独占一行、字号放大，与普通卡片拉开层级 */
+    .columns-grid .column-card.is-featured {
+      grid-column: 1 / -1;
+      min-height: 300px;
+      padding: 46px 48px;
+      border-color: var(--line-strong);
+      border-top: 3px solid var(--accent);
+    }
+    .column-card.is-featured .col-tag { margin-bottom: 20px; }
+    .column-card.is-featured h3 {
+      max-width: 22ch;
+      margin: 0 0 16px;
+      font-size: clamp(30px, 4.2vw, 46px);
+      line-height: 1.16;
+    }
+    .column-card.is-featured p { max-width: 62ch; font-size: clamp(15px, 1.5vw, 18px); line-height: 1.75; }
+    .column-card.is-featured .col-meta { max-width: 62ch; margin-top: 30px; }
+    @media (max-width: 760px) {
+      .columns-grid .column-card.is-featured { min-height: auto; padding: 28px 22px; }
+      .column-card.is-featured h3 { font-size: 26px; }
+      .column-card.is-featured .col-meta { margin-top: 22px; }
+    }
+  </style>
 </head>
 <body class="home-page">
   <header class="site-header">
@@ -39,6 +63,18 @@
       </h2>
 
       <div class="columns-grid">
+
+        <a class="column-card is-featured" href="./jiliang-fangfa/">
+          <div>
+            <span class="col-tag">最新专栏</span>
+            <h3>计量方法 · Stata 实操</h3>
+            <p>用 Stata 把因果推断的每一步跑通，从设计选择到诊断细节。第一讲逐个实测 xtswitchdid 的十个开关，附可重建的模拟数据与同口径实测输出。</p>
+          </div>
+          <div class="col-meta">
+            <span>1 篇讲稿 · DID 专题 · 入门 → 实战</span>
+            <span class="col-arrow" aria-hidden="true">→</span>
+          </div>
+        </a>
 
         <a class="column-card" href="https://aiolaola.com/course" target="_blank" rel="noopener">
           <div>
@@ -124,17 +160,6 @@
           </div>
           <div class="col-meta">
             <span>8 节 · 入门 → 实战</span>
-            <span class="col-arrow" aria-hidden="true">→</span>
-          </div>
-        </a>
-
-        <a class="column-card" href="./jiliang-fangfa/">
-          <div>
-            <h3>计量方法 · Stata 实操</h3>
-            <p>用 Stata 把因果推断的每一步跑通，从设计选择到诊断细节。第一讲逐个实测 xtswitchdid 的十个开关。</p>
-          </div>
-          <div class="col-meta">
-            <span>1 篇讲稿 · DID 专题</span>
             <span class="col-arrow" aria-hidden="true">→</span>
           </div>
         </a>

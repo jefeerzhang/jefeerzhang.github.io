@@ -120,6 +120,7 @@ sections:
         meta: 1 篇讲稿 · DID 专题
         shell: knowledge-shell
         status: live
+        featured: true            # 在 knowledge/index.html 里置顶、独占一行
 
   - id: tools
     path: /tools/
