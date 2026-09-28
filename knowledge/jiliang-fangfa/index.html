@@ -1,119 +1,137 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>计量方法 · 知识学习</title>
-  <meta name="description" content="计量方法专栏：用 Stata 把因果推断的每一步跑通。第一讲逐个实测 xtswitchdid 的十个开关。">
-  <script src="../../assets/theme.js"></script>
-  <link rel="stylesheet" href="../../assets/site.css?v=19">
-  <style>
-    /* 计量方法专栏首页：沿用站点视觉，只用站点变量，明暗主题自动跟随 */
-    .jiliang-hero { padding: 72px 0 56px; background: var(--paper); border-bottom: 1px solid var(--line-strong); }
-    .jiliang-hero .breadcrumb { margin-bottom: 22px; }
-    .jiliang-hero h1 { margin: 0 0 18px; font-family: var(--display); font-size: clamp(38px, 5.4vw, 62px); font-weight: 700; line-height: 1.08; letter-spacing: -0.02em; color: var(--ink); }
-    .jiliang-hero .hero-summary { max-width: 660px; margin: 0 0 28px; font-family: var(--serif); font-size: 17px; line-height: 1.8; color: var(--muted); }
-    .jiliang-hero-meta { display: flex; flex-wrap: wrap; gap: 18px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
-    .jiliang-hero-meta span strong { margin-right: 6px; font-weight: 600; color: var(--ink); }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>计量方法 · Stata 实操讲稿</title>
+<meta name="description" content="计量方法专栏：用 Stata 把因果推断的每一步跑通。每篇讲稿都配可重建的模拟数据、do-file 与实测输出。">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ink:#1a2e4b; --ink-soft:#2b2b2b; --muted:#6b7280; --line:#d1d5db;
+  --bg:#f7f5f0; --card:#fff; --accent:#c87533; --accent-soft:rgba(200,117,51,.1);
+  --blue:#1a2e4b; --blue-soft:rgba(26,46,75,.06);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans SC',system-ui,sans-serif;background:var(--bg);color:var(--ink-soft);line-height:1.8;font-size:16px}
+.wrap{max-width:880px;margin:0 auto;padding:0 24px}
+a{color:var(--accent)}
 
-    .jiliang-index-section { padding: 64px 0 0; }
-    .jiliang-index-section:last-of-type { padding-bottom: 88px; }
-    .jiliang-index-section .section-title { margin: 0 0 22px; font-family: var(--display); font-size: clamp(24px, 3vw, 32px); font-weight: 700; line-height: 1.25; letter-spacing: -0.01em; color: var(--ink); }
+/* header */
+.hero{padding:60px 0 32px;border-bottom:1px solid var(--line)}
+.hero .crumb{font-size:13px;color:var(--muted);letter-spacing:.05em;margin-bottom:16px}
+.hero .crumb a{color:var(--muted);text-decoration:none}
+.hero .crumb a:hover{color:var(--accent)}
+.hero h1{font-family:'Noto Serif SC',serif;font-size:38px;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:12px}
+.hero .subtitle{font-size:17px;color:var(--muted);margin-bottom:24px}
+.meta-tags{display:flex;flex-wrap:wrap;gap:8px}
+.meta-tags span{font-size:12px;padding:4px 12px;border:1px solid var(--line);border-radius:20px;color:var(--muted);background:var(--card)}
+.lead-note{font-size:13.5px;color:var(--muted);margin-top:20px}
 
-    .jiliang-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 420px)); justify-content: start; gap: 18px; }
-    .jiliang-card { display: flex; gap: 18px; padding: 22px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: inherit; text-decoration: none; transition: border-color 200ms ease; }
-    .jiliang-card:hover { border-color: var(--accent); }
-    .jiliang-card-num { flex: 0 0 48px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: var(--surface-soft); color: var(--accent); font-family: var(--mono); font-size: 18px; font-weight: 700; }
-    .jiliang-card-body { flex: 1; min-width: 0; }
-    .jiliang-card-tag { display: inline-block; margin-bottom: 8px; font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
-    .jiliang-card-body h3 { margin: 0 0 8px; font-family: var(--serif); font-size: 19px; font-weight: 600; line-height: 1.4; color: var(--ink); }
-    .jiliang-card-body p { margin: 0 0 10px; font-family: var(--serif); font-size: 14.5px; line-height: 1.65; color: var(--muted); }
-    .jiliang-card-go { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+/* sections */
+section{padding:48px 0;border-bottom:1px solid var(--line)}
+section:last-child{border-bottom:none}
+.sec-num{font-family:'Noto Serif SC',serif;font-size:14px;color:var(--accent);font-weight:700;letter-spacing:.1em;margin-bottom:8px}
+.sec-title{font-family:'Noto Serif SC',serif;font-size:26px;font-weight:700;color:var(--ink);margin-bottom:24px}
 
-    .jiliang-cta { padding: 26px 28px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
-    .jiliang-cta h3 { margin: 0 0 14px; font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
-    .jiliang-cta ol { margin: 0; padding-left: 1.3em; color: var(--text); font-family: var(--serif); font-size: 16px; line-height: 1.9; }
-    .jiliang-cta strong { color: var(--ink); }
+/* lecture card */
+.lecture{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:26px 28px;transition:border-color 200ms ease}
+.lecture:hover{border-color:var(--accent)}
+.lecture-head{display:flex;align-items:baseline;gap:12px;margin-bottom:10px}
+.case-tag{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.05em;white-space:nowrap}
+.lecture-title{font-family:'Noto Serif SC',serif;font-size:22px;font-weight:700;color:var(--ink);line-height:1.45}
+.lecture-desc{margin:0 0 16px;font-size:15px;line-height:1.75;color:var(--ink-soft)}
+.lecture-meta{display:flex;flex-wrap:wrap;gap:14px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);margin-bottom:14px}
+.lecture-go{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:500;color:var(--accent)}
 
-    @media (max-width: 760px) {
-      .jiliang-hero { padding: 40px 0 36px; }
-      .jiliang-index-section { padding-top: 44px; }
-      .jiliang-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+/* reading order */
+ol,ul{padding-left:24px;margin:12px 0}
+li{margin:8px 0}
+li strong{color:var(--ink)}
+blockquote{border-left:3px solid var(--accent);background:var(--accent-soft);padding:16px 20px;margin:20px 0;border-radius:0 6px 6px 0}
+blockquote p{margin:4px 0}
+code{font-family:'JetBrains Mono',monospace;font-size:13px;background:var(--blue-soft);padding:2px 6px;border-radius:4px;color:var(--ink)}
+
+/* footer */
+footer{padding:40px 0;text-align:center;font-size:13px;color:var(--muted)}
+footer p{margin:4px 0}
+footer a{color:var(--accent);text-decoration:none}
+
+@media(max-width:640px){
+  .hero{padding:40px 0 28px}
+  .hero h1{font-size:28px}
+  .sec-title{font-size:22px}
+  .lecture{padding:20px 18px}
+  .lecture-head{display:block}
+  .lecture-title{font-size:19px;margin-top:6px}
+}
+</style>
 </head>
-<body class="jiliang-index-page">
-  <a class="skip-link" href="#main-content">跳至主要内容</a>
-  <header class="site-header">
-    <nav class="site-nav" aria-label="主导航">
-      <div class="container nav-inner">
-        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
-        <div class="nav-links">
-          <a href="../../">首页</a>
-          <a href="../../cv/">个人简历</a>
-          <a href="../" aria-current="page">知识学习</a>
-          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
-        </div>
-      </div>
-    </nav>
-  </header>
+<body>
 
-  <main id="main-content">
-    <section class="jiliang-hero">
-      <div class="container">
-        <div class="breadcrumb"><a href="../">知识学习</a><span class="sep">/</span><span class="current">计量方法</span></div>
-        <p class="eyebrow">计量方法 · Stata 实操</p>
-        <h1>计量方法</h1>
-        <p class="hero-summary">用 Stata 把因果推断的每一步跑通：设计、估计、诊断。每篇讲稿都配可重建的模拟数据、do-file 与实测输出，数字能自己跑一遍。</p>
-        <div class="jiliang-hero-meta">
-          <span><strong>1</strong> 篇讲稿</span>
-          <span><strong>DID 专题</strong></span>
-          <span><strong>Stata 实操</strong></span>
-        </div>
-      </div>
-    </section>
+<header class="hero">
+<div class="wrap">
+<div class="crumb"><a href="../">知识学习</a> / 计量方法</div>
+<h1>计量方法</h1>
+<p class="subtitle">用 Stata 把因果推断的每一步跑通：设计、估计、诊断</p>
+<div class="meta-tags">
+<span>1 篇讲稿</span>
+<span>DID 专题</span>
+<span>Stata 18 实操</span>
+<span>数据可重建</span>
+</div>
+<p class="lead-note">每篇讲稿都配一份能重建的模拟数据、do-file 与实测日志。正文里的数字你都可以自己跑一遍，再对照结论。</p>
+</div>
+</header>
 
-    <section class="jiliang-index-section">
-      <div class="container">
-        <h2 class="section-title">讲稿</h2>
-        <div class="jiliang-grid">
-          <a class="jiliang-card" href="0001-xtswitchdid-shi-ge-kai-guan.html">
-            <div class="jiliang-card-num">01</div>
-            <div class="jiliang-card-body">
-              <span class="jiliang-card-tag">DID · 十个开关</span>
-              <h3>xtswitchdid 之后：把十个开关一个个打开</h3>
-              <p>neffects / switchgroup / controlgroup / path / supergroup / raw / commonswitchers 各解决什么问题，不用会怎样。附同口径实测数字。</p>
-              <span class="jiliang-card-go">查看讲稿 →</span>
-            </div>
-          </a>
-        </div>
-      </div>
-    </section>
+<main>
 
-    <section class="jiliang-index-section">
-      <div class="container">
-        <div class="jiliang-cta">
-          <h3>怎么读这一篇</h3>
-          <ol>
-            <li>先看<strong>第 0 节 一页速览</strong>，知道十个开关分别对应什么设计问题</li>
-            <li>再看<strong>第 1 节 DGP</strong>，弄清这份模拟数据为什么能刁难传统方法</li>
-            <li><strong>第 3 节</strong>逐个开关看：每个开关都有同口径的前后对比数字</li>
-            <li><strong>第 4 节</strong>把十个开关并成一张对照表，<strong>第 6 节</strong>作业可以照着跑一遍</li>
-          </ol>
-        </div>
-      </div>
-    </section>
-  </main>
+<section id="lectures">
+<div class="wrap">
+<div class="sec-num">01</div>
+<h2 class="sec-title">讲稿</h2>
 
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <span>由 GitHub Pages 托管</span>
-      <div class="footer-links">
-        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
-      </div>
-    </div>
-  </footer>
+<a class="lecture" href="0001-xtswitchdid-shi-ge-kai-guan.html">
+<div class="lecture-head">
+<span class="case-tag">第 1 讲</span>
+<span class="lecture-title">xtswitchdid 选定之后：把十个开关一个个打开</span>
+</div>
+<p class="lecture-desc"><code>neffects()</code>、<code>switchgroup()</code>、<code>controlgroup()</code>、<code>path()</code>、<code>supergroup()</code>、<code>raw</code>、<code>commonswitchers</code> 各自在解决什么设计问题，不用会怎样。十个场景逐个实测，每个开关都给出同口径的前后对照数字。</p>
+<div class="lecture-meta">
+<span>10 个场景</span>
+<span>55 张对照表</span>
+<span>26 段 Stata 输出</span>
+<span>DGP 可重建</span>
+</div>
+<span class="lecture-go">查看讲稿 →</span>
+</a>
+</div>
+</section>
+
+<section id="howto">
+<div class="wrap">
+<div class="sec-num">02</div>
+<h2 class="sec-title">怎么读这一篇</h2>
+<ol>
+<li>先读<b>第 0 节 一页速览</b>：十个开关各对应一个设计问题，速览表已经把「不用会怎样」的实测数字列出来了。</li>
+<li>再读<b>第 1 节 DGP</b>：这份模拟数据为什么能刁难传统方法，读完才知道后面每个开关在防什么。</li>
+<li>然后<b>第 3 节</b>逐个场景过。每个场景都是同一套五段结构：什么时候需要它、为什么默认不够用、不用会怎样、代价、怎么汇报。</li>
+<li>最后用<b>第 4 节</b>的一张总卡收口，再照着<b>第 6 节</b>作业自己跑一遍。</li>
+</ol>
+<blockquote>
+<p>读的时候守住一条纪律：所有「用/不用某开关」的对照，两侧 <code>neffects()</code> 必须相同。同时改两件事，差额就无法归因。</p>
+</blockquote>
+</div>
+</section>
+
+</main>
+
+<footer>
+<div class="wrap">
+<p>「计量方法 · Stata 实操」· 模拟数据、do-file 与日志全部可重建</p>
+<p><a href="../">← 回到知识学习</a> · <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a> · <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a></p>
+</div>
+</footer>
 
 </body>
 </html>
