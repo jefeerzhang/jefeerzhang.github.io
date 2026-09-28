@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>计量方法 · 知识学习</title>
+  <meta name="description" content="计量方法专栏：用 Stata 把因果推断的每一步跑通。第一讲逐个实测 xtswitchdid 的十个开关。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <style>
+    /* 计量方法专栏首页：沿用站点视觉，只用站点变量，明暗主题自动跟随 */
+    .jiliang-hero { padding: 72px 0 56px; background: var(--paper); border-bottom: 1px solid var(--line-strong); }
+    .jiliang-hero .breadcrumb { margin-bottom: 22px; }
+    .jiliang-hero h1 { margin: 0 0 18px; font-family: var(--display); font-size: clamp(38px, 5.4vw, 62px); font-weight: 700; line-height: 1.08; letter-spacing: -0.02em; color: var(--ink); }
+    .jiliang-hero .hero-summary { max-width: 660px; margin: 0 0 28px; font-family: var(--serif); font-size: 17px; line-height: 1.8; color: var(--muted); }
+    .jiliang-hero-meta { display: flex; flex-wrap: wrap; gap: 18px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+    .jiliang-hero-meta span strong { margin-right: 6px; font-weight: 600; color: var(--ink); }
+
+    .jiliang-index-section { padding: 64px 0 0; }
+    .jiliang-index-section:last-of-type { padding-bottom: 88px; }
+    .jiliang-index-section .section-title { margin: 0 0 22px; font-family: var(--display); font-size: clamp(24px, 3vw, 32px); font-weight: 700; line-height: 1.25; letter-spacing: -0.01em; color: var(--ink); }
+
+    .jiliang-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 420px)); justify-content: start; gap: 18px; }
+    .jiliang-card { display: flex; gap: 18px; padding: 22px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: inherit; text-decoration: none; transition: border-color 200ms ease; }
+    .jiliang-card:hover { border-color: var(--accent); }
+    .jiliang-card-num { flex: 0 0 48px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: var(--surface-soft); color: var(--accent); font-family: var(--mono); font-size: 18px; font-weight: 700; }
+    .jiliang-card-body { flex: 1; min-width: 0; }
+    .jiliang-card-tag { display: inline-block; margin-bottom: 8px; font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+    .jiliang-card-body h3 { margin: 0 0 8px; font-family: var(--serif); font-size: 19px; font-weight: 600; line-height: 1.4; color: var(--ink); }
+    .jiliang-card-body p { margin: 0 0 10px; font-family: var(--serif); font-size: 14.5px; line-height: 1.65; color: var(--muted); }
+    .jiliang-card-go { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); }
+
+    .jiliang-cta { padding: 26px 28px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+    .jiliang-cta h3 { margin: 0 0 14px; font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+    .jiliang-cta ol { margin: 0; padding-left: 1.3em; color: var(--text); font-family: var(--serif); font-size: 16px; line-height: 1.9; }
+    .jiliang-cta strong { color: var(--ink); }
+
+    @media (max-width: 760px) {
+      .jiliang-hero { padding: 40px 0 36px; }
+      .jiliang-index-section { padding-top: 44px; }
+      .jiliang-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="jiliang-index-page">
+  <a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+          <a href="../../">首页</a>
+          <a href="../../cv/">个人简历</a>
+          <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <section class="jiliang-hero">
+      <div class="container">
+        <div class="breadcrumb"><a href="../">知识学习</a><span class="sep">/</span><span class="current">计量方法</span></div>
+        <p class="eyebrow">计量方法 · Stata 实操</p>
+        <h1>计量方法</h1>
+        <p class="hero-summary">用 Stata 把因果推断的每一步跑通：设计、估计、诊断。每篇讲稿都配可重建的模拟数据、do-file 与实测输出，数字能自己跑一遍。</p>
+        <div class="jiliang-hero-meta">
+          <span><strong>1</strong> 篇讲稿</span>
+          <span><strong>DID 专题</strong></span>
+          <span><strong>Stata 实操</strong></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="jiliang-index-section">
+      <div class="container">
+        <h2 class="section-title">讲稿</h2>
+        <div class="jiliang-grid">
+          <a class="jiliang-card" href="0001-xtswitchdid-shi-ge-kai-guan.html">
+            <div class="jiliang-card-num">01</div>
+            <div class="jiliang-card-body">
+              <span class="jiliang-card-tag">DID · 十个开关</span>
+              <h3>xtswitchdid 之后：把十个开关一个个打开</h3>
+              <p>neffects / switchgroup / controlgroup / path / supergroup / raw / commonswitchers 各解决什么问题，不用会怎样。附同口径实测数字。</p>
+              <span class="jiliang-card-go">查看讲稿 →</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="jiliang-index-section">
+      <div class="container">
+        <div class="jiliang-cta">
+          <h3>怎么读这一篇</h3>
+          <ol>
+            <li>先看<strong>第 0 节 一页速览</strong>，知道十个开关分别对应什么设计问题</li>
+            <li>再看<strong>第 1 节 DGP</strong>，弄清这份模拟数据为什么能刁难传统方法</li>
+            <li><strong>第 3 节</strong>逐个开关看：每个开关都有同口径的前后对比数字</li>
+            <li><strong>第 4 节</strong>把十个开关并成一张对照表，<strong>第 6 节</strong>作业可以照着跑一遍</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -112,6 +112,14 @@ sections:
         meta: 12 节核心 + 7 篇辅助 · 入门 → 实战
         shell: knowledge-shell
         status: live
+      - id: jiliang-fangfa
+        path: /knowledge/jiliang-fangfa/
+        title: 计量方法 · Stata 实操
+        summary: 用 Stata 把因果推断的每一步跑通,从设计选择到诊断细节。
+        tag: 研究方法
+        meta: 1 篇讲稿 · DID 专题
+        shell: knowledge-shell
+        status: live
 
   - id: tools
     path: /tools/
