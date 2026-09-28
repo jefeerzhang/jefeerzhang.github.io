@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>计量方法 · Stata 实操讲稿</title>
 <meta name="description" content="计量方法专栏：用 Stata 把因果推断的每一步跑通。每篇讲稿都配可重建的模拟数据、do-file 与实测输出。">
+<script src="../../assets/theme.js"></script>
 <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
 :root{
@@ -65,6 +66,23 @@ footer a{color:var(--accent);text-decoration:none}
   .lecture-head{display:block}
   .lecture-title{font-size:19px;margin-top:6px}
 }
+
+/* 主题切换：沿用站点 assets/theme.js 的 data-theme="dark" 机制，
+   深色取值对齐 assets/site.css 的深色变量（accent 保持橙色系并提亮一档） */
+.theme-toggle{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;padding:0;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--muted);cursor:pointer;transition:background .18s ease,border-color .18s ease,color .18s ease}
+.theme-toggle:hover{background:var(--card);border-color:var(--muted);color:var(--accent)}
+.theme-toggle svg{width:16px;height:16px}
+.theme-toggle--fab{position:fixed;right:18px;bottom:18px;width:44px;height:44px;margin:0;background:var(--card);box-shadow:0 6px 18px rgba(0,0,0,.18);z-index:1000}
+.theme-toggle--fab svg{width:18px;height:18px}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0f1316;--card:#1c2126;--surface-soft:#252c32;--ink:#e8ebe8;--ink-soft:#a8b3ac;--muted:#7c8b83;--line:#333e47;--blue:#e8ebe8;--blue-soft:rgba(232,235,232,.06);--accent:#e0a06a;--accent-soft:rgba(224,160,106,.14)}
+:root[data-theme="dark"] table th{background:#252c32;color:#e8ebe8}
+:root[data-theme="dark"] table tr:nth-child(even) td{background:rgba(232,235,232,.03)}
+:root[data-theme="dark"] pre{background:#161b21;border:1px solid #333e47}
+:root[data-theme="dark"] .theme-toggle--fab{background:#252c32;box-shadow:0 6px 20px rgba(0,0,0,.6)}
+:root[data-theme="dark"] .theme-toggle .icon-sun{display:inline-block}
+:root[data-theme="dark"] .theme-toggle .icon-moon{display:none}
+:root:not([data-theme="dark"]) .theme-toggle .icon-sun{display:none}
+:root:not([data-theme="dark"]) .theme-toggle .icon-moon{display:inline-block}
 </style>
 </head>
 <body>
