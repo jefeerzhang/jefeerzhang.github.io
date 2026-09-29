@@ -321,7 +321,7 @@ ATET。</li>
 年结局故意缺失</strong>，用来演示缺失年份怎么影响暴露期窗口。</li>
 </ol>
 
-<h3 class="sub" id="11-为什么要自己造数据">1.1 为什么要自己造数据</h3>
+<h3 class="sub" id="21-为什么要自己造数据">2.1 为什么要自己造数据</h3>
 <p>真实数据不可控。你不知道真值是多少，所以没法判断估计量是对是错；你也不知道某个开关动了之后变化来自设计还是来自噪声。</p>
 <p>教学数据必须反过来：<strong>先写死真值，再让估计量去追。</strong>
 追不上，我们才能确定是估计量的性质，而不是数据的问题。</p>
@@ -333,7 +333,7 @@ ATET。</li>
 <code>d0</code> / <code>f</code> / <code>rate</code> / <code>ramp</code>
 存进数据集，任何估计都能和真值逐期对照。</li>
 </ol>
-<h3 class="sub" id="12-全流程一览">1.2 全流程一览</h3>
+<h3 class="sub" id="22-全流程一览">2.2 全流程一览</h3>
 <p>脚本 <code>data/did-routing/build_switching_features.do</code>（167
 行，日志同名 <code>.log</code>，以
 <code>DONE_BUILD_SWITCHING_FEATURES</code> 结尾）。分七步：</p>
@@ -408,7 +408,7 @@ set obs 4480  // 面板总观测数 = 280 县 × 16 年</code></pre>
 seed，<code>u</code> / <code>theta</code> / <code>x1</code> /
 <code>e</code> 全变，但<strong>真值 <code>tau</code>
 不变</strong>，种子只影响噪声，不影响设计。这个分离很有用：想知道一个结论是「碰巧」还是「稳的」，换个种子重跑就知道。</p>
-<h3 class="sub" id="13-第-1-步面板骨架">1.3 第 1 步：面板骨架</h3>
+<h3 class="sub" id="23-第-1-步面板骨架">2.3 第 1 步：面板骨架</h3>
 <pre class="stata"><code>* ===== 第 1 步：造出「280 个县 × 16 年」的平衡面板 =====
 * 观测总数 = 280 县 × 16 年；必须最先写，_n 才有意义
 set obs 4480
@@ -517,8 +517,8 @@ typ 的县数是不均的</strong>（第 1 省：typ1 和 typ2 各 2 个，其�
 个），而且不均的方式逐省变化。</p>
 <p>这不是失误，是<strong>故意留的</strong>：它让「按 typ
 分组比较」和「按省分组比较」不再等价，从而制造出
-<code>supergroup(province)</code> 存在的必要（见 1.7 节）。</p>
-<h3 class="sub" id="14-第-2-步构造处理路径-dose--0-1-2">1.4 第 2 步：构造处理路径
+<code>supergroup(province)</code> 存在的必要（见 2.7 节）。</p>
+<h3 class="sub" id="24-第-2-步构造处理路径-dose--0-1-2">2.4 第 2 步：构造处理路径
 <code>dose ∈ {0, 1, 2}</code></h3>
 <p>这一整段是本数据的灵魂。设计原则：<strong>三个初始水平（0/1/2）各自都配「从不切换」和「切换」两类县；切换县里升档与降档成对出现；另加一类非吸收往返。</strong></p>
 <pre class="stata"><code>* ===== 第 2 步：构造处理路径 dose ∈ {0,1,2} =====
@@ -792,7 +792,7 @@ note</strong>。第一版数据在这里踩过坑，typ4 当时写成
 <li><strong>吸收与非吸收并存</strong>：typ3/4/5 切过去不回头；typ7
 切两次（2012、2018）。这是 <code>path()</code> 存在的理由。</li>
 </ul>
-<h3 class="sub" id="15-第-3-步路径元信息">1.5 第 3 步：路径元信息</h3>
+<h3 class="sub" id="25-第-3-步路径元信息">2.5 第 3 步：路径元信息</h3>
 <p>要让效应函数知道「这个县偏离初始水平多少」和「已经偏离了几期」，先把四个元信息算出来：</p>
 <pre class="stata"><code>* ===== 第 3 步：路径元信息 =====
 * 这四个变量不直接进结局方程，但真值 tau 要用它们算。
@@ -855,7 +855,7 @@ gen double dev = dose - d0</code></pre>
 <code>.dta</code></strong>，第 7 步的 <code>keep</code>
 里没有它们。演示脚本会自己重算 <code>ell</code>，因为估计时要按
 <code>ell</code> 分组看暴露期。）</p>
-<h3 class="sub" id="16-第-4-步真值效应函数">1.6 第 4 步：真值效应函数</h3>
+<h3 class="sub" id="26-第-4-步真值效应函数">2.6 第 4 步：真值效应函数</h3>
 <p>真值<strong>不能写成常数</strong>。如果真实效应处处相同，这份数据就测不出十个开关的差别了。所以写成：</p>
 <pre class="stata"><code>* ===== 第 4 步：真值效应 tau =====
 * 效应不是常数：它随「切换幅度」和「暴露期」变化。
@@ -1087,7 +1087,7 @@ TD2 / TD3 会看到。</strong></li>
 年发生第二次切换，<code>dev</code> 从 −1 变成 −2。这是
 <code>path()</code> 存在的理由。</li>
 </ul>
-<h3 class="sub" id="17-第-56-步不可观测成分与结局方程">1.7 第 5–6
+<h3 class="sub" id="27-第-56-步不可观测成分与结局方程">2.7 第 5–6
 步：不可观测成分与结局方程</h3>
 <pre class="stata"><code>* ===== 第 5 步：不可观测成分 =====
 * 三种东西：县固定冲击 u、省趋势 theta、县-年协变量 x1，
@@ -1275,7 +1275,7 @@ F8e / F9 里
 个县之间共享。后果有三层：</p>
 <ol type="1">
 <li><strong>同一省的县趋势高度相关</strong>，跨省比较才安全。</li>
-<li>因为 <code>typ</code> 与 <code>province</code> 不独立（1.3 节），按
+<li>因为 <code>typ</code> 与 <code>province</code> 不独立（2.3 节），按
 typ 分组比较时，两组的<strong>省内构成</strong>不同，组均
 <code>theta</code> 也就不相等。</li>
 <li>这个组均差的量级在 <strong>0.01–0.02</strong>（<code>theta</code> 的
@@ -1291,7 +1291,7 @@ SD 只有 0.04），但<strong>它会随暴露期线性累积</strong>，到第 
 <code>replace x1 = . if year == 2020</code> 把这一年整个抹掉。注意
 <strong><code>dose</code> 和 <code>tau</code> 在 2020
 年仍然完整</strong>，缺的只是结局和协变量。这个设计同时服务两件事：演示「缺失年份吃掉暴露期」（F8e、F9），以及制造非平衡面板（F10）。</p>
-<h3 class="sub" id="18-第-7-步交付前自检">1.8 第 7 步：交付前自检</h3>
+<h3 class="sub" id="28-第-7-步交付前自检">2.8 第 7 步：交付前自检</h3>
 <p>脚本第 126–148 行跑七项检查，全部写进 <code>.log</code>：</p>
 <div class="tw"><table>
 <thead>
@@ -1322,7 +1322,7 @@ SD 只有 0.04），但<strong>它会随暴露期线性累积</strong>，到第 
 <tr>
 <td>真值 <code>tau</code> × typ × ell</td>
 <td><code>table (ell) (typ) if ell &gt; 0, statistic(mean tau)</code></td>
-<td>见 1.6 节真值表</td>
+<td>见 2.6 节真值表</td>
 </tr>
 <tr>
 <td>真值 <code>tau</code> × typ × dev</td>
@@ -1343,7 +1343,7 @@ SD 只有 0.04），但<strong>它会随暴露期线性累积</strong>，到第 
 </table></div>
 <p>估计前的自检就靠这张表。<strong>每次改动 DGP
 后，先看真值表对不对，再看估计</strong>，顺序不能反。</p>
-<h3 class="sub" id="19-这份模拟能验证那十个场景吗">1.9
+<h3 class="sub" id="29-这份模拟能验证那十个场景吗">2.9
 这份模拟能验证那十个场景吗</h3>
 <p>这是本讲稿必须正面回答的问题。逐条对账：</p>
 <div class="tw"><table>
@@ -1438,7 +1438,7 @@ treatment    |      Groups          Obs   Switch out    Switch in    Absorbing
 <li><p><strong>平行趋势在默认设定下通过</strong>（<code>chi2(5) = 4.44</code>，<code>p = 0.4879</code>）。基准可信，后面所有开关的比较才有意义。</p></li>
 </ol>
 <p><strong>结论：这版模拟对十个场景是高度契合的，不是「大概能跑」。每一处差异都能回溯到一个写死的真值参数。</strong></p>
-<h3 class="sub" id="110-不变量清单">1.10 不变量清单</h3>
+<h3 class="sub" id="210-不变量清单">2.10 不变量清单</h3>
 <p>每次重建数据后核对这几条：</p>
 <div class="tw"><table>
 <thead>
@@ -3202,7 +3202,7 @@ particular does not enforce a common set of control groups.</p>
 与默认<strong>在 4
 位有效数字上完全相同</strong>）。原因就是上面那条：<code>neffects(6)</code>
 没超过晚批上限，没有一个人被踢出共同集。</p>
-<p><strong>这正好说明第 1 节为什么要花那么大力气重造数据</strong>：v1
+<p><strong>这正好说明第 2 节为什么要花那么大力气重造数据</strong>：v1
 里两批的效应是同一个对称斜率，就算把 <code>neffects</code>
 拉过晚批上限，差别也不会大。v2 设计了批次异质（<code>ramp</code> 0.20 vs
 0.12），这个开关一被激活就给出 0.268
@@ -3480,7 +3480,7 @@ treatment    |      Groups          Obs   Switch out    Switch in    Absorbing
 <h2 class="sec-title">文献与外部材料</h2>
 
 <p>命令族对照（四个命令各接什么设计）已移到开头那节：<a href="#s0">先定位：它接的是什么设计</a>。</p>
-<h3 class="sub" id="51-方法本体">5.1 方法本体</h3>
+<h3 class="sub" id="61-方法本体">6.1 方法本体</h3>
 <ul>
 <li><strong>de Chaisemartin, C. &amp; D'Haultfœuille, X.
 (2026).</strong> "Difference-in-Differences Estimators of Intertemporal
@@ -3493,8 +3493,8 @@ switch）设计下的事件研究估计量，允许处理非二元、可非吸�
 <li><strong>Stata
 功能页</strong>：<code>https://www.stata.com/statanow/DID-with-switching-treatments-for-panel-data/</code></li>
 </ul>
-<h3 class="sub" id="52-为什么传统方法会崩第-2-节的理论根据">5.2
-为什么传统方法会崩（第 2 节的理论根据）</h3>
+<h3 class="sub" id="62-为什么传统方法会崩第-3-节的理论根据">6.2
+为什么传统方法会崩（第 3 节的理论根据）</h3>
 <ul>
 <li><strong>Goodman-Bacon, A. (2021).</strong>
 "Difference-in-differences with variation in treatment timing."
@@ -3510,7 +3510,7 @@ Treatment." → 连续处理的 TWFE
 (2024).</strong> <em>AEA Papers and Proceedings</em>, 114: 610–613. →
 连续处理、无 stayers 的识别问题。</li>
 </ul>
-<h3 class="sub" id="53-可补充的阅读">5.3 可补充的阅读</h3>
+<h3 class="sub" id="63-可补充的阅读">6.3 可补充的阅读</h3>
 <ul>
 <li>Sant'Anna 讲义《Causal Inference using Difference-in-Differences》第
 13 讲（on/off
