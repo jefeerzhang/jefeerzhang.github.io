@@ -127,6 +127,7 @@ footer a{color:var(--accent);text-decoration:none}
 <!-- ===== HERO ===== -->
 <header class="hero">
 <div class="wrap">
+<p class="back-home-line" style="margin:0 0 16px;text-align:right"><a class="back-home" style="display:inline-block;padding:4px 12px;border:1px solid currentColor;border-radius:999px;text-decoration:none;font-size:14px;line-height:1.4;opacity:.85" href="../../">← 返回首页</a></p>
 <div class="crumb"><a href="../">知识学习</a> / <a href="./">计量方法</a> / 第 1 讲</div>
 <h1>xtswitchdid 选定之后：把十个开关一个个打开</h1>
 <p class="subtitle">十个场景逐个实测：每个开关打开前后，同一个数字会怎么变</p>
@@ -136,7 +137,7 @@ footer a{color:var(--accent);text-decoration:none}
 <!-- ===== NAV ===== -->
 <nav class="nav">
 <div class="wrap">
-<a href="#s0">速览</a>
+<a href="#s0">命令定位</a>
 <a href="#s1">数据生成</a>
 <a href="#s2">传统方法</a>
 <a href="#s3">十个场景</a>
@@ -151,18 +152,85 @@ footer a{color:var(--accent);text-decoration:none}
 <section id="s0">
 <div class="wrap">
 <div class="sec-num">01</div>
-<h2 class="sec-title">一页速览</h2>
+<h2 class="sec-title">先定位：它接的是什么设计</h2>
 
-<p>这份数据是<strong>故意造出来刁难传统方法的</strong>。它有三个特征：</p>
-<ol type="1">
-<li><strong>处理是多值的</strong>（0 / 1 / 2，三个水平），不是「处理 vs
-未处理」。</li>
-<li><strong>处理会来回切换</strong>，而且<strong>方向不对称</strong>，有的县升档，有的县降档。</li>
-<li><strong>2020
-年结局故意缺失</strong>，用来演示缺失年份怎么影响暴露期窗口。</li>
-</ol>
-<p>在这份数据上，<code>xtswitchdid</code>
-有十个可调开关。每个开关都对应一个真实存在的设计问题。下面是一句话版本：</p>
+<p>Stata 的 DID 命令已经有一整族。上手
+<code>xtswitchdid</code> 之前，先把它放回这张表里：它接的是别的命令接不了的设计。</p>
+<p>官方功能页只用一句话就说完了适用范围：</p>
+<blockquote>
+<p>If you have a multivalued treatment or groups that switch in and out
+of treatment, traditional difference-in-differences (DID) estimators are
+of little use.</p>
+</blockquote>
+<p>拆开是两件事：<strong>处理是多值的</strong>（不止「处理 /
+未处理」两档），<strong>处理会来回进出</strong>（不是进去就不出来）。这两件事同时出现时，传统
+DID 不是精度差一点，而是<strong>估的东西根本不是你要的</strong>。</p>
+
+<h3 class="sub" id="命令族对照">命令族对照：四个命令各接什么设计</h3>
+<p>看三件事：处理变量长什么样、处理能不能撤回、输出的是哪一种效应。</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>支持的处理</th>
+<th>输出</th>
+<th>什么时候选它</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>didregress</code> / <code>xtdidregress</code></td>
+<td>二元、吸收、错时</td>
+<td>单一 ATET</td>
+<td>处理只进不退，一个平均效应就够</td>
+</tr>
+<tr>
+<td><code>hdidregress</code> / <code>xthdidregress</code></td>
+<td>二元、吸收、错时</td>
+<td>异质 ATET（分队列）</td>
+<td>同上，但想按队列或子群看异质</td>
+</tr>
+<tr>
+<td><strong><code>xtswitchdid</code></strong></td>
+<td><strong>二元/多值、可逆、非吸收</strong></td>
+<td><strong>事件研究效应（逐暴露期）</strong></td>
+<td><strong>处理多值、能撤、来回切换</strong></td>
+</tr>
+<tr>
+<td><code>did_multiplegt_dyn</code></td>
+<td>连续剂量、无 stayer</td>
+<td>非归一化 <code>DID_ℓ</code>（默认）+ 可选归一化</td>
+<td>处理强度是连续剂量，不是档位</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>did_multiplegt_dyn</code>
+的默认输出是<strong>非归一化</strong>的，并可选归一化版本（当前与滞后效应的加权平均），另带
+dynamic
+placebo。<strong>两者的默认口径正好相反</strong>：<code>xtswitchdid</code>
+默认归一化，<code>did_multiplegt_dyn</code>
+默认不归一化。<strong>换工具时一定要看默认，不要想当然。</strong></p>
+
+<h3 class="sub" id="什么时候用它">什么时候用它，什么时候别用</h3>
+<ul>
+<li><strong>用它</strong>：处理有多个档位（本例 0 / 1 /
+2），单位会升档也会降档，而且你想看<strong>逐暴露期</strong>的效应曲线，不是一个平均
+ATET。</li>
+<li><strong>用它</strong>：你关心「退出处理」的效果。可逆设计里
+<code>switchgroup(out)</code>
+这类开关才有意义，吸收型设计里它压根不存在。</li>
+<li><strong>别用它</strong>：处理一旦进入就不再退出。这时
+<code>xtdidregress</code> / <code>xthdidregress</code>
+更直接，可用样本也更大。</li>
+<li><strong>别用它</strong>：处理是连续剂量（药量、税率、强度）。那属于
+<code>did_multiplegt_dyn</code> 的领地。</li>
+</ul>
+<p><strong>一句话判据</strong>：把处理按时间画成折线，<strong>能画出「上去再下来」的</strong>，就该考虑
+<code>xtswitchdid</code>；只会上台阶的，用不上它。</p>
+
+<h3 class="sub" id="十个开关一句话版本">十个开关一句话版本</h3>
+<p>多值和可逆这两个前提一立，要调的东西就多了：在这份数据上，<code>xtswitchdid</code>
+有十个可调开关，每个开关都对应一个真实存在的设计问题。下面是一句话版本：</p>
 <div class="tw"><table>
 <thead>
 <tr>
@@ -226,6 +294,14 @@ footer a{color:var(--accent);text-decoration:none}
 </tbody>
 </table></div>
 <p><strong>这份数据上没有两个开关是「随便选都一样」的。这就是这一篇要讲的全部内容。</strong></p>
+
+<h3 class="sub" id="本篇怎么读">本篇怎么读</h3>
+<ol type="1">
+<li>先看<strong>数据怎么造出来</strong>：真值先写死，估计量再去追。</li>
+<li>再看<strong>传统方法在这份数据上怎么崩</strong>：三种做法，三种坏法。</li>
+<li>然后<strong>逐个打开十个开关</strong>：每个开关一组同口径对照。</li>
+<li>文献与外部材料、作业、附录在最后。</li>
+</ol>
 <hr />
 
 </div>
@@ -235,6 +311,15 @@ footer a{color:var(--accent);text-decoration:none}
 <div class="wrap">
 <div class="sec-num">02</div>
 <h2 class="sec-title">数据生成过程（DGP）</h2>
+
+<p>这份数据是<strong>故意造出来刁难传统方法的</strong>。它有三个特征：</p>
+<ol type="1">
+<li><strong>处理是多值的</strong>（0 / 1 / 2，三个水平），不是「处理 vs
+未处理」。</li>
+<li><strong>处理会来回切换</strong>，而且<strong>方向不对称</strong>，有的县升档，有的县降档。</li>
+<li><strong>2020
+年结局故意缺失</strong>，用来演示缺失年份怎么影响暴露期窗口。</li>
+</ol>
 
 <h3 class="sub" id="11-为什么要自己造数据">1.1 为什么要自己造数据</h3>
 <p>真实数据不可控。你不知道真值是多少，所以没法判断估计量是对是错；你也不知道某个开关动了之后变化来自设计还是来自噪声。</p>
@@ -848,17 +933,17 @@ gen double tau = -dev * (rate + ramp * min(ell, 4))
 <li><strong><code>min(ell, 4)</code> 里的 4
 是硬编码的封顶期</strong>。它直接决定了 F1 的 <code>neffects</code>
 阶梯在第 4 期之后为什么变缓，窗口从 4 拉到 6，真值没变，但分母变大了（见
-§3.1）。</li>
+F1）。</li>
 <li><strong><code>ell</code> 和 <code>dev</code> 必须已经生成。</strong>
 这一段依赖第 3 步。如果前面写错，这里的 <code>tau</code>
 会静默地变成负数或缺失，而不是报错，所以第 7 步的
 <code>table (ell) (typ), statistic(mean tau)</code>
 就是用来抓这类错误的。</li>
 </ol>
-<p><span class="math display">\tau_{i,t} = -\underbrace{(D_{i,t} -
+<p><span class="math display">\[ \tau_{i,t} = -\underbrace{(D_{i,t} -
 D_{i,0})}_{dev} \times \Big(\underbrace{rate_i}_{\text{永久水平}} +
 \underbrace{ramp_i}_{\text{累积速度}} \times \min(\ell_{i,t},
-4)\Big)</span></p>
+4)\Big) \]</span></p>
 <p>五个部件各自的职责：</p>
 <div class="tw"><table>
 <thead>
@@ -1416,14 +1501,8 @@ treatment    |      Groups          Obs   Switch out    Switch in    Absorbing
 <div class="sec-num">03</div>
 <h2 class="sec-title">传统方法在这份数据上会怎样</h2>
 
-<p>学生最容易跳过这一步。但如果不先看传统方法怎么崩，后面十个开关看起来就是一堆没有动机的参数。</p>
-<p><code>xtswitchdid</code> 的定位，官方功能页写得很直白：</p>
-<blockquote>
-<p>If you have a multivalued treatment or groups that switch in and out
-of treatment, traditional difference-in-differences (DID) estimators are
-of little use.</p>
-</blockquote>
-<p>这句话是整篇讲稿的题眼。下面三种做法，对应学生最可能上手的三种「传统方法」。</p>
+<p>为什么非得换 <code>xtswitchdid</code>？这一节把三种「传统做法」各跑一遍，看它们在这份数据上坏在哪。学生最容易跳过这一步，但不先看传统方法怎么崩，后面十个开关看起来就是一堆没有动机的参数。</p>
+<p>下面三种做法，对应学生最可能上手的三种「传统方法」。</p>
 <h3 class="sub"
 id="td1把多值处理二值化直接塞给-xthdidregress">TD1：把多值处理二值化，直接塞给
 <code>xthdidregress</code></h3>
@@ -1935,7 +2014,7 @@ note。<strong>280 个聚类远超 6
 <div class="case-header"><span class="case-tag">F2</span><span class="case-title">初始处理非零：处理不必从 0 起步</span></div>
 
 <h4 class="case-label">本节命令</h4>
-<pre class="stata"><code>* 全样本（上面 §3.1 的基线，拿来做对照）
+<pre class="stata"><code>* 全样本（上面 F1 的基线，拿来做对照）
 xtswitchdid (y x1) (dose), group(id) neffects(6)
 
 * 只留初始处理非零的县：d0 = 该县 2010 年的 dose
@@ -2777,8 +2856,8 @@ B</strong>：<code>keep if inlist(typ, 0, 5)</code>（typ5
 <p><strong>比值恰好是 2, 4, 6 = dev × ℓ。</strong></p>
 <h4 class="sub-head">归一化定律</h4>
 <p>两个子样本合起来，结论是<strong>精确</strong>的：</p>
-<p><span class="math display">\text{normalized}_\ell \;=\;
-\frac{\text{raw}_\ell}{dev \times \ell}</span></p>
+<p><span class="math display">\[ \text{normalized}_\ell \;=\;
+\frac{\text{raw}_\ell}{dev \times \ell} \]</span></p>
 <p><strong>归一化效应 = 累计效应 ÷ 累计剂量变化。</strong> 分母
 <code>dev × ℓ</code> 随暴露期<strong>线性增长</strong>。所以：</p>
 <blockquote>
@@ -2793,13 +2872,13 @@ B</strong>：<code>keep if inlist(typ, 0, 5)</code>（typ5
 <p>顺带把 total 也验了。子样本
 A：<code>estat total = -1.655542</code>（SE <code>.2491</code>）。六个
 raw 的算术平均：</p>
-<p><span class="math display">(-1.1178 - 1.2162 - 1.8338 - 1.9544 -
-2.0582 - 1.7528) / 6 = -1.655542</span></p>
+<p><span class="math display">\[ (-1.1178 - 1.2162 - 1.8338 - 1.9544 -
+2.0582 - 1.7528) / 6 = -1.655542 \]</span></p>
 <h4 class="case-label">精确吻合。</h4>
-<p>官方公式：<span class="math inline">\hat\tau =
+<p>官方公式：<span class="math inline">\( \hat\tau =
 \sum_t\sum_{\ell&lt;t}\hat\tau_{t,\ell} \big/
 \sum_t\sum_{\ell&lt;t}(D_{t+\ell} -
-D_{t,1})</span>，即按累计剂量变化归一化。</p>
+D_{t,1}) \)</span>，即按累计剂量变化归一化。</p>
 <p class="lead"><strong>关键事实</strong>：<code>estat total</code> <strong>在
 <code>raw</code> 与默认下完全相同</strong>，两边都是
 <strong>−1.0453</strong>（已实测确认）。<strong>因为 total
@@ -3400,6 +3479,7 @@ treatment    |      Groups          Obs   Switch out    Switch in    Absorbing
 <div class="sec-num">06</div>
 <h2 class="sec-title">文献与外部材料</h2>
 
+<p>命令族对照（四个命令各接什么设计）已移到开头那节：<a href="#s0">先定位：它接的是什么设计</a>。</p>
 <h3 class="sub" id="51-方法本体">5.1 方法本体</h3>
 <ul>
 <li><strong>de Chaisemartin, C. &amp; D'Haultfœuille, X.
@@ -3430,46 +3510,7 @@ Treatment." → 连续处理的 TWFE
 (2024).</strong> <em>AEA Papers and Proceedings</em>, 114: 610–613. →
 连续处理、无 stayers 的识别问题。</li>
 </ul>
-<h3 class="sub" id="53-命令族定位承接-report-09">5.3 命令族定位（承接
-REPORT-09）</h3>
-<div class="tw"><table>
-<thead>
-<tr>
-<th>命令</th>
-<th>支持的处理</th>
-<th>输出</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>didregress</code> / <code>xtdidregress</code></td>
-<td>二元、吸收、错时</td>
-<td>单一 ATET</td>
-</tr>
-<tr>
-<td><code>hdidregress</code> / <code>xthdidregress</code></td>
-<td>二元、吸收、错时</td>
-<td>异质 ATET（分队列）</td>
-</tr>
-<tr>
-<td><strong><code>xtswitchdid</code></strong></td>
-<td><strong>二元/多值、可逆、非吸收</strong></td>
-<td><strong>事件研究效应（逐暴露期）</strong></td>
-</tr>
-<tr>
-<td><code>did_multiplegt_dyn</code></td>
-<td>连续剂量、无 stayer</td>
-<td>非归一化 <code>DID_ℓ</code>（默认）+ 可选归一化</td>
-</tr>
-</tbody>
-</table></div>
-<p><code>did_multiplegt_dyn</code>
-的默认输出是<strong>非归一化</strong>的，并可选归一化版本（当前与滞后效应的加权平均），另带
-dynamic
-placebo。<strong>两者的默认口径正好相反</strong>，<code>xtswitchdid</code>
-默认归一化，<code>did_multiplegt_dyn</code>
-默认不归一化。<strong>换工具时一定要看默认，不要想当然。</strong></p>
-<h3 class="sub" id="54-可补充的阅读">5.4 可补充的阅读</h3>
+<h3 class="sub" id="53-可补充的阅读">5.3 可补充的阅读</h3>
 <ul>
 <li>Sant'Anna 讲义《Causal Inference using Difference-in-Differences》第
 13 讲（on/off
@@ -3666,5 +3707,6 @@ F6。数一数有多少条不同的真实路径被合并了，并说明合并之
 </div>
 </footer>
 
+<p class="back-home-line" style="margin:36px 0 0;text-align:right"><a class="back-home" style="display:inline-block;padding:4px 12px;border:1px solid currentColor;border-radius:999px;text-decoration:none;font-size:14px;line-height:1.4;opacity:.85" href="../../">← 返回首页</a></p>
 </body>
 </html>
