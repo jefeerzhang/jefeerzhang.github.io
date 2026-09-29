@@ -1,5 +1,6 @@
 from html.parser import HTMLParser
 from pathlib import Path
+import re
 import struct
 import unittest
 
@@ -113,7 +114,8 @@ class SharedSiteContractTests(unittest.TestCase):
                 self.assertEqual(len(find_tags(parser, "main")), 1)
                 self.assertEqual(len(find_tags(parser, "a", "skip-link")), 1)
                 self.assertEqual(len([h for h in parser.heading_text if h[0] == "h1"]), 1)
-                self.assertIn(f'href="{stylesheet}"', html)
+                # 站点样式表带缓存串（?v=19），这里只要求路径一致
+                self.assertRegex(html, rf'href="{re.escape(stylesheet)}(\?[^"]*)?"')
                 self.assertIn(f'<link rel="canonical" href="{canonical}">', html)
                 self.assertIn('<meta name="description"', html)
                 self.assertIn('<meta property="og:title"', html)
@@ -137,14 +139,18 @@ class HomepageRedesignTests(unittest.TestCase):
 
     def test_homepage_preserves_primary_destinations(self):
         hrefs = {attrs.get("href") for attrs in find_tags(self.parser, "a")}
+        # 四张入口卡：个人简历 / 知识库 / 课程中心 / 小工具
         expected = {
-            "https://jefeerzhang.github.io/master-course/",
             "cv/",
             "knowledge/",
+            "./courses/",
             "tools/",
             "https://orcid.org/0000-0002-8024-5483",
         }
         self.assertTrue(expected.issubset(hrefs))
+        # 硕士课程挂在独立站点，链接改从课程中心页出去
+        courses = (ROOT / "courses" / "index.html").read_text(encoding="utf-8")
+        self.assertIn("https://jefeerzhang.github.io/master-course/", courses)
         self.assertEqual(len(find_tags(self.parser, "article", "entry-card")), 4)
 
 
@@ -163,7 +169,8 @@ class CvRedesignTests(unittest.TestCase):
 
     def test_cv_preserves_research_metrics_and_publications(self):
         self.assertEqual(len(find_tags(self.parser, "div", "metric")), 5)
-        self.assertEqual(len(find_tags(self.parser, "article", "publication")), 19)
+        # 只增不减：2026 年新增 3 篇英文论文后为 22（原契约 19）
+        self.assertGreaterEqual(len(find_tags(self.parser, "article", "publication")), 22)
         for value in ("5", "6", "20+", "27.3", "Top 1%"):
             self.assertIn(value, self.html)
         self.assertIn("中国IPO询价制下发行效率的随机前沿分析", self.html)
@@ -174,7 +181,10 @@ class CvRedesignTests(unittest.TestCase):
             [group["attrs"].get("data-language") for group in groups],
             ["zh", "en"],
         )
-        self.assertEqual([len(group["years"]) for group in groups], [12, 7])
+        # 只增不减：英文论文 7 → 10（2026 年新增 3 篇）
+        sizes = [len(group["years"]) for group in groups]
+        self.assertGreaterEqual(sizes[0], 12)
+        self.assertGreaterEqual(sizes[1], 10)
         for group in groups:
             self.assertEqual(group["attrs"].get("data-sort"), "year-desc")
             self.assertEqual(group["years"], sorted(group["years"], reverse=True))
