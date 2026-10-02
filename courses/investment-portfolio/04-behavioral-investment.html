@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23002FA7'/%3E%3Ctext x='32' y='46' font-size='36' text-anchor='middle' fill='white' font-family='Georgia,serif'%3E%CE%BB%3C/text%3E%3C/svg%3E">
+<title>第4课时 · 行为投资学与投资行为管理 — 学生自读讲义</title>
+<style>
+/* ===== 瑞士国际主义 · 克莱因蓝 IKB（与第1/3课时讲义同款） ===== */
+:root{
+  --paper:#fafaf8;
+  --paper-rgb:250,250,248;
+  --ink:#0a0a0a;
+  --ink-rgb:10,10,10;
+  --grey-1:#f0f0ee;
+  --grey-2:#d4d4d2;
+  --grey-3:#737373;
+  --accent:#002FA7;
+  --accent-rgb:0,47,167;
+  --accent-on:#ffffff;
+  --mono:"JetBrains Mono","Cascadia Code",Consolas,"Courier New",monospace;
+  --sans:"Inter","Helvetica Neue","Noto Sans SC","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+.container{max-width:880px;margin:0 auto;padding:0 24px}
+
+/* ===== header（纯色，无渐变） ===== */
+header{background:var(--ink);color:#fff;padding:56px 0 40px;border-bottom:6px solid var(--accent)}
+header .tag{font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;font-weight:600}
+header .tag::before{content:"// "}
+header h1{font-size:38px;line-height:1.22;font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+header .sub{font-size:16.5px;color:var(--grey-2);margin-bottom:22px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:12.5px;color:#fff;border:1px solid var(--grey-3);padding:4px 12px;background:rgba(255,255,255,.03);font-weight:500}
+
+/* ===== nav（直角 hairline） ===== */
+nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--grey-2);margin-bottom:28px}
+nav .links{display:flex;gap:0;flex-wrap:wrap;padding:6px 0}
+nav a{font-size:14px;color:var(--grey-3);text-decoration:none;padding:8px 14px;border-left:1px solid var(--grey-2);transition:color .15s;font-weight:500}
+nav a:first-child{border-left:none}
+nav a:hover{color:var(--accent)}
+nav a.on{color:var(--accent);font-weight:600}
+nav a.back{color:var(--accent);font-weight:500;margin-right:8px}
+
+/* ===== sections ===== */
+section{margin-bottom:44px}
+h2{font-size:23px;font-weight:700;color:var(--ink);margin:36px 0 16px;padding:0 0 10px 14px;border-left:6px solid var(--accent);display:flex;align-items:baseline;gap:12px;letter-spacing:-.01em}
+h2 .no{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.12em;font-weight:600}
+h3{font-size:17.5px;font-weight:700;margin:24px 0 10px;color:var(--ink)}
+p{margin:8px 0}
+ul,ol{margin:8px 0 8px 24px}
+li{margin:5px 0}
+code{font-family:var(--mono);font-size:.86em;background:var(--grey-1);padding:1px 6px;color:var(--ink);font-weight:500}
+strong{font-weight:700}
+a{color:var(--accent)}
+a:hover{color:#0047d0}
+
+/* ===== 卡片（直角纯色） ===== */
+.panel{background:var(--grey-1);border:1px solid var(--grey-2);padding:20px 22px;margin:14px 0}
+.takeaway{border-left:4px solid var(--accent);background:var(--grey-1);padding:12px 18px;font-weight:600;color:var(--ink);margin:14px 0}
+.warnbox{border-left:4px solid var(--ink);background:var(--grey-1);padding:12px 18px;margin:14px 0;font-size:14.5px}
+.note{font-size:14px;color:var(--grey-3);margin:6px 0}
+.case{border:1px solid var(--grey-2);margin:16px 0;background:var(--paper)}
+.case .case-head{background:var(--grey-1);padding:10px 20px;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--grey-2);font-size:15.5px}
+.case .case-body{padding:14px 20px 18px}
+.prompt{background:var(--ink);color:#e8e8e8;padding:14px 18px;font-family:var(--mono);font-size:13.5px;line-height:1.65;margin:10px 0;white-space:pre-wrap;font-weight:400}
+.prompt .plabel{display:block;color:var(--accent);font-size:12px;letter-spacing:.12em;margin-bottom:6px;font-weight:600}
+.verdict{font-family:var(--mono);font-size:13.5px;background:var(--grey-1);padding:12px 16px;margin:10px 0;color:var(--ink)}
+.verdict b{color:var(--accent);font-weight:600}
+
+/* ===== 公式块（推导主线） ===== */
+.formula{background:var(--paper);border:1px solid var(--grey-2);border-left:4px solid var(--ink);padding:14px 18px;margin:10px 0;font-family:var(--mono);font-size:14.5px;line-height:1.8;overflow-x:auto}
+.formula .eq{color:var(--grey-3);font-size:12.5px;white-space:nowrap}
+.formula .cap{display:block;color:var(--grey-3);font-size:13px;margin-top:4px}
+
+/* ===== 统一图片槽位（瑞士风硬规则：同组图同槽位同高度） ===== */
+.figure{height:320px;display:flex;align-items:center;justify-content:center;background:var(--grey-1);border:1px solid var(--grey-2);margin:12px 0;overflow:hidden}
+.figure img{max-height:100%;max-width:100%;object-fit:contain}
+.figure figcaption{display:none}
+.figcap{font-family:var(--mono);font-size:12px;color:var(--grey-3);margin:-6px 0 12px;font-weight:500}
+.figcap b{color:var(--ink)}
+
+/* ===== 数字强调 ===== */
+.statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0;margin:14px 0;border:1px solid var(--grey-2)}
+.stat{border-right:1px solid var(--grey-2);border-bottom:1px solid var(--grey-2);padding:14px 16px;background:var(--paper)}
+.stat:nth-child(4n){border-right:none}
+.stat .k{font-family:var(--mono);font-size:12px;color:var(--grey-3);letter-spacing:.08em;margin-bottom:6px;font-weight:600}
+.stat .v{font-size:24px;font-weight:700;font-family:var(--mono);color:var(--ink)}
+.stat .v .ac{color:var(--accent)}
+.stat .d{font-size:12.5px;color:var(--grey-3);margin-top:4px;line-height:1.5}
+
+/* ===== 表格（hairline） ===== */
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px}
+th,td{border:1px solid var(--grey-2);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--grey-1);color:var(--ink);font-weight:600;font-size:14px}
+td .mono,th .mono{font-family:var(--mono);font-size:13px}
+
+/* ===== 流程链（机制假说） ===== */
+.chain{display:flex;gap:0;align-items:stretch;flex-wrap:wrap;margin:14px 0}
+.chain .step{flex:1;min-width:150px;background:var(--grey-1);border:1px solid var(--grey-2);padding:12px 14px;font-size:14px}
+.chain .step .t{font-weight:700;display:block;margin-bottom:4px}
+.chain .step .s{font-size:13px;color:var(--grey-3);line-height:1.5}
+.chain .arrow{align-self:center;font-family:var(--mono);color:var(--accent);font-size:18px;padding:0 6px;font-weight:700}
+
+/* ===== 路线网格（八个环节） ===== */
+.roadmap{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.roadmap .rm{background:var(--grey-1);border:1px solid var(--grey-2);padding:12px 14px}
+.roadmap .rm .no{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.1em;font-weight:700;display:block;margin-bottom:4px}
+.roadmap .rm .t{font-weight:700;font-size:14.5px;display:block}
+.roadmap .rm .s{font-size:12.5px;color:var(--grey-3);margin-top:2px;line-height:1.5}
+.roadmap .rm.wide{grid-column:span 4;background:var(--paper);border:1px solid var(--ink)}
+.roadmap .rm.wide .s{color:var(--ink);font-size:13.5px}
+
+/* ===== 三列要点 ===== */
+.cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:12px 0;border:1px solid var(--grey-2)}
+.cols3 .col{border-right:1px solid var(--grey-2);padding:12px 14px;background:var(--paper)}
+.cols3 .col:last-child{border-right:none}
+.cols3 .col .t{font-weight:700;font-size:14.5px;margin-bottom:4px}
+.cols3 .col .s{font-size:13.5px;color:var(--grey-3);line-height:1.6}
+
+/* ===== 双列卡片（四格布局，2×2，避免3+1孤儿） ===== */
+.cols4{display:grid;grid-template-columns:repeat(2,1fr);gap:0;margin:12px 0;border:1px solid var(--grey-2)}
+.cols4 .col{border-right:1px solid var(--grey-2);border-bottom:1px solid var(--grey-2);padding:12px 14px;background:var(--paper)}
+.cols4 .col:nth-child(2n){border-right:none}
+.cols4 .col:nth-last-child(-n+2){border-bottom:none}
+.cols4 .col .t{font-weight:700;font-size:14.5px;margin-bottom:4px}
+.cols4 .col .s{font-size:13.5px;color:var(--grey-3);line-height:1.6}
+
+/* ===== 清单 ===== */
+.check{list-style:none;margin-left:0}
+.check li{padding:8px 0 8px 30px;position:relative;border-bottom:1px solid var(--grey-2)}
+.check li::before{content:"☐";position:absolute;left:2px;font-size:17px;color:var(--accent);font-weight:700}
+.check li:last-child{border-bottom:none}
+
+/* ===== SVG 图（内联） ===== */
+.svgfig{display:flex;align-items:center;justify-content:center;background:var(--paper);border:1px solid var(--grey-2);margin:12px 0;padding:16px}
+.svgfig svg{max-height:280px;width:auto}
+
+/* ===== footer ===== */
+footer{margin-top:48px;padding:28px 0 48px;border-top:2px solid var(--accent);color:var(--grey-3);font-size:13.5px}
+footer .mono{font-size:12.5px}
+footer strong{color:var(--ink)}
+
+/* ===== 响应式 ===== */
+@media (max-width:760px){
+  header h1{font-size:28px}
+  header{padding:40px 0 28px}
+  .roadmap{grid-template-columns:repeat(2,1fr)}
+  .roadmap .rm.wide{grid-column:span 2}
+  .cols3{grid-template-columns:1fr}
+  .cols3 .col{border-right:none;border-bottom:1px solid var(--grey-2)}
+  .cols3 .col:last-child{border-bottom:none}
+  .cols4{grid-template-columns:1fr}
+  .cols4 .col{border-right:none;border-bottom:1px solid var(--grey-2)}
+  .cols4 .col:last-child{border-bottom:none}
+  .chain{flex-direction:column}
+  .chain .arrow{transform:rotate(90deg);padding:4px 0}
+}
+@media print{
+  nav{display:none}
+  body{background:#fff}
+  .prompt{background:#f0f0f0;color:#222}
+  .figure{height:300px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="tag">第7章 · 课时 4</div>
+    <h1>行为投资学与投资行为管理</h1>
+    <div class="sub">为什么有了模型，决策仍会偏离计划——行为金融能解释什么，不能证明什么</div>
+    <div class="chips">
+      <span class="chip">45 min</span>
+      <span class="chip">本科大三</span>
+      <span class="chip">案例块＋课堂算例</span>
+      <span class="chip">Agent 现场验证</span>
+      <span class="chip">小组自带电脑</span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="container links">
+    <a href="index.html" class="back">← 课程主页</a>
+    <a href="#goals">学习目标</a>
+    <a href="#roadmap">路线</a>
+    <a href="#behavior">行为与决策</a>
+    <a href="#bapm">BAPM</a>
+    <a href="#momentum">动量与反转</a>
+    <a href="#agent">Agent演示</a>
+    <a href="#mindicator">M指标</a>
+    <a href="#memo">小组任务</a>
+    <a href="04-behavioral-investment.pptx" target="_blank" rel="noopener">课件</a>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- ============ 学习目标 ============ -->
+<section id="goals">
+  <h2><span class="no">01</span> 本课时学习目标</h2>
+  <div class="panel">
+    <ol>
+      <li>区分 <strong>BPT（行为投资组合理论）、BAPM（行为资产定价模型）与行为管理</strong> 三个层次——行为组合理论、行为资产定价、行为管理回答的问题不同，不能混为一谈；</li>
+      <li>区分 <strong>损失厌恶和风险厌恶</strong>，说明心理账户的用途与局限——同额损失比收益更难受，不等于讨厌不确定性；分开记账不消除经济相关性；</li>
+      <li>分清 <strong>交易行为、价格可预测性与扣费后策略绩效</strong>——观察到追涨杀跌，不等于这样交易有利可图；相关性不能推出因果；</li>
+      <li>驱动 <strong>Agent（智能体）运行一项可复算实验</strong>，并指出样本与推断的边界——能复现、能指出局限的结果才可检验，不把教学样本写成全市场证明。</li>
+    </ol>
+    <div class="takeaway">本课分工：Agent 负责计算，学生负责提问、核查与表述。</div>
+  </div>
+</section>
+
+<!-- ============ 课程路线 ============ -->
+<section id="roadmap">
+  <h2><span class="no">02</span> 本课时教学框架与环节安排</h2>
+  <p>八个环节：从决策偏差出发，走向一条可被第三人检查的执行纪律。</p>
+  <div class="roadmap">
+    <div class="rm"><span class="no">01</span><span class="t">开场·两个同值赌局</span><span class="s">连接前三课，不给学生贴标签</span></div>
+    <div class="rm"><span class="no">02</span><span class="t">BPT·目标与心理账户</span><span class="s">100万元目标约束算例</span></div>
+    <div class="rm"><span class="no">03</span><span class="t">BAPM·924案例</span><span class="s">有情绪不等于有套利</span></div>
+    <div class="rm"><span class="no">04</span><span class="t">动量与反转</span><span class="s">先把时间轴写对</span></div>
+    <div class="rm"><span class="no">05</span><span class="t">Agent实证演示</span><span class="s">20股教学池实测三屏</span></div>
+    <div class="rm"><span class="no">06</span><span class="t">M指标（同向变动）</span><span class="s">同向变动不等于交易动机</span></div>
+    <div class="rm"><span class="no">07</span><span class="t">小组任务·Memo（备忘录）</span><span class="s">目标-假说-证据-纪律</span></div>
+    <div class="rm"><span class="no">08</span><span class="t">退出题</span><span class="s">区分赚了钱、有超额、证明机制</span></div>
+    <div class="rm wide"><span class="t">核心主线</span><span class="s">先把目标写清楚，再把规则固定下来，让数据检验规则，让记录约束事后解释。</span></div>
+  </div>
+</section>
+
+<!-- ============ 第一部分 · 行为与决策 ============ -->
+<section id="behavior">
+  <h2><span class="no">03</span> 第一部分 · 行为与决策</h2>
+  <p class="note">模型之外，还有做决定的人——先从"为什么偏离计划"开始。</p>
+
+  <h3>两个同值赌局：同一批人，选择会反转</h3>
+  <p>两行中各方案的期望金额相同。若第一行选A、第二行选B，就是收益区间求稳、损失区间愿意冒险；一次投票不能据此诊断人格。</p>
+  <table>
+    <tr><th>情境</th><th>方案A</th><th>方案B</th></tr>
+    <tr><td class="mono">收益</td><td>确定获得 500 元</td><td>50% 获得 1000 元，50% 获得 0 元</td></tr>
+    <tr><td class="mono">损失</td><td>确定损失 500 元</td><td>50% 损失 1000 元，50% 损失 0 元</td></tr>
+  </table>
+  <div class="cols3">
+    <div class="col"><div class="t">参考点依赖</div><div class="s">按相对于参考点的变化做判断，而不是绝对财富。</div></div>
+    <div class="col"><div class="t">损失厌恶</div><div class="s">不对称：损失一侧更陡——损失厌恶不等于风险厌恶。</div></div>
+    <div class="col"><div class="t">概率权重</div><div class="s">风险偏好会随概率和情境改变。</div></div>
+  </div>
+  <div class="note">出处：Kahneman &amp; Tversky (1979)</div>
+
+  <h3>展望效用理论：价值函数与权重函数</h3>
+  <p>它把上面的三种直觉——参考点、不对称、概率权重——放进一个统一框架。</p>
+  <div class="cols3">
+    <div class="col"><div class="t">01 参考点依赖</div><div class="s">价值按"相对于参考点的损益"编码，参考点通常是现状或目标。</div></div>
+    <div class="col"><div class="t">02 价值函数</div><div class="s">盈利区凹（求稳）、亏损区凸（冒险）；亏损端更陡，损失厌恶。</div></div>
+    <div class="col"><div class="t">03 概率权重</div><div class="s">小概率被高估（彩票与保险并存）、大概率被低估。</div></div>
+  </div>
+  <div class="svgfig">
+    <svg viewBox="0 0 340 210" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="展望理论价值函数S形曲线">
+      <line y2="105" stroke-width="1.5" x1="20" x2="332" stroke="#d4d4d2" y1="105"/>
+      <line y2="200" stroke-width="1.5" x1="170" x2="170" stroke="#d4d4d2" y1="15"/>
+      <path fill="none" stroke-width="2.5" d="M 170 105 L 140 122 L 110 136 L 80 149 L 50 161 L 25 170" stroke-linecap="round" stroke-linejoin="round" stroke="#002FA7"/>
+      <path fill="none" stroke-width="2.5" d="M 170 105 L 200 88 L 230 76 L 260 67 L 290 60 L 320 54" stroke-linecap="round" stroke-linejoin="round" stroke="#002FA7"/>
+      <circle fill="#002FA7" r="3.5" cx="170" cy="105"/>
+      <text fill="#737373" x="170" font-size="11" y="95" font-family="Microsoft YaHei" text-anchor="middle">参考点</text>
+      <text fill="#737373" x="22" font-size="10" y="30" font-family="Microsoft YaHei">价值 v(Δ)</text>
+      <text fill="#737373" x="27" font-size="10" y="194" font-family="Microsoft YaHei">亏损</text>
+      <text fill="#737373" x="308" font-size="10" y="194" font-family="Microsoft YaHei">盈利</text>
+    </svg>
+  </div>
+  <div class="figcap">展望效用理论 · 价值函数：参考点两侧不对称，亏损端更陡。</div>
+  <div class="formula">总价值：V = Σ π(p<sub>i</sub>) · v(x<sub>i</sub> − r)<span class="eq">——先评估相对得失，再用决策权重加总</span></div>
+  <div class="note">出处：Kahneman &amp; Tversky (1979, <em>Econometrica</em>)</div>
+
+  <!-- BPT -->
+  <h3>BPT：从波动最小，到目标不落空</h3>
+  <div class="cols3">
+    <div class="col"><div class="t">MPT 问：收益与风险怎么权衡</div><div class="s">有效前沿与最优组合；所有钱放在同一张收益—风险地图上比较。</div></div>
+    <div class="col"><div class="t">BPT 问：钱要完成什么任务</div><div class="s">目标、底线与心理账户；同一个人可以同时追求安全与小概率的高收益。</div></div>
+    <div class="col"><div class="t">课堂目标规划表达</div><div class="s">把目标写成约束。</div></div>
+  </div>
+  <div class="note">出处：Shefrin &amp; Statman (2000, <em>JFQA</em>·金融与数量分析季刊)</div>
+
+  <h3>BPT 的心理账户：一座分层金字塔</h3>
+  <p>心理账户把资产按目标分三层：保底、稳健、增长，各层独立设限、独立评估。</p>
+  <div class="svgfig">
+    <svg viewBox="0 0 350 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="BPT心理账户分层金字塔">
+      <polygon fill="rgba(0,47,167,0.12)" stroke-width="1.5" points="140,35 85,100 195,100" stroke="#002FA7"/>
+      <polygon fill="rgba(0,47,167,0.30)" stroke-width="1.5" points="85,100 195,100 230,170 50,170" stroke="#002FA7"/>
+      <polygon fill="rgba(0,47,167,0.55)" stroke-width="1.5" points="50,170 230,170 265,240 15,240" stroke="#002FA7"/>
+      <text x="140" font-size="14" y="76" fill="#002FA7" text-anchor="middle" font-family="Microsoft YaHei" font-weight="bold">增长层</text>
+      <text x="140" font-size="14" y="144" fill="#002FA7" text-anchor="middle" font-family="Microsoft YaHei" font-weight="bold">稳健层</text>
+      <text x="140" font-size="14" y="214" fill="#ffffff" text-anchor="middle" font-family="Microsoft YaHei" font-weight="bold">安全层</text>
+      <line y2="230" stroke-width="1.5" x1="305" x2="305" stroke="#969696" y1="40"/>
+      <polygon fill="#969696" points="301,233 309,233 305,241"/>
+      <text fill="#737373" x="288" font-size="10" y="253" font-family="Microsoft YaHei">风险·收益↑</text>
+    </svg>
+  </div>
+  <div class="cols3">
+    <div class="col"><div class="t">增长层</div><div class="s">小概率高收益：期权、成长股、彩票式资产。</div></div>
+    <div class="col"><div class="t">稳健层</div><div class="s">平衡波动与增长：债券、蓝筹、指数定投。</div></div>
+    <div class="col"><div class="t">安全层</div><div class="s">现金、国债等；保险/年金须核验合同、期限与流动性。</div></div>
+  </div>
+  <div class="takeaway">MPT 摊开一张收益—风险地图；BPT 按目标分层、独立管理。</div>
+  <div class="note">出处：Shefrin &amp; Statman (2000, <em>JFQA</em>·金融与数量分析季刊)</div>
+
+  <h3>底层：先让"目标不落空"</h3>
+  <p>安全层只做一件事：把到期财富跌破底线的概率，压到允许范围内。</p>
+  <div class="cols3">
+    <div class="col"><div class="t">服务的任务</div><div class="s">未来必需支出：学费、养老、房贷、应急金。</div></div>
+    <div class="col"><div class="t">典型工具</div><div class="s">无风险资产、国债、存款、保险与年金。</div></div>
+    <div class="col"><div class="t">数学约束</div><div class="s">到期财富跌破底线 A 的概率，不超过允许失败概率 ε（示意 5%）。</div></div>
+  </div>
+  <div class="takeaway">与展望理论衔接：亏损端更陡——先锁死下限，再谈冒险；"先买保险，再买彩票"的保险，就放在这一层。</div>
+
+  <h3>上层：用小概率高收益，满足"搏一把"</h3>
+  <p>增长层买的是"可能大涨"的机会，而不是稳稳的收益。</p>
+  <div class="cols3">
+    <div class="col"><div class="t">保险侧：确定的小支出</div><div class="s">小概率的大损失被高估，愿付超过精算公平价的保费，买一个确定性。对应概率权重：小概率损失被高估，确定性被看重。</div></div>
+    <div class="col"><div class="t">彩票侧：小概率高收益</div><div class="s">期权、成长股、新兴市场、彩票式资产；小概率高收益被高估，愿为"几乎不中"支付溢价。对应概率权重：小概率收益被高估。</div></div>
+  </div>
+  <div class="takeaway">一个投资者，两副面孔："既买保险、又买彩票"不是矛盾——安全层保下限、增长层博上限，两个心理账户各自成立。</div>
+  <div class="note">出处：Shefrin &amp; Statman (2000)；概率权重见 Kahneman &amp; Tversky (1979)</div>
+
+  <h3>分层之后：看得见的投资行为</h3>
+  <p>把目标装进不同的心理账户，会改变可观察的投资行为。</p>
+  <div class="cols3">
+    <div class="col"><div class="t">01 保守与激进并存</div><div class="s">同一资金池里国债与成长股并存，各自独立管理，不再被视为矛盾。</div></div>
+    <div class="col"><div class="t">02 对单层波动反应不同</div><div class="s">增长层大跌不急于赎回，安全层微跌就警惕——两层的心情不一样。</div></div>
+    <div class="col"><div class="t">03 层内调仓多于再平衡</div><div class="s">哪里缺目标补哪里，不按总组合风险统一操作。</div></div>
+  </div>
+  <div class="warnbox"><strong>BPT 小结</strong>：BPT 解释分层目标，但仍须合并检查整体风险与目标；局部达标不等于整体组合最优。</div>
+
+  <!-- 案例一 -->
+  <div class="case">
+    <div class="case-head"><span>案例一 · 100 万元投资，一年后至少保留 85 万元</span></div>
+    <div class="case-body">
+      <p><strong>前提</strong>：假设算例，不是市场预测。安全部分收益为 0 且可随时使用；风险部分只考虑下跌 60%、持平、上涨 60% 三种情景，不为情景赋予概率。</p>
+      <table>
+        <tr><th>配置</th><th>风险资产跌 60%</th><th>持平</th><th>风险资产涨 60%</th></tr>
+        <tr><td class="mono">70万安全＋30万风险</td><td><strong>82 万元，未达底线</strong></td><td>100 万元</td><td>118 万元</td></tr>
+        <tr><td class="mono">80万安全＋20万风险</td><td><strong>88 万元，满足底线</strong></td><td>100 万元</td><td>112 万元</td></tr>
+      </table>
+      <div class="note">25% 来自给定压力幅度，不是普遍适用的最佳仓位；没有可靠分布，就不能从三种情景计算真实失败概率。</div>
+      <div class="warnbox"><strong>追问</strong>：为了多赚 6 万元而让 85 万元的底线落空，是计算错误，还是目标排序错误？</div>
+    </div>
+  </div>
+
+  <h3>案例一：先看清这笔钱的任务</h3>
+  <p>一年后有一笔 85 万元的硬支出，今天手里有 100 万元。问题不是怎么赚最多，而是哪些钱可以拿去冒险。</p>
+  <div class="cols3">
+    <div class="col"><div class="t">这笔钱的任务</div><div class="s">一年后必须拿出 85 万元（如学费、房款）；今天手里有 100 万元，多出的 15 万是安全垫。</div></div>
+    <div class="col"><div class="t">硬底线 A = 85 万</div><div class="s">一年后财富不得低于 85 万；本例按不允许跌破处理，不讨论失败概率。</div></div>
+    <div class="col"><div class="t">钱怎么分 / 要回答的问题</div><div class="s">100 万 = 安全部分（一年后仍可用）＋风险部分（可能跌 60%）。问题：风险部分最多放多少，才能保证一年后不低于 85 万？</div></div>
+  </div>
+  <div class="note">设风险占比为 x，下一页从最坏情景倒推 x 的上限。</div>
+
+  <h3>案例一：两种配置，差在哪儿</h3>
+  <p>同样 100 万，风险放 30 万还是 20 万，决定最坏情景下底线保不保得住。</p>
+  <div class="cols3">
+    <div class="col"><div class="t">70 万安全＋30 万风险</div><div class="s">风险跌 60% 后：70 + 30×40% = <strong>82 万元，跌破 85 万底线</strong>。</div></div>
+    <div class="col"><div class="t">80 万安全＋20 万风险</div><div class="s">风险跌 60% 后：80 + 20×40% = <strong>88 万元，守住底线</strong>。</div></div>
+  </div>
+  <div class="takeaway">差别在哪：多赚的 6 万（118−112）来自拿 10 万去冒险；代价是最坏情景 82 万低于 85 万，底线落空。</div>
+
+  <h3>案例一：倒推风险占比上限</h3>
+  <p>给定最坏情景"风险跌 60%"，反解风险占比 x 的上限。</p>
+  <div class="formula">最坏情景推导：压力假设——安全部分收益为 0，风险部分下跌 60%。<br>财富：W = 100(1−x) + 100x×0.4 = 100 − 60x。<br>约束：W ≥ 85 ⇒ x ≤ 15/60 = <strong>25%</strong>。</div>
+  <div class="formula">更保守的情形：若风险资产可能全部损失——100(1−x) ≥ 85，故 x ≤ <strong>15%</strong>。<span class="cap">25% 和 15% 都是给定压力情景下的上限，不是普遍最优仓位。</span></div>
+  <div class="takeaway">回到 BPT：先定目标底线，风险敞口是被约束出来的——这正是安全层"先保目标，再谈收益"的做法。</div>
+
+  <h3>案例一拆解：公式里的每一部分是什么</h3>
+  <p>风险占比为 x：安全部分 100(1−x)，风险部分 100x；若风险资产跌 60%，剩余价值为 40x，因此 W = 100 − 60x。</p>
+  <div class="cols3">
+    <div class="col"><div class="t">第一项 100(1−x)</div><div class="s">x 是风险占比，(1−x) 是安全占比；安全部分一年后不变，收益为 0。</div></div>
+    <div class="col"><div class="t">第二项 100x×0.4</div><div class="s">100x 是投入风险部分的金额；跌 60% 后只剩 40%，所以乘以 0.4。</div></div>
+    <div class="col"><div class="t">两部分相加</div><div class="s">W 就是最坏情景下一年后总共还有的钱；要求它不低于 85 万。</div></div>
+  </div>
+  <div class="note">代回验证：x＝0.3 时 82 万，低于 85 万；x＝0.2 时 88 万，达到 85 万。</div>
+
+  <h3>案例一拆解：不等式怎么一步步解出 25%</h3>
+  <div class="formula">第 1 步　目标：最坏情景财富 W ≥ 85 万元。<br>第 2 步　代入：100(1−x) + 100x×0.4 ≥ 85。<br>第 3 步　展开：100 − 60x ≥ 85。<br>第 4 步　求解：x ≤ 15/60 = <strong>25%</strong>。</div>
+  <div class="formula">25% 落地成金额：风险 25 万元，安全 75 万元。<br>x = 25%：75 + 25×40% = 85 万元，达标。<br>x = 30%：70 + 30×40% = 82 万元，低于 85 万元。<span class="cap">任何 x 超过 25%，最坏情景都会跌破 85 万——上限由底线约束倒推，这正是安全层的做法。</span></div>
+
+  <h3>案例一 · 课堂算例可视化：到期财富与可行上限</h3>
+  <p>交互可视化静态呈现（默认态 70/30 ＋ 压力 −60%）：左图对比到期财富与 85 万底线，右图给出风险层可行上限。</p>
+  <div class="figure"><img src="images/s4c1a.png" alt="案例一：70/30 与 80/20 在不同风险层下的到期财富对比"></div>
+  <div class="figcap">S4_C1a · 到期财富对比（70/30 vs 80/20）：硬底线 85 万，80/20 守住、70/30 跌破</div>
+  <div class="figure"><img src="images/s4c1b.png" alt="案例一：不同风险层比例下的到期财富与可行上限"></div>
+  <div class="figcap">S4_C1b · 风险层可行上限：−60% 情景最大可行 25%，全损情景最大可行 15%</div>
+
+  <h3>案例一 · 结论：先保住底线，再谈收益</h3>
+  <p>七页算例讲完，收束成三条结论。</p>
+  <div class="statgrid">
+    <div class="stat"><div class="k">核心结论</div><div class="v">85 万<span class="ac">底线</span></div><div class="d">风险占比上限 25%（压力 −60%）或 15%（压力全损）；80/20 守住底线，70/30 跌破底线。</div></div>
+    <div class="stat"><div class="k">01 配置结论</div><div class="v">80/20 <span class="ac">优于</span> 70/30</div><div class="d">同样 100 万，80/20 最差情况 88 万守住底线，70/30 最差情况 82 万跌破；多赚的 6 万弥补不了底线落空。</div></div>
+    <div class="stat"><div class="k">02 推导结论</div><div class="v">x ≤ <span class="ac">25%</span></div><div class="d">上限由"W ≥ 85 万"的不等式倒推，随压力情景（−60% / 全损）变化。</div></div>
+    <div class="stat"><div class="k">03 行为学结论</div><div class="v">BPT <span class="ac">安全层</span></div><div class="d">先保目标、再谈收益；风险敞口由底线约束出来，不是偏好参数。</div></div>
+  </div>
+  <div class="warnbox">边界：三种情景未赋概率，结论是压力约束而非失败概率；本例为假设算例，非行情预测。</div>
+
+  <h3>心理账户 · 课堂算例可视化：合并风险不因命名改变</h3>
+  <p>招商银行在「安全」账户占 7%、在「增值」账户占 3%，单只合计 10%；两个账户的银行行业合计 27%。</p>
+  <div class="figure"><img src="images/s4c2.png" alt="心理账户：改名与分开记账不改变合并风险"></div>
+  <div class="figcap">S4_C2 · 心理账户：分开记账不改变合并风险（单股 10% · 银行行业 27%）</div>
+
+  <h3>心理账户：分开记账，不等于分开风险</h3>
+  <p>把账户分层的目的是把问题问清楚；每层都要有可操作的评价方式，而不是把名字改成"安全"就真的安全。</p>
+  <table>
+    <tr><th>账户层次</th><th>首先问什么</th><th>可操作的评价方式</th></tr>
+    <tr><td class="mono">底线层</td><td>什么钱在什么日期必须可用</td><td>到期现金缺口、亏损容忍、流动性</td></tr>
+    <tr><td class="mono">增长层</td><td>为长期目标可以承受多大波动</td><td>分散程度、风险暴露、回撤与期限</td></tr>
+    <tr><td class="mono">试验层</td><td>最多能损失多少，何时停止</td><td>资金上限、可验证假说、退出条件</td></tr>
+  </table>
+  <div class="warnbox"><strong>关键提醒</strong>：心理上分层不会消除经济上的相关性——股票不能因为放在叫"养老账户"的抽屉里，就变成安全资产；收益率或波动率也不因账户名称而改变。</div>
+</section>
+<!-- ============ 第二部分 · BAPM ============ -->
+<section id="bapm">
+  <h2><span class="no">04</span> 第二部分 · BAPM</h2>
+  <p class="note">情绪性定价偏差不必然伴随可实现的套利机会——定价偏离的持续，取决于套利者的风险承受能力、融资可得性与卖空约束。</p>
+
+  <h3>BAPM：行为资产定价模型是什么</h3>
+  <p>Behavioral Asset Pricing Model（行为资产定价模型）：在均衡定价中纳入投资者的异质信念与情绪。</p>
+  <div class="cols3">
+    <div class="col"><div class="t">定义</div><div class="s">均衡价格不再由单一理性代表投资者决定，而是由理性套利者与噪声交易者的相互作用共同形成。</div></div>
+    <div class="col"><div class="t">01 与传统模型的差别</div><div class="s">CAPM 假定投资者同质、理性、信念一致；BAPM 允许异质信念——噪声交易者凭情绪交易，套利者按基本面交易。</div></div>
+    <div class="col"><div class="t">02 价格如何形成</div><div class="s">教学直觉，不是原始定价方程：交易价格受基本面信息与交易者信念共同影响；套利受资金、卖空、流动性和风险约束，偏离未必立即消失。</div></div>
+  </div>
+  <div class="warnbox"><strong>03 为什么重要</strong>：情绪真实进入均衡价格与交易量；检验情绪定价含义须区分信息与噪声（见 924 案例）。<br>一句话：BAPM 把"人不是同质理性的"写进定价模型，均衡价格与交易量随之改变。</div>
+  <div class="note">出处：Shefrin &amp; Statman (1994)</div>
+
+  <h3>BAPM：不同投资者共同交易，价格怎样形成</h3>
+  <p class="note"><strong>机制假说链（假说，不是已证明的规律）</strong>；上侧约束：融资、融券、流动性与风险约束作用于整条链条。</p>
+  <div class="chain">
+    <div class="step"><span class="t">环节 1</span><span class="s">信息或叙事：新信息、政策与市场叙事</span></div>
+    <div class="arrow">→</div>
+    <div class="step"><span class="t">环节 2</span><span class="s">注意力与信念变化：关注度、预期与情绪改变</span></div>
+    <div class="arrow">→</div>
+    <div class="step"><span class="t">环节 3</span><span class="s">订单与持仓变化：买入卖出与仓位调整</span></div>
+    <div class="arrow">→</div>
+    <div class="step"><span class="t">环节 4</span><span class="s">价格变化：收益与估值的当期变动</span></div>
+  </div>
+  <div class="warnbox"><strong>说清机制时，三条不能（避免常见误用）</strong><br>① 不能简化为"散户多就无效，机构多就有效"；② 不能把普通 β（贝塔）改名"行为 β"；③ 不能以任意情绪回归声称验证 BAPM。</div>
+
+  <h3>BAPM 机制拆解：信息怎样变成信念</h3>
+  <p>机制链前半段：市场叙事进入注意力，再变成预期与情绪。</p>
+  <div class="cols3">
+    <div class="col"><div class="t">环节 1｜信息或叙事</div><div class="s">新信息、政策、传闻与市场故事；只有被注意到的部分，才会进入价格。</div></div>
+    <div class="col"><div class="t">环节 2｜注意力与信念变化</div><div class="s">有限注意力决定哪些信息被加工；预期与情绪随之改变，乐观与恐慌都是信念。</div></div>
+    <div class="col"><div class="t">行为学依据</div><div class="s">有限注意力、锚定与叙事传播——信息不是等权进入价格，注意力是稀缺资源。</div></div>
+  </div>
+
+  <h3>BAPM 机制拆解：信念怎样变成订单</h3>
+  <p>机制链后半段：信念变成买卖，买卖变成价格。</p>
+  <div class="cols3">
+    <div class="col"><div class="t">环节 3｜订单与持仓变化</div><div class="s">买入卖出与仓位调整；处置效应（卖盈留亏）与羊群行为，让交易带有系统性偏差。</div></div>
+    <div class="col"><div class="t">环节 4｜价格变化</div><div class="s">买卖不平衡推动价格移动；最后成交的边际交易者决定价格，而不是"最理性的人"。</div></div>
+    <div class="col"><div class="t">贯穿链条的约束</div><div class="s">融资、融券、流动性与风险约束作用于整条链条——限制"想交易"能不能真正落地。</div></div>
+  </div>
+
+  <h3>BAPM 机制拆解：三条"不能"与小结</h3>
+  <div class="cols3">
+    <div class="col"><div class="t">不能① 贴人群标签</div><div class="s">有效与否看定价过程，不看"散户多"还是"机构多"。</div></div>
+    <div class="col"><div class="t">不能② 只改名</div><div class="s">把普通 β（贝塔）改名"行为 β"，不是检验，只是换标签。</div></div>
+    <div class="col"><div class="t">不能③ 不设检验</div><div class="s">以任意情绪回归声称验证 BAPM，等于用故事代替证据。</div></div>
+  </div>
+  <div class="takeaway">课堂小结：机制假说链的每一环都需要证据；没有证据就把链条写实，就是讲故事。</div>
+
+  <!-- 案例二 -->
+  <div class="case">
+    <div class="case-head"><span>案例二 · 924 上涨之后，为什么仍要检查交易条件</span></div>
+    <div class="case-body">
+      <p><strong>案例背景</strong>：2024-09-24 宣布货币与资本市场支持措施；以 9 月 23 日收盘为起点，把"上涨"与"兑现"分开看。沪深300、创业板指已联网核对。</p>
+      <table>
+        <tr><th>指数</th><th>9-23收盘 → 10-08收盘</th><th>10-08 → 10-09收盘</th></tr>
+        <tr><td class="mono">沪深300</td><td><strong>+32.47%</strong></td><td>−7.05%</td></tr>
+        <tr><td class="mono">创业板指</td><td><strong>+66.63%</strong></td><td>−10.59%</td></tr>
+        <tr><td class="mono">中证2000</td><td><strong>+36.11%</strong></td><td>−9.36%</td></tr>
+      </table>
+      <div class="figure"><img src="images/s4b1.png" alt="924行情：三指数归一化走势"></div>
+      <div class="figcap">S4_B1 · 924 行情三指数归一化走势（9月23日 = 1）：先 +32%~+67%，10-08 后回落</div>
+      <div class="warnbox"><strong>课堂规则</strong>：故事可以变，事先写下的交易规则不能随结果更改——先涨后跌本身，不证明追涨是情绪，也不证明抄底是理性。</div>
+    </div>
+  </div>
+
+  <h3>一日压力回放："防御"这个名称，不等于本金安全</h3>
+  <p>五只科技股等权放进 30% 的"进取账户"，长江电力、中国神华、工商银行等权放进 70% 的"防御账户"；按 10 月 8 日至 9 日前复权收益计算。</p>
+  <div class="statgrid">
+    <div class="stat"><div class="k">进取账户（30%）科技5股等权</div><div class="v">−2.49%</div><div class="d">账户单独看并不"激进而亏大"。</div></div>
+    <div class="stat"><div class="k">防御账户（70%）防御3股等权</div><div class="v">−2.84%</div><div class="d">叫"防御"的两天里跌得更多。</div></div>
+    <div class="stat"><div class="k">合并 30/70 组合</div><div class="v">−2.74%</div><div class="d">合并后两个账户的相关性暴露。</div></div>
+  </div>
+  <div class="warnbox">边界：事后选样的一日压力回放，只能演示"名称不等于属性"，不能推断通常的波动排序，更不能作为卖出依据。</div>
+
+  <h3>案例二逻辑链：两个场景如何推出结论</h3>
+  <p>两步走：先用 924 涨跌排除"事后叙事"，再用防御账户排除"名称标签"；每一步都标明推导依据。</p>
+  <div class="cols3">
+    <div class="col"><div class="t">证据 A · 924涨跌</div><div class="s">同一指数先 +32%（9-23→10-08）后 −7%（10-08→10-09）；同一段价格可被"情绪狂热"与"情绪崩溃"两种叙事解释。</div></div>
+    <div class="col"><div class="t">推导 1 → 结论 01</div><div class="s">价格序列不含动机信息；把涨跌当情绪证据，任何结果都能事后讲圆 → 情绪归因不可证伪。</div></div>
+    <div class="col"><div class="t">结论 01</div><div class="s"><strong>叙事 ≠ 证据</strong>（由 A 推出）。</div></div>
+  </div>
+  <div class="cols3">
+    <div class="col"><div class="t">证据 B · 防御账户</div><div class="s">压力日"防御"账户 −2.84%，跌幅大于"进取"账户 −2.49%；名称与实际跌幅排序相反。</div></div>
+    <div class="col"><div class="t">推导 2 → 结论 02/03</div><div class="s">名称来自账户划分而非持仓风险；标签与跌幅排序相反 → 风险须看合并持仓，而非名称。</div></div>
+    <div class="col"><div class="t">结论 02 / 03</div><div class="s"><strong>名称 ≠ 属性</strong>（由 B 推出）· <strong>合并才是风险</strong>（B 延伸）。</div></div>
+  </div>
+  <div class="note">边界：教学演示而非统计证明；不推断普适规律，不构成交易建议。</div>
+
+  <h3>案例二结论：检验情绪定价，须对照事前条件而非事后叙事</h3>
+  <div class="statgrid">
+    <div class="stat"><div class="k">核心结论</div><div class="v">事前条件</div><div class="d">价格上涨与下跌本身，都不构成"情绪驱动"的证据；账户名称也不代表实际风险，合并组合才是风险管理的对象。</div></div>
+    <div class="stat"><div class="k">01 叙事 ≠ 证据</div><div class="v">对照规则</div><div class="d">先涨后跌不证明追涨是情绪、抄底是理性；情绪归因须对照事前写下的规则，区分信息与噪声。</div></div>
+    <div class="stat"><div class="k">02 名称 ≠ 属性</div><div class="v">−2.84%</div><div class="d">"防御"账户压力日跌幅 −2.84% ＞"进取"账户 −2.49%；名称不等于风险属性。</div></div>
+    <div class="stat"><div class="k">03 合并才是风险</div><div class="v">−2.74%</div><div class="d">两账户分开看都"合理"，合并后 −2.74%；相关性决定组合真实风险，这才是该管的数字。</div></div>
+  </div>
+  <div class="takeaway">回到 BAPM：情绪定价要有可证伪的事前条件；风险管理要盯合并组合，而不是账户标签。</div>
+</section>
+<!-- ============ 第三部分 · 动量与反转 ============ -->
+<section id="momentum">
+  <h2><span class="no">05</span> 第三部分 · 动量与反转</h2>
+  <p class="note">动量与反转都不是无条件规律——先问：哪一组股票、过去多久、持有多久、以什么成本成交。</p>
+
+  <h3>先用例子讲清"赢家组合"</h3>
+  <p>先看股票怎么分组、策略赌什么，再对照学术定义——动量与反转说的是"过去表现"与"未来相对表现"的关系。</p>
+  <div class="cols3">
+    <div class="col"><div class="t">01 怎么分组</div><div class="s">把过去一段时间的收益排序：涨得多的叫"赢家组合"，跌得多的叫"输家组合"。例如过去 11 个月，A 涨 30%、B 跌 20%。</div></div>
+    <div class="col"><div class="t">02 动量策略</div><div class="s">买赢家、卖输家，赌过去强者继续强。学术策略中的"卖输家"可涉及做空；本课 A 股回测只做多，不假设融券。</div></div>
+    <div class="col"><div class="t">03 反转策略</div><div class="s">买输家、卖赢家，赌"跌多了会反弹"。学术定义：过去输家组合后续相对领先。</div></div>
+  </div>
+  <div class="note">两个关键参数：形成期（用哪段过去收益分组）与持有期（分组后持有多久）——"12–2""6–2"就是这两组参数。</div>
+
+  <h3>三个问题不要混在一起</h3>
+  <p>行为现象、价格可预测性、扣费后可获利是三件不同的事，回答它们需要不同的数据，证据强度也不同。</p>
+  <table>
+    <tr><th>要回答的问题</th><th>需要的数据</th><th>不能直接推出什么</th></tr>
+    <tr><td class="mono">投资者是否追涨杀跌</td><td>交易记录或经调整的持仓变化，加上此前收益</td><td>不能推出这样交易有利可图</td></tr>
+    <tr><td class="mono">过去收益是否预测未来收益</td><td>事前形成的股票分组，加上后续收益</td><td>不能单凭相关性证明心理机制</td></tr>
+    <tr><td class="mono">策略能否扣费后获利</td><td>可交易股票池、真实时序、成本与成交约束</td><td>不能仅凭毛收益推出现实可复制</td></tr>
+  </table>
+  <div class="takeaway">定义与口径：动量＝过去赢家组合后续相对领先；反转＝过去输家组合后续相对领先。必须声明形成期与持有期；截面动量不等于时间序列动量。</div>
+
+  <h3>12–2 动量：把时间轴画出来</h3>
+  <p>以 2024 年 9 月持有期为例：信号用 2023 年 9 月至 2024 年 7 月收益，跳过 8 月，9 月建仓、10 月退出。</p>
+  <div class="chain">
+    <div class="step"><span class="t">2023-08 起点 t−13</span></div>
+    <div class="arrow">→</div>
+    <div class="step"><span class="t">2023-09 至 2024-07</span><span class="s">11 个月收益（t−12 → t−2）</span></div>
+    <div class="arrow">→</div>
+    <div class="step"><span class="t">2024-08 缓冲跳过 t−1</span></div>
+    <div class="arrow">→</div>
+    <div class="step"><span class="t">2024-09 建仓 t</span></div>
+    <div class="arrow">→</div>
+    <div class="step"><span class="t">2024-10 成交 t+1</span></div>
+  </div>
+  <div class="cols3">
+    <div class="col"><div class="t">01 为什么跳过最近一个月</div><div class="s">跳过 8 月是为了降低短期反转影响。信号在 8 月底可计算，按 9 月首个可执行收盘价建仓。</div></div>
+    <div class="col"><div class="t">02 为什么是 11 个月</div><div class="s">P<sub>t−2</sub> / P<sub>t−13</sub> − 1：用 t−2 与 t−13 两个月末收盘价，覆盖 t−12 至 t−2 共 11 个月收益。</div></div>
+    <div class="col"><div class="t">6–2 与一月反转</div><div class="s">6–2 同理：P<sub>t−2</sub> / P<sub>t−7</sub> − 1 覆盖 t−6 至 t−2 共 5 个月；一月反转用上月收益取反，方向相反。</div></div>
+  </div>
+  <div class="note">对照 French 动量因子说明。</div>
+
+  <h3>本次实验的三个信号：把时间轴写在纸上</h3>
+  <p>P 表示月末收盘价（前复权）；S 表示排序分数。i 为个股，t 为决策期。</p>
+  <table>
+    <tr><th>信号</th><th>定义</th></tr>
+    <tr><td class="mono">12–2 动量</td><td>第 t−12 月至第 t−2 月的 11 个月复合收益</td></tr>
+    <tr><td class="mono">6–2 动量</td><td>第 t−6 月至第 t−2 月的 5 个月复合收益</td></tr>
+    <tr><td class="mono">一月反转</td><td>上月收益取反，与动量方向相反</td></tr>
+  </table>
+  <div class="note">时间轴示例：准备在 2024 年 9 月交易，12–2 动量使用 2023 年 9 月至 2024 年 7 月的月收益，跳过 2024 年 8 月（t−1）作为落地缓冲。</div>
+  <div class="warnbox">分组规则：按排序分数前 30% 取组、组内等权；所有策略及等权基准共用 12–2 历史资格。<br><span class="note">对照 French 动量因子说明（mba.tuck.dartmouth.edu）</span></div>
+
+  <h3>读文献证据，先看三件事</h3>
+  <p>不同研究结论不一，不等于"谁错了"；先比较数据范围、口径参数与结论强度。</p>
+  <div class="cols3">
+    <div class="col"><div class="t">01 数据范围</div><div class="s">哪国、哪段时间、哪些股票？美国样本不能直接外推中国；A 股与 B 股的投资者结构也不同。</div></div>
+    <div class="col"><div class="t">02 口径参数</div><div class="s">形成期与持有期多长？3–12 个月动量与短于一周的动量，结论可以完全不同。</div></div>
+    <div class="col"><div class="t">03 结论强度</div><div class="s">"记录到现象"≠"证明机制"≠"扣费后能获利"。Jegadeesh–Titman 记录的是动量现象本身。</div></div>
+  </div>
+  <div class="takeaway">读文献时先标出数据范围和口径参数，再判断研究结论能否外推到你的问题。</div>
+
+  <h3>海外证据与中国证据，分别怎么说</h3>
+  <p>文献结论按原研究口径陈述；外推到中国或换一个持有期限，都需要新的证据。</p>
+  <table>
+    <tr><th>研究</th><th>数据与比较</th><th>可带入课堂的结论</th></tr>
+    <tr><td class="mono">Jegadeesh &amp; Titman (1993)</td><td>美国样本，3–12 个月持有期</td><td>记录动量现象，不能直接外推中国</td></tr>
+    <tr><td class="mono">De Bondt &amp; Thaler (1985)</td><td>组合形成后 36 个月</td><td>输家比赢家累计高约 25%，不是"每年稳获 8%"</td></tr>
+    <tr><td class="mono">Gang, Qian &amp; Xu (2019)</td><td>中国 2006–2017</td><td>动量盈利主要出现在短于一周的期限</td></tr>
+    <tr><td class="mono">Chui, Subrahmanyam &amp; Titman (2022)</td><td>中国 2002–2018，A 股与 B 股</td><td>B 股动量较明显，A 股短期反转较明显</td></tr>
+  </table>
+  <div class="takeaway">收束：不能说中国市场只能追涨，也不能说只能抄底——机制、样本与证据强度要分开说。</div>
+  <div class="note">文献见 <code>课时4_教材勘误与来源.md</code> S4–S7</div>
+</section>
+
+<!-- ============ 第四部分 · Agent 实证演示 ============ -->
+<section id="agent">
+  <h2><span class="no">06</span> 第四部分 · Agent 实证演示</h2>
+  <p class="note">一个漂亮回测，怎样接受审查——先看收益，也看承担了什么；再看相对基准是否可靠；最后把选中的股票摆上台面。</p>
+
+  <h3>演示参数与口径设定</h3>
+  <p>以下四项为演示固定参数与口径，收益数字均按此计算。</p>
+  <table>
+    <tr><th>#</th><th>参数</th><th>约定</th></tr>
+    <tr><td class="mono">01</td><td class="mono">教学池</td><td>20 只参考股，沿用前三课事后选定的教学池——不是全 A 股，不是事前冻结的真实策略</td></tr>
+    <tr><td class="mono">02</td><td class="mono">时间范围</td><td>43 个完整持有期：2023 年 1 月至 2026 年 7 月形成持仓，2026-08-03 收盘估值结束</td></tr>
+    <tr><td class="mono">03</td><td class="mono">成交约定</td><td>收盘价成交；20 只参考股均有报价才调仓（2025 年 6 月顺延至 6 月 10 日）</td></tr>
+    <tr><td class="mono">04</td><td class="mono">成本</td><td>买卖各 8bp（基点）、卖出另计印花税（2023-08-28 前 10bp、后 5bp）；另做 20bp 成本敏感性</td></tr>
+  </table>
+  <div class="warnbox">本页为教学执行约定，不是基金真实交易记录；有收盘报价也不代表涨跌停时必然成交。</div>
+
+  <h3>演示第一屏：先看收益，也看承担了什么</h3>
+  <p>20 股教学池、8bp 成本、无额外成交延迟；换手＝买入＋卖出，不是卖出比例。</p>
+  <table>
+    <tr><th>策略</th><th>年化收益</th><th>年化波动</th><th>最大回撤</th><th>双边换手</th></tr>
+    <tr><td class="mono">同池等权</td><td>43.55%</td><td>26.32%</td><td>−9.77%</td><td>10.59%</td></tr>
+    <tr><td class="mono">12–2 动量</td><td><strong>54.61%</strong></td><td>50.49%</td><td>−31.21%</td><td>42.23%</td></tr>
+    <tr><td class="mono">6–2 动量</td><td>48.79%</td><td>40.18%</td><td>−25.99%</td><td>62.94%</td></tr>
+    <tr><td class="mono">一月反转</td><td>41.18%</td><td>36.13%</td><td>−13.64%</td><td>139.66%</td></tr>
+  </table>
+  <div class="figure"><img src="images/s4d1.png" alt="四策略累计净值（对数轴）"></div>
+  <div class="figcap">S4_D1 · 四策略累计净值（对数轴，2023-01 ~ 2026-07）：12–2 动量净值最高，一月反转换手最高</div>
+  <div class="warnbox">54.61% 来自事后选出的 20 股教学池、43 期回测，不代表 A 股平均或可实现预期；与等权基准的月均净收益差区间跨 0。</div>
+
+  <h3>演示第二屏：和同池等权相比，有没有可靠优势</h3>
+  <p>对逐期"策略净收益 − 同池等权净收益"计算均值与 NW（Newey–West）标准误；正态近似 95% 区间，样本 43 期。</p>
+  <table>
+    <tr><th>策略</th><th>平均每期收益差</th><th>NW t 值</th><th>95% 区间</th></tr>
+    <tr><td class="mono">12–2 动量</td><td>+1.29 个百分点</td><td>1.01</td><td>[−1.20，+3.78]</td></tr>
+    <tr><td class="mono">6–2 动量</td><td>+0.66 个百分点</td><td>0.66</td><td>[−1.29，+2.61]</td></tr>
+    <tr><td class="mono">一月反转</td><td>+0.06 个百分点</td><td>0.06</td><td>[−2.05，+2.18]</td></tr>
+  </table>
+  <div class="takeaway">结论：三个区间都包含 0——本实验不足以确认稳定的平均超额收益，也不是对整个中国市场有效性的否定。</div>
+  <div class="note">这里测的是相对等权的收益差，不是因子调整后的 α，更不是行为机制的因果效应。</div>
+
+  <h3>演示第三屏：把"选中了哪些股票"摆到台面上</h3>
+  <p>结果对股票池选择高度敏感——剔除寒武纪、中际旭创、海光信息、新易盛、光迅科技后的对比：</p>
+  <table>
+    <tr><th>股票池</th><th>等权年化</th><th>12–2 动量</th><th>6–2 动量</th><th>一月反转</th></tr>
+    <tr><td class="mono">20 股教学池</td><td>43.55%</td><td>54.61%</td><td>48.79%</td><td>41.18%</td></tr>
+    <tr><td class="mono">剔除科技5股（15股池）</td><td>12.47%</td><td>15.73%</td><td>14.63%</td><td>10.26%</td></tr>
+  </table>
+  <div class="note">成本 20bp：12–2 动量年化 53.67%，一月反转降至 38.36%——高换手策略最先被成本吃掉。<br>延后一日成交：12–2 动量年化反而升至 58.85%——成交时序假定也会改变结论方向。</div>
+  <div class="warnbox">边界：这是样本敏感性检查，不是严谨的"科技因素因果贡献分解"；规则计算使用历史信息，不等于股票池和规则选择没有事后信息。</div>
+</section>
+<!-- ============ 第五部分 · M指标与行为管理 ============ -->
+<section id="mindicator">
+  <h2><span class="no">07</span> 第五部分 · M 指标与行为管理</h2>
+  <p class="note">测到同向变动，不等于找到了交易动机——M 为正只描述同期关联；行为管理，是把偏差改写成可执行的规则。</p>
+
+  <h3>M 指标是什么：测量持仓与收益同向变动的一把尺子</h3>
+  <p>M 描述持仓变化与同期超额收益是否同向；它本身不能识别追涨或抄底动机。</p>
+  <div class="cols3">
+    <div class="col"><div class="t">01 要回答的问题</div><div class="s">价格涨跌本身不含交易动机；要识别"追涨杀跌"，必须把持仓动作与收益放在一起看。</div></div>
+    <div class="col"><div class="t">02 两个变量</div><div class="s">ΔH：本期持仓比例变化，加仓为正；超额收益 R−Rm：个股收益减市场收益，剔除大盘因素。</div></div>
+    <div class="col"><div class="t">03 直觉读数</div><div class="s">ΔH 与同期超额同向只表示同期相关；判断顺势或逆势，还须把持仓变化与事前收益窗口对齐。</div></div>
+  </div>
+  <div class="takeaway">M 指标只测同期关联，不等于因果；它是一把尺子，先定义清楚口径，才能读数。</div>
+
+  <h3>M 指标：同期与滞后，两种读法</h3>
+  <p>同期指标看"当期持仓变化与当期收益的关系"，滞后指标看"当期持仓变化与上期收益的关系"。</p>
+  <div class="cols3">
+    <div class="col"><div class="t">同期指标（像"顺势"）</div><div class="s">M<sub>same</sub> = ΔH × 本期超额收益。</div></div>
+    <div class="col"><div class="t">滞后指标（像"逆势"）</div><div class="s">M<sub>lag</sub> = ΔH × 上期超额收益。</div></div>
+    <div class="col"><div class="t">假设算例</div><div class="s">持股比例 1.0% → 1.2%（ΔH＝0.2 个百分点）；本期超额＋10%，上期超额 −8%。</div></div>
+  </div>
+  <div class="formula">M<sub>same</sub> ＝ 0.002 × 0.10 ＝ ＋0.00020<span class="eq">→ 同一段变化，用同期口径读成"顺势"</span></div>
+  <div class="formula">M<sub>lag</sub> ＝ 0.002 × (−0.08) ＝ −0.00016<span class="eq">→ 用滞后口径读成"逆势"——口径决定结论</span></div>
+  <div class="warnbox">提醒：M<sub>same</sub> 只描述同期关联，不证明"先涨后买"；必须调整股本变化，区分持仓股数与市值权重。</div>
+
+  <h3>算例演算：一次加仓，同期与滞后两种读法</h3>
+  <p>沿用上一页假设：持股比例 1.0%→1.2%（ΔH＝+0.2 个百分点）；本期超额 +10%，上期超额 −8%。</p>
+  <table>
+    <tr><th>步骤</th><th>同期口径</th><th>滞后口径</th></tr>
+    <tr><td class="mono">持仓变化 ΔH</td><td>+0.2 个百分点</td><td>+0.2 个百分点（同一动作）</td></tr>
+    <tr><td class="mono">用哪一期超额收益</td><td>本期 +10%</td><td>上期 −8%</td></tr>
+    <tr><td class="mono">计算 M＝ΔH×超额</td><td>0.002 × 0.10</td><td>0.002 × (−0.08)</td></tr>
+    <tr><td class="mono">结果</td><td>＋0.00020</td><td>−0.00016</td></tr>
+    <tr><td class="mono">读数</td><td>＞0 → "顺势"</td><td>＜0 → "逆势"</td></tr>
+  </table>
+  <div class="takeaway">关键：同一动作（加仓 0.2 个百分点），同期读成"顺势"，滞后读成"逆势"——口径决定结论。</div>
+  <div class="note">提醒：M 只描述同期关联，不证明"先涨后买"；须调整股本变化，区分持仓股数与市值权重。算例为假设数据，非真实持仓。</div>
+
+  <h3>教材案例 7–4：一张不能直接复制的动态面板表</h3>
+  <p class="note">本页审查教材案例 7–4 的变量定义与编码，不等同于前页 M 指标的估计。</p>
+  <table>
+    <tr><th>#</th><th>审查发现</th></tr>
+    <tr><td class="mono">01</td><td>27 只基金、2015 年第 1 季度至 2017 年第 3 季度共 11 期：截图未给出完整方程、变量编码、原始数据和工具变量，无法独立复现。</td></tr>
+    <tr><td class="mono">02</td><td>β₂ 为负却被解释为正贡献：只有在反转变量本身保留负值等特定编码下才可能成立。</td></tr>
+    <tr><td class="mono">03</td><td>不同变量未标准化，不能只比系数绝对值大小；回归显著性也不等于经济重要性。</td></tr>
+    <tr><td class="mono">04</td><td>Sargan（过度识别检验）p=0.9684 至多未拒绝过度识别限制，不能证明工具变量有效；p=0.000 是显示精度。</td></tr>
+  </table>
+  <div class="takeaway">审查课的意义：先问能否复现、系数符号如何编码、显著性与重要性是否混淆，再决定是否采用结论。</div>
+  <div class="note">截图 10，完整方法审查见验证报告第 7 节。</div>
+
+  <h3>从教材 7–4 学到的：审查一篇实证的四步清单</h3>
+  <p>教材案例的四个问题不是"挑错"，而是判断一篇实证"能否采用"的标准动作——按顺序过四关。</p>
+  <div class="cols4">
+    <div class="col"><div class="t">① 能否复现</div><div class="s">有完整方程、变量编码、原始数据吗？不可复现的结论不能进入决策。</div></div>
+    <div class="col"><div class="t">② 系数符号怎么读</div><div class="s">β₂ 为负却被解释为正贡献？先对齐变量编码，再读符号与作用方向。</div></div>
+    <div class="col"><div class="t">③ 显著 ≠ 重要</div><div class="s">未标准化的系数不能比大小；回归显著只说明统计关系，不说明经济分量。</div></div>
+    <div class="col"><div class="t">④ 检验怎么解释</div><div class="s">Sargan p=0.9684 至多未拒绝过度识别限制，不能证明工具变量有效。</div></div>
+  </div>
+  <div class="takeaway">审查顺序：复现 → 编码 → 量纲 → 检验；先过四问，再决定是否采用结论。</div>
+
+  <h3>把偏差改写成可执行规则</h3>
+  <p>行为管理不是"更自律"，而是把每种偏差写成可检查的操作规则。</p>
+  <table>
+    <tr><th>常见偏差</th><th>课堂中的具体表现</th><th>可执行规则</th></tr>
+    <tr><td class="mono">损失厌恶／回本锚定</td><td>因为跌破成本就加仓</td><td>加仓须更新估值或信息证据，不突破总风险额度</td></tr>
+    <tr><td class="mono">确认偏误</td><td>只让 Agent 找支持观点的新闻</td><td>每条观点配一条可推翻它的证据条件</td></tr>
+    <tr><td class="mono">近因偏误／外推</td><td>最近上涨就上调长期预期</td><td>同时报多窗口、同类基准与失败期</td></tr>
+    <tr><td class="mono">心理账户隔离</td><td>两账户分别合规但都买科技</td><td>合并看单股、行业、风格与流动性暴露</td></tr>
+    <tr><td class="mono">过度交易</td><td>高频改参数、随涨跌换策略</td><td>预先写调仓频率、触发条件和成本预算</td></tr>
+    <tr><td class="mono">后见之明</td><td>复盘时说"当时早就知道"</td><td>保存决策时的信息快照和原始判断</td></tr>
+  </table>
+</section>
+
+<!-- ============ 小组任务 ============ -->
+<section id="memo">
+  <h2><span class="no">08</span> 小组任务：Memo（项目备忘录）Part 4——行为约束与策略验证</h2>
+  <p>延续前三课项目，提交一份能接受审查的四格交付。</p>
+  <div class="cols4">
+    <div class="col"><div class="t">① 目标</div><div class="s">资金用途、期限、最低金额、允许的压力损失。</div></div>
+    <div class="col"><div class="t">② 假说</div><div class="s">选一种动量或反转，写明形成期、跳过月、持有期与股票池。</div></div>
+    <div class="col"><div class="t">③ 证据</div><div class="s">一张结果表＋同池基准＋成本，再加一项反例或敏感性检查。</div></div>
+    <div class="col"><div class="t">④ 纪律</div><div class="s">一条能被第三人检查的规则，并写明何种证据使你改变观点。</div></div>
+  </div>
+  <div class="takeaway">评分标准：不能证明有优势也是合格结果；选择性展示高收益不是。</div>
+</section>
+
+<!-- ============ 退出题 ============ -->
+<section id="exit">
+  <h2><span class="no">09</span> 退出题与课后任务</h2>
+  <h3>三句退出题</h3>
+  <ul class="check">
+    <li>M 为正＝追涨能赚钱？<strong>不成立</strong>——混淆了行为与收益。</li>
+    <li>样本动量净值最高＝全 A 股动量有效？<strong>不成立</strong>——忽略了选样、统计与成交。</li>
+    <li>两账户分开＝总风险降低？<strong>不成立</strong>——要看合并权重与相关性。</li>
+  </ul>
+  <h3>课后任务</h3>
+  <ol>
+    <li>小组任务：完成 Memo Part 4，接在前三课项目之后。</li>
+    <li>复跑 P2（动量反转实验）：写明口径、结果与边界，不美化输出。</li>
+    <li>自检：结论是否随股票池、成本、成交时序改变。</li>
+  </ol>
+  <div class="takeaway">先把目标写清楚，再把规则固定下来，让数据检验规则。</div>
+</section>
+
+</div>
+
+<footer>
+  <div class="container">
+    <p><strong>数据与口径声明</strong></p>
+    <p class="note">本页内容来自第 7 章第 4 课时课件《行为投资学与投资行为管理》。课堂算例（100 万底线、M 指标算例）为假设数据，非行情预测、非真实持仓；924 行情指数涨跌与防御账户压力回放为教学演示，不构成交易建议。Agent 演示基于 20 股教学池与假设成本约定，不代表 A 股平均或可实现预期。</p>
+    <p class="mono">出处：Kahneman &amp; Tversky (1979) · Shefrin &amp; Statman (1994, 2000) · Jegadeesh–Titman (1993) · De Bondt–Thaler (1985) · 动量/反转文献对照 French 因子说明</p>
+  </div>
+</footer>
+</body>
+</html>
