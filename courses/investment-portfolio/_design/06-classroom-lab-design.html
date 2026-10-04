@@ -157,11 +157,11 @@ footer strong{color:var(--ink)}
   </div>
 
   <div class="warnbox">
-    <strong>修订（2026-10-04）</strong>：① 数据接口从"AkShare 免注册"改为<strong>学生端已配置的 tushare MCP</strong>，与课时 4 的数据获取约定一致；② 组合样本从 6 只股票扩为<strong>30 个标的</strong>，候选池扩为 40 个标的，允许个股、基金与其他资产。
+    <strong>修订（2026-10-04）</strong>：① 数据接口从"AkShare 免注册"改为<strong>学生端已配置的 tushare MCP</strong>，与课时 4 的数据获取约定一致；② 组合样本从 6 只股票扩为<strong>30 个标的</strong>，候选池扩为 40 个标的，允许个股、基金与其他资产；③ 2026-10-04 补测基金与 ETF 接口（<code>fund_basic</code> / <code>fund_daily</code> / <code>fund_adj</code> / <code>fund_nav</code> / <code>fund_share</code> / <code>fund_div</code> / <code>fund_portfolio</code> 均可用），候选池表的"课前状态"列由"待实测"改为实测结论。
   </div>
 
   <h3>素材完整性与衔接机制</h3>
-  <p>4 课时讲稿、04 学生 Prompt 模板卡（6 张卡）、05 小组项目任务书、PlanB 预跑包（每步 PNG + CSV + 结论）、学生端 tushare MCP（课时 4 已下发，已实测 <code>daily</code> / <code>adj_factor</code> / <code>index_daily</code> / <code>trade_cal</code> / <code>daily_basic</code>）均已就绪。本实验全部环节只复用课程内已有工具，无需补充材料。</p>
+  <p>4 课时讲稿、04 学生 Prompt 模板卡（6 张卡）、05 小组项目任务书、PlanB 预跑包（每步 PNG + CSV + 结论）、学生端 tushare MCP（课时 4 已下发，已实测 <code>daily</code> / <code>adj_factor</code> / <code>index_daily</code> / <code>trade_cal</code> / <code>daily_basic</code>；基金与 ETF 类 <code>fund_basic</code> / <code>fund_daily</code> / <code>fund_adj</code> / <code>fund_nav</code> / <code>fund_share</code> / <code>fund_div</code> 于 2026-10-04 实测可取）均已就绪。本实验全部环节只复用课程内已有工具，无需补充材料。</p>
   <ul>
     <li>E1 的产出（本组组合样本：30 个标的 + 权重 + 事前筛选逻辑 + 选择理由）＝ E2 的分析对象；</li>
     <li>E2 的产出（全部 30 个标的的 α / β 证据 + 2 买 2 避 + 组合 β 与 Blume 调整）＝ E3 的归因与压测对象；</li>
@@ -173,7 +173,7 @@ footer strong{color:var(--ink)}
   <ol>
     <li>讲稿与课时练习里的"20 股池""6 股组合""10 股回归"保持不变，它们是课内 8 分钟小练习；本实验在同一条教学池上把候选池扩到 40、组合样本扩到 30，属于<strong>超集</strong>，方向一致。</li>
     <li>30 个标的的取数调用量约为课内练习的 3 倍，必须给取数设时间预算（见 0.4 节）并在 T-2 准备 PlanB 行情快照。</li>
-    <li>ETF、场外基金、指数代理三类标的的接口权限需 T-7 实测；未通过时按 0.4 节的降级梯度处理，题目与时长不变。</li>
+    <li>ETF、场外基金、指数代理三类标的的接口权限已于 <strong>2026-10-04 实测通过</strong>：12 只场内 ETF 走 <code>fund_daily</code> + <code>fund_adj</code>、4 只场外基金走 <code>fund_nav</code>、<code>000012.SH</code> 上证国债指数走 <code>index_daily</code>，主窗各 483 个交易日。学生端积分档位可能低于教师端（<code>fund_adj</code> / <code>fund_portfolio</code> 需 5000 积分，其余基金接口 2000），返回 40203 时按 0.4 节的降级梯度处理，题目与时长不变。</li>
   </ol>
 
   <h3>时间分配（合计 90 分钟）</h3>
@@ -194,8 +194,8 @@ footer strong{color:var(--ink)}
     <li><strong>时间预算</strong>：E1 取数 8 分钟（30 个标的周频）；超时即整组切教师 PlanB 快照，不得在课堂上继续排查接口。</li>
     <li><strong>降级梯度</strong>（按顺序，每次降级都要在记录单写一行"降级原因 + 证据"）：
       <ol>
-        <li>首选：个股 <code>daily</code> + <code>adj_factor</code>；ETF <code>fund_daily</code> + <code>fund_adj</code>；场外基金 <code>fund_nav</code>；指数 <code>index_daily</code>。</li>
-        <li>一级降级：接口返回 <code>40203 无接口权限</code> 或字段缺失 → 同类标的改用场外基金 <code>fund_nav</code>（累计净值口径）。</li>
+        <li>首选：个股 <code>daily</code> + <code>adj_factor</code>；ETF <code>fund_daily</code> + <code>fund_adj</code>（或 <code>fund_nav</code> 的 <code>adj_nav</code> 复权净值）；场外基金 <code>fund_nav</code> 的 <code>adj_nav</code>；指数 <code>index_daily</code>。四类均已于 2026-10-04 实测可取。</li>
+        <li>一级降级：接口返回 <code>40203 无接口权限</code> 或字段缺失 → 同类标的改用 <code>fund_nav</code>（含 <code>adj_nav</code> 复权净值字段，场内场外均有，积分门槛 2000，低于 <code>fund_adj</code> 的 5000）；场外基金也可用 <code>accum_nav</code> 累计净值。不得把场内价格与场外净值混成一条收益序列。</li>
         <li>二级降级：仍不可得 → 改用指数代理 <code>index_daily</code>，图表须注明"指数代理，不可直接持有，不含分红"。</li>
         <li>三级降级：整组切换教师 PlanB 行情快照（候选池 40 个标的已预跑 CSV，同窗口同口径），记录单注明"使用 PlanB 数据，与现场取数的口径差异见 README"。</li>
       </ol>
@@ -282,23 +282,23 @@ rf：固定 1.8%（中债 10Y 简化取值，本卡声明）。
       <td><strong>场内 ETF</strong>（权益 / 固收 / 黄金 / 海外）</td><td class="mono">12</td>
       <td>510300 沪深300ETF、510500 中证500ETF、159915 创业板ETF、588000 科创50ETF、512880 证券ETF、512690 酒ETF、515790 光伏ETF、518880 黄金ETF、511010 国债ETF、511260 十年国债ETF、513100 纳指ETF、513500 标普500ETF</td>
       <td class="mono">fund_daily + fund_adj</td>
-      <td><strong>T-7 需实测</strong>，未通过按 0.4 节降级</td>
+      <td><strong>已实测（2026-10-04）</strong>：主窗各 483 日；学生端积分不足时按 0.4 节降级</td>
     </tr>
     <tr>
       <td><strong>场外基金</strong>（主动权益 / 黄金 / 债券）</td><td class="mono">4</td>
       <td>005827.OF 易方达蓝筹精选、110022.OF 易方达消费行业、000216.OF 华安黄金易 ETF 联接 A、217022.OF 招商产业债券 A</td>
-      <td class="mono">fund_nav（unit_nav / accum_nav）</td>
-      <td>005827 课时 2 / 3 已用；其余 T-7 用 fund_basic 核验代码与存续区间</td>
+      <td class="mono">fund_nav（unit_nav / accum_nav / adj_nav）</td>
+      <td>4 只代码已用 fund_basic 核验（2026-10-04）；主窗 fund_nav 各 483 日；无 fund_adj / fund_daily</td>
     </tr>
     <tr>
       <td><strong>指数代理</strong>（不可直接持有，仅代理口径）</td><td class="mono">4</td>
       <td>000300.SH 沪深300、932000.CSI 中证2000、399006.SZ 创业板指、000012.SH 上证国债指数</td>
       <td class="mono">index_daily</td>
-      <td>前 3 条已实测；上证国债指数需 T-7 试取</td>
+      <td>4 条全部已实测（2026-10-04，主窗各 483 日）</td>
     </tr>
   </table>
   </div>
-  <p class="note">代码以 T-7 实测为准；若某标的不可取，用同类替代并在记录单写明替代关系，不使用非 MCP 来源。</p>
+  <p class="note">代码已于 2026-10-04 实测确认；若上课时某标的不可取，用同类替代并在记录单写明替代关系，不使用非 MCP 来源。</p>
 
   <h3>组合样本规则（30 个标的，五条硬规则，写进记录单 1）</h3>
   <ol>
@@ -385,7 +385,7 @@ rf：固定 1.8%（中债 10Y 简化取值，本卡声明）。
       <table>
         <tr><th>时间</th><th>环节</th><th>动作</th></tr>
         <tr><td class="mono">0-3′</td><td>预备</td><td>确认回归对象＝E1 组合样本的<strong>全部 30 个标的</strong>（组合 β = Σw<sub>i</sub>β<sub>i</sub> 需要每个持仓的 β）；市场＝沪深300 日收益（<code>index_daily</code>, 000300.SH）；主窗 2024-09-01~2026-08-31；日频；rf = 1.8%（声明取值）</td></tr>
-        <tr><td class="mono">3-15′</td><td>Agent 任务</td><td>整段复制卡 3：30 个标的（个股 <code>daily</code> + <code>adj_factor</code> 自算前复权；ETF <code>fund_daily</code> + <code>fund_adj</code>；场外基金 <code>fund_nav</code> 累计净值；指数 <code>index_daily</code>）→ 输出 β、年化 α（注明换算）、t(α)、R² 表（30 行）＋ SML（理论线 = rf + β × 样本市场超额均值，散点标注 α 正负）；不同资产类别的复权口径与净值口径分列说明</td></tr>
+        <tr><td class="mono">3-15′</td><td>Agent 任务</td><td>整段复制卡 3：30 个标的（个股 <code>daily</code> + <code>adj_factor</code> 自算前复权；ETF <code>fund_daily</code> + <code>fund_adj</code>；场外基金 <code>fund_nav</code> 的 <code>adj_nav</code>（复权净值）；指数 <code>index_daily</code>）→ 输出 β、年化 α（注明换算）、t(α)、R² 表（30 行）＋ SML（理论线 = rf + β × 样本市场超额均值，散点标注 α 正负）；不同资产类别的复权口径与净值口径分列说明</td></tr>
         <tr><td class="mono">15-21′</td><td>审查</td><td>卡 3 必查 3 问：① α 年化换算公式写了吗？② |t| &gt; 2 的有几只、分别是谁？③ <strong>窗口敏感性（必做，限 1 只）</strong>：对组合内 β 最高的 1 只改用 2023-01-01~2024-08-31 窗口重估 β，比较位移（锚点：三窗口位移光迅 +1.09、恒瑞 +1.07、神华 −0.63，β 是估计量，不是标的属性）</td></tr>
         <tr><td class="mono">21-27′</td><td>决策</td><td>① 2 买 2 避：买＝正 α（带 t 值）或 β 适配组合目标且回归稳定；避＝显著负 α 或 β 明显偏离目标；<strong>未报 t 值的 α 不得写入记录单</strong>（课时 2 纪律）；② 组合 β = Σw<sub>i</sub>β<sub>i</sub>；Blume 调整 β 作下季度预测值；③ 换股决定：≤ 2 只，写理由与类别影响</td></tr>
         <tr><td class="mono">27-30′</td><td>执笔</td><td>完成记录单 2；导出对话留档</td></tr>
@@ -435,7 +435,7 @@ rf：固定 1.8%（中债 10Y 简化取值，本卡声明）。
       <div class="tablewrap">
       <table>
         <tr><th>时间</th><th>环节</th><th>动作</th></tr>
-        <tr><td class="mono">0-3′</td><td>序列构建</td><td>让 Agent 把本组 30 标的组合（E1 权重，若有换股按 E2）在扩展窗内按<strong>固定权重</strong>算月收益序列，声明"固定权重假设，仅为风险画像"；含指数代理或场外基金时，注明收益口径（指数＝价格收益不含分红；场外基金＝累计净值）</td></tr>
+        <tr><td class="mono">0-3′</td><td>序列构建</td><td>让 Agent 把本组 30 标的组合（E1 权重，若有换股按 E2）在扩展窗内按<strong>固定权重</strong>算月收益序列，声明"固定权重假设，仅为风险画像"；含指数代理或场外基金时，注明收益口径（指数＝价格收益不含分红；场外基金＝<code>fund_nav</code> 的 <code>adj_nav</code> 复权净值，退而用 <code>accum_nav</code> 累计净值）</td></tr>
         <tr><td class="mono">3-12′</td><td>Agent 任务①（卡 5 改造）</td><td>组合月收益 − rf 对 RM / SMB / HML_proxy / MOM 回归（2023-01 至 2026-08，44 个月）：输出暴露系数 ＋ t 值、残差 α（年化）＋ t 值、R²；<strong>恒等式复核</strong>：年化超额 ≈ α ＋ Σ 暴露 × 因子年化（锚点示例 005827：−9.63 = −29.79 + 17.69 + 1.33 + 0.89 + 0.25）</td></tr>
         <tr><td class="mono">12-18′</td><td>Agent 任务②（卡 6）</td><td>压测窗① 2024-01-01~02-08、② 2024-09-24~10-08：组合累计收益 ＋ 最大回撤对比沪深300；<strong>若某标的在压测窗内无数据（新上市 / 新成立），按可得子集重算并声明覆盖率</strong>；<strong>必须注明</strong>"候选池与组合样本均为事后选定，压测属事后情景，非可实现业绩"</td></tr>
         <tr><td class="mono">18-24′</td><td>行为纪律页</td><td>从课时 4 偏差表挑 <strong>2 条最相关</strong>（推荐：确认偏误 → 每个观点配一条可推翻它的证据条件；心理账户 → 合并检查行业 / 风格 / 类别暴露）；写预先承诺：调仓频率、触发条件、成本预算；写风险声明"本建议最可能错在哪？什么信号出现时推翻？"；页脚加免责句</td></tr>
