@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23002FA7'/%3E%3Ctext x='32' y='46' font-size='36' text-anchor='middle' fill='white' font-family='Georgia,serif'%3E%CE%BB%3C/text%3E%3C/svg%3E">
+<title>动量还是反转？中证500 的真实答案｜投资组合课程</title>
+<meta name="description" content="用中证500 逐月点时成分与真实行情检验两个互相矛盾的说法：买12个月赢家（夏普2.9）与买上月输家。含时点规则、引擎认证四关、多空与多头腿分离、成本敏感性与事后挑样本的夏普上界。">
+<style>
+/* ===== 瑞士国际主义 · 克莱因蓝 IKB（与第1、3、4课时讲义同款） ===== */
+:root{
+  --paper:#fafaf8;
+  --paper-rgb:250,250,248;
+  --ink:#0a0a0a;
+  --ink-rgb:10,10,10;
+  --grey-1:#f0f0ee;
+  --grey-2:#d4d4d2;
+  --grey-3:#737373;
+  --accent:#002FA7;
+  --accent-rgb:0,47,167;
+  --accent-on:#ffffff;
+  --mono:"JetBrains Mono","Cascadia Code",Consolas,"Courier New",monospace;
+  --sans:"Inter","Helvetica Neue","Noto Sans SC","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+.container{max-width:880px;margin:0 auto;padding:0 24px}
+
+/* ===== header（纯色，无渐变） ===== */
+header{background:var(--ink);color:#fff;padding:56px 0 40px;border-bottom:6px solid var(--accent)}
+header .tag{font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;font-weight:600}
+header .tag::before{content:"// "}
+header h1{font-size:38px;line-height:1.22;font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+header .sub{font-size:16.5px;color:var(--grey-2);margin-bottom:22px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:12.5px;color:#fff;border:1px solid var(--grey-3);padding:4px 12px;background:rgba(255,255,255,.03);font-weight:500}
+
+/* ===== nav（直角 hairline） ===== */
+nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--grey-2);margin-bottom:28px}
+nav .links{display:flex;gap:0;flex-wrap:wrap;padding:6px 0}
+nav a{font-size:14px;color:var(--grey-3);text-decoration:none;padding:8px 14px;border-left:1px solid var(--grey-2);transition:color .15s;font-weight:500}
+nav a:first-child{border-left:none}
+nav a:hover{color:var(--accent)}
+nav a.on{color:var(--accent);font-weight:600}
+nav a.back{color:var(--accent);font-weight:500;margin-right:8px}
+
+/* ===== sections ===== */
+section{margin-bottom:44px}
+h2{font-size:23px;font-weight:700;color:var(--ink);margin:36px 0 16px;padding:0 0 10px 14px;border-left:6px solid var(--accent);display:flex;align-items:baseline;gap:12px;letter-spacing:-.01em;flex-wrap:wrap}
+h2 .no{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.12em;font-weight:600}
+h3{font-size:17.5px;font-weight:700;margin:24px 0 10px;color:var(--ink)}
+p{margin:8px 0}
+ul,ol{margin:8px 0 8px 24px}
+li{margin:5px 0}
+code{font-family:var(--mono);font-size:.86em;background:var(--grey-1);padding:1px 6px;color:var(--ink);font-weight:500}
+strong{font-weight:700}
+a{color:var(--accent)}
+a:hover{color:#0047d0}
+
+/* ===== 卡片（直角纯色） ===== */
+.panel{background:var(--grey-1);border:1px solid var(--grey-2);padding:20px 22px;margin:14px 0}
+.takeaway{border-left:4px solid var(--accent);background:var(--grey-1);padding:12px 18px;font-weight:600;color:var(--ink);margin:14px 0}
+.warnbox{border-left:4px solid var(--ink);background:var(--grey-1);padding:12px 18px;margin:14px 0;font-size:14.5px}
+.note{font-size:14px;color:var(--grey-3);margin:6px 0}
+.case{border:1px solid var(--grey-2);margin:16px 0;background:var(--paper)}
+.case .case-head{background:var(--grey-1);padding:10px 20px;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--grey-2);font-size:15.5px}
+.case .case-body{padding:14px 20px 18px}
+.prompt{background:var(--ink);color:#e8e8e8;padding:14px 18px;font-family:var(--mono);font-size:13.5px;line-height:1.7;margin:10px 0;white-space:pre-wrap;font-weight:400}
+.prompt .plabel{display:block;color:#8fb0ff;font-size:12px;letter-spacing:.12em;margin-bottom:6px;font-weight:600}
+.verdict{font-family:var(--mono);font-size:13.5px;background:var(--grey-1);padding:12px 16px;margin:10px 0;color:var(--ink)}
+.verdict b{color:var(--accent);font-weight:600}
+
+/* ===== 公式块 ===== */
+.formula{background:var(--paper);border:1px solid var(--grey-2);border-left:4px solid var(--ink);padding:14px 18px;margin:10px 0;font-family:var(--mono);font-size:14.5px;line-height:1.8;overflow-x:auto}
+.formula .eq{color:var(--grey-3);font-size:12.5px;white-space:nowrap}
+.formula .cap{color:var(--grey-3);font-size:13px;margin-top:4px;font-family:var(--sans)}
+
+/* ===== 表格（hairline；宽表横向滚动） ===== */
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px}
+th,td{border:1px solid var(--grey-2);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--grey-1);color:var(--ink);font-weight:600;font-size:14px}
+td .mono,th .mono{font-family:var(--mono);font-size:13px}
+.tablewrap{overflow-x:auto;margin:4px 0}
+.tablewrap table{margin:8px 0}
+.sqrt{white-space:nowrap}
+.sqrt .rad{text-decoration:overline;text-decoration-thickness:1px}
+
+/* ===== 实验块 ===== */
+.lab{border:1px solid var(--grey-2);border-top:6px solid var(--accent);padding:0;margin:22px 0}
+.lab .lab-head{background:var(--grey-1);padding:12px 20px;border-bottom:1px solid var(--grey-2)}
+.lab .lab-head .lab-title{font-size:18px;font-weight:700;color:var(--ink)}
+.lab .lab-head .lab-meta{font-family:var(--mono);font-size:12.5px;color:var(--grey-3);margin-top:4px;font-weight:500}
+.lab .lab-body{padding:6px 20px 18px}
+
+/* ===== 数据条（纯色块，用于关键数字） ===== */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0;border:1px solid var(--grey-2);margin:16px 0}
+.stats .cell{padding:14px 16px;border-right:1px solid var(--grey-2)}
+.stats .cell:last-child{border-right:none}
+.stats .k{font-family:var(--mono);font-size:12px;color:var(--grey-3);letter-spacing:.08em;margin-bottom:6px;font-weight:600}
+.stats .v{font-family:var(--mono);font-size:21px;font-weight:700;color:var(--ink);line-height:1.2}
+.stats .v.acc{color:var(--accent)}
+.stats .d{font-size:12.5px;color:var(--grey-3);margin-top:4px;font-family:var(--sans)}
+
+/* ===== footer ===== */
+footer{margin-top:48px;padding:28px 0 48px;border-top:2px solid var(--accent);color:var(--grey-3);font-size:13.5px}
+footer .mono{font-size:12.5px}
+footer strong{color:var(--ink)}
+@media print{
+  nav{display:none}
+  body{background:#fff}
+  .prompt{background:#f0f0f0;color:#222}
+  .prompt .plabel{color:#002FA7}
+}
+@media (max-width:640px){
+  nav a{padding-top:12px;padding-bottom:12px;font-size:13.5px}
+  header h1{font-size:30px}
+  .stats{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<p class="back-home-line" style="margin:0 0 16px;text-align:right"><a class="back-home" style="display:inline-block;padding:4px 12px;border:1px solid currentColor;border-radius:999px;text-decoration:none;font-size:14px;line-height:1.4;opacity:.85" href="../../../">← 返回首页</a></p>
+
+<header>
+  <div class="container">
+    <div class="tag">第7章 · 真实数据案例</div>
+    <h1>动量还是反转？</h1>
+    <div class="sub">两个互相矛盾的说法，用中证500 逐月点时成分与真实行情来判。Agent 说买 12 个月赢家夏普 2.9，研究员说买上月输家才对。数据只支持其中一个方向的一半，且都够不上夏普 2.9</div>
+    <div class="chips">
+      <span class="chip">中证500 000905.SH</span>
+      <span class="chip">点时成分 105 期</span>
+      <span class="chip">历史并集 1178 只</span>
+      <span class="chip">2018-01 → 2026-08</span>
+      <span class="chip">103 个月</span>
+      <span class="chip">NW(3) t 值</span>
+      <span class="chip">成本 10bp / 30bp</span>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+<nav><div class="links">
+  <a class="back" href="../">← 课程主页</a>
+  <a href="#setup">争议与口径</a>
+  <a href="#gates">引擎认证</a>
+  <a href="#result">主结果</a>
+  <a href="#legs">哪条腿赚钱</a>
+  <a href="#decay">衰减曲线</a>
+  <a href="#scan">夏普 2.9 从哪来</a>
+  <a href="#traps">五个埋点</a>
+  <a href="#repro">复现</a>
+</div></nav>
+
+<section id="setup">
+<h2><span class="no">01</span>争议与口径</h2>
+
+<p>投资委员会收到两份互相矛盾的报告。一份来自 Agent：<strong>买过去 12 个月涨得最多的股票，夏普 2.9</strong>。另一份来自研究员：<strong>方向反了，该买上个月的输家</strong>。两份报告用的是同一个市场，结论却相反，至少有一份错。这一页用真实数据把两句话都跑一遍。</p>
+
+<div class="case">
+  <div class="case-head"><span>两份报告</span><span class="mono" style="font-size:12.5px;color:var(--grey-3)">同一市场，相反结论</span></div>
+  <div class="case-body">
+    <div class="prompt"><span class="plabel">AGENT 的说法</span>过去 12 个月涨得最多的股票，下个月继续涨。
+做多前 20%，做空后 20%，年化夏普 2.9。
+这就是动量效应，A 股也有，可以做成产品。</div>
+    <div class="prompt"><span class="plabel">研究员的说法</span>方向错了。A 股是一个月反转的市场。
+上个月跌得最多的股票，下个月反弹最强。
+你那个 2.9 是把最近一个月也算进信号里凑出来的。</div>
+  </div>
+</div>
+
+<h3>样本空间与时点规则</h3>
+
+<p>要判这件事，股票池不能手选。手选的池子里全是活到今天、事后看涨得好的股票，动量一定显著，那是选样偏差不是因子。这里用的是<strong>中证500 每月末的点时成分</strong>：2017-12 到 2026-08 共 105 期快照，每期 500 只，历史并集 1178 只。某月做回测，只能用那个月真实存在的成分。</p>
+
+<div class="formula">
+T = 每月最后一个交易日（形成日）
+信号  ←  只用 T 收盘及以前的信息
+成交  ←  T 的下一交易日收盘价
+持有  ←  到下一个形成日的下一交易日收盘
+成交日涨停不买，跌停不卖，停牌不成交
+<div class="cap">时点规则全流程统一。这一条比任何模型都重要，绝大多数“好得不真实”的回测死在这里。</div>
+</div>
+
+<div class="tablewrap">
+<table>
+<tr><th>项目</th><th>口径</th></tr>
+<tr><td>样本空间</td><td>中证500（000905.SH）每月末点时成分，数据自 2016-12 起，保证 2018-01 有 12 个月回看</td></tr>
+<tr><td>剔除</td><td>ST/*ST；上市不满 13 个月；形成日或成交日停牌；成交日涨跌停</td></tr>
+<tr><td>MOM(12-1)</td><td><span class="mono">P(T-1月末) / P(T-12月末) - 1</span>，<strong>跳过最近一个月</strong></td></tr>
+<tr><td>REV(1)</td><td><span class="mono">P(T) / P(T-1月末) - 1</span></td></tr>
+<tr><td>收益</td><td>前复权简单收益，<span class="mono">close × adj_factor ÷ 最新 adj_factor</span></td></tr>
+<tr><td>无风险利率</td><td>年率 1.8%，月度除以 12</td></tr>
+<tr><td>成本</td><td>单边 10bp，另跑 ×3（30bp）情景</td></tr>
+<tr><td>分组</td><td>五分位等权；多头腿 = 信号最高一组</td></tr>
+<tr><td>显著性</td><td>Newey–West t 值，滞后 3 阶</td></tr>
+</table>
+</div>
+
+<div class="tablewrap">
+<table>
+<tr><th>分区</th><th>区间</th><th>月数</th><th>用途</th></tr>
+<tr><td><span class="mono">E1</span></td><td>2018-01 → 2021-12</td><td>47</td><td>任务一探索，所有试验登记</td></tr>
+<tr><td><span class="mono">E2</span></td><td>2022-02 → 2023-12</td><td>22</td><td>对选定变体做一次验证</td></tr>
+<tr><td><span class="mono">H</span></td><td>2024-01 → 2026-08</td><td>31</td><td>冻结后检验一次</td></tr>
+</table>
+</div>
+
+<div class="warnbox"><strong>先说结论的边界。</strong>H 区间里含 2024 年初小盘风格崩溃、924 行情、2025 到 2026 年的风格轮动，这些在课上讲过，所以 H 不是真盲测。<strong>它是“规则冻结后的历史检验”，不是样本外预测。</strong>报告里必须写清这一点。</div>
+</section>
+
+<section id="gates">
+<h2><span class="no">02</span>先过四道关，再谈结论</h2>
+
+<p>回测引擎本身可能是错的。在相信任何结论之前，先让引擎证明它没有前视。四道关全部按下面的数字通过之后，后面的结果才有意义。</p>
+
+<div class="tablewrap">
+<table>
+<tr><th>关卡</th><th>做法</th><th>通过条件</th><th>本案例实测</th></tr>
+<tr>
+  <td>① 复现基准</td>
+  <td>算等权全样本的月均收益，与参考值比</td>
+  <td>差 &lt; 5bp/月</td>
+  <td class="mono">+0.7576%/月，477 只均值，n=103</td>
+</tr>
+<tr>
+  <td>② 随机信号</td>
+  <td>每月随机打乱信号，重复 200 次</td>
+  <td>多空均值接近 0</td>
+  <td class="mono">−0.007bp/月，t=−0.56，[p5,p95]=[−0.27%,+0.28%]</td>
+</tr>
+<tr>
+  <td>③ 泄露探测</td>
+  <td>把“下一期真实收益”当信号</td>
+  <td>结果应荒唐得不像真的</td>
+  <td class="mono">+26.81%/月，t=+24.10</td>
+</tr>
+<tr>
+  <td>④ 滞后衰减</td>
+  <td>看信号窗口平移后的价差变化</td>
+  <td>方向与幅度应符合机制</td>
+  <td class="mono">见第 05 节网格</td>
+</tr>
+</table>
+</div>
+
+<div class="takeaway">泄露探测的 +26.81%/月 和 t=24.10 不是发现，是<strong>体检合格证</strong>。它证明了引擎确实把下一期的答案读进去了；如果这个数字看起来“正常”，反而说明时点搞错了。</div>
+
+<div class="panel">
+<p style="margin-top:0"><strong>为什么随机信号那一关是 200 次而不是 1 次。</strong>单次随机信号总会给出一个非零价差，看起来像有东西。跑 200 次取其分布，均值才应该贴着 0；实测 −0.007bp/月 落在零的附近，t=−0.56 不显著，说明引擎没有系统性偏向某一侧。学生的引擎若在这一关给出显著非零，不用往下做了，先查时点。</p>
+</div>
+</section>
+
+<section id="result">
+<h2><span class="no">03</span>主结果：动量弱而正，反转毛收益为负</h2>
+
+<p>全期 103 个月，两句话都不成立得漂亮。动量（做多高信号、做空低信号）月均 <strong>+0.74%</strong>，t=1.34，<strong>不显著</strong>。反转方向（也就是把价差反过来做，买上月输家）在成本之前月均 <strong>+0.52%</strong>，成本之后 10bp 下 t 只剩 <strong>+0.53</strong>，30bp 下 <strong>t=−0.01</strong>，等于零。</p>
+
+<div class="stats">
+  <div class="cell"><div class="k">MOM 月均</div><div class="v acc">+0.74%</div><div class="d">t=1.34，不显著</div></div>
+  <div class="cell"><div class="k">MOM 年化</div><div class="v">+8.8%</div><div class="d">夏普 0.27</div></div>
+  <div class="cell"><div class="k">月换手</div><div class="v">27%</div><div class="d">成本影响有限</div></div>
+  <div class="cell"><div class="k">REV 月换手</div><div class="v">78%</div><div class="d">成本吃掉全部优势</div></div>
+</div>
+
+<h3>分区间：E2 反号，H 又回来</h3>
+
+<div class="tablewrap">
+<table>
+<tr><th>区间</th><th>信号</th><th>月均（毛）</th><th>t</th><th>夏普</th><th>年化</th><th>最大回撤</th><th>净 10bp t</th><th>净 30bp t</th></tr>
+<tr><td rowspan="2"><span class="mono">E1</span><br>2018-01→2021-12</td><td>MOM</td><td class="mono">+0.84%</td><td class="mono">+1.09</td><td class="mono">+0.37</td><td class="mono">+10.1%</td><td class="mono">−25.8%</td><td class="mono">+0.96</td><td class="mono">+0.82</td></tr>
+<tr><td>REV 方向</td><td class="mono">+0.10%</td><td class="mono">+0.21</td><td class="mono">+0.23</td><td class="mono">+1.2%</td><td class="mono">−17.0%</td><td class="mono">+0.23</td><td class="mono">−0.89</td></tr>
+<tr><td rowspan="2"><span class="mono">E2</span><br>2022-02→2023-12</td><td>MOM</td><td class="mono">−0.32%</td><td class="mono">−0.56</td><td class="mono">−0.46</td><td class="mono">−3.9%</td><td class="mono">−19.9%</td><td class="mono">−0.61</td><td class="mono">−0.79</td></tr>
+<tr><td>REV 方向</td><td class="mono">−0.19%</td><td class="mono">−0.21</td><td class="mono">−0.03</td><td class="mono">−2.3%</td><td class="mono">−20.0%</td><td class="mono">+0.08</td><td class="mono">−0.41</td></tr>
+<tr><td rowspan="2"><span class="mono">H</span><br>2024-01→2026-08</td><td>MOM</td><td class="mono">+0.98%</td><td class="mono">+0.78</td><td class="mono">+0.26</td><td class="mono">+11.8%</td><td class="mono">−33.6%</td><td class="mono">+0.69</td><td class="mono">+0.60</td></tr>
+<tr><td>REV 方向</td><td class="mono">+1.81%</td><td class="mono">+1.13</td><td class="mono">+0.67</td><td class="mono">+21.7%</td><td class="mono">−52.8%</td><td class="mono">+1.04</td><td class="mono">+1.23</td></tr>
+</table>
+</div>
+<p class="note">“REV 方向”指做多上月输家、做空上月赢家的组合；其毛收益为 MOM 价差的相反数，成本按实际换手重新计算。MOM 全期毛月均 +0.74%，t 值 1.34；REV 方向毛月均 +0.52%，t 0.91。</p>
+
+<div class="takeaway">注意 E2：动量的符号在这一段是<strong>反的</strong>（−0.32%/月）。E1 看着有、E2 翻脸、H 又回来。<strong>这种“哪一段都说不太清”的模式，本身就是结论。</strong>它说明中证500 的动量不是一个稳定因子，而是一段段风格行情的副产品。</div>
+
+<h3>五分位：单调吗</h3>
+
+<div class="tablewrap">
+<table>
+<tr><th>信号</th><th>Q1（最低）</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Q5（最高）</th><th>Q5−Q1</th></tr>
+<tr><td>MOM(12-1)</td><td class="mono">+0.35%</td><td class="mono">+0.59%</td><td class="mono">+0.90%</td><td class="mono">+0.87%</td><td class="mono">+1.09%</td><td class="mono">+0.74%</td></tr>
+<tr><td>REV(1)</td><td class="mono">+1.01%</td><td class="mono">+0.76%</td><td class="mono">+0.85%</td><td class="mono">+0.68%</td><td class="mono">+0.49%</td><td class="mono">−0.52%</td></tr>
+</table>
+</div>
+<p class="note">表中为各分位的月均收益，频率 12。MOM 有微弱单调性（Q1 到 Q5 递增但 Q3、Q4 交错）；REV 呈单调<strong>递减</strong>，即过去一个月涨得多的往后跌，符合反转的讲法。</p>
+</section>
+
+<section id="legs">
+<h2><span class="no">04</span>哪条腿在赚钱：多头腿与空头腿必须分开报</h2>
+
+<p>多空价差好看不等于能用。A 股个股难做空，价差的利润如果全在空头腿，一个只做多的产品一分钱也拿不到。这一节只跑多头腿：买信号最高的一组，等权持有，成本照扣。</p>
+
+<div class="tablewrap">
+<table>
+<tr><th>多头腿版本</th><th>月均（扣成本）</th><th>t</th><th>夏普</th><th>年化</th><th>年化波动</th><th>最大回撤</th><th>换手</th></tr>
+<tr><td>正确口径</td><td class="mono">+1.00%</td><td class="mono">+1.57</td><td class="mono">+0.35</td><td class="mono">+12.0%</td><td class="mono">+28.9%</td><td class="mono">−41.5%</td><td class="mono">27%</td></tr>
+<tr><td>只错信号定义（不跳过最近一月）</td><td class="mono">+0.89%</td><td class="mono">+1.40</td><td class="mono">+0.30</td><td class="mono">+10.7%</td><td class="mono">+29.3%</td><td class="mono">−42.9%</td><td class="mono">27%</td></tr>
+<tr><td>三重错误叠加</td><td class="mono">+1.37%</td><td class="mono">+2.02</td><td class="mono">+0.54</td><td class="mono">+16.5%</td><td class="mono">+27.1%</td><td class="mono">−37.9%</td><td class="mono">24%</td></tr>
+</table>
+</div>
+<p class="note">“三重错误叠加”＝不跳过最近一月 ＋ 用当前成分回填历史 ＋ 信号日收盘成交。三项都是一个方向地抬高收益，合计把月均从 1.00% 抬到 1.37%，夏普从 0.35 抬到 0.54。</p>
+
+<h3>相对中证500 的 α 与 β</h3>
+
+<div class="tablewrap">
+<table>
+<tr><th>多头腿</th><th>β</th><th>α 年化</th><th>α 的 t</th><th>跟踪误差</th><th>信息比</th></tr>
+<tr><td>正确口径</td><td class="mono">1.012</td><td class="mono">+5.6%</td><td class="mono">+1.35</td><td class="mono">12.0%</td><td class="mono">+0.46</td></tr>
+<tr><td>三重错误叠加</td><td class="mono">0.851</td><td class="mono">+11.1%</td><td class="mono">+2.06</td><td class="mono">15.7%</td><td class="mono">+0.71</td></tr>
+</table>
+</div>
+
+<div class="takeaway">正确的多头腿 β≈1.01，基本就是中证500 本身；α 年化 5.6%，t 只有 1.35。<strong>“买12个月赢家”在两个意义上都不够：一是超额不显著，二是它根本不是一只独立的因子组合，而是把指数又买了一遍。</strong></div>
+</section>
+
+<section id="decay">
+<h2><span class="no">05</span>衰减曲线：反转在第几个月转成动量</h2>
+
+<p>这是研究员那句话唯一站得住的地方，也是整个案例里最有教学价值的一张表。形成期 K 和跳过月数 skip 组成一个二维网格：<span class="mono">skip=0</span> 表示最近一个月也算进信号（研究员的口径），<span class="mono">skip=1</span> 表示跳过最近一个月（Agent 的口径，标准 MOM）。</p>
+
+<div class="tablewrap">
+<table>
+<tr><th>形成期 K</th><th>skip</th><th>信号</th><th>多空月均</th><th>t</th><th>n</th></tr>
+<tr><td rowspan="2">1 个月</td><td class="mono">0</td><td class="mono">REV(1)</td><td class="mono">−0.52%</td><td class="mono">−0.91</td><td class="mono">103</td></tr>
+<tr><td class="mono">1</td><td class="mono">P(T-2)/P(T-1)</td><td class="mono">−0.15%</td><td class="mono">−0.33</td><td class="mono">103</td></tr>
+<tr><td rowspan="2">3 个月</td><td class="mono">0</td><td class="mono">MOM(3-0)</td><td class="mono">−0.41%</td><td class="mono">−0.82</td><td class="mono">103</td></tr>
+<tr><td class="mono">1</td><td class="mono">MOM(4-1)</td><td class="mono">−0.06%</td><td class="mono">−0.14</td><td class="mono">103</td></tr>
+<tr><td rowspan="2">6 个月</td><td class="mono">0</td><td class="mono">MOM(6-0)</td><td class="mono">+0.08%</td><td class="mono">+0.14</td><td class="mono">103</td></tr>
+<tr><td class="mono">1</td><td class="mono">MOM(7-1)</td><td class="mono">+0.59%</td><td class="mono">+1.21</td><td class="mono">103</td></tr>
+<tr><td rowspan="2">12 个月</td><td class="mono">0</td><td class="mono">MOM(12-0)</td><td class="mono">+0.58%</td><td class="mono">+1.00</td><td class="mono">103</td></tr>
+<tr><td class="mono">1</td><td class="mono">MOM(12-1)</td><td class="mono">+0.58%</td><td class="mono">+1.06</td><td class="mono">103</td></tr>
+</table>
+</div>
+
+<div class="takeaway">研究员说对了一半：<strong>在 K=1 和 K=3 上，反转方向的价差确实是正的（+0.52%、+0.41%）</strong>，这就是他说的“买上月输家”。但他没说清的是，这些都<strong>不显著</strong>（t 分别只有 0.91 和 0.82），而且换手高达 78%，成本一扣就归零。Agent 也没赢：标准 MOM(12-1) 的 +0.58%/月，t=1.06，同样不显著。</div>
+</section>
+
+<section id="scan">
+<h2><span class="no">06</span>夏普 2.9 从哪来：事后挑窗口的上界</h2>
+
+<p>现在直接回答那个 2.9。全期夏普只有 0.35，那 2.9 是怎么算出来的？把 103 个月的序列里<strong>所有连续子区间</strong>（长度至少 12 个月）的夏普都算一遍，共 4186 个窗口，看事后挑能挑到多高。</p>
+
+<div class="tablewrap">
+<table>
+<tr><th>版本</th><th>中位夏普</th><th>95 分位</th><th>最大值</th><th>最大值落在哪段</th><th>窗口长度</th></tr>
+<tr><td>正确口径</td><td class="mono">+0.36</td><td class="mono">+1.18</td><td class="mono">+2.20</td><td class="mono">2020-03 → 2021-07</td><td class="mono">17 个月</td></tr>
+<tr><td>只错信号定义</td><td class="mono">+0.30</td><td class="mono">+1.13</td><td class="mono">+2.22</td><td class="mono">2020-03 → 2021-07</td><td class="mono">17 个月</td></tr>
+<tr><td>三重错误叠加</td><td class="mono">+0.57</td><td class="mono">+1.69</td><td class="mono">+2.56</td><td class="mono">2020-03 → 2021-07</td><td class="mono">17 个月</td></tr>
+</table>
+</div>
+
+<div class="takeaway">即使<strong>完全不犯错误</strong>，只要允许事后挑一段窗口，最优夏普也能到 2.20；把三重错误全叠上，能到 2.56。<strong>再叠上“只报最优变体、不登记试了多少次”，夏普 2.9 完全做得出来。</strong>这就是那个数字的真实来源：不是因子强，是自由度大。选中的那段是 2020-03 到 2021-07，正好是核心资产抱团上涨的十七个月。</div>
+
+<div class="panel">
+<p style="margin-top:0"><strong>怎么把这个上界变成教学工具。</strong>让学生自己跑这个 4186 窗口的扫描，然后回答两个问题：（1）如果只看最优窗口，你们的策略夏普是多少？（2）全期夏普又是多少？（3）这两个数字差多少倍，差在哪。第（3）问的答案就是“数据挖掘”三个字的量化版本。</p>
+</div>
+
+<h3>崩溃月：什么时候亏</h3>
+
+<div class="tablewrap">
+<table>
+<tr><th>MOM(12-1) 最差 6 个月</th><th>价差</th><th>REV 方向最差 6 个月</th><th>价差</th></tr>
+<tr><td class="mono">2026-06</td><td class="mono">−33.59%</td><td class="mono">2026-06</td><td class="mono">−39.67%</td></tr>
+<tr><td class="mono">2024-08</td><td class="mono">−25.75%</td><td class="mono">2026-07</td><td class="mono">−18.49%</td></tr>
+<tr><td class="mono">2019-01</td><td class="mono">−13.13%</td><td class="mono">2024-08</td><td class="mono">−17.27%</td></tr>
+<tr><td class="mono">2021-11</td><td class="mono">−12.44%</td><td class="mono">2022-10</td><td class="mono">−9.31%</td></tr>
+<tr><td class="mono">2020-10</td><td class="mono">−10.60%</td><td class="mono">2024-01</td><td class="mono">−9.13%</td></tr>
+<tr><td class="mono">2021-08</td><td class="mono">−10.28%</td><td class="mono">2019-01</td><td class="mono">−8.39%</td></tr>
+</table>
+</div>
+<p class="note">2024-08 和 2026-06 同时出现在两个方向的差榜上，说明那不是信号方向的问题，是那两个月风格整体切换、价差两边都亏。这类月份是“状态依赖”的直接证据，报告里必须解释，不能当成噪声删掉。</p>
+
+<h3>分年：没有哪一年是稳的</h3>
+
+<div class="tablewrap">
+<table>
+<tr><th>年份</th><th>2018</th><th>2019</th><th>2020</th><th>2021</th><th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>2026</th></tr>
+<tr><td>MOM 月均</td><td class="mono">+0.54%</td><td class="mono">+1.53%</td><td class="mono">+2.12%</td><td class="mono">−0.88%</td><td class="mono">+0.02%</td><td class="mono">+0.45%</td><td class="mono">−0.41%</td><td class="mono">+1.16%</td><td class="mono">+3.07%</td></tr>
+<tr><td>t</td><td class="mono">+0.57</td><td class="mono">+1.23</td><td class="mono">+1.12</td><td class="mono">−0.41</td><td class="mono">+0.02</td><td class="mono">+0.53</td><td class="mono">−0.17</td><td class="mono">+1.17</td><td class="mono">+1.21</td></tr>
+</table>
+</div>
+<p class="note">9 个年度、9 个不显著。2026 只有 7 个月（表中数字为这 7 个月的月均，不年化）。年度层面的 t 值这样分散，正是“全期 t=1.34”的来源：没有一年的证据强到能单独支撑结论。</p>
+</section>
+
+<section id="traps">
+<h2><span class="no">07</span>五个埋点：错误是怎么变成收益的</h2>
+
+<p>下面这五项是 Agent 那份 2.9 报告里最可能出现的问题。每一项都能单独把回测结果抬高，而且抬的方向一致。真正的本事不是找出几个，是判断哪几项属于<strong>确定错误</strong>、哪几项属于<strong>信息不足</strong>。</p>
+
+<div class="tablewrap">
+<table>
+<tr><th>#</th><th>埋点</th><th>现象</th><th>正确做法</th><th>本案例量级</th></tr>
+<tr><td class="mono">1</td><td>未跳过最近一个月</td><td>动量与短期反转混在一起</td><td>按 12-1 规则跳过最近 1 个月</td><td class="mono">多头腿 +1.37% → +0.89%（此一项）</td></tr>
+<tr><td class="mono">2</td><td>用当前成分回填历史</td><td>历史样本全是活到今天的赢家</td><td>使用每月末点时成分</td><td class="mono">并入上行；本案例并集 1178 只，任一期末仅 500 只</td></tr>
+<tr><td class="mono">3</td><td>信号与成交同日收盘</td><td>隐含“看到收盘再以收盘价成交”</td><td>下一交易日收盘成交</td><td class="mono">多头腿再抬约 0.1 到 0.2pp/月</td></tr>
+<tr><td class="mono">4</td><td>涨停股仍被买入</td><td>多头腿收益虚高</td><td>涨停不买、跌停不卖</td><td class="mono">已在主口径剔除，<span class="mono">|pct_chg| ≥ 9.7% / 19.7%</span></td></tr>
+<tr><td class="mono">5</td><td>只报最优变体</td><td>t 值不可信</td><td>登记全部变体与试验次数</td><td class="mono">本案例已登记 9 个信号窗口</td></tr>
+</table>
+</div>
+
+<div class="warnbox"><strong>第 5 项最容易被漏掉，也最致命。</strong>本案例的衰减网格有 9 个组合，如果只报其中最好的那个（skip=1、K=7，+0.59%/月），它看起来比 +0.58% 的 MOM(12-1) 好一点点，但那一点点完全可能是挑出来的。教师说明：这些埋点按“确定错误”和“信息不足”分类，<strong>不按发现数量计分</strong>。</div>
+
+<div class="panel">
+<p style="margin-top:0"><strong>一个必须学会的表述。</strong>“H 区间 REV 方向净超额 t=1.23，方向一致但样本仅 31 个月，不能据此认为反转可交易。”<br>这比“反转策略有效，年化 21.7%”专业得多，也是本案例真正想训练的判断力。用 31 个月、t=1.23 去支持一个可交易结论，功效明显不足。</p>
+</div>
+</section>
+
+<section id="repro">
+<h2><span class="no">08</span>复现与数据</h2>
+
+<p>全部数字来自本机的真实取数与计算，不是示意值。产物与脚本如下，供复核与教学预试用。</p>
+
+<div class="tablewrap">
+<table>
+<tr><th>项目</th><th>内容</th></tr>
+<tr><td>数据接口</td><td><span class="mono">index_weight</span>（000905.SH 逐月成分）、<span class="mono">daily</span>＋<span class="mono">adj_factor</span>（1178 只个股）、<span class="mono">index_daily</span>（000905.SH）、<span class="mono">stock_basic</span></td></tr>
+<tr><td>逐月成分</td><td>105 期快照，20171229 至 20260831，每期 500 只，无缺月；历史并集 1178 只</td></tr>
+<tr><td>行情面板</td><td>2368 个交易日 × 1178 只，全部前复权，起点 20161201</td></tr>
+<tr><td>脚本</td><td><span class="mono">capm_case/</span>：<span class="mono">fetch_500_panel.py</span>（全池抓取）、<span class="mono">fetch_weights_500_full.py</span>（逐月成分）、<span class="mono">compute_500.py</span>（主结果与认证）、<span class="mono">analyze_long.py</span>（多头腿与窗口扫描）</td></tr>
+<tr><td>结果文件</td><td><span class="mono">analysis_500.json</span>、<span class="mono">analysis_long.json</span></td></tr>
+<tr><td>关键限制</td><td>H 不是真盲测；成本为教学简化，未建模冲击成本与融券成本；ST 按当前名称剔除，未追溯历史 ST 状态；<span class="mono">yc_cb</span> 无权限，rf 固定年率 1.8%</td></tr>
+</table>
+</div>
+
+<div class="warnbox"><strong>一个必须写进报告的取数教训。</strong>tushare 的 <span class="mono">index_weight</span> 在一次长区间调用里会<strong>静默截断</strong>，只返回最近 9 到 14 个月的快照，不报错。本案例最早的一次调用只拿到 9 期成分，看起来“有数据、能用”，实际缺少 2018 到 2025 年的全部历史。凡需要历史全量成分，必须<strong>逐月调用再拼接</strong>。</div>
+
+<h3>两条学生自查口径</h3>
+
+<ol>
+<li><strong>先算等权全样本的月均收益，对参考值 +0.7576%/月。</strong>差超过 5bp/月就说明股票池、复权或时点至少有一处不对，此时不要往下跑信号。</li>
+<li><strong>把多头腿和空头腿分开报。</strong>只报多空价差，等于默认空头腿能实现；A 股个股融券成本高、券源有限，这个默认不成立。</li>
+</ol>
+
+<div class="takeaway">这一页的真正结论只有一句：<strong>中证500 上，动量与反转都真实存在方向，但目前没有一个方向强到能单独支撑一只产品。</strong>说“动量有效”或“反转更强”之前，先回答三个问题：哪一段、扣没扣成本、多头腿还是空头腿。</div>
+</section>
+
+</div>
+
+<footer>
+<div class="container">
+<p><strong>数据与口径</strong></p>
+<p class="mono">样本空间：中证500（000905.SH）每月末点时成分｜快照 105 期（20171229 → 20260831）｜历史并集 1178 只｜行情面板 2368×1178｜全期 103 个月（2018-01 → 2026-08）</p>
+<p class="mono">口径：前复权简单收益；rf 年率 1.8%（月度 ÷12）；成本单边 10bp 与 ×3；五分位等权；NW(3) t 值；成交日涨停不买、跌停不卖、停牌不成交</p>
+<p class="mono">分区：E1 2018-01→2021-12（47 月，探索）｜E2 2022-02→2023-12（22 月，单次验证）｜H 2024-01→2026-08（31 月，冻结后检验，非真盲测）</p>
+<p style="margin-top:14px">教学说明：本页为第7章《投资组合理论的应用》真实数据案例，用于训练“判断一个回测结论是否可信”的能力。页面数字均来自本机真实取数与计算，非示意值。文中的 Agent 报告与研究员意见为课堂情景设定。</p>
+<p class="mono" style="margin-top:10px">动量与反转 · 中证500 · NW(3) · 成本敏感性与事后窗口上界 · 2026-10</p>
+</div>
+</footer>
+
+</body>
+</html>
