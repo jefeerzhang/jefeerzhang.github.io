@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23002FA7'/%3E%3Ctext x='32' y='46' font-size='36' text-anchor='middle' fill='white' font-family='Georgia,serif'%3E%CE%BB%3C/text%3E%3C/svg%3E">
+<title>课堂综合实验设计 · 三个衔接累计实验（90 分钟）｜投资组合课程</title>
+<meta name="description" content="投资组合课程第7章综合实验课：三个衔接累计实验，90 分钟走完建仓、验货、拆解与自控，产出课堂版季度组合策略建议书。">
+<style>
+/* ===== 瑞士国际主义 · 克莱因蓝 IKB（与第1、3、4课时讲义同款） ===== */
+:root{
+  --paper:#fafaf8;
+  --paper-rgb:250,250,248;
+  --ink:#0a0a0a;
+  --ink-rgb:10,10,10;
+  --grey-1:#f0f0ee;
+  --grey-2:#d4d4d2;
+  --grey-3:#737373;
+  --accent:#002FA7;
+  --accent-rgb:0,47,167;
+  --accent-on:#ffffff;
+  --mono:"JetBrains Mono","Cascadia Code",Consolas,"Courier New",monospace;
+  --sans:"Inter","Helvetica Neue","Noto Sans SC","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+.container{max-width:880px;margin:0 auto;padding:0 24px}
+
+/* ===== header（纯色，无渐变） ===== */
+header{background:var(--ink);color:#fff;padding:56px 0 40px;border-bottom:6px solid var(--accent)}
+header .tag{font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;font-weight:600}
+header .tag::before{content:"// "}
+header h1{font-size:38px;line-height:1.22;font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+header .sub{font-size:16.5px;color:var(--grey-2);margin-bottom:22px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:12.5px;color:#fff;border:1px solid var(--grey-3);padding:4px 12px;background:rgba(255,255,255,.03);font-weight:500}
+
+/* ===== nav（直角 hairline） ===== */
+nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--grey-2);margin-bottom:28px}
+nav .links{display:flex;gap:0;flex-wrap:wrap;padding:6px 0}
+nav a{font-size:14px;color:var(--grey-3);text-decoration:none;padding:8px 14px;border-left:1px solid var(--grey-2);transition:color .15s;font-weight:500}
+nav a:first-child{border-left:none}
+nav a:hover{color:var(--accent)}
+nav a.on{color:var(--accent);font-weight:600}
+nav a.back{color:var(--accent);font-weight:500;margin-right:8px}
+
+/* ===== sections ===== */
+section{margin-bottom:44px}
+h2{font-size:23px;font-weight:700;color:var(--ink);margin:36px 0 16px;padding:0 0 10px 14px;border-left:6px solid var(--accent);display:flex;align-items:baseline;gap:12px;letter-spacing:-.01em;flex-wrap:wrap}
+h2 .no{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.12em;font-weight:600}
+h3{font-size:17.5px;font-weight:700;margin:24px 0 10px;color:var(--ink)}
+p{margin:8px 0}
+ul,ol{margin:8px 0 8px 24px}
+li{margin:5px 0}
+code{font-family:var(--mono);font-size:.86em;background:var(--grey-1);padding:1px 6px;color:var(--ink);font-weight:500}
+strong{font-weight:700}
+a{color:var(--accent)}
+a:hover{color:#0047d0}
+
+/* ===== 卡片（直角纯色） ===== */
+.panel{background:var(--grey-1);border:1px solid var(--grey-2);padding:20px 22px;margin:14px 0}
+.takeaway{border-left:4px solid var(--accent);background:var(--grey-1);padding:12px 18px;font-weight:600;color:var(--ink);margin:14px 0}
+.warnbox{border-left:4px solid var(--ink);background:var(--grey-1);padding:12px 18px;margin:14px 0;font-size:14.5px}
+.note{font-size:14px;color:var(--grey-3);margin:6px 0}
+.case{border:1px solid var(--grey-2);margin:16px 0;background:var(--paper)}
+.case .case-head{background:var(--grey-1);padding:10px 20px;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--grey-2);font-size:15.5px}
+.case .case-body{padding:14px 20px 18px}
+.prompt{background:var(--ink);color:#e8e8e8;padding:14px 18px;font-family:var(--mono);font-size:13.5px;line-height:1.7;margin:10px 0;white-space:pre-wrap;font-weight:400}
+.prompt .plabel{display:block;color:#8fb0ff;font-size:12px;letter-spacing:.12em;margin-bottom:6px;font-weight:600}
+.verdict{font-family:var(--mono);font-size:13.5px;background:var(--grey-1);padding:12px 16px;margin:10px 0;color:var(--ink)}
+.verdict b{color:var(--accent);font-weight:600}
+
+/* ===== 公式块 ===== */
+.formula{background:var(--paper);border:1px solid var(--grey-2);border-left:4px solid var(--ink);padding:14px 18px;margin:10px 0;font-family:var(--mono);font-size:14.5px;line-height:1.8;overflow-x:auto}
+.formula .eq{color:var(--grey-3);font-size:12.5px;white-space:nowrap}
+.formula .cap{color:var(--grey-3);font-size:13px;margin-top:4px;font-family:var(--sans)}
+
+/* ===== 表格（hairline；宽表横向滚动） ===== */
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px}
+th,td{border:1px solid var(--grey-2);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--grey-1);color:var(--ink);font-weight:600;font-size:14px}
+td .mono,th .mono{font-family:var(--mono);font-size:13px}
+.tablewrap{overflow-x:auto;margin:4px 0}
+.tablewrap table{margin:8px 0}
+.sqrt{white-space:nowrap}
+.sqrt .rad{text-decoration:overline;text-decoration-thickness:1px}
+
+/* ===== 实验块 ===== */
+.lab{border:1px solid var(--grey-2);border-top:6px solid var(--accent);padding:0;margin:22px 0}
+.lab .lab-head{background:var(--grey-1);padding:12px 20px;border-bottom:1px solid var(--grey-2)}
+.lab .lab-head .lab-title{font-size:18px;font-weight:700;color:var(--ink)}
+.lab .lab-head .lab-meta{font-family:var(--mono);font-size:12.5px;color:var(--grey-3);margin-top:4px;font-weight:500}
+.lab .lab-body{padding:6px 20px 18px}
+
+/* ===== footer ===== */
+footer{margin-top:48px;padding:28px 0 48px;border-top:2px solid var(--accent);color:var(--grey-3);font-size:13.5px}
+footer .mono{font-size:12.5px}
+footer strong{color:var(--ink)}
+@media print{
+  nav{display:none}
+  body{background:#fff}
+  .prompt{background:#f0f0f0;color:#222}
+  .prompt .plabel{color:#002FA7}
+}
+@media (max-width:640px){
+  nav a{padding-top:12px;padding-bottom:12px;font-size:13.5px}
+  header h1{font-size:30px}
+}
+</style>
+</head>
+<body>
+<p class="back-home-line" style="margin:0 0 16px;text-align:right"><a class="back-home" style="display:inline-block;padding:4px 12px;border:1px solid currentColor;border-radius:999px;text-decoration:none;font-size:14px;line-height:1.4;opacity:.85" href="../../">← 返回首页</a></p>
+
+<header>
+  <div class="container">
+    <div class="tag">第7章 · 综合实验课</div>
+    <h1>课堂综合实验设计</h1>
+    <div class="sub">三个衔接累计实验：一次课 90 分钟走完 MPT → CAPM → APT 与行为纪律</div>
+    <div class="chips">
+      <span class="chip">90 min</span>
+      <span class="chip">3 个实验</span>
+      <span class="chip">2-3 人/组</span>
+      <span class="chip">记录单 ×3</span>
+      <span class="chip">Agent 现场实操</span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="container links">
+    <a href="index.html" class="back">← 课程主页</a>
+    <a href="#design">设计说明</a>
+    <a href="#prepare">公共准备</a>
+    <a href="#lab1">实验一 25′</a>
+    <a href="#lab2">实验二 30′</a>
+    <a href="#lab3">实验三 35′</a>
+    <a href="#forms">记录单</a>
+    <a href="#checklist">审查清单</a>
+    <a href="#memo">课后选做</a>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- ============ 设计说明 ============ -->
+<section id="design">
+  <h2><span class="no">说明</span> 实验课定位与衔接机制</h2>
+  <div class="panel">
+    <p><strong>定位</strong>：第 7 章 4 课时结束后的综合实验课，一次课完成，也可拆为三次课后任务。</p>
+    <p><strong>对象</strong>：本科大三，已修完 MPT / CAPM / APT 理论，并完成本章 4 课时的 Agent 实操训练。2 至 3 人一组，自带电脑与自有 Agent。</p>
+    <p><strong>实验链（累计完成）</strong>：E1 建仓（MPT）→ E2 验货（CAPM）→ E3 拆解与自控（APT 与行为）→《2026Q4 组合策略建议书 · 课堂版》。</p>
+    <p>产出直接对应<strong>05 小组项目任务书</strong>的 Memo Part2 / 3 / 4 / 5 草稿骨架。</p>
+  </div>
+
+  <h3>素材完整性与衔接机制</h3>
+  <p>4 课时讲稿、04 学生 Prompt 模板卡（6 张卡）、05 小组项目任务书、PlanB 预跑包（每步 PNG + CSV + 结论）均已就绪。本实验全部环节只复用课程内已有工具，无需补充任何材料。</p>
+  <ul>
+    <li>E1 的产出（本组组合：名单 + 权重 + 选择理由）＝ E2 的分析对象；</li>
+    <li>E2 的产出（修订后组合 + 带 t 值的 α / β 证据 + 2 买 2 避）＝ E3 的归因与压测对象；</li>
+    <li>E3 把三张记录单收拢成 1.5 至 2 页课堂版建议书，课后扩写即 Memo 草稿；</li>
+    <li>任一环节数据跑不出来，用 PlanB 预跑结果继续决策环节，记录单注明"本组使用 PlanB 数据"。</li>
+  </ul>
+
+  <h3>时间分配（合计 90 分钟）</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>实验</th><th>主题</th><th>时长</th><th>分配依据</th></tr>
+    <tr><td class="mono">E1</td><td>建仓：6 股最小方差 vs 等权</td><td class="mono">25′</td><td>课时 1 已完整练过同款操作（卡 2），是最短环节</td></tr>
+    <tr><td class="mono">E2</td><td>验货：10 股 α / β 回归 + SML + 2 买 2 避</td><td class="mono">30′</td><td>回归量最大（10 股日频），决策环节多</td></tr>
+    <tr><td class="mono">E3</td><td>拆解与自控：四因子归因 + 双窗压测 + 行为纪律</td><td class="mono">35′</td><td>两个 Agent 任务 + 写作 + 组装，最重环节</td></tr>
+  </table>
+  </div>
+
+  <h3>难度适配</h3>
+  <p>只用 4 课时教过的工具：卡 2 / 卡 3 / 卡 5 / 卡 6、Blume 公式、PlanB 预计算因子序列、失败模式清单。所有重活<strong>不进 90 分钟</strong>，列为课后选做（见附录 C）：有效前沿 20 点扫描、因子 universe 全重建、策略回测、β 横截面回归。</p>
+
+  <div class="warnbox">
+    <strong>PlanB 降级预案</strong>（总大纲 T-2 预跑纪律的延伸）：任一 Agent 任务<strong>超过 3 分钟无输出</strong>或接口报错，整组切换教师投屏的 PlanB 预跑结果，照常完成审查与决策环节并向学生坦白。PlanB 锚点 rf = 2.0%，课堂 live 统一 rf = 1.8%，两口径差约 0.2pp/年，对照锚点时只看量级，不追精确一致。
+  </div>
+</section>
+
+<!-- ============ 公共准备 ============ -->
+<section id="prepare">
+  <h2><span class="no">准备</span> 材料清单、口径卡与股票池</h2>
+
+  <h3>1.1 材料清单</h3>
+  <div class="case">
+    <div class="case-head"><span>每组</span><span class="mono">记录单 ×3</span></div>
+    <div class="case-body">
+      <ul>
+        <li>笔记本电脑 1 至 2 台（已装好本组 Agent）＋ 可用网络（AkShare 免注册）；</li>
+        <li><code>00_公共\04_学生Prompt模板卡.md</code> 打印件（卡 2 / 3 / 5 / 6 将被整段使用）；</li>
+        <li>统一口径卡（见 1.2，每组一份）；</li>
+        <li>实验记录单 ×3（附录 A 模板）；</li>
+        <li>计时（手机即可，教师统一报时）。</li>
+      </ul>
+    </div>
+  </div>
+  <div class="case">
+    <div class="case-head"><span>教师</span><span class="mono">投屏 + PlanB</span></div>
+    <div class="case-body">
+      <ul>
+        <li>投屏 ＋ PlanB 预跑包（第 7 章教学包 PlanB 包）；</li>
+        <li><strong>因子月度序列 CSV</strong>（RM / SMB / HML_proxy / MOM ＋ 月度 rf，2023-01 至 2026-08 共 44 个月，PlanB 包 lesson3 因子输出），附构建口径 README：universe = 76 只 = 20 股池 ＋ 沪深300 成分种子 42 抽 30 ＋ 中证2000 升序前 30；RM = 等权 − rf/12；SMB = 小 − 大；HML 为 proxy = 红利 − 创业板，<strong>必须写 HML_proxy</strong>；MOM = t−12 至 t−3 前 30% − 后 30% 逐月。课前通过群文件或 U 盘分发；</li>
+        <li>时间提示（每环节剩 2 分钟时提醒）。</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>1.2 统一口径卡（照抄进每次给 Agent 的提问）</h3>
+  <div class="prompt"><span class="plabel">统一口径卡 · 每组一份</span>数据源：AkShare（免注册）；若换用 Tushare 必须在输出中声明。
+复权：前复权 qfq。
+窗口：主窗 2024-09-01~2026-08-31；扩展窗 2023-01-01~2026-08-31；
+     压测窗① 2024-01-01~2024-02-08；压测窗② 2024-09-24~2024-10-08。
+频率与年化：实验一周频 ×√52；实验二日频 ×√252；实验三月频 ×√12。
+rf：固定 1.8%（中债 10Y 简化取值，本卡声明）。
+市场组合：沪深300（000300.SH）。
+每张图 / 表必须注明口径五项：数据来源、样本区间、频率、复权方式、rf 取值。</div>
+
+  <h3>1.3 角色轮换（与任务书一致）</h3>
+  <p>3 人组：E1 提问者 A / 审查者 B / 执笔人 C → E2 轮换（B 提问 / C 审查 / A 执笔）→ E3 再轮换。2 人组：E1 自由分工，E2 起每实验轮换。每个成员至少完整担任一次审查者。</p>
+
+  <h3>1.4 20 股池菜单（E1 选股、E2 补股仅限此池）</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>板块</th><th>股票（代码）</th></tr>
+    <tr><td><strong>跨行业 8 只</strong></td><td>贵州茅台 600519、宁德时代 300750、比亚迪 002594、招商银行 600036、中信证券 600030、恒瑞医药 600276、海康威视 002415、中国建筑 601668</td></tr>
+    <tr><td><strong>高 β 组 5 只</strong></td><td>寒武纪 688256、中际旭创 300308、海光信息 688041、新易盛 300502、光迅科技 002281</td></tr>
+    <tr><td><strong>低 β 组 5 只</strong></td><td>长江电力 600900、中国神华 601088、中国移动 600941、工商银行 601398、伊利股份 600887</td></tr>
+    <tr><td><strong>补足 2 只</strong></td><td>五粮液 000858、紫金矿业 601899</td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ============ 实验一 ============ -->
+<section id="lab1">
+  <h2><span class="no">E1</span> 实验一 · 25 分钟：建仓，从主题股票池到本组组合</h2>
+  <div class="lab">
+    <div class="lab-head">
+      <div class="lab-title">E1 建仓：6 股最小方差组合 vs 等权</div>
+      <div class="lab-meta">25 min · 模板卡卡 2 · 记录单 1 · 产出＝E2 的分析对象</div>
+    </div>
+    <div class="lab-body">
+
+      <h3>实验目标</h3>
+      <ol>
+        <li>用自然语言驱动 Agent 完成 <strong>6 股最小方差组合</strong>求解，并核查输出合规（权重和 = 1、无非负约束违约、口径五项齐全）；</li>
+        <li>用数据解释<strong>为什么最小方差 ≠ 等权</strong>：分散化买的是协方差结构，不是股票数量（课时 1 金句）；</li>
+        <li>为本组 2026Q4 组合做出并记录<strong>一个有据决定</strong>（本组组合＝后续两个实验的累计载体）。</li>
+      </ol>
+
+      <h3>所需材料</h3>
+      <p>模板卡卡 2、统一口径卡、20 股池菜单、记录单 1、PlanB 预案（教师投屏）。</p>
+
+      <h3>操作步骤</h3>
+      <div class="tablewrap">
+      <table>
+        <tr><th>时间</th><th>环节</th><th>动作</th></tr>
+        <tr><td class="mono">0-5′</td><td>组建与选题</td><td>定角色；从 20 股池选 6 只组成主题组合，写一句话主题（如"攻守平衡""科技进攻"）。<strong>默认规则：跨行业 ≥ 3</strong>；若有意行业集中，必须在记录单主题栏声明"本组有意承担行业集中风险，将在实验三压测检验"</td></tr>
+        <tr><td class="mono">5-14′</td><td>Agent 任务</td><td>整段复制卡 2（6 股代码 ＋ 主窗 ＋ 周频 ＋ rf = 1.8%），输出相关系数热力图、最小方差权重、等权对比（年化收益 / 波动 / 夏普）、权重条形图</td></tr>
+        <tr><td class="mono">14-18′</td><td>审查</td><td>卡 2 必查 3 问：① 权重和 = 1？② 有无单只 &gt; 40%？若有，追问 Agent 原因；③ 夏普的 rf 与年化口径一致吗？＋ 失败模式清单第 1 / 2 / 4 / 6 条</td></tr>
+        <tr><td class="mono">18-23′</td><td>决策</td><td>三选一并写一句话理由：最小方差 / 等权 / 折中（如 50-50 混合）。理由必须引用具体数字（σ、夏普、最大权重）</td></tr>
+        <tr><td class="mono">23-25′</td><td>执笔</td><td>完成记录单 1；导出 Agent 对话留档</td></tr>
+      </table>
+      </div>
+
+      <h3>预期结果（PlanB 锚点仅作量级参考，rf 差 0.2pp）</h3>
+      <ul>
+        <li>跨行业组合平均两两相关约 0.2 量级（锚点：跨行业 0.21 vs 新能源链 0.51）；若选科技集中组合，相关升至 0.4 至 0.6，最小方差 σ 降幅明显缩水，协方差结构是分散化本体。</li>
+        <li>最小方差 σ 通常比等权低 3 至 5pp（8 股锚点：18.2% vs 22.0%），<strong>但收益也低</strong>（15.4% vs 18.3%），没有免费午餐。</li>
+        <li>常见现象：最小方差解出现单只 &gt; 40% 权重（锚点：招行 47.4%），由低 β ＋ 低相关驱动，属正常结果；接受与否写入理由即可。</li>
+        <li>若 Agent 输出权重和 ≠ 1 或出现负权重：打回重跑（失败模式第 6 条）。</li>
+      </ul>
+
+      <h3>成果提交要求</h3>
+      <p>记录单 1（一页，PDF 或 MD）＋ Agent 对话 / 代码导出。<strong>检查项</strong>：口径五项齐全、权重和 = 1、主题一句话、决策理由引用了数字。缺任一项＝本实验审查不合格，须在 E2 开始前补齐。</p>
+
+      <div class="warnbox"><strong>教师巡场提示</strong>：只问不答。"权重和是 1 吗？""这只 40% 你接受吗？""你的 σ 为什么比等权低？" 5 分钟节点确认每组已提交 Agent 提问。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 实验二 ============ -->
+<section id="lab2">
+  <h2><span class="no">E2</span> 实验二 · 30 分钟：验货，α / β 体检与 2 买 2 避</h2>
+  <div class="lab">
+    <div class="lab-head">
+      <div class="lab-title">E2 验货：10 股 CAPM 回归 + SML + Blume 调整</div>
+      <div class="lab-meta">30 min · 模板卡卡 3 · 记录单 2 · 分析对象＝E1 的组合</div>
+    </div>
+    <div class="lab-body">
+
+      <h3>实验目标</h3>
+      <ol>
+        <li>完成 <strong>10 股 CAPM 回归</strong>（r − rf = α + β(rm − rf) + ε），产出带 t 值的 α / β 表与 SML 图；</li>
+        <li>用数据选出 <strong>2 只买入 ＋ 2 只回避</strong>，每个结论必须挂具体数字（β、年化 α、t、R²）；</li>
+        <li>给出<strong>组合 β 与 Blume 调整 β</strong>，决定是否换股（≤ 2 只，保持主题），换股决定随组合带入 E3。</li>
+      </ol>
+
+      <h3>所需材料</h3>
+      <p>模板卡卡 3、Blume 公式、记录单 2、E1 的 6 股名单与权重、PlanB 预案。</p>
+      <div class="formula">β<sub>调整</sub> = 2/3 × β<sub>样本</sub> + 1/3 × 1<span class="eq">&nbsp;&nbsp;（下季度预测值）</span>
+      <div class="cap">组合 β = Σ w<sub>i</sub> β<sub>i</sub>；调整 β 用于回应"下季度该用哪个 β"。</div></div>
+
+      <h3>操作步骤</h3>
+      <div class="tablewrap">
+      <table>
+        <tr><th>时间</th><th>环节</th><th>动作</th></tr>
+        <tr><td class="mono">0-4′</td><td>扩池</td><td>从 20 股池补 4 只至 10 只（<strong>至少含 1 只高 β、1 只低 β</strong>，让 SML 散点铺开；回避对象可从池内选）</td></tr>
+        <tr><td class="mono">4-14′</td><td>Agent 任务</td><td>整段复制卡 3：10 股 ＋ 沪深300 日收益，主窗 2024-09-01~2026-08-31，前复权，rf = 1.8%（声明取值）；输出 β、年化 α（注明换算）、t(α)、R² 表 ＋ SML（理论线 = rf + β × 样本市场超额均值，散点标注 α 正负）</td></tr>
+        <tr><td class="mono">14-19′</td><td>审查</td><td>卡 3 必查 3 问：① α 年化换算公式写了吗？② |t| &gt; 2 的有几只？③ <strong>窗口敏感性（必做，限 1 只）</strong>：对组合内 β 最高的 1 只改用 2023-01-01~2024-08-31 窗口重估 β，比较位移（锚点：三窗口位移光迅 +1.09、恒瑞 +1.07、神华 −0.63，β 是估计量，不是股票属性）</td></tr>
+        <tr><td class="mono">19-26′</td><td>决策</td><td>① 2 买 2 避：买＝正 α（带 t 值）或 β 适配组合目标且回归稳定；避＝显著负 α 或 β 明显偏离目标。<strong>未报 t 值的 α 不得写入记录单</strong>（课时 2 纪律）；② 组合 β = Σ w<sub>i</sub> β<sub>i</sub>；Blume 调整 β 作下季度预测值；③ 换股决定：≤ 2 只，写理由</td></tr>
+        <tr><td class="mono">26-30′</td><td>执笔</td><td>完成记录单 2；导出对话留档</td></tr>
+      </table>
+      </div>
+
+      <h3>预期结果（量级参考）</h3>
+      <ul>
+        <li>β 谱系：高 β 股约 1.5 至 2.1（2 年日频高 β 组均值 1.93；五年周频锚点寒武纪 1.498、中际旭创 1.641、新易盛 1.627），低 β 股约 0.12 至 0.30（工行 0.122、长电 0.133）。</li>
+        <li><strong>|t(α)| &gt; 2 者很少</strong>（锚点：2 年日频 4/20、5 年周频 7/20），"免费午餐很少"是本实验的预期教学点，不是异常。</li>
+        <li>组合 β：等权跨行业约 0.8（锚点 0.790），最小方差约 0.4（锚点 0.397）；Blume 示例：招行 0.830 → 0.887。</li>
+        <li>换窗后 β 位移明显，这正是"下季度该用哪个 β"的答案来源（课时 2 P4：用调整 β 而非单窗样本 β）。</li>
+      </ul>
+
+      <h3>成果提交要求</h3>
+      <p>记录单 2（一页）：α / β 表（含 t、R²、口径五项）、SML 图、2 买 2 避各一句<strong>数据理由</strong>、组合 β ＋ Blume 调整 β、换股决定与理由、运行记录。缺 t 值即打回。</p>
+
+      <div class="warnbox"><strong>教师巡场提示</strong>：重点盯"α 没带 t 就下买卖结论"的组（失败模式第 5 条）；提醒 SML 的偏离点即 α，回归线和散点的差就是"β 讲不完的部分"，这正是通向 E3 的钩子：剩下的部分就是因子。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 实验三 ============ -->
+<section id="lab3">
+  <h2><span class="no">E3</span> 实验三 · 35 分钟：拆解与自控，因子归因、压测与纪律</h2>
+  <div class="lab">
+    <div class="lab-head">
+      <div class="lab-title">E3 拆解与自控：四因子归因 ＋ 双窗压测 ＋ 行为纪律页</div>
+      <div class="lab-meta">35 min · 模板卡卡 5 / 卡 6 · 记录单 3 · 产出＝课堂版建议书</div>
+    </div>
+    <div class="lab-body">
+
+      <h3>实验目标</h3>
+      <ol>
+        <li>把本组组合拆到<strong>四因子</strong>上（暴露 ＋ t、残差 α ＋ t、R²），并用归因恒等式复核结果；</li>
+        <li>完成<strong>双窗口压测</strong>（微盘危机窗 ＋ 924 急涨窗）对比沪深300，正确使用"事后情景"限定语；</li>
+        <li>写出<strong>可被第三人核查的行为纪律与风险声明</strong>，组装《2026Q4 组合策略建议书 · 课堂版》。</li>
+      </ol>
+
+      <h3>所需材料</h3>
+      <p>因子序列 CSV（PlanB 分发，44 个月，附构建口径 README）、模板卡卡 5 / 卡 6、行为管理表（课时 4：偏差 → 表现 → 规则 → 复盘）、记录单 3、E1 / E2 记录单、PlanB 预案。</p>
+      <div class="formula">年化超额 ≈ α<sub>年化</sub> + Σ 暴露<sub>k</sub> × 因子<sub>k</sub> 年化<span class="eq">&nbsp;&nbsp;（恒等式复核）</span>
+      <div class="cap">锚点示例（005827）：−9.63 = −29.79 + 17.69 + 1.33 + 0.89 + 0.25</div></div>
+
+      <h3>操作步骤</h3>
+      <div class="tablewrap">
+      <table>
+        <tr><th>时间</th><th>环节</th><th>动作</th></tr>
+        <tr><td class="mono">0-3′</td><td>序列构建</td><td>让 Agent 把本组组合（E1 权重，若有换股按 E2）在扩展窗内按<strong>固定权重</strong>算月收益序列，并声明"固定权重假设，仅为风险画像"</td></tr>
+        <tr><td class="mono">3-12′</td><td>Agent 任务①（卡 5 改造）</td><td>组合月收益 − rf 对 RM / SMB / HML_proxy / MOM 回归（2023-01 至 2026-08，44 个月）：输出暴露系数 ＋ t 值、残差 α（年化）＋ t 值、R²；<strong>恒等式复核</strong>：年化超额 ≈ α ＋ Σ 暴露 × 因子年化</td></tr>
+        <tr><td class="mono">12-18′</td><td>Agent 任务②（卡 6）</td><td>压测窗① 2024-01-01~02-08、② 2024-09-24~10-08：组合累计收益 ＋ 最大回撤对比沪深300；<strong>必须注明</strong>"20 股池与本组组合均为事后选定，压测属事后情景，非可实现业绩"</td></tr>
+        <tr><td class="mono">18-24′</td><td>行为纪律页</td><td>从课时 4 偏差表挑 <strong>2 条最相关</strong>（推荐：确认偏误 → 每个观点配一条可推翻它的证据条件；心理账户 → 合并检查行业 / 风格暴露）；写预先承诺：调仓频率、触发条件、成本预算；写风险声明："本建议最可能错在哪？什么信号出现时推翻？"；页脚加免责句</td></tr>
+        <tr><td class="mono">24-32′</td><td>组装</td><td>1.5 至 2 页建议书：执行摘要（3 条核心观点 ＋ 组合一句话画像）＋ E1 权重表与理由 ＋ E2 α / β 与 2 买 2 避 ＋ E3 归因压测 ＋ 纪律页；审查者按<strong>口径五项</strong>逐图逐表终审</td></tr>
+        <tr><td class="mono">32-35′</td><td>提交</td><td>交建议书 ＋ 三张记录单 ＋ 运行记录；每组口头一句话亮点</td></tr>
+      </table>
+      </div>
+
+      <h3>预期结果（量级参考）</h3>
+      <ul>
+        <li>组合 R² 取决于风格集中度（个股锚点区间 0.26 至 0.85）；科技重组 RM 暴露高。</li>
+        <li><strong>危机窗</strong>：高 β / 科技重组回撤显著深于 300（锚点：行业约束版 10 股等权 −2.46%、最大回撤 −16.94% vs 300 的 −1.93%、−7.33%）；<strong>924 窗</strong>反向（+42.94% vs +32.47%）。因子风险的两副面孔：同一暴露既是回撤来源，也是急涨来源。</li>
+        <li>样本期 SMB 年化 −9.65%、HML_proxy 年化 −10.66%，持有小盘 / 成长暴露在样本期是逆风；<strong>暴露为负未必是坏事</strong>，方向解读看符号。</li>
+        <li>残差 α 大概率不显著。课时 4 原话："不能证明有优势"也是合格结果；班级级证据：动量 / 反转三信号的 NW(3) 检验 95% CI 全部含 0（12-2 动量 +1.29pp，CI[−1.20, +3.78]）。</li>
+        <li>心理账户对照（教师收束用）：进取账户 −2.49% vs "防御"账户 −2.84%（2024-10-08 至 10-09）。名字叫防御不等于本金安全。</li>
+      </ul>
+
+      <h3>成果提交要求</h3>
+      <p>《2026Q4 组合策略建议书 · 课堂版》1.5 至 2 页（组名 ＋ 成员 ＋ 各实验角色记录）＋ 三张记录单 ＋ Agent 运行记录打包。<strong>检查项</strong>（缺任一＝审查不合格，与 05 任务书硬性格式一致）：四因子表带 t 值；压测带"事后情景"声明；纪律页规则可被第三人核查；页脚含"本建议书为教学演练，不构成真实投资建议"；口径五项全覆盖。</p>
+
+      <div class="warnbox"><strong>教师巡场提示</strong>：若多组残差 α 不显著，收束时点破：这节课的合格答案常常是"没有显著 α"，发现没有优势也是发现。投屏 005827 归因分解作对照；提"你的 HML_proxy 负暴露，2023 年以来是帮你还是害你？"</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 附录 A ============ -->
+<section id="forms">
+  <h2><span class="no">附录 A</span> 实验记录单模板</h2>
+  <div class="case">
+    <div class="case-head"><span>记录单 1（E1）</span><span class="mono">建仓</span></div>
+    <div class="case-body">
+      <p>组名 ____　成员与角色 ____｜主题一句话 ____｜6 股代码 ____｜相关系数矩阵图（贴图）｜最小方差 vs 等权对比表（年化收益 / 波动 / 夏普 ＋ 口径五项）｜选定组合与权重 ____｜决策理由一句话（须含数字）____｜PlanB 使用声明 □</p>
+    </div>
+  </div>
+  <div class="case">
+    <div class="case-head"><span>记录单 2（E2）</span><span class="mono">验货</span></div>
+    <div class="case-body">
+      <p>10 股名单（标 * 为补选）____｜α / β 表（β、年化 α、t、R²）｜SML 图｜2 买 ____（理由：数字）____　2 避 ____（理由：数字）____｜组合 β ____　Blume 调整 β ____｜换股决定与理由 ____｜窗口敏感性结果（1 只）____</p>
+    </div>
+  </div>
+  <div class="case">
+    <div class="case-head"><span>记录单 3（E3）</span><span class="mono">拆解与自控</span></div>
+    <div class="case-body">
+      <p>组合月收益口径声明 ____｜四因子暴露表（含 t、R²）｜恒等式复核 ____｜压测两窗口表（含"事后情景"声明）｜纪律页（2 条偏差 → 规则；调仓频率 / 触发条件 / 成本预算；最可能错在哪；推翻信号）｜页脚免责句 □</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 附录 B ============ -->
+<section id="checklist">
+  <h2><span class="no">附录 B</span> 审查清单（审查者逐条打勾）</h2>
+  <div class="panel">
+    <p><strong>通用失败模式 8 条</strong>（照抄模板卡）：① 复权未前复权；② 年化系数缺失 / 错配；③ 前视偏差（用今天的成分 / 市值代表历史时点）；④ rf 前后不一致；⑤ α 无 t 值；⑥ 权重和 ≠ 1 或未声明负权重；⑦ 回测无成本 / 换仓说明；⑧ 窗口单一。</p>
+    <p><strong>各实验加查</strong>：E1 ＝ 卡 2 必查 3 问；E2 ＝ 卡 3 必查 3 问（窗口敏感性限 1 只需留证据）；E3 ＝ ① 因子 universe 与 HML_proxy 写了吗？② 压测有"事后情景"字样吗？③ 纪律规则第三人能执行吗？</p>
+  </div>
+</section>
+
+<!-- ============ 附录 C ============ -->
+<section id="memo">
+  <h2><span class="no">附录 C</span> 与 Memo 里程碑的映射 ＋ 课后选做</h2>
+  <div class="tablewrap">
+  <table>
+    <tr><th>实验</th><th>直接对应</th><th>课后扩写</th></tr>
+    <tr><td class="mono">E1</td><td>Memo Part2 草稿骨架（配置方案 ＋ 对比表）</td><td>选做：20 点有效前沿 ＋ 切点组合图（课时 1 P4，锚点切点夏普 1.28）</td></tr>
+    <tr><td class="mono">E2</td><td>Memo Part3 草稿（α / β 表 ＋ 2 买 2 避 ＋ β 选择理由＝Blume 说明）</td><td>选做：策略回测复现（课时 2 P2 趋势调 β / P3 追 α）</td></tr>
+    <tr><td class="mono">E3</td><td>Memo Part4 草稿（归因 ＋ 压测）＋ Part5 骨架（风险声明）</td><td>选做：因子 universe 自选重做敏感性（课时 3 P1）；三信号回测与 NW 检验复述（课时 4）</td></tr>
+  </table>
+  </div>
+  <div class="takeaway">收束一句（课时 4 结束语的应用）：先写目标 → 固定规则 → 数据检验规则 → 记录约束事后解释。Agent 负责算得快，你们负责问得对、查得狠、讲得清。</div>
+</section>
+
+</div>
+
+<footer>
+  <div class="container">
+    <p><strong>教学说明与口径</strong></p>
+    <p class="note">本页为第 7 章综合实验课的课堂设计。预期结果中的"锚点"数字来自 PlanB 预跑包与四课时讲义，口径为 PlanB 预跑 rf = 2.0%；本设计课堂统一 rf = 1.8%，两口径差约 0.2pp/年，对照锚点时只看量级。主窗 2024-09-01~2026-08-31，扩展窗 2023-01-01~2026-08-31，压测两窗见正文。</p>
+    <p class="note">锚点中的名单、权重、成分与因子 universe 均含前视 / 幸存者偏差，不是可交易回测；课堂以 Agent 现场实时结果为准，网络中断时切换 PlanB 图表继续教学。本页为教学演练材料，不构成投资建议。</p>
+    <p class="mono">前复权 qfq · 市场组合 沪深300（000300.SH） · 年化 日×<span class="sqrt">√<span class="rad">252</span></span> / 周×<span class="sqrt">√<span class="rad">52</span></span> / 月×<span class="sqrt">√<span class="rad">12</span></span> · 因子 universe 76 只</p>
+  </div>
+</footer>
+
+<p class="back-home-line" style="margin:36px 0 0;text-align:right"><a class="back-home" style="display:inline-block;padding:4px 12px;border:1px solid currentColor;border-radius:999px;text-decoration:none;font-size:14px;line-height:1.4;opacity:.85" href="../../">← 返回首页</a></p>
+</body>
+</html>
