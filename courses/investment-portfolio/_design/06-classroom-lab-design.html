@@ -158,7 +158,7 @@ footer strong{color:var(--ink)}
     <p><strong>对象</strong>：本科大三，已修完 MPT / CAPM / APT 理论，并完成本章 4 课时的 Agent 实操训练。2 至 3 人一组，自带电脑与自有 Agent（已配置 tushare MCP）。</p>
     <p><strong>实验链（累计完成）</strong>：E1 建仓（MPT）→ E2 验货（CAPM）→ E3 拆解与自控（APT 与行为）→《2026Q4 组合策略建议书 · 课堂版》。</p>
     <p><strong>组合样本</strong>：<strong>30 个标的</strong>，来自 40 个标的候选池，含个股、ETF / 场外基金与指数代理；三个实验累计使用同一样本。</p>
-    <p>产出直接对应<strong>05 小组项目任务书</strong>的 Memo Part2 / 3 / 4 / 5 草稿骨架。</p>
+    <p>产出对应<strong>05 学生项目指南</strong>两份报告的证据环节：任务一报告第3／4／5节与任务二冻结页素材。</p>
   </div>
 
   <div class="warnbox">
@@ -168,7 +168,7 @@ footer strong{color:var(--ink)}
   </div>
 
   <h3>素材完整性与衔接机制</h3>
-  <p>4 课时讲稿、04 学生 Prompt 模板卡（8 张卡：卡 1 至卡 6 ＋ 卡 7 审计卡 ＋ 卡 8 预注册卡）、05 小组项目任务书、PlanB 预跑包（每步 PNG + CSV + 结论）、学生端 tushare MCP（课时 4 已下发，已实测 <code>daily</code> / <code>adj_factor</code> / <code>index_daily</code> / <code>trade_cal</code> / <code>daily_basic</code>；基金与 ETF 类 <code>fund_basic</code> / <code>fund_daily</code> / <code>fund_adj</code> / <code>fund_nav</code> / <code>fund_share</code> / <code>fund_div</code> 于 2026-10-04 实测可取）、三份审计件 S1 / S2 / S3（附录 D）、《投资委员会章程》模板与预注册页均已就绪。本实验全部环节只复用课程内已有工具，无需补充材料。</p>
+  <p>4 课时讲稿、04 学生 Prompt 模板卡（8 张卡：卡 1 至卡 6 ＋ 卡 7 审计卡 ＋ 卡 8 预注册卡）、05 学生项目指南、PlanB 预跑包（每步 PNG + CSV + 结论）、学生端 tushare MCP（课时 4 已下发，已实测 <code>daily</code> / <code>adj_factor</code> / <code>index_daily</code> / <code>trade_cal</code> / <code>daily_basic</code>；基金与 ETF 类 <code>fund_basic</code> / <code>fund_daily</code> / <code>fund_adj</code> / <code>fund_nav</code> / <code>fund_share</code> / <code>fund_div</code> 于 2026-10-04 实测可取）、三份审计件 S1 / S2 / S3（附录 D）、《投资委员会章程》模板与预注册页均已就绪。本实验全部环节只复用课程内已有工具，无需补充材料。</p>
   <ul>
     <li>课前预训的产出（30 个标的主窗快照 ＋ 取数清单 ＋ 一页《审计清单》）＝ 课上全部环节的入场券（见 0.3 节）；</li>
     <li>E1 的产出（本组组合样本：30 个标的 + 权重 + 事前筛选逻辑 + 选择理由）＝ E2 的分析对象；</li>
@@ -488,7 +488,7 @@ rf：固定 1.8%（中债 10Y 简化取值，本卡声明）。
       </ul>
 
       <h3>成果提交要求</h3>
-      <p>《2026Q4 组合策略建议书 · 课堂版》1.5 至 2 页（组名 ＋ 成员 ＋ 各实验角色记录）＋ 三张记录单 ＋ <strong>《审计清单》</strong>＋ <strong>预注册页（含写下时点与签名）</strong>＋ Agent 运行记录（含 <code>data/tushare_manifest.csv</code>）打包。<strong>检查项</strong>（缺任一＝审查不合格，与 05 任务书硬性格式一致）：四因子表带 t 值；<strong>恒等式残差 &lt; 0.1pp</strong>；压测带"事后情景"声明与覆盖率说明；<strong>归因反事实含动作与成本估算</strong>；纪律页三要素可被第三人执行且<strong>写下时点早于压测结论</strong>；页脚含"本建议书为教学演练，不构成真实投资建议"；口径五项全覆盖（数据来源须含接口名）。</p>
+      <p>《2026Q4 组合策略建议书 · 课堂版》1.5 至 2 页（组名 ＋ 成员 ＋ 各实验角色记录）＋ 三张记录单 ＋ <strong>《审计清单》</strong>＋ <strong>预注册页（含写下时点与签名）</strong>＋ Agent 运行记录（含 <code>data/tushare_manifest.csv</code>）打包。<strong>检查项</strong>（缺任一＝审查不合格，与 05 学生项目指南硬性格式一致）：四因子表带 t 值；<strong>恒等式残差 &lt; 0.1pp</strong>；压测带"事后情景"声明与覆盖率说明；<strong>归因反事实含动作与成本估算</strong>；纪律页三要素可被第三人执行且<strong>写下时点早于压测结论</strong>；页脚含"本建议书为教学演练，不构成真实投资建议"；口径五项全覆盖（数据来源须含接口名）。</p>
 
       <div class="warnbox"><strong>教师巡场提示</strong>：若多组残差 α 不显著，收束时点破：这节课的合格答案常常是"没有显著 α"，发现没有优势也是发现。投屏 005827 归因分解作对照；提"你的 HML_proxy 负暴露，2023 年以来是帮你还是害你？"；检验预注册成色只问一句"如果压测窗是上涨的，你这条规则会变吗？"；再追一句"你要卖的到底是什么、成本多少？"</div>
     </div>
@@ -543,9 +543,9 @@ rf：固定 1.8%（中债 10Y 简化取值，本卡声明）。
   <div class="tablewrap">
   <table>
     <tr><th>实验</th><th>直接对应</th><th>课后扩写</th></tr>
-    <tr><td class="mono">E1</td><td>Memo Part2 草稿骨架（配置方案 ＋ 对比表）</td><td>选做：20 点有效前沿 ＋ 切点组合图（课时 1 P4，锚点切点夏普 1.28）；40 池等权 vs 30 标的组合样本的分散化对比</td></tr>
-    <tr><td class="mono">E2</td><td>Memo Part3 草稿（α / β 表 ＋ 2 买 2 避 ＋ β 选择理由＝Blume 说明）</td><td>选做：策略回测复现（课时 2 P2 趋势调 β / P3 追 α）；同一指数的场内 ETF 与场外联接基金跟踪差</td></tr>
-    <tr><td class="mono">E3</td><td>Memo Part4 草稿（归因 ＋ 压测）＋ Part5 骨架（风险声明）</td><td>选做：因子 universe 自选重做敏感性（课时 3 P1）；三信号回测与 NW 检验复述（课时 4）</td></tr>
+    <tr><td class="mono">E1</td><td>任务一报告第3节素材（配置方案 ＋ 对比表）</td><td>选做：20 点有效前沿 ＋ 切点组合图（课时 1 P4，锚点切点夏普 1.28）；40 池等权 vs 30 标的组合样本的分散化对比</td></tr>
+    <tr><td class="mono">E2</td><td>任务一报告第5节素材（α / β 表 ＋ 主要持仓诊断 ＋ Blume 说明）</td><td>选做：策略回测复现（课时 2 P2 趋势调 β / P3 追 α）；同一指数的场内 ETF 与场外联接基金跟踪差</td></tr>
+    <tr><td class="mono">E3</td><td>任务一报告第5节素材（归因 ＋ 压测）＋ 第6节素材（风险声明）</td><td>选做：因子 universe 自选重做敏感性（课时 3 P1）；三信号回测与 NW 检验复述（课时 4）</td></tr>
   </table>
   </div>
   <h3>挑战档（课后加分，只加不减，不计入达标线）</h3>
