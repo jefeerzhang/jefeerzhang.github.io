@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数字经济专业毕业生的核心能力：AI 时代 — 学生阅读版</title>
+<meta name="description" content="数字经济专业毕业生的核心能力：AI 时代（学生阅读版）——六项核心能力、五个工作场景、项目合规查阅附录。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23002FA7'/%3E%3Ctext x='16' y='22' font-size='15' text-anchor='middle' fill='white' font-family='sans-serif'%3E%E7%BB%8F%3C/text%3E%3C/svg%3E">
+<style>
+/* ===== 瑞士国际主义 · 克莱因蓝 IKB（与课时讲义同一体系） ===== */
+:root{
+  --paper:#fafaf8;
+  --paper-rgb:250,250,248;
+  --ink:#0a0a0a;
+  --ink-rgb:10,10,10;
+  --grey-1:#f0f0ee;
+  --grey-2:#d4d4d2;
+  --grey-3:#737373;
+  --accent:#002FA7;
+  --accent-rgb:0,47,167;
+  --accent-on:#ffffff;
+  --mono:"JetBrains Mono","Cascadia Code",Consolas,"Courier New",monospace;
+  --sans:"Inter","Helvetica Neue","Noto Sans SC","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+.container{max-width:880px;margin:0 auto;padding:0 24px}
+
+/* ===== header（纯色，无渐变） ===== */
+header{background:var(--ink);color:#fff;padding:56px 0 40px;border-bottom:6px solid var(--accent)}
+header .tag{font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;font-weight:600}
+header .tag::before{content:"// "}
+header h1{font-size:38px;line-height:1.22;font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+header .sub{font-size:16.5px;color:var(--grey-2);margin-bottom:22px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:12.5px;color:#fff;border:1px solid var(--grey-3);padding:4px 12px;background:rgba(255,255,255,.03);font-weight:500}
+
+/* ===== nav（直角 hairline） ===== */
+nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--grey-2);margin-bottom:28px}
+nav .links{display:flex;gap:0;flex-wrap:wrap;padding:6px 0}
+nav a{font-size:14px;color:var(--grey-3);text-decoration:none;padding:8px 14px;border-left:1px solid var(--grey-2);transition:color .15s;font-weight:500}
+nav a:first-child{border-left:none}
+nav a:hover{color:var(--accent)}
+nav a.on{color:var(--accent);font-weight:600}
+nav a.back{color:var(--accent);font-weight:500;margin-right:8px}
+
+/* ===== sections ===== */
+section{margin-bottom:44px}
+h2{font-size:23px;font-weight:700;color:var(--ink);margin:36px 0 16px;padding:0 0 10px 14px;border-left:6px solid var(--accent);display:flex;align-items:baseline;gap:12px;letter-spacing:-.01em}
+h2 .no{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.12em;font-weight:600;white-space:nowrap}
+h3{font-size:17.5px;font-weight:700;margin:24px 0 10px;color:var(--ink)}
+p{margin:8px 0}
+ul,ol{margin:8px 0 8px 24px}
+li{margin:5px 0}
+code{font-family:var(--mono);font-size:.86em;background:var(--grey-1);padding:1px 6px;color:var(--ink);font-weight:500}
+strong{font-weight:700}
+a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+a:hover{text-decoration:none}
+
+/* ===== 卡片（直角纯色） ===== */
+.panel{background:var(--grey-1);border:1px solid var(--grey-2);padding:20px 22px;margin:14px 0}
+.takeaway{border-left:4px solid var(--accent);background:var(--grey-1);padding:12px 18px;font-weight:600;color:var(--ink);margin:14px 0}
+.warnbox{border-left:4px solid var(--ink);background:var(--grey-1);padding:12px 18px;margin:14px 0;font-size:14.5px}
+.note{font-size:14px;color:var(--grey-3);margin:6px 0}
+.note b{color:var(--ink);font-weight:700}
+.case{border:1px solid var(--grey-2);margin:16px 0;background:var(--paper)}
+.case .case-head{background:var(--grey-1);padding:10px 20px;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--grey-2);font-size:15.5px}
+.case .case-body{padding:14px 20px 18px}
+.prompt{background:var(--ink);color:#e8e8e8;padding:14px 18px;font-family:var(--mono);font-size:13.5px;line-height:1.65;margin:10px 0;white-space:pre-wrap;font-weight:400}
+.prompt .plabel{display:block;color:var(--accent);font-size:12px;letter-spacing:.12em;margin-bottom:6px;font-weight:600}
+.verdict{font-family:var(--mono);font-size:13.5px;background:var(--grey-1);padding:12px 16px;margin:10px 0;color:var(--ink)}
+.verdict b{color:var(--accent);font-weight:600}
+
+/* ===== 法规块 ===== */
+.law{border:1px solid var(--grey-2);margin:14px 0;background:var(--paper)}
+.law .law-head{background:var(--grey-1);padding:10px 20px;font-weight:700;color:var(--ink);border-bottom:1px solid var(--grey-2);font-size:15px;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px}
+.law .law-head .src{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:500;text-decoration:none}
+.law .law-head .src:hover{text-decoration:underline}
+.law .law-body{padding:10px 20px 14px}
+.law .law-body ul{margin:4px 0 4px 20px}
+.law .rel{margin-top:8px;padding-top:8px;border-top:1px solid var(--grey-2)}
+
+/* ===== 表格（hairline，固定列宽） ===== */
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px;table-layout:fixed}
+th,td{border:1px solid var(--grey-2);padding:9px 12px;text-align:left;vertical-align:top;overflow-wrap:break-word;word-break:break-word}
+th{background:var(--grey-1);color:var(--ink);font-weight:600;font-size:14px}
+td .mono,th .mono{font-family:var(--mono);font-size:13px}
+
+/* ===== footer ===== */
+footer{margin-top:48px;padding:28px 0 48px;border-top:2px solid var(--accent);color:var(--grey-3);font-size:13.5px}
+footer .mono{font-size:12.5px}
+footer strong{color:var(--ink)}
+@media print{
+  nav{display:none}
+  body{background:#fff}
+  .prompt{background:#f0f0f0;color:#222}
+}
+</style>
+</head>
+<body>
+<p class="back-home-line" style="margin:0 0 16px;text-align:right"><a class="back-home" style="display:inline-block;padding:4px 12px;border:1px solid currentColor;border-radius:999px;text-decoration:none;font-size:14px;line-height:1.4;opacity:.85" href="../../">← 返回首页</a></p>
+
+<header>
+  <div class="container">
+    <div class="tag">数字经济专业导论 · 学生阅读版</div>
+    <h1>数字经济专业毕业生的核心能力：AI 时代</h1>
+    <div class="sub">这份材料写给本专业的同学：说明 AI 时代毕业生需要具备哪些核心能力，以及可以怎样有意识地练习。以人才培养方案为依据，能力描述、工具标准和案例均为教学建议。</div>
+    <div class="chips">
+      <span class="chip">学生阅读版</span>
+      <span class="chip">六项核心能力</span>
+      <span class="chip">五个工作场景</span>
+      <span class="chip">附：项目合规查阅</span>
+      <span class="chip">教学建议非毕业要求</span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="container links">
+    <a href="index.html" class="back">← 课程主页</a>
+    <a href="#judgment">核心判断</a>
+    <a href="#capabilities">六项核心能力</a>
+    <a href="#scenarios">五个工作场景</a>
+    <a href="#appendix1">附录一 · 合规查阅</a>
+    <a href="#appendix2">附录二 · 政策背景</a>
+    <a href="#references">参考资料</a>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- ============ 核心判断 ============ -->
+<section id="judgment">
+  <h2><span class="no">01</span> 核心判断</h2>
+  <div class="takeaway">一句话概括：毕业时，你应该能把一个现实的经济问题转化为可以检验的问题，结合数据与 AI 完成分析，把有依据、可实施、讲得清的建议交给真正要用它的人，并在建议落地后继续检查效果。</div>
+  <p>如果精力有限，优先练好三项：</p>
+  <ul>
+    <li><strong>经济判断力</strong>：先弄清问题是什么、谁要做决定、背后的激励和成本是什么。</li>
+    <li><strong>数据分析与验证能力</strong>：结论要从数据中来，并且经得起检验。</li>
+    <li><strong>用 AI 协作解决问题的能力</strong>：让 AI 提高效率，同时知道什么时候不能信它。</li>
+  </ul>
+  <p class="note">另外两项，行业与数据要素理解以及沟通与合规，决定前三项能力能否进入真实场景、产生价值。</p>
+
+  <h3>为什么使用 AI 时必须核验结果</h3>
+  <p>哈佛商学院与波士顿咨询公司（BCG）合作做过一项实地实验：研究者事先登记了研究方案（即"预注册"），让 758 名咨询顾问完成接近真实工作的任务，结果发表在 <a href="https://www.hbs.edu/faculty/Pages/item.aspx?num=64700" target="_blank" rel="noopener"><em>Organization Science</em></a>, 2026, 37(2): 403–423。</p>
+  <ul>
+    <li>任务在 AI 能力范围之内时，使用 GPT-4 的顾问完成速度提高 25% 以上，质量提高 40% 以上。</li>
+    <li>任务被刻意设计在 AI 能力范围之外时，使用 AI 的顾问得出正确结论的概率，反而比不用 AI 的顾问<strong>低 19 个百分点</strong>。</li>
+  </ul>
+  <div class="warnbox">研究者把这种现象称为<strong>"锯齿状技术前沿"</strong>：即使在同一项工作中、难度看起来差不多的任务，AI 也可能在一些任务上帮了忙，在另一些任务上帮倒忙，而且事先很难看出来。所以，不会核验的人用了 AI，可能错得更自信。</div>
+  <p class="note">读这项研究时要注意两点。第一，它检验的是"用不用 AI"对工作表现的影响，并没有检验"先训练验证能力"的培养效果，所以它说明了验证能力为什么重要，但不能直接证明能力的先后顺序。第二，实验用的是 2023 年的 GPT-4，现在模型的能力边界已经明显变化，不过"边界参差不齐、事先难以识别"这一点仍然成立。</p>
+
+  <h3>这些能力与培养方案、政策的关系</h3>
+  <p>培养方案已经提出经济分析、数据分析方法和数字技术应用能力，也强调审辩思维、计量与机器学习、Python/R/Tableau 应用、团队协作、实践能力和"三农情怀"。本文要做的，是把这些要求落实为毕业时拿得出手的能力：能独立判断，能核验结果，能交付成果。</p>
+  <p>政策与人才需求也指向同一个方向。国家要求培养"复合型、创新型、实战型数字人才"；2026 年 4 月教育部等五部门印发的《"人工智能+教育"行动计划》要求优化传统学科专业人才培养方案，开设人工智能交叉融合课程。与此同时，全国约 300 所高校开设了数字经济专业，数字经济相关专业的毕业生数量快速增长，但高端复合型人才仍然短缺（数据见<a href="#appendix2">附录二</a>）。专业名称已经很普及，真正拉开差距的，是你能拿出来的能力证据。</p>
+
+  <h3>六项能力怎样分工</h3>
+  <p>能力 1 至 3 是经济判断与数据验证的基础；能力 4 决定 AI 时代的工作效率；能力 5、6 决定分析成果能否进入真实场景、合规地产生价值。第二节的五个工作场景，用来练习把几项能力组合起来使用。</p>
+</section>
+
+<!-- ============ 六项核心能力 ============ -->
+<section id="capabilities">
+  <h2><span class="no">02</span> 六项核心能力</h2>
+  <table>
+    <colgroup><col style="width:20%"><col style="width:42%"><col style="width:38%"></colgroup>
+    <tr><th>核心能力</th><th>毕业时应该做到</th><th>相关课程</th></tr>
+    <tr>
+      <td><strong>1. 经济问题定义与判断</strong></td>
+      <td>能把"提高销量"这类宽泛目标改写成明确的决策问题；能识别其中的激励、交易成本、市场关系和利益分配。</td>
+      <td>微观经济学、数字经济学、博弈论和信息经济学、网络与平台经济学</td>
+    </tr>
+    <tr>
+      <td><strong>2. 数据整理与量化分析</strong></td>
+      <td>能说清数据从哪里来、指标怎样定义（口径）、样本覆盖了谁；能整理数据、计算合适的指标、制作图表，并说明结论在什么范围内成立。</td>
+      <td>Python 语言基础、统计学 B、数据库原理与应用、经济统计分析与软件应用实验</td>
+    </tr>
+    <tr>
+      <td><strong>3. 因果识别与模型评价</strong></td>
+      <td>能分清"描述发生了什么""预测会发生什么"和"判断是什么导致的"这三类问题；能检查比较的双方是否可比，评价模型会犯哪类错误、在不同人群中的表现是否一致、犯错的实际代价有多大。</td>
+      <td>计量经济学 B、机器学习与数据挖掘、经济预测与决策</td>
+    </tr>
+    <tr>
+      <td><strong>4. AI 协作与流程设计</strong></td>
+      <td>能拆解任务，向 AI 讲清业务定义和数据背景；能检查 AI 生成的内容，留下别人可以复现的步骤，并处理异常情况；能用已知答案的样本测试 AI 在具体任务上是否可靠。</td>
+      <td>人工智能概论、Python 语言基础、大模型与智能投研（方向选修）</td>
+    </tr>
+    <tr>
+      <td><strong>5. 行业理解、数据要素与投入产出分析</strong></td>
+      <td>理解农业、平台、供应链、金融等场景的业务流程和成本，能比较不同技术方案的收益、实施条件和风险；能说明场景中的数据从哪里来、归谁持有、怎样流通和定价，并估算数据产品的成本与收益。</td>
+      <td>数据资产评估与价值管理、数字供应链管理、数字贸易、金融学 B、企业数字化转型案例分析；数字经济学、网络与平台经济学也提供相关支撑（见"能力 5 补充"）</td>
+    </tr>
+    <tr>
+      <td><strong>6. 沟通、协作与数据合规</strong></td>
+      <td>能针对不同对象解释结论，说明分工和依据；能识别个人信息和重要数据，判断需要履行哪些告知、同意和授权；做调查和访谈时取得对方的知情同意；能标注 AI 生成的内容，并主动说明分析的局限。</td>
+      <td>数字经济发展调查、综合实训、毕业实习与论文；这项能力贯穿所有项目</td>
+    </tr>
+  </table>
+
+  <h3>能力 5 补充：把数据当作生产要素来分析</h3>
+  <p>数字经济专业和数据科学、统计学专业的区别在于，它不只处理数据，还要分析数据作为生产要素的经济属性：数据怎样产生，归谁所有，怎样流通和定价，怎样进入企业的账面。这方面的制度框架已经初步形成：</p>
+  <ul>
+    <li><strong>数据产权</strong>：2022 年 12 月中共中央、国务院印发的《关于构建数据基础制度更好发挥数据要素作用的意见》（简称"数据二十条"），提出数据资源持有权、数据加工使用权、数据产品经营权"三权分置"的产权思路。</li>
+    <li><strong>数据资产会计</strong>：财政部《企业数据资源相关会计处理暂行规定》（财会〔2023〕11 号）自 2024 年 1 月 1 日起施行，企业可以把符合条件的数据资源确认为无形资产或存货，也就是常说的"数据资产入表"。</li>
+    <li><strong>学科建设</strong>：五部门 2025 年印发的《关于加强数据要素学科专业建设和数字人才队伍建设的意见》，把数据要素学科专业建设列为主线。</li>
+  </ul>
+  <div class="warnbox"><strong>有一个容易忽略的适用范围问题</strong>：上述暂行规定适用于企业按照企业会计准则确认为无形资产或存货等资产类别的数据资源。农民专业合作社执行的是财政部《农民专业合作社会计制度》（财会〔2021〕37 号，2023 年 1 月 1 日起施行），能否参照暂行规定处理需要单独判断，不能直接套用"入表"的结论。</div>
+  <p>你不必成为数据交易或会计专家，但应该能回答下面四个问题：</p>
+  <ol>
+    <li>某个场景里的数据是谁产生的、谁持有、谁有权授权别人使用？</li>
+    <li>提供原始数据、提供脱敏后的统计结果、提供"数据可用不可见"的计算服务（借助隐私计算等技术，让对方能用数据算出结果，却看不到原始数据），这三种流通方式的风险和收益有什么不同？</li>
+    <li>一个数据产品的成本、价值和定价依据是什么？</li>
+    <li>一批数据满足什么条件才能确认为资产？持有它的主体适用哪一套会计规则？</li>
+  </ol>
+  <p class="note">培养方案中的"数据资产评估与价值管理"（第六学期，2 学分）直接支撑这项能力；数据产权、流通与治理的具体覆盖程度，还需结合课程大纲确认。数字经济学、网络与平台经济学等课程也提供相关支撑。如果学校开设相关模块或微专业，可以结合自己的学习方向选择。</p>
+
+  <h3>能力 6 补充：做项目前要知道的合规底线</h3>
+  <p>"数据责任"不能停留在口号上，要落到具体规则。你不需要背法条，但做项目时应能判断自己的工作会碰到哪些规则、哪些条款。下表帮助你定位相关规则，详细条款和适用范围见<a href="#appendix1">附录一</a>。具体项目仍要结合实际场景和适用规则判断，拿不准时请先咨询老师。</p>
+  <p><strong>先用这张表自查：</strong></p>
+  <table>
+    <colgroup><col style="width:55%"><col style="width:45%"></colgroup>
+    <tr><th>如果你的项目……</th><th>先看哪条规则</th></tr>
+    <tr><td>收集、使用或向别人提供个人信息</td><td>《个人信息保护法》</td></tr>
+    <tr><td>用模型自动作出影响他人权益的决定（如授信、定价）</td><td>《个人信息保护法》第二十四条</td></tr>
+    <tr><td>把数据上传到境外的 AI 服务或境外服务器</td><td>《个人信息保护法》第三十八、三十九条；《促进和规范数据跨境流动规定》</td></tr>
+    <tr><td>涉及可能属于重要数据的行业数据</td><td>《数据安全法》；《网络数据安全管理条例》</td></tr>
+    <tr><td>做成面向公众开放的 AI 问答或生成服务，或在网上公开发布 AI 生成的内容</td><td>《生成式人工智能服务管理暂行办法》；《人工智能生成合成内容标识办法》</td></tr>
+    <tr><td>用非传统数据评估个人或企业的信用</td><td>《征信业务管理办法》</td></tr>
+    <tr><td>对人做问卷、访谈或观察</td><td>《科技伦理审查办法（试行）》；学校的伦理审查规定</td></tr>
+  </table>
+  <p class="note">各项规则的具体义务、适用范围与项目提示见<a href="#appendix1">附录一：项目合规查阅</a>。先依据情境导航定位相关规则，再结合学校要求与项目条件判断。</p>
+
+  <h3>工具能力的建议标准</h3>
+  <p class="note">不必在大一就全部掌握。建议以 Python 为主线，随课程进度和兴趣逐步扩展，并始终用基础数学、统计和代码阅读能力核验 AI 的输出。</p>
+  <table>
+    <colgroup><col style="width:16%"><col style="width:42%"><col style="width:42%"></colgroup>
+    <tr><th>工具</th><th>毕业时建议达到的水平</th><th>说明</th></tr>
+    <tr><td><strong>Python</strong></td><td>能读取、清理和分析小型数据；能读懂、修改、调试 AI 生成的代码，并解释输出结果</td><td>主线工具</td></tr>
+    <tr><td><strong>SQL</strong></td><td>能写常见查询、分组统计和多表关联</td><td>培养方案没有单设 SQL 课程，可结合"数据库原理与应用"学习</td></tr>
+    <tr><td><strong>表格与可视化</strong></td><td>能检查公式和指标口径；至少熟练使用一种可视化工具</td><td>培养方案提到 Python、R、Tableau；Excel 和 Power BI 可作补充</td></tr>
+    <tr><td><strong>统计与计量</strong></td><td>能为问题选择基础方法，检查假设，评价样本外表现（模型在没见过的数据上表现如何），区分相关、预测和因果</td><td>与能力 2、3 对应</td></tr>
+    <tr><td><strong>大模型 API</strong></td><td>能用 Python 调用大模型 API 批量处理文本或表格（如分类、信息抽取），并用人工标注的小样本评估输出的准确率</td><td>能力 4 最直接的技术落点。优先使用已完成备案的国内服务或本地部署的模型；含个人信息或敏感数据的材料，未满足出境条件时不要上传到境外服务</td></tr>
+    <tr><td><strong>版本管理（Git）</strong></td><td>能用 Git 管理代码和数据处理脚本，写清每次更新的内容和原因</td><td>让分析流程能交接、能维护</td></tr>
+    <tr><td><strong>AI 工作流</strong></td><td>能搭建有来源、可检查、可重复的工作流程，并评价它是否真正改善了工作</td><td>《数字中国发展报告（2025 年）》指出 AI 应用正在向智能体升级。使用能自动执行多步骤任务的智能体时，要设置检查点和人工确认环节，记录每一步的输入、输出和依据</td></tr>
+  </table>
+</section>
+
+<!-- ============ 五个工作场景 ============ -->
+<section id="scenarios">
+  <h2><span class="no">03</span> 五个工作场景</h2>
+  <p class="note">以下案例中，凡未注明来源的数据和情境都是教学模拟。重点是练习判断过程，没有唯一的标准答案。每个案例末尾标出了主要练习的能力。</p>
+
+  <!-- 案例一 -->
+  <div class="case">
+    <div class="case-head"><span>案例一 · 平台运营：优惠券真的增加了购买吗？</span></div>
+    <div class="case-body">
+      <div class="verdict">AI 整理订单后得出结论："领券用户购买更多，因此应增加优惠券预算。" <b>这个结论下得太快</b>。你需要追问：</div>
+      <ul>
+        <li><strong>领券的人是不是本来就更想买？</strong>如果原本就会按原价下单的用户也领了券，这部分补贴只是让利，并没有带来额外订单，这就是蚕食效应。</li>
+        <li><strong>长期会怎样？</strong>用户会不会养成"等券再买"的习惯，对价格越来越敏感？</li>
+        <li><strong>该比较什么？</strong>应比较增量订单、补贴成本、毛利和复购，而不只是购买量。</li>
+      </ul>
+      <p><strong>怎样得到可信的答案：</strong>条件允许时，做随机分组试验，由随机方式决定谁能领券；做不了试验时，可以利用不同地区或用户群上线时间的先后差异做双重差分，或者按历史购买行为把领券用户和相似的未领券用户配对比较（匹配），并写明这些方法依赖的假设。最终建议要说明适用于哪些人群、以谁作为对照，以及出现什么情况时应停止发券。</p>
+      <div class="takeaway">训练能力：能力 1、2、3。</div>
+    </div>
+  </div>
+
+  <!-- 案例二 -->
+  <div class="case">
+    <div class="case-head"><span>案例二 · 数字农业：先购买 AI 分选设备，还是增加直播投入？</span></div>
+    <div class="case-body">
+      <p>以某地特色农产品（如猕猴桃）为例。先调查损耗、分级、冷链、退货和获客成本，再比较购买设备、外包分选和增加营销投入等方案。</p>
+      <p>AI 可以帮你整理资料、搭建成本情景表；但你仍需核实当地的实际条件，并说清农户、合作社和消费者各自承担哪些成本。</p>
+      <p>如果用真实的全链条数字化实践（如蒲江猕猴桃）作为背景，要选用可核实的公开报道，注明出处和数据年份；不要把整体增长直接归功于某一项技术。</p>
+      <div class="takeaway">训练能力：能力 5、2、6。</div>
+    </div>
+  </div>
+
+  <!-- 案例三 -->
+  <div class="case">
+    <div class="case-head"><span>案例三 · 数字金融：准确率很高的风控模型能直接使用吗？</span></div>
+    <div class="case-body">
+      <p>设想一份教学数据：95% 的客户没有违约。一个模型把所有客户都预测为"不会违约"，准确率也有 95%，却一个违约客户都没有识别出来。在这种数据上，只看准确率会严重误导判断。</p>
+      <p>你需要：</p>
+      <ul>
+        <li><strong>换用合适的指标</strong>：召回率（违约客户中被识别出来的比例）、精确率（被判为违约的客户中真正违约的比例），以及 AUC 和 KS（衡量模型区分好坏客户能力的常用指标）。</li>
+        <li><strong>算清犯错的代价</strong>：在不同的判定阈值下，比较"误拒好客户"和"误放坏客户"各自的损失。</li>
+        <li><strong>检查数据时点，防止数据泄漏</strong>：例如，模型用了放款之后才能观察到的变量，而实际审批时根本拿不到这些信息。</li>
+        <li><strong>检查公平性</strong>：如果模型在不同地区或人群中的通过率差异很大，要检查是否用了不当特征，在利率等交易条件上是否构成《个人信息保护法》第二十四条第一款所说的不合理差别待遇。授信审批通常属于对个人权益有重大影响的决定，还要说明怎样落实第二十四条第三款：个人有权要求说明，并有权拒绝仅通过自动化决策的方式作出决定。</li>
+        <li><strong>划清使用边界</strong>：说明模型的适用范围，以及哪些环节仍需人工判断。</li>
+      </ul>
+      <div class="takeaway">训练能力：能力 3、6、2。</div>
+    </div>
+  </div>
+
+  <!-- 案例四 -->
+  <div class="case">
+    <div class="case-head"><span>案例四 · 政策研究：数字化服务是否帮助农户增收？</span></div>
+    <div class="case-body">
+      <p>只比较服务上线前后的销售额，结论可能受到天气、价格、农户自我选择等因素的干扰。例如，主动使用服务的农户，可能本来就更善于经营。你应设计有对照组的比较或调查，记录服务使用情况、成本和收入，并区分不同规模农户的情况。</p>
+      <p>AI 可以协助整理文献、编码或生成初步分析，但你必须核对资料来源和指标口径，并说明结论的因果证据有多强。</p>
+      <div class="takeaway">训练能力：能力 3、1、6；同时练习审辩思维、三农服务意识和政策表达。</div>
+    </div>
+  </div>
+
+  <!-- 案例五 -->
+  <div class="case">
+    <div class="case-head"><span>案例五 · 数据要素：合作社的收购数据能否用于社员授信？</span></div>
+    <div class="case-body">
+      <p>一家合作社积累了三年的收购、分级与结算数据，本地银行希望用这些数据给社员发放信用贷款。请回答下面六个问题。第一个问题决定了后面哪些方案可行，要先回答。</p>
+      <ol>
+        <li><strong>这算不算征信业务？</strong>银行用这些数据评估社员信用，是否属于《征信业务管理办法》第三条定义的征信业务？合作社能否直接向银行提供数据或评分，还是必须经由持牌征信机构（第四条、第五条）？注意，以"信用评分"等名义实质提供征信服务的，同样适用该办法（第五十条）。</li>
+        <li><strong>谁有权授权？</strong>数据由谁持有、谁有权授权使用？合作社与社员个人各自的权利边界在哪里？</li>
+        <li><strong>个人信息怎样处理？</strong>数据中涉及的个人信息，应怎样告知社员、怎样取得单独同意（《个人信息保护法》第二十三条）？如果经由征信机构采集，还须经社员本人同意并明确告知采集目的；征信机构通过合作社取得社员同意的，合作社作为信息提供者要向社员履行告知义务（《征信业务管理办法》第十二条、第十三条）。</li>
+        <li><strong>用什么方式提供？</strong>在征信规则允许的范围内，比较三种方式的风险与收益：交付原始数据；只提供脱敏后的统计指标；通过隐私计算提供"可用不可见"的评分服务。</li>
+        <li><strong>怎样定价？</strong>合作社能获得什么对价，按什么依据定价？</li>
+        <li><strong>账怎样记？</strong>合作社执行《农民专业合作社会计制度》，财政部的数据资源暂行规定能否参照适用？如果可以参照，这批数据资源能否确认为无形资产或存货，需要满足什么条件？</li>
+      </ol>
+      <p>最后，请给出一份合作社理事会能看懂的方案比较。</p>
+      <div class="takeaway">训练能力：能力 5、6、1。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 附录一：项目合规查阅 ============ -->
+<section id="appendix1">
+  <h2><span class="no">附录一</span> 项目合规查阅</h2>
+  <p class="note">以下规则于 2026 年 10 月 6 日按原文核对。根据正文的情境导航查阅相关部分；具体项目仍需结合实际场景、适用规则与学校要求判断。</p>
+
+  <h3>个人信息与数据安全</h3>
+
+  <div class="law">
+    <div class="law-head"><span>《个人信息保护法》（2021 年 11 月 1 日施行）</span><a class="src" href="https://www.cac.gov.cn/2021-08/20/c_1631050028355286.htm" target="_blank" rel="noopener">法律原文 ↗</a></div>
+    <div class="law-body">
+      <ul>
+        <li>处理个人信息必须有合法依据。第十三条列出的依据，除了取得个人同意，还包括为订立、履行合同所必需，为履行法定职责或法定义务所必需等，所以不能简单理解为"任何处理都要先取得同意"。此外，还要按规定履行告知义务。</li>
+        <li>向其他处理者提供个人信息时，要告知个人接收方的名称或姓名、联系方式、处理目的、处理方式和个人信息的种类，并取得个人的单独同意（第二十三条）。</li>
+        <li>利用个人信息进行自动化决策，要保证决策透明、结果公平公正，不得在交易价格等交易条件上实行不合理的差别待遇；通过自动化决策作出对个人权益有重大影响的决定时，个人有权要求说明，并有权拒绝仅通过自动化决策作出决定（第二十四条）。</li>
+        <li>向境外提供个人信息，要具备法定条件之一，并告知个人、取得单独同意（第三十八、三十九条）。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="law">
+    <div class="law-head"><span>《数据安全法》（2021 年 9 月 1 日施行）</span><a class="src" href="http://www.npc.gov.cn/c2/c30834/202106/t20210610_311888.html" target="_blank" rel="noopener">法律原文 ↗</a></div>
+    <div class="law-body">
+      <ul>
+        <li>国家按数据在经济社会发展中的重要程度，以及数据遭篡改、破坏、泄露后可能造成的危害程度，对数据实行分类分级保护，加强对重要数据的保护；关系国家安全、国民经济命脉、重要民生、重大公共利益等的国家核心数据，实行更加严格的管理制度（第二十一条）。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="law">
+    <div class="law-head"><span>《网络数据安全管理条例》（国务院令第 790 号，2025 年 1 月 1 日施行）</span><a class="src" href="https://www.cac.gov.cn/2024-09/30/c_1729384452307680.htm" target="_blank" rel="noopener">条例原文 ↗</a></div>
+    <div class="law-body">
+      <ul>
+        <li>分章规定了网络数据处理的一般要求、个人信息保护、重要数据安全、网络数据跨境安全管理和网络平台服务提供者的义务。</li>
+        <li>第十九条要求，提供生成式人工智能服务的网络数据处理者，加强对训练数据和训练数据处理活动的安全管理。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="law">
+    <div class="law-head"><span>《促进和规范数据跨境流动规定》（国家网信办令第 16 号，2024 年 3 月 22 日公布并施行）</span><a class="src" href="https://www.gov.cn/gongbao/2024/issue_11366/202405/content_6954192.html" target="_blank" rel="noopener">规定原文 ↗</a></div>
+    <div class="law-body">
+      <ul>
+        <li>规定了什么情况下需要申报数据出境安全评估、订立个人信息出境标准合同或通过个人信息保护认证，什么情况下可以免除。例如，关键信息基础设施运营者以外的数据处理者，自当年 1 月 1 日起累计向境外提供不满 10 万人的个人信息（不含敏感个人信息），可以免除这三项程序（第五条）。</li>
+        <li>但第十条同时规定，向境外提供个人信息，仍须履行告知、取得个人单独同意、进行个人信息保护影响评估等义务。</li>
+      </ul>
+      <div class="note rel"><b>和你的关系</b>：把含有个人信息的数据上传到境外大模型服务处理，可能构成个人信息出境。即使只涉及很少几个人，告知和单独同意也不能省。</div>
+    </div>
+  </div>
+
+  <h3>网络安全与人工智能</h3>
+
+  <div class="law">
+    <div class="law-head"><span>《网络安全法》（2025 年 10 月 28 日修正，2026 年 1 月 1 日施行）</span><a class="src" href="http://www.npc.gov.cn/c2/c30834/202510/t20251028_449048.html" target="_blank" rel="noopener">修改决定原文 ↗</a></div>
+    <div class="law-body">
+      <ul>
+        <li>新增第二十条：国家支持人工智能基础理论研究和算法等关键技术研发，推进训练数据资源、算力等基础设施建设，完善人工智能伦理规范，加强风险监测评估和安全监管，促进人工智能应用和健康发展；国家支持运用人工智能等新技术，提升网络安全保护水平。</li>
+        <li>这一条说明的是国家的支持和监管方向，本身不直接给个人或企业设定具体义务。</li>
+        <li>同次修改在第四十二条增加了一款：网络运营者处理个人信息，应当遵守本法和《民法典》《个人信息保护法》等法律、行政法规的规定。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="law">
+    <div class="law-head"><span>《生成式人工智能服务管理暂行办法》（国家网信办等七部门令第 15 号，2023 年 8 月 15 日施行）</span><a class="src" href="https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm" target="_blank" rel="noopener">办法原文 ↗</a></div>
+    <div class="law-body">
+      <ul>
+        <li>主要约束向境内公众提供生成式人工智能服务的"提供者"：第七条规定提供者开展预训练、优化训练等训练数据处理活动的义务；第九条要求提供者依法承担网络信息内容生产者责任，涉及个人信息的，还要承担个人信息处理者责任。</li>
+        <li>第二条第三款规定，教育和科研机构等研发、应用生成式人工智能技术，但没有向境内公众提供服务的，不适用本办法。</li>
+      </ul>
+      <div class="note rel"><b>和你的关系</b>：在课程中调用模型做分析，你通常不是这个办法所管的"提供者"；但如果把项目做成对公众开放的问答或生成服务，就需要重新判断。</div>
+    </div>
+  </div>
+
+  <div class="law">
+    <div class="law-head"><span>《人工智能生成合成内容标识办法》（国家网信办等四部门，2025 年 9 月 1 日施行）</span><a class="src" href="https://www.cac.gov.cn/2025-03/14/c_1743654684782215.htm" target="_blank" rel="noopener">办法原文 ↗</a></div>
+    <div class="law-body">
+      <ul>
+        <li>按不同情形，规定服务提供者对生成合成内容添加显式标识（用户能直接看到的提示）和隐式标识（如写入文件元数据、用户不易直接察觉的标识）的义务。</li>
+        <li>第十条要求，用户通过网络信息内容传播服务发布生成合成内容时，应当主动声明，并使用服务提供者提供的标识功能。</li>
+      </ul>
+      <div class="note rel"><b>和你的关系</b>：在公开平台发布 AI 生成的内容时适用这条规定；课程作业中的 AI 使用说明按学校和课程要求填写，两者不要混为一谈。</div>
+    </div>
+  </div>
+
+  <h3>行业专门规则：以金融征信为例</h3>
+
+  <div class="law">
+    <div class="law-head"><span>《征信业务管理办法》（中国人民银行令〔2021〕第 4 号，2022 年 1 月 1 日施行）</span><a class="src" href="https://www.pbc.gov.cn/tiaofasi/144941/144957/4354378/index.html" target="_blank" rel="noopener">办法原文 ↗</a></div>
+    <div class="law-body">
+      <ul>
+        <li><strong>什么是征信业务</strong>：对企业和个人的信用信息进行采集、整理、保存、加工，并向信息使用者提供的活动。信用信息是指依法采集，为金融等活动提供服务，用于识别判断企业和个人信用状况的基本信息、借贷信息、其他相关信息，以及基于这些信息形成的分析评价信息（第三条）。</li>
+        <li><strong>谁可以做</strong>：从事个人征信业务，须依法取得中国人民银行个人征信机构许可（第四条）；金融机构不得与未取得合法征信业务资质的市场机构开展商业合作获取征信服务（第五条），即通常所说的"断直连"。</li>
+        <li><strong>换个名称也算</strong>：以"信用评分""信用评级"等名义实质对外提供征信服务的，同样适用本办法（第五十条）。</li>
+        <li><strong>要经本人同意</strong>：征信机构采集个人信用信息，须经信息主体本人同意，并明确告知采集目的（第十二条）。</li>
+      </ul>
+      <div class="note rel"><b>和你的关系</b>：凡是用非传统数据给个人或企业授信的项目，都要先判断是否落入征信业务的范围。</div>
+    </div>
+  </div>
+
+  <h3>研究伦理</h3>
+
+  <div class="law">
+    <div class="law-head"><span>《科技伦理审查办法（试行）》（科技部等部门印发，2023 年 12 月 1 日施行）</span><a class="src" href="https://kjj.cbs.gov.cn/zcfg/202311/t20231109_790852.html" target="_blank" rel="noopener">办法原文 ↗</a></div>
+    <div class="law-body">
+      <ul>
+        <li>第二条把涉及以人为研究参与者的科技活动列入伦理审查范围，包括以人为测试、调查、观察等研究活动的对象，以及利用人类生物样本、个人信息数据等的科技活动。</li>
+        <li>高等学校是本单位科技伦理审查管理的责任主体（第四条）。</li>
+        <li>审查时重点看：知情同意书是否内容完整、风险告知是否客观充分，个人信息处理是否符合个人信息保护的有关规定（第十五条）。</li>
+        <li>伦理风险不高于最低风险的活动，可以适用简易程序（第二十二条）。</li>
+      </ul>
+      <div class="note rel"><b>和你的关系</b>：课程中的问卷和访谈怎样纳入审查，按学校伦理委员会的规定执行。但无论是否需要正式审查，取得知情同意、对数据做匿名化处理、妥善保管数据，都是所有现场调查的基本要求。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 附录二：政策与人才需求背景 ============ -->
+<section id="appendix2">
+  <h2><span class="no">附录二</span> 政策与人才需求背景</h2>
+  <ul>
+    <li><strong>政策提出"复合型、创新型、实战型"三个关键词。</strong>人力资源社会保障部等九部门 2024 年印发的<a href="https://www.12371.cn/2024/04/17/ARTI1713332772353285.shtml" target="_blank" rel="noopener">《加快数字人才培育支撑数字经济发展行动方案（2024—2026 年）》</a>提出"加强高等院校数字领域相关学科专业建设"，该方案执行期到 2026 年底，后续政策值得留意；国家发展改革委、国家数据局、教育部等五部门 2025 年印发的<a href="https://www.nda.gov.cn/sjj/zwgk/zjjd/1215/20251215204250823491143_pc.html" target="_blank" rel="noopener">《关于加强数据要素学科专业建设和数字人才队伍建设的意见》</a>要求培养"复合型、创新型、实战型数字人才"。这三个关键词可以这样理解："复合"对应"经济学＋数据＋数字技术"的知识结构，"创新"对应在新技术、新场景中提出问题，"实战"对应交付可核验的成果，与本文的六项能力基本一致（这是教学解读，不是政策原文的表述）。</li>
+    <li><strong>AI 教育政策进入实施阶段。</strong>国务院 2025 年 8 月印发<a href="https://www.gov.cn/gongbao/2025/issue_12266/202509/content_7039598.html" target="_blank" rel="noopener">《关于深入实施"人工智能+"行动的意见》</a>（国发〔2025〕11 号）；据此，教育部等五部门 2026 年 4 月印发<a href="http://www.moe.gov.cn/srcsite/A16/s3342/202604/t20260410_1433240.html" target="_blank" rel="noopener">《"人工智能+教育"行动计划》</a>（教科信〔2026〕1 号），提出到 2030 年构建人工智能全学段教育和全社会通识教育体系，要求优化传统学科专业人才培养方案、开设人工智能交叉融合课程、培养复合型交叉人才。这两份文件是高校调整人才培养方案、增设人工智能相关课程的直接依据。</li>
+    <li><strong>政策也在改造培养体系本身。</strong>五部门《意见》要求分层分类建设数字学院、优势专业、微专业和职业教育，并提出制定从业人员能力标准、推进产教融合。对你来说，未来几年校内可能新增微专业、实训与认证机会（如数字贸易与商务、数智化供应链管理、数据安全等方向），值得主动关注。</li>
+    <li><strong>供给与需求两方面的信号要一起看。</strong>据国家数据局<a href="https://www.nda.gov.cn/sjj/swdt/xwfb/0608/ff808081-9e81e648-019e-a78ceae4-00c3.pdf" target="_blank" rel="noopener">《数字中国发展报告（2025 年）》</a>，2025 年数字经济核心产业增加值占 GDP 比重达 10.5% 以上；截至 2025 年底，全国约 300 所高校开设数字经济专业，数字经济相关专业毕业生从 2020 年的 61.7 万人增至 2025 年的 93.2 万人。需求方面，《数字经济人才蓝皮书：中国数字经济人才发展报告（2025）》测算，截至 2024 年底数字经济人才缺口在 3200 万人以上，高端复合型人才短缺尤为突出；这是课题组的测算口径，不是官方统计。<a href="http://opinion.people.com.cn/n1/2025/1206/c436867-40618770.html" target="_blank" rel="noopener">人民网评论文章</a>把这种缺口概括为"高端复合型人才与技能型实操人才的双重短缺"：缺的不是读过这个专业的人，而是有具体能力证据的人。</li>
+    <li><strong>国际研究给出的技能信号。</strong>世界经济论坛<a href="https://www.weforum.org/publications/the-future-of-jobs-report-2025/digest/" target="_blank" rel="noopener">《未来就业报告 2025》</a>的雇主调查把分析性思维列为当年最受重视的核心技能，并预计到 2030 年劳动者平均 39% 的核心技能将发生转变或过时。<a href="https://www.oecd.org/en/publications/ai-and-skills_f843b352-en.html" target="_blank" rel="noopener">OECD 2026 年政策简报</a>指出，需要高级 AI 专门技能的劳动者不足 1%，多数人更需要数字技能，以及使用、分析和解释数据的能力；OECD 2024 年的研究发现，在 AI 高暴露职业中，需求增长最多的是管理与商业技能（<a href="https://www.oecd.org/en/publications/artificial-intelligence-and-the-changing-demand-for-skills-in-the-labour-market_88684e36-en.html" target="_blank" rel="noopener">Green, 2024</a>）。这些都是跨地区的研究结论，只能作为参考。</li>
+    <li><strong>新职业目录是岗位层面的信号。</strong>2024 年 7 月人力资源社会保障部等部门<a href="http://paper.people.com.cn/rmrbhwb/html/2024-08/02/content_26072490.htm" target="_blank" rel="noopener">新增 19 个新职业</a>，其中"生成式人工智能系统应用员"等 9 个为数字职业，数字职业标注累计达 106 个。新职业进入目录后，通常会跟进职业标准、培训与评价体系，AI 应用与人机协作类工作已经成为正式的职业赛道。</li>
+    <li><strong>全国信号需要本地检验。</strong>上述数据都是全国或跨国层面的，本地岗位的需求未必相同。你可以收集本地用人单位的招聘信息做文本分析，看看这六项能力在本地岗位中的要求如何。这本身就是一个很好的数据分析练习。</li>
+  </ul>
+</section>
+
+<!-- ============ 参考资料 ============ -->
+<section id="references">
+  <h2><span class="no">附录三</span> 参考资料（核对日期：2026 年 9 月 28 日至 10 月 6 日）</h2>
+  <ul>
+    <li>Dell'Acqua, F., McFowland III, E., Mollick, E., Lifshitz, H., Kellogg, K. C., Rajendran, S., Krayer, L., Candelon, F., <span>&amp;</span> Lakhani, K. R.，《<a href="https://www.hbs.edu/faculty/Pages/item.aspx?num=64700" target="_blank" rel="noopener">Navigating the Jagged Technological Frontier: Field Experimental Evidence of the Effects of Artificial Intelligence on Knowledge Worker Productivity and Quality</a>》，<em>Organization Science</em>, 2026, 37(2): 403–423（工作论文版见 <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4573321" target="_blank" rel="noopener">SSRN</a>）：对 758 名 BCG 顾问的预注册实地实验。任务在 AI 能力范围内时，速度提升超过 25%，质量提升超过 40%；任务在 AI 能力边界之外时，使用 AI 的顾问得出正确结论的概率低 19 个百分点。研究情境和样本有其边界，实验所用模型为 2023 年的 GPT-4。</li>
+    <li>OECD, <a href="https://www.oecd.org/en/publications/ai-and-skills_f843b352-en.html" target="_blank" rel="noopener"><em>AI and skills: What we know so far</em></a>（政策简报，2026 年 6 月）：技能不足是 AI 应用的主要障碍，制造业与金融业尚未采用 AI 的雇主中约 40% 称技能是主要原因，尚未使用生成式 AI 的中小企业中这一比例超过一半；已采用 AI 的制造业与金融业雇主中，超过一半表示对高技能人才的需求增加；需要高级 AI 专门技能的劳动者不足 1%，多数人需要数字技能以及使用、分析和解释数据的能力。</li>
+    <li>OECD, Andrew Green, <a href="https://www.oecd.org/en/publications/artificial-intelligence-and-the-changing-demand-for-skills-in-the-labour-market_88684e36-en.html" target="_blank" rel="noopener"><em>Artificial Intelligence and the Changing Demand for Skills in the Labour Market</em></a>（OECD 人工智能论文第 14 号，2024）：多数受 AI 影响的劳动者不需要专门的 AI 开发技能，但工作任务和技能需求会发生变化；在 AI 高暴露职业中，需求增长最多的是管理与商业技能。</li>
+    <li>世界经济论坛，<a href="https://www.weforum.org/publications/the-future-of-jobs-report-2025/digest/" target="_blank" rel="noopener"><em>Future of Jobs Report 2025</em></a>：分析性思维是 2025 年最受重视的核心技能（约七成受访企业视为必备）；预计到 2030 年劳动者平均 39% 的核心技能将发生转变或过时（2023 年报告的数字为 44%）；AI 与大数据、网络与网络安全、技术素养是增长最快的技能。该调查反映的是受访雇主的全球预期。</li>
+    <li>人力资源社会保障部等九部门，《<a href="https://www.12371.cn/2024/04/17/ARTI1713332772353285.shtml" target="_blank" rel="noopener">加快数字人才培育支撑数字经济发展行动方案（2024—2026 年）</a>》（人社部发〔2024〕37 号，2024 年 4 月）。</li>
+    <li>国家发展改革委、国家数据局、教育部、科技部、中共中央组织部，《<a href="https://www.nda.gov.cn/sjj/zwgk/zjjd/1215/20251215204250823491143_pc.html" target="_blank" rel="noopener">关于加强数据要素学科专业建设和数字人才队伍建设的意见</a>》（发改数据〔2025〕1425 号，2025 年 11 月）：围绕数据要素学科专业建设、职业教育、学术研究和产学研用协同提出 12 项举措。</li>
+    <li>国务院，《<a href="https://www.gov.cn/gongbao/2025/issue_12266/202509/content_7039598.html" target="_blank" rel="noopener">关于深入实施"人工智能+"行动的意见</a>》（国发〔2025〕11 号，2025 年 8 月）。</li>
+    <li>教育部、国家发展改革委、工业和信息化部、科技部、国家数据局，《<a href="http://www.moe.gov.cn/srcsite/A16/s3342/202604/t20260410_1433240.html" target="_blank" rel="noopener">"人工智能+教育"行动计划</a>》（教科信〔2026〕1 号，2026 年 4 月 2 日）。</li>
+    <li>国家数据局，《<a href="https://www.nda.gov.cn/sjj/swdt/xwfb/0608/ff808081-9e81e648-019e-a78ceae4-00c3.pdf" target="_blank" rel="noopener">数字中国发展报告（2025 年）</a>》。</li>
+    <li>中国重庆人力资源服务产业发展研究院等编，《数字经济人才蓝皮书：中国数字经济人才发展报告（2025）》，社会科学文献出版社（<a href="https://www.pishu.com.cn/skwx_ps/bookdetail?ID=16708908&amp;SiteID=14" target="_blank" rel="noopener">皮书数据库</a>；<a href="http://www.chinadevelopment.com.cn/zxsd/2025/1117/1969250.shtml" target="_blank" rel="noopener">中国发展网报道</a>）：截至 2024 年底，数字经济人才总量约 3286 万人，需求约 6500 万人，缺口超过 3200 万人；预计 2025 年缺口接近 3000 万人。数据为课题组测算，非官方统计。</li>
+    <li>人力资源社会保障部等新增 19 个新职业（2024 年 7 月，<a href="http://paper.people.com.cn/rmrbhwb/html/2024-08/02/content_26072490.htm" target="_blank" rel="noopener">人民日报海外版报道</a>）；数字职业标注由 97 个增至 106 个（<a href="https://cn.chinadaily.com.cn/a/202408/02/WS66ad6c0fa310054d254eb4c0.html" target="_blank" rel="noopener">中国日报网报道</a>）。</li>
+    <li>中共中央、国务院，《关于构建数据基础制度更好发挥数据要素作用的意见》（2022 年 12 月）；财政部，《企业数据资源相关会计处理暂行规定》（财会〔2023〕11 号，2024 年 1 月 1 日施行）；财政部，《农民专业合作社会计制度》（财会〔2021〕37 号，2023 年 1 月 1 日施行）。</li>
+    <li>《中华人民共和国个人信息保护法》（2021 年 11 月 1 日施行）；《<a href="http://www.npc.gov.cn/c2/c30834/202106/t20210610_311888.html" target="_blank" rel="noopener">中华人民共和国数据安全法</a>》（2021 年 9 月 1 日施行）；《<a href="https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm" target="_blank" rel="noopener">生成式人工智能服务管理暂行办法</a>》（2023 年 8 月 15 日施行）；国家网信办等四部门，《<a href="http://www.sxzx.gov.cn:80/wlaq/63928.html" target="_blank" rel="noopener">人工智能生成合成内容标识办法</a>》（2025 年 9 月 1 日施行）。</li>
+    <li>《中华人民共和国网络安全法》（2025 年 10 月 28 日修正，2026 年 1 月 1 日施行；<a href="http://www.npc.gov.cn/c2/c30834/202510/t20251028_449048.html" target="_blank" rel="noopener">修改决定原文</a>）；《<a href="https://www.cac.gov.cn/2024-09/30/c_1729384452307680.htm" target="_blank" rel="noopener">网络数据安全管理条例</a>》（国务院令第 790 号，2025 年 1 月 1 日施行）；国家网信办，《<a href="https://www.gov.cn/gongbao/2024/issue_11366/202405/content_6954192.html" target="_blank" rel="noopener">促进和规范数据跨境流动规定</a>》（国家网信办令第 16 号，2024 年 3 月 22 日公布并施行）；科技部等，《<a href="https://kjj.cbs.gov.cn/zcfg/202311/t20231109_790852.html" target="_blank" rel="noopener">科技伦理审查办法（试行）</a>》（2023 年 12 月 1 日施行）；中国人民银行，《<a href="https://www.pbc.gov.cn/tiaofasi/144941/144957/4354378/index.html" target="_blank" rel="noopener">征信业务管理办法</a>》（中国人民银行令〔2021〕第 4 号，2022 年 1 月 1 日施行）。</li>
+    <li>专业培养依据：本专业人才培养方案，包括培养目标、毕业要求、课程体系、专业方向和实践教育安排。</li>
+  </ul>
+</section>
+
+</div>
+
+<footer>
+  <div class="container">
+    <p><strong>数据与口径声明</strong></p>
+    <p class="note">本页依据本专业人才培养方案编写；文中的能力描述、工具标准和案例都是教学建议，<strong>不是培养方案规定的毕业要求</strong>。凡未注明来源的数据和情境均为教学模拟。附录一规则于 2026 年 10 月 6 日按原文核对，具体项目仍需结合实际场景、适用规则与学校要求判断。</p>
+    <p class="note">案例与政策背景中的外部数字（如 BCG 实地实验数据、数字经济人才缺口等）均来自文中所列公开来源或课题组测算口径，详见参考资料，引用时请核对原文。</p>
+    <p class="mono">学生阅读版 · 核对日期 2026-09-28 ~ 10-06 · 教学建议非毕业要求 · 课程主页 index.html</p>
+  </div>
+</footer>
+
+<p class="back-home-line" style="margin:36px 0 0;text-align:right"><a class="back-home" style="display:inline-block;padding:4px 12px;border:1px solid currentColor;border-radius:999px;text-decoration:none;font-size:14px;line-height:1.4;opacity:.85" href="../../">← 返回首页</a></p>
+</body>
+</html>
