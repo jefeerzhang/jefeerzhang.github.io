@@ -7,6 +7,12 @@
   <meta name="description" content="张剑整理的小工具集合，包括提示词优化器等实用的研究辅助工具。">
   <script src="../assets/theme.js"></script>
   <link rel="stylesheet" href="../assets/site.css?v=19">
+  <style>
+    .software-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (max-width: 640px) {
+      .software-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body class="home-page">
   <header class="site-header">
@@ -120,6 +126,61 @@
 
       </div>
     </section>
+
+    <section class="container columns-section" aria-labelledby="software-title">
+      <header class="section-heading">
+        <h2 id="software-title">常用软件</h2>
+        <p>研究常用的桌面软件，点击进入官方下载页面。</p>
+      </header>
+
+      <div class="tools-grid software-grid">
+
+        <a class="tool-card" href="https://www.zotero.org/download/" target="_blank" rel="noopener">
+          <div class="tool-body">
+            <h3>Zotero</h3>
+            <p>开源文献管理工具，支持引文管理、PDF 阅读与笔记。</p>
+          </div>
+          <div class="tool-meta">
+            <span>官方下载</span>
+            <span class="tool-arrow" aria-hidden="true">↗</span>
+          </div>
+        </a>
+
+        <a class="tool-card" href="https://solomd.app/" target="_blank" rel="noopener">
+          <div class="tool-body">
+            <h3>SoloMD</h3>
+            <p>免费开源的 Markdown 编辑器，本地优先，支持实时预览。</p>
+          </div>
+          <div class="tool-meta">
+            <span>官网下载</span>
+            <span class="tool-arrow" aria-hidden="true">↗</span>
+          </div>
+        </a>
+
+        <a class="tool-card" href="https://obsidian.md/download" target="_blank" rel="noopener">
+          <div class="tool-body">
+            <h3>Obsidian</h3>
+            <p>本地优先的知识库笔记软件，支持双向链接与插件扩展。</p>
+          </div>
+          <div class="tool-meta">
+            <span>官方下载</span>
+            <span class="tool-arrow" aria-hidden="true">↗</span>
+          </div>
+        </a>
+
+        <a class="tool-card" href="https://ai4paper.pro/" target="_blank" rel="noopener">
+          <div class="tool-body">
+            <h3>AI4Paper</h3>
+            <p>学术文献辅助工具，支持 PDF 翻译、文献检索与期刊分区显示。</p>
+          </div>
+          <div class="tool-meta">
+            <span>官网下载</span>
+            <span class="tool-arrow" aria-hidden="true">↗</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
   </main>
 
   <footer class="site-footer">
@@ -140,4 +201,3 @@
 </script>
 </body>
 </html>
-
