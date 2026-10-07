@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>六项核心能力 · 分工与场景练习</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&family=Noto+Serif:ital@0;1&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@400;600&family=Noto+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@400&family=Noto+Sans+TC:wght@400;500;600&family=Noto+Serif+TC:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-paper: #fafaf8;
+    --color-paper-2: #f0f0ee;
+    --color-ink: #0a0a0a;
+    --color-muted: #737373;
+    --color-soft: #8e8e8c;
+    --color-accent: #002FA7;
+    --color-rule: rgba(10,10,10,0.12);
+    --font-sans: 'Inter', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    --font-serif: 'Instrument Serif', 'Noto Serif SC', 'Songti SC', serif;
+    --font-mono: 'Geist Mono', 'SF Mono', Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .frame { max-width: 1200px; width: 100%; min-width: 0; }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    margin: 0 0 0.75rem;
+  }
+  h1 {
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin: 0 0 0.75rem;
+  }
+  .sub {
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    max-width: 62ch;
+    margin: 0 0 2rem;
+  }
+  .diagram-container { width: 100%; overflow-x: auto; }
+  svg { width: 100%; min-width: 960px; display: block; }
+  @media print {
+    body { padding: 0; }
+    .diagram-container { overflow-x: visible; }
+    svg { min-width: 0; }
+  }
+  .summary {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 0.9fr;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  @media (max-width: 860px) {
+    .summary { grid-template-columns: 1fr; }
+  }
+  .card {
+    background: #ffffff;
+    border: 1px solid var(--color-rule);
+    border-radius: 6px;
+    padding: 1.25rem;
+  }
+  .card h2 {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    margin: 0 0 0.75rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  .card h2::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    flex: none;
+    transform: translateY(-1px);
+  }
+  .card ul { margin: 0; padding-left: 1.1em; }
+  .card li { font-size: 0.8125rem; margin-bottom: 0.5em; }
+  .card li:last-child { margin-bottom: 0; }
+  .card b { font-weight: 600; }
+  .xref { color: var(--color-accent); font-weight: 500; }
+  .quote { margin: 0; font-size: 0.8125rem; color: #0a0a0a; }
+  .quote + .quote { margin-top: 0.6em; }
+  .cap {
+    font-family: var(--font-mono);
+    font-size: 0.8em;
+    font-weight: 600;
+    color: var(--color-accent);
+    white-space: nowrap;
+  }
+  .colophon {
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-rule);
+    font-size: 0.75rem;
+    color: #8e8e8c;
+  }
+</style>
+</head>
+<body>
+<main class="frame">
+  <p class="eyebrow">CORE CAPABILITIES · 02</p>
+  <h1>六项能力怎样分工，五个场景怎么用它们</h1>
+  <p class="sub">《六项能力怎样分工》一节的骨架图。三段分工决定了能力的层次，底部五个案例则说明：真实问题不会只考一项能力，每个案例都从三段里各取一项来练。</p>
+
+  <div class="diagram-container">
+    <svg viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="cap-map-title cap-map-desc">
+      <title id="cap-map-title">六项核心能力的分工与五个工作场景的练习组合</title>
+      <desc id="cap-map-desc">结构图：六项核心能力分为三段——基础段是能力 1 经济问题定义与判断、能力 2 数据整理与量化分析、能力 3 因果识别与模型评价；效率段是能力 4 AI 协作与流程设计；落地段是能力 5 行业理解数据要素与投入产出分析、能力 6 沟通协作与数据合规。底部五个工作场景各自标出所练习的能力编号：优惠券案例练 1、2、3；数字农业练 5、2、6；风控模型练 3、6、2；政策研究练 3、1、6；数据授信练 5、6、1。能力 4 下方有一条提示：五个案例的训练能力里都没有出现能力 4。</desc>
+      <defs>
+        <marker id="cap-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#737373"/></marker>
+        <marker id="cap-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#002FA7"/></marker>
+        <marker id="cap-arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#5b86c9"/></marker>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#fafaf8"/>
+
+      <!-- Group headers -->
+      <text x="72" y="52" fill="#0a0a0a" font-size="14" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">基础</text>
+      <text x="72" y="72" fill="#737373" font-size="12" font-weight="400" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">经济判断与数据验证</text>
+      <line x1="72" y1="84" x2="312" y2="84" stroke="rgba(10,10,10,0.12)" stroke-width="0.8"/>
+
+      <text x="360" y="52" fill="#0a0a0a" font-size="14" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">效率</text>
+      <text x="360" y="72" fill="#737373" font-size="12" font-weight="400" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">AI 时代的工作效率</text>
+      <line x1="360" y1="84" x2="600" y2="84" stroke="rgba(10,10,10,0.12)" stroke-width="0.8"/>
+
+      <text x="648" y="52" fill="#0a0a0a" font-size="14" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">落地</text>
+      <text x="648" y="72" fill="#737373" font-size="12" font-weight="400" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">进入真实场景、合规地产生价值</text>
+      <line x1="648" y1="84" x2="888" y2="84" stroke="rgba(10,10,10,0.12)" stroke-width="0.8"/>
+
+      <!-- 能力 1 -->
+      <rect x="72" y="92" width="240" height="88" rx="6" fill="#ffffff" stroke="#0a0a0a" stroke-width="1"/>
+      <rect x="84" y="104" width="16" height="16" rx="2" fill="rgba(10,10,10,0.05)" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="92" y="116" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">1</text>
+      <text x="108" y="116" fill="#0a0a0a" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">经济问题定义与判断</text>
+      <text x="84" y="140" fill="#0a0a0a" font-size="12" font-weight="400" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">把宽泛目标改写成明确的决策问题，</text>
+      <text x="84" y="160" fill="#0a0a0a" font-size="12" font-weight="400" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">看清激励、交易成本与利益分配</text>
+
+      <!-- 能力 2 -->
+      <rect x="72" y="196" width="240" height="88" rx="6" fill="#ffffff" stroke="#0a0a0a" stroke-width="1"/>
+      <rect x="84" y="208" width="16" height="16" rx="2" fill="rgba(10,10,10,0.05)" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="92" y="220" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">2</text>
+      <text x="108" y="220" fill="#0a0a0a" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">数据整理与量化分析</text>
+      <text x="84" y="244" fill="#0a0a0a" font-size="12" font-weight="400" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">说清数据从哪来、指标口径是什么，</text>
+      <text x="84" y="264" fill="#0a0a0a" font-size="12" font-weight="400" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">结论在多大范围内成立</text>
+
+      <!-- 能力 3 -->
+      <rect x="72" y="300" width="240" height="88" rx="6" fill="#ffffff" stroke="#0a0a0a" stroke-width="1"/>
+      <rect x="84" y="312" width="16" height="16" rx="2" fill="rgba(10,10,10,0.05)" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="92" y="324" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">3</text>
+      <text x="108" y="324" fill="#0a0a0a" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">因果识别与模型评价</text>
+      <text x="84" y="348" fill="#0a0a0a" font-size="12" font-weight="400" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">分清描述、预测与因果三类问题，</text>
+      <text x="84" y="368" fill="#0a0a0a" font-size="12" font-weight="400" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">模型会在哪类人群上犯什么错</text>
+
+      <!-- 能力 4 -->
+      <rect x="360" y="92" width="240" height="88" rx="6" fill="#ffffff" stroke="#0a0a0a" stroke-width="1"/>
+      <rect x="372" y="104" width="16" height="16" rx="2" fill="rgba(10,10,10,0.05)" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="380" y="116" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">4</text>
+      <text x="396" y="116" fill="#0a0a0a" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">AI 协作与流程设计</text>
+      <text x="372" y="140" fill="#0a0a0a" font-size="12" font-weight="400" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">拆解任务、向 AI 讲清业务定义，</text>
+      <text x="372" y="160" fill="#0a0a0a" font-size="12" font-weight="400" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">用已知答案的样本测它靠不靠谱</text>
+
+      <!-- 能力 5 -->
+      <rect x="648" y="92" width="240" height="88" rx="6" fill="#ffffff" stroke="#0a0a0a" stroke-width="1"/>
+      <rect x="660" y="104" width="16" height="16" rx="2" fill="rgba(10,10,10,0.05)" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="668" y="116" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">5</text>
+      <text x="684" y="116" fill="#0a0a0a" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">行业理解、数据要素与投入产出分析</text>
+      <text x="660" y="140" fill="#0a0a0a" font-size="12" font-weight="400" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">比较技术方案的收益、条件与风险，</text>
+      <text x="660" y="160" fill="#0a0a0a" font-size="12" font-weight="400" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">说明数据归谁、怎样流通和定价</text>
+
+      <!-- 能力 6 -->
+      <rect x="648" y="196" width="240" height="88" rx="6" fill="#ffffff" stroke="#0a0a0a" stroke-width="1"/>
+      <rect x="660" y="208" width="16" height="16" rx="2" fill="rgba(10,10,10,0.05)" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="668" y="220" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">6</text>
+      <text x="684" y="220" fill="#0a0a0a" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">沟通、协作与数据合规</text>
+      <text x="660" y="244" fill="#0a0a0a" font-size="12" font-weight="400" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">面向不同对象解释结论、说明依据，</text>
+      <text x="660" y="264" fill="#0a0a0a" font-size="12" font-weight="400" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">识别个人信息并履行告知同意</text>
+
+      <!-- Note anchored to 能力 4 -->
+      <line x1="480" y1="180" x2="480" y2="216" stroke="rgba(10,10,10,0.20)" stroke-width="0.8"/>
+      <rect x="360" y="216" width="240" height="92" rx="6" fill="rgba(0,47,167,0.08)" stroke="#002FA7" stroke-width="1.2"/>
+      <text x="372" y="244" fill="#002FA7" font-size="12" font-weight="500" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">五个案例的训练能力里</text>
+      <text x="372" y="264" fill="#002FA7" font-size="12" font-weight="500" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">都没有出现能力 4</text>
+      <text x="372" y="292" fill="#0a0a0a" font-size="12" font-weight="400" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">工具与流程能力要另外练</text>
+
+      <!-- Scenario band -->
+      <rect x="56" y="416" width="848" height="88" rx="6" fill="#f0f0ee"/>
+      <text x="72" y="440" fill="#0a0a0a" font-size="12" font-weight="500" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">五个工作场景 · 每个案例末尾标出主要练习的能力</text>
+      <text x="888" y="440" fill="#737373" font-size="12" font-weight="400" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif" text-anchor="end">教学模拟情境 · 没有唯一标准答案</text>
+
+      <rect x="72" y="448" width="144" height="48" rx="6" fill="#ffffff" stroke="rgba(10,10,10,0.30)" stroke-width="1"/>
+      <text x="84" y="464" fill="#0a0a0a" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">案例一 优惠券</text>
+      <rect x="84" y="472" width="16" height="16" rx="2" fill="#ffffff" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="92" y="484" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">1</text>
+      <rect x="108" y="472" width="16" height="16" rx="2" fill="#ffffff" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="116" y="484" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">2</text>
+      <rect x="132" y="472" width="16" height="16" rx="2" fill="#ffffff" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="140" y="484" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">3</text>
+
+      <rect x="240" y="448" width="144" height="48" rx="6" fill="#ffffff" stroke="rgba(10,10,10,0.30)" stroke-width="1"/>
+      <text x="252" y="464" fill="#0a0a0a" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">案例二 数字农业</text>
+      <rect x="252" y="472" width="16" height="16" rx="2" fill="#ffffff" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="260" y="484" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">5</text>
+      <rect x="276" y="472" width="16" height="16" rx="2" fill="#ffffff" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="284" y="484" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">2</text>
+      <rect x="300" y="472" width="16" height="16" rx="2" fill="#ffffff" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="308" y="484" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">6</text>
+
+      <rect x="408" y="448" width="144" height="48" rx="6" fill="#ffffff" stroke="rgba(10,10,10,0.30)" stroke-width="1"/>
+      <text x="420" y="464" fill="#0a0a0a" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">案例三 风控模型</text>
+      <rect x="420" y="472" width="16" height="16" rx="2" fill="#ffffff" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="428" y="484" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">3</text>
+      <rect x="444" y="472" width="16" height="16" rx="2" fill="#ffffff" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="452" y="484" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">6</text>
+      <rect x="468" y="472" width="16" height="16" rx="2" fill="#ffffff" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="476" y="484" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">2</text>
+
+      <rect x="576" y="448" width="144" height="48" rx="6" fill="#ffffff" stroke="rgba(10,10,10,0.30)" stroke-width="1"/>
+      <text x="588" y="464" fill="#0a0a0a" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">案例四 政策研究</text>
+      <rect x="588" y="472" width="16" height="16" rx="2" fill="#ffffff" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="596" y="484" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">3</text>
+      <rect x="612" y="472" width="16" height="16" rx="2" fill="#ffffff" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="620" y="484" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">1</text>
+      <rect x="636" y="472" width="16" height="16" rx="2" fill="#ffffff" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="644" y="484" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">6</text>
+
+      <rect x="744" y="448" width="144" height="48" rx="6" fill="#ffffff" stroke="rgba(10,10,10,0.30)" stroke-width="1"/>
+      <text x="756" y="464" fill="#0a0a0a" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">案例五 数据授信</text>
+      <rect x="756" y="472" width="16" height="16" rx="2" fill="#ffffff" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="764" y="484" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">5</text>
+      <rect x="780" y="472" width="16" height="16" rx="2" fill="#ffffff" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="788" y="484" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">6</text>
+      <rect x="804" y="472" width="16" height="16" rx="2" fill="#ffffff" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="812" y="484" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">1</text>
+
+      <!-- Legend -->
+      <line x1="40" y1="540" x2="920" y2="540" stroke="rgba(10,10,10,0.10)" stroke-width="0.8"/>
+      <text x="40" y="556" fill="#737373" font-size="8" font-family="'Geist Mono',monospace" letter-spacing="0.14em">LEGEND</text>
+
+      <rect x="40" y="572" width="24" height="16" rx="2" fill="#ffffff" stroke="#0a0a0a" stroke-width="1"/>
+      <text x="72" y="584" fill="#737373" font-size="12" font-weight="500" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">核心能力</text>
+
+      <rect x="200" y="572" width="24" height="16" rx="2" fill="rgba(0,47,167,0.08)" stroke="#002FA7" stroke-width="1.2"/>
+      <text x="232" y="584" fill="#737373" font-size="12" font-weight="500" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">需要注意的提示</text>
+
+      <rect x="400" y="572" width="24" height="16" rx="2" fill="#f0f0ee" stroke="rgba(10,10,10,0.30)" stroke-width="1"/>
+      <text x="432" y="584" fill="#737373" font-size="12" font-weight="500" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">工作场景</text>
+
+      <rect x="560" y="572" width="16" height="16" rx="2" fill="#ffffff" stroke="rgba(10,10,10,0.30)" stroke-width="0.8"/>
+      <text x="568" y="584" fill="#0a0a0a" font-size="9" font-weight="500" font-family="'Geist Mono',monospace" text-anchor="middle">1</text>
+      <text x="588" y="584" fill="#737373" font-size="12" font-weight="500" font-family="'Inter','Noto Sans SC','PingFang SC',sans-serif">该场景练习的能力</text>
+    </svg>
+  </div>
+
+  <div class="summary">
+    <section class="card">
+      <h2>三段分工</h2>
+      <p class="quote"><span class="cap">1–3</span> 基础：经济判断与数据验证。</p>
+      <p class="quote"><span class="cap">4</span> 效率：AI 时代的工作效率。</p>
+      <p class="quote"><span class="cap">5 · 6</span> 落地：决定分析成果能否进入真实场景、合规地产生价值。</p>
+      <p class="quote">第二节的五个工作场景，就是用来练习把几项能力组合起来使用。</p>
+    </section>
+    <section class="card">
+      <h2>为什么现在讲这个</h2>
+      <ul>
+        <li>全国约 <span class="cap">300</span> 所高校开设数字经济专业，毕业生数量快速增长，但高端复合型人才仍然短缺。</li>
+        <li>2026 年 4 月教育部等五部门印发《“人工智能+教育”行动计划》，要求优化传统学科专业人才培养方案。</li>
+        <li>国家要求培养“复合型、创新型、实战型”数字人才。</li>
+        <li><b>专业名称已经很普及，真正拉开差距的，是你能拿出来的能力证据。</b></li>
+      </ul>
+    </section>
+    <section class="card">
+      <h2>练习时的提醒</h2>
+      <ul>
+        <li>凡未注明来源的数据和情境都是<b>教学模拟</b>。</li>
+        <li>重点是练习<b>判断过程</b>，没有唯一的标准答案。</li>
+        <li>案例四（政策研究）同时还练审辩思维、三农服务意识和政策表达。</li>
+        <li>能力 4 的练习路径在正文<span class="xref">「工具能力的建议标准」</span>一节，不在案例里。</li>
+      </ul>
+    </section>
+  </div>
+
+  <footer class="colophon">
+    配色与字体取自本站品牌 token（International Klein Blue / Swiss International Style） · 图形由 diagram-design 生成 · 能力定义与课程对应见正文第一节表格，案例题面见第二节
+  </footer>
+</main>
+</body>
+</html>
