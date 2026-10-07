@@ -155,6 +155,13 @@ footer strong{color:var(--ink)}
 .student-flow .flow-mobile li.flow-focus{border-color:var(--accent);background:var(--accent-tint)}
 @media(max-width:760px){.student-flow .flow-canvas{display:none}.student-flow .flow-mobile{display:block}}
 @media print{.student-flow .flow-canvas{display:block;width:100%;margin:0;overflow-x:visible}.student-flow .flow-mobile{display:none}.student-flow svg{min-width:0}}
+
+/* Pre-rendered from LaTeX with KaTeX; native MathML needs no runtime scripts. */
+.formula.latex-rendered{font-family:"Cambria Math","STIX Two Math","Latin Modern Math",serif;line-height:normal;padding:18px;overflow-x:auto}
+.formula.latex-rendered .katex{display:block;min-width:max-content;margin:8px 0}
+.formula.latex-rendered math{font-size:1.12rem;}
+.formula.latex-rendered mtext{font-family:var(--sans)}
+@media print{.formula.latex-rendered{break-inside:avoid}}
 </style>
 </head>
 <body>
@@ -387,7 +394,8 @@ footer strong{color:var(--ink)}
   <h3>2.3 复权、入组与缺失处理</h3>
   <p><strong>除任务二专门研究成本外，所有收益率及收益率差均不扣交易成本。</strong> 程序和 CSV 中统一用小数，如 <code>0.03</code>；报告显示为 <code>3%</code>，收益率差及其标准差、标准误和置信区间用百分点。</p>
   <p>使用同一复权口径计算收益率：</p>
-  <div class="formula">R(a,b) = ( close<sub>b</sub> / close<sub>a</sub> ) × ( adj_factor<sub>b</sub> / adj_factor<sub>a</sub> ) − 1</div>
+  <div class="formula latex-rendered"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>R</mi><mo stretchy="false">(</mo><mi>a</mi><mo separator="true">,</mo><mi>b</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><msub><mrow><mi mathvariant="normal">c</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">e</mi></mrow><mi>b</mi></msub><msub><mrow><mi mathvariant="normal">c</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">e</mi></mrow><mi>a</mi></msub></mfrac><mo>×</mo><mfrac><msub><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">d</mi><mi mathvariant="normal">j</mi><mi mathvariant="normal">_</mi><mi mathvariant="normal">f</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">r</mi></mrow><mi>b</mi></msub><msub><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">d</mi><mi mathvariant="normal">j</mi><mi mathvariant="normal">_</mi><mi mathvariant="normal">f</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">r</mi></mrow><mi>a</mi></msub></mfrac><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">R(a,b)=\frac{\mathrm{close}_{b}}{\mathrm{close}_{a}}
+\times\frac{\mathrm{adj\_factor}_{b}}{\mathrm{adj\_factor}_{a}}-1</annotation></semantics></math></span></div>
   <p><code>close</code> 为未复权收盘价，<code>adj_factor</code> 为复权因子；公式中的 a、b 为起止日期。</p>
   <p>后文公式中的 P 表示按上述口径复权的价格。<strong>价格可核验</strong>指同一股票当日有 <code>daily</code> 记录且 <code>close&gt;0</code>，同日有有效且大于零的 <code>adj_factor</code>。价格与因子不跨日期混配。</p>
   <p>信号所需月末端点都须当天可核验，缺一个端点就不计算该股票的该信号，不往前取价。建仓也须当天可核验；只有退出估值允许沿用此前最近一个价格和因子同日齐全的记录。</p>
@@ -419,11 +427,11 @@ footer strong{color:var(--ink)}
   <p>公式中的日期分别为当月、上月和十二个月前的最后一个交易日，价格均为复权价格。</p>
 
   <h4>REV1：一月反转</h4>
-  <div class="formula">REV1<sub>t</sub> = −( P<sub>Tt</sub> / P<sub>Tt−1</sub> − 1 )</div>
+  <div class="formula latex-rendered"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mrow><mi mathvariant="normal">R</mi><mi mathvariant="normal">E</mi><mi mathvariant="normal">V</mi><mn>1</mn></mrow><mi>t</mi></msub><mo>=</mo><mo>−</mo><mrow><mo fence="true">(</mo><mfrac><msub><mi>P</mi><msub><mi>T</mi><mi>t</mi></msub></msub><msub><mi>P</mi><msub><mi>T</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub></msub></mfrac><mo>−</mo><mn>1</mn><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathrm{REV1}_t=-\left(\frac{P_{T_t}}{P_{T_{t-1}}}-1\right)</annotation></semantics></math></span></div>
   <p><strong>形成月收益率</strong>是上个月最后一个交易日至本月形成日的收益率，取负得到 REV1。例如，形成月涨 8%，信号为 −8%；形成月跌 6%，信号为 +6%。</p>
 
   <h4>MOM12–1：中期动量</h4>
-  <div class="formula">MOM12−1<sub>t</sub> = P<sub>Tt−1</sub> / P<sub>Tt−12</sub> − 1</div>
+  <div class="formula latex-rendered"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mrow><mi mathvariant="normal">M</mi><mi mathvariant="normal">O</mi><mi mathvariant="normal">M</mi><mn>12</mn><mtext> ⁣</mtext><mo lspace="0em" rspace="0em">−</mo><mtext> ⁣</mtext><mn>1</mn></mrow><mi>t</mi></msub><mo>=</mo><mfrac><msub><mi>P</mi><msub><mi>T</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub></msub><msub><mi>P</mi><msub><mi>T</mi><mrow><mi>t</mi><mo>−</mo><mn>12</mn></mrow></msub></msub></mfrac><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathrm{MOM12\!{-}\!1}_t=\frac{P_{T_{t-1}}}{P_{T_{t-12}}}-1</annotation></semantics></math></span></div>
   <p>回看 12 个月，跳过最近 1 个月，计算此前 11 个月的累计收益率。过去涨得越多，信号越大。例如，窗口内累计涨 20%，信号为 +20%。</p>
 
   <div class="takeaway">两个信号都<strong>持有一期</strong>，日期按 2.2 确定。各自筛选符合条件的股票，股票数和完整收益期数可能不同。任务一计算理论收益率，不考虑真实成交限制或借券条件。</div>
@@ -436,7 +444,7 @@ footer strong{color:var(--ink)}
 
   <h4>第二步：按 REV1 和 MOM12–1 分别排序、分组</h4>
   <p>每个形成日，分别按两个信号从低到高排序，信号相同按股票代码升序排序。排序后从第 0 只开始编号，按下式分入 Q1 至 Q5：</p>
-  <div class="formula">组号 = ⌊ 5i / n ⌋ + 1</div>
+  <div class="formula latex-rendered"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>组号</mtext><mo>=</mo><mrow><mo fence="true">⌊</mo><mfrac><mrow><mn>5</mn><mi>i</mi></mrow><mi>n</mi></mfrac><mo fence="true">⌋</mo></mrow><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\text{组号}=\left\lfloor\frac{5i}{n}\right\rfloor+1</annotation></semantics></math></span></div>
   <p>其中，i 为排序位置，n 为该信号当期分组股票总数，方括号表示向下取整。五组只数相差最多 1 只；500 只时，每组 100 只。分组只看形成日信息，建仓日缺价后不重新排序或分组。</p>
 
   <div class="tablewrap">
@@ -463,15 +471,15 @@ footer strong{color:var(--ink)}
 
   <h4>第三步：计算各组持有收益率</h4>
   <p>按 2.3 计算每只已建仓股票的持有收益率。组收益率为：已建仓股票收益率之和，除以形成日该组分组只数。所有股票都建仓时，就是组内算术平均。例如，三只都建仓：</p>
-  <div class="formula">r<sub>组</sub> = ( 6% + (−3%) + 0% ) / 3 = 1%</div>
+  <div class="formula latex-rendered"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>r</mi><mtext>组</mtext></msub><mo>=</mo><mfrac><mrow><mn>6</mn><mi mathvariant="normal">%</mi><mo>+</mo><mo stretchy="false">(</mo><mo>−</mo><mn>3</mn><mi mathvariant="normal">%</mi><mo stretchy="false">)</mo><mo>+</mo><mn>0</mn><mi mathvariant="normal">%</mi></mrow><mn>3</mn></mfrac><mo>=</mo><mn>1</mn><mi mathvariant="normal">%</mi></mrow><annotation encoding="application/x-tex">r_{\mathrm{组}}=\frac{6\%+(-3\%)+0\%}{3}=1\%</annotation></semantics></math></span></div>
   <p>若原定三只，只有前两只能建仓，第三只对应资金留作现金：</p>
-  <div class="formula">r<sub>组</sub> = ( 6% + (−3%) ) / 3 = 1%</div>
+  <div class="formula latex-rendered"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>r</mi><mtext>组</mtext></msub><mo>=</mo><mfrac><mrow><mn>6</mn><mi mathvariant="normal">%</mi><mo>+</mo><mo stretchy="false">(</mo><mo>−</mo><mn>3</mn><mi mathvariant="normal">%</mi><mo stretchy="false">)</mo></mrow><mn>3</mn></mfrac><mo>=</mo><mn>1</mn><mi mathvariant="normal">%</mi></mrow><annotation encoding="application/x-tex">r_{\mathrm{组}}=\frac{6\%+(-3\%)}{3}=1\%</annotation></semantics></math></span></div>
   <p>此时分母仍为 3，不改成 2；这里的零收益来自现金，不是给缺价股票补零收益。</p>
   <p>持有期内保持已建仓股票的名单和股数，不重新分组或每天恢复等权；下一期重新选股、分组。停牌和缺失按 2.3 处理。</p>
 
   <h4>第四步：汇总收益率和收益率差</h4>
   <p>两个信号分别保存逐期结果，每行列出 Q1 至 Q5 收益率，以及 <strong>Q5 收益率减去 Q1 收益率</strong>，简称"收益率差"：</p>
-  <div class="formula">spread<sub>t</sub> = r<sub>Q5,t</sub> − r<sub>Q1,t</sub></div>
+  <div class="formula latex-rendered"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">p</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">d</mi></mrow><mi>t</mi></msub><mo>=</mo><msub><mi>r</mi><mrow><mi>Q</mi><mn>5</mn><mo separator="true">,</mo><mi>t</mi></mrow></msub><mo>−</mo><msub><mi>r</mi><mrow><mi>Q</mi><mn>1</mn><mo separator="true">,</mo><mi>t</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\mathrm{spread}_t=r_{Q5,t}-r_{Q1,t}</annotation></semantics></math></span></div>
   <p>例如，Q5 为 −2.0%、Q1 为 −2.5%，收益率差为 +0.5 个百分点，表示 Q5 少亏了 0.5 个百分点。REV1 的差为正，表示过去输家跑赢；MOM12–1 的差为正，表示过去赢家跑赢。Q1 栏填股票本身的收益率，不能取负后填入。</p>
   <p>汇总表每个信号一行，列出：</p>
   <ul>
@@ -481,7 +489,8 @@ footer strong{color:var(--ink)}
     <li><strong>均值检验</strong>：报告收益率差均值的 Newey–West 检验统计量和近似 95% 置信区间，滞后阶数固定为 3。</li>
   </ul>
   <p>计算检验时，将逐期收益率差作为因变量，只放常数项，采用 Newey–West（HAC）标准误。常数项估计值就是收益率差均值；用该标准误计算：</p>
-  <div class="formula">t = spread 均值 / SE<sub>NW</sub><br>近似 95% 置信区间 = spread 均值 ± 1.96 × SE<sub>NW</sub></div>
+  <div class="formula latex-rendered"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>t</mi><mo>=</mo><mfrac><mover accent="true"><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">p</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">d</mi></mrow><mo stretchy="true">‾</mo></mover><msub><mrow><mi mathvariant="normal">S</mi><mi mathvariant="normal">E</mi></mrow><mrow><mi mathvariant="normal">N</mi><mi mathvariant="normal">W</mi></mrow></msub></mfrac></mrow><annotation encoding="application/x-tex">t=\frac{\overline{\mathrm{spread}}}{\mathrm{SE}_{\mathrm{NW}}}</annotation></semantics></math></span><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>近似 95% 置信区间</mtext><mo>=</mo><mover accent="true"><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">p</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">d</mi></mrow><mo stretchy="true">‾</mo></mover><mo>±</mo><mn>1.96</mn><mo>×</mo><msub><mrow><mi mathvariant="normal">S</mi><mi mathvariant="normal">E</mi></mrow><mrow><mi mathvariant="normal">N</mi><mi mathvariant="normal">W</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\text{近似 95\% 置信区间}
+=\overline{\mathrm{spread}}\pm1.96\times\mathrm{SE}_{\mathrm{NW}}</annotation></semantics></math></span></div>
   <p>其中，SE 表示均值的标准误，不是逐期收益率差的标准差。以下 Python 示例适用于<strong>没有缺期的连续月度序列</strong>：</p>
 
   <div class="prompt"><span class="plabel">PYTHON · Newey–West（HAC）均值检验</span>import numpy as np
@@ -501,7 +510,7 @@ ci95 = (mean - 1.96 * se, mean + 1.96 * se)</div>
   <h4>第五步：画累计收益率图</h4>
   <p>每个信号画 Q1、Q5 两条曲线，可放在一张图的两个面板中。横轴为退出日期，纵轴为累计收益率，起点为 0；注明信号、覆盖区间、统计期数及排除的期次。</p>
   <p>累计收益按复利计算。例如，100 元先涨 10%、再跌 10%，最终为 99 元，累计收益率为 −1%。公式为：</p>
-  <div class="formula">C<sub>g,n</sub> = Π<sub>j=1..n</sub> (1 + r<sub>Qg,j</sub>) − 1，g ∈ {1, 5}</div>
+  <div class="formula latex-rendered"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>C</mi><mrow><mi>g</mi><mo separator="true">,</mo><mi>n</mi></mrow></msub><mo>=</mo><munderover><mo>∏</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mo fence="true">(</mo><mn>1</mn><mo>+</mo><msub><mi>r</mi><mrow><mi>Q</mi><mi>g</mi><mo separator="true">,</mo><mi>j</mi></mrow></msub><mo fence="true">)</mo></mrow><mo>−</mo><mn>1</mn><mo separator="true">,</mo><mspace width="2em"/><mi>g</mi><mo>∈</mo><mo stretchy="false">{</mo><mn>1</mn><mo separator="true">,</mo><mn>5</mn><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">C_{g,n}=\prod_{j=1}^{n}\left(1+r_{Qg,j}\right)-1,\qquad g\in\{1,5\}</annotation></semantics></math></span></div>
   <p>对 Q1、Q5 分别将每期收益率加 1 后连乘，再减 1，不能把收益率差直接复利后称为多空净值。缺期处断线，后续从此前累计值继续计算；注明仅累计有效期，不能解释为连续持仓净值，也不能给缺期填零。</p>
 
   <h3>3.3 检查与报告</h3>
@@ -513,7 +522,9 @@ ci95 = (mean - 1.96 * se, mean + 1.96 * se)</div>
     <li><strong>抽样收益核对</strong>：抽取几只股票、几个价格齐全且无特殊估值的持有期，将建仓日之后至退出日（含）的 <code>daily.pct_chg</code> 除以 100 后逐日复利，与 2.3 的复权价格法比较，保存两种结果和差值。不能漏掉有效交易记录；差异明显时检查日期、行情缺口和除权处理，不强行认定只有舍入误差。</li>
     <li><strong>信号窗口核对</strong>：对同时能计算两个信号的股票，检查下面的关系。右侧直接取相应月末价格，核对实际日期；这能检查窗口衔接，不能证明复权数据本身正确。</li>
   </ul>
-  <div class="formula">( 1 + MOM12−1<sub>t</sub> ) × ( 1 − REV1<sub>t</sub> ) = P<sub>Tt</sub> / P<sub>Tt−12</sub></div>
+  <div class="formula latex-rendered"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mrow><mo fence="true">(</mo><mn>1</mn><mo>+</mo><msub><mrow><mi mathvariant="normal">M</mi><mi mathvariant="normal">O</mi><mi mathvariant="normal">M</mi><mn>12</mn><mtext> ⁣</mtext><mo lspace="0em" rspace="0em">−</mo><mtext> ⁣</mtext><mn>1</mn></mrow><mi>t</mi></msub><mo fence="true">)</mo></mrow><mrow><mo fence="true">(</mo><mn>1</mn><mo>−</mo><msub><mrow><mi mathvariant="normal">R</mi><mi mathvariant="normal">E</mi><mi mathvariant="normal">V</mi><mn>1</mn></mrow><mi>t</mi></msub><mo fence="true">)</mo></mrow><mo>=</mo><mfrac><msub><mi>P</mi><msub><mi>T</mi><mi>t</mi></msub></msub><msub><mi>P</mi><msub><mi>T</mi><mrow><mi>t</mi><mo>−</mo><mn>12</mn></mrow></msub></msub></mfrac></mrow><annotation encoding="application/x-tex">\left(1+\mathrm{MOM12\!{-}\!1}_t\right)
+\left(1-\mathrm{REV1}_t\right)
+=\frac{P_{T_t}}{P_{T_{t-12}}}</annotation></semantics></math></span></div>
   <p>检查用于核对数据和计算，不要求结果显著、方向符合预期或超过随机信号。</p>
 
   <h4>跑完对照下面的清单自查</h4>
@@ -605,7 +616,7 @@ ci95 = (mean - 1.96 * se, mean + 1.96 * se)</div>
 
   <h3>信号窗口</h3>
   <p>三月反转取最近 3 个完整月末区间的收益率，再取负。6–1 动量跳过最近一个月，累计此前 5 个月：</p>
-  <div class="formula">MOM6−1<sub>t</sub> = P<sub>Tt−1</sub> / P<sub>Tt−6</sub> − 1</div>
+  <div class="formula latex-rendered"><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mrow><mi mathvariant="normal">M</mi><mi mathvariant="normal">O</mi><mi mathvariant="normal">M</mi><mn>6</mn><mtext> ⁣</mtext><mo lspace="0em" rspace="0em">−</mo><mtext> ⁣</mtext><mn>1</mn></mrow><mi>t</mi></msub><mo>=</mo><mfrac><msub><mi>P</mi><msub><mi>T</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub></msub><msub><mi>P</mi><msub><mi>T</mi><mrow><mi>t</mi><mo>−</mo><mn>6</mn></mrow></msub></msub></mfrac><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathrm{MOM6\!{-}\!1}_t=\frac{P_{T_{t-1}}}{P_{T_{t-6}}}-1</annotation></semantics></math></span></div>
   <p>写清窗口日期，使用共同可用样本，区分窗口变化与样本变化的影响。</p>
 
   <h3>市场状态与事件</h3>
