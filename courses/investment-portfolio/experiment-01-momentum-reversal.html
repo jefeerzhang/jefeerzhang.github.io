@@ -128,6 +128,33 @@ footer strong{color:var(--ink)}
   .prompt{background:#f0f0f0;color:#222}
   .prompt .plabel{color:#002FA7}
 }
+
+/* student-flow: isolated styles for the embedded diagram */
+.student-flow{--paper:#f6f7f9;--paper-2:#eceff3;--ink:#17202b;--muted:#505c6c;--rule:#cbd2dc;--accent:#002fa7;--accent-tint:#edf1ff;--sans:"Microsoft YaHei","PingFang SC","Noto Sans SC",Arial,sans-serif}
+.student-flow .flow-canvas{width:min(1280px,calc(100vw - 48px));margin-left:calc((100% - min(1280px,calc(100vw - 48px)))/2);overflow-x:auto}
+.student-flow svg{width:100%;min-width:1280px;display:block}
+.student-flow .flow-lane{font-family:var(--sans);font-size:20px;font-weight:600;fill:var(--muted)}
+.student-flow .flow-node{fill:#fff;stroke:var(--rule);stroke-width:1.2;rx:0}
+.student-flow .flow-focal{fill:var(--accent-tint);stroke:var(--accent);stroke-width:1.5}
+.student-flow .flow-decision{fill:#fff;stroke:var(--ink);stroke-width:1.2}
+.student-flow .flow-node-name{font-family:var(--sans);font-size:16px;font-weight:600;fill:var(--ink)}
+.student-flow .flow-note{font-family:var(--sans);font-size:12px;fill:var(--muted)}
+.student-flow .flow-output{font-family:var(--sans);font-size:12px;fill:var(--ink)}
+.student-flow .flow-edge{fill:none;stroke:var(--muted);stroke-width:1.5;marker-end:url(#student-flow-arrow)}
+.student-flow .flow-return{stroke-dasharray:5 4}
+.student-flow .flow-label{font-family:var(--sans);font-size:12px;font-weight:600;fill:var(--ink)}
+.student-flow .flow-legend{font-family:var(--sans);font-size:12px;fill:var(--muted)}
+.student-flow .flow-mobile{display:none}
+.student-flow .flow-mobile ol{padding:0;margin:16px 0;list-style:none}
+.student-flow .flow-mobile li{position:relative;display:flex;gap:16px;padding:20px 16px;margin:0 0 28px;border:1px solid var(--rule);background:#fff}
+.student-flow .flow-mobile li:not(:last-child)::after{content:"↓";position:absolute;bottom:-27px;left:27px;color:var(--muted);font-size:20px}
+.student-flow .flow-number{font-family:Consolas,monospace;font-size:18px;color:var(--muted)}
+.student-flow .flow-mobile h3{font-size:17px;margin:0 0 8px}
+.student-flow .flow-mobile p{font-size:14px;margin:4px 0;color:var(--muted)}
+.student-flow .flow-mobile .flow-deliverable{color:var(--ink)}
+.student-flow .flow-mobile li.flow-focus{border-color:var(--accent);background:var(--accent-tint)}
+@media(max-width:760px){.student-flow .flow-canvas{display:none}.student-flow .flow-mobile{display:block}}
+@media print{.student-flow .flow-canvas{display:block;width:100%;margin:0;overflow-x:visible}.student-flow .flow-mobile{display:none}.student-flow svg{min-width:0}}
 </style>
 </head>
 <body>
@@ -151,6 +178,7 @@ footer strong{color:var(--ink)}
 <nav>
   <div class="container links">
     <a href="index.html" class="back">← 课程主页</a>
+    <a href="#flow">流程图</a>
     <a href="#overview">概览</a>
     <a href="#rules">共同规则</a>
     <a href="#task1">任务一</a>
@@ -161,6 +189,46 @@ footer strong{color:var(--ink)}
 </nav>
 
 <div class="container">
+
+<!-- student-flow:begin -->
+<section id="flow" class="student-flow">
+<h2><span class="no">FLOW</span> 实验流程</h2>
+<p>先完成任务一，再自己提出任务二的问题。Agent 协助计算，你负责核对和判断。</p>
+<div class="flow-canvas"><svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="student-flow-title student-flow-desc">
+<title id="student-flow-title">中证500实验学生流程</title>
+<desc id="student-flow-desc">取数后分别完成反转和动量分组回测，检查不通过则返工，通过后完成任务一，再自主提出问题、保存计划、完成比较及任务二报告，最后打包提交。</desc>
+<defs><marker id="student-flow-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#505c6c"/></marker></defs>
+<rect width="1280" height="720" fill="#f6f7f9"/>
+<text x="88" y="44" class="flow-lane">任务一：按规则完成回测</text><text x="824" y="44" class="flow-lane">任务二：自主提出并研究问题</text>
+<path class="flow-edge" d="M268 180 V232"/><path class="flow-edge" d="M268 324 V352"/>
+<path class="flow-edge" d="M268 448 V536"/>
+<path class="flow-edge flow-return" d="M88 400 H56 Q48 400 48 392 V152 Q48 144 56 144 H88"/>
+<path class="flow-edge" d="M448 580 H632 Q640 580 640 572 V132 Q640 124 648 124 H824"/>
+<path class="flow-edge" d="M1008 180 V232"/><path class="flow-edge" d="M1008 324 V376"/><path class="flow-edge" d="M1008 468 V536"/>
+<rect x="280" y="476" width="64" height="24" fill="#f6f7f9"/><text x="292" y="493" class="flow-label">通过</text>
+<rect x="60" y="196" width="112" height="24" fill="#f6f7f9"/><text x="68" y="213" class="flow-label">不通过 → 修正</text>
+<g data-node="step-01"><rect x="88" y="88" width="360" height="92" class="flow-node"/><text x="108" y="116" class="flow-node-name" text-anchor="start">01  取数与整理</text><text x="108" y="140" class="flow-note" text-anchor="start">固定基期名单，获取行情和交易日历</text><text x="108" y="164" class="flow-output" text-anchor="start">名单 · 数据 · 取数记录 · 日期表</text></g>
+<g data-node="step-02"><rect x="88" y="232" width="360" height="92" class="flow-node"/><text x="108" y="260" class="flow-node-name" text-anchor="start">02  分别分组并算收益</text><text x="108" y="284" class="flow-note" text-anchor="start">REV1、MOM12–1 各分五组，计算持有收益</text><text x="108" y="308" class="flow-output" text-anchor="start">两套分组名单 · 两张逐期收益表</text></g>
+<g data-node="check"><polygon points="268,352 448,400 268,448 88,400" class="flow-decision"/><text x="268" y="396" class="flow-node-name" text-anchor="middle">核对是否通过？</text><text x="268" y="420" class="flow-note" text-anchor="middle">日期 · 分组 · 收益 · 窗口</text></g>
+<g data-node="step-04"><rect x="88" y="536" width="360" height="92" class="flow-node flow-focal"/><text x="108" y="564" class="flow-node-name" text-anchor="start">04  完成任务一</text><text x="108" y="588" class="flow-note" text-anchor="start">汇总收益率、画 Q1 与 Q5 累计收益率图</text><text x="108" y="612" class="flow-output" text-anchor="start">报告 1–2 页 · 汇总表 · 累计图</text></g>
+<g data-node="step-05"><rect x="824" y="88" width="368" height="92" class="flow-node"/><text x="844" y="116" class="flow-node-name" text-anchor="start">05  自己提出问题，先写计划</text><text x="844" y="140" class="flow-note" text-anchor="start">从任务一的结果或疑点中选一个问题</text><text x="844" y="164" class="flow-output" text-anchor="start">150–200 字计划 · 注明保存时间</text></g>
+<g data-node="step-06"><rect x="824" y="232" width="368" height="92" class="flow-node"/><text x="844" y="260" class="flow-node-name" text-anchor="start">06  完成一次有针对性的比较</text><text x="844" y="284" class="flow-note" text-anchor="start">明确比较对象，保持其他条件可比</text><text x="844" y="308" class="flow-output" text-anchor="start">比较结果 · 尝试记录 · 所需补充数据</text></g>
+<g data-node="step-07"><rect x="824" y="376" width="368" height="92" class="flow-node"/><text x="844" y="404" class="flow-node-name" text-anchor="start">07  完成任务二</text><text x="844" y="428" class="flow-note" text-anchor="start">说明方法、证据，以及结论的适用范围</text><text x="844" y="452" class="flow-output" text-anchor="start">报告 2–3 页 · 至少一张表或图</text></g>
+<g data-node="step-08"><rect x="824" y="536" width="368" height="108" class="flow-node flow-focal"/><text x="844" y="564" class="flow-node-name" text-anchor="start">08  打包提交作业</text><text x="844" y="588" class="flow-note" text-anchor="start">人工核对报告数字与程序输出</text><text x="844" y="612" class="flow-output" text-anchor="start">两份报告 + 数据、代码、结果、计划、README</text></g>
+<line x1="88" y1="676" x2="1192" y2="676" stroke="#cbd2dc"/>
+<rect x="88" y="692" width="16" height="16" fill="#edf1ff" stroke="#002fa7"/><text x="116" y="705" class="flow-legend">蓝框：报告或提交产出</text>
+<polygon points="408,700 416,692 424,700 416,708" fill="#fff" stroke="#17202b"/><text x="436" y="705" class="flow-legend">菱形：检查；不通过需返工</text>
+</svg></div>
+<div class="flow-mobile" aria-label="学生实验步骤"><ol><li><span class="flow-number">01</span><div><h3>取数与整理</h3><p>固定基期名单，获取行情和交易日历</p><p class="flow-deliverable">名单 · 数据 · 取数记录 · 日期表</p></div></li>
+<li><span class="flow-number">02</span><div><h3>分别分组并算收益</h3><p>REV1、MOM12–1 各分五组，计算持有收益</p><p class="flow-deliverable">两套分组名单 · 两张逐期收益表</p></div></li>
+<li><span class="flow-number">03</span><div><h3>核对数据与计算</h3><p>日期、分组、收益和信号窗口是否正确？</p><p class="flow-deliverable">不通过 → 修正数据或程序，再核对</p></div></li>
+<li class="flow-focus"><span class="flow-number">04</span><div><h3>完成任务一</h3><p>汇总收益率、画 Q1 与 Q5 累计收益率图</p><p class="flow-deliverable">报告 1–2 页 · 汇总表 · 累计图</p></div></li>
+<li><span class="flow-number">05</span><div><h3>自己提出问题，先写计划</h3><p>从任务一的结果或疑点中选一个问题</p><p class="flow-deliverable">150–200 字计划 · 注明保存时间</p></div></li>
+<li><span class="flow-number">06</span><div><h3>完成一次有针对性的比较</h3><p>明确比较对象，保持其他条件可比</p><p class="flow-deliverable">比较结果 · 尝试记录 · 所需补充数据</p></div></li>
+<li><span class="flow-number">07</span><div><h3>完成任务二</h3><p>说明方法、证据，以及结论的适用范围</p><p class="flow-deliverable">报告 2–3 页 · 至少一张表或图</p></div></li>
+<li class="flow-focus"><span class="flow-number">08</span><div><h3>打包提交作业</h3><p>人工核对报告数字与程序输出</p><p class="flow-deliverable">两份报告 + 数据、代码、结果、计划、README</p></div></li></ol></div>
+</section>
+<!-- student-flow:end -->
 
 <!-- ============ 01 你要完成什么 ============ -->
 <section id="overview">
