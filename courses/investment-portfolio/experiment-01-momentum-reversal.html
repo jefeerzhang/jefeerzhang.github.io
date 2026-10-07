@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23002FA7'/%3E%3Ctext x='32' y='46' font-size='36' text-anchor='middle' fill='white' font-family='Georgia,serif'%3E%CE%BB%3C/text%3E%3C/svg%3E">
+<title>实验作业 01 · 中证500成分股的动量与反转 — 学生实验手册</title>
+<meta name="description" content="学生实验手册：中证500（000905.SH）2019-12-31 基期名单上，REV1 与 MOM12–1 两个信号的五组等权、一期持有回测，以及任务二自主提出并研究一个问题。Agent 辅助完成提交物，人工持续审核。">
+<style>
+/* ===== 瑞士国际主义 · 克莱因蓝 IKB（与第1/3/4课时讲义同款） ===== */
+:root{
+  --paper:#fafaf8;
+  --paper-rgb:250,250,248;
+  --ink:#0a0a0a;
+  --ink-rgb:10,10,10;
+  --grey-1:#f0f0ee;
+  --grey-2:#d4d4d2;
+  --grey-3:#737373;
+  --accent:#002FA7;
+  --accent-rgb:0,47,167;
+  --accent-on:#ffffff;
+  --mono:"JetBrains Mono","Cascadia Code",Consolas,"Courier New",monospace;
+  --sans:"Inter","Helvetica Neue","Noto Sans SC","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+.container{max-width:880px;margin:0 auto;padding:0 24px}
+
+/* ===== header（纯色，无渐变） ===== */
+header{background:var(--ink);color:#fff;padding:56px 0 40px;border-bottom:6px solid var(--accent)}
+header .tag{font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;font-weight:600}
+header .tag::before{content:"// "}
+header h1{font-size:38px;line-height:1.22;font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+header .sub{font-size:16.5px;color:var(--grey-2);margin-bottom:22px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:12.5px;color:#fff;border:1px solid var(--grey-3);padding:4px 12px;background:rgba(255,255,255,.03);font-weight:500}
+
+/* ===== nav（直角 hairline） ===== */
+nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--grey-2);margin-bottom:28px}
+nav .links{display:flex;gap:0;flex-wrap:wrap;padding:6px 0}
+nav a{font-size:14px;color:var(--grey-3);text-decoration:none;padding:8px 14px;border-left:1px solid var(--grey-2);transition:color .15s;font-weight:500}
+nav a:first-child{border-left:none}
+nav a:hover{color:var(--accent)}
+nav a.on{color:var(--accent);font-weight:600}
+nav a.back{color:var(--accent);font-weight:500;margin-right:8px}
+
+/* ===== sections ===== */
+section{margin-bottom:44px;scroll-margin-top:52px}
+h2{font-size:23px;font-weight:700;color:var(--ink);margin:36px 0 16px;padding:0 0 10px 14px;border-left:6px solid var(--accent);display:flex;align-items:baseline;gap:12px;letter-spacing:-.01em;flex-wrap:wrap}
+h2 .no{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.12em;font-weight:600}
+h3{font-size:17.5px;font-weight:700;margin:24px 0 10px;color:var(--ink)}
+h4{font-size:15.5px;font-weight:700;margin:18px 0 8px;color:var(--ink)}
+p{margin:8px 0}
+ul,ol{margin:8px 0 8px 24px}
+li{margin:5px 0}
+code{font-family:var(--mono);font-size:.86em;background:var(--grey-1);padding:1px 6px;color:var(--ink);font-weight:500}
+strong{font-weight:700}
+a{color:var(--accent)}
+a:hover{color:#0047d0}
+
+/* ===== 卡片（直角纯色） ===== */
+.panel{background:var(--grey-1);border:1px solid var(--grey-2);padding:20px 22px;margin:14px 0}
+.takeaway{border-left:4px solid var(--accent);background:var(--grey-1);padding:12px 18px;font-weight:600;color:var(--ink);margin:14px 0}
+.warnbox{border-left:4px solid var(--ink);background:var(--grey-1);padding:12px 18px;margin:14px 0;font-size:14.5px}
+.note{font-size:14px;color:var(--grey-3);margin:6px 0}
+.case{border:1px solid var(--grey-2);margin:16px 0;background:var(--paper)}
+.case .case-head{background:var(--grey-1);padding:10px 20px;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--grey-2);font-size:15.5px}
+.case .case-body{padding:14px 20px 18px}
+.prompt{background:var(--ink);color:#e8e8e8;padding:14px 18px;font-family:var(--mono);font-size:13.5px;line-height:1.7;margin:10px 0;white-space:pre-wrap;font-weight:400}
+.prompt .plabel{display:block;color:#8fb0ff;font-size:12px;letter-spacing:.12em;margin-bottom:6px;font-weight:600}
+.verdict{font-family:var(--mono);font-size:13.5px;background:var(--grey-1);padding:12px 16px;margin:10px 0;color:var(--ink)}
+.verdict b{color:var(--accent);font-weight:600}
+
+/* ===== 公式块（推导主线） ===== */
+.formula{background:var(--paper);border:1px solid var(--grey-2);border-left:4px solid var(--ink);padding:14px 18px;margin:10px 0;font-family:var(--mono);font-size:14.5px;line-height:1.8;overflow-x:auto}
+.formula .eq{color:var(--grey-3);font-size:12.5px;white-space:nowrap}
+.formula .cap{display:block;color:var(--grey-3);font-size:13px;margin-top:4px;font-family:var(--sans)}
+.formula .hl{color:var(--accent);font-weight:700}
+
+/* ===== 表格（hairline；宽表横向滚动） ===== */
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px}
+th,td{border:1px solid var(--grey-2);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--grey-1);color:var(--ink);font-weight:600;font-size:14px}
+td .mono,th .mono{font-family:var(--mono);font-size:13px}
+.tablewrap{overflow-x:auto;margin:4px 0}
+.tablewrap table{margin:8px 0}
+
+/* ===== 流程链（机制假说 / 时间轴） ===== */
+.chain{display:flex;gap:0;align-items:stretch;flex-wrap:wrap;margin:14px 0}
+.chain .step{flex:1;min-width:150px;background:var(--grey-1);border:1px solid var(--grey-2);padding:12px 14px;font-size:14px}
+.chain .step .t{font-weight:700;display:block;margin-bottom:4px}
+.chain .step .s{font-size:13px;color:var(--grey-3);line-height:1.5}
+.chain .arrow{align-self:center;font-family:var(--mono);color:var(--accent);font-size:18px;padding:0 6px;font-weight:700}
+
+/* ===== 四格要点 ===== */
+.cols4{display:grid;grid-template-columns:repeat(2,1fr);gap:0;margin:12px 0;border:1px solid var(--grey-2)}
+.cols4 .col{border-right:1px solid var(--grey-2);border-bottom:1px solid var(--grey-2);padding:12px 14px;background:var(--paper)}
+.cols4 .col:nth-child(2n){border-right:none}
+.cols4 .col:nth-last-child(-n+2){border-bottom:none}
+.cols4 .col .t{font-weight:700;font-size:14.5px;margin-bottom:4px}
+.cols4 .col .s{font-size:13.5px;color:var(--grey-3);line-height:1.6}
+
+/* ===== 清单 ===== */
+.check{list-style:none;margin-left:0}
+.check li{padding:8px 0 8px 30px;position:relative;border-bottom:1px solid var(--grey-2)}
+.check li::before{content:"☐";position:absolute;left:2px;font-size:17px;color:var(--accent);font-weight:700}
+.check li:last-child{border-bottom:none}
+
+/* ===== footer ===== */
+footer{margin-top:48px;padding:28px 0 48px;border-top:2px solid var(--accent);color:var(--grey-3);font-size:13.5px}
+footer .mono{font-size:12.5px}
+footer strong{color:var(--ink)}
+
+/* ===== 响应式 ===== */
+@media (max-width:760px){
+  header h1{font-size:28px}
+  header{padding:40px 0 28px}
+  .cols4{grid-template-columns:1fr}
+  .cols4 .col{border-right:none;border-bottom:1px solid var(--grey-2)}
+  .cols4 .col:last-child{border-bottom:none}
+  .chain{flex-direction:column}
+  .chain .arrow{transform:rotate(90deg);padding:4px 0}
+}
+@media print{
+  nav{display:none}
+  body{background:#fff}
+  .prompt{background:#f0f0f0;color:#222}
+  .prompt .plabel{color:#002FA7}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="tag">第7章 · 实验作业 01</div>
+    <h1>中证500成分股的动量与反转</h1>
+    <div class="sub">学生实验手册——独立完成两项任务：任务一完成 REV1 与 MOM12–1 两个信号的基准回测，任务二围绕动量与反转自主提出并研究一个问题。使用 Agent 完成提交物，需要人工持续审核 Agent 产物。</div>
+    <div class="chips">
+      <span class="chip">独立完成</span>
+      <span class="chip">两项任务各占 50%</span>
+      <span class="chip">80 个形成月</span>
+      <span class="chip">2019-12 → 2026-09</span>
+      <span class="chip">中证500 基期名单</span>
+      <span class="chip">建议一周内提交</span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="container links">
+    <a href="index.html" class="back">← 课程主页</a>
+    <a href="#overview">概览</a>
+    <a href="#rules">共同规则</a>
+    <a href="#task1">任务一</a>
+    <a href="#task2">任务二</a>
+    <a href="#prompt">Agent 提示</a>
+    <a href="#appendix">附录</a>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- ============ 01 你要完成什么 ============ -->
+<section id="overview">
+  <h2><span class="no">01</span> 你要完成什么</h2>
+
+  <p><strong>股票池：2019-12-31 的中证500成分股。</strong> 名单固定，整个研究时期保持不变。</p>
+
+  <div class="tablewrap">
+  <table>
+    <tr><th>任务</th><th>要做的事</th><th>完成标准</th><th>报告正文</th></tr>
+    <tr>
+      <td class="mono">任务一：完成基准回测</td>
+      <td>按给定规则，完成 REV1 与 MOM12–1 两个信号的五组等权、一期持有回测</td>
+      <td>按规定完成计算，结果与代码输出一致</td>
+      <td class="mono">1–2 页</td>
+    </tr>
+    <tr>
+      <td class="mono">任务二：自己提出一个问题</td>
+      <td>围绕动量与反转提出一个具体问题，设计并完成至少一次有针对性的数据比较</td>
+      <td>问题明确，比较有针对性，结论有依据</td>
+      <td class="mono">2–3 页</td>
+    </tr>
+  </table>
+  </div>
+
+  <div class="takeaway">先完成任务一，再开展任务二。建议一周内提交，附件不计入报告页数。两项任务可共用数据与基础代码，README 写清各自的运行方法。使用 Agent 完成下面提交物，需要人工持续审核 Agent 产物。</div>
+
+  <div class="panel">
+    <p style="margin-top:0"><strong>作业提交链接</strong>：<a href="https://send2me.cn/3xHoO1MW/T82uuxFqG-bdyA" target="_blank" rel="noopener">https://send2me.cn/3xHoO1MW/T82uuxFqG-bdyA</a>　·　建议一周内完成。</p>
+  </div>
+
+  <h3>提交物清单</h3>
+  <p>文件名可以不同，但每项都要交，并在 README 里指到对应文件。</p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>提交物</th><th>内容</th><th>属于</th></tr>
+    <tr><td class="mono">report_task1.pdf</td><td>任务一报告正文 1–2 页</td><td class="mono">一</td></tr>
+    <tr><td class="mono">report_task2.pdf</td><td>任务二报告正文 2–3 页</td><td class="mono">二</td></tr>
+    <tr><td class="mono">data/manifest.csv</td><td>取数时间、接口、参数、日期范围、行数、文件路径</td><td class="mono">一</td></tr>
+    <tr><td class="mono">data/</td><td>本人取回的名单、行情、日历、简称等原始与整理后数据</td><td class="mono">共用</td></tr>
+    <tr><td class="mono">scripts/</td><td>能跑出下面全部结果表图的代码</td><td class="mono">共用</td></tr>
+    <tr><td class="mono">results/dates.csv</td><td>日期表：形成日、建仓日、退出日、该期能否算出完整收益、两个信号各自的分组只数 <span class="mono">n_grouped</span>、实际持有只数 <span class="mono">n_held</span></td><td class="mono">一</td></tr>
+    <tr><td class="mono">results/groups_rev1.csv、results/groups_mom.csv</td><td>两套分组名单，含是否建仓及未建仓原因</td><td class="mono">一</td></tr>
+    <tr><td class="mono">results/returns_rev1.csv、results/returns_mom.csv</td><td>逐期 Q1 至 Q5 收益率与收益率差</td><td class="mono">一</td></tr>
+    <tr><td class="mono">results/summary.csv</td><td>两个信号的汇总表</td><td class="mono">一</td></tr>
+    <tr><td class="mono">results/figure_cum.png</td><td>两个信号的 Q1、Q5 累计收益率图</td><td class="mono">一</td></tr>
+    <tr><td class="mono">results/missing.csv</td><td>缺失登记表：情形、代码、期次、处理方式</td><td class="mono">一</td></tr>
+    <tr><td class="mono">plans/task2_plan.md</td><td>扩展计算之前保存的任务二计划，注明时间</td><td class="mono">二</td></tr>
+    <tr><td class="mono">README.md</td><td>环境、运行方法、结果表图如何复现</td><td class="mono">共用</td></tr>
+  </table>
+  </div>
+
+  <div class="warnbox"><strong>如实报告结果</strong>，包括不显著或与预期相反的结果。</div>
+</section>
+
+<!-- ============ 02 共同规则 ============ -->
+<section id="rules">
+  <h2><span class="no">02</span> 共同规则</h2>
+
+  <h3>重要概念解释</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>概念</th><th>含义</th></tr>
+    <tr><td>基期名单</td><td>2019-12-31 的中证500成分股，实验期内不变</td></tr>
+    <tr><td>形成日</td><td>某月最后一个交易日，收盘后算信号、排序、分组</td></tr>
+    <tr><td>建仓日</td><td>月末选股后的第一个交易日，按收盘价买入</td></tr>
+    <tr><td>退出日</td><td>下个月月末选股后的第一个交易日，按收盘价卖出旧组合；如有下一期，同时建立新组合</td></tr>
+    <tr><td>一期</td><td>建仓日收盘至退出日收盘，约一个自然月但不对齐月末</td></tr>
+    <tr><td>信号值</td><td>REV1 或 MOM12–1 在形成日的数值，越大越靠 Q5</td></tr>
+    <tr><td>Q1 至 Q5</td><td>同一信号按信号值从低到高的五组，Q1 最低、Q5 最高</td></tr>
+    <tr><td>入组</td><td>股票进入当期 Q1–Q5 分组：选股当天未停牌、价格可核验、历史数据足够计算该信号，且当时不是 ST／*ST／退市标记股票</td></tr>
+    <tr><td>收益率差</td><td>同一期 Q5 收益率减去 Q1 收益率</td></tr>
+    <tr><td>复权价格 P</td><td>按 2.3 口径复权后的价格</td></tr>
+    <tr><td>实际统计期数</td><td>最终用于计算平均收益率等结果的期数：持有期已结束，五组收益率均能算出。例如，80 期中有 2 期无法算出完整收益，实际统计期数就是 78</td></tr>
+  </table>
+  </div>
+
+  <h3>2.1 股票池与数据</h3>
+  <ol>
+    <li>通过 <code>index_weight</code> 获取 <code>index_code='000905.SH'</code>、<code>start_date='20191231'</code>、<code>end_date='20191231'</code> 的基期名单，保存代码和返回记录。不得改用后来日期的成分名单。</li>
+    <li>核对你自己取回的名单：快照日期须为 2019-12-31，代码去重后的只数与返回行数一致，与中证500的常规规模（约 500 只）相符。有差异就登记下来并说明原因。此后的股票池只用这一份名单，发现少取或多取都在此步修正，不得中途改用其他日期的成分名单。</li>
+    <li>独立获取以下数据，任务二需要其他字段时再补取。</li>
+  </ol>
+
+  <div class="tablewrap">
+  <table>
+    <tr><th>数据用途</th><th>常用接口</th><th>要保留的信息</th></tr>
+    <tr><td>基期名单</td><td class="mono">index_weight</td><td class="mono">con_code、快照日期</td></tr>
+    <tr><td>形成、建仓与退出日期</td><td class="mono">trade_cal</td><td class="mono">cal_date、is_open</td></tr>
+    <tr><td>价格与复权</td><td class="mono">daily、adj_factor</td><td class="mono">ts_code、trade_date、close、pct_chg、adj_factor</td></tr>
+    <tr><td>上市、退市与历史简称</td><td class="mono">stock_basic、namechange</td><td>上市／退市日期、历史简称及起止日期、退市原因（简称须按当时记录）</td></tr>
+    <tr><td>核实停牌或价格缺口</td><td>按缺口补取 <code>suspend_d</code> 等</td><td>停复牌日期及缺失原因</td></tr>
+  </table>
+  </div>
+
+  <p>获取 <strong>2018-12-01 至 2026-09-01</strong> 的日线价格和复权因子，保留月末、建仓日及退出日的数据，不能只用月线。</p>
+
+  <div class="panel">
+    <p style="margin-top:0"><strong>为什么要取 2018 年的数据？</strong> 首个形成日是 2019-12-31。计算当天的 MOM12–1 信号，要跳过 2019 年 12 月，用 <strong>2018 年 12 月末至 2019 年 11 月末</strong>的价格计算此前 11 个月的累计收益率。因此，取数必须早于实验开始日期，从 2018-12-01 开始即可。</p>
+  </div>
+
+  <p>任务二需要更早或更晚的数据时再补取。回看窗口内尚未上市或历史不足的股票，等数据足够计算信号后再参与分组，不补造缺失价格。</p>
+  <p><code>stock_basic</code> 分别查询 <code>list_status='L'</code>、<code>'D'</code>、<code>'P'</code>，合并并去重，显式保留 <code>list_date</code> 和 <code>delist_date</code>。默认只返回上市股票，不能据此漏掉基期名单中后来退市或暂停上市的股票。</p>
+  <p>历史简称按形成日匹配 <code>namechange</code> 的起止日期。<code>end_date</code> 为空视为尚未结束；重叠记录取 <code>start_date</code> 较晚的一条，同日重复记录去重，仍有冲突则登记，不猜测当时简称。</p>
+  <p>先试取少量股票，再分批取数并保存进度。检查分页、行数和日期覆盖，确保数据完整；历史状态须包含后来退市的股票。</p>
+
+  <div class="warnbox">在 <code>data/manifest.csv</code> 登记取数时间、接口、参数、日期范围、行数和文件路径。权限不足或数据缺失时记录并向教师反馈。提交包不含密码或密钥。</div>
+
+  <h3>2.2 形成日、信号与持有收益</h3>
+  <p>预设形成月为 <strong>2019-12 至 2026-07，共 80 个</strong>。第一个形成日是 2019-12-31，最后一期在 2026-09-01 收盘退出，80 期的收益在你提交时都已公布。每个月做一次选股和分组，按以下顺序计算：</p>
+
+  <div class="tablewrap">
+  <table>
+    <tr><th>步骤</th><th>什么时候做</th><th>具体做什么</th></tr>
+    <tr>
+      <td class="mono">① 选股和分组</td>
+      <td>本月最后一个交易日收盘后，称为"形成日"</td>
+      <td>用当天及以前的数据计算信号、排序、分组</td>
+    </tr>
+    <tr>
+      <td class="mono">② 建仓</td>
+      <td>月末选股后的第一个交易日收盘</td>
+      <td>买入选出的股票，建立等权组合，开始计算持有收益</td>
+    </tr>
+    <tr>
+      <td class="mono">③ 退出并换仓</td>
+      <td>下个月月末选股后的第一个交易日收盘</td>
+      <td>卖出旧组合，计算本期收益；如有下一期，同时买入新组合</td>
+    </tr>
+  </table>
+  </div>
+
+  <div class="takeaway">历史收益用于选股，建仓后的收益用于检验表现，两者分开计算。从下一交易日收盘建仓，不计形成日收盘至建仓日收盘的涨跌，与月末到月末口径不同，研究结果不能直接比较。任务二可研究改变建仓时点后的结果。</div>
+
+  <h4>例如，最后一期（2026 年 7 月形成）</h4>
+  <div class="chain">
+    <div class="step"><span class="t">7 月 31 日收盘后选股</span><span class="s">使用当天及以前的数据</span></div>
+    <div class="arrow">→</div>
+    <div class="step"><span class="t">8 月 3 日收盘建仓</span><span class="s">本期收益的起点</span></div>
+    <div class="arrow">→</div>
+    <div class="step"><span class="t">9 月 1 日收盘退出</span><span class="s">本期收益的终点；8 月的最后一个交易日是 8 月 31 日，它之后的第一个交易日是 9 月 1 日</span></div>
+  </div>
+  <p>这一期计算 <strong>8 月 3 日至 9 月 1 日</strong>的持有收益，不是月末到月末的收益。</p>
+
+  <p>日期表至少核对以下三行：</p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>形成日</th><th>建仓日</th><th>退出日</th></tr>
+    <tr><td class="mono">2019-12-31（首期）</td><td class="mono">2020-01-02</td><td class="mono">2020-02-03</td></tr>
+    <tr><td class="mono">2020-01-23</td><td class="mono">2020-02-03</td><td class="mono">2020-03-02</td></tr>
+    <tr><td class="mono">2026-07-31（末期）</td><td class="mono">2026-08-03</td><td class="mono">2026-09-01</td></tr>
+  </table>
+  </div>
+  <p>形成日、建仓日和退出日均按交易日历确定。只统计持有期已结束且五组收益率均可计算的期次，其余单独标记。两个信号分别报告实际统计期数。</p>
+
+  <h3>2.3 复权、入组与缺失处理</h3>
+  <p><strong>除任务二专门研究成本外，所有收益率及收益率差均不扣交易成本。</strong> 程序和 CSV 中统一用小数，如 <code>0.03</code>；报告显示为 <code>3%</code>，收益率差及其标准差、标准误和置信区间用百分点。</p>
+  <p>使用同一复权口径计算收益率：</p>
+  <div class="formula">R(a,b) = ( close<sub>b</sub> / close<sub>a</sub> ) × ( adj_factor<sub>b</sub> / adj_factor<sub>a</sub> ) − 1</div>
+  <p><code>close</code> 为未复权收盘价，<code>adj_factor</code> 为复权因子；公式中的 a、b 为起止日期。</p>
+  <p>后文公式中的 P 表示按上述口径复权的价格。<strong>价格可核验</strong>指同一股票当日有 <code>daily</code> 记录且 <code>close&gt;0</code>，同日有有效且大于零的 <code>adj_factor</code>。价格与因子不跨日期混配。</p>
+  <p>信号所需月末端点都须当天可核验，缺一个端点就不计算该股票的该信号，不往前取价。建仓也须当天可核验；只有退出估值允许沿用此前最近一个价格和因子同日齐全的记录。</p>
+
+  <h4>逐期将下列情况登记在 <code>results/missing.csv</code></h4>
+  <div class="tablewrap">
+  <table>
+    <tr><th>情形</th><th>统一处理</th><th>要记录什么</th></tr>
+    <tr><td>形成日停牌或价格不可核验</td><td>这只股票当期不参加两个信号的分组</td><td>代码、期次、原因</td></tr>
+    <tr><td>历史不足或信号端点不可核验</td><td>不参加算不出的信号分组；另一信号符合条件仍可参加</td><td>代码、信号、缺失端点日期及原因</td></tr>
+    <tr><td>形成日历史简称含 ST／*ST／退</td><td>这只股票当期不参加两个信号的分组</td><td>代码、当时简称及生效区间</td></tr>
+    <tr><td>建仓日价格或因子不可核验</td><td>保留原分组，标记未建仓；预留资金留现金，不分给其他股票</td><td>代码、期次、原因、现金比例</td></tr>
+    <tr><td>中途停牌，建仓和退出价格均可核验</td><td>照常计算持有收益</td><td>无</td></tr>
+    <tr><td>退出日价格或因子不可核验，且持有期内未退市</td><td>沿用退出日前最近可核验估值，不删股票、不重新分配权重</td><td>代码、期次、报价日期</td></tr>
+    <tr><td>持有期内退市</td><td>优先按下文退市规则处理，不按普通缺价处理</td><td>代码、期次、退市日期、原因及来源、报价日期、权重</td></tr>
+  </table>
+  </div>
+
+  <p><strong>退市估值：</strong> 主结果统一用退出日及以前最后可核验的价格和同日因子；这只是估值假设，不代表实际回收金额。汇总表、累计图和 NW 检验都用这套主结果。</p>
+  <div class="warnbox">强制退市的持仓另做零回收敏感性计算：该持仓终值设为零，其他规则不变。汇总表按受影响信号增加一行，报告平均收益率差及相对主结果的变化，不另画整套图。合并、私有化等退市不设零回收，沿用最后交易日的可核验估值。原因无法确认时标记"原因待核"，不自动归为强制退市；无退市持仓则注明"无"。</div>
+  <p>以后满足条件可重新入组。不要用后来退市的信息倒推过去资格，不补造上市前价格，不给退出缺价股票记零收益。</p>
+</section>
+
+<!-- ============ 03 任务一 ============ -->
+<section id="task1">
+  <h2><span class="no">03</span> 任务一：完成两个信号的基准回测（50%）</h2>
+
+  <h3>3.1 两个固定信号</h3>
+  <p>公式中的日期分别为当月、上月和十二个月前的最后一个交易日，价格均为复权价格。</p>
+
+  <h4>REV1：一月反转</h4>
+  <div class="formula">REV1<sub>t</sub> = −( P<sub>Tt</sub> / P<sub>Tt−1</sub> − 1 )</div>
+  <p><strong>形成月收益率</strong>是上个月最后一个交易日至本月形成日的收益率，取负得到 REV1。例如，形成月涨 8%，信号为 −8%；形成月跌 6%，信号为 +6%。</p>
+
+  <h4>MOM12–1：中期动量</h4>
+  <div class="formula">MOM12−1<sub>t</sub> = P<sub>Tt−1</sub> / P<sub>Tt−12</sub> − 1</div>
+  <p>回看 12 个月，跳过最近 1 个月，计算此前 11 个月的累计收益率。过去涨得越多，信号越大。例如，窗口内累计涨 20%，信号为 +20%。</p>
+
+  <div class="takeaway">两个信号都<strong>持有一期</strong>，日期按 2.2 确定。各自筛选符合条件的股票，股票数和完整收益期数可能不同。任务一计算理论收益率，不考虑真实成交限制或借券条件。</div>
+
+  <h3>3.2 操作步骤</h3>
+  <p class="note">以下数字均为算法示例。</p>
+
+  <h4>第一步：整理数据和日期</h4>
+  <p>保存基期名单、取数清单和数据。生成日期表，每行一期，列出形成日、建仓日、退出日、该期能否算出完整收益，以及两个信号各自的分组只数 <code>n_grouped</code> 和实际持有只数 <code>n_held</code>。</p>
+
+  <h4>第二步：按 REV1 和 MOM12–1 分别排序、分组</h4>
+  <p>每个形成日，分别按两个信号从低到高排序，信号相同按股票代码升序排序。排序后从第 0 只开始编号，按下式分入 Q1 至 Q5：</p>
+  <div class="formula">组号 = ⌊ 5i / n ⌋ + 1</div>
+  <p>其中，i 为排序位置，n 为该信号当期分组股票总数，方括号表示向下取整。五组只数相差最多 1 只；500 只时，每组 100 只。分组只看形成日信息，建仓日缺价后不重新排序或分组。</p>
+
+  <div class="tablewrap">
+  <table>
+    <tr><th>信号</th><th>Q1：信号最低</th><th>Q5：信号最高</th><th>要检验的问题</th></tr>
+    <tr>
+      <td class="mono">REV1（一月反转）</td>
+      <td>形成月表现最好的一组</td>
+      <td>形成月表现最差的一组</td>
+      <td>过去输家能否跑赢过去赢家？</td>
+    </tr>
+    <tr>
+      <td class="mono">MOM12–1（中期动量）</td>
+      <td>历史窗口内表现最差的一组</td>
+      <td>历史窗口内表现最好的一组</td>
+      <td>过去赢家能否继续跑赢过去输家？</td>
+    </tr>
+  </table>
+  </div>
+
+  <p>保存<strong>两套分组名单</strong>，包括形成日、信号名称、股票代码、信号值、组别、是否建仓及未建仓原因。每只股票在每套名单中只进入一组，在两套名单中可以属于不同组。</p>
+  <p>组内等权按<strong>形成日分组只数</strong>分配资金。原定 100 只，每只占初始资金的 1%；若仅 99 只能建仓，其他股票仍各占 1%，剩余 1% 留作现金，现金收益设为零。</p>
+  <p>每个信号逐期记录总计及各组的分组只数 <code>n_grouped</code>、实际持有只数 <code>n_held</code>，以及被排除或未建仓的原因。可用股票明显减少时，检查数据是否取全、筛选程序是否正确，并说明原因。无法完成五组分组或计算完整收益的期次单独记录，不纳入统计，也不填零。</p>
+
+  <h4>第三步：计算各组持有收益率</h4>
+  <p>按 2.3 计算每只已建仓股票的持有收益率。组收益率为：已建仓股票收益率之和，除以形成日该组分组只数。所有股票都建仓时，就是组内算术平均。例如，三只都建仓：</p>
+  <div class="formula">r<sub>组</sub> = ( 6% + (−3%) + 0% ) / 3 = 1%</div>
+  <p>若原定三只，只有前两只能建仓，第三只对应资金留作现金：</p>
+  <div class="formula">r<sub>组</sub> = ( 6% + (−3%) ) / 3 = 1%</div>
+  <p>此时分母仍为 3，不改成 2；这里的零收益来自现金，不是给缺价股票补零收益。</p>
+  <p>持有期内保持已建仓股票的名单和股数，不重新分组或每天恢复等权；下一期重新选股、分组。停牌和缺失按 2.3 处理。</p>
+
+  <h4>第四步：汇总收益率和收益率差</h4>
+  <p>两个信号分别保存逐期结果，每行列出 Q1 至 Q5 收益率，以及 <strong>Q5 收益率减去 Q1 收益率</strong>，简称"收益率差"：</p>
+  <div class="formula">spread<sub>t</sub> = r<sub>Q5,t</sub> − r<sub>Q1,t</sub></div>
+  <p>例如，Q5 为 −2.0%、Q1 为 −2.5%，收益率差为 +0.5 个百分点，表示 Q5 少亏了 0.5 个百分点。REV1 的差为正，表示过去输家跑赢；MOM12–1 的差为正，表示过去赢家跑赢。Q1 栏填股票本身的收益率，不能取负后填入。</p>
+  <p>汇总表每个信号一行，列出：</p>
+  <ul>
+    <li><strong>各组平均收益率</strong>：分别计算 Q1 至 Q5 在全部有效期次中的平均收益率。</li>
+    <li><strong>收益率差的均值与标准差</strong>：分别说明 Q5 平均比 Q1 高多少，以及这个差值逐期波动多大。</li>
+    <li><strong>实际统计期数</strong>：参与计算的完整收益期数。例如，78 期填 78，不乘股票数；各期收益可能相关，不能视为相互独立。</li>
+    <li><strong>均值检验</strong>：报告收益率差均值的 Newey–West 检验统计量和近似 95% 置信区间，滞后阶数固定为 3。</li>
+  </ul>
+  <p>计算检验时，将逐期收益率差作为因变量，只放常数项，采用 Newey–West（HAC）标准误。常数项估计值就是收益率差均值；用该标准误计算：</p>
+  <div class="formula">t = spread 均值 / SE<sub>NW</sub><br>近似 95% 置信区间 = spread 均值 ± 1.96 × SE<sub>NW</sub></div>
+  <p>其中，SE 表示均值的标准误，不是逐期收益率差的标准差。以下 Python 示例适用于<strong>没有缺期的连续月度序列</strong>：</p>
+
+  <div class="prompt"><span class="plabel">PYTHON · Newey–West（HAC）均值检验</span>import numpy as np
+import statsmodels.api as sm
+
+values = np.asarray(spread, dtype=float)
+model = sm.OLS(values, np.ones(len(values))).fit(
+    cov_type="HAC", cov_kwds={"maxlags": 3}, use_t=False
+)
+mean = model.params[0]
+se = model.bse[0]
+t_stat = model.tvalues[0]
+ci95 = (mean - 1.96 * se, mean + 1.96 * se)</div>
+
+  <div class="warnbox"><code>spread</code> 为按形成月顺序排列的小数收益率差。有排除期时，NW 滞后仍按真实月份间隔计算，只使用两端均有效的月份配对；不能删掉缺期后直接运行上述代码，也不能给缺期填零收益。</div>
+
+  <h4>第五步：画累计收益率图</h4>
+  <p>每个信号画 Q1、Q5 两条曲线，可放在一张图的两个面板中。横轴为退出日期，纵轴为累计收益率，起点为 0；注明信号、覆盖区间、统计期数及排除的期次。</p>
+  <p>累计收益按复利计算。例如，100 元先涨 10%、再跌 10%，最终为 99 元，累计收益率为 −1%。公式为：</p>
+  <div class="formula">C<sub>g,n</sub> = Π<sub>j=1..n</sub> (1 + r<sub>Qg,j</sub>) − 1，g ∈ {1, 5}</div>
+  <p>对 Q1、Q5 分别将每期收益率加 1 后连乘，再减 1，不能把收益率差直接复利后称为多空净值。缺期处断线，后续从此前累计值继续计算；注明仅累计有效期，不能解释为连续持仓净值，也不能给缺期填零。</p>
+
+  <h3>3.3 检查与报告</h3>
+  <p>保存以下检查结果：</p>
+  <ul>
+    <li><strong>时点</strong>：信号只用形成日及以前的数据，建仓日严格晚于形成日，退出日严格晚于建仓日。</li>
+    <li><strong>分组</strong>：形成日名单无重复、无漏分组，组号符合指定公式，各组 <code>n_grouped</code> 相差最多 1 只；<code>n_held</code> 不超过 <code>n_grouped</code>，不要求实际持有只数均分。</li>
+    <li><strong>收益检查</strong>：将全部已建仓股票的收益率加总，除以形成日分组总只数；再将五组收益率按各组 <code>n_grouped</code> 加权平均，两者应一致。未建仓资金按零收益现金计入，不把缺价股票记成零收益。</li>
+    <li><strong>抽样收益核对</strong>：抽取几只股票、几个价格齐全且无特殊估值的持有期，将建仓日之后至退出日（含）的 <code>daily.pct_chg</code> 除以 100 后逐日复利，与 2.3 的复权价格法比较，保存两种结果和差值。不能漏掉有效交易记录；差异明显时检查日期、行情缺口和除权处理，不强行认定只有舍入误差。</li>
+    <li><strong>信号窗口核对</strong>：对同时能计算两个信号的股票，检查下面的关系。右侧直接取相应月末价格，核对实际日期；这能检查窗口衔接，不能证明复权数据本身正确。</li>
+  </ul>
+  <div class="formula">( 1 + MOM12−1<sub>t</sub> ) × ( 1 − REV1<sub>t</sub> ) = P<sub>Tt</sub> / P<sub>Tt−12</sub></div>
+  <p>检查用于核对数据和计算，不要求结果显著、方向符合预期或超过随机信号。</p>
+
+  <h4>跑完对照下面的清单自查</h4>
+  <ul class="check">
+    <li>80 个形成月（2019-12 至 2026-07）都在日期表里，三个日期全部由交易日历推出。</li>
+    <li>两个信号各有一套分组名单和一张逐期收益表，两者的实际统计期数可以不同。</li>
+    <li>Q1 栏填的是按分组资金及现金计算的组收益率，没有预先取负。</li>
+    <li>收益率差 = Q5 − Q1，汇总表、逐期表和图上的符号一致。</li>
+    <li>缺失登记表的每条都能对应到日期表里的期次，没有给缺价股票填零收益或补造价格。</li>
+    <li>报告里的每个数字都能用提交的代码重跑出来。</li>
+  </ul>
+
+  <h4>任务一报告正文 1–2 页，包括</h4>
+  <ul>
+    <li><strong>数据与方法</strong>：基期名单、取数时间、行情最后交易日、统计期数、信号及持有规则。</li>
+    <li><strong>结果</strong>：一张汇总表、一张累计收益率图，标注沿用最近估值的持仓和被排除的期次。</li>
+    <li><strong>简短说明</strong>：概括结果及局限。运行方法统一写在 README；深入分析留给任务二。</li>
+  </ul>
+</section>
+
+<!-- ============ 04 任务二 ============ -->
+<section id="task2">
+  <h2><span class="no">04</span> 任务二：自主提出并研究一个问题（50%）</h2>
+
+  <h3>4.1 提出一个具体问题</h3>
+  <p>从任务一的结果或疑点出发，提出<strong>一个能用数据比较回答的问题</strong>。沿用基期股票池，需补取数据时说明用途。</p>
+  <p>下面只是启发，可以另提问题：</p>
+  <ol>
+    <li>1 个月与 3 个月反转的结果是否一致？</li>
+    <li>6–1 与 12–1 动量的收益方向是否相同？</li>
+    <li>某个信号的平均收益是否主要由少数月份贡献？</li>
+    <li>形成日前市场上涨与下跌时，信号表现是否不同？</li>
+    <li>等权和市值加权的差异是否来自少数大权重股票？</li>
+    <li>考虑交易约束和交易成本后，Q5 组合的收益率会发生多大变化？也可只研究其中一项。</li>
+  </ol>
+  <div class="takeaway">只研究一个问题，可以自选。比较应回答问题，不能只挑收益最高的参数。</div>
+
+  <h3>4.2 先写计划，再开展比较</h3>
+  <p>完成任务一后，在扩展计算之前保存 <strong>150–200 字</strong>左右的 <code>plans/task2_plan.md</code>，注明时间，写清：</p>
+  <ol>
+    <li>我从什么结果或疑点提出这个问题？</li>
+    <li>我准备比较哪两个对象、区间或规则，哪些口径保持一致？</li>
+    <li>不同的比较结果分别会支持或削弱什么判断？</li>
+  </ol>
+  <p>保存计划后即可开展；修改问题或规则时保留原计划，记录原因。</p>
+
+  <h3>4.3 完成比较并给出判断</h3>
+  <p>完成<strong>至少一次有针对性的比较</strong>，写清比较对象、改变的条件、计算规则和样本量，持有区间保持可比。数据不足时可调整问题，并记录理由。</p>
+  <p>保留尝试结果，说明它们支持什么判断、还不能说明什么。关联不能直接解释为因果关系。</p>
+  <div class="case">
+    <div class="case-head"><span>例子：比较一月与三月反转</span></div>
+    <div class="case-body">
+      <p style="margin-top:0">只改变信号窗口，保持股票池、形成日期、分组和持有规则一致，在共同可用样本上比较收益率及置信区间。</p>
+    </div>
+  </div>
+
+  <h3>4.4 任务二报告</h3>
+  <p>正文 <strong>2–3 页</strong>，按四部分写：</p>
+  <div class="cols4">
+    <div class="col"><div class="t">① 问题</div><div class="s">研究问题及其来源，简述扩展计算前的计划。</div></div>
+    <div class="col"><div class="t">② 比较方法</div><div class="s">比较对象、保持一致和改变的条件、补取的数据。</div></div>
+    <div class="col"><div class="t">③ 结果</div><div class="s">至少一张能够回答问题的表或图，列出关键数字与实际样本量。</div></div>
+    <div class="col"><div class="t">④ 判断与边界</div><div class="s">结果支持、削弱或改变了什么判断；哪些问题仍无法回答。</div></div>
+  </div>
+  <p>可复用任务一的数据和代码，在 README 中写清任务二的运行方法。</p>
+</section>
+
+<!-- ============ 05 驱动 Agent 的提示案例 ============ -->
+<section id="prompt">
+  <h2><span class="no">05</span> 驱动 Agent 的提示案例</h2>
+  <p>将本手册提供给 Agent，再复制下面的提示。任务二的问题由你根据任务一结果提出。</p>
+  <div class="prompt"><span class="plabel">COPY · 驱动 Agent 的提示（复制使用）</span>请依据这份实验手册，协助我完成中证500动量与反转实验。按以下顺序推进：
+
+1. 阅读手册，列出任务一的步骤、必要数据和结果要求。检查我的 tushare MCP 支持哪些接口；权限或数据不足时说明具体缺口。
+2. 先试取少量股票，检查日期、字段和返回行数，再分批获取完整数据。保存取数记录和数据，中断后能继续。
+3. 按手册分别计算 REV1 和 MOM12–1，完成五组等权、一期持有回测。先用小样本检查流程，正式结果使用完整基期名单。保存日期表、分组名单和程序检查结果。
+4. 输出任务一汇总表及 Q1、Q5 累计收益率图。简要解释结果，指出值得进一步研究的疑点；不预设收益方向或显著性。
+5. 完成任务一后，先等我提出任务二的问题。根据我的问题，协助明确比较对象、保持一致的条件和需要补取的数据；我保存研究计划后，再开展比较。
+
+所有结果使用实际数据计算，保留实际尝试的结果。数据缺失时按手册处理，不编造价格或将缺价股票收益填零；未建仓资金按现金处理。保存代码、参数和结果，在 README 中写明运行方法。报告数字须与程序输出一致；结论由我审阅后确定。
+
+现在从第 1 步开始。</div>
+</section>
+
+<!-- ============ 06 附录 ============ -->
+<section id="appendix">
+  <h2><span class="no">06</span> 附录：按选题查阅</h2>
+  <p class="note">仅在任务二需要时使用。</p>
+
+  <h3>信号窗口</h3>
+  <p>三月反转取最近 3 个完整月末区间的收益率，再取负。6–1 动量跳过最近一个月，累计此前 5 个月：</p>
+  <div class="formula">MOM6−1<sub>t</sub> = P<sub>Tt−1</sub> / P<sub>Tt−6</sub> − 1</div>
+  <p>写清窗口日期，使用共同可用样本，区分窗口变化与样本变化的影响。</p>
+
+  <h3>市场状态与事件</h3>
+  <p>市场状态只用形成日及以前的信息；当期指数和股票组合使用相同持有区间。事件研究写清日期及选期规则。</p>
+
+  <h3>延长持有期</h3>
+  <p>每次建仓的一批股票称为"队列"，期间保持名单，持有满设定期数后退出。滚动策略按持有期数等分初始资金。例如，持有 3 期就分 3 份，每期新建一个队列，未使用资金留作现金。到期先退出，再投入新队列；保留无法卖出的持仓，记录现金及权重变化。</p>
+  <p>比较累计持有路径，分别累计同一队列的 Q5、Q1 收益率后相减。主曲线使用同一批走完最长期限的队列，另列各期限可用队列数。滚动策略净值与单队列路径分开画图；持有区间重叠时说明收益依赖，不能仅靠增加 NW 滞后保证推断可靠。</p>
+
+  <h3>交易约束与成本</h3>
+  <p>按订单方向判断：涨停挡买、跌停挡卖，停牌单列。用未复权 <code>daily.close</code> 与同日 <code>stk_limit</code> 比较，不能统一假设涨跌幅限制为 10%。日线只能近似判断成交。</p>
+  <p>首期从现金买入，没有卖单就不统计"卖出受阻"。保留未成交持仓和现金，分别统计触及限价的股票数与受阻订单数。先比较 Q5 基准与交易情景的收益率，再按实际成交金额扣成本。只扣多头成本，不能称为完整多空策略收益率。</p>
+
+  <h3>参考口径</h3>
+  <p><a href="https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/Data_Library/det_mom_factor.html" target="_blank" rel="noopener">Kenneth French 月度动量说明</a>采用跳过最近月的 prior 2–12 收益；本实验采用自己的固定股票池和五组等权规则。<a href="https://tushare.pro/document/2?doc_id=27" target="_blank" rel="noopener">Tushare 日线说明</a>与<a href="https://tushare.pro/document/2?doc_id=28" target="_blank" rel="noopener">复权因子说明</a>可供接口与字段核对，实际取数参数以本人 MCP 工具提供的接口为准。</p>
+</section>
+
+</div>
+
+<footer>
+  <div class="container">
+    <p><strong>数据与口径声明</strong></p>
+    <p class="note">本页为《学生实验手册 · 中证500成分股的动量与反转》在线任务书，规则以教师下发的 Markdown 原件为权威版本。任务一计算理论收益率，不扣交易成本（任务二专门研究成本除外）；程序与 CSV 中收益率统一用小数，报告用百分点。取数、复权、入组与缺失处理按手册 2.1、2.3 执行，不给缺价股票补零收益、不补造价格。作业提交链接：<a href="https://send2me.cn/3xHoO1MW/T82uuxFqG-bdyA" target="_blank" rel="noopener">send2me.cn/3xHoO1MW/T82uuxFqG-bdyA</a>。</p>
+    <p class="mono">出处：Kenneth French 月度动量说明（mba.tuck.dartmouth.edu）· Tushare 日线说明与复权因子说明 · 分组公式见手册 3.2 第二步</p>
+  </div>
+</footer>
+</body>
+</html>
