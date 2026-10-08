@@ -27,6 +27,15 @@ html{scroll-behavior:smooth}
 body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
 .container{max-width:880px;margin:0 auto;padding:0 24px}
 
+/* ===== 顶部作业提交入口 ===== */
+.submission-bar{background:var(--accent);color:#fff}
+.submission-bar .container{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px}
+.submission-bar strong{display:block;font-size:16px}
+.submission-bar span{font-size:13px;color:#e8edff}
+.submission-bar a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 20px;background:#fff;color:var(--accent);font-weight:700;text-decoration:none;white-space:nowrap}
+.submission-bar a:hover{background:#edf1ff}
+.submission-bar a:focus-visible{outline:3px solid #fff;outline-offset:4px}
+
 /* ===== header（纯色，无渐变） ===== */
 header{background:var(--ink);color:#fff;padding:56px 0 40px;border-bottom:6px solid var(--accent)}
 header .tag{font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;font-weight:600}
@@ -166,6 +175,15 @@ footer strong{color:var(--ink)}
 </head>
 <body>
 
+<aside class="submission-bar" aria-label="作业提交">
+  <div class="container">
+    <div><strong>作业提交</strong><span>两项任务统一提交 · 建议一周内完成</span></div>
+    <a href="https://send2me.cn/3xHoO1MW/T82uuxFqG-bdyA" target="_blank" rel="noopener">提交作业 ↗</a>
+  </div>
+</aside>
+
+
+
 <header>
   <div class="container">
     <div class="tag">第7章 · 实验作业 01</div>
@@ -265,11 +283,7 @@ footer strong{color:var(--ink)}
 
   <div class="takeaway">先完成任务一，再开展任务二。建议一周内提交，附件不计入报告页数。两项任务可共用数据与基础代码，README 写清各自的运行方法。使用 Agent 完成下面提交物，需要人工持续审核 Agent 产物。</div>
 
-  <div class="panel">
-    <p style="margin-top:0"><strong>作业提交链接</strong>：<a href="https://send2me.cn/3xHoO1MW/T82uuxFqG-bdyA" target="_blank" rel="noopener">https://send2me.cn/3xHoO1MW/T82uuxFqG-bdyA</a>　·　建议一周内完成。</p>
-  </div>
-
-  <h3>提交物清单</h3>
+<h3>提交物清单</h3>
   <p>文件名可以不同，但每项都要交，并在 README 里指到对应文件。</p>
   <div class="tablewrap">
   <table>
@@ -636,7 +650,7 @@ ci95 = (mean - 1.96 * se, mean + 1.96 * se)</div>
 <footer>
   <div class="container">
     <p><strong>数据与口径声明</strong></p>
-    <p class="note">本页为《学生实验手册 · 中证500成分股的动量与反转》在线任务书，规则以教师下发的 Markdown 原件为权威版本。任务一计算理论收益率，不扣交易成本（任务二专门研究成本除外）；程序与 CSV 中收益率统一用小数，报告用百分点。取数、复权、入组与缺失处理按手册 2.1、2.3 执行，不给缺价股票补零收益、不补造价格。作业提交链接：<a href="https://send2me.cn/3xHoO1MW/T82uuxFqG-bdyA" target="_blank" rel="noopener">send2me.cn/3xHoO1MW/T82uuxFqG-bdyA</a>。</p>
+    <p class="note">本页为《学生实验手册 · 中证500成分股的动量与反转》在线任务书，规则以教师下发的 Markdown 原件为权威版本。任务一计算理论收益率，不扣交易成本（任务二专门研究成本除外）；程序与 CSV 中收益率统一用小数，报告用百分点。取数、复权、入组与缺失处理按手册 2.1、2.3 执行，不给缺价股票补零收益、不补造价格。</p>
     <p class="mono">出处：Kenneth French 月度动量说明（mba.tuck.dartmouth.edu）· Tushare 日线说明与复权因子说明 · 分组公式见手册 3.2 第二步</p>
   </div>
 </footer>
