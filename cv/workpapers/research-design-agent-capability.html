@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 越强，人还该懂什么？——研究设计方案 · 工作论文 | 张剑</title>
+  <meta name="description" content="张剑团队预注册研究设计：在 agent 能力三档随机操纵下，考察经管本科生专业知识与通用能力对业务任务表现的预测、替代与放大（主实验 N = 240）。">
+  <link rel="canonical" href="https://jefeerzhang.github.io/cv/workpapers/research-design-agent-capability.html">
+  <meta property="og:title" content="AI 越强，人还该懂什么？——Agent 能力分级实验中经管本科生技能的替代与放大（研究设计方案）">
+  <meta property="og:description" content="相关设计 + agent 能力三档随机操纵的预注册研究设计，考察经管本科生使用 agent 完成业务任务时学生变量的替代与放大。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://jefeerzhang.github.io/cv/workpapers/research-design-agent-capability.html">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%23245642'/%3E%3Ctext x='32' y='41' text-anchor='middle' font-family='serif' font-size='27' font-weight='700' fill='white'%3EJZ%3C/text%3E%3C/svg%3E">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <style>
+    /* ============ 工作论文页面专用样式（基于站点 token 体系） ============ */
+    .wp-page main { padding-top: 56px; }
+
+    /* Hero */
+    .wp-hero {
+      padding: 34px 0 40px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 34px;
+    }
+    .wp-hero .breadcrumb { margin: 0 0 26px; }
+    .wp-hero .eyebrow { margin: 0 0 16px; }
+    .wp-hero h1 {
+      margin: 0 0 10px;
+      font-family: var(--display);
+      font-size: clamp(34px, 4.6vw, 52px);
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      text-wrap: balance;
+    }
+    .wp-subtitle {
+      margin: 0 0 22px;
+      font-family: var(--serif);
+      font-size: clamp(17px, 1.6vw, 21px);
+      font-weight: 600;
+      color: var(--text);
+    }
+    .wp-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 22px;
+      padding-top: 18px;
+      border-top: 1px dashed var(--line);
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+    .wp-meta strong { color: var(--ink); font-weight: 700; }
+    .wp-meta a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+    .wp-meta a:hover { border-bottom-color: var(--accent); }
+
+    /* 布局：TOC 侧栏 + 正文 */
+    .wp-layout {
+      display: grid;
+      grid-template-columns: 210px minmax(0, 1fr);
+      gap: 48px;
+      align-items: start;
+      padding-bottom: 88px;
+    }
+    .wp-toc {
+      position: sticky;
+      top: 88px;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+      font-size: 13px;
+      line-height: 1.55;
+      scrollbar-width: thin;
+    }
+    .wp-toc > strong {
+      display: block;
+      margin-bottom: 12px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .wp-toc > nav { border-left: 1px solid var(--line); }
+    .wp-toc a {
+      display: block;
+      padding: 4px 0 4px 12px;
+      margin-left: -1px;
+      border-left: 1px solid transparent;
+      color: var(--text);
+      text-decoration: none;
+      font-family: var(--serif);
+      transition: color 180ms ease, border-color 180ms ease;
+    }
+    .wp-toc a:hover { color: var(--accent); border-left-color: var(--accent); }
+    .wp-toc a.is-active { color: var(--accent); border-left-color: var(--accent); font-weight: 700; }
+    .wp-toc a.lv2 { padding-left: 24px; font-size: 12.5px; }
+
+    .wp-content { min-width: 0; max-width: 100%; }
+
+    /* 章节标题 */
+    .wp-content section { margin: 0 0 46px; }
+    .wp-content h2 {
+      margin: 0 0 18px;
+      padding-top: 8px;
+      font-family: var(--display);
+      font-size: clamp(24px, 2.8vw, 31px);
+      font-weight: 700;
+      line-height: 1.22;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+      text-wrap: balance;
+    }
+    .wp-content h2 .sec-no {
+      display: inline-block;
+      margin-right: 12px;
+      font-family: var(--mono);
+      font-size: 0.72em;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+      vertical-align: 0.06em;
+    }
+    .wp-content h3 {
+      margin: 30px 0 12px;
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--ink);
+      line-height: 1.35;
+    }
+    .wp-content h4 {
+      margin: 24px 0 10px;
+      font-family: var(--serif);
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .wp-content p {
+      margin: 0 0 14px;
+      color: var(--text);
+      font-family: var(--serif);
+      font-size: 16.5px;
+      line-height: 1.85;
+      max-width: 42em;
+      font-feature-settings: "kern", "liga", "halt";
+    }
+    .wp-content strong { color: var(--ink); font-weight: 800; }
+    .wp-content ul, .wp-content ol {
+      margin: 0 0 16px;
+      padding-left: 1.5em;
+      color: var(--text);
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.85;
+      max-width: 42em;
+    }
+    .wp-content li { margin-bottom: 7px; }
+    .wp-content a { color: var(--accent); border-bottom: 1px solid var(--line); text-decoration: none; }
+    .wp-content a:hover { border-bottom-color: var(--accent); }
+
+    /* 术语/变量名 */
+    .wp-content code {
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: var(--surface-soft);
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.88em;
+    }
+    .wp-content pre.codeblock {
+      margin: 16px 0 22px;
+      padding: 16px 18px;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--ink);
+    }
+    .wp-content pre.codeblock code { background: none; color: inherit; padding: 0; font-size: inherit; }
+
+    /* 表格 */
+    .table-wrap {
+      margin: 16px 0 26px;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+    .doc-table {
+      width: 100%;
+      min-width: 640px;
+      table-layout: fixed;
+      border-collapse: collapse;
+      font-family: var(--serif);
+      font-size: 14.5px;
+      line-height: 1.7;
+    }
+    .table-wrap.table-wide .doc-table { min-width: 780px; }
+    .doc-table th {
+      padding: 10px 14px;
+      background: var(--surface-soft);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-align: left;
+      border-bottom: 1px solid var(--line-strong);
+    }
+    .doc-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--line);
+      color: var(--text);
+      vertical-align: top;
+    }
+    .doc-table tr:last-child td { border-bottom: 0; }
+    .doc-table tr:hover td { background: rgba(36, 86, 66, 0.03); }
+    .doc-table code { font-size: 12.5px; }
+    .doc-table .t-nowrap { white-space: nowrap; }
+
+    /* 流程图 figure */
+    .figure-mermaid {
+      margin: 20px 0 28px;
+      padding: 18px 14px 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+    .figure-mermaid .fig-caption {
+      display: block;
+      margin-bottom: 8px;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .figure-mermaid .mermaid { overflow-x: auto; text-align: center; }
+
+    /* 公式 */
+    .wp-content .formula-box {
+      margin: 16px 0 22px;
+      padding: 14px 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      text-align: center;
+      overflow-x: auto;
+      font-size: 17px;
+    }
+    .wp-content .katex-display { margin: 0.4em 0; }
+
+    /* 引述/结论框 */
+    .wp-content blockquote {
+      margin: 18px 0 22px;
+      padding: 16px 20px;
+      border-left: 3px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+      background: var(--surface);
+      color: var(--text);
+      font-family: var(--serif);
+      font-size: 15.5px;
+      line-height: 1.8;
+    }
+    .wp-content blockquote p { margin: 0 0 8px; }
+    .wp-content blockquote p:last-child { margin-bottom: 0; }
+
+    .conclusion-box {
+      margin: 18px 0 26px;
+      padding: 18px 22px;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+    .conclusion-box .box-title {
+      display: block;
+      margin-bottom: 8px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .conclusion-box p { margin: 0 0 8px; }
+    .conclusion-box p:last-child { margin-bottom: 0; }
+
+    /* 附录标签 */
+    .appendix-note {
+      display: inline-block;
+      margin-bottom: 14px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(36, 86, 66, 0.08);
+      border: 1px solid rgba(36, 86, 66, 0.18);
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    /* 深色模式适配（mermaid 由 JS 按主题重渲染） */
+    :root[data-theme="dark"] .figure-mermaid,
+    :root[data-theme="dark"] .table-wrap,
+    :root[data-theme="dark"] .wp-content .formula-box,
+    :root[data-theme="dark"] .wp-content pre.codeblock {
+      background: var(--surface);
+      border-color: var(--line);
+    }
+
+    /* 响应式 */
+    @media (max-width: 860px) {
+      .wp-layout { grid-template-columns: 1fr; gap: 26px; padding-bottom: 64px; }
+      .wp-toc { position: static; max-height: none; }
+    }
+    @media (max-width: 640px) {
+      .wp-hero { padding: 22px 0 30px; margin-bottom: 24px; }
+      .wp-hero h1 { font-size: 30px; }
+      .doc-table { font-size: 13.5px; }
+    }
+  </style>
+</head>
+<body class="wp-page">
+  <a class="skip-link" href="#main-content">跳至主要内容</a>
+
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+          <a href="../../">首页</a>
+          <a href="../" aria-current="page">个人简历</a>
+          <a href="../../courses/">课程中心</a>
+          <a href="../../knowledge/">知识学习</a>
+          <a href="../../tools/">小工具</a>
+          <button type="button" class="theme-toggle" id="theme-toggle" aria-label="切换主题"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.9 4.9l1.4 1.4"/><path d="M17.7 17.7l1.4 1.4"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M4.9 19.1l1.4-1.4"/><path d="M17.7 6.3l1.4-1.4"/></svg></button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <header class="container wp-hero">
+      <p class="breadcrumb"><a href="../">个人简历</a><span class="sep">/</span><span class="current">工作论文</span></p>
+      <p class="eyebrow">Working Paper · 研究设计方案 v3 · 预注册</p>
+      <h1>AI 越强，人还该懂什么？</h1>
+      <p class="wp-subtitle">——Agent 能力分级实验中经管本科生技能的替代与放大</p>
+      <div class="wp-meta">
+        <span><strong>版本</strong> v3（正式研究设计）</span>
+        <span><strong>设计类型</strong> 相关设计 + 被试间随机操纵（agent 能力三档）</span>
+        <span><strong>样本量</strong> 主实验 N = 240（每档 80）</span>
+        <span><strong>基于</strong> <a href="https://doi.org/10.1145/3772318.3791666" target="_blank" rel="noopener">Thorgeirsson 等（2026, CHI ’26）</a></span>
+      </div>
+    </header>
+
+    <div class="container wp-layout">
+      <aside class="wp-toc" aria-label="文档目录">
+        <strong>本页目录</strong>
+        <nav id="toc-nav">
+          <a href="#overview">0 方案概览</a>
+          <a href="#background">1 研究背景与目的</a>
+          <a href="#rq" class="lv2">2 研究问题与假设</a>
+          <a href="#sample" class="lv2">3 实验对象与分组</a>
+          <a href="#variables" class="lv2">4 实验变量</a>
+          <a href="#procedure" class="lv2">5 实验流程</a>
+          <a href="#control" class="lv2">6 控制变量与混淆控制</a>
+          <a href="#data" class="lv2">7 数据采集方法</a>
+          <a href="#analysis" class="lv2">8 数据分析方法</a>
+          <a href="#ethics" class="lv2">9 伦理与数据管理</a>
+          <a href="#timeline" class="lv2">10 时间线</a>
+          <a href="#extensions" class="lv2">11 扩展实验</a>
+          <a href="#implications" class="lv2">12 结果到培养目标的对接</a>
+          <a href="#sources" class="lv2">13 资料来源</a>
+          <a href="#appendix">附录 审核记录</a>
+        </nav>
+      </aside>
+
+      <div class="wp-content">
+        <section id="overview">
+          <h2><span class="sec-no">0</span>方案概览</h2>
+          <p>本研究的核心问题是：<strong>在 agent 能力不断提升的条件下，学生的哪些能力影响他们使用 agent 完成业务任务的最终表现。</strong>考察的学生能力包括专业知识与四项通用能力（书面沟通、计算思维、数量素养、AI 素养），本文统称「学生变量」，与 agent 一侧的「能力档」区分。</p>
+          <p>「agent 越来越强」无法通过追踪真实模型的长期演进来研究，本研究用弱、中、强三档 agent 随机分配来模拟，比较同一项学生能力在不同档位下的预测力：作用保持不变、被 agent 削弱（替代），还是被放大。</p>
+          <p>设计沿用 Thorgeirsson 等（2026）的 vibe coding 实验平台与相关设计，做了三处关键改动：agent 能力从固定的单一模型改为弱、中、强三档随机分配；被试从有 CS 背景的学生换成经管本科生；因变量从「界面行为是否与样例一致」改为「业务数字算得对不对」和「能否发现 AI 文稿中的错误」。</p>
+          <p>全文围绕三条主线展开，第一、二条是核心，第三条用于解释：</p>
+          <ol>
+            <li><strong>哪些能力起作用：</strong>控制一般推理后，专业知识、书面沟通、计算思维、数量素养、AI 素养各自能否独立预测产出正确性与验错表现（H1、H2a、H3、H6）。</li>
+            <li><strong>agent 变强后作用如何变化：</strong>每项能力的预测力随能力档升高是保持、减弱还是增强（H2b、H3 的交互估计、H5）。</li>
+            <li><strong>能力通过什么起作用：</strong>专业知识是否通过定向核验、写作是否通过提示词质量发挥作用；agent 变强是否让人放松核验、从而改变能力发挥作用的空间（中介 M1–M4；H4b–H4d 作为机制证据）。</li>
+          </ol>
+
+          <div class="figure-mermaid">
+            <span class="fig-caption">实验流程总览 · 两场次设计</span>
+            <pre class="mermaid">
+flowchart TD
+  M["场次 1：随机化之前（约 100 分钟）<br/>ICAR16 · DK · Numeracy · CT · 作文 · MAILS · SPEC 小测"]
+  M -->|"间隔 3–10 天"| R{"场次 2 到场<br/>随机分档"}
+  R --> L1["L1 弱"]
+  R --> L2["L2 中"]
+  R --> L3["L3 强"]
+  L1 --> P["平台练习"]
+  L2 --> P
+  L3 --> P
+  P --> T["生成任务 T1–T3（顺序随机）<br/>完整度 · 正确性 · 行为保真"]
+  T --> TR["信任量表 + 感知能力"]
+  TR --> A["4A 验错：审阅固定备忘录<br/>不可用 agent（信任迁移）"]
+  A --> B["4B 验错：审阅另一份备忘录<br/>可用同档 agent（人机联合核验）"]
+  B --> D["事后问卷 + 当场解说"]
+            </pre>
+          </div>
+
+          <h3>术语与缩写</h3>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <colgroup><col style="width:16%"><col style="width:44%"><col style="width:40%"></colgroup>
+              <thead>
+                <tr><th>缩写</th><th>含义</th><th>在本研究中的角色</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="t-nowrap">DK</td><td>专业知识（20 题测验）</td><td>核心预测变量</td></tr>
+                <tr><td class="t-nowrap">Writing</td><td>书面沟通能力（作文评分）</td><td>预测变量</td></tr>
+                <tr><td class="t-nowrap">CT</td><td>计算思维（10 题测验）</td><td>预测变量</td></tr>
+                <tr><td class="t-nowrap">Numeracy</td><td>数量素养（Berlin Numeracy Test）</td><td>协变量；计算类错误的区分效度变量</td></tr>
+                <tr><td class="t-nowrap">ICAR16</td><td>一般推理能力（16 题）</td><td>所有主模型的控制变量</td></tr>
+                <tr><td class="t-nowrap">MAILS</td><td>AI 素养自评量表</td><td>预测变量（H6，探索）</td></tr>
+                <tr><td class="t-nowrap">SPEC</td><td>规格完整度：需求说明是否覆盖输入、输出、约束、边界、完成标准 5 项</td><td>场次 1 小测；过程变量</td></tr>
+                <tr><td class="t-nowrap">PQ</td><td>提示词质量</td><td>中介变量</td></tr>
+                <tr><td class="t-nowrap">VER</td><td>验算行为</td><td>过程变量</td></tr>
+                <tr><td class="t-nowrap">L1 / L2 / L3</td><td>agent 能力弱 / 中 / 强三档</td><td>随机分配的处理</td></tr>
+                <tr><td class="t-nowrap">T1 / T2 / T3</td><td>生成任务：情境复制 / 功能扩展 / 去情境</td><td>被试内任务</td></tr>
+                <tr><td class="t-nowrap">4A / 4B</td><td>验错任务两阶段：不能用 / 可以用 agent</td><td>被试内任务</td></tr>
+                <tr><td>Y_comp、Y_corr、Y_gen、Y_aud</td><td>完整度、正确性、行为保真、验错</td><td>因变量（定义见 4.2）</td></tr>
+                <tr><td class="t-nowrap">TRAP</td><td>默认值陷阱：agent 在朴素提示下会套用错误商业默认值的业务约束</td><td>任务设计要素；陷阱分</td></tr>
+                <tr><td class="t-nowrap">PBW</td><td>「像样但错」比例</td><td>探索性因变量</td></tr>
+                <tr><td class="t-nowrap">cap_lin / cap_quad</td><td>能力档的线性 / 二次正交对比编码</td><td>模型中的处理变量</td></tr>
+                <tr><td class="t-nowrap">TOST / SESOI</td><td>双单侧等效检验 / 最小关注效应量</td><td>H3、H6 的检验方法</td></tr>
+                <tr><td class="t-nowrap">BH</td><td>Benjamini–Hochberg 多重比较校正</td><td>确认性家族</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <section id="background">
+          <h2><span class="sec-no">1</span>研究背景与目的</h2>
+
+          <h3>1.1 背景</h3>
+          <p><strong>Vibe coding 与原文研究。</strong>Karpathy 在 2025 年提出 vibe coding 一词，指用户完全通过自然语言指令让 AI 生成可用的软件，自己既不看、也不改生成的代码。Thorgeirsson 等（2026）以 100 名修过 CS 导论、英语达到 C1 的大学生为样本，首次量化了这种「自然语言编程」能力由什么预测：</p>
+          <ul>
+            <li>书面沟通能力与任务表现正相关（Pearson <code>r</code> = .290，p = .003）；控制一般推理（ICAR16）后，偏相关降至 .186（p = .066）。</li>
+            <li>CS 成绩提供独特的预测增量（ΔR² = .125），写作的独特增量较小（ΔR² = .059）。</li>
+            <li>写作的预测作用约 52% 经由提示词质量中介（间接效应 0.152，95% CI [0.061, 0.279]）。</li>
+            <li>自我报告的 LLM 使用频率与任务表现负相关（<code>r</code> = −.258，p = .010）。</li>
+          </ul>
+          <p><strong>原文留下的三个缺口。</strong>第一，只用了一个模型：全程使用 Claude Sonnet 4（20250514 版），agent 能力没有被操纵，因此无法回答「工具变强以后，人的知识与能力还起多大作用」。第二，样本有偏：被试都有 CS 课程背景，结论不能外推到以业务知识而非编程为主业的人群。第三，因变量只看 GUI 行为是否与样例一致，没有触及业务产出中利害更高的一面——数字算得对不对、因果推得对不对。</p>
+          <p><strong>为什么选经管本科生。</strong>会计、金融、营销等专业的核心工作不是做界面，而是把数算对、把因果判断准，并写成可交付的需求说明和备忘录。AI agent 变强之后，它生成的应用和文书在外观上会迅速趋同，瓶颈转移到两端：一端是把任务说清楚（规格写作），另一端是拦住「看起来像样、实际算错」的输出（核验）。</p>
+          <p><strong>已有证据的分歧。</strong>强工具会替代人的技能，还是放大技能差异？现有证据给出相反的预测。Noy &amp; Zhang（2023, <em>Science</em>）与 Brynjolfsson 等（2025, <em>QJE</em>）发现低技能者获益更大，支持替代；Otis 等（2026, <em>Management Science</em>）在创业者样本中发现高绩效者受益、低绩效者受损，支持互补；Dell'Acqua 等（2026, <em>Organization Science</em>）则用「锯齿状能力边界」概括 agent 在概念判断上的不均衡表现。</p>
+          <p><strong>两项直接约束本设计的新证据。</strong></p>
+          <ul>
+            <li>Cruces 等（2026, NBER w34851）的随机实验（1,174 人）显示，使用 AI 后，不同教育水平组之间的生产率差距从 0.548 SD 缩小到 0.139 SD，约缩小四分之三；但撤掉 AI 后，差距重新出现。这说明替代发生在执行层，技能层面的差距仍在——这是 H1a（专业知识仍能独立预测表现）的理论依据。</li>
+            <li>Caosun &amp; Aral（2026）的动态模型（augmentation trap）表明：当替代足够强时，把认知外包给 AI 会造成永久分化，高技能者兑现潜力，低技能者去技能化；而当 AI 承担教学、反馈或刻意练习的职能时，这一机制会反转。这是扩展实验 E（训练干预）的模型依据。</li>
+          </ul>
+          <p>这一问题在经管教育情境中尚无实验证据。</p>
+
+          <h3>1.2 目的</h3>
+          <p>本研究把原文的「单模型相关设计」改为「相关设计 + agent 能力三档随机操纵」，并把因变量从 GUI 行为保真改为「业务产出正确性 + 验错」。目的有四，其中目的 1 是核心目的，目的 2、3 用于解释目的 1 的机制，目的 4 是应用落点：</p>
+          <ol>
+            <li><strong>识别学生变量的作用变化</strong>：agent 能力从弱到强变化时，经管类本科生的专业知识与通用能力（书面沟通、计算思维、数量素养、AI 素养）中，哪些仍能独立预测任务表现；哪些被替代（学生变量 × 能力档交互为负）；哪些被放大（交互为正）。</li>
+            <li><strong>检验自动化自满</strong>：agent 越强、使用体验越流畅，人对错误的接受门槛是否越松；低专业知识者是否受损更大。</li>
+            <li><strong>划清 agent 在核验中的作用边界</strong>：计算类错误能否交给 agent 代查；概念类错误是否必须由人有针对性地提问才能查出。</li>
+            <li><strong>为经管培养方案提供可检验的依据</strong>：哪些能力应提高权重（核验、规格写作）；哪些主张还需要额外的训练干预实验才能成立。</li>
+          </ol>
+
+          <h3>1.3 理论框架</h3>
+          <ol>
+            <li><strong>人机互补与锯齿状能力边界</strong>（Dell'Acqua 等，2026, <em>Organization Science</em>）。这是一项预注册实验，758 名 BCG 顾问完成 18 项任务：在 AI 能力边界之内，完成量 +12.2%、速度 +25.1%、质量 +40%；在边界之外，正确率反而低 19 个百分点。据此，本研究假定 agent 强在生成与计算执行，弱在业务默认值与概念判断；人的专业知识用来判断对错，而不是把按钮做出来。落到设计上，任务中埋设「默认值陷阱」（agent 在朴素提示下会做错的业务约束），并用 P0 预实验确认三档后端都会踩中。</li>
+            <li><strong>生成—核验不对称</strong>（沿用原文）。界面好不好、文字顺不顺，人人都能判断；数字与因果对不对，必须懂行才能判断。由此推出：专业知识对验错的预测应强于对生成任务正确性的预测（H1b）。</li>
+            <li><strong>自动化自满与依赖校准</strong>（Parasuraman &amp; Manzey, 2010；Schemmer 等，2023）。使用高可靠的自动化系统之后，人的接受门槛会放松。在信号检测框架下，这表现为判定标准 <code>c</code> 的移动，而不必然是辨别力 d′ 的下降。这是本研究对「过度信任」的精确化定义。</li>
+          </ol>
+          <p>关于学生变量 × 能力档交互的方向，上述理论与 1.1 的实证证据给出相互竞争的预测：替代（交互项 &lt; 0）、放大（交互项 &gt; 0）或倒 U 形。因此所有交互假设一律双侧检验，每种结果对应的理论解释事先写入预注册。</p>
+        </section>
+
+        <section id="rq">
+          <h2><span class="sec-no">2</span>研究问题与假设</h2>
+
+          <h3>2.1 研究问题</h3>
+          <p><strong>总问题</strong>：在 agent 能力不断提升的条件下，经管类本科生的哪些能力影响其使用 agent 完成业务任务的最终表现？这些能力的作用随 agent 变强是保持、被替代还是被放大？</p>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <colgroup><col style="width:10%"><col style="width:50%"><col style="width:40%"></colgroup>
+              <thead>
+                <tr><th>编号</th><th>研究问题</th><th>与原文的关系</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="t-nowrap">RQ1</td><td>情境任务是否更依赖专业知识？（agent 在情境任务中会套用错误的商业默认值）</td><td>原文 RQ1（写作 × 去情境）未获支持（.239 vs .245），本研究降为次要对照</td></tr>
+                <tr><td class="t-nowrap">RQ2</td><td>写作能力是否仍能预测生成任务表现？控制一般推理后是否仍成立？</td><td>原文 RQ2 在经管样本中的复现（原文控制后偏相关 .186，p = .066）</td></tr>
+                <tr><td class="t-nowrap">RQ3</td><td>专业知识、写作、计算思维各有多少独特贡献？agent 变强时，各自被替代还是被放大？</td><td>原文 RQ3 的扩展</td></tr>
+                <tr><td class="t-nowrap">RQ4</td><td>agent 越强：(a) 生成产物是否越完整；(b) 人对 agent 输出的接受门槛是否放松（信任迁移）；(c) 流畅的措辞是否让错误更难被发现？</td><td>新增</td></tr>
+                <tr><td class="t-nowrap">RQ5</td><td>三条机制路径：写作 → 提示词质量 → 生成（原文机制）；专业知识 → 定向核验 → 验错；能力档（随机）→ 信任 → 漏检</td><td>新增（机制层）</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>2.2 假设</h3>
+          <p>全部假设预注册，预测方向事先固定；所有交互项一律双侧检验。「检验地位」含义：<strong>确认</strong>＝进入确认性家族并做多重比较校正；<strong>估计</strong>＝只报效应量与 95% CI；<strong>探索</strong>＝不校正，逐条标明。</p>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <colgroup><col style="width:9%"><col style="width:63%"><col style="width:28%"></colgroup>
+              <thead>
+                <tr><th>编号</th><th>假设</th><th>检验地位</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="t-nowrap">H1a</td><td>专业知识（DK）正向预测正确性（Y_corr）与验错（Y_aud）；控制 ICAR16、Numeracy、Writing、CT 与能力档后仍显著</td><td>确认（2 个检验）</td></tr>
+                <tr><td class="t-nowrap">H1b</td><td>DK 与 Y_aud 的相关大于 DK 与 Y_corr 的相关（相依相关检验，另报信度校正版）</td><td>确认</td></tr>
+                <tr><td class="t-nowrap">H1c</td><td>DK 的预测斜率在情境任务（T1、T2）上大于去情境任务（T3）</td><td>确认</td></tr>
+                <tr><td class="t-nowrap">H2a</td><td>Writing 正向预测行为保真（Y_gen），提示词质量（PQ）部分中介这一关系</td><td>主效应：确认；中介：次要</td></tr>
+                <tr><td class="t-nowrap">H2b</td><td>Writing × 能力档的交互不为零，方向不预设（替代、放大或倒 U）</td><td>估计</td></tr>
+                <tr><td class="t-nowrap">H3</td><td>CT 预测 Y_gen；CT 对 Y_aud 的效应落在 ±0.25 之内（TOST 等效检验）；CT × 能力档只做估计</td><td>估计</td></tr>
+                <tr><td class="t-nowrap">H4a</td><td>操纵检验：完整度 Y_comp 呈 L3 &gt; L2 &gt; L1</td><td>前置条件，不进入确认性家族</td></tr>
+                <tr><td class="t-nowrap">H4b</td><td>信任迁移：在 4A（审阅一份不能用 agent 的固定备忘录，各档文本相同）中，能力档越高，漏检率越高</td><td>确认</td></tr>
+                <tr><td class="t-nowrap">H4c</td><td>在 4B（可用 agent）中存在能力档 × 错误类型交互：L3 提高计算类错误的检出，但对概念类错误的提升显著更小</td><td>确认</td></tr>
+                <tr><td class="t-nowrap">H4d</td><td>在 4A 中，措辞流畅的错误比措辞含糊的错误漏检更多（被试内操纵）</td><td>确认</td></tr>
+                <tr><td class="t-nowrap">H5</td><td>DK × 能力档：在 4A 的概念类错误上，能力档升高带来的漏检增幅，低 DK 者大于高 DK 者</td><td>确认（N = 240 时交互的最小可检效应 q ≈ .45）</td></tr>
+                <tr><td class="t-nowrap">H6</td><td>AI 素养（MAILS）预测过程指标（迭代轮数、VER）；MAILS 对 Y_corr 的增量效应落在 ±0.25 之内（TOST）</td><td>探索</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p><strong>探索性分析</strong>（标明，不校正）：Numeracy 预测计算类错误、DK 预测概念类错误（区分效度）；TRAP ~ DK × VER（陷阱分的近端分解，见 5.5）；能力档 → 过度自信；LLM 使用频率与各结果变量的关系（原文 <code>r</code> = −.258）。</p>
+          <p><strong>确认性家族</strong>共 9 个检验：H1a（2 个）、H1b、H1c、H2a、H4b、H4c、H4d、H5，采用 BH 校正，q = .05。若操纵检验 H4a 未通过，H4b–H5 降为探索性分析。</p>
+
+          <h3>2.3 识别策略：哪些结论可以做因果解释</h3>
+          <blockquote>
+            <p><strong>能力档</strong>是随机分配的处理，其效应可以做因果解释。「能力档 → 信任 → 漏检」路径的前半段（a 段）因果可识别，是本设计最有力的机制证据。</p>
+            <p><strong>专业知识与通用能力</strong>都是观测变量，只能谈预测与机制，不能推出「教了就会」。关于训练效果的因果主张，由扩展实验 E（训练干预随机对照）单独承担。</p>
+          </blockquote>
+        </section>
+        <section id="sample">
+          <h2><span class="sec-no">3</span>实验对象与分组</h2>
+
+          <h3>3.1 对象与纳入 / 排除标准</h3>
+          <ul>
+            <li><strong>对象</strong>：经管类本科二至四年级学生（会计、金融、经济、工商管理、市场营销、国际商务）。</li>
+            <li><strong>纳入标准</strong>：已修微观经济学或会计学原理中的至少一门；近 6 个月内至少使用过一次生成式 AI。</li>
+            <li><strong>与原文的差异</strong>：不要求「已修 CS 导论」或「用 LLM 写过代码」——这是原文最大的样本偏差来源。原文还要求英语达到 C1，本设计不设此筛选。</li>
+            <li><strong>排除标准</strong>：CS 或软件类辅修超过 12 学分；参加过 P1 或 P2 预实验（题目已暴露）。</li>
+            <li><strong>招募</strong>：不经任课教师之手；若以课程加分作为报酬，必须提供等值的非实验替代作业。</li>
+          </ul>
+
+          <h3>3.2 样本量与功效</h3>
+          <p>计算条件：80% 功效，α = .05 双侧，相关类效应采用 Fisher z 近似。</p>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <colgroup><col style="width:30%"><col style="width:18%"><col style="width:14%"><col style="width:38%"></colgroup>
+              <thead>
+                <tr><th>目标</th><th>设计</th><th>N</th><th>最小可检效应</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>学生变量主效应（三档合并）</td><td>回归</td><td>240</td><td><code>r</code> ≈ .18</td></tr>
+                <tr><td>原文对照（只用 L2 组）</td><td>相关</td><td>80</td><td><code>r</code> ≈ .31（原文写作 <code>r</code> = .29 略低于此线，对应功效约 .75）</td></tr>
+                <tr><td>能力档主效应（任两档比较）</td><td>组间</td><td>每档 80</td><td><code>d</code> ≈ .44；协变量解释 30% 方差时约 .37</td></tr>
+                <tr><td>学生变量 × 能力档（L1 与 L3 的斜率差）</td><td>组间</td><td>每档 80</td><td><code>q</code> ≈ .45（例如一档 <code>r</code> = .45、另一档 <code>r</code> = .05）</td></tr>
+                <tr><td>H3、H6 等效检验（TOST，SESOI = 0.25）</td><td>—</td><td>240</td><td>功效约 .88</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>主实验定为 <strong>N = 240（每档 80）</strong>。预算受限时有两条退路：</p>
+          <ul>
+            <li><strong>退至 N = 180（每档 60）</strong>：确认性家族只保留 H5 一条交互，H2b、H3 的交互只报估计值与 CI。</li>
+            <li><strong>改为 L1、L3 各 90 人 + L2 30 人（N = 210）</strong>：L1 与 L3 斜率差的估计效率约为每档 60 人方案的 1.5 倍，但放弃原文对照与倒 U 检验。</li>
+          </ul>
+          <p>功效复核：用被试层模拟模板复核上述计算，并做学生变量测量信度从 .75 降到 .65 的敏感性分析。4A、4B 的题目层 GLMM 功效，待 P2 数据估出随机效应方差后用 <code>simr</code> 计算。</p>
+
+          <h3>3.3 分组与随机化</h3>
+          <ul>
+            <li><strong>设计</strong>：被试间因素为 agent 能力三档（L1 弱 / L2 中 / L3 强）；被试内因素为四类任务——T1 复制、T2 扩展、T3 去情境、T4 验错，其中 T4 分为 4A（不能用 agent）与 4B（可用 agent）两个阶段。</li>
+            <li><strong>随机化时点</strong>：场次 2 到场时才随机分档。场次 1 之后的流失发生在随机化之前，不破坏组间可比性；但仍需报告流失者与留存者在场次 1 各量表上的差异。</li>
+            <li><strong>随机化方法</strong>：最小化法（Pocock &amp; Simon, 1975），平衡 DK 三分位、ICAR16 三分位、专业与性别；保留随机成分，以 p = 0.8 的概率分入最能改善平衡的档位。</li>
+            <li><strong>同场混排</strong>：同一场次内三档混合，座位随机；不按场次分档，以免时段、主试、网络状况与档位混淆。</li>
+            <li><strong>控制需求特征</strong>：被试只被告知「使用一个 AI 助手」，不知道存在三档；事后测量感知能力，作为被试侧的操纵检验。</li>
+            <li><strong>顺序与平衡</strong>：T1–T3 的顺序对每名被试单独随机；T4 固定在生成任务之后，4A 固定在 4B 之前；每个任务有两个同构平行版本，随机分配；两份备忘录在 4A、4B 间的分配按拉丁方跨被试平衡。</li>
+          </ul>
+        </section>
+
+        <section id="variables">
+          <h2><span class="sec-no">4</span>实验变量</h2>
+
+          <h3>4.1 自变量</h3>
+          <ol>
+            <li><strong>Agent 能力档</strong>（被试间，随机分配）：同一模型家族的小、中、大三档，锁定版本；L3 另配代码解释器与表格计算工具（禁止联网）。因此操纵的构念是「agent 栈能力」（模型 + 工具），讨论中不能把效应全部归给模型本身。</li>
+            <li><strong>任务类型</strong>（被试内）：情境复制（T1）、功能扩展（T2）、去情境（T3）、验错（4A、4B）。</li>
+            <li><strong>措辞流畅度</strong>（被试内，用于 4A / 4B）：同一个错误以两种措辞之一呈现——流畅（语气确定、数字精确、格式规范）或含糊（「大概」「可能」、数字取整），按拉丁方平衡。</li>
+            <li><strong>学生变量</strong>（观测，非操纵）：DK、Writing、CT、Numeracy、ICAR16、MAILS、SPEC。</li>
+          </ol>
+
+          <h3>4.2 因变量</h3>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <colgroup><col style="width:18%"><col style="width:50%"><col style="width:32%"></colgroup>
+              <thead>
+                <tr><th>变量</th><th>定义</th><th>服务假设</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="t-nowrap">Y_comp 完整度</td><td>已实现的功能数 ÷ 应有功能数</td><td>H4a</td></tr>
+                <tr><td class="t-nowrap">Y_corr 正确性</td><td>固定测试用例的通过数 ÷ 总用例数（缺失的功能按不通过计）</td><td>H1a、H1b、H1c、主模型</td></tr>
+                <tr><td class="t-nowrap">Y_gen 行为保真</td><td>沿用原文的 0–3 评分（不可接受 / 低于预期 / 达标 / 超出预期），换算到 [0, 1]</td><td>H2a；与原文可比</td></tr>
+                <tr><td class="t-nowrap">TRAP 陷阱分</td><td>默认值陷阱被正确实现的比例</td><td>探索性近端证据：TRAP ~ DK × VER（见 5.5 与 8 节；不进确认性家族）</td></tr>
+                <tr><td class="t-nowrap">PBW「像样但错」</td><td>已实现的功能中，未通过测试用例的比例</td><td>探索</td></tr>
+                <tr><td class="t-nowrap">Y_aud 验错</td><td>击中率、虚报率、d′、判定标准 c；改正质量 0–2 分</td><td>H1a、H1b、H4b–H5</td></tr>
+                <tr><td class="t-nowrap">校准</td><td>事后估计的正确率 − 实际 Y_corr；逐项置信度 50–100%</td><td>探索（过度自信）</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>4.3 过程变量（中介 / 机制）</h3>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <colgroup><col style="width:16%"><col style="width:46%"><col style="width:38%"></colgroup>
+              <thead>
+                <tr><th>变量</th><th>定义</th><th>采集与信度</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="t-nowrap">PQ 提示词质量</td><td>语言沟通质量三个维度：连贯性、复杂度与任务是否相称、指令清晰度；1–5 分</td><td>以每个任务的完整提示序列为评分单位；20% 双评，ICC ≥ .70</td></tr>
+                <tr><td class="t-nowrap">SPEC 规格完整度</td><td>是否覆盖 5 项内容：输入、输出、约束、边界、完成标准；每项 0/1</td><td>首条提示与全部提示各记一次；LLM 预编码 + 人工复核，κ ≥ .70</td></tr>
+                <tr><td class="t-nowrap">VER 验算行为</td><td>测试输入次数、边界值输入、计算器调用、核对类指令次数</td><td>预览 iframe 事件日志 + 提示编码</td></tr>
+                <tr><td class="t-nowrap">定向提问（4B）</td><td>点名具体概念的审核提问，与通用提问区分</td><td>日志编码（H5 机制、中介 M2）</td></tr>
+                <tr><td class="t-nowrap">依赖（4B）</td><td>agent 给出判断后，人与 agent 判断一致的比例，按 agent 判对 / 判错分别计算</td><td>日志</td></tr>
+                <tr><td class="t-nowrap">信任</td><td>T1–T3 之后填写的 4 题「AI 助手」信任量表（改编自 Jian 等，2000）+ 感知能力 1–7 分</td><td>问卷（中介 M3；被试侧操纵检验）</td></tr>
+                <tr><td class="t-nowrap">迭代</td><td>轮数、提示长度、首条提示前的用时、回滚次数、每轮生成延迟</td><td>平台自动记录</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>4.4 协变量与背景变量</h3>
+          <p>ICAR16（一般推理，进入所有主模型）；Numeracy（同时作为计算类错误的区分效度预测变量）；专业（哑变量）、年级、性别、年龄、每周 Excel 使用时长、是否修过 Python/R、LLM 使用频率（1–5）及用途。</p>
+          <p>任务语言统一为中文。原文样本经过英语 C1 筛选，本样本没有；如果使用英文任务，二语水平会混入写作与提示词质量的测量。</p>
+        </section>
+        <section id="procedure">
+          <h2><span class="sec-no">5</span>实验流程</h2>
+
+          <h3>5.1 总体结构：两场次，间隔 3–10 天</h3>
+          <p>拆成两场有两个理由。其一是时长：两场各环节合计约 200–220 分钟，合并为一场，疲劳会集中在后段任务上。</p>
+          <p>其二更关键，是处理后测量问题。如果被试先做任务、再测 DK、Writing、MAILS，这些预测变量就会被所在档位带来的挫败或顺畅体验污染。因此，<strong>全部个体差异测量放在场次 1（随机化之前），场次 2 才随机分档。</strong></p>
+          <p>间隔定为 3–10 天，是因为 DK 测验与任务涉及的概念高度重叠，同场进行会启动相关概念。原文中测验与任务的先后顺序对表现没有影响（先测验 .446、先任务 .448，p = .953），但本研究 DK 测验与任务的概念重叠度远高于原文的作文，这一结论不能套用。</p>
+
+          <h3>5.2 场次 1（实验室机房；断网或仅开放白名单；禁用个人设备；约 100 分钟）</h3>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <colgroup><col style="width:76%"><col style="width:24%"></colgroup>
+              <thead>
+                <tr><th>环节</th><th>分钟</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>知情同意 + 背景问卷（含 2 道注意力检查题）</td><td>8</td></tr>
+                <tr><td>ICAR16</td><td>12</td></tr>
+                <tr><td>DK 专业知识（20 题）</td><td>25</td></tr>
+                <tr><td>Berlin Numeracy Test</td><td>8</td></tr>
+                <tr><td>CT 计算思维（10 题）</td><td>15</td></tr>
+                <tr><td>作文（300–450 字）</td><td>20</td></tr>
+                <tr><td>MAILS</td><td>5</td></tr>
+                <tr><td>SPEC 小测（写一段交给 agent 的需求说明）</td><td>8</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>各测验的顺序对每名被试单独随机。作文与测验必须在无 AI 条件下完成，因此机房断网。</p>
+
+          <h3>5.3 场次 2（实验室；约 100–120 分钟）</h3>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <colgroup><col style="width:76%"><col style="width:24%"></colgroup>
+              <thead>
+                <tr><th>环节</th><th>分钟</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>到场核验 + 随机分档</td><td>3</td></tr>
+                <tr><td>平台练习：用分配到的 agent 做一个与业务无关的小应用</td><td>8</td></tr>
+                <tr><td>T1–T3（顺序随机）：每个任务有效时间 15 分钟，agent 生成期间暂停计时，墙钟上限 25 分钟；每个任务结束后答 1 题置信度</td><td>50–70</td></tr>
+                <tr><td>信任量表 + 感知能力</td><td>2</td></tr>
+                <tr><td>休息</td><td>5</td></tr>
+                <tr><td>4A：审阅一份固定备忘录，不能使用 agent</td><td>10</td></tr>
+                <tr><td>4B：审阅另一份备忘录，可使用同档 agent</td><td>12</td></tr>
+                <tr><td>事后问卷（开放题「你怎么判断 agent 算对了」；是否与他人讨论过任务）+ 当场解说（轻度欺骗的伦理处理）</td><td>7</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>按上表合计 97–117 分钟；若三个任务都触及墙钟上限，T1–T3 最长约 75 分钟。</p>
+
+          <h3>5.4 Agent 能力操纵（三档同一界面，只换后端）</h3>
+          <p>界面沿用原文：左侧聊天、右侧预览、可回滚、代码不可见（生成过程以模糊方式显示）、倒计时。更新机制也沿用原文：单文件 HTML，以 diff 方式增量更新。</p>
+          <div class="table-wrap table-wide">
+            <table class="doc-table">
+              <colgroup><col style="width:12%"><col style="width:34%"><col style="width:22%"><col style="width:32%"></colgroup>
+              <thead>
+                <tr><th>档</th><th>后端</th><th>工具</th><th>P0 目标（专家提示下的 Y_comp；T1–T3 分任务各自达标，见 7.3 第 1 条）</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="t-nowrap">L1 弱</td><td>同一模型家族的最小档（约 7–8B）</td><td>无</td><td>≥ .50，且低于 L2</td></tr>
+                <tr><td class="t-nowrap">L2 中</td><td>同一家族的中档</td><td>仅生成单文件预览</td><td>比 L1 高 ≥ .10</td></tr>
+                <tr><td class="t-nowrap">L3 强</td><td>同一家族的最大档，或能力相当的锁版本 API 模型</td><td>代码解释器 / 表格计算，禁止联网</td><td>比 L2 高 ≥ .10</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <h4>操纵净化原则</h4>
+          <ul>
+            <li><strong>三档同一模型家族</strong>：跨厂商会把能力、输出风格、中文能力、指令遵循习惯一起换掉。</li>
+            <li><strong>锁定版本</strong>，防止版本漂移。原文专门列出了这一风险；本方案早期版本曾举例的 GPT-4o-mini 已被弃用。</li>
+            <li><strong>控制随机性</strong>：能设置 temperature 的设为 0 并固定 seed；记录完整的请求、响应与模型标识；P0 中重复运行，估计残余方差。</li>
+            <li><strong>剥离速度</strong>：agent 生成期间暂停倒计时，并记录延迟。原文选用 Sonnet 4 的理由之一就是快；在限时任务中，速度会与能力混淆。</li>
+            <li><strong>统一系统提示</strong>：三档使用同一系统提示，不压制强模型主动核对的行为——这本身就是能力的一部分。</li>
+            <li><strong>部署与数据</strong>：优先选择中文能力强、开放权重、可在校内部署的模型家族；L3 若使用 API，须签订不留存、不用于训练的协议。</li>
+          </ul>
+
+          <h3>5.5 任务材料</h3>
+          <h4>总原则</h4>
+          <ul>
+            <li>刺激材料均为可操作的样例应用或可下载的 CSV。<strong>禁止把文字说明写成可直接复制的完整需求</strong>，否则测到的是复制粘贴。</li>
+            <li>每个任务有 2 个同构平行版本。</li>
+            <li>保留原文的功能横幅：样例功能未全部点开时给出提示并记录（原文 300 次提交中仅 3 次未点完）。</li>
+            <li>泄题防范：被试签保密承诺；同时监测三项泄题信号——首条提示中提前出现样例参数、完成时间异常短、事后自报与他人讨论过。被标记者保留在数据中，另做剔除后的敏感性分析。</li>
+          </ul>
+
+          <h4>T1 复制（高情境）｜定价与促销模拟器</h4>
+          <ul>
+            <li>样例可操作的内容：单价、档位折扣、增值税、贡献毛利、盈亏平衡销量。</li>
+            <li>评分 8 项：档位阈值、折扣计算、增值税、毛利、盈亏平衡、输入校验、结果随输入更新、边界（销量为 0）。</li>
+            <li>默认值陷阱（经 P0 验证）：
+              <ul>
+                <li>折扣按超出阈值的部分累进计算，而不是达到阈值后全额打折；</li>
+                <li>输入的单价为含税价，计算毛利前须剔除增值税；</li>
+                <li>盈亏平衡用单位贡献毛利（不含税价 − 变动成本）计算，固定成本不摊入单位成本。</li>
+              </ul>
+            </li>
+            <li>学生发现这些陷阱需要两个成分：用同一组输入对比样例与自己的应用（VER 成分），以及理解数字为何不同（DK 成分）。因此 TRAP 不是 DK 的纯净近端指标——低 DK 但逐格对数字的人能过一部分，高 DK 但不对样例的人会栽。TRAP 预注册为探索性分析 TRAP ~ DK × VER：预期 DK 的斜率在「对比过样例数字」的子群中更大，与 M2 机制（DK → 定向核验 → 验错）同构，不进确认性家族。P0 另设无样例对照提示验证陷阱的通过路径（见 7.3）。</li>
+            <li>测试用例 12 组，包括恰好等于阈值、销量为 0、负数或非数字输入。</li>
+          </ul>
+
+          <h4>T2 功能扩展｜社团预算看板</h4>
+          <ul>
+            <li>已有功能：收入 / 支出记录与分类合计。</li>
+            <li>需新增：分类预算预警、剩余预算百分比、「赞助延迟一周到账」的 what-if 分析。</li>
+            <li>评分 6 项，每项 0–3 分。</li>
+            <li>候选陷阱：剩余预算百分比的分母是预算额，而不是已支出额；赞助延迟只改变现金到账时点，不改变全年收入合计，期间若现金余额为负，须显示资金缺口。</li>
+          </ul>
+
+          <h4>T3 去情境｜不透明标签计算器</h4>
+          <ul>
+            <li>行为一看就懂（例如点 A 使 K 加 1，点 B 使 K 翻倍并把 A 清零）；标签用字母，不暗示用途；规则无需靠试错归纳。</li>
+            <li>不埋陷阱，作为 DK 的对照任务。</li>
+            <li>不采用本方案早期版本中「规则靠试出来」的设定：那样测的是 ICAR16 已经测过的归纳推理。</li>
+          </ul>
+
+          <h4>T4 验错（4A + 4B）</h4>
+          <p>两份备忘录：甲为「校园咖啡馆开设外卖窗口」，乙为「文创店进入线上渠道」。每份约 300 字 + 1 张表，各含 6 处错误（3 处计算类 + 3 处概念类），另有 3 条正确陈述作为干扰项。</p>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <colgroup><col style="width:16%"><col style="width:42%"><col style="width:42%"></colgroup>
+              <thead>
+                <tr><th></th><th>备忘录甲</th><th>备忘录乙</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="t-nowrap"><strong>计算类</strong></td><td>TAM（潜在市场总规模）数量级错一档；同一项成本重复计入；把月度数字当作年度数字引用</td><td>增长率用错基数；折扣后的毛利率算错；合计行与明细不符</td></tr>
+                <tr><td class="t-nowrap"><strong>概念类</strong></td><td>把收入当作利润；由相关推出因果；把沉没成本计入是否继续的决策</td><td>未考虑对自有业务的蚕食；只调查现有顾客就推断全体；假设涨价后销量不变（忽略价格弹性）</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p><strong>作答方式</strong>：每一项判断「接受」或「需改」，并给出置信度（50–100%）；标为「需改」时须写出改法。改正质量按 0–2 计分：0 = 未改或改错，1 = 方向正确，2 = 改对且给出数字。</p>
+
+          <h4>4A 的来源匹配（防止 H4b 被归因错配污染）</h4>
+          <ul>
+            <li><strong>做法</strong>：4A 指导语为「你的 AI 助手刚才根据同一批数据，另写了一份文字稿备忘录」。备忘录在与 T1–T3 相同的界面中呈现（同样的聊天气泡版式、同样的「助手」名称），三档看到的文本完全相同。</li>
+            <li><strong>原因</strong>：如果来源不匹配，L1 组刚见过残缺的产出，会不相信这份备忘录出自同一个助手，从而用「来源审查」代替「内容审查」。这样一来，H4b 的组间差异会被自满以外的机制放大。</li>
+            <li><strong>配套措施</strong>：(a) P2 中加入归因操纵检查，问「你认为这份备忘录是刚才那个助手写的吗」；若 L1 与 L3 的认同率相差超过 20 个百分点，就重写指导语。(b) 主实验保留同一题作为测量变量，按档报告认同率，并报告「控制归因认同后 H4b 是否仍成立」的敏感性分析。</li>
+            <li><strong>伦理</strong>：这属于轻度欺骗，须经伦理委员会批准，实验结束时当场解说，并允许被试撤回数据。</li>
+          </ul>
+
+          <h4>4B</h4>
+          <p>使用同档 agent，agent 可读取备忘录与表格，用于检验人机联合核验（H4c）与定向提问（H5 机制）。备忘录与阶段的搭配按拉丁方平衡（见 3.3）。</p>
+
+          <h3>5.6 测量工具（场次 1）</h3>
+          <div class="table-wrap table-wide">
+            <table class="doc-table">
+              <colgroup><col style="width:15%"><col style="width:17%"><col style="width:38%"><col style="width:30%"></colgroup>
+              <thead>
+                <tr><th>量表</th><th>题量 / 时长</th><th>要点</th><th>P1 质量门槛</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="t-nowrap">ICAR16</td><td>16 题 / 12 分钟</td><td>确认中文版来源；若自行翻译，须做翻译—回译</td><td>α ≥ .60（原文 .625）</td></tr>
+                <tr><td class="t-nowrap">DK 专业知识</td><td>20 题 / 25 分钟</td><td>5 个知识块 × 4 题：贡献毛利与盈亏平衡、价格弹性、机会成本与沉没成本、相关≠因果与样本偏差、简单贴现；每块 2 题近迁移 + 2 题远迁移；题干采用校园场景</td><td>难度 .30–.80；校正点二列相关 ≥ .20；ω ≥ .75</td></tr>
+                <tr><td class="t-nowrap">Writing 作文</td><td>1 篇 / 20 分钟</td><td>写给非本专业的部门经理，2–3 段。评分量表为原文 5 维 × 4 项的中文本地化版，英语特有条目须改写（如「主动动词在前半句」改为「主干清楚、避免过长的前置定语」）。双盲评分；两人分差 &gt; 10 分时由第三人评分，取较接近的两个分数的均值（原文规则；原文有 21% 需要第三评）</td><td>ICC(2,2) ≥ .75；若 &lt; .70，改用三评均值并做潜变量敏感性分析</td></tr>
+                <tr><td class="t-nowrap">Numeracy</td><td>4 题 / 8 分钟</td><td>若满分者超过 40%，换用多选版或加题</td><td>—</td></tr>
+                <tr><td class="t-nowrap">CT 计算思维</td><td>10 题 / 15 分钟</td><td>5 题伪代码（定义 / 追踪）+ 5 题表格逻辑（IF、累计、阈值）</td><td>ω ≥ .65；两个分量表相关 r &lt; .30 时分开分析</td></tr>
+                <tr><td class="t-nowrap">MAILS</td><td>约 10 题 / 5 分钟</td><td>自评量表，约 10 题对应 Koch 等（2024）的简版，覆盖原量表各因子。原版（Carolus 等，2023）共 34 题：AI 素养部分含使用与应用、理解、识别、伦理四个维度，另有创造 AI、AI 自我效能、AI 自我胜任三个模块。中文版须做 CFA</td><td>—</td></tr>
+                <tr><td class="t-nowrap">SPEC 小测</td><td>1 题 / 8 分钟</td><td>按 SPEC 的 5 项评分</td><td>用于检验规格写作是否独立于一般写作能力</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p><strong>DK 增至 20 题的依据</strong>：交互项的信度约等于两个因子信度之积。能力档是随机分配的处理，信度可视为 1，因此交互项的信度主要取决于 DK。按 Spearman-Brown 公式，15 题 α = .70 时，增至 20 题约为 .76。</p>
+        </section>
+        <section id="control">
+          <h2><span class="sec-no">6</span>控制变量与混淆控制</h2>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <colgroup><col style="width:24%"><col style="width:76%"></colgroup>
+              <thead>
+                <tr><th>类别</th><th>控制手段</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>一般推理</td><td>ICAR16 进入所有主模型</td></tr>
+                <tr><td>处理后偏差</td><td>全部预测变量在随机化之前测量（两场次设计的核心目的）</td></tr>
+                <tr><td>跨厂商风格与语言能力差异</td><td>三档同一模型家族、锁定版本；三档的中文能力由 P0 检验</td></tr>
+                <tr><td>任务语言</td><td>全部中文；作文与提示词使用同一语言</td></tr>
+                <tr><td>速度</td><td>agent 生成期间暂停计时；记录每轮延迟；任一档墙钟上限触发率 &gt; 10% 时单独报告，并做剔除后的敏感性分析</td></tr>
+                <tr><td>Agent 随机性</td><td>temperature = 0 + 固定 seed（不能保证输出完全确定）；全量日志；P0 重复运行估计运行间方差</td></tr>
+                <tr><td>天花板 / 地板效应</td><td>P2 设分布门槛（每档满分者与零分者各 &lt; 15%）；主分析采用测试用例层的二项模型，天然处理 0/1 边界</td></tr>
+                <tr><td>疲劳与顺序</td><td>测验全部安排在处理之前；T1–T3 顺序随机；4A → 4B 顺序固定；备忘录 × 阶段拉丁方平衡</td></tr>
+                <tr><td>样例探索不完整</td><td>功能横幅提示并记录；未点完就提交者保留，敏感性分析中剔除</td></tr>
+                <tr><td>自带工具</td><td>在机房进行；平台内提供计算器与便笺（不发草稿纸，保证验算行为全部进入日志）；禁用个人 ChatGPT、手机与外网；剪贴板仅限平台内使用</td></tr>
+                <tr><td>评分偏差</td><td>测试用例作为客观主指标；评分员不看聊天记录（聊天内容会暴露档位）；盲法检查：请评分员猜档位，猜中率显著高于 1/3 时予以报告，并以 Y_corr 为主要结论依据</td></tr>
+                <tr><td>专业与任务内容重叠</td><td>主模型加入专业哑变量；稳健性分析中剔除会计 / 金融专业</td></tr>
+                <tr><td>泄题</td><td>平行版本 + 保密承诺 + 泄题检测</td></tr>
+                <tr><td>需求特征</td><td>不告知三档的存在；事后测量感知能力</td></tr>
+                <tr><td>时段与主试</td><td>同一场次内三档混排</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>调节变量只预注册能力档与任务类型；不设「年级 × 能力」之类的三阶交互（样本量不足以支撑）。</p>
+        </section>
+        <section id="data">
+          <h2><span class="sec-no">7</span>数据采集方法</h2>
+
+          <h3>7.1 数据来源</h3>
+          <ol>
+            <li><strong>平台日志</strong>（自建 vibe coding 平台，结构同原文）：完整提示序列、每轮请求 / 响应与模型标识、回滚、预览 iframe 事件（测试输入、边界值）、计算器调用、功能横幅触发、墙钟与有效计时、每轮生成延迟。</li>
+            <li><strong>测验系统</strong>：场次 1 各量表的逐题作答与用时（含注意力检查）。</li>
+            <li><strong>评分数据</strong>：测试用例执行结果、0–3 行为保真评分、PQ / SPEC / 定向提问编码、改正质量评分、双评记录。</li>
+            <li><strong>问卷数据</strong>：背景、信任、感知能力、置信度、事后问卷。</li>
+          </ol>
+
+          <h3>7.2 评分流程</h3>
+          <ul>
+            <li><strong>测试用例（主指标）</strong>：每个任务 10–12 组输入与标准输出（容差 ±0.01），用例表作为预注册附录冻结。以 Playwright 脚本辅助执行，人工兜底（生成应用的 DOM 结构不固定）。20% 复评，一致率 ≥ .95。</li>
+            <li><strong>行为保真（0–3）</strong>：评分员只看最终应用，不看聊天记录；20% 双评，ICC(2,1) ≥ .75。原文仅由一名作者盲评，本研究至少两名评分员。</li>
+            <li><strong>作文</strong>：两名中文写作教师盲评；分差 &gt; 10 分时由第三人评分。预算按 21% 的第三评比例预留。</li>
+            <li><strong>改正质量</strong>：20% 双评，κ ≥ .70。</li>
+          </ul>
+
+          <h3>7.3 预实验（冻结材料前全部完成）</h3>
+
+          <h4>P0｜Agent 基准测试（约 2 周；无被试，可与伦理审批并行）</h4>
+          <p>每个任务准备两套标准提示：专家提示（SPEC 5 项写全）与朴素提示（一句话说明目标）；三档各运行 5 次。通过标准：</p>
+          <ol>
+            <li>分任务达标：T1、T2、T3 各自的专家提示 Y_comp 都须满足 5.4 表目标（含 L3 − L2 ≥ .10）。只报合并 Y_comp 会掩盖任务差异——L3 多出的代码解释器对单文件 HTML 的边际有限、对 4B 验算帮助大；若某任务 L3 − L2 &lt; .10，H4a 在该任务上就有失败风险，并按 2.2 的规则连带 H4b–H5 降级。补救顺序：先为 L3 增加「运行测试用例并回报数字」类工具（仍不显示代码，构念仍是 agent 栈能力）；仍不达标则把该任务降出 H4a 前置条件并在局限中说明。不得用「4B 计算类检出」充当操纵检验——那是 H4c 的因变量，用因变量验证自变量会形成循环。</li>
+            <li>每个默认值陷阱在朴素提示下、三档中均被踩中 ≥ 4/5 次；不达标的陷阱换掉。另跑一轮不含样例参数的朴素提示对照：若 agent 无样例可依也能做对陷阱，说明陷阱太浅（模型先验即可避开），须换；只有靠样例参数才做对，才证明通过陷阱依赖人提供测试输入——这正是 5.5 中 TRAP 依赖 VER 成分的设计依据。</li>
+            <li>按档报告「提示敏感度」＝专家提示 Y_corr − 朴素提示 Y_corr。若 L3 的敏感度明显低于 L1，即构成替代假说在机制层的证据。</li>
+            <li>4B 情境下：L3 在通用审核提示下，计算类错误检出 ≥ 4/5、概念类 ≤ 1/5；在点名具体概念的定向提示下，概念类检出 ≥ 4/5；L1 在通用提示下，计算类检出 ≤ 2/5。</li>
+          </ol>
+          <p>第 4 条把「锯齿状能力边界」做进了设计本身：agent 能答对概念问题，但前提是人先问对。</p>
+
+          <h4>P1｜量表校准（约 2 周，N ≈ 120–150）</h4>
+          <p>在课堂纸笔或断网机房中施测 DK、CT、Numeracy、ICAR16 中文版；另收集 20 篇作文，用于校准评分员。按经典测验理论筛题，样本量足够时补做 Rasch 分析。P1 参与者不进入主实验。</p>
+
+          <h4>P2｜实验室预实验（约 2 周，N ≈ 18，每档 6 人）</h4>
+          <p>完整走一遍两场次流程。通过标准：</p>
+          <ul>
+            <li>作文在 20 分钟内能写满；</li>
+            <li>DK 测验 25 分钟内，≥ 80% 的人能做到最后一题；</li>
+            <li>T1–T3 合并均分在 .35–.60 之间（原文总均分 .45，去情境任务 .34）；</li>
+            <li>每档满分者与零分者各 &lt; 15%；</li>
+            <li>4A / 4B 每题通过率在 .20–.85 之间；</li>
+            <li>4A 归因检查：「你认为这份备忘录是刚才那个助手写的吗」，L1 与 L3 认同率差 &gt; 20 个百分点即重写指导语（见 5.5 来源匹配段）；主实验保留该题作测量变量；</li>
+            <li>统计各档墙钟上限触发率；完成评分员培训与用例表试跑。</li>
+          </ul>
+          <p>不达标则修改任务，不开主实验。</p>
+
+          <h3>7.4 排除与缺失规则（预注册）</h3>
+          <ul>
+            <li>两道注意力检查题都答错 → 剔除。</li>
+            <li>技术故障（服务中断 &gt; 2 分钟）→ 重新预约，原记录不计。</li>
+            <li>未点完样例功能 / 有泄题标记 → 保留，敏感性分析中剔除。</li>
+            <li>某量表 &gt; 20% 未作答 → 该量表记为缺失；主分析采用 FIML 或多重插补（m = 50），不做列删除。</li>
+            <li>超时任务按已提交的成品评分，不剔除。</li>
+          </ul>
+        </section>
+        <section id="analysis">
+          <h2><span class="sec-no">8</span>数据分析方法</h2>
+
+          <h3>通用约定</h3>
+          <ul>
+            <li>连续变量先换算到 [0, 1]，进入回归前再 z 分数化（与原文一致）。</li>
+            <li>能力档采用正交对比编码：线性项 cap_lin（L1 = −1，L2 = 0，L3 = 1），二次项 cap_quad（L1 = 1，L2 = −2，L3 = 1）。描述统计另报以 L2 为参照的哑变量结果。</li>
+            <li>场次数超过 10 时，加入场次随机截距。</li>
+          </ul>
+
+          <h3>8.1 生成任务（测试用例层模型）</h3>
+          <p>主分析以「被试 × 任务 × 测试用例」为一行，因变量为该用例是否通过（0/1），用二项 GLMM 估计。</p>
+          <pre class="codeblock"><code># 每行 = 被试 × 任务 × 用例，pass ∈ {0,1}
+m_corr &lt;- glmer(pass ~ (DK + Writing + CT) * cap_lin + cap_quad +
+                  Numeracy + ICAR + major + task + version +
+                  (1 | id) + (1 | task:case),
+                family = binomial, data = d_case)
+
+# H1c：DK × 情境（T1、T2 = +0.5；T3 = -0.5）
+m_h1c &lt;- glmer(pass ~ DK * ctx + Writing * ctx + CT + Numeracy + ICAR + cap_lin +
+                 (1 | id) + (1 | task:case),
+               family = binomial, data = d_case)
+
+# H2a（与原文可比）：被试层
+m_h2a &lt;- lm(y_gen ~ Writing + ICAR + cap_lin + cap_quad, data = d_person)</code></pre>
+          <p>用例层模型直接处理 0/1 边界，L3 的天花板不会机械地压平斜率；同时报告被试层 OLS，便于与原文对照。若任一档有 ≥ 15% 的被试 Y_corr = 1，以用例层模型的结论为准。</p>
+
+          <h4>与原文对照</h4>
+          <ul>
+            <li>(a) 只用 L2 组（n = 80），报告 Writing、CT 与 Y_gen 的相关 <code>r</code>，以及分层 OLS 的 ΔR²（先进 CT 后进 Writing，再反过来）。本研究的 CT 不是原文的 SCS1，因此称为「概念性对照」，不称「复现」。原文参照值：ΔR²(write|CS) = .059，ΔR²(CS|write) = .125。</li>
+            <li>(b) 三档合并、控制能力档后再报告一次（N = 240）。</li>
+          </ul>
+
+          <h3>8.2 H1b：相依相关比较</h3>
+          <pre class="codeblock"><code>library(cocor)
+cocor.dep.groups.overlap(r.jk = r_dk_aud, r.jh = r_dk_corr, r.kh = r_aud_corr,
+                         n = 240, test = c("williams1959", "steiger1980"))</code></pre>
+          <p>以 Williams 检验为主。Y_aud（18 项）与 Y_corr（约 36 个用例）的信度不同，信度较低的一方，其相关会被系统性压低，因此另报信度校正版：</p>
+          <div class="formula-box">$$r^{*} = \frac{r}{\sqrt{\rho_{xx}\,\rho_{yy}}}$$</div>
+          <p>两个校正相关之差用 bootstrap 求置信区间。控制协变量的版本，在 lavaan 中对两个标准化 DK 系数施加等值约束，做 Wald 检验。</p>
+
+          <h3>8.3 验错任务（题目层模型与信号检测）</h3>
+          <pre class="codeblock"><code># 4A 错误题；miss = 1 表示把错误标成「接受」
+m_h4b &lt;- glmer(miss ~ cap_lin + cap_quad + DK + fluency + err_type +
+                 Numeracy + ICAR + (1 | id) + (1 | item),
+               family = binomial, data = d4a_err)
+# H4b：cap_lin &gt; 0；H4d：fluency &gt; 0
+
+m_h5 &lt;- glmer(miss ~ cap_lin * DK + fluency + Numeracy + ICAR +
+                (1 | id) + (1 | item),
+              family = binomial, data = subset(d4a_err, err_type == "概念"))
+# H5：cap_lin:DK &lt; 0
+
+# 4B 错误题的击中
+m_h4c &lt;- glmer(hit ~ cap_lin * err_type + DK * err_type + Numeracy + ICAR +
+                 (1 | id) + (1 | item),
+               family = binomial, data = d4b_err)
+# H4c：cap_lin 对计算类的效应 &gt; 对概念类的效应</code></pre>
+          <p><strong>信号检测分解（次要分析）</strong>：令 $$e_j$$ 在错误题取 +0.5、正确题取 −0.5，拟合 probit 混合模型：</p>
+          <div class="formula-box">$$P(\text{flag}_{ij}=1) = \Phi\left(-c_i + d'_i\, e_j\right)$$</div>
+          <p>其中 flag = 1 表示把该项标为「需改」。预测变量的主效应对应判定标准 <code>c</code> 的移动：系数为负，表示被试更少标「需改」、更多接受，即接受门槛放松（<code>c</code> 增大）；预测变量与 <code>e</code> 的交互对应 d′ 的变化。自动化自满理论预测，能力档主要移动 <code>c</code>，而不是降低 d′——这比「漏检率升高」更精确。</p>
+
+          <h3>8.4 中介分析（lavaan，bootstrap 10,000 次，与原文一致）</h3>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <colgroup><col style="width:34%"><col style="width:22%"><col style="width:44%"></colgroup>
+              <thead>
+                <tr><th>路径</th><th>地位</th><th>说明</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>M1 Writing → PQ → Y_gen</td><td>次要（复现原文；原文间接效应 0.152，约占 52%）</td><td>控制 ICAR16 与能力档</td></tr>
+                <tr><td>M2 DK → 定向提问 → 4B 概念类击中</td><td>次要</td><td>横断数据，b 段可能存在混淆</td></tr>
+                <tr><td>M3 能力档（随机）→ 信任 → 4A 漏检</td><td>次要，但识别最强</td><td>a 段因果可识别；b 段用 medsens 做敏感性分析（Imai 等，2010）</td></tr>
+                <tr><td>M4 DK → VER → Y_aud</td><td>探索</td><td>—</td></tr>
+                <tr><td>M5 MAILS → 迭代轮数 → Y_gen</td><td>探索</td><td>—</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>PQ 不以模型自动打分作为唯一指标（原文强调人工评分的构念效度），模型打分仅作稳健性检查。</p>
+
+          <h3>8.5 等效检验、多重比较与稳健性</h3>
+          <ul>
+            <li><strong>等效检验（TOST；Lakens, 2017）</strong>：用于 H3「CT 不预测 Y_aud」与 H6「MAILS 不增量预测 Y_corr」。90% CI 完全落在 SESOI（±0.25）之内才算支持等效。预注册中写明：「小于 0.25 的效应，本研究无法与零区分。」</li>
+            <li><strong>多重比较</strong>：确认性家族 9 个检验做 BH 校正；估计类只报效应量与 95% CI；探索类不校正，但逐条标明。</li>
+            <li><strong>TRAP 的近端分解（探索性，见 5.5）</strong>：被试层模型 <code>trap ~ DK * VER + ICAR + cap_lin</code>，VER 取「是否用同一组输入对比过样例数字」（0/1）。预期 DK 的斜率在 VER = 1 子群中更大；只报效应量与 95% CI，不做显著性结论。</li>
+            <li><strong>稳健性分析</strong>：
+              <ul>
+                <li>剔除会计 / 金融专业后重跑；</li>
+                <li>PQ 改用模型打分，并报告其与人工评分的 ICC；</li>
+                <li>用潜变量 SEM 校正 DK、Writing 的测量误差；</li>
+                <li>中文分词（jieba / pkuseg，报告版本）后计算提示词的 HD-D、MTLD，作三角验证（原文中这两个指标与任务表现的相关为 .310 / .343）；</li>
+                <li>剔除触发墙钟上限者；</li>
+                <li>对照被试层 OLS 与用例层 GLMM 的结论。</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+        <section id="ethics">
+          <h2><span class="sec-no">9</span>伦理与数据管理</h2>
+          <ul>
+            <li><strong>轻度欺骗</strong>：4A 的来源归因属于轻度欺骗，须经伦理委员会批准；场次 2 结束时当场解说，允许被试撤回数据。</li>
+            <li><strong>隐私</strong>：提示词与日志包含个人表达。优先在校内部署开放权重模型；使用外部 API 时须签订不留存、不用于训练的协议，数据去标识化后再上传，并遵守内地 PIPL、香港 PDPO 及跨境传输要求（原文同样把「不留存、不用于训练」列为平台硬性要求）。</li>
+            <li><strong>无 AI 条件</strong>：场次 1 断网，保证作文与测验在无 AI 条件下完成。</li>
+            <li><strong>招募与报酬</strong>：招募不经任课教师之手；以课程加分作报酬时，须提供等值的替代作业。</li>
+            <li><strong>开放科学</strong>：数据与代码随预注册在 OSF 存档。</li>
+          </ul>
+        </section>
+
+        <section id="timeline">
+          <h2><span class="sec-no">10</span>时间线</h2>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <colgroup><col style="width:14%"><col style="width:86%"></colgroup>
+              <thead>
+                <tr><th>周</th><th>工作内容</th></tr>
+              </thead>
+              <tbody>
+                <tr><td class="t-nowrap">1–4</td><td>伦理申请；平台搭建（预览日志注入、生成期间暂停计时、三档后端）；编制任务与平行版本；建设 DK、CT 题库；P0（无被试，与伦理审批并行）</td></tr>
+                <tr><td class="t-nowrap">4–6</td><td>P1 量表校准</td></tr>
+                <tr><td class="t-nowrap">6–7</td><td>P2 实验室预实验；评分员培训</td></tr>
+                <tr><td class="t-nowrap">8</td><td>冻结材料；在 OSF 用完整模板预注册（9 个确认性检验、排除规则、P0 通过标准等内容超出 AsPredicted 的篇幅）</td></tr>
+                <tr><td class="t-nowrap">9–15</td><td>主实验数据采集（两场次滚动进行）</td></tr>
+                <tr><td class="t-nowrap">15–20</td><td>评分、分析、写作</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>合计约 20 周（约 5 个月）。</p>
+        </section>
+
+        <section id="extensions">
+          <h2><span class="sec-no">11</span>扩展实验（可拆分，均不是主实验的前提）</h2>
+
+          <h3>扩展 B｜无 agent 基线 L0（约增加 60 人）</h3>
+          <p>同样的任务，只提供 Excel 与计算器。产物是 Excel 模型，但用同一套测试用例评分，因此 Y_corr 在 L0–L3 之间可比（Y_comp、Y_gen 不可比）；4A 原样可比；4B 在 L0 条件下相当于第二份不能用 agent 的备忘录。用于回答：「agent 提高的是完整度，还是同时降低了正确性？」</p>
+
+          <h3>扩展 C｜课程情境任务</h3>
+          <p>取财务、营销、管理三门课的真实作业，限时 48 小时，使用同一平台。在班内按账号对个体随机（班级数太少，无法在班级层面对能力档做推断）。评分加入「能否直接交给经理」的整体项。作为实验室结论的概念性复制。</p>
+
+          <h3>扩展 D｜专业对照</h3>
+          <p>30 名 CS 本科生在 L2 条件下完成同一套经管任务，描述性地比较「CS 学生生成强、经管学生核验强」这一培养目标主张。</p>
+
+          <h3>扩展 E｜训练干预随机对照（人才培养结论的因果依据）</h3>
+          <ul>
+            <li><strong>设计</strong>：全部使用 L3；两臂各约 60 人（ANCOVA 下 d = 0.5，80% 功效）。</li>
+            <li><strong>干预组</strong>：90 分钟「规格 + 核验」训练，包括 SPEC 5 项模板、典型业务错误清单，以及「先写下判定标准与预期数字，再看输出」的认知强制（Buçinca 等，2021）。</li>
+            <li><strong>主动对照组</strong>：90 分钟通用 AI 工具讲解，时长与讲师相同。</li>
+            <li><strong>流程</strong>：前测（平行版 T1 + 4A）→ 训练 → 一周后后测（新的平行版本 + 新情境任务，测远迁移）。</li>
+            <li><strong>调节分析：DK × 训练（补偿性还是增强性），必须检验。</strong>Buçinca 等（2021，N = 199）发现认知强制类干预存在「干预造成的不平等」：认知需求（Need for Cognition）高者获益显著更大，而且降低过度依赖最有效的设计，主观评价最差。如果训练只帮到高 DK 者，就等于在经管培养中复制了 Otis 等（2026）与 Caosun &amp; Aral（2026）所预言的分化：高技能者兑现潜力，低技能者去技能化。</li>
+            <li><strong>为什么需要 E</strong>：只有 E 成立，才能写「规格 + 核验训练能提高……」。已有证据表明，无护栏地使用 AI 会损害学习：Bastani 等（2025, <em>PNAS</em>）对近千名高中生的研究发现，无护栏的 AI 辅导提升了平时成绩，却损害了独立考试成绩，有护栏的版本则没有这种损害。Caosun &amp; Aral（2026）的模型进一步表明，如果 AI 承担的是教学、反馈与刻意练习的职能，而不是替代练习，技能侵蚀机制会反转——「先写判定标准再看输出」正属于这一类。</li>
+          </ul>
+          <p><strong>不做</strong>：眼动、脑成像、多国样本——对经管培养问题没有增量。</p>
+        </section>
+
+        <section id="implications">
+          <h2><span class="sec-no">12</span>结果到培养目标的对接（预注册结果分支）</h2>
+          <p>前提：主实验只回答「agent 变强时，哪些学生变量仍能预测表现」；课程改革措施是否有效，由扩展 E 检验。下表每一条都应读作「若……则建议……，有待 E 验证」。</p>
+          <div class="table-wrap">
+            <table class="doc-table">
+              <colgroup><col style="width:34%"><col style="width:66%"></colgroup>
+              <thead>
+                <tr><th>结果分支</th><th>培养动作</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>H1a / H1b / H1c 成立</td><td>培养目标从「会用 AI 出方案」改为「会用专业知识拦住 AI」；微观经济学、会计、统计课程的测验加入「AI 草稿纠错」题型（与 4A 同构）；期末成绩的 20% 分配给验错</td></tr>
+                <tr><td>H4b + H5 成立（信任迁移，且低 DK 者受损更大）</td><td>把强模型当作风险条件，而不是奖励；高年级案例课使用 L3 级工具，但评分看击中率；「低年级先用 L1、再升到 L3」本身是待检验的假设（可作为 E 的第三臂）</td></tr>
+                <tr><td>H4c 成立</td><td>把「让 agent 验算」当作基本操作来教；课堂时间集中在概念类错误与定向提问上——学的是「该问什么」，而不是「怎么算」</td></tr>
+                <tr><td>H4d 成立</td><td>阅读 AI 稿件时，先抽出关键数字与因果主张逐条核对；案例课加入「给流畅稿件挑错」的练习</td></tr>
+                <tr><td>H2b 呈替代方向</td><td>商务沟通课的重点从文采转向规格（SPEC 5 项纳入作文评分表；提示词随作业一起上交）</td></tr>
+                <tr><td>H2b 呈放大方向</td><td>写作与规格训练的回报随工具变强而上升，应提前到低年级开始，并贯穿各年级</td></tr>
+                <tr><td>H3 成立</td><td>不必开成 CS 导论；保留表格逻辑、条件判断、累计、阈值等内容，放进数据分析课用 Excel 教</td></tr>
+                <tr><td>H6 等效成立</td><td>不单独开设「提示词工程」核心课；AI 素养内容不超过 8 学时，嵌入已有课程；考核看 VER 与 PQ</td></tr>
+                <tr><td>复现出 LLM 使用频率的负相关</td><td>只作为局限写入（相关不等于因果）；最强的教学表述是：用 AI 的时间不能替代 DK 与写作的独立练习；每学期初做一次 20 分钟的无 AI 概念解释</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="conclusion-box">
+            <span class="box-title">结论允许说到哪一步</span>
+            <p>本研究可以支持：「经管培养应把核验和规格写作做成可测量的能力，并随 agent 变强提高其权重。」</p>
+            <p>本研究不支持：「取消编程课」或「全面拥抱 vibe coding」（原文同样没有因果证据）。</p>
+          </div>
+        </section>
+        <section id="sources">
+          <h2><span class="sec-no">13</span>资料来源</h2>
+
+          <h3>原始依据（本设计直接建立在其上，关键数字已逐条核对）</h3>
+          <ul>
+            <li>Thorgeirsson, S., Weidmann, T. B., &amp; Su, Z. (2026). Computer Science Achievement and Writing Skills Predict Vibe Coding Proficiency. <em>Proc. CHI '26</em>. doi:10.1145/3772318.3791666；预印本 arXiv:2603.14133。原文关键量：N = 100；写作与任务表现 r = .290（p = .003），控制 ICAR16 后偏相关 .186（p = .066）；ΔR²(write|CS) = .059，ΔR²(CS|write) = .125；提示词中介的间接效应 0.152（约 52%）；LLM 使用频率 r = −.258；HD-D / MTLD 与任务表现 r = .310 / .343；ICAR16 α = .625；写作 ICC(2,2) = .731（21% 需第三评）；任务总均分 .45，去情境任务 .34；先测验 / 先任务均分 .446 / .448（p = .953）；功效依据 N = 85（r = .30）；模型 Claude Sonnet 4（20250514）。</li>
+          </ul>
+
+          <h3>理论文献</h3>
+          <ul>
+            <li>Dell'Acqua, F., et al. (2026). Navigating the jagged technological frontier: Field experimental evidence of the effects of AI on knowledge worker productivity and quality. <em>Organization Science</em>. doi:10.1287/orsc.2025.21838（前身为 HBS Working Paper 24-013 / SSRN 4573321）</li>
+            <li>Parasuraman, R., &amp; Manzey, D. H. (2010). Complacency and bias in human use of automation. <em>Human Factors</em>, 52(3).</li>
+            <li>Schemmer, M., et al. (2023). Appropriate reliance on AI advice. <em>IUI '23</em>.</li>
+            <li>DeCarlo, L. T. (1998). Signal detection theory and generalized linear models. <em>Psychological Methods</em>, 3(2).</li>
+            <li>Buçinca, Z., Malaya, M. B., &amp; Gajos, K. Z. (2021). To trust or to think: Cognitive forcing functions. <em>Proc. ACM HCI</em>, 5(CSCW1).（N = 199；认知强制显著降低过度依赖；认知需求高者获益更大）</li>
+            <li>Caosun, M., &amp; Aral, S. (2026). The augmentation trap: AI productivity and the cost of cognitive offloading. arXiv:2604.03501v6.（动态模型：外包强度 u、技能中性成分 α 与技能互补成分 β 的分解；划分五个区域；管理者短视或技能外部性导致 augmentation trap；β &gt; 1 时使用强度随技能递增，可产生高技能者积累、低技能者去技能化的永久分化；AI 承担教学 / 反馈 / 刻意练习职能时机制反转）</li>
+          </ul>
+
+          <h3>替代 / 放大方向的实证证据</h3>
+          <ul>
+            <li>Noy, S., &amp; Zhang, W. (2023). Experimental evidence on the productivity effects of generative artificial intelligence. <em>Science</em>, 381(6654).（444 名专业人员；用时 −0.8 SD，质量 +0.4 SD；分布压缩，低能力者获益更大；替代的是努力，而非互补技能）</li>
+            <li>Brynjolfsson, E., Li, D., &amp; Raymond, L. (2025). Generative AI at work. <em>Quarterly Journal of Economics</em>, 140(2), 889–942. doi:10.1093/qje/qjae044（5,172 名客服；生产率平均 +15%，新手与低技能者获益最大；NBER 工作论文版为 5,179 人、+14%）</li>
+            <li>Otis, N. G., et al. (2026). The uneven impact of generative artificial intelligence on entrepreneurial performance. <em>Management Science</em>. doi:10.1287/mnsc.2024.06909（前身为 HBS Working Paper 24-042 / SSRN 4671369；640 名肯尼亚小企业主；高绩效者受益，低绩效者受损）</li>
+            <li>Cruces, G., Fernández Meijide, D., Galiani, S., Gálvez, R. H., &amp; Lombardi, M. (2026). Does generative AI narrow education-based productivity gaps? Evidence from a randomized experiment. NBER Working Paper 34851. doi:10.3386/w34851（1,174 名 25–45 岁成人；无 AI 时教育组间差距 0.548 SD，有 AI 时 0.139 SD，缩小约四分之三；撤掉 AI 后低教育组保留部分增益，但差距重现；聊天日志显示低教育组成功获得了实质帮助，高教育组在多个边际上用得更好；密集使用且自身持续投入者，撤掉 AI 后表现更高。AEA-RCT 注册号 0016607）</li>
+            <li>Bastani, H., et al. (2025). Generative AI without guardrails can harm learning: Evidence from high school mathematics. <em>PNAS</em>. doi:10.1073/pnas.2422633122（近千名高中生；无护栏的 GPT-4 辅导提升平时成绩、损害独立考试成绩；护栏版两者均无损害）</li>
+          </ul>
+
+          <h3>测量工具</h3>
+          <ul>
+            <li>Condon, D. M., &amp; Revelle, W. (2014). The International Cognitive Ability Resource. <em>Intelligence</em>, 43.（ICAR16）</li>
+            <li>Cokely, E. T., et al. (2012). Measuring risk literacy: The Berlin Numeracy Test. <em>Judgment and Decision Making</em>, 7(1).</li>
+            <li>Carolus, A., Koch, M. J., Straka, S., Latoschik, M. E., &amp; Wienrich, C. (2023). MAILS – Meta AI literacy scale. <em>Computers in Human Behavior: Artificial Humans</em>, 1(2), 100014. doi:10.1016/j.chbah.2023.100014（34 题；AI 素养：使用与应用、理解、识别、伦理；另含创造 AI、AI 自我效能、AI 自我胜任）</li>
+            <li>Koch, M. J., Carolus, A., Wienrich, C., &amp; Latoschik, M. E. (2024). Meta AI literacy scale: Further validation and development of a short version. <em>Heliyon</em>, 10(21), e39686. doi:10.1016/j.heliyon.2024.e39686（10 题简版）</li>
+            <li>Jian, J.-Y., Bisantz, A. M., &amp; Drury, C. G. (2000). Foundations for a scale of trust in automated systems. <em>International Journal of Cognitive Ergonomics</em>, 4(1).</li>
+          </ul>
+
+          <h3>统计方法</h3>
+          <ul>
+            <li>Pocock, S. J., &amp; Simon, R. (1975). Sequential treatment assignment with balancing. <em>Biometrics</em>, 31(1).（最小化法）</li>
+            <li>Diedenhofen, B., &amp; Musch, J. (2015). cocor. <em>PLoS ONE</em>, 10(4).（相依相关比较）</li>
+            <li>Lakens, D. (2017). Equivalence tests. <em>Social Psychological and Personality Science</em>, 8(4).（TOST）</li>
+            <li>Imai, K., Keele, L., &amp; Tingley, D. (2010). A general approach to causal mediation analysis. <em>Psychological Methods</em>, 15(4).（medsens）</li>
+          </ul>
+          <p>Dell'Acqua 等（<em>Organization Science</em>）、Otis 等（<em>Management Science</em>）、Bastani 等（<em>PNAS</em>）三篇已核对到正式发表版本与 DOI（2026-10-09 核对）；Brynjolfsson 等（<em>QJE</em>）与 MAILS 两条于 2026-10-10 补核。其余文献在引用前逐条核对卷期页码。</p>
+        </section>
+        <section id="appendix">
+          <h2><span class="sec-no">附</span>本轮审核记录</h2>
+          <p><span class="appendix-note">内部工作记录 · 定稿后删除</span></p>
+
+          <h3>A. 已在正文中直接修正</h3>
+          <ol>
+            <li><strong>3.2 功效表「原文对照」一行</strong>：原写「r ≈ .31（原文写作 r = .29 可检出）」，不成立。.29 低于 80% 功效下的最小可检效应 .31，n = 80 时检出 r = .29 的功效约 .75。另外，原文 r = .29 来自 N = 100 的单次研究，可能偏高，L2 单组对照应定位为低功效的方向性检验。</li>
+            <li><strong>场次时长</strong>：场次 1 各环节合计 101 分钟（原写约 95）；场次 2 合计 97–117 分钟（原写约 100）；5.1 的「单场 152 分钟以上」与两表合计（约 200–220 分钟）对不上。已按表格合计改写。</li>
+            <li><strong>1.3 末段的归因</strong>：原称「三个框架给出替代 / 放大 / 倒 U 三种对立预测」，但所列三个框架（锯齿边界、生成—核验不对称、自动化自满）与这三个方向并不一一对应：替代与放大的预测来自 1.1 的实证文献，倒 U 没有给出来源。已改为「理论与实证证据给出相互竞争的预测」。<strong>建议补一条倒 U 的文献或机制论证。</strong></li>
+            <li><strong>Brynjolfsson 等（2025, QJE）</strong>：正式发表版为生产率 +15%（5,172 人）；+14%（5,179 人）是 NBER 工作论文版的数字。已更正，并补页码与 DOI。</li>
+            <li><strong>MAILS 结构</strong>：原写「知识 / 应用 / 伦理三亚量表」，与原量表不符。原版 34 题，AI 素养部分为使用与应用（6）、理解（6）、识别（3）、伦理（3），另有创造 AI（4）、AI 自我效能（6）、AI 自我胜任（6）；「约 10 题」对应 Koch 等（2024, <em>Heliyon</em>）的简版。已更正并补引文。另请注意 MAILS 是<strong>自评</strong>量表，H6 的结论应限定为「自评 AI 素养」。</li>
+            <li><strong>8.3 信号检测符号</strong>：「负 = 门槛放松」指代不清（系数为负还是 c 为负）。已明确为：系数为负 → 更少标「需改」→ c 增大 → 接受门槛放松。</li>
+            <li><strong>3.2 备选方案「交互效率约 1.5 倍」</strong>：比较基准不明。L1、L3 各 90 人相对每档 60 人，方差比约 1.53；相对每档 80 人，仅约 1.13。已注明基准为每档 60 人。</li>
+            <li><strong>P0 通过标准第 2 条</strong>：原文未说明在哪种提示下「被踩中」，已按 1.3 的定义补为「朴素提示下」。</li>
+            <li><strong>对齐假设与模型</strong>：H5 补明数据来自 4A（与 8.3 的 m_h5 一致）；4.2 中 Y_aud 服务的假设补上 H1a、H1b，Y_corr 补上 H1b。</li>
+            <li><strong>文字层面</strong>：删除对「v1」的内部指代，改为「本方案早期版本」；删去重复的拉丁方说明；口语化表达（「吃专业知识」「写死」「撑不住」「三件套」「最硬」）改为书面语；专业名称展开（工管→工商管理、营销→市场营销、国商→国际商务，请确认「工管」所指）；新增概览、流程图与术语表；长段落按「做法—原因—配套措施」拆分。</li>
+            <li><strong>标题与核心术语</strong>：原标题「可教技能」是 teachable skills 的直译，不符合中文教育学表述；「技能」无法涵盖专业知识（知识）、书面沟通与计算思维（能力）、数量素养与 AI 素养（素养）；「可教」还与 2.3「不能推出教了就会」相矛盾。已改为以「能力因素」为主语、以「Agent 持续增强」为背景的标题（agent 一侧用动词「增强」，避免标题中两个「能力」重叠），与核心目的（agent 越来越强时，学生哪些能力影响使用表现）对齐；学生一侧统称「学生变量」（具体写「专业知识与通用能力」），agent 一侧统称「能力档」，避免「能力 × 能力」撞词。文献综述中的「低技能者」「去技能化」系原文献术语（low-skilled、deskilling），保留。<strong>（2026-10-10 作者定稿：标题再改为「AI 越强，人还该懂什么？——Agent 能力分级实验中经管本科生技能的替代与放大」；注意副标题的「技能」与本章第 11 条对「技能」一词的限定存在张力，见 B 节末待确认。）</strong></li>
+            <li><strong>4A 来源匹配（防 H4b 被归因错配污染）</strong>：T1–T3 的产出是网页应用，4A 却是一份流畅的备忘录。L1 组刚见过残缺产出，可能因「不像同一来源」而不信归因，用来源审查代替内容审查，H4b 的组间差被非自满机制放大。已改（5.5）：指导语改为「你的 AI 助手刚才根据同一批数据，另写了一份文字稿备忘录」；备忘录呈现在与预览同一套界面（同一聊天气泡、同一助手名）；P2 加归因操纵检查（L1 与 L3 认同率差 &gt; 20 个百分点即重写指导语，见 7.3）；主实验保留该题作测量变量，报「控制归因认同后 H4b 是否仍在」的敏感性版本。</li>
+            <li><strong>TRAP 的构念定位</strong>：发现陷阱需要两个成分——用同一组输入对比样例（VER）与理解数字为何不同（DK）。TRAP 因此不是 DK 的纯净近端指标：低 DK 高 VER 者能过一部分，高 DK 低 VER 者会栽。已改：4.2 表与 5.5 将 TRAP 定位为探索性 TRAP ~ DK × VER（预期 DK 斜率在对比过样例数字的子群中更大，与 M2 机制同构），列入 2.2 探索清单，不进确认性家族；P0 第 2 条加无样例对照提示，区分「靠样例参数抄对」与「靠理解做对」两条通过路径。</li>
+            <li><strong>P0 分任务门槛</strong>：L3 多出的代码解释器对单文件 HTML 的边际帮助有限、对 4B 验算帮助大。只报合并 Y_comp 可能掩盖某任务 L3 − L2 &lt; .10，导致 H4a 在该任务上失败，并按 2.2 规则连带 H4b–H5 整组降级。已改：7.3 第 1 条要求 T1、T2、T3 分任务各自达标（5.4 表头同步注明）；补救顺序为先为 L3 加「运行测试用例并回报数字」类工具（仍不显示代码）；明文禁止用「4B 计算类检出」充当操纵检验——那是 H4c 的因变量，用因变量验证自变量会形成循环。</li>
+          </ol>
+
+          <h3>B. 需要作者决定的问题</h3>
+          <ol>
+            <li><strong>H5 的机制与检验数据不一致。</strong>H5 在 4A（不能用 agent）的概念类错误上检验，但 4.3 与 5.5 把「定向提问（4B）」标为 H5 的机制，而 4A 中不存在定向提问。二选一：(a) H5 保留在 4A，机制改为信任 / 自满（与 M3 呼应），定向提问只服务 M2；(b) 在 4B 中增加一个平行的 DK × 能力档检验。倾向 (a)，改动最小，逻辑最干净。</li>
+            <li><strong>H1a 的 Y_aud 部分没有对应模型。</strong>H1a 要求控制 ICAR16、Numeracy、Writing、CT 与能力档，但 8.3 的 m_h4b 只控制了 Numeracy 与 ICAR，没有 Writing 与 CT；8.1 只覆盖 Y_corr。需要补一个 Y_aud 模型，否则确认性家族中有一个检验没有预先指定的模型。</li>
+            <li><strong>Y_aud 作为单一分数没有定义。</strong>4.2 中 Y_aud 是一组指标（击中率、虚报率、d′、c、改正质量），但 H1a、H1b 把它当作一个分数用，8.2 又写 Y_aud 为 18 项（即 4A + 4B 合并）。需要明确：用哪个指标（d′？18 项正确率？），是否合并有无 agent 两个阶段。合并会把「独立核验」和「人机联合核验」混在一起，建议主分析只用 4A 的 9 项，4B 另报。</li>
+            <li><strong>L3 后端选项与「同一家族」原则冲突。</strong>5.4 表中 L3 允许「能力相当的锁版本 API 模型」，而净化原则要求三档同族。若 L3 换了厂商，H4a–H5 中的能力效应会混入风格与中文能力差异。建议限定为同一家族的 API 版本；若做不到，须预注册这一偏离及对应的敏感性分析。</li>
+            <li><strong>目的 1 与分析计划不完全匹配。</strong>1.2 列出五项学生变量（含数量素养、AI 素养）要判断替代还是放大，但 m_corr 只估计 DK、Writing、CT 与能力档的交互；Numeracy 只作协变量，MAILS 只出现在 H6。要么把目的收窄到三项，要么在探索性分析中补 Numeracy × 能力档、MAILS × 能力档。</li>
+            <li><strong>作文信度门槛有空档。</strong>ICC(2,2) ≥ .75 为合格，&lt; .70 启用补救方案，.70–.75 之间如何处理没有写。</li>
+            <li><strong>T1 与 T2 的评分口径不统一。</strong>T1 写「评分 8 项」（像是 Y_comp 的功能点清单），T2 写「评分 6 项 × 0–3」（像是逐项行为保真），而 4.2 把 Y_gen 定义为原文式的整体 0–3 评分。需统一：功能点清单作为 Y_comp 的分母；Y_gen 采用逐项评分还是整体评分。</li>
+            <li><strong>TOST 的度量单位与功效假设没有写明。</strong>SESOI = 0.25 是标准化 β 还是 r？若按 SE ≈ 1/√N 粗算，N = 240 时功效约 .97；原写 .88 意味着假设了一定程度的预测变量共线性，这一假设应写进预注册。</li>
+            <li><strong>「在经管教育情境中尚无实验证据」是强断言。</strong>建议改为「据我们检索」，并在附录列出检索式与检索日期。</li>
+            <li><strong>作文第三评规则「分差 &gt; 10 分」</strong>取决于量表总分范围，原文 5 维 × 4 项的计分范围没有写明。</li>
+          </ol>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管 · 张剑个人主页</span>
+      <div class="footer-links">
+        <a href="../">返回个人简历</a>
+        <a href="../../">返回首页</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+    <div class="footer-counter">
+      <span id="busuanzi_container_site_pv" style="display:none">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次</span>
+      <span id="busuanzi_container_site_uv" style="display:none">总访客数 <span id="busuanzi_value_site_uv"></span> 人</span>
+    </div>
+  </footer>
+
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+  <script>
+    (function () {
+      var btn = document.getElementById("theme-toggle");
+      if (btn && window.Theme) {
+        btn.addEventListener("click", function () { window.Theme.toggle(); });
+      }
+
+      /* ---- 目录滚动高亮 ---- */
+      var tocLinks = Array.prototype.slice.call(document.querySelectorAll("#toc-nav a"));
+      var sections = tocLinks.map(function (a) {
+        var el = document.getElementById(a.getAttribute("href").slice(1));
+        return el ? { link: a, el: el } : null;
+      }).filter(Boolean);
+      function onScroll() {
+        var y = window.scrollY + 120;
+        var current = null;
+        sections.forEach(function (s) {
+          if (s.el.offsetTop <= y) current = s;
+        });
+        sections.forEach(function (s) {
+          s.link.classList.toggle("is-active", s === current);
+        });
+      }
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+
+      /* ---- Mermaid 流程图（按主题渲染） ---- */
+      var mermaidPre = document.querySelector(".mermaid");
+      function mermaidVars(theme) {
+        return theme === "dark" ? {
+          primaryColor: "#252c32", primaryTextColor: "#e8ebe8", primaryBorderColor: "#4e5d68",
+          lineColor: "#8a9890", secondaryColor: "#1c2126", tertiaryColor: "#252c32",
+          clusterBkg: "#1c2126", clusterBorder: "#4e5d68", edgeLabelBackground: "#1c2126"
+        } : {
+          primaryColor: "#eef3ef", primaryTextColor: "#1a1817", primaryBorderColor: "#b9c8be",
+          lineColor: "#5d6b63", secondaryColor: "#fbfcfb", tertiaryColor: "#f1ede4",
+          clusterBkg: "#fbfcfb", clusterBorder: "#b9c8be", edgeLabelBackground: "#fbfcfb"
+        };
+      }
+      function renderMermaid() {
+        if (!mermaidPre || !window.mermaid) return;
+        var src = mermaidPre.getAttribute("data-source");
+        if (!src) {
+          src = mermaidPre.textContent.trim();
+          mermaidPre.setAttribute("data-source", src);
+        }
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: "base",
+          securityLevel: "strict",
+          themeVariables: mermaidVars(document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light")
+        });
+        mermaid.render("mermaid-svg-" + Date.now(), src).then(function (r) {
+          mermaidPre.innerHTML = r.svg;
+        })["catch"](function (e) { console.error("mermaid render failed", e); });
+      }
+      if (window.mermaid) {
+        renderMermaid();
+      } else {
+        document.addEventListener("DOMContentLoaded", renderMermaid);
+      }
+      if (window.Theme) {
+        document.addEventListener("site:theme", function () { renderMermaid(); });
+      }
+
+      /* ---- KaTeX 渲染公式 ---- */
+      function renderKaTeX() {
+        if (window.renderMathInElement) {
+          renderMathInElement(document.body, {
+            delimiters: [{ left: "$$", right: "$$", display: true }],
+            throwOnError: false
+          });
+        }
+      }
+      if (window.renderMathInElement) {
+        renderKaTeX();
+      } else {
+        document.addEventListener("DOMContentLoaded", renderKaTeX);
+      }
+    })();
+  </script>
+</body>
+</html>
