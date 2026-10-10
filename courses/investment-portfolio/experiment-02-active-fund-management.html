@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23002FA7'/%3E%3Ctext x='32' y='46' font-size='36' text-anchor='middle' fill='white' font-family='Georgia,serif'%3E%CE%BB%3C/text%3E%3C/svg%3E">
+<title>实验作业 02 · 中国开放式证券投资基金的积极组合管理能力评价 — 学生实验手册</title>
+<meta name="description" content="学生实验手册：结合课堂内容，与 Agent 自主判断 9 只基金的风格、开展管理能力评价，再从初步结果提出新问题并自行设计实验。附基金名单与作业提交入口。">
+<style>
+/* ===== 瑞士国际主义 · 克莱因蓝 IKB（与第1/3/4课时讲义同款） ===== */
+:root{
+  --paper:#fafaf8;
+  --paper-rgb:250,250,248;
+  --ink:#0a0a0a;
+  --ink-rgb:10,10,10;
+  --grey-1:#f0f0ee;
+  --grey-2:#d4d4d2;
+  --grey-3:#737373;
+  --accent:#002FA7;
+  --accent-rgb:0,47,167;
+  --accent-on:#ffffff;
+  --mono:"JetBrains Mono","Cascadia Code",Consolas,"Courier New",monospace;
+  --sans:"Inter","Helvetica Neue","Noto Sans SC","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+.container{max-width:880px;margin:0 auto;padding:0 24px}
+
+/* ===== 顶部作业提交入口 ===== */
+.submission-bar{background:var(--accent);color:#fff}
+.submission-bar .container{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px}
+.submission-bar strong{display:block;font-size:16px}
+.submission-bar span{font-size:13px;color:#e8edff}
+.submission-bar a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 20px;background:#fff;color:var(--accent);font-weight:700;text-decoration:none;white-space:nowrap}
+.submission-bar a:hover{background:#edf1ff}
+.submission-bar a:focus-visible{outline:3px solid #fff;outline-offset:4px}
+
+/* ===== header（纯色，无渐变） ===== */
+header{background:var(--ink);color:#fff;padding:56px 0 40px;border-bottom:6px solid var(--accent)}
+header .tag{font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;font-weight:600}
+header .tag::before{content:"// "}
+header h1{font-size:38px;line-height:1.22;font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+header .sub{font-size:16.5px;color:var(--grey-2);margin-bottom:22px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:12.5px;color:#fff;border:1px solid var(--grey-3);padding:4px 12px;background:rgba(255,255,255,.03);font-weight:500}
+
+/* ===== nav（直角 hairline） ===== */
+nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--grey-2);margin-bottom:28px}
+nav .links{display:flex;gap:0;flex-wrap:wrap;padding:6px 0}
+nav a{font-size:14px;color:var(--grey-3);text-decoration:none;padding:8px 14px;border-left:1px solid var(--grey-2);transition:color .15s;font-weight:500}
+nav a:first-child{border-left:none}
+nav a:hover{color:var(--accent)}
+nav a.on{color:var(--accent);font-weight:600}
+nav a.back{color:var(--accent);font-weight:500;margin-right:8px}
+
+/* ===== sections ===== */
+section{margin-bottom:44px;scroll-margin-top:52px}
+h2{font-size:23px;font-weight:700;color:var(--ink);margin:36px 0 16px;padding:0 0 10px 14px;border-left:6px solid var(--accent);display:flex;align-items:baseline;gap:12px;letter-spacing:-.01em;flex-wrap:wrap}
+h2 .no{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.12em;font-weight:600}
+h3{font-size:17.5px;font-weight:700;margin:24px 0 10px;color:var(--ink)}
+h4{font-size:15.5px;font-weight:700;margin:18px 0 8px;color:var(--ink)}
+p{margin:8px 0}
+ul,ol{margin:8px 0 8px 24px}
+li{margin:5px 0}
+code{font-family:var(--mono);font-size:.86em;background:var(--grey-1);padding:1px 6px;color:var(--ink);font-weight:500}
+strong{font-weight:700}
+a{color:var(--accent)}
+a:hover{color:#0047d0}
+
+/* ===== 卡片（直角纯色） ===== */
+.panel{background:var(--grey-1);border:1px solid var(--grey-2);padding:20px 22px;margin:14px 0}
+.takeaway{border-left:4px solid var(--accent);background:var(--grey-1);padding:12px 18px;font-weight:600;color:var(--ink);margin:14px 0}
+.warnbox{border-left:4px solid var(--ink);background:var(--grey-1);padding:12px 18px;margin:14px 0;font-size:14.5px}
+.note{font-size:14px;color:var(--grey-3);margin:6px 0}
+.case{border:1px solid var(--grey-2);margin:16px 0;background:var(--paper)}
+.case .case-head{background:var(--grey-1);padding:10px 20px;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--grey-2);font-size:15.5px}
+.case .case-body{padding:14px 20px 18px}
+.prompt{background:var(--ink);color:#e8e8e8;padding:14px 18px;font-family:var(--mono);font-size:13.5px;line-height:1.7;margin:10px 0;white-space:pre-wrap;font-weight:400}
+.prompt .plabel{display:block;color:#8fb0ff;font-size:12px;letter-spacing:.12em;margin-bottom:6px;font-weight:600}
+.verdict{font-family:var(--mono);font-size:13.5px;background:var(--grey-1);padding:12px 16px;margin:10px 0;color:var(--ink)}
+.verdict b{color:var(--accent);font-weight:600}
+
+/* ===== 公式块（推导主线） ===== */
+.formula{background:var(--paper);border:1px solid var(--grey-2);border-left:4px solid var(--ink);padding:14px 18px;margin:10px 0;font-family:var(--mono);font-size:14.5px;line-height:1.8;overflow-x:auto}
+.formula .eq{color:var(--grey-3);font-size:12.5px;white-space:nowrap}
+.formula .cap{display:block;color:var(--grey-3);font-size:13px;margin-top:4px;font-family:var(--sans)}
+.formula .hl{color:var(--accent);font-weight:700}
+
+/* ===== 表格（hairline；宽表横向滚动） ===== */
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px}
+th,td{border:1px solid var(--grey-2);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--grey-1);color:var(--ink);font-weight:600;font-size:14px}
+td .mono,th .mono{font-family:var(--mono);font-size:13px}
+.tablewrap{overflow-x:auto;margin:4px 0}
+.tablewrap table{margin:8px 0}
+
+/* ===== 流程链（机制假说 / 时间轴） ===== */
+.chain{display:flex;gap:0;align-items:stretch;flex-wrap:wrap;margin:14px 0}
+.chain .step{flex:1;min-width:150px;background:var(--grey-1);border:1px solid var(--grey-2);padding:12px 14px;font-size:14px}
+.chain .step .t{font-weight:700;display:block;margin-bottom:4px}
+.chain .step .s{font-size:13px;color:var(--grey-3);line-height:1.5}
+.chain .arrow{align-self:center;font-family:var(--mono);color:var(--accent);font-size:18px;padding:0 6px;font-weight:700}
+
+/* ===== 四格要点 ===== */
+.cols4{display:grid;grid-template-columns:repeat(2,1fr);gap:0;margin:12px 0;border:1px solid var(--grey-2)}
+.cols4 .col{border-right:1px solid var(--grey-2);border-bottom:1px solid var(--grey-2);padding:12px 14px;background:var(--paper)}
+.cols4 .col:nth-child(2n){border-right:none}
+.cols4 .col:nth-last-child(-n+2){border-bottom:none}
+.cols4 .col .t{font-weight:700;font-size:14.5px;margin-bottom:4px}
+.cols4 .col .s{font-size:13.5px;color:var(--grey-3);line-height:1.6}
+
+/* ===== 清单 ===== */
+.check{list-style:none;margin-left:0}
+.check li{padding:8px 0 8px 30px;position:relative;border-bottom:1px solid var(--grey-2)}
+.check li::before{content:"☐";position:absolute;left:2px;font-size:17px;color:var(--accent);font-weight:700}
+.check li:last-child{border-bottom:none}
+
+/* ===== footer ===== */
+footer{margin-top:48px;padding:28px 0 48px;border-top:2px solid var(--accent);color:var(--grey-3);font-size:13.5px}
+footer .mono{font-size:12.5px}
+footer strong{color:var(--ink)}
+
+/* ===== 响应式 ===== */
+@media (max-width:760px){
+  header h1{font-size:28px}
+  header{padding:40px 0 28px}
+  .cols4{grid-template-columns:1fr}
+  .cols4 .col{border-right:none;border-bottom:1px solid var(--grey-2)}
+  .cols4 .col:last-child{border-bottom:none}
+  .chain{flex-direction:column}
+  .chain .arrow{transform:rotate(90deg);padding:4px 0}
+}
+@media print{
+  nav{display:none}
+  body{background:#fff}
+  .prompt{background:#f0f0f0;color:#222}
+  .prompt .plabel{color:#002FA7}
+}
+
+
+/* 基金实验：文档阅读与附件入口 */
+blockquote{border-left:4px solid var(--accent);background:var(--grey-1);padding:12px 18px;margin:16px 0}
+.attachments{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:24px 0}
+.attachment-link{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 18px;border:1px solid var(--accent);text-decoration:none;font-weight:600}
+.attachment-link:hover{background:#edf1ff}
+.tablewrap table{min-width:560px}
+#grading .tablewrap:nth-of-type(2) table{min-width:800px}
+pre{overflow-x:auto;background:var(--grey-1);padding:14px 18px}
+pre code{padding:0}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.submission-bottom{margin-top:32px}
+@media(max-width:760px){nav .links{flex-wrap:nowrap;overflow-x:auto}nav a{flex-shrink:0}section{scroll-margin-top:68px}.container{padding-left:18px;padding-right:18px}.attachments{align-items:flex-start}}
+@media print{header{background:#fff;color:var(--ink);padding:20px 0}header .sub,header .chip{color:var(--ink)}.submission-bar,.attachment-link{display:none}.tablewrap{overflow:visible}.tablewrap table,#grading .tablewrap:nth-of-type(2) table{min-width:0;font-size:11px}th,td{padding:5px}h2,h3{break-after:avoid}tr{break-inside:avoid}}
+</style>
+</head>
+<body>
+<aside class="submission-bar" aria-label="基金实验作业提交"><div class="container"><div><strong>基金实验作业提交</strong><span>两项任务统一打包 · 建议一周内完成 · 截止日期见提交页面</span></div><a href="https://send2me.cn/s6scThjh/S7uneaqptLkaHg" target="_blank" rel="noopener">提交基金实验作业 ↗</a></div></aside>
+<header><div class="container"><div class="tag">Experiment 02 · Active Fund Management</div><h1>中国开放式证券投资基金的<br>积极组合管理能力评价</h1><div class="sub">学生实验手册 · 结合课堂所学，与 Agent 自主探索、核查结果，并从初步发现中设计后续实验。</div><div class="chips"><span class="chip">每位同学独立完成</span><span class="chip">两项任务各占 50%</span><span class="chip">2022 年 6 月—2026 年 9 月</span><span class="chip">建议一周内完成</span></div></div></header>
+<nav aria-label="手册目录"><div class="container"><div class="links"><a class="back" href="./">← 返回课程</a><a href="#task">实验任务</a><a href="#scope">起步材料</a><a href="#task1">任务一</a><a href="#task2">任务二</a><a href="#boundaries">研究边界</a><a href="#submission">提交成果</a><a href="#grading">评价依据</a></div></div></nav>
+<main class="container" id="main-content">
+<div class="panel attachments" aria-label="实验附件"><div><strong>起步附件 · 9 只基金名单</strong><p class="note">基金代码与名称，不附风格标签。读取 CSV 时保留基金代码的前导零。</p></div><a class="attachment-link" href="fund-experiment-9-funds.csv" download="基金实验_9只基金名单.csv">下载基金名单 CSV ↓</a></div>
+<blockquote>
+<p>v0.8 设计稿 · 2026-10-10</p>
+<p>每位同学独立完成，使用自己的 Agent（智能体）。先形成初步评价，再提出改进意见或新问题，自行设计并开展后续实验。</p>
+<p><strong>开课信息：9 只基金名单已提供，见第二节；Tushare MCP 接入说明已在课程 QQ 群发布，请查阅群内相关消息并在自己的 Agent 中完成接入。</strong> 任务一研究区间见第二节。你可以开展问题澄清、资料检索和工具探查；涉及基金表现的判断须取得可核验的数据。提交入口见第六节，建议一周内完成，截止日期以提交页面显示为准。正式评分版本在开课前公布。</p>
+</blockquote>
+
+<section id="task">
+<h2><span class="no">01</span>实验任务</h2>
+<p>有人认为：“基金收益较高，说明它的积极组合管理效果较好。”请研究教师提供的主动基金样本，对这一判断作出初步评价。</p>
+<p>你需要结合课堂所学的理论与方法，自主确定如何理解“积极组合管理能力”、用什么证据评价、与谁比较，以及哪些结论能够得到数据支持。与 Agent 共同完成研究，说明所选方法与课堂内容的联系，交出能够复查的评价，并从初步结果中提出新问题，自行设计后续实验进一步检验。</p>
+<p>本实验需要理解基金差异，选择适合问题的评价方法，核查结果，并根据发现继续探索。研究方法和深度由你自主决定，可以结合课堂内容学习并使用新的方法。</p>
+<div aria-label="可横向滚动的表格" class="tablewrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>任务</th>
+<th>要完成的研究</th>
+<th>核心交付</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>任务一：自主建立评价</td>
+<td>明确问题，形成方法，完成基金比较并审查初步判断</td>
+<td>经你确认的研究方案、实际计算结果和初步评价</td>
+</tr>
+<tr>
+<td>任务二：提出改进并自行实验</td>
+<td>从任务一的发现提出新问题，自主设计并执行研究</td>
+<td>执行前的研究计划、实际产物、新证据及更新后的认识</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>推进路线：</strong> 确认交流能够保存 → 澄清问题 → 判断 9 只基金的风格并选择比较样本 → 确认任务一方案、计算和核验 → 从结果提出新问题、先计划再实验 → 整理提交包。</p>
+<p>开始研究前，选择自己可用的 Agent，用一段短会话试验原始交流能否保存，并记录产品、版本和模式。保存方式见第六节。接下来选择什么方法、怎样比较，由你结合课堂内容与 Agent 探索决定。</p>
+
+</section>
+<section id="scope">
+<h2><span class="no">02</span>研究范围与起步材料</h2>
+<p>教师提供的实验资源为 <strong>9 只基金的名称与份额代码，以及 Tushare MCP 接口及其使用信息</strong>。名单中的基金为普通主动权益基金，以 2022 年 6 月为选样节点，成立超过两年且具有一定规模，具体名单以正式公布为准。样本不包含需要处理分级结构的基金。你通过 Agent 自行查找资料，判断这 9 只基金各自的投资风格，并说明依据。</p>
+<p><strong>任务一的研究区间为 2022 年 6 月至 2026 年 9 月。</strong> 2022 年 6 月同时是选样节点。列明实际使用的净值观察日期，保证所选基金之间可比。任务二的研究对象和区间由你根据问题自行确定，必要时补充数据；先说明理由并确认方案，再执行。</p>
+<p>根据教师提供的 9 只基金名单，先自行判断每只基金属于价值、成长、均衡或其他什么投资风格。<strong>由你确定并说明，归类结论对应某个时点还是一段时期，以及为什么选择这个时点或时期。</strong> 可以让 Agent 协助查找投资策略、主要持仓等资料，也可以采用自己选择的分类方法；由你判断这些依据是否充分，并说明最终归类理由。注明所用证据、资料来源及对应日期或报告期，说明它们如何支持所选时点或时期的判断；解释历史表现时，使用相应时期的证据。基金名称和 Agent 的判断都需要资料支持；资料不充分或定位不清楚时，可以保留疑问。不要求每组恰好 3 只。</p>
+<p>再从中选择至少 3 只完成任务一的比较，说明为何选择它们、哪些条件具有可比性。同组或跨组比较均可，由你决定。任务一评价研究区间内的基金整体，任务二的评价对象可根据新问题自行扩展；不要重复计入同一基金的不同份额类别。少量教学样本的结论不能直接推广到整个基金行业。</p>
+<div aria-label="可横向滚动的表格" class="tablewrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>起步信息与准备事项</th>
+<th>当前状态</th>
+<th>你的工作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>不附风格标签的基金名单及份额代码</td>
+<td>已提供：<a download="基金实验_9只基金名单.csv" href="fund-experiment-9-funds.csv">9 只基金名单 CSV</a></td>
+<td>如何归类，依据在哪里，选择哪些基金作比较</td>
+</tr>
+<tr>
+<td>任务一研究区间</td>
+<td>2022 年 6 月至 2026 年 9 月</td>
+<td>数据是否覆盖该区间，实际净值观察日期是否可比</td>
+</tr>
+<tr>
+<td>9 只基金的投资风格判断</td>
+<td>由学生自行完成</td>
+<td>自行确定判断对应的时点或时期，查找资料，与 Agent 讨论，说明每只基金的风格及证据依据</td>
+</tr>
+<tr>
+<td>Tushare MCP 接口</td>
+<td>接入说明已在课程 QQ 群发布</td>
+<td>在自己的 Agent 中接入并试取数据，检查实际可用能力、字段含义和日期覆盖</td>
+</tr>
+<tr>
+<td>实验所需资料与数据</td>
+<td>由学生通过 Agent 自行获取</td>
+<td>根据研究需要检索基金报告、获取净值及其他所需数据，记录来源并核查质量</td>
+</tr>
+<tr>
+<td>提交入口与截止时间</td>
+<td><a href="https://send2me.cn/s6scThjh/S7uneaqptLkaHg" rel="noopener" target="_blank">课程作业提交入口</a>已提供；建议一周内完成，截止日期见提交页面</td>
+<td>按第六节整理材料，在指定入口提交</td>
+</tr>
+<tr>
+<td>正式评分规则</td>
+<td>待公布，第七节为拟定规则</td>
+<td>哪些交流和产物能体现自己的提问、判断与核验</td>
+</tr>
+</tbody>
+</table></div>
+<p>教师提供基金名单和 Tushare MCP 接口，你负责与 Agent 确定数据需求、实际获取资料与数据，并检查是否适合研究。两项任务均按这一分工开展，无需等待教师发放整理好的数据文件。</p>
+<p>CSV 中的基金代码为六位文本，读取时保留前导零；基金名称沿用 2022 年报告中的名称，以代码识别所研究的份额。</p>
+<p>可让 Agent 使用 Tushare MCP，以及自己可用的其他检索或数据工具。需要什么数据，取决于你的问题与方法；接口未能取得所需资料时，自行寻找其他来源并说明处理理由。记录来源和取得方式，核查实际覆盖和缺失情况，使用一致、可说明的研究口径。</p>
+<p>开始时先写下自己对实验任务的理解和一项具体的不确定之处，再向 Agent 提问。逐步把开放任务转成它能够执行的任务，检查它有没有替你加入未经确认的目标或假设。</p>
+
+</section>
+<section id="task1">
+<h2><span class="no">03</span>任务一：自主建立评价</h2>
+<p>你与 Agent 需要逐步回答：如何判断基金风格，如何形成合理比较，现有证据能够说明哪一方面的管理效果。自行选择所学的收益、风险或风险调整评价方法，说明它回答什么问题、为什么适合当前样本。计算方案应包含能够检验“收益较高是否足以说明管理效果较好”的比较依据；不以方法数量或复杂程度作为目标。</p>
+<p>在正式计算前，保存经你确认的任务一方案，例如 <code>plans/task1_plan.md</code>，也可使用 Word 或 PDF。写清研究问题、基金及区间、评价依据、数据和方法、Agent 可以直接做哪些事、哪些变化需要先由你决定，以及关键检查点和预期产物。方案可以迭代，保留旧版和修改理由。</p>
+<p>下面是参与与留痕要求，你可以往返推进。</p>
+<div aria-label="可横向滚动的表格" class="tablewrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>环节</th>
+<th>你的参与</th>
+<th>Agent 可以协助什么</th>
+<th>要保留的证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>澄清问题</td>
+<td>提出自己的理解与疑问，确定评价对象和范围</td>
+<td>解释概念、指出歧义和信息缺口</td>
+<td>原始提问、澄清后的问题及你的决定</td>
+</tr>
+<tr>
+<td>探查材料与工具</td>
+<td>要求检查实际资料或试取数据，提出风格分组并说明依据，判断材料是否够用</td>
+<td>检索策略与持仓资料、提出分类建议、试取并检查数据</td>
+<td>原始提问、分组依据、你的判断、实际返回及缺口处理</td>
+</tr>
+<tr>
+<td>形成方案</td>
+<td>比较方法建议，说明采用或修改的理由</td>
+<td>提出候选方法及其条件，整理计划</td>
+<td>方案版本及你在会话中的确认</td>
+</tr>
+<tr>
+<td>执行与核验</td>
+<td>查看中间结果，独立核查至少一项关键计算或假设</td>
+<td>协助编写运行程序或制作计算工作簿，展示中间过程，按决定修正</td>
+<td>计算文件、结果、你的核查及处理依据</td>
+</tr>
+<tr>
+<td>评价与追问</td>
+<td>先自审，判断结论是否超出证据，提出下一问</td>
+<td>检查解释、提出质疑、协助复核</td>
+<td>初步判断、分歧或不足清单及你的裁决</td>
+</tr>
+</tbody>
+</table></div>
+<p>每个环节都应有一项可回查的真实参与，可以是问题、检查指令、修正要求或有理由的确认。无需凑对话轮数，也无需制造错误或分歧。</p>
+<p><strong>怎样核查：</strong> 自行选择至少一项会影响评价的关键计算或假设进行检查。例如，抽查取得的数据是否与原始来源一致、核对一个公式及其输入，或用另一种方式复算一个结果。核查方法由你决定，也可以请 Agent 协助执行；由你选择核查点、查看实际证据并作出判断。记录查了什么、怎样查、结果如何，以及据此保留或修正了什么，并指向对应的原始交流和产物。这一要求同样适用于任务二。</p>
+<p>初步评价应说明比较基准、实际样本与区间、关键结果、核验方法，以及支持和不足的证据。将“尚无法判断”作为结论时，要指出缺口和已做的尝试，不能仅以此替代本可完成的研究。</p>
+<p><strong>任务一完成标准：</strong> 有 9 只基金的风格判断、对应时点或时期及证据依据，完成至少 3 只基金的实际比较；保存计算前确认的方案并说明方法选择理由；核查至少一项关键计算或假设，形成初步评价。各环节的原始交流与对应产物一并保留。</p>
+
+</section>
+<section id="task2">
+<h2><span class="no">04</span>任务二：提出改进意见，自行设计实验</h2>
+<p>指出任务一的一项具体结果、分歧或局限，并给出它在表格、图、程序输出或原始交流中的位置。先表达自己的新问题和初步改进意见，再与 Agent 商定如何检验。</p>
+<p>任务二的研究方向、对象、方法、深度和规模由你自主决定。你可以改进原来的评价，也可以从任务一的发现中发展新的研究问题，扩展样本、区间、数据或方法。说明问题从何而来、为什么值得研究，并通过实际分析或实验检验自己的想法。</p>
+<p>下面的问题可帮助你发现线索。它们是启发，不是必须完成的题目，也不限定你的选题。先看自己的结果中出现了什么，再决定继续研究什么；可以使用已有材料，也可以根据研究需要补充。</p>
+<div aria-label="可横向滚动的表格" class="tablewrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>任务一中可能出现的现象</th>
+<th>可以继续追问什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一只基金收益最高</td>
+<td>它是否承担了更大的风险？考虑风险后，原评价是否仍然成立？</td>
+</tr>
+<tr>
+<td>一只基金在整个区间明显领先</td>
+<td>这种优势是否集中在某一段时间？在不同阶段是否都能观察到？</td>
+</tr>
+<tr>
+<td>基金超过了某个市场指数</td>
+<td>比较基准是否适合这只基金？使用另一个有依据的基准，判断是否变化？</td>
+</tr>
+<tr>
+<td>你和 Agent 对基金风格归类有分歧</td>
+<td>基金名称、策略说明与实际持仓是否一致？补充证据后，是否需要调整归类和比较？</td>
+</tr>
+<tr>
+<td>两种评价指标给出不同排名</td>
+<td>它们各自反映什么？哪一种更适合你要回答的问题？</td>
+</tr>
+<tr>
+<td>Agent 算出的收益与报告或其他来源不一致</td>
+<td>差异是否来自分红、日期或净值口径？核查后，结果和解释是否需要修正？</td>
+</tr>
+<tr>
+<td>报告中的策略表述与持仓印象不一致</td>
+<td>主要持仓或行业配置能否支持该策略表述？现有资料还留下哪些疑问？</td>
+</tr>
+</tbody>
+</table></div>
+<p>你负责提出问题、选择研究方法与条件、核查结果并形成判断；Agent 可以协助提出可行方案、获取和检查资料、执行分析或实验，以及复核解释。对它的建议作出自己的决定，并在交流中留下理由。</p>
+<p><strong>执行后续分析或实验前</strong>保存任务二计划，例如 <code>plans/task2_plan.md</code>，也可使用 Word 或 PDF。篇幅按研究需要确定，在原始交流中明确确认，内容包括：</p>
+<ol>
+<li>问题来自哪个具体结果或疑点，我现在有什么解释？</li>
+<li>准备研究或改进什么，如何开展分析或实验？</li>
+<li>需要什么资料或数据，如何获取、分析和核验？涉及比较时，说明比较条件及如何处理不可比之处。</li>
+<li>不同结果将支持或削弱什么判断，什么情况仍不足以下结论？</li>
+</ol>
+<p>在过程记录中指向计划确认消息和首次后续分析或实验的执行记录，让教师能查到它们的先后顺序；具体写法见第六节。不需要软件自动提供时间戳。改变问题或规则时，另存版本并说明原因。</p>
+<p>任务二同样遵守上表的参与和留痕要求。围绕新问题重新确认数据、工具和执行范围，查看并核验新结果，对 Agent 的建议作出自己的决定。</p>
+<p>实际执行自己的研究方案，保留分析或实验的产物，核查关键结果。开展比较时说明比较条件；涉及多项变化时，解释它们如何影响判断。记录实际尝试，不能只留下最有利的结果。</p>
+<p>两轮研究可共用数据和计算文件。最后回答：原来怎样理解，新证据是什么，现在修正、保留或暂缓了什么判断，以及还需要什么证据。原判断得到支持或比较结果不明显，同样可以完成任务。</p>
+<p><strong>任务二完成标准：</strong> 有来自任务一发现的研究问题、一份执行前确认的计划、实际完成的分析或实验及关键结果核验，并说明新证据怎样影响原来的认识。保留计划、原始交流和实际产物。</p>
+
+</section>
+<section id="boundaries">
+<h2><span class="no">05</span>研究与工具的边界</h2>
+<ul>
+<li><strong>数据与计算规则要可比。</strong> 核查净值与分红的处理、日期、频率及有效样本。普通 LOF 也使用所选份额的基金净值；不要混用场内交易价格。不能悄然删除不利样本或补造缺失数据。</li>
+<li><strong>基准要有依据。</strong> 说明为什么与该基准比较、是否适合所选基金。更换基准时保留原因和两套结果；不能只因为某个基准让结论更好就采用它。</li>
+<li><strong>结论要与证据相称。</strong> 收益较高不自动等于管理能力较强；风险、比较对象和区间都会影响解释。对管理能力的判断应说明证据依据和适用范围。</li>
+<li><strong>资料要支持判断。</strong> 接口成功返回不代表数据完整。主要持仓可作为风格判断的线索，不能据此声称已经掌握全部组合或期间交易。</li>
+<li><strong>工具能力和执行范围要确认。</strong> 可让 Agent 检索资料、使用可用接口、处理本地文件和运行程序。先试取少量数据，确认能否完成任务；记录可用来源和输出位置。关键样本、方法或口径变化前，由你作出判断；遇到缺口时说明如何处理。实验不涉及真实交易。</li>
+</ul>
+<p>你可以让 Agent 执行一段连续工作，但要能够解释它为何这样做，并检查实际产物。对它提出的缺口和建议作出有理由的决定，也是实验的一部分。</p>
+
+</section>
+<section id="submission">
+<h2><span class="no">06</span>保存交流与提交成果</h2>
+<p>使用 TRAE、WorkBuddy 或其他自己可用的 Agent 均可。</p>
+<p>优先使用经过试验的原生导出方式。没有可用导出时，逐轮复制实验交流原文，保留发言角色和顺序，截图补充关键执行位置。注明覆盖范围及未能取得的内容；界面没有显示的时间或工具调用详情不能补写成事实。Agent 生成的过程总结只能作为索引，不能替代原始交流。</p>
+<p>保存实验相关的全部研究、核验和修订会话，包括未成功的尝试。任务一结束时保存一次完整快照，再开展任务二；任务二及研究过程中的修订另存版本，保留原版。通过教师公布的同一渠道提交，不覆盖前次记录。</p>
+<p><strong>提交一个完整材料包。</strong> 完成两项任务后，将下表材料放入以 <code>学号_姓名</code> 命名的文件夹，压缩为 <code>学号_姓名_基金实验.zip</code>，通过<a href="https://send2me.cn/s6scThjh/S7uneaqptLkaHg" rel="noopener" target="_blank">课程作业提交入口</a>提交。建议一周内完成，截止日期以提交页面显示为准。</p>
+<div aria-label="可横向滚动的表格" class="tablewrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>提交材料</th>
+<th>用途及内容</th>
+<th>可用格式或组织方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>实验报告</td>
+<td>说明风格判断对应的时点或时期、证据依据与选样理由；任务一的问题、方法、关键结果和初评；任务二的问题来源、研究设计、实际结果与认识变化。正文篇幅按研究内容确定，附件保存必要证据</td>
+<td>Word、PDF 或 Markdown，选择一种即可</td>
+</tr>
+<tr>
+<td>两份方案</td>
+<td>保存任务一计算前的研究方案、任务二执行前的研究计划，以及有修改时的旧版和理由</td>
+<td>可放在 <code>plans/</code>；Word、PDF 或 Markdown 均可</td>
+</tr>
+<tr>
+<td>原始交流</td>
+<td>保留实际提问、Agent 建议、你的决定和可取得的执行记录，包括未成功的尝试</td>
+<td>可放在 <code>logs/</code>；原生导出文件、TXT 或 Markdown，截图补充关键位置</td>
+</tr>
+<tr>
+<td>过程记录</td>
+<td>指向两项任务各环节的关键交流和产物，方便教师查找</td>
+<td>一张表即可；Word、Excel 或 Markdown，示例见下表</td>
+</tr>
+<tr>
+<td>数据与来源清单</td>
+<td>保存实际使用的数据，说明来源或接口、取得时间、参数或筛选条件、日期覆盖及文件位置</td>
+<td>可放在 <code>data/</code>；CSV、Excel 或实际取得的文件</td>
+</tr>
+<tr>
+<td>分析、计算文件与结果</td>
+<td>支持核查与复现，报告中的判断和数字能找到对应的分析依据与结果</td>
+<td>按实际方法提交分析记录、程序及运行输出，或含公式的 Excel 工作簿；图表和结果可放在 <code>results/</code></td>
+</tr>
+<tr>
+<td>说明文件（README）</td>
+<td>列明以上材料的位置、Agent 产品与版本、打开或运行方法，以及未完成或无法复现的部分</td>
+<td>TXT、Word 或 Markdown，放在材料包根目录</td>
+</tr>
+</tbody>
+</table></div>
+<p>文件名和子目录可以调整，README 应指向实际文件。无需为没有使用的方式建立空目录。方案保存完整内容，报告概述关键选择，无需全文重复；过程记录负责指向证据，不重复抄写全部对话。可以请 Agent 协助整理文件和索引，由你核对确认。</p>
+<p><strong>过程记录示例：</strong> 下表只说明怎样指向证据，请填写自己的真实决定和文件位置。原始消息位置可以使用自行添加的消息编号、文本行号或截图编号，并保留原有发言顺序。</p>
+<div aria-label="可横向滚动的表格" class="tablewrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>环节</th>
+<th>原始交流位置</th>
+<th>我的决定及理由</th>
+<th>对应产物</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>任务二形成方案</td>
+<td><code>logs/task2.md</code> 第 18 条消息（自行编号）</td>
+<td>保持基金和指标不变，比较两个区间，检查优势是否持续</td>
+<td><code>plans/task2_plan.md</code></td>
+</tr>
+<tr>
+<td>任务二执行比较</td>
+<td><code>logs/task2.md</code> 第 21 条消息及其执行输出</td>
+<td>按已确认方案开始计算，并检查区间是否一致</td>
+<td><code>results/task2_comparison.xlsx</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>同样的方法用于记录任务一及其他环节。每位同学的交流和判断单独留存；引用同伴、模板或其他资料时注明来源，凭证不放入提交包。</p>
+
+</section>
+<section id="grading">
+<h2><span class="no">07</span>评价依据</h2>
+<p>以下为拟定评分规则，正式版本在开课前公布。两项任务各占总成绩的 50%，每项按下面五个维度评价。</p>
+<div aria-label="可横向滚动的表格" class="tablewrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>比例</th>
+<th>评价依据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>问题与目标</td>
+<td>20%</td>
+<td>是否把开放任务转成可研究的问题，任务二是否有实际结果或发现作为来源</td>
+</tr>
+<tr>
+<td>方法与约束</td>
+<td>25%</td>
+<td>是否解释样本、资料、方法及适用条件，明确它们能回答什么；涉及比较时说明比较条件</td>
+</tr>
+<tr>
+<td>工具与执行控制</td>
+<td>20%</td>
+<td>是否检查实际工具和数据能力，明确执行范围，妥善处理缺口与变更</td>
+</tr>
+<tr>
+<td>核验与迭代</td>
+<td>20%</td>
+<td>是否核查关键产物，对建议、分歧或不足作出有依据的处理</td>
+</tr>
+<tr>
+<td>判断与认识更新</td>
+<td>15%</td>
+<td>是否根据证据形成有边界的评价，并说明新证据如何影响认识</td>
+</tr>
+</tbody>
+</table></div>
+<h3>1. 评分档次与计分</h3>
+<p>两项任务各按 100 分计。每个维度采用 0—4 档，其分值上限为上表比例对应的分数；维度得分＝分值上限×档次÷4。总成绩＝任务一得分×50%＋任务二得分×50%，最后保留一位小数。以下为拟定档次，以开课公布版本为准。</p>
+<div aria-label="可横向滚动的表格" class="tablewrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>1 档：初步</th>
+<th>2 档：基本</th>
+<th>3 档：充分</th>
+<th>4 档：扎实</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>问题与目标</td>
+<td>有任务表述，但问题或目标含糊</td>
+<td>有可研究的问题和范围；任务二能指出任务一的来源</td>
+<td>能说明问题、目标与已有发现的联系，并转成可执行任务</td>
+<td>能辨析问题中的假设或歧义，说明研究意义和所需证据，执行目标清楚</td>
+</tr>
+<tr>
+<td>方法与约束</td>
+<td>有方法名称，但缺少选择理由或适用说明</td>
+<td>能解释方法与问题的联系，交代主要资料、样本和条件</td>
+<td>方法、证据与问题匹配，能说明适用条件及主要局限</td>
+<td>能对方法建议作有依据的选择，处理影响判断的关键条件，解释结论的适用范围</td>
+</tr>
+<tr>
+<td>工具与执行控制</td>
+<td>有工具使用记录，但数据检查和学生决定较少</td>
+<td>检查实际取数或检索结果，明确基本执行范围</td>
+<td>根据实际能力组织执行，检查覆盖和质量；发生缺口或变更时有处置依据</td>
+<td>能解释工具选择与执行决策，关键变更有确认，实际产物与方案及记录对应</td>
+</tr>
+<tr>
+<td>核验与迭代</td>
+<td>泛泛要求检查，缺少具体核查依据</td>
+<td>有明确核查点、实际过程和结果</td>
+<td>能判断核查结果的影响，有依据地修正或保留研究决定</td>
+<td>针对影响结论的关键环节核验，证据与处理决定对应，能解释为何修正或保留</td>
+</tr>
+<tr>
+<td>判断与认识更新</td>
+<td>有结论，但主要复述输出</td>
+<td>结论有关键证据，能说明主要不足或新增认识</td>
+<td>根据证据形成评价，说明支持与不足；任务二交代认识变化</td>
+<td>推理与证据相称，能处理不同解释；有依据地修正、保留或暂缓判断</td>
+</tr>
+</tbody>
+</table></div>
+<p>0 档表示有证据确认该维度未开展或完全不符合要求。因材料缺失或文件无法打开而无法判断的项目，暂待核验；可根据反馈补充原始交流、相关产物或可读取的文件，并注明位置。</p>
+<p>任务一的“认识更新”看初步评价是否有依据，任务二还看新证据与原认识的联系。没有发现错误、没有发生数据缺口、没有推翻原结论，都不妨碍取得高档，关键是判断依据和实际处理过程。</p>
+<h3>2. 评分证据与自主选题</h3>
+<p>评价结合你的原始交流与对应的数据、分析文件和结果，重点看你如何提出问题、判断 Agent 的建议、核查结果，以及根据证据改进认识。保留关键提问、决定和对应产物；过程总结不能替代原始交流。不按提示词篇幅、对话次数或报告措辞评分。</p>
+<p>任务二按问题来源、方法是否适合问题、实际执行、核验和认识更新评价。方法和研究深度由你决定；复杂方法或扩大样本不自动加分，简单方法也可以取得高档。</p>
+<p>风格分组按所声明的时点或时期、资料依据和推理评价，合理的不同归类可以获得认可。涉及比较或模型时说明相应条件；采用资料分析等方式时，说明资料选择、分析与核验方法。</p>
+<p>教师使用 Agent 辅助评分，并确认最终成绩。未完成的部分、缺少的证据和仍不确定的判断，应在提交材料中如实说明。</p>
+
+</section>
+</main>
+<div class="submission-bottom"><aside class="submission-bar" aria-label="基金实验作业提交"><div class="container"><div><strong>基金实验作业提交</strong><span>两项任务统一打包 · 建议一周内完成 · 截止日期见提交页面</span></div><a href="https://send2me.cn/s6scThjh/S7uneaqptLkaHg" target="_blank" rel="noopener">提交基金实验作业 ↗</a></div></aside></div>
+<footer><div class="container"><p><strong>提交前核对</strong></p><p>两项任务一并整理为 <code>学号_姓名_基金实验.zip</code>，保留原始交流、数据、分析文件与结果。建议一周内完成，截止日期以提交页面显示为准。</p><p class="note">学生手册 v0.8 设计稿 · 2026-10-10。正式评分版本以教师公布为准。Tushare MCP 接入说明已在课程 QQ 群发布。</p><p><a href="./">返回投资组合课程</a> · <a href="fund-experiment-9-funds.csv" download="基金实验_9只基金名单.csv">下载 9 只基金名单</a></p></div></footer>
+</body>
+</html>
