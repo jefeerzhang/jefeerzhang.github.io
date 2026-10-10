@@ -225,6 +225,54 @@
       color: #ff6a2b;
     }
 
+    /* 面板：把同类入口收进一个视觉单元（实验 / 课程各一） */
+    .panel {
+      margin-top: 26px;
+      padding: 26px 26px 24px;
+      border: 1px solid var(--line);
+      border-radius: calc(var(--radius) + 4px);
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 10px 34px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-kicker {
+      display: block;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .panel-head h2 {
+      margin: 7px 0 0;
+      font-family: var(--display);
+      font-size: clamp(22px, 2.6vw, 29px);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.012em;
+      color: var(--ink);
+    }
+
+    .panel-note {
+      margin: 0 0 2px;
+      max-width: 30em;
+      color: var(--muted);
+      font-family: var(--serif);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
     @media (max-width: 760px) {
       .page-hero {
         padding: 40px 0 24px;
@@ -240,6 +288,23 @@
 
       .page-grid {
         grid-template-columns: 1fr;
+      }
+
+      .panel {
+        margin-top: 20px;
+        padding: 20px 16px 18px;
+      }
+
+      .panel-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 16px;
+        padding-bottom: 14px;
+      }
+
+      .panel-note {
+        max-width: none;
       }
     }
   </style>
@@ -285,79 +350,105 @@
 
     <section class="page-content">
       <div class="container">
-        <div class="page-grid">
 
-          <a class="page-card opening-card" href="./opening.html" target="_blank">
-            <span class="page-tag">课程开场白</span>
-            <h3>394 亿 Tokens 与我们的投资组合课</h3>
-            <p>开学前我先让 AI 工作了 160 天。烧掉的 token 不是聊天记录，是一份工作日志。</p>
-            <div class="page-meta">
-              <span>沉浸式页面 · 新窗口打开</span>
-              <span class="page-arrow" aria-hidden="true">→</span>
+        <a class="page-card opening-card" href="./opening.html" target="_blank">
+          <span class="page-tag">课程开场白</span>
+          <h3>394 亿 Tokens 与我们的投资组合课</h3>
+          <p>开学前我先让 AI 工作了 160 天。烧掉的 token 不是聊天记录，是一份工作日志。</p>
+          <div class="page-meta">
+            <span>沉浸式页面 · 新窗口打开</span>
+            <span class="page-arrow" aria-hidden="true">→</span>
+          </div>
+        </a>
+
+        <section class="panel" id="experiments" aria-labelledby="panel-experiments-title">
+          <header class="panel-head">
+            <div>
+              <span class="panel-kicker">Experiments · 02</span>
+              <h2 id="panel-experiments-title">实验作业</h2>
             </div>
-          </a>
+            <p class="panel-note">Agent 辅助完成提交物，人工持续审核。</p>
+          </header>
 
-          <a class="page-card" href="./experiment-01-momentum-reversal.html">
-            <span class="page-tag">实验作业 01</span>
-            <h3>中证500成分股的动量与反转</h3>
-            <p>学生实验手册：任务一完成 REV1 与 MOM12–1 基准回测，任务二自主提出并研究一个问题；Agent 辅助完成提交物，人工持续审核。</p>
-            <div class="page-meta">
-              <span>第一次实验作业 · 学生任务书</span>
-              <span class="page-arrow" aria-hidden="true">→</span>
+          <div class="page-grid">
+
+            <a class="page-card" href="./experiment-01-momentum-reversal.html">
+              <span class="page-tag">实验作业 01</span>
+              <h3>中证500成分股的动量与反转</h3>
+              <p>学生实验手册：任务一完成 REV1 与 MOM12–1 基准回测，任务二自主提出并研究一个问题；Agent 辅助完成提交物，人工持续审核。</p>
+              <div class="page-meta">
+                <span>第一次实验作业 · 学生任务书</span>
+                <span class="page-arrow" aria-hidden="true">→</span>
+              </div>
+            </a>
+
+            <a class="page-card" href="./experiment-02-active-fund-management.html">
+              <span class="page-tag">实验作业 02</span>
+              <h3>中国开放式证券投资基金的积极组合管理能力评价</h3>
+              <p>学生实验手册：与 Agent 自主判断基金风格、开展初步评价，再从结果提出新问题并设计实验；附 9 只基金名单与提交入口。</p>
+              <div class="page-meta">
+                <span>第二次实验作业 · 学生任务书</span>
+                <span class="page-arrow" aria-hidden="true">→</span>
+              </div>
+            </a>
+
+          </div>
+        </section>
+
+        <section class="panel" id="lectures" aria-labelledby="panel-lectures-title">
+          <header class="panel-head">
+            <div>
+              <span class="panel-kicker">Lectures · 04</span>
+              <h2 id="panel-lectures-title">课程讲义</h2>
             </div>
-          </a>
+            <p class="panel-note">学生自读讲义，配合课堂讲解使用。</p>
+          </header>
 
-          <a class="page-card" href="./experiment-02-active-fund-management.html">
-            <span class="page-tag">实验作业 02</span>
-            <h3>中国开放式证券投资基金的积极组合管理能力评价</h3>
-            <p>学生实验手册：与 Agent 自主判断基金风格、开展初步评价，再从结果提出新问题并设计实验；附 9 只基金名单与提交入口。</p>
-            <div class="page-meta">
-              <span>第二次实验作业 · 学生任务书</span>
-              <span class="page-arrow" aria-hidden="true">→</span>
-            </div>
-          </a>
+          <div class="page-grid">
 
-          <a class="page-card" href="./01-asset-portfolio-theory.html">
-            <span class="page-tag">第 01 讲</span>
-            <h3>资产组合理论的应用</h3>
-            <p>学生自读讲义。</p>
-            <div class="page-meta">
-              <span>讲义</span>
-              <span class="page-arrow" aria-hidden="true">→</span>
-            </div>
-          </a>
+            <a class="page-card" href="./01-asset-portfolio-theory.html">
+              <span class="page-tag">第 01 讲</span>
+              <h3>资产组合理论的应用</h3>
+              <p>学生自读讲义。</p>
+              <div class="page-meta">
+                <span>讲义</span>
+                <span class="page-arrow" aria-hidden="true">→</span>
+              </div>
+            </a>
 
-          <a class="page-card" href="./capm-handout/">
-            <span class="page-tag">第 02 讲</span>
-            <h3>资本资产定价模型的应用</h3>
-            <p>学生自读讲义：CAPM 与证券市场线。</p>
-            <div class="page-meta">
-              <span>讲义</span>
-              <span class="page-arrow" aria-hidden="true">→</span>
-            </div>
-          </a>
+            <a class="page-card" href="./capm-handout/">
+              <span class="page-tag">第 02 讲</span>
+              <h3>资本资产定价模型的应用</h3>
+              <p>学生自读讲义：CAPM 与证券市场线。</p>
+              <div class="page-meta">
+                <span>讲义</span>
+                <span class="page-arrow" aria-hidden="true">→</span>
+              </div>
+            </a>
 
-          <a class="page-card" href="./03-arbitrage-pricing-theory.html">
-            <span class="page-tag">第 03 讲 · 讲义</span>
-            <h3>套利定价理论的应用</h3>
-            <p>学生自读讲义：APT 多因子定价、四因子构建、个股与基金归因、观点与压力测试。</p>
-            <div class="page-meta">
-              <span>讲义</span>
-              <span class="page-arrow" aria-hidden="true">→</span>
-            </div>
-          </a>
+            <a class="page-card" href="./03-arbitrage-pricing-theory.html">
+              <span class="page-tag">第 03 讲 · 讲义</span>
+              <h3>套利定价理论的应用</h3>
+              <p>学生自读讲义：APT 多因子定价、四因子构建、个股与基金归因、观点与压力测试。</p>
+              <div class="page-meta">
+                <span>讲义</span>
+                <span class="page-arrow" aria-hidden="true">→</span>
+              </div>
+            </a>
 
-          <a class="page-card" href="./04-behavioral-investment.html">
-            <span class="page-tag">第 04 讲</span>
-            <h3>行为投资学与投资行为管理</h3>
-            <p>学生自读讲义：行为投资组合理论、BAPM、动量与反转、Agent 实证演示与行为管理纪律。</p>
-            <div class="page-meta">
-              <span>讲义</span>
-              <span class="page-arrow" aria-hidden="true">→</span>
-            </div>
-          </a>
+            <a class="page-card" href="./04-behavioral-investment.html">
+              <span class="page-tag">第 04 讲</span>
+              <h3>行为投资学与投资行为管理</h3>
+              <p>学生自读讲义：行为投资组合理论、BAPM、动量与反转、Agent 实证演示与行为管理纪律。</p>
+              <div class="page-meta">
+                <span>讲义</span>
+                <span class="page-arrow" aria-hidden="true">→</span>
+              </div>
+            </a>
 
-        </div>
+          </div>
+        </section>
+
       </div>
     </section>
 
