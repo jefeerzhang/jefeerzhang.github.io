@@ -9,7 +9,7 @@
 # 接到"改站 / 加子站 / 调样式 / 写文案"这类任务,请按以下顺序:
 #   1. 读 `theme.palette` + `theme.rule`:知道能用什么色 / 什么字体 / 什么禁条
 #   2. 读 `nav` + `sections`:知道顶层有哪几个栏目,目录路径是什么
-#   3. 读 `sections` 里 knowledge 的 columns:挂新子站照 `shells.knowledge-shell` 的外壳写
+#   3. 读 `sections` 里 knowledge 的 columns:查现有入口;外壳接入方式按 `knowledge_mount`
 #   4. 读 `knowledge_mount`:挂载步骤与卡片格式以它为准
 #   5. 写文案读 `copy_discipline`;改样式读 `theme.rule`
 # 铁律:
@@ -209,7 +209,9 @@ sections:
 
 # -------------------------------------------------------------
 # 四、知识库子页统一外壳(knowledge-shell)
-#   任何 knowledge 下的子页必须按这个结构套,杜绝"每个子站结构都不一样"
+#   下述结构仅供完整外壳模式使用,不要求所有 knowledge 子页统一套壳。
+#   挂载已有材料默认采用 knowledge_mount 的仅入口接入模式,保留其他子页原样。
+#   既有页面保留当前接入方式;变更须用户明确授权。
 #   约定:保留原 inline <style>;不引入 <main> 嵌套
 # -------------------------------------------------------------
 shells:
@@ -257,19 +259,19 @@ workflow:
     # 原先此处还要求读 jefeerzhang_site.md / taste_skill_sop.md / stop_ai_slop_zh_sop.md。
     # 2026-10-11 查证:这三份文件在本机与仓库都不存在,规则已内联进本文件的
     # theme.rule / theme.design_discipline / copy_discipline,故不再单列。
-    - 修改
-    - git commit + push master
-    - curl 远端 raw 验真
+    - 在用户授权范围内修改,完成本地差异核对
+    - 仅在用户明确要求时执行 git add / commit / push;否则停在本地验收
+    - 如已获授权并推送,等待 GitHub Pages 构建完成后验证线上页面
   verify:
     tool: curl.exe --noproxy '*' --max-time 15
     raw_url: https://raw.githubusercontent.com/jefeerzhang/jefeerzhang.github.io/master
     pages_url: https://jefeerzhang.github.io
-    note: 加 /index.html 或具体 html 避免 GitHub Pages 自定义 404
+    note: raw 仅核对仓库内容;推送后用 gh api repos/jefeerzhang/jefeerzhang.github.io/pages/builds/latest 确认构建完成,再验证 Pages 页面并加查询参数绕过缓存;加 /index.html 或具体 html 避免自定义 404
 
 # -------------------------------------------------------------
 # 七、知识库子站挂载标准流程(给 AI 的操作清单)
 #   用户只需说: "把 XXX 文件夹挂到 knowledge 下,叫 YYY"
-#   AI 按以下步骤执行,不问不猜
+#   AI 按用户指定的材料与位置执行;涉及删除或覆盖已有材料时,先列出影响范围并确认
 # -------------------------------------------------------------
 knowledge_mount:
   description: |
@@ -285,14 +287,14 @@ knowledge_mount:
   steps:
     - step: 1
       name: 拷贝文件
-      action: "把文件夹内所有 HTML 复制到 site_clone/knowledge/{slug}/"
-      note: 先删目标目录旧文件(如有)
+      action: "把用户指定的材料复制到 site-repo/knowledge/{slug}/(相对于 class2026 工作区根目录)"
+      note: 目标目录已有文件时,先列出拟覆盖或删除的文件,取得用户确认后再操作;不默认清空目录
     - step: 2
       name: index.html 加导航
       action: |
         只给 index.html 加:
           1. <head> 内 </style> 后加 <link rel="stylesheet" href="../../assets/site.css">
-          2. <body> 后加 site-header(5 链接:首页/个人简历/知识学习{active}/个人学习站/硕士课程)
+          2. <body> 后加 site-header(链接名称、顺序与路径以 nav 为准,知识学习为 active)
           3. </body> 前加 site-footer(版权+不蒜子+busuanzi.js)
       note: 其他子页不动,保留素材原样
     - step: 3
@@ -309,15 +311,15 @@ knowledge_mount:
           status: live
     - step: 4
       name: 更新知识库主页卡片
-      action: "在 site_clone/knowledge/index.html 的卡片区加一张新卡片"
+      action: "在 site-repo/knowledge/index.html 的卡片区加一张新卡片(相对于 class2026 工作区根目录)"
       note: 卡片格式同 fsqca/zhang-gen-li-lun 现有卡片
     - step: 5
-      name: commit + push + 验证
+      name: 本地验收与授权发布
       action: |
-        git add knowledge/{slug}/ knowledge/index.html site.yml
-        git commit -m "feat(knowledge): 挂载 {title} 子站"
-        git push origin master
-        curl 验证远端 index.html 含 site-header
+        先核对本地差异、入口链接与原材料是否保留;未获提交推送授权时到此停止。
+        仅在用户明确要求时,在 site-repo 仓库内执行 git add / commit / push。
+        提交信息遵循中文 Conventional Commits:type(中文scope): 中文动宾短语,body 说明原因与影响范围。
+        推送后按 workflow.verify 等待 Pages 构建完成并验证实际页面。
   shell_types:
     knowledge-shell-index-only:
       description: "仅 index.html 加外壳,子页原样(扎根理论模式)"
@@ -328,7 +330,7 @@ knowledge_mount:
       applies_to: all pages
       blocks: [site-header, breadcrumb, lesson-hero, lesson-nav, site-footer, site.css]
   rules:
-    - 不改子页 CSS/布局,只改 index.html
+    - 默认仅入口接入,只改 index.html,保留其他子页 CSS/布局;完整外壳模式须用户明确授权
     - site-header 的 active 链接指向当前子站路径
     - footer-counter 不蒜子必须居中(class="footer-counter")
     - 不准自己改 accent 色;要改先问张剑
@@ -338,7 +340,7 @@ knowledge_mount:
 # -------------------------------------------------------------
 maintainer:
   name: 张剑
-  note: 本文件改一次,commit 一次;AI 不得擅改 site.yml
+  note: AI 仅在用户明确授权时修改 site.yml;修改授权不等于 git add / commit / push 授权
 
 # -------------------------------------------------------------
 # 八、首页问答组件(ask)
