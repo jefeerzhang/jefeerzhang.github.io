@@ -2087,9 +2087,7 @@ body.fsqca-page {
   font-weight: 700;
   color: var(--ink);
   letter-spacing: -0.005em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
 }
 
 .contact-hint {
