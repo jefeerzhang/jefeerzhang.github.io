@@ -22,7 +22,7 @@
     wrap.className = 'ask-msg ask-msg--' + role;
     var name = document.createElement('span');
     name.className = 'ask-role';
-    name.textContent = role === 'user' ? '你' : '助手';
+    name.textContent = role === 'user' ? '你' : '张老师的 agent';
     // div 而不是 p:回答里可能有 ul / pre 这类块级元素,p 装不进
     var body = document.createElement('div');
     body.className = 'ask-bubble';
