@@ -1,12 +1,12 @@
 :root {
-  --paper: #ece5d3;
-  --surface: #f6f0e1;
-  --surface-soft: #efe7d2;
-  --surface-deep: #e2d6b8;
+  --paper: #f0eadb;
+  --surface: #f9f4e9;
+  --surface-soft: #f2ecdc;
+  --surface-deep: #e7dcc6;
   --ink: #211c14;
   --text: #514a38;
   --muted: #6e6552;
-  --line: #ded2b6;
+  --line: #e3d9c4;
   --line-strong: #b6a988;
   --accent: #245642;
   --accent-hover: #173e2f;
@@ -1552,7 +1552,7 @@ body.fsqca-page {
 .lesson-hero {
   padding: 36px 0 64px;
   border-bottom: 1px solid var(--line);
-  background: linear-gradient(180deg, #f1e9d6 0%, #faf6ea 100%);
+  background: linear-gradient(180deg, #f5efdf 0%, #fcf9f1 100%);
 }
 .lesson-hero .breadcrumb {
   margin: 0 0 32px;
@@ -1919,7 +1919,7 @@ body.fsqca-page {
 .ref-list li { margin-bottom: 6px; }
 
 /* ---------- fsqca 主页 index 专属 ---------- */
-.fsqca-hero{padding:72px 0 56px;background:linear-gradient(180deg,#f1e9d6 0%,#faf6ea 100%);border-bottom:1px solid var(--line);}
+.fsqca-hero{padding:72px 0 56px;background:linear-gradient(180deg,#f5efdf 0%,#fcf9f1 100%);border-bottom:1px solid var(--line);}
 .fsqca-hero .eyebrow{font-family:var(--mono);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--accent);margin:0 0 14px;}
 .fsqca-hero h1{font-family:var(--serif);font-size:46px;line-height:1.18;font-weight:600;margin:0 0 18px;letter-spacing:-.01em;}
 .fsqca-hero .hero-summary{font-family:var(--serif);font-size:17px;line-height:1.75;color:var(--muted);max-width:680px;margin:0 0 28px;}
