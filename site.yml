@@ -113,6 +113,15 @@ sections:
         meta: 外部课程 · 10 阶段 182 节 · 零基础 → 能动手
         status: live
         featured: true            # 在 knowledge/index.html 里置顶、独占一行
+      - id: python-course
+        path: /knowledge/python-course/
+        title: Python 语言基础与应用
+        summary: 面向零基础大学生的 142 节 Python 课,每节结构一致:比喻导入、概念讲解、课堂代码到随堂测验。
+        tag: 新专栏
+        meta: 8 章节 · 142 知识点 · 零基础 → 能动手
+        shell: knowledge-shell
+        status: live
+        featured: true            # 与 ai-biancheng 同为首行置顶卡
       - id: datawhale-ai
         url: https://www.datawhale.cn/learn/summary/40
         external: true
