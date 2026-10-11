@@ -1,0 +1,200 @@
+/* Python 语言基础与应用 · 深色模式覆盖
+   由 gen_dark.py 从 assets/python.css 与 142 个课时页的页内 <style> 自动生成。
+   只为「硬编码浅色底」的规则补深色版本；浅色模式不受影响。
+   改动样式后请重新生成（python gen_dark.py），不要手改本文件。
+*/
+
+  [data-theme="dark"] .hw-chip {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .feat span {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink2);
+  }
+  [data-theme="dark"] .panel {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .machine {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .chip.src {
+    background: #342e14;
+    color: var(--ink);
+    border-color: var(--line);
+  }
+  [data-theme="dark"] .chip.mc {
+    background: #171f30;
+    color: var(--ink);
+    border-color: var(--line);
+  }
+  [data-theme="dark"] .btn-ghost {
+    background: rgba(255, 255, 255, .06);
+    color: var(--accent);
+  }
+  [data-theme="dark"] .qbox {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .qbox.bad {
+    background: #341414;
+    color: var(--ink);
+  }
+  [data-theme="dark"] .qbox.good {
+    background: #143427;
+    color: var(--ink);
+    border-color: var(--line);
+  }
+  [data-theme="dark"] .pw-box {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .pw-box.vague {
+    background: #341414;
+    color: var(--ink);
+  }
+  [data-theme="dark"] .pw-box.precise {
+    background: #143427;
+    color: var(--ink);
+    border-color: var(--line);
+  }
+  [data-theme="dark"] .idxcol .ch {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .idcell .ch {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .opbtn {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .gate .lv {
+    background: rgba(255, 255, 255, .06);
+    color: var(--accent);
+  }
+  [data-theme="dark"] .ind-tag {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink2);
+  }
+  [data-theme="dark"] .thresh .t1 {
+    background: #143427;
+    color: var(--ink);
+    border-color: var(--line);
+  }
+  [data-theme="dark"] .thresh .t2 {
+    background: #342814;
+    color: var(--ink);
+  }
+  [data-theme="dark"] .thresh .t3 {
+    background: #341414;
+    color: var(--ink);
+    border-color: var(--line);
+  }
+  [data-theme="dark"] .treadmill .tp {
+    background: rgba(255, 255, 255, .06);
+    color: var(--accent);
+  }
+  [data-theme="dark"] .count span {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .rcell {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .trace .tc {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .syn .hi {
+    background: #342514;
+    color: var(--ink);
+  }
+  [data-theme="dark"] .match .cell {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .pcell {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .pcell.keep {
+    background: #143425;
+    color: var(--ink);
+  }
+  [data-theme="dark"] .scell {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .doll {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .frame {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .dcard {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .dcard.txt {
+    background: #14341e;
+    color: var(--ink);
+  }
+  [data-theme="dark"] .dcard.bin {
+    background: #342d14;
+    color: var(--ink);
+  }
+  [data-theme="dark"] .tcard {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .mbtn {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .ccard.good {
+    background: #14341e;
+    color: var(--ink);
+  }
+  [data-theme="dark"] .ccard.bad {
+    background: #342d14;
+    color: var(--ink);
+  }
+  [data-theme="dark"] .fcell {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .chip {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .cobj {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .sw-btn {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink2);
+  }
+  [data-theme="dark"] .sw-pane {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] table.m3 {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] .ccard {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
+  [data-theme="dark"] input.blank {
+    background: rgba(255, 255, 255, .06);
+    color: var(--ink);
+  }
