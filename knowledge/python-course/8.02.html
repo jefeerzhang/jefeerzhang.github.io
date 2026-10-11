@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8.02 面向对象的三大特性 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第八章 面向对象编程 · 第 2 / 12 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch08.html">第八章 面向对象编程</a><span class="sep">/</span>
+          <span class="current">8.02</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">02</span>
+            <span class="lesson-hero-num-total">/ 12</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第八章 · 面向对象编程</span>
+            <h1>面向对象的三大特性</h1>
+            <p class="hero-summary">第 2 / 12 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 12 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>编程的两种范式</li>
+      <li class="cur">面向对象的三大特性</li>
+      <li>四个核心概念：类·对象·属性·方法</li>
+      <li>创建类：class·__init__·self</li>
+      <li>创建对象与访问成员</li>
+      <li>实例属性与类属性</li>
+      <li>三种方法：实例·类·静态</li>
+      <li>封装与私有属性</li>
+      <li>继承与 super()</li>
+      <li>多重继承</li>
+      <li>多态与方法重写</li>
+      <li>综合案例：商品库存管理</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>面向对象凭什么成为主流？靠这三张王牌</h2>
+    <p>上一节我们知道了面向对象是「让对象协作」。但凭什么说它更适合大型程序？答案就是<b>三大特性：封装、继承、多态</b>——它们分别解决「数据安全」「代码复用」「灵活扩展」三个老大难问题。本页先建立整体印象，<b>8.08、8.09、8.11 会逐个深入展开</b>，现在不求甚解、先混个眼熟。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">三大特性像「一间公司」的三套制度</div>
+      <p><b>封装</b>是保密制度：财务室锁着门（隐藏内部细节），前台只留一个报销窗口（暴露必要接口）——员工不必知道账怎么算。<b>继承</b>是新人入职：老员工会的技能新员工自动都会（父类的属性和方法），再学几门新本事就是子类的扩展。<b>多态</b>是同一句「开工」：设计师交付图纸、程序员交付代码、销售交付订单——同一个指令，各自有不同的做法。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>三大特性速览：点卡片展开细节</h2>
+    <div class="grid g3">
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent)"></span>① 封装 Encapsulation</h4>
+        <div class="desc">隐藏内部细节，只暴露必要接口</div>
+        <div class="more">
+          <b>定义</b>：将对象的属性（数据）和方法（行为）包装在类中，隐藏内部细节、只暴露必要的接口。<br><br>
+          <b>生活例子</b>：银行账户——储户只需会用存款、取款功能，完全不需要了解银行内部的账务处理逻辑。<br><br>
+          <b>对应课程</b>：8.08 封装与私有属性
+        </div>
+        <div class="hint">👆 点击展开 / 收起</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent2)"></span>② 继承 Inheritance</h4>
+        <div class="desc">子类自动获得父类的属性和方法</div>
+        <div class="more">
+          <b>定义</b>：子类可以继承父类的属性和方法，并在此基础上<b>扩展或修改</b>，实现代码复用。<br><br>
+          <b>生活例子</b>：动物 → 哺乳动物 → 狗。狗继承了动物的呼吸、移动，还有自己独有的「汪汪叫」。<br><br>
+          <b>对应课程</b>：8.09 继承与 super()、8.10 多重继承
+        </div>
+        <div class="hint">👆 点击展开 / 收起</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--ok)"></span>③ 多态 Polymorphism</h4>
+        <div class="desc">同一方法，不同对象有不同行为</div>
+        <div class="more">
+          <b>定义</b>：同一父类的不同子类对象，调用同一个方法可以产生<b>不同的行为</b>，增强灵活性和扩展性。<br><br>
+          <b>生活例子</b>：<code>乐器.演奏()</code>——钢琴弹出叮咚声、吉他弹出拨弦声、鼓敲出咚咚声，同一动作各显神通。<br><br>
+          <b>对应课程</b>：8.11 多态与方法重写
+        </div>
+        <div class="hint">👆 点击展开 / 收起</div>
+      </div>
+    </div>
+    <ul class="points" style="margin-top:14px">
+      <li><b>封装</b>解决「数据安全」——不让外面乱碰对象的内部数据</li>
+      <li><b>继承</b>解决「代码复用」——父类写一次，子类白得一套</li>
+      <li><b>多态</b>解决「灵活扩展」——同一个调用入口，换对象就换行为</li>
+      <li>三者不是并列关系：封装是基础，继承在封装之上复用，多态在继承之上变化</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>一段代码，三大特性全露脸</h2>
+    <pre class="codeblock">class Animal:                        # 父类：所有动物的公共模板
+    def __init__(self, name):
+        self.name = name             # 属性被「装进」对象 —— 封装的雏形
+
+    def breathe(self):               # 所有动物共有的行为
+        print(f'{self.name}在呼吸')
+
+    def speak(self):
+        print(f'{self.name}发出声音')
+
+class Dog(Animal):                   # 继承：Dog(Animal) 表示狗是动物的一种
+    def speak(self):                 # 重写：狗有自己专属的叫法
+        print(f'{self.name}：汪汪！')
+
+class Cat(Animal):
+    def speak(self):                 # 同一方法名，猫是另一种行为
+        print(f'{self.name}：喵喵～')
+
+d = Dog('旺财')
+c = Cat('咪咪')
+d.breathe()      # breathe 是从 Animal 继承来的 —— 继承
+d.speak()        # 狗叫汪汪 —— 重写带来的多态
+c.speak()        # 猫叫喵喵 —— 同一调用，不同行为</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">旺财在呼吸
+旺财：汪汪！
+咪咪：喵喵～</pre>
+    <ul class="points">
+      <li><code>class Dog(Animal)</code> 括号里写父类名，这就是继承的语法（8.09 细讲）</li>
+      <li>d 不会叫喵喵、c 不会叫汪汪——同一个 <code>speak()</code>，各自对象各有行为，这就是多态</li>
+      <li><code>breathe</code> 只在父类写了一次，两个子类直接就能用——代码复用</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！子类自动获得父类的属性和方法（如狗继承动物的呼吸），并可在此基础上扩展修改——这正是继承。"
+         data-no="❌ 封装是隐藏细节只留接口；多态是同一方法不同行为；「实例化」是根据类创建对象的过程。题目描述的「子类获得父类的属性和方法」是继承。">
+      <p style="font-weight:700;margin-bottom:12px">「子类自动获得父类的属性和方法，并在此基础上扩展或修改」，这体现的三大特性是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 封装</button>
+      <button class="opt" onclick="quizPick(this)">B. 继承</button>
+      <button class="opt" onclick="quizPick(this)">C. 多态</button>
+      <button class="opt" onclick="quizPick(this)">D. 实例化</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="封装 继承 多态" data-ok="✅ 全对！隐藏细节是封装、代码复用是继承、灵活变化是多态——三大特性各就各位。" data-no="❌ 提示：三个空分别对应——隐藏内部细节只暴露接口的是＿＿；子类获得父类属性和方法的是＿＿；同一方法不同对象有不同行为的是＿＿。（三空用空格隔开）">
+      <p>三大特性：将属性和方法包装在类中、隐藏内部细节只暴露必要接口，叫<b>＿＿</b>；子类继承父类的属性和方法实现代码复用，叫<b>＿＿</b>；同一方法被不同对象调用产生不同行为，叫<b>＿＿</b>。（三空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：封装 继承 多态">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个初学误区</div>
+      <p>①<b>把「多态」背成「多种状态」</b>：这里的多态指<b>同一方法调用，不同对象表现出不同行为</b>，不是物理里的状态变化；</p>
+      <p>②<b>以为封装就是「把代码藏起来看不见」</b>：封装是<b>不该碰的藏起来、该用的留接口</b>，方法照样可以正常调用；</p>
+      <p>③<b>以为继承是「复制一份代码」</b>：继承是子类<b>指向</b>父类、直接借用——父类改一处，所有子类同步受益，而不是各抄一份。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚了解了 Python 面向对象的三大特性：封装、继承、多态。请：1）每个特性各举一个生活例子和一个 Python 小代码片段；2）出 3 道情景题让我判断属于哪种特性（例如「银行账户不让人直接改余额」「猫和狗都调用 speak() 但叫声不同」）；3）提醒我后面深入学封装和继承时要特别注意什么。">
+      我刚了解了 Python 面向对象的三大特性：封装、继承、多态。请：1）每个特性各举一个生活例子和一个 Python 小代码片段；2）出 3 道情景题让我判断属于哪种特性（例如「银行账户不让人直接改余额」「猫和狗都调用 speak() 但叫声不同」）；3）提醒我后面深入学封装和继承时要特别注意什么。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：把三张王牌打熟（10 分钟）</span>
+    <ol class="steps">
+      <li>回到上面的三张卡片：先自己复述每个特性的定义，再点开对照，检查有没有说漏关键词。</li>
+      <li>读 Animal/Dog/Cat 代码：把 <code>d.speak()</code> 换成 <code>c.speak()</code>，输出会变成什么？先预测再验证。</li>
+      <li>给 Cat 类增加一个新方法 <code>catch_mouse()</code>，打印「咪咪抓到了老鼠」——注意只有猫有这个本事，这就是「子类扩展」。</li>
+      <li>挑战：再写一个 <code>Duck(Animal)</code> 子类，speak 打印「嘎嘎」，三个对象轮流调用 speak，看叫声互不干扰。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>三大特性：<b>封装</b>——属性和方法包装进类、隐藏细节只留接口（银行账户）；<b>继承</b>——子类白得父类的属性和方法、还能扩展（动物→狗）；<b>多态</b>——同一方法不同对象各有行为（乐器各奏各音）。本页是概览，细节分别在 8.08、8.09、8.11 展开。下一节：先认识类、对象、属性、方法四个核心概念。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="8.01.html"><span class="nav-label">← 上一节</span><span class="nav-title">8.01 编程的两种范式</span></a>
+        <a class="next" href="8.03.html"><span class="nav-label">下一节 →</span><span class="nav-title">8.03 四个核心概念：类·对象·属性·方法</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.06 元组的不可变性 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第四章 元组、集合和字典 · 第 6 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.play{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.pane p{font-size:14px;color:var(--ink2)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch04.html">第四章 元组、集合和字典</a><span class="sep">/</span>
+          <span class="current">4.06</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">06</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第四章 · 元组、集合和字典</span>
+            <h1>元组的不可变性</h1>
+            <p class="hero-summary">第 6 / 21 节 · 约 12 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>元组的定义与特性</li>
+      <li>元组的创建</li>
+      <li>元组索引与切片</li>
+      <li>元组运算</li>
+      <li>元组函数与方法</li>
+      <li class="cur">元组的不可变性</li>
+      <li>集合的定义与特性</li>
+      <li>集合的创建</li>
+      <li>集合运算：交差并补</li>
+      <li>集合操作：增删元素</li>
+      <li>集合运算并更新</li>
+      <li>集合函数与判断方法</li>
+      <li>序列与映射</li>
+      <li>字典的定义与特性</li>
+      <li>字典的创建</li>
+      <li>字典访问与三视图</li>
+      <li>字典添加与修改</li>
+      <li>字典删除</li>
+      <li>字典其他操作</li>
+      <li>组合数据类型总结</li>
+      <li>数据类型转换</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>「不可变」到底锁住了什么？</h2>
+    <p>前面五节一直说元组不可变，但如果元组里装了一个<b>列表</b>呢？列表自己可是能改的！这节用一个坐标 <code>location = (30.57, [104.07])</code> 做三步实验，把「不可变」的真正含义——<b>元组中存放的引用不可变</b>——彻底讲透。想明白这一点，你就懂了为什么本章作业第 1 题要用元组存坐标：安全、防误改。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">上锁的文件柜与抽屉里的书包</div>
+      <p>元组像<b>上锁的文件柜</b>：柜子里每个抽屉的位置<b>永远不变</b>（引用固定），1 号抽屉永远是 1 号抽屉。但如果 1 号抽屉里放的是个<b>书包（列表）</b>，书包里面的东西还是可以随便换——柜子锁的是「抽屉安排」，不是「抽屉里物品的内部」。所以 <code>location[1][0]=140.07</code> 能成功（换书包里的东西），而 <code>location[1]=140.07</code> 会失败（想把 1 号抽屉整个换成别的东西——柜子不让）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>不可变 ≠ 万物皆不可改</h2>
+    <ul class="points">
+      <li><b>准确含义</b>：元组的不可变，指的是<b>元组中存放的引用不可变</b>——location[1] 永远指向原来那个列表对象</li>
+      <li><b>元素是可变对象时，对象内部可以修改</b>：<code>location[1][0] = 140.07</code> 完全合法</li>
+      <li><b>给元组元素赋值会报错</b>：<code>location[1] = 140.07</code> 报 TypeError——这不是换内容，而是想换引用，被锁死了</li>
+      <li><b>整体重新赋值是另一回事</b>：<code>location = (30.57, [140.07])</code> 合法，但这是创建了一个新元组、让变量换个指向，不是修改原元组</li>
+      <li><code>id()</code> 能查看对象的内存地址：地址不变说明还是同一个对象，地址变了就是新对象</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>🔬 三步实验：锁柜子的边界在哪里</h2>
+    <div class="play">
+      <p style="font-weight:700;margin-bottom:8px">location = (30.57, [104.07])——元组里装了一个列表</p>
+      <div class="switch">
+        <button class="on" data-pane="p-s1">第一步：给元素赋值</button>
+        <button data-pane="p-s2">第二步：改列表内部</button>
+        <button data-pane="p-s3">第三步：整体重新赋值</button>
+      </div>
+      <div class="pane on" id="p-s1">
+        <pre class="codeblock">location[1] = 140.07</pre>
+        <p>输出：</p>
+        <pre class="codeblock out">TypeError: 'tuple' object does not support item assignment</pre>
+        <p>解读：想把 1 号「抽屉」整个换掉——柜子上着锁，Python 直接拒绝。</p>
+      </div>
+      <div class="pane" id="p-s2">
+        <pre class="codeblock">location[1][0] = 140.07
+print(location)
+print(id(location), id(location[1]))</pre>
+        <p>输出：</p>
+        <pre class="codeblock out">(30.57, [140.07])
+1516683075264 1516683642624</pre>
+        <p>解读：只换书包里的东西、不动抽屉——修改<b>成功</b>！元组和列表的 id 都没变，说明还是原来那两个对象，变的只是列表内部的内容。</p>
+      </div>
+      <div class="pane" id="p-s3">
+        <pre class="codeblock">location = (30.57, [140.07])
+print(id(location), id(location[1]))</pre>
+        <p>输出：</p>
+        <pre class="codeblock out">1516683103872 1516683643200</pre>
+        <p>解读：这是<b>新建</b>了一个元组再让 location 指过去——不是修改。对比第二步的 id，两个地址全变了。</p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：完整跑一遍，盯住 id 的变化</h2>
+    <pre class="codeblock">location = (30.57, [104.07])
+print(f"经度：{location[0]}，纬度：{location[1]}")
+# location[1] = 140.07      # 想换掉元素，报 TypeError，因此注释掉
+print(id(location), id(location[1]))
+location[1][0] = 140.07     # 修改列表内部，合法
+print(f"经度：{location[0]}，纬度：{location[1]}")
+print(id(location), id(location[1]))
+location = (30.57, [140.07])    # 整体重新赋值：创建新元组
+print(id(location), id(location[1]))</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">经度：30.57，纬度：[104.07]
+1516683075264 1516683642624
+经度：30.57，纬度：[140.07]
+1516683075264 1516683642624
+1516683103872 1516683643200</pre>
+    <ul class="points">
+      <li>第二次 print id：修改列表内部后，<b>两个 id 完全没变</b>——元组还是那个元组、列表还是那个列表，变的只是列表的内容</li>
+      <li>第三次 print id：整体重新赋值后<b>两个 id 全变</b>——新元组、新列表，变量换了指向</li>
+      <li>三组 id 一对比，「不可变」指的就是：元组存放的<b>引用</b>不换</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！改的是元组里那个列表对象的内部内容，引用没换——修改成功，元组 id 也不变。"
+         data-no="❌ 不可变锁的是「引用」：location[1] 永远指向那个列表，但列表内部可以随便改——所以修改成功且元组 id 不变。">
+      <p style="font-weight:700;margin-bottom:12px">location = (30.57, [104.07])，执行 <code>location[1][0] = 140.07</code> 会？</p>
+      <button class="opt" onclick="quizPick(this)">A. 报 TypeError，元组不可修改</button>
+      <button class="opt" onclick="quizPick(this)">B. 成功修改，元组 id 不变</button>
+      <button class="opt" onclick="quizPick(this)">C. 成功修改，元组 id 改变</button>
+      <button class="opt" onclick="quizPick(this)">D. 元组自动转换成列表</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="引用|地址|内存地址"
+         data-ok="✅ 正确！锁的是「引用」：元素指向谁不能换，但元素（如果是列表）内部还能改。"
+         data-no="❌ 再想想：不可变锁的不是「内容」，而是元组中存放的____（对象指向关系）。">
+      <p>元组的不可变性指的是元组中存放的____不可变，而非元素内部完全不可改。</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：引用或地址">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">关于「不可变」的三个误区</div>
+      <p>误区一：以为「元组不可变 = 装什么都绝对改不了」。遇到列表元素，内部照样能改。想要真·只读，元素应全用不可变类型（数字、字符串、元组）。</p>
+      <p>误区二：以为 <code>location = (30.57, [140.07])</code> 是「修改了元组」——其实是<b>创建了新元组</b>让变量重新指向，id 全变。修改和重新赋值是两回事。</p>
+      <p>误区三：id 的数值每次运行、每台电脑都不同——你跑出来的地址和课件不一样是正常的，重点看「同一次运行里变没变」。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 元组不可变的真正含义：不可变指的是元组中存放的引用不可变——元素若为列表，列表内部仍可修改；给元组元素赋值会报 TypeError；整体重新赋值是创建新元组、id 全变。请：1）用「上锁文件柜与抽屉里的书包」的比喻出 3 道判断题考我；2）以 tp=([1,2],'a') 为例，让我预测 tp[0].append(3)、tp[0]=[9]、tp=('x',) 各自的结果并解释；3）解释为什么说用元组存坐标更安全。">
+      我刚学了 Python 元组不可变的真正含义：不可变指的是元组中存放的引用不可变——元素若为列表，列表内部仍可修改；给元组元素赋值会报 TypeError；整体重新赋值是创建新元组、id 全变。请：1）用「上锁文件柜与抽屉里的书包」的比喻出 3 道判断题考我；2）以 tp=([1,2],'a') 为例，让我预测 tp[0].append(3)、tp[0]=[9]、tp=('x',) 各自的结果并解释；3）解释为什么说用元组存坐标更安全。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：完整跑一遍三步实验（6 分钟）</span>
+    <ol class="steps">
+      <li>把课堂代码 location 全段抄进交互模式完整跑一遍——重点对比两次 <code>print(id(location), id(location[1]))</code> 的输出。</li>
+      <li>单独运行 <code>location[1] = 140.07</code>（去掉注释），亲眼看 TypeError。</li>
+      <li>试 <code>tp = ([1, 2], 'a')</code>，然后 <code>tp[0].append(3)</code>——成功！再 <code>print(tp)</code> 看看。</li>
+      <li>想想作业第 1 题的思路：用元组存坐标点，正是利用其不可变带来的安全性。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>「不可变」指的是<b>元组中存放的引用不可变</b>：location[1] 永远指向原来那个列表；列表内部可以改（location[1][0]=140.07 成功且 id 不变），给元素赋值不行（location[1]=140.07 报 TypeError）；整体重新赋值是创建新元组、id 全变。元组适合存坐标这类受保护数据——这正是作业第 1 题的用意。下一节进入第二部分：集合。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="4.05.html"><span class="nav-label">← 上一节</span><span class="nav-title">4.05 元组函数与方法</span></a>
+        <a class="next" href="4.07.html"><span class="nav-label">下一节 →</span><span class="nav-title">4.07 集合的定义与特性</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

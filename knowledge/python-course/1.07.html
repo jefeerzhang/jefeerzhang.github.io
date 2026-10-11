@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.07 五大语言的诞生与用途 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第一章 导论与 Python 环境 · 第 7 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+/* —— 本页专属：语言卡片的品牌色圆点与年代徽标 —— */
+.icard .yr{display:inline-block;font-size:12px;font-weight:700;color:var(--accent);
+     background:var(--accent-soft);border-radius:999px;padding:1px 10px;margin-left:auto}
+.dot-c{background:#5b7a99}.dot-cpp{background:#1a6fb0}.dot-py{background:#e0b040}
+.dot-java{background:#d9704a}.dot-js{background:#e8c93e}
+.use-line{padding:3px 0;font-size:13.5px}
+.use-line::before{content:"▸ ";color:var(--accent);font-weight:700}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch01.html">第一章 导论与 Python 环境</a><span class="sep">/</span>
+          <span class="current">1.07</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">07</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第一章 · 导论与 Python 环境</span>
+            <h1>五大语言的诞生与用途</h1>
+            <p class="hero-summary">第 7 / 18 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>计算机系统架构</li>
+      <li>操作系统及其分类</li>
+      <li>编程语言：人机沟通的桥梁</li>
+      <li>编程语言的三个层次</li>
+      <li>编译型 vs 解释型语言</li>
+      <li>TIOBE 排行与语言流行趋势</li>
+      <li class="cur">五大语言的诞生与用途</li>
+      <li>AI 时代的编程学习理念</li>
+      <li>与 AI 高效协作的三技巧</li>
+      <li>学习路径的三阶段</li>
+      <li>Python 的诞生与发展</li>
+      <li>PEP 与 PEP 8</li>
+      <li>The Zen of Python</li>
+      <li>Python 2 vs Python 3</li>
+      <li>Python 的六大特点</li>
+      <li>Python 的应用领域</li>
+      <li>Python 环境搭建</li>
+      <li>Anaconda 与 AI IDE</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>认识五位“老熟人”，看懂招聘需求里的关键词</h2>
+    <p>打开招聘软件，你会看到：系统工程师要求 C，游戏公司要求 C++，数据岗要求 Python，企业开发要 Java，前端必备 JavaScript。这五种语言几乎<b>撑起了整个软件世界</b>。了解它们的出身和用途，你才能：</p>
+    <ul class="points">
+      <li>看懂“这个软件是用什么写的”，明白<b>不同语言各管一片地盘</b>；</li>
+      <li>理解为什么<b>1991 年出生的 Python</b> 直到 AI 时代才真正爆发；</li>
+      <li>后面学到“Python 的诞生与发展”时，能把它放进<b>整条时间线</b>里理解。</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">五种语言，就是厨房里的五把刀</div>
+      <p><b>C 是手术刀</b>——精密、贴着硬件，专做操作系统内核和底层驱动这种“高精度手术”；<b>Python 是瑞士军刀</b>——数据分析、AI、自动运维，什么都能干；<b>Java 是工业扳手</b>——企业流水线上的标准工具，哪里需要拧哪里；<b>JavaScript 是万能胶水</b>——网页上的一切交互都靠它粘合；<b>C++ 是电动组合刀</b>——又要快、又要灵活，游戏引擎就靠它。<b>没有哪把刀是“最强”的，只有合不合适。</b></p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>一条时间线：五十年来，五次登场</h2>
+    <div class="timeline">
+      <div class="titem"><span class="tyear">1972 · C 语言</span><div class="ttext">为改写操作系统而生，至今仍是<b>系统开发</b>的基石——操作系统内核、底层驱动程序都离不开它。</div></div>
+      <div class="titem"><span class="tyear">1983 · C++</span><div class="ttext">在 C 之上加入面向对象，主打<b>高性能软件</b>：游戏引擎开发、图形图像处理首选。</div></div>
+      <div class="titem"><span class="tyear">1991 · Python</span><div class="ttext">追求“代码像英语一样好读”，如今活跃在<b>数据分析、人工智能（AI）、自动运维</b>一线。</div></div>
+      <div class="titem"><span class="tyear">1995 · Java</span><div class="ttext">“一次编写，到处运行”，撑起<b>企业级应用、Android 开发、大型分布式系统</b>。</div></div>
+      <div class="titem"><span class="tyear">1995 · JavaScript</span><div class="ttext">为让网页“动起来”而生，如今横跨<b>Web 前端、全栈开发（React/Vue）、服务端（Node.js）</b>。</div></div>
+    </div>
+    <p class="muted">注意规律：越靠近硬件的语言出生越早（C），越贴近人的语言出生越晚——但“晚生”不等于“弱”，Python 等了三十年才等来 AI 风口。</p>
+  </section>
+      <section>
+    <span class="tag">🃏 互动：点卡片，揭用途</span>
+    <h2>五位选手，五张名片</h2>
+    <p>先猜一猜每张卡片背后写着什么用途，再<b>点击卡片揭晓</b>：</p>
+    <div class="grid g3">
+      <div class="icard" data-toggle>
+        <h4><span class="dot dot-c"></span>C 语言<span class="yr">1972</span></h4>
+        <div class="desc">最贴近硬件的高级语言，操作系统与底层库的常用语言。</div>
+        <div class="more">
+          <div class="use-line">系统开发</div>
+          <div class="use-line">操作系统内核</div>
+          <div class="use-line">底层驱动程序</div>
+          <div class="hint">👆 典型作品：Linux 内核、各操作系统底层</div>
+        </div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot dot-cpp"></span>C++<span class="yr">1983</span></h4>
+        <div class="desc">C 的加强版：既要性能，也要抽象。</div>
+        <div class="more">
+          <div class="use-line">高性能软件</div>
+          <div class="use-line">游戏引擎开发</div>
+          <div class="use-line">图形图像处理</div>
+          <div class="hint">👆 典型作品：Unreal 游戏引擎、Photoshop 核心模块</div>
+        </div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot dot-py"></span>Python<span class="yr">1991</span></h4>
+        <div class="desc">语法最像英语，AI 时代的头号明星。</div>
+        <div class="more">
+          <div class="use-line">数据分析</div>
+          <div class="use-line">人工智能（AI）</div>
+          <div class="use-line">自动运维</div>
+          <div class="hint">👆 典型作品：ChatGPT 后端、各大数据平台脚本</div>
+        </div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot dot-java"></span>Java<span class="yr">1995</span></h4>
+        <div class="desc">企业软件界的“老黄牛”，稳定可靠。</div>
+        <div class="more">
+          <div class="use-line">企业级应用</div>
+          <div class="use-line">Android 开发</div>
+          <div class="use-line">大型分布式系统</div>
+          <div class="hint">👆 典型作品：银行/电商后台、早年安卓 App</div>
+        </div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot dot-js"></span>JavaScript<span class="yr">1995</span></h4>
+        <div class="desc">唯一“浏览器原生自带”的编程语言。</div>
+        <div class="more">
+          <div class="use-line">Web 前端开发</div>
+          <div class="use-line">全栈开发（React/Vue）</div>
+          <div class="use-line">服务端（Node.js）</div>
+          <div class="hint">👆 典型作品：所有你能点、能滑、能弹窗的网页</div>
+        </div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4>🧠 找规律</h4>
+        <div class="desc">点开前面五张卡后，再点这张。</div>
+        <div class="more">
+          <p>三问自测：①诞生最早的是哪种？②与 AI 关系最密切的是哪种？③两个同年（1995）出生的是谁？答案都在上面的时间线和卡片里。</p>
+          <div class="hint">👆 答不上就翻回去再点一遍卡片</div>
+        </div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！Java 诞生于 1995 年，以“一次编写，到处运行”著称，长期是 Android 官方开发的主要语言。"
+         data-no="❌ 不对哦。C/C++ 主要做系统与游戏引擎，Python 主打数据与 AI，JavaScript 管网页——Android 官方长期使用的是 Java。">
+      <p style="font-weight:700;margin-bottom:12px"><b>Android 开发</b>官方长期使用的主要编程语言是？</p>
+      <button class="opt" onclick="quizPick(this)">A. C 语言</button>
+      <button class="opt" onclick="quizPick(this)">B. JavaScript</button>
+      <button class="opt" onclick="quizPick(this)">C. Java</button>
+      <button class="opt" onclick="quizPick(this)">D. Python</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="1991" data-ok="✅ 正确！Python 诞生于 1991 年，设计者是荷兰人 Guido van Rossum，下一节会专门讲它的故事。" data-no="❌ 再想想：它是五大语言里的“中生代”——比 C/C++ 晚，比 Java/JavaScript 早。对照上面的时间线找找看。">
+      <p>Python 诞生于 <b>＿＿年</b>，最初的设计者是 <b>Guido van Rossum</b>。请在框里填写这四位数字的年份：</p>
+      <div class="fill-row">
+        <input class="blank" id="blank1" placeholder="填四位年份，如：19××">
+        <button class="btn btn-main" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">两个最常见的混淆点</div>
+      <p>第一，<b>Java 和 JavaScript 没有父子关系</b>——名字像纯属营销蹭热度，一个是企业后端语言，一个是浏览器脚本语言，“雷锋和雷峰塔”的关系。</p>
+      <p>第二，别把“用途”背成死名单：说 Python 只能做数据分析/AI/运维、Java 只能做企业应用，都是简化记忆。语言的地盘会随生态扩张而变化（比如 JavaScript 靠 Node.js 打进了服务端）。<b>记“典型用途”即可，别记“唯一用途”。</b></p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了「五大语言（C、C++、Python、Java、JavaScript）的诞生与用途」。请：1）按诞生年份从早到晚列一张表，包含年份和各自典型用途；2）分别举一个用每种语言开发的知名软件或系统；3）出 2 道单选题考我（一道考年份、一道考用途），等我作答后再公布答案和讲解。">
+      我刚学了「五大语言（C、C++、Python、Java、JavaScript）的诞生与用途」。请：1）按诞生年份从早到晚列一张表，包含年份和各自典型用途；2）分别举一个用每种语言开发的知名软件或系统；3）出 2 道单选题考我（一道考年份、一道考用途），等我作答后再公布答案和讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：给手机里的 App “验明正身”（5 分钟）</span>
+    <ol class="steps">
+      <li>打开你的手机，随便挑 3 个常用 App（如微信、淘宝、抖音）。</li>
+      <li>对每个 App 问自己：<b>它的哪些功能可能由哪种语言支撑？</b></li>
+      <li>参考思路：微信小程序的页面 → JavaScript；淘宝的交易后台 → Java；抖音的推荐算法（AI）→ Python；游戏类 App 的引擎 → C++。</li>
+      <li>把你的“猜测表”发给 AI，让它点评哪些猜得对、哪些属于混搭，加深对“语言分工”的理解。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>五大语言五把刀：<b>C（1972）做系统内核与驱动，C++（1983）做高性能与游戏引擎，Python（1991）做数据分析、AI 与自动运维，Java（1995）做企业应用与 Android，JavaScript（1995）做 Web 前端与全栈</b>。语言没有最强，只有最合适。而我们的主角 Python 究竟是怎么诞生的？下一节揭晓。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="1.06.html"><span class="nav-label">← 上一节</span><span class="nav-title">1.06 TIOBE 排行与语言流行趋势</span></a>
+        <a class="next" href="1.08.html"><span class="nav-label">下一节 →</span><span class="nav-title">1.08 AI 时代的编程学习理念</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

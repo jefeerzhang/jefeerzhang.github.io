@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8.05 创建对象与访问成员 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第八章 面向对象编程 · 第 5 / 12 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.play{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.crow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.ccard{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.cobj{border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;background:#fff}
+.cobj .nm{font-weight:800;font-size:15px;color:var(--ink)}
+.cobj .info{font-size:13px;color:var(--ink2);margin-top:4px;line-height:1.7}
+.cobj .info b{color:var(--accent)}
+.clog{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14px;min-height:150px;white-space:pre-wrap;line-height:1.8}
+.clog .warn{color:var(--err);font-weight:700}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch08.html">第八章 面向对象编程</a><span class="sep">/</span>
+          <span class="current">8.05</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">05</span>
+            <span class="lesson-hero-num-total">/ 12</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第八章 · 面向对象编程</span>
+            <h1>创建对象与访问成员</h1>
+            <p class="hero-summary">第 5 / 12 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 12 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>编程的两种范式</li>
+      <li>面向对象的三大特性</li>
+      <li>四个核心概念：类·对象·属性·方法</li>
+      <li>创建类：class·__init__·self</li>
+      <li class="cur">创建对象与访问成员</li>
+      <li>实例属性与类属性</li>
+      <li>三种方法：实例·类·静态</li>
+      <li>封装与私有属性</li>
+      <li>继承与 super()</li>
+      <li>多重继承</li>
+      <li>多态与方法重写</li>
+      <li>综合案例：商品库存管理</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>类是图纸，对象才是能用的「活物」</h2>
+    <p>上一节你用 <code>class</code>、<code>__init__</code>、<code>self</code> 三件套画好了 Student 这张「图纸」——但图纸不能上课、不能考试。这一节要做的就是把图纸<b>造出真东西</b>：一行 <code>stu1 = Student('张三', 85)</code>，一个有名字、有成绩、会自我介绍的学生对象就诞生了。造出来之后怎么问他的名字、怎么给他改成绩、怎么让他开口说话？——<b>对象名.属性名</b> 和 <b>对象名.方法名()</b>，这就是本节的全部主旨，也是后面所有节的日常操作。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">类像「饼干模具」，对象是一块块压出来的饼干</div>
+      <p><code>stu1 = Student('张三', 85)</code> 就是<b>拿模具压一块饼干</b>——这个动作叫「实例化」。压下去的<b>一瞬间</b>，<code>__init__</code> 自动执行，把「张三」和「85」刻进这块饼干（属性初值）。同一副模具可以压第二块：<code>stu2 = Student('李四', 55)</code>——两块饼干<b>形状相同、味道各异</b>，你在 stu1 上咬一口，stu2 完好无损。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>实例化 + 点号访问，两步走</h2>
+    <ul class="points">
+      <li><b>创建对象（实例化）</b>：向初始化方法 <code>__init__</code> 提供所需的数据，生成一个具体实例。语法：<code>对象名 = 类名(参数)</code>，参数要和 <code>__init__</code> 的形参对上号</li>
+      <li><b><code>__init__</code> 是自动调用的</b>：写 <code>stu1 = Student('张三', 85)</code> 这一行时，Python 自动执行 <code>__init__</code>，把 '张三' 交给 <code>self.name</code>、85 交给 <code>self.score</code>——你从不需要手写 <code>stu1.__init__(...)</code></li>
+      <li><b>访问属性</b>：<code>对象名.属性名</code>——既能读（<code>print(stu1.score)</code>）也能改（<code>stu1.score = 92</code>）</li>
+      <li><b>调用方法</b>：<code>对象名.方法名()</code>——<b>括号不能省</b>，方法是在「让对象做一件事」</li>
+      <li><b>每个对象都是独立的</b>：实例化几次就有几个对象，各自的属性各自保存、互不影响</li>
+    </ul>
+
+    <div class="play">
+      <p style="font-weight:700;margin-bottom:10px">🔬 实例化实验台：按 PPT 流程点按钮，观察两个对象互不影响</p>
+      <div class="crow">
+        <button class="btn-main btn" onclick="sDo('create')">stu1 = Student('张三', 85)</button>
+        <button class="btn-ghost btn" onclick="sDo('create2')">stu2 = Student('李四', 55)</button>
+        <button class="btn-ghost btn" onclick="sDo('name')">print(stu1.name)</button>
+        <button class="btn-ghost btn" onclick="sDo('score1')">print(stu1.score)</button>
+        <button class="btn-main btn" onclick="sDo('set')">stu1.score = 92</button>
+        <button class="btn-ghost btn" onclick="sDo('score2')">print(stu1.score)</button>
+        <button class="btn-ghost btn" onclick="sDo('intro')">stu1.introduce()</button>
+        <button class="btn-ghost btn" onclick="sDo('pass1')">print(stu1.is_pass())</button>
+        <button class="btn-ghost btn" onclick="sDo('score3')">print(stu2.score)</button>
+        <button class="btn-ghost btn" onclick="sDo('reset')">重置</button>
+      </div>
+      <div class="ccard" id="ccard"></div>
+      <div class="clog" id="clog">先点「stu1 = Student('张三', 85)」创建第一个对象——注意观察：这一行一执行，__init__ 就自动跑起来了。</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：创建两个 Student 对象并访问成员</h2>
+    <pre class="codeblock">class Student:
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+
+    def introduce(self):
+        print(f"我是{self.name}，我的成绩是{self.score}分")
+
+    def is_pass(self):
+        return self.score &gt;= 60
+
+# 创建对象（实例化）：给构造函数提供所需的数据
+stu1 = Student('张三', 85)
+stu2 = Student('李四', 55)
+
+# 通过 对象名.属性名 访问属性
+print(stu1.name)
+print(stu1.score)
+
+# 通过 对象名.属性名 修改属性值
+stu1.score = 92
+print(stu1.score)
+
+# 通过 对象名.方法名() 调用方法
+stu1.introduce()
+print(stu1.is_pass())</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">张三
+85
+92
+我是张三，我的成绩是92分
+True</pre>
+    <ul class="points">
+      <li><code>stu1 = Student('张三', 85)</code> 执行的瞬间，<code>__init__</code> 被自动调用——'张三' 传给 name、85 传给 score</li>
+      <li><code>stu1.score = 92</code> 直接用点号给属性赋新值，再读就是 92 了</li>
+      <li><code>stu1.is_pass()</code> 返回 <code>self.score &gt;= 60</code> 的判断结果，92 分 → True</li>
+      <li>stu2 完全没被改动，<code>print(stu2.score)</code> 依然是 55——两个对象互不影响</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！每个对象有自己独立的一份属性，stu1.score = 92 只改 stu1 自己的，stu2.score 还是创建时的 55。"
+         data-no="❌ 注意：stu1 和 stu2 是两次实例化得到的两个独立对象，改 stu1 的属性不会波及 stu2——stu2 的 score 仍是创建时传入的 55。">
+      <p style="font-weight:700;margin-bottom:12px">接 PPT 原例，执行 <code>stu1.score = 92</code> 之后，<code>print(stu2.score)</code> 的输出是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 92</button>
+      <button class="opt" onclick="quizPick(this)">B. 55</button>
+      <button class="opt" onclick="quizPick(this)">C. 报错 AttributeError</button>
+      <button class="opt" onclick="quizPick(this)">D. None</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="实例化属性括号|实例化 属性 括号" data-ok="✅ 全对！创建对象的动作叫实例化；访问和操作靠 对象名.属性名 与 对象名.方法名()；方法名后的括号不能省。" data-no="❌ 提示：三个空分别是——把类变成具体对象的过程叫＿＿；点号后面跟属性名或方法名，stu1.score 访问的是＿＿；调用方法 stu1.introduce() 时，方法名后的＿＿不能省。">
+      <p>把类变成具体对象的过程叫<b>＿＿</b>，语法是 对象名 = 类名(参数)；对象生成后，通过 对象名.<b>＿＿</b>名 和 对象名.方法名() 来访问和操作对象；调用方法时，方法名后面的<b>＿＿</b>不能省。（三空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：实例化 属性 括号">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>拿类名直接访问实例属性</b>：<code>Student.name</code> 报 AttributeError——name 是 <code>__init__</code> 里挂在对象身上的，必须先实例化再访问；</p>
+      <p>②<b>调用方法漏了括号</b>：<code>print(stu1.introduce)</code> 输出的是「这是一个方法」的信息而不是自我介绍——方法要加括号才真正执行；</p>
+      <p>③<b>以为改了一个对象会影响另一个</b>：<code>stu1.score = 92</code> 只改 stu1 的——但如果你改的是「类属性」（下一节内容），那就真的会一改全改。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 创建对象与访问成员：对象名 = 类名(参数) 会自动调用 __init__ 完成实例化，之后用 对象名.属性名 读改属性、对象名.方法名() 调用方法，每个对象的属性互不影响。请：1）用「饼干模具」类比讲一遍实例化过程，强调 __init__ 是在哪一行被自动调用的；2）出 5 道读代码预测输出题考我（含修改属性、调用方法、两个对象互不影响）；3）解释一下为什么 stu1.introduce 不加括号只是拿到方法本身。">
+      我刚学了 Python 创建对象与访问成员：对象名 = 类名(参数) 会自动调用 __init__ 完成实例化，之后用 对象名.属性名 读改属性、对象名.方法名() 调用方法，每个对象的属性互不影响。请：1）用「饼干模具」类比讲一遍实例化过程，强调 __init__ 是在哪一行被自动调用的；2）出 5 道读代码预测输出题考我（含修改属性、调用方法、两个对象互不影响）；3）解释一下为什么 stu1.introduce 不加括号只是拿到方法本身。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：动手玩对象（10 分钟）</span>
+    <ol class="steps">
+      <li>读代码预测：照 PPT 再创建 <code>stu3 = Student('王五', 60)</code>，先猜 <code>stu3.is_pass()</code> 输出 True 还是 False，再运行验证（及格线是 <code>&gt;= 60</code>，60 分刚好及格）。</li>
+      <li>改代码试效果：把 <code>is_pass</code> 里的 60 改成 95，再执行 <code>stu1.is_pass()</code>——观察输出从 True 变 False（前面第 115 行已把 stu1.score 改成 92），体会方法读的是「当前」的属性值。</li>
+      <li>在实验台里先点 <code>stu1.score = 92</code>，再点 <code>print(stu2.score)</code>——亲眼确认两个对象互不影响。</li>
+      <li>挑战：给 Student 增加一个 <code>set_score(self, s)</code> 方法，把成绩改成 s 并打印「成绩已更新为 s 分」，然后调用它试试。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>创建对象（实例化）就是向构造函数提供所需数据、生成一个具体实例：<code>stu1 = Student('张三', 85)</code> 这一行自动触发 <code>__init__</code>；对象生成后用 <code>对象名.属性名</code> 读改属性、<code>对象名.方法名()</code> 调用方法；每次实例化都得到一个独立对象，互不影响。下一节：属性还分「实例属性」和「类属性」两种，规则大不相同。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="8.04.html"><span class="nav-label">← 上一节</span><span class="nav-title">8.04 创建类：class·__init__·self</span></a>
+        <a class="next" href="8.06.html"><span class="nav-label">下一节 →</span><span class="nav-title">8.06 实例属性与类属性</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：实例化实验台（模拟 Student 类行为） */
+let stu1, stu2, logs;
+function sReset(){
+  stu1 = null; stu2 = null;
+  logs = ['# 还没有对象。先点 stu1 = Student(\'张三\', 85) 试试'];
+  sRender();
+}
+function sCard(key, stu){
+  if (!stu) return '<div class="cobj"><div class="nm">' + key + '（尚未创建）</div><div class="info">等一句 stu = Student(...) 来实例化</div></div>';
+  return '<div class="cobj"><div class="nm">' + key + ' ← Student 对象</div><div class="info">name = <b>' + stu.name + '</b> · score = <b>' + stu.score + '</b></div></div>';
+}
+function sRender(){
+  document.getElementById('ccard').innerHTML = sCard('stu1', stu1) + sCard('stu2', stu2);
+  document.getElementById('clog').textContent = logs.join('\n');
+}
+function sDo(op){
+  if (op === 'reset'){ sReset(); return; }
+  if (op === 'create'){
+    stu1 = {name:'张三', score:85};
+    logs.push("stu1 = Student('张三', 85)");
+    logs.push('# 这一行执行 → __init__ 自动调用 → name=张三, score=85');
+  }
+  if (op === 'create2'){
+    stu2 = {name:'李四', score:55};
+    logs.push("stu2 = Student('李四', 55)");
+    logs.push('# 又实例化一个新对象 → name=李四, score=55');
+  }
+  if (!stu1 && op !== 'create2'){
+    logs.push('# stu1 还不存在，请先实例化！');
+    sRender(); return;
+  }
+  if (op === 'name'){ logs.push('print(stu1.name)', '→ ' + stu1.name); }
+  if (op === 'score1'){ logs.push('print(stu1.score)', '→ ' + stu1.score); }
+  if (op === 'set'){ stu1.score = 92; logs.push('stu1.score = 92', '# 修改属性值：85 → 92'); }
+  if (op === 'score2'){ logs.push('print(stu1.score)', '→ ' + stu1.score); }
+  if (op === 'intro'){ logs.push('stu1.introduce()', '→ 我是' + stu1.name + '，我的成绩是' + stu1.score + '分'); }
+  if (op === 'pass1'){ logs.push('print(stu1.is_pass())', '→ ' + (stu1.score >= 60)); }
+  if (op === 'score3'){
+    if (!stu2){ logs.push('# stu2 还不存在，请先实例化！'); sRender(); return; }
+    logs.push('print(stu2.score)', '→ ' + stu2.score, '# stu2 没被动过，还是 55——互不影响');
+  }
+  sRender();
+}
+window.addEventListener('DOMContentLoaded', sReset);
+</script>
+</body>
+</html>

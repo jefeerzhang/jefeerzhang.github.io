@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.11 Python 的诞生与发展 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第一章 导论与 Python 环境 · 第 11 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+/* —— 本页专属：时间线卡片与彩蛋样式 —— */
+.tcard{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+       box-shadow:var(--shadow);padding:22px}
+.tcard .note{font-size:13px;color:var(--ink2);margin-top:14px}
+.namebox{background:var(--accent-soft);border:1px solid #d8e0fc;border-radius:12px;
+         padding:14px 18px;margin-top:18px;font-size:14px}
+.namebox b{color:var(--accent)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch01.html">第一章 导论与 Python 环境</a><span class="sep">/</span>
+          <span class="current">1.11</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">11</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第一章 · 导论与 Python 环境</span>
+            <h1>Python 的诞生与发展</h1>
+            <p class="hero-summary">第 11 / 18 节 · 约 8 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>计算机系统架构</li>
+      <li>操作系统及其分类</li>
+      <li>编程语言：人机沟通的桥梁</li>
+      <li>编程语言的三个层次</li>
+      <li>编译型 vs 解释型语言</li>
+      <li>TIOBE 排行与语言流行趋势</li>
+      <li>五大语言的诞生与用途</li>
+      <li>AI 时代的编程学习理念</li>
+      <li>与 AI 高效协作的三技巧</li>
+      <li>学习路径的三阶段</li>
+      <li class="cur">Python 的诞生与发展</li>
+      <li>PEP 与 PEP 8</li>
+      <li>The Zen of Python</li>
+      <li>Python 2 vs Python 3</li>
+      <li>Python 的六大特点</li>
+      <li>Python 的应用领域</li>
+      <li>Python 环境搭建</li>
+      <li>Anaconda 与 AI IDE</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>你天天用的这门语言，最初只是个「假期项目」？</h2>
+    <p>从这一节起，我们正式走近 Python 本尊。了解一门语言的出身与成长史，不只是听故事——它能帮你理解这门语言<b>为什么是现在这个样子</b>，也常常出现在课程作业与考试的选择题里：</p>
+    <ul class="points">
+      <li>考试常问：<b>Python 之父是谁</b>？Python 诞生于哪一年？哪个版本引入了重要特性？</li>
+      <li>理解 Python 的家谱，你才能明白为什么今天大家都在用 <b>Python 3</b>（后面 1.14 节细讲）。</li>
+      <li>看到「一门语言从兴趣项目成长为 AI 时代霸主」，你会对「持续迭代」这件事更有感觉——写代码如此，学习也如此。</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">一个圣诞假期的兴趣项目，结果改变了世界</div>
+      <p>Python 的出身，特别像那种「<b>寒假闲着没事做</b>，干脆搞个小发明」的同学：1989 年底，Guido 只是想在假期里做点有趣的事，顺手构思一门新语言。谁也没想到，这个「打发时间」的项目一迭代就是三十多年，如今支撑着人工智能、数据分析等前沿领域。</p>
+      <p>这里有两层启发：第一，<b>好点子 + 持续迭代</b>，小项目也能长成参天大树；第二，Guido 并不是从零发明——他是站在 ABC 语言的基础上「扬长避短」。学习编程也一样，不必追求一开始就完美，<b>先做出来，再一点点变好</b>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>Python 的前世今生：一条时间线看懂</h2>
+    <ul class="points">
+      <li><b>Guido van Rossum（吉多·范罗苏姆）</b>：Python 的<b>创始人与长期核心架构师</b>，被社区亲切地称为「Python 之父」（Benevolent Dictator For Life，仁慈的终身独裁者）。</li>
+      <li><b>继承者身份</b>：Python 的设计继承了 ABC 语言的可读性与易用性，同时修复了 ABC 的诸多不足（比如扩展性差的问题）。</li>
+      <li><b>名字由来</b>：与蟒蛇无关！Guido 是英国喜剧团体 <b>Monty Python（蒙提·派森）</b>的粉丝，于是借用了这个名字。不过后来 Logo 设计成了两条缠绕的蟒蛇，也算将错就错。</li>
+    </ul>
+
+    <div class="tcard">
+      <div class="timeline">
+        <div class="titem">
+          <div class="tyear">1989 年 · 起源构思</div>
+          <div class="ttext">圣诞节期间，Guido 为了<b>打发假期时间</b>，开始构思一种新的脚本语言——作为 <b>ABC 语言的继承者</b>，希望它既好读又好用。</div>
+        </div>
+        <div class="titem">
+          <div class="tyear">1991 年 · 首个版本</div>
+          <div class="ttext">发布 <b>Python 0.9.0</b>，已经包含<b>核心数据类型、函数以及异常处理机制</b>，语言的基本骨架就此搭成。</div>
+        </div>
+        <div class="titem">
+          <div class="tyear">2000 年 · 版本迭代</div>
+          <div class="ttext"><b>Python 2.0</b> 发布，引入<b>垃圾回收机制</b>和<b>列表推导式</b>等新特性，语言功能日趋完善，社区生态迅速壮大。</div>
+        </div>
+        <div class="titem">
+          <div class="tyear">2020 年 · 生态成熟</div>
+          <div class="ttext"><b>Python 2 停止维护</b>，Python 3 成为<b>绝对主流</b>，在<b>人工智能</b>等领域占据统治地位。</div>
+        </div>
+      </div>
+      <div class="namebox">🐍 <b>冷知识：</b>「Python」取自喜剧团体 Monty Python，而不是大蟒蛇——但它的 Logo 恰恰是两条蟒蛇，成了编程界一个著名的「美丽的误会」。</div>
+      <div class="note">💡 观察时间线：从 1989 年的假期构思，到 1991 年的 0.9.0，再到 2000 年的 2.0 与 2020 年的生态成熟——三十多年里，Python 靠一次次「小步快跑」的迭代走到了今天。</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！Guido van Rossum 在 1989 年圣诞节期间构思了 Python，被称为 Python 之父。"
+         data-no="❌ 不对哦。Dennis Ritchie 是 C 语言之父，James Gosling 创造了 Java。Python 之父是 Guido van Rossum，往上翻时间线再确认一下。">
+      <p style="font-weight:700;margin-bottom:12px">被称为「Python 之父」、于 1989 年开始构思这门语言的人是谁？</p>
+      <button class="opt" onclick="quizPick(this)">A. Dennis Ritchie（C 语言之父）</button>
+      <button class="opt" onclick="quizPick(this)">B. Guido van Rossum</button>
+      <button class="opt" onclick="quizPick(this)">C. James Gosling（Java 之父）</button>
+      <button class="opt" onclick="quizPick(this)">D. Linus Torvalds（Linux 之父）</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="ABC" data-ok="✅ 正确！Python 是作为 ABC 语言的继承者而设计的，吸收了它的易读性，又修复了它的短板。" data-no="❌ 再想想：Guido 想造一门「新的脚本语言」，它是哪门语言的继承者？提示：三个大写字母。">
+      <p>1989 年圣诞节，Guido 为了打发时间，开始构思一门新的脚本语言，作为 <b>＿＿语言的继承者</b>。请在框里填上这门语言的名字：</p>
+      <div class="fill-row">
+        <input class="blank" id="blank1" placeholder="填三个大写字母">
+        <button class="btn btn-main" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">「Python = 蟒蛇」？名字的由来别答错</div>
+      <p>考试和作业里最容易错的一点：<b>Python 这个名字来自英国喜剧团体 Monty Python，与蟒蛇无关</b>。Guido 是这个喜剧团体的粉丝。虽然官方 Logo 画的是两条蟒蛇，但那是后来的视觉设计，不是命名原因。</p>
+      <p>另外注意时间线上的两个版本节点容易混淆：<b>2000 年发布的是 Python 2.0</b>（引入垃圾回收、列表推导式），而<b> 2020 年是 Python 2 停止维护</b>的年份——一个是「诞生」，一个是「退役」，方向刚好相反。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的诞生与发展史（1989 年 Guido van Rossum 圣诞节构思、1991 年发布 0.9.0、2000 年发布 2.0、2020 年 Python 2 停止维护）。请：1）用编年体的方式帮我梳理一遍并补充 2 个有意思的冷知识；2）解释 Python 为什么能从一门假期兴趣项目成长为 AI 时代的主流语言；3）出 2 道单选题考我，等我作答后再公布答案。">
+      我刚学了 Python 的诞生与发展史（1989 年 Guido van Rossum 圣诞节构思、1991 年发布 0.9.0、2000 年发布 2.0、2020 年 Python 2 停止维护）。请：1）用编年体的方式帮我梳理一遍并补充 2 个有意思的冷知识；2）解释 Python 为什么能从一门假期兴趣项目成长为 AI 时代的主流语言；3）出 2 道单选题考我，等我作答后再公布答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：让你的电脑报出 Python 的「出生信息」（3 分钟）</span>
+    <ol class="steps">
+      <li>按 <code>Win + R</code> 输入 <code>cmd</code> 打开命令行，输入 <code>python</code> 回车，进入交互模式。</li>
+      <li>看输出<b>首行</b>，例如 <code>Python 3.11.5</code>——这就是你电脑上 Python 的版本号，相当于它的「身份证」。</li>
+      <li>对照上面的时间线想一想：这个版本号远大于 3.0，说明它诞生在<b> 2020 年生态成熟之后</b>，属于 Python 3 家族。</li>
+      <li>输入 <code>exit()</code> 退出交互模式。下一节我们要看看：这门语言的「规章制度」是怎么制定的。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p><b>Guido van Rossum 是 Python 之父</b>：1989 年圣诞节他为打发时间构思了这门语言，作为 ABC 语言的继承者；1991 年发布 0.9.0，2000 年发布 2.0（引入垃圾回收和列表推导式），2020 年 Python 2 退役、Python 3 成为绝对主流。名字取自喜剧团体 Monty Python，与蟒蛇无关。下一节，我们聊聊 Python 社区的「立法机制」——PEP。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="1.10.html"><span class="nav-label">← 上一节</span><span class="nav-title">1.10 学习路径的三阶段</span></a>
+        <a class="next" href="1.12.html"><span class="nav-label">下一节 →</span><span class="nav-title">1.12 PEP 与 PEP 8</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* —— 本页无需额外 JS：时间线为静态展示，测验/填空/复制已由 course.js 支持 —— */
+</script>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.05 编译型 vs 解释型语言 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第一章 导论与 Python 环境 · 第 5 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+/* —— 本页专属：编译/解释对比动画 —— */
+.demo{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:680px){.demo-grid{grid-template-columns:1fr}}
+.panel{border:1px solid var(--border);border-radius:12px;padding:16px;background:#fbfcfe}
+.panel h3{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.panel h3 .dot{width:10px;height:10px;border-radius:50%}
+.p1 h3 .dot{background:#e05252}.p2 h3 .dot{background:#1a9e6c}
+.panel .sub{font-size:12px;color:var(--ink2);margin-bottom:12px}
+.machine{font-family:Consolas,monospace;font-size:12px;background:#fff;border:1px dashed var(--border);
+         border-radius:10px;padding:12px;min-height:150px;display:flex;flex-direction:column;gap:8px}
+.chip{display:block;background:var(--code-bg);border:1px solid var(--border);border-radius:8px;
+      padding:6px 10px;font-size:13px;color:var(--ink);transition:all .5s ease}
+.chip.src{background:#fffbe8;border-color:#efe3ad}
+.chip.out{background:var(--ok-soft);border-color:#bfe6d5;color:#147352}
+.chip.mc{background:#eceff6;color:#6b7382;border-color:#dde2ec}
+.chip.hot{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:700}
+.demo-actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+button.btn{font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;
+      padding:10px 18px;cursor:pointer;transition:transform .1s}
+button.btn:active{transform:scale(.97)}
+.btn-main{background:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(79,110,247,.3)}
+.btn-ghost{background:#fff;color:var(--accent);border:1.5px solid var(--accent)}
+.demo-note{font-size:13px;color:var(--ink2);margin-top:12px}
+.runline{font-size:12px;color:var(--ok);font-weight:700;min-height:18px}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch01.html">第一章 导论与 Python 环境</a><span class="sep">/</span>
+          <span class="current">1.05</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">05</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第一章 · 导论与 Python 环境</span>
+            <h1>编译型 vs 解释型语言</h1>
+            <p class="hero-summary">第 5 / 18 节 · 约 8 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>计算机系统架构</li>
+      <li>操作系统及其分类</li>
+      <li>编程语言：人机沟通的桥梁</li>
+      <li>编程语言的三个层次</li>
+      <li class="cur">编译型 vs 解释型语言</li>
+      <li>TIOBE 排行与语言流行趋势</li>
+      <li>五大语言的诞生与用途</li>
+      <li>AI 时代的编程学习理念</li>
+      <li>与 AI 高效协作的三技巧</li>
+      <li>学习路径的三阶段</li>
+      <li>Python 的诞生与发展</li>
+      <li>PEP 与 PEP 8</li>
+      <li>The Zen of Python</li>
+      <li>Python 2 vs Python 3</li>
+      <li>Python 的六大特点</li>
+      <li>Python 的应用领域</li>
+      <li>Python 环境搭建</li>
+      <li>Anaconda 与 AI IDE</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>同是高级语言，凭什么分两大门派？</h2>
+    <p>你写的 Python 代码、程序员写的 C 代码，计算机其实都<b>一个字都看不懂</b>——它只认 0 和 1。那代码是怎么变成计算机能执行的动作的？关键就在于"翻译"方式的不同。搞懂这一节，你才能明白：</p>
+    <ul class="points">
+      <li>为什么 Python <b>写一行就能马上看到结果</b>，而 C 语言要先"编译"才能运行？</li>
+      <li>为什么说 Python 属于<b>脚本语言 / 解释型语言</b>（第一章作业第 2 题就考这个）？</li>
+      <li>为什么 Python 开发效率高，但运行速度却不如 C / C++？</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">翻译一本英文书，有两种翻法</div>
+      <p><b>编译型</b> = 找翻译公司<b>一次性把整本书翻完</b>，装订成中文版直接发行。读者（计算机）拿到的就是成品，读起来飞快；但如果原文改了一个字，就得<b>整本重新翻译</b>。</p>
+      <p><b>解释型</b> = 请一位<b>同声传译</b>坐在旁边，读一句、翻一句、执行一句。改了原文，下次照读不误、非常灵活；但每次阅读都得带着译员，速度自然慢一些。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>两种翻译方式，两条技术路线</h2>
+    <ul class="points">
+      <li><b>编译型语言（静态语言）</b>：源代码经<b>编译器（Compiler）一次性翻译</b>成目标代码（机器码），之后直接执行，运行效率高。典型代表：<code>C</code>、<code>C++</code>、<code>Go</code>。（<code>Java</code> 常被归为「半编译半解释」：先编译成字节码，再由虚拟机解释执行。）</li>
+      <li><b>解释型语言（脚本语言）</b>：源代码由<b>解释器（Interpreter）逐行翻译</b>，边翻译边执行（边译边跑），开发灵活、跨平台方便。典型代表：<code>Python</code>、<code>JavaScript</code>、<code>PHP</code>。</li>
+      <li>一句话记忆：<b>编译型"先翻译完再吃饭"，解释型"边做边吃"</b>。</li>
+    </ul>
+
+    <div class="demo">
+      <div class="demo-grid">
+        <div class="panel p1">
+          <h3><span class="dot"></span>编译型 · 以 C 为例</h3>
+          <div class="sub">编译器一次性翻译 → 生成机器码 → 再运行</div>
+          <div class="machine" id="m1"><span class="runline" id="run1"></span></div>
+        </div>
+        <div class="panel p2">
+          <h3><span class="dot"></span>解释型 · 以 Python 为例</h3>
+          <div class="sub">解释器逐行翻译 → 每行马上执行</div>
+          <div class="machine" id="m2"><span class="runline" id="run2"></span></div>
+        </div>
+      </div>
+      <div class="demo-actions">
+        <button class="btn btn-main" onclick="runBoth()">▶ 播放对比动画</button>
+        <button class="btn btn-ghost" onclick="resetDemo()">↺ 重置</button>
+      </div>
+      <div class="demo-note">💡 观察：左边必须"全部翻译完"才出现输出；右边每翻译一行，输出就立刻多一行。</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">对比总结</span>
+    <h2>一张表看清区别</h2>
+    <table>
+      <tr><th>对比维度</th><th>编译型语言</th><th>解释型语言</th></tr>
+      <tr><td>翻译方式</td><td>编译器一次性翻译为机器码</td><td>解释器逐行翻译、逐行执行</td></tr>
+      <tr><td>执行速度</td><td>快（直接运行机器码）</td><td>相对较慢（边译边跑）</td></tr>
+      <tr><td>开发调试</td><td>改一处需重新编译</td><td>改完即跑，灵活高效</td></tr>
+      <tr><td>跨平台性</td><td>较弱（机器码依赖平台）</td><td>强（有解释器即可运行）</td></tr>
+      <tr><td>典型代表</td><td>C、C++、Java</td><td>Python、JavaScript、PHP</td></tr>
+      <tr><td>常见别称</td><td>静态语言</td><td>脚本语言</td></tr>
+    </table>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！Python 由解释器逐行翻译、边译边跑，是解释型（脚本）语言的典型代表。"
+         data-no="❌ 不对哦。C、C++ 需要先编译成机器码再运行；Java 虽有虚拟机，但传统上归为编译型路线。正确答案是 Python。">
+      <p style="font-weight:700;margin-bottom:12px">下列哪种语言属于<b>解释型语言</b>？</p>
+      <button class="opt" onclick="quizPick(this)">A. C 语言</button>
+      <button class="opt" onclick="quizPick(this)">B. Java</button>
+      <button class="opt" onclick="quizPick(this)">C. Python</button>
+      <button class="opt" onclick="quizPick(this)">D. C++</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="解释|解释型" data-ok="✅ 正确！Python 属于解释型语言，由解释器逐行翻译执行。" data-no="❌ 再想想：Python 是"边译边跑"的，应该是哪个词？（提示：参考上面的对比表格）">
+      <p>Python 被称为 <b>＿＿型语言</b>（也叫脚本语言），它的程序由解释器<b>逐行翻译、边译边跑</b>。请在框里填写这两个字：</p>
+      <div class="fill-row">
+        <input class="blank" id="blank1" placeholder="填两个字，如：××">
+        <button class="btn btn-main" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">"解释型 = 完全不翻译"？不对</div>
+      <p>新手容易以为 Python 代码是"直接被机器读懂的"。其实 Python 也会先把源代码编译成<b>字节码（.pyc 文件）</b>，再由 Python 虚拟机执行——只是这一步<b>对使用者完全透明、自动完成</b>，不需要像 C 那样手动编译。</p>
+      <p>另外，"解释型慢"是相对的：在 AI、数据分析场景中，Python 的核心计算都由 C/C++ 编写的底层库（NumPy、PyTorch）完成，整体速度并不差。<b>别用"慢"一个字否定 Python。</b></p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了'编译型语言和解释型语言'的概念。请：1）用一个生活类比帮我再解释一遍两者的区别；2）每种类型各举 3 个代表语言及代表作品；3）出 2 道单选题考我，等我作答后再公布答案。">
+      我刚学了"编译型语言和解释型语言"的概念。请：1）用一个生活类比帮我再解释一遍两者的区别；2）每种类型各举 3 个代表语言及代表作品；3）出 2 道单选题考我，等我作答后再公布答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：亲眼看看"边解释边执行"（4 分钟）</span>
+    <ol class="steps">
+      <li>按作业第 6 题的要求，在你的电脑上装好 Python（或打开 Anaconda）。</li>
+      <li>按 <code>Win + R</code> 输入 <code>cmd</code> 打开命令行，输入 <code>python</code> 回车，进入<b>交互模式</b>（出现 <code>&gt;&gt;&gt;</code> 提示符）。</li>
+      <li>输入 <code>1 / 2</code> 回车——<b>不等任何"编译"步骤</b>，立刻得到 <code>0.5</code>。这就是解释型语言"边译边跑"的直接体验。</li>
+      <li>再输入一行故意写错的代码，比如 <code>print(abc</code>——你会看到解释器立刻报出 <code>SyntaxError</code>，这段代码<b>一行都不会执行</b>——语法错误在「编译成字节码」的阶段就被整段拦下。想看「先执行前面、到出错那行才中断」，要写<b>运行时异常</b>，例如 <code>print(1/0)</code>——这才是解释型「边译边跑」的表现。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>高级语言必须"翻译"成机器语言才能执行：<b>编译型一次性翻译完再运行（C/C++），解释型逐行翻译边译边跑（Python/JavaScript）</b>。Python 属于解释型（脚本）语言，开发灵活、跨平台，代价是运行速度相对慢——但它依然是 AI 时代最热门的语言。下一节，我们看看编程语言的"流行度榜单"。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="1.04.html"><span class="nav-label">← 上一节</span><span class="nav-title">1.04 编程语言的三个层次</span></a>
+        <a class="next" href="1.06.html"><span class="nav-label">下一节 →</span><span class="nav-title">1.06 TIOBE 排行与语言流行趋势</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* —— 本页专属：编译 vs 解释动画 —— */
+const SRC = ['print("你好，Python")', 'x = 3 + 4', 'print("x =", x)'];
+const MC  = ['10110000 01100001', '10001011 11000101', '11001101 00101000'];
+const OUTS = ['⚡ 立即输出：你好，Python', '⚡ 立即执行：x = 7', '⚡ 立即输出：x = 7'];
+let timers = [];
+function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
+function resetDemo(){
+  clearTimers();
+  ['m1','m2'].forEach(id => document.getElementById(id).querySelectorAll('.chip').forEach(c => c.remove()));
+  document.getElementById('run1').textContent = '';
+  document.getElementById('run2').textContent = '';
+}
+function chip(box, text, cls){
+  const el = document.createElement('span');
+  el.className = 'chip ' + cls;
+  el.textContent = text;
+  box.appendChild(el);
+  return el;
+}
+function runCompile(){
+  const box = document.getElementById('m1');
+  chip(box, '📄 源代码（3 行）', 'src');
+  timers.push(setTimeout(() => {
+    box.lastElementChild.classList.add('hot');
+    box.lastElementChild.textContent = '⬇ 交给编译器（一次性翻译全部）…';
+  }, 900));
+  timers.push(setTimeout(() => {
+    box.lastElementChild.classList.remove('hot');
+    box.lastElementChild.textContent = '✅ 编译完成 → 生成机器码文件';
+    MC.forEach(m => chip(box, m, 'mc'));
+  }, 2100));
+  timers.push(setTimeout(() => {
+    chip(box, '▶ 运行 → 输出：你好，Python / x = 7', 'out');
+    document.getElementById('run1').textContent = '运行 1 次，此后无需再翻译，速度快';
+  }, 3200));
+}
+function runInterpret(){
+  const box = document.getElementById('m2');
+  SRC.forEach((s, i) => {
+    const t = i * 1100;
+    timers.push(setTimeout(() => {
+      const c = chip(box, '📄 ' + s, 'src');
+      c.classList.add('hot');
+      document.getElementById('run2').textContent = '解释器正在翻译第 ' + (i+1) + ' 行…';
+    }, t));
+    timers.push(setTimeout(() => {
+      box.lastElementChild.classList.remove('hot');
+      chip(box, OUTS[i], 'out');
+    }, t + 700));
+  });
+  timers.push(setTimeout(() => {
+    document.getElementById('run2').textContent = '改了代码？下次照读不误，无需重新"编译"';
+  }, 3 * 1100 + 300));
+}
+function runBoth(){ resetDemo(); runCompile(); runInterpret(); }
+</script>
+</body>
+</html>

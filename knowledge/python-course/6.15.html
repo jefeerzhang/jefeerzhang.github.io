@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6.15 递归函数：概念与两要素 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第六章 函数 · 第 15 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.dplay{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.drow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.dbar{display:flex;gap:6px;flex-wrap:wrap;min-height:56px;padding:12px;
+  background:var(--code-bg);border:1.5px dashed var(--border);border-radius:10px;align-items:center}
+.doll{font-size:15px;font-family:Consolas,monospace;padding:8px 12px;border-radius:8px;
+  background:#fff;border:1px solid var(--border);transition:all .25s}
+.doll.open{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:800}
+.doll.base{background:#fff7ed;border-color:#f59e0b;color:#b45309;font-weight:800}
+.dlog{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14px;min-height:96px;white-space:pre-wrap;line-height:1.8}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch06.html">第六章 函数</a><span class="sep">/</span>
+          <span class="current">6.15</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">15</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第六章 · 函数</span>
+            <h1>递归函数：概念与两要素</h1>
+            <p class="hero-summary">第 15 / 18 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>函数的定义与优点</li>
+      <li>函数的分类</li>
+      <li>函数的定义</li>
+      <li>函数的调用</li>
+      <li>形参与实参</li>
+      <li>参数传递的两种方式</li>
+      <li>必须参数与可选参数</li>
+      <li>不定长参数</li>
+      <li>参数值的数据类型</li>
+      <li>变量作用域：局部与全局</li>
+      <li>global 修改全局变量</li>
+      <li>匿名函数 lambda</li>
+      <li>高阶函数：map 与 filter</li>
+      <li>高阶函数：sorted 与 key</li>
+      <li class="cur">递归函数：概念与两要素</li>
+      <li>递归执行逻辑：递推与回溯</li>
+      <li>递归实战：阶乘</li>
+      <li>递归实战：字符串逆序</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>函数调用自己？听起来玄，其实是「把大问题拆成同款小问题」</h2>
+    <p>有的问题天生是「套娃结构」：求 5! 可以变成 5 × 4!，求 4! 又可以变成 4 × 3!……每一层都是<b>同一种问题、规模更小</b>。这种「在函数定义中调用自己」的函数叫<b>递归函数</b>——一些特殊问题用它求解比循环<b>更简单方便</b>。但递归也是本章最容易翻车的地方：不设好停止条件，程序会一层层拆下去直到崩溃。这一节先把「两要素」这副骨架搭好，后三节（执行逻辑、阶乘、字符串逆序）都是往骨架里填肉。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">递归像「俄罗斯套娃」：一层层打开是拆解，最小的娃娃打不开就是终点</div>
+      <p>拿到一个大套娃，你想数清一共几层：打开 5 号，里面是 4 号；打开 4 号，里面是 3 号……一直开到<b>最小的实心娃娃</b>——它打不开，数数到此为止（这就是<b>基项</b>）。然后你手里攥着从最小到最大的娃娃往回一个一个合上、逐层计数。<b>层层打开 = 问题拆小，实心娃娃 = 停止点</b>。下一节你还会在「食堂传餐盘」的例子里看到同样的过程：往下传单子是拆解，答案往回端是返回——两个比方说的是同一件事。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>递归函数必须满足两个特征</h2>
+    <ul class="points">
+      <li><b>什么是递归函数</b>：在函数定义中<b>调用自己</b>的特殊函数——一些特殊问题（如阶乘、斐波那契数列）用递归求解更简单方便</li>
+      <li><b>特征① 递归链条</b>：后一项的值<b>依赖前一项或前几项</b>——如 F(n) = F(n-1) × n、F(n) = F(n-1) + F(n-2)。「要求 F(n)，先去要 F(n-1)」，问题就这样一层层变小</li>
+      <li><b>特征② 基项</b>：存在一个或多个<b>不需要再次递归</b>的实例（停止于此）——如 0! = 1，是整条链条的起点答案，不必再拆</li>
+      <li><b>注意事项①</b>：必须有<b>明确的基项</b>来停止递归，否则无限拆解、程序报错</li>
+      <li><b>注意事项②</b>：递归链条内调用函数的<b>参数形式一定要有变化</b>（如 n 变成 n-1），保证问题不断向基项靠近</li>
+      <li><b>注意事项③</b>：递归函数通常与<b>分支语句 if…else… 搭配</b>使用——if 分支处理基项，else 分支处理递归链条</li>
+    </ul>
+
+    <div class="dplay">
+      <p style="font-weight:700;margin-bottom:10px">🔬 套娃演示台：5 层套娃，先「一层层打开」，再「一层层合上」</p>
+      <div class="drow">
+        <button class="btn-main btn" onclick="dStep()">下一步 →</button>
+        <button class="btn-ghost btn" onclick="dReset()">重置</button>
+      </div>
+      <div class="dbar" id="dbar"></div>
+      <div class="dlog" id="dlog">点「下一步」开始拆套娃……</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>把两要素「长」在代码上</h2>
+    <pre class="codeblock">def factorial(n):
+    if n == 0:
+        return 1                # 基项：实心娃娃，不再拆
+    else:
+        return n * factorial(n-1)   # 递归链条：F(n) = F(n-1) × n，参数 n 变小
+
+print(factorial(5))</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">120</pre>
+    <ul class="points">
+      <li><code>if n == 0: return 1</code> 对应<b>基项</b>——0! = 1 是数学上现成的答案，不需要再调用自己</li>
+      <li><code>else: return n * factorial(n-1)</code> 对应<b>递归链条</b>——F(n) = F(n-1) × n，每次调用参数从 n 变成 n-1（有变化！）</li>
+      <li><code>if…else…</code> 是递归的标配骨架：if 守住停止点，else 负责继续拆——两要素各占一个分支</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>换个链条看看：F(n) = F(n-1) + F(n-2)</h2>
+    <pre class="codeblock">def fib(n):
+    if n == 1:
+        return 1                # 基项一
+    if n == 2:
+        return 1                # 基项二（依赖前两项，需要两个基项）
+    else:
+        return fib(n-1) + fib(n-2)   # 链条：F(n) = F(n-1) + F(n-2)
+
+print(fib(7))</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">13</pre>
+    <ul class="points">
+      <li>链条变成了「依赖<b>前两项</b>」：fib(7) = fib(6) + fib(5)，一路拆下去</li>
+      <li>因为每层要「前两项」，基项也得有<b>两个</b>：fib(1)=1 和 fib(2)=1——基项的数量跟着链条的形式走</li>
+      <li>数一数：1, 1, 2, 3, 5, 8, 13——第 7 项是 13，这就是斐波那契数列</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！return n * factorial(n-1) 里参数从 n 变成 n-1，问题规模每层缩小 1，才能一路靠近基项 n==0——「链条参数必须有变化」这一条它满足。"
+         data-no="❌ 判断链条是否合格，关键看调用自己时<b>参数有没有变化</b>：return n * factorial(n-1) 中 n-1 和 n 不一样，问题在缩小。如果写成 factorial(n)，参数永远不变，就会无限拆解。">
+      <p style="font-weight:700;margin-bottom:12px">下面哪一条说明 <code>return n * factorial(n-1)</code> 这个递归链条是「合格」的？</p>
+      <button class="opt" onclick="quizPick(this)">A. 它调用了自己，调用自己就一定合格</button>
+      <button class="opt" onclick="quizPick(this)">B. 参数从 n 变成了 n-1，问题在向基项靠近</button>
+      <button class="opt" onclick="quizPick(this)">C. 它写在了 else 分支里</button>
+      <button class="opt" onclick="quizPick(this)">D. 它用了乘号</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="调用自己递归链条基项if|调用自己 递归链条 基项 if" data-ok="✅ 全对！递归函数在定义中调用自己；两大特征是递归链条（后项依赖前项）和基项（停止点）；代码骨架通常和 if…else… 搭配。" data-no="❌ 提示：四个空分别是——递归函数在定义中做了什么特殊动作？两大特征的名称各是什么？递归通常和哪种分支语句搭配？">
+      <p>递归函数是在函数定义中<b>＿＿</b>的特殊函数；它必须满足两个特征：<b>＿＿</b>（后一项依赖前一项或前几项）和<b>＿＿</b>（不需要再次递归的停止实例）；代码上通常与 <b>＿＿</b>…else… 分支搭配使用。（四空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：调用自己 递归链条 基项 if">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>只有链条没有基项</b>：递归会一层层拆下去永不停止，最后抛 <code>RecursionError: maximum recursion depth exceeded</code>——「套娃永远打不完」；</p>
+      <p>②<b>链条参数一成不变</b>：写成 <code>return n * factorial(n)</code>，参数没变化，问题规模不缩小，同样拆不到基项；</p>
+      <p>③<b>基项位置放错</b>：链条是「依赖前一项」（如阶乘）却只想着依赖前两项的写法，或者把基项写在了 else 后面永远执行不到——先想清楚「拆到哪一层必须停」，再动笔。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 递归函数的概念与两要素。请：1）用「俄罗斯套娃」的类比解释递归链条和基项；2）给我 5 个问题（如求 n!、斐波那契、1 到 n 求和、字符串长度、n 个 2 相乘），让我说出每个问题的递归链条公式和基项是什么，你逐一批改；3）解释为什么递归函数必须和 if…else… 搭配，并举一个漏写基项报 RecursionError 的例子。">
+      我刚学了 Python 递归函数的概念与两要素。请：1）用「俄罗斯套娃」的类比解释递归链条和基项；2）给我 5 个问题（如求 n!、斐波那契、1 到 n 求和、字符串长度、n 个 2 相乘），让我说出每个问题的递归链条公式和基项是什么，你逐一批改；3）解释为什么递归函数必须和 if…else… 搭配，并举一个漏写基项报 RecursionError 的例子。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：先写「骨架」，再写「代码」（5 分钟）</span>
+    <ol class="steps">
+      <li>作业第 6 题要求递归求 1+2+…+N：先别写代码，在纸上写出它的<b>递归链条</b>（mysum(n) = n + mysum(n-1)）和<b>基项</b>（n 等于几时不用再拆？）。</li>
+      <li>对照本页 factorial 的骨架：链条应该放进哪个分支？基项放进哪个分支？——先画骨架，再填代码。</li>
+      <li>故意把 factorial 的 <code>if n == 0</code> 改成 <code>if n == 10</code> 跑一下，体会「基项放错位置，拆解停不下来」。</li>
+      <li>下一节的主线程会用「食堂传餐盘」演示递归的完整执行过程（递推与回溯）——学完本节先猜一猜：打开套娃和合上套娃，分别对应哪半个过程？</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>递归函数 = 在定义中调用自己；两要素缺一不可：<b>递归链条</b>（后项依赖前项，如 F(n)=F(n-1)×n）+ <b>基项</b>（停止点，如 0!=1）；参数必须有变化、代码常配 if…else…。下一节把 factorial(5) 放进「食堂传餐盘」的实验台，亲眼看看递推与回溯的完整执行过程。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="6.14.html"><span class="nav-label">← 上一节</span><span class="nav-title">6.14 高阶函数：sorted 与 key</span></a>
+        <a class="next" href="6.16.html"><span class="nav-label">下一节 →</span><span class="nav-title">6.16 递归执行逻辑：递推与回溯</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：套娃演示台（打开=拆解，合上=返回） */
+const DOLL_TOTAL = 5;
+let dOpened = 0, dClosed = 0;
+function dRender(msg){
+  const bar = document.getElementById('dbar');
+  bar.innerHTML = '';
+  const openLeft = dOpened - dClosed;   // 当前仍处于打开状态的层数
+  for (let n = DOLL_TOTAL; n >= 1; n--){
+    const layer = DOLL_TOTAL - n;       // 0 = 最外层，DOLL_TOTAL-1 = 最内层
+    const d = document.createElement('span');
+    let cls = 'doll', label = n + ' 号娃娃';
+    if (layer < openLeft){
+      cls += ' open';
+      label = n + ' 号（已打开）';
+    } else if (layer === openLeft && dClosed === 0){
+      cls += ' base';
+      label = n + ' 号 ← 正在打开';
+    } else if (dClosed > 0 && layer >= openLeft){
+      label = n + ' 号（已合上 ✓）';
+    }
+    d.className = cls;
+    d.textContent = label;
+    bar.appendChild(d);
+  }
+  document.getElementById('dlog').textContent = msg || '点「下一步」开始拆套娃……';
+}
+function dStep(){
+  const totalSteps = DOLL_TOTAL + DOLL_TOTAL;
+  const done = dOpened + dClosed;
+  if (done >= totalSteps){
+    document.getElementById('dlog').textContent += '\n—— 演示结束：打开 5 次（拆解），合上 5 次（返回）——重置可再看一遍';
+    return;
+  }
+  if (dOpened <= DOLL_TOTAL - 1){
+    dOpened++;
+    const n = DOLL_TOTAL - dOpened + 1;
+    dRender(dOpened === DOLL_TOTAL
+      ? '打开第 ' + dOpened + ' 层：1 号是实心娃娃，打不开！——【基项】到了，开始往回合上……'
+      : '打开第 ' + dOpened + ' 层：' + n + ' 号里面是 ' + (n - 1) + ' 号——问题变小了，继续打开');
+  } else {
+    dClosed++;
+    const n = dClosed;
+    dRender('合上第 ' + dClosed + ' 层：' + n + ' 号娃娃归位——问题从最小处开始逐层解决');
+  }
+}
+function dReset(){
+  dOpened = 0; dClosed = 0;
+  dRender();
+}
+window.addEventListener('DOMContentLoaded', dReset);
+</script>
+</body>
+</html>

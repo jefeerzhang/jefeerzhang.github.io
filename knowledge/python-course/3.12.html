@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.12 f-string 格式化输出 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第三章 字符串与列表 · 第 12 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.demo-out{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;
+  padding:12px 16px;font-family:Consolas,Menlo,monospace;font-size:14px;line-height:2}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch03.html">第三章 字符串与列表</a><span class="sep">/</span>
+          <span class="current">3.12</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">12</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第三章 · 字符串与列表</span>
+            <h1>f-string 格式化输出</h1>
+            <p class="hero-summary">第 12 / 21 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>字符串基础与三种引号</li>
+      <li>转义字符</li>
+      <li>字符串索引</li>
+      <li>字符串切片</li>
+      <li>实战：身份证号提取信息</li>
+      <li>字符串运算与内置函数</li>
+      <li>大小写转换方法</li>
+      <li>计数、查找与替换</li>
+      <li>分割、联合与剔除</li>
+      <li>判断字符串类别</li>
+      <li>format 格式化输出</li>
+      <li class="cur">f-string 格式化输出</li>
+      <li>列表定义与特性</li>
+      <li>列表的创建</li>
+      <li>列表索引与切片</li>
+      <li>列表增加元素</li>
+      <li>列表删除元素</li>
+      <li>列表修改元素</li>
+      <li>列表运算与函数</li>
+      <li>列表常用方法</li>
+      <li>实战：成绩排序和统计</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>官方推荐的格式化方式：少写一半字</h2>
+    <p>上一节的 format 已经很好用了，但每次都要在字符串后面补一句 <code>.format(a, b)</code>，变量离大括号远，读起来要来回对照。<b>f-string</b> 是 Python <b>3.6+</b> 引入的特性，也是<b>目前官方推荐的字符串格式化方式</b>：在字符串引号前加一个小写字母 <code>f</code>，大括号里<b>直接写变量甚至表达式</b>——代码更简洁、可读性更高、执行效率也优于传统格式化方式。以后你写自己的项目，基本只用它。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">format 像填表上交，f-string 像现场直播</div>
+      <p>format 是「<b>填表上交</b>」：字符串是一张表格，你要把所有数据收集齐，最后一起交到 <code>.format()</code> 柜台统一分发；f-string 是「<b>现场直播</b>」：大括号里直接写变量、直接做运算（<code>{a+b}</code>），<b>边写边算、当场出结果</b>，不用排队交表。格式控制符号两台机器通用——冒号后面的那套「装饰要求」完全一样。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>加个 f，大括号里随便写</h2>
+    <ul class="points">
+      <li>用法：在字符串<b>引号前加小写字母 f</b>，如 <code>f"..."</code></li>
+      <li>大括号里可以<b>直接写变量</b>：<code>f"{a}"</code></li>
+      <li>还可以<b>直接写表达式</b>：<code>f"{a+b}"</code>、<code>f"{a/b:.2f}"</code>——边写边算</li>
+      <li>格式控制符号与 format <b>完全一致</b>：<code>:&gt;</code>、<code>:&lt;</code>、<code>:^</code>、<code>:e</code>、<code>:.2f</code>、<code>:0&gt;5</code> 等原样通用</li>
+    </ul>
+    <pre class="codeblock">a, b = 2, 3
+print(f"{a}+{b}={a+b}")                      <span class="good">→ 2+3=5</span>
+print(f"{'Python':*&gt;10}{'123':-&lt;7}")         <span class="good">→ ****Python123----</span>
+print(f"{a:^3}+{b:^3}={a+b:^3}")             <span class="good">→ 2 + 3 = 5</span>
+print(f"{a}/{b}等于{a/b:e}, 约等于{a/b:.2f}") <span class="good">→ 2/3等于6.666667e-01, 约等于0.67</span></pre>
+    <p class="muted">对照上一节：同样的输出，format 要写 <code>"{}+{}={}".format(a, b, a+b)</code>，f-string 只要 <code>f"{a}+{b}={a+b}"</code>——少写一整段柜台调用。</p>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>同一任务两种写法，同屏对照</h2>
+    <div class="switch">
+      <button class="on" data-pane="s1">format 版</button>
+      <button data-pane="s2">f-string 版</button>
+    </div>
+    <div class="pane on" id="s1">
+      <pre class="codeblock">a, b = 2, 3
+print("{}+{}={}".format(a, b, a+b))
+print("{:*>10}{:-<7}".format('Python', '123'))
+print("{}/{}等于{:e}, 约等于{:.2f}".format(a, b, a/b, a/b))</pre>
+      <div class="demo-out">2+3=5<br>****Python123----<br>2/3等于6.666667e-01, 约等于0.67</div>
+      <p class="muted" style="margin-top:8px">痛点：写完大括号还要回头数参数顺序，变量和占位符隔得远。</p>
+    </div>
+    <div class="pane" id="s2">
+      <pre class="codeblock">a, b = 2, 3
+print(f"{a}+{b}={a+b}")
+print(f"{'Python':*>10}{'123':-<7}")
+print(f"{a}/{b}等于{a/b:e}, 约等于{a/b:.2f}")</pre>
+      <div class="demo-out">2+3=5<br>****Python123----<br>2/3等于6.666667e-01, 约等于0.67</div>
+      <p class="muted" style="margin-top:8px">输出<b>一模一样</b>，但大括号里就地取材、直接运算——变量在哪，占位就在哪，不用来回对照。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！f-string 是 Python 3.6 引入的特性，因为更简洁高效，已成为官方推荐的格式化方式。"
+         data-no="❌ 再想想：f-string 是比较新的语法，Python 2.7 和 3.0 的时代还没有它，它是 3.6 版本才引入的。">
+      <p style="font-weight:700;margin-bottom:12px">f-string 是从 Python 哪个版本开始引入的？</p>
+      <button class="opt" onclick="quizPick(this)">A. 2.7</button>
+      <button class="opt" onclick="quizPick(this)">B. 3.0</button>
+      <button class="opt" onclick="quizPick(this)">C. 3.6</button>
+      <button class="opt" onclick="quizPick(this)">D. 3.12</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="f|F" data-ok="✅ 正确！在字符串引号前加字母 f（如 f&quot;...&quot;），大括号里的变量和表达式才会被求值替换。" data-no="❌ 想想它的名字 f-string——这个 f 就是关键，写在字符串引号的前面。">
+      <p>使用 f-string 时，需在字符串引号前加字母 <code>____</code>，大括号内的内容才会被求值。</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="填一个字母">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">漏了 f，一切照旧</div>
+      <p><b>坑一：漏写 f 不报错，但大括号原样输出。</b><code>print("{a}+{b}")</code> 会老老实实打印 <code>{a}+{b}</code> 这七个字符——没有 f，Python 就把大括号当普通字符。程序不报错、结果却不对，这种「静默翻车」最隐蔽，输出怪怪的先检查 f。</p>
+      <p><b>坑二：大括号里不能用反斜杠转义</b>（Python 3.12 之前的版本），<code>f"{'don\'t'}"</code> 会直接报错。需要引号时，外层和内层用不同的引号：<code>f"{'Python':*&gt;10}"</code> 外双内单。</p>
+      <p><b>坑三：别为了炫技把复杂逻辑塞进大括号。</b>f-string 适合放简单变量和短表达式（如 <code>{a+b}</code>、<code>{a/b:.2f}</code>）；一整段 if-else 塞进去，可读性反而崩了——简洁是它的初衷。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的 f-string 格式化输出（Python 3.6+ 引入，官方推荐）。请：1）把同一任务分别用 format() 和 f-string 各写一遍让我对比简洁度；2）举一个漏写 f 导致大括号原样输出的例子；3）出 4 道求值题考我（含 {a+b} 表达式和对齐补位），等我作答后公布答案和讲解。">
+      我刚学了 Python 的 f-string 格式化输出（Python 3.6+ 引入，官方推荐）。请：1）把同一任务分别用 format() 和 f-string 各写一遍让我对比简洁度；2）举一个漏写 f 导致大括号原样输出的例子；3）出 4 道求值题考我（含 {a+b} 表达式和对齐补位），等我作答后公布答案和讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：用 f-string 重写本章作业第 5 题（5 分钟）</span>
+    <ol class="steps">
+      <li>交互模式输入三个变量：<code>a = '大象'</code>，<code>b = '长颈鹿'</code>，<code>c = '企鹅'</code>（对应 animals 列表的三个元素）。</li>
+      <li>用 f-string 插入句子：<code>print(f"动物园有很多动物，包括：{a}、{b} 和 {c}")</code>。</li>
+      <li>故意去掉 f 再运行一次：<code>print("动物园有很多动物，包括：{a}、{b} 和 {c}")</code>——亲眼看大括号原样输出的翻车现场。</li>
+      <li>挑战：把成绩也拼进去：<code>print(f"{a} 的得分是 {92.5:.1f} 分")</code>，体会表达式和格式控制混用的威力。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>f-string 是 Python 3.6+ 引入、官方推荐的格式化方式：引号前加 <code>f</code>，大括号里直接写变量和表达式（<code>{a+b}</code>），格式控制符号与 format 完全通用；它更简洁、可读性更高、执行更快；漏写 f 大括号会原样输出、3.12 之前版本大括号里不能用反斜杠。<b>字符串方法与格式化到此全部学完</b>，下一节进入新大陆：列表的定义与特性！</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="3.11.html"><span class="nav-label">← 上一节</span><span class="nav-title">3.11 format 格式化输出</span></a>
+        <a class="next" href="3.13.html"><span class="nav-label">下一节 →</span><span class="nav-title">3.13 列表定义与特性</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

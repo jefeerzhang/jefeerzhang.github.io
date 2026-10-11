@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6.14 高阶函数：sorted 与 key · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第六章 函数 · 第 14 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.splay{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.srow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.sbar{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 4px}
+.scell{display:inline-flex;flex-direction:column;align-items:center;gap:2px;min-width:52px;
+  padding:8px 6px;background:#fff;border:1px solid var(--border);border-radius:8px;
+  font-family:Consolas,monospace;font-size:14px;transition:all .25s}
+.scell b{font-size:16px}
+.scell span{font-size:11px;color:var(--ink2)}
+.scell.working{background:var(--accent-soft);border-color:var(--accent);transform:scale(1.08)}
+.scell.working span{color:var(--accent);font-weight:800}
+.slog{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14px;min-height:96px;white-space:pre-wrap;line-height:1.8}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch06.html">第六章 函数</a><span class="sep">/</span>
+          <span class="current">6.14</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">14</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第六章 · 函数</span>
+            <h1>高阶函数：sorted 与 key</h1>
+            <p class="hero-summary">第 14 / 18 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>函数的定义与优点</li>
+      <li>函数的分类</li>
+      <li>函数的定义</li>
+      <li>函数的调用</li>
+      <li>形参与实参</li>
+      <li>参数传递的两种方式</li>
+      <li>必须参数与可选参数</li>
+      <li>不定长参数</li>
+      <li>参数值的数据类型</li>
+      <li>变量作用域：局部与全局</li>
+      <li>global 修改全局变量</li>
+      <li>匿名函数 lambda</li>
+      <li>高阶函数：map 与 filter</li>
+      <li class="cur">高阶函数：sorted 与 key</li>
+      <li>递归函数：概念与两要素</li>
+      <li>递归执行逻辑：递推与回溯</li>
+      <li>递归实战：阶乘</li>
+      <li>递归实战：字符串逆序</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>排序听谁的？——按大小排谁都会，「按规则排」才见真章</h2>
+    <p>3.20 学过列表的 <code>sort()</code> 和 <code>reverse()</code> 方法，但它们只会按「天然大小」排。可实际问题常常是：<b>按离某个数的远近排</b>、<b>按成绩排姓名</b>、<b>按字典的值排键</b>……这时就需要 <code>sorted()</code> 的 <b>key 参数</b>：把「按什么排」写成一条规则（还是 lambda），递给 sorted 执行。作业第 5 题「按成绩从低到高输出学生名单」，就是这一节的主场。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">sorted 像「运动会入场排序」，key 是「检录员手里的排序依据」</div>
+      <p>运动员排队入场，怎么排？按身高？按学号？按离主席台的远近？<b>sorted 负责排</b>，但排法取决于<b>检录标准</b>——你把「每人报个数」（key 函数）交给检录员，他就按这个数从小到大排。<code>key=lambda n: abs(3-n)</code> 就是告诉检录员：「每人报一下自己离 3 号位有多远，按报数排队」——于是 3 号第 1 个，2 号、4 号紧随其后。reverse=True 则是「反过来报，从大到小排」。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>sorted(排序对象, key=匿名函数, reverse=False)</h2>
+    <ul class="points">
+      <li><b>sorted 是高阶函数</b>：对可迭代对象排序，<b>返回一个新列表</b>（原对象不动——这是它和列表方法 sort() 的区别，sort() 是原地修改、返回 None）</li>
+      <li><b>key 参数</b>：指定<b>按什么规则排</b>——key 函数对每个元素求一个「排位值」，sorted 按排位值从小到大排；key 只影响排序依据，<b>不影响输出内容</b>（输出的还是原元素）</li>
+      <li><b>reverse 参数</b>：默认 False 升序；<code>reverse=True</code> 降序（衔接 3.20 列表的 sort / reverse 方法）</li>
+      <li><b>对字典排序</b>：字典不能直接按「值」排，先用 <code>items()</code> 把键值对转成元组列表，再用 <code>key=lambda x: x[1]</code> 让「值」当排位值——作业第 5 题的核心套路</li>
+    </ul>
+
+    <div class="splay">
+      <p style="font-weight:700;margin-bottom:10px">🔬 「离 3 越近越靠前」实验台：看 key=abs(3-n) 怎么给 [1, 2, 3, 4, 5] 排队</p>
+      <div class="srow">
+        <button class="btn-main btn" onclick="runSort(false)">▶ 演示 sorted(ls, key=lambda n: abs(3-n))</button>
+        <button class="btn-ghost btn" onclick="runSort(true)">▶ 演示 reverse=True 降序</button>
+        <button class="btn-ghost btn" onclick="resetSort()">重置</button>
+      </div>
+      <div class="sbar" id="sbar"></div>
+      <div class="slog" id="slog">点上方按钮开始演示……</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：按「与 3 的距离」排序</h2>
+    <pre class="codeblock">ls = [1, 2, 3, 4, 5]
+st = sorted(ls, key=lambda n: abs(3-n))
+print(st)</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">[3, 2, 4, 1, 5]</pre>
+    <ul class="points">
+      <li>key 函数给每个元素「报数」：1 报 |3-1|=2、2 报 1、3 报 0、4 报 1、5 报 2</li>
+      <li>sorted 按<b>报的数</b>从小到大排：3（报 0）→ 2、4（都报 1，谁先在前面谁先）→ 1、5（都报 2）</li>
+      <li>注意：<b>输出的还是原元素</b> [3, 2, 4, 1, 5]，不是距离值 [0, 1, 1, 2, 2]——key 只是「排位依据」</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>作业第 5 题完整演示：字典按成绩排序</h2>
+    <pre class="codeblock">dic1 = {'张三': 85, '李四': 92, '王五': 79}
+
+# items() 把字典转成键值对元组：[('张三', 85), ('李四', 92), ('王五', 79)]
+items = sorted(dic1.items(), key=lambda x: x[1])
+print(items)</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">[('王五', 79), ('张三', 85), ('李四', 92)]</pre>
+    <ul class="points">
+      <li>每个元素是元组 <code>('张三', 85)</code>，<code>x[0]</code> 是姓名、<code>x[1]</code> 是成绩</li>
+      <li><code>key=lambda x: x[1]</code>：让<b>成绩</b>当排位值，默认升序 → 79、85、92，即按成绩从低到高</li>
+      <li>想从高到低？加 <code>reverse=True</code> → [('李四', 92), ('张三', 85), ('王五', 79)]——正好是「成绩单」的顺序</li>
+      <li>作业第 5 题就是这套写法：sorted + items() + lambda x: x[1]（+ reverse 看题目要求），下面「试一试」必须亲手演练</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！key 函数只决定「按什么排」，输出的是原元素本身：每个元素的报数是 2、1、0、1、2，按报数升序排完后输出 [3, 2, 4, 1, 5]。"
+         data-no="❌ key 是「排位依据」不是「输出内容」：sorted 排完后输出的还是原来的元素（姓名还是姓名、数字还是数字），不是 key 函数算出来的距离值。">
+      <p style="font-weight:700;margin-bottom:12px"><code>sorted([10, 20, 30, 40], key=lambda n: abs(30-n))</code> 的输出是？</p>
+      <button class="opt" onclick="quizPick(this)">A. [0, 10, 10, 20]</button>
+      <button class="opt" onclick="quizPick(this)">B. [30, 20, 40, 10]</button>
+      <button class="opt" onclick="quizPick(this)">C. [30, 20, 10, 40]</button>
+      <button class="opt" onclick="quizPick(this)">D. [10, 20, 30, 40]</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="keyreverse=Trueitemsx[1]|key reverse=True items x[1]" data-ok="✅ 全对！key 指定排序规则；reverse=True 降序；items() 把字典转成键值对元组，x[1] 取出元组的值当排位依据。" data-no="❌ 提示：四个空分别是——指定排序规则的参数名？降序怎么写？字典按值排序前先用什么方法转成元组？lambda 里取值用的下标是？">
+      <p>sorted 中用 <b>＿＿</b> 参数指定按什么规则排；想降序要写 <b>＿＿</b>；字典要先调用 <b>＿＿</b>() 转成键值对元组列表，再用 <code>lambda x: <b>＿＿</b></code> 让值当排序依据。（四空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：key reverse=True items x[1]">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>sorted 与 sort() 用混</b>：<code>sorted(ls)</code> 返回新列表、原列表不动；<code>ls.sort()</code> 是原地修改、返回 None——写成 <code>ls = ls.sort()</code> 会把列表变成 None；</p>
+      <p>②<b>字典直接 sorted 按值排</b>：<code>sorted(dic1)</code> 只会按<b>键</b>排（得到姓名列表），想按成绩排必须先 <code>items()</code> 再 <code>key=lambda x: x[1]</code>；</p>
+      <p>③<b>x[0] 和 x[1] 下标记反</b>：元组里 <code>x[0]</code> 是键（姓名）、<code>x[1]</code> 是值（成绩）——按成绩排序却写了 x[0]，排出来的是按姓名的字典序。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的 sorted 函数和 key 参数。请：1）用「运动会检录」的类比解释 key 函数的作用，并说明 sorted(ls) 和 ls.sort() 的区别；2）演示一个字典先 items() 再 key=lambda x: x[1] 按值排序的完整过程，逐个元素解释报数和排队；3）出 3 道 sorted + key 求输出题考我（含一道 reverse=True、一道按字符串长度排），等我答完再讲解。">
+      我刚学了 Python 的 sorted 函数和 key 参数。请：1）用「运动会检录」的类比解释 key 函数的作用，并说明 sorted(ls) 和 ls.sort() 的区别；2）演示一个字典先 items() 再 key=lambda x: x[1] 按值排序的完整过程，逐个元素解释报数和排队；3）出 3 道 sorted + key 求输出题考我（含一道 reverse=True、一道按字符串长度排），等我答完再讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：直接演练作业第 5 题（5 分钟）</span>
+    <ol class="steps">
+      <li>把作业第 5 题的 <code>dic1 = {'张三': 85, '李四': 92, '王五': 79}</code> 抄进交互模式，先单独跑 <code>print(dic1.items())</code>，看看键值对长什么样。</li>
+      <li>再跑 <code>sorted(dic1.items(), key=lambda x: x[1])</code>，对照输出 [(&#x27;王五&#x27;, 79), (&#x27;张三&#x27;, 85), (&#x27;李四&#x27;, 92)]——按成绩从低到高。</li>
+      <li>加上 <code>reverse=True</code> 再跑一遍，得到从高到低的成绩单顺序；把两种结果都截图或抄下来，作业要哪种就用哪种。</li>
+      <li>改一下排位规则玩玩：<code>key=lambda x: x[0]</code> 是按姓名排、<code>key=lambda x: -x[1]</code> 也能从高到低——体会「规则一换，排法就变」。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>sorted(对象, key=匿名函数, reverse=False) 返回排好序的新列表；key 指定「按什么排」，输出的仍是原元素；reverse=True 降序；字典按值排序的套路是 items() + key=lambda x: x[1]。至此 lambda 的三大用武之地（map、filter、sorted）集齐——接下来进入本章压轴主题：递归。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="6.13.html"><span class="nav-label">← 上一节</span><span class="nav-title">6.13 高阶函数：map 与 filter</span></a>
+        <a class="next" href="6.15.html"><span class="nav-label">下一节 →</span><span class="nav-title">6.15 递归函数：概念与两要素</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：「离 3 越近越靠前」排序演示 */
+const SLS = [1, 2, 3, 4, 5];
+let sTimer = null;
+function resetSort(){
+  if (sTimer){ clearInterval(sTimer); sTimer = null; }
+  const bar = document.getElementById('sbar');
+  bar.innerHTML = '';
+  SLS.forEach(n => {
+    const d = document.createElement('div');
+    d.className = 'scell';
+    d.innerHTML = '<b>' + n + '</b><span>距 3：' + Math.abs(3 - n) + '</span>';
+    bar.appendChild(d);
+  });
+  document.getElementById('slog').textContent = '点上方按钮开始演示……';
+}
+function runSort(rev){
+  resetSort();
+  const order = SLS.slice().sort((a, b) => rev ? Math.abs(3-b) - Math.abs(3-a) : Math.abs(3-a) - Math.abs(3-b));
+  const log = document.getElementById('slog');
+  const placed = [];
+  let i = 0;
+  sTimer = setInterval(() => {
+    if (i >= order.length){
+      clearInterval(sTimer); sTimer = null;
+      log.textContent += '\n—— 排序完成：[' + order.join(', ') + '] ——';
+      log.textContent += rev ? '\n（reverse=True：报数从大到小排）' : '\n（key 函数报的数是排位依据，输出的还是原元素）';
+      return;
+    }
+    const n = order[i];
+    placed.push(n);
+    const cellsEl = document.getElementById('sbar').children;
+    for (let k = 0; k < cellsEl.length; k++){
+      const num = parseInt(cellsEl[k].querySelector('b').textContent, 10);
+      cellsEl[k].className = 'scell' + (num === n ? ' working' : '');
+    }
+    log.textContent = (i === 0 ? '' : log.textContent.split('\n——')[0] + '\n') + (i + 1) + '. ' + n + ' 报数 |3-' + n + '|=' + Math.abs(3-n) + (rev ? '，reverse=True 从大到小 → 排第 ' : '，从小到大 → 排第 ') + (i + 1) + ' 位';
+    i++;
+  }, 1100);
+}
+window.addEventListener('DOMContentLoaded', resetSort);
+</script>
+</body>
+</html>

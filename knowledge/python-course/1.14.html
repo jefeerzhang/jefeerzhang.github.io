@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.14 Python 2 vs Python 3 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第一章 导论与 Python 环境 · 第 14 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+/* —— 本页专属：版本切换展示区 —— */
+.vcompare{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+          box-shadow:var(--shadow);padding:22px}
+.vcompare .tip{font-size:13px;color:var(--ink2);margin-top:12px}
+.pane h3{font-size:15px;margin:6px 0 10px}
+.pane h3.v2{color:var(--err)}
+.pane h3.v3{color:var(--ok)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch01.html">第一章 导论与 Python 环境</a><span class="sep">/</span>
+          <span class="current">1.14</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">14</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第一章 · 导论与 Python 环境</span>
+            <h1>Python 2 vs Python 3</h1>
+            <p class="hero-summary">第 14 / 18 节 · 约 8 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>计算机系统架构</li>
+      <li>操作系统及其分类</li>
+      <li>编程语言：人机沟通的桥梁</li>
+      <li>编程语言的三个层次</li>
+      <li>编译型 vs 解释型语言</li>
+      <li>TIOBE 排行与语言流行趋势</li>
+      <li>五大语言的诞生与用途</li>
+      <li>AI 时代的编程学习理念</li>
+      <li>与 AI 高效协作的三技巧</li>
+      <li>学习路径的三阶段</li>
+      <li>Python 的诞生与发展</li>
+      <li>PEP 与 PEP 8</li>
+      <li>The Zen of Python</li>
+      <li class="cur">Python 2 vs Python 3</li>
+      <li>Python 的六大特点</li>
+      <li>Python 的应用领域</li>
+      <li>Python 环境搭建</li>
+      <li>Anaconda 与 AI IDE</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>同一个 Python，为什么会有两个「不兼容」的版本？</h2>
+    <p>你在网上搜代码、找教程时，几乎一定会撞上这样一个坑：<b>明明照着敲，程序却报错</b>——很可能那是一段 Python 2 的老代码。分清 2 和 3，能帮你：</p>
+    <ul class="points">
+      <li>一眼识别老代码：看到 <code>print "Hello"</code> 这种写法，立刻知道「这是 Python 2.x 的，我不能直接照抄」。</li>
+      <li>考试常考三大差异：<b>打印输出、除法运算、迭代对象</b>，这一节一张表全部搞定。</li>
+      <li>确认自己电脑装的是哪个版本，避免环境搭错、作业跑不通。</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">Python 2 和 3，像「繁体字和简体字」</div>
+      <p>两个版本<b>长得像、渊源深，但书写规则不同</b>：很多字写法变了（print 要加括号了），老文章（旧代码）直接拿新规则读会出问题——这就是「<b>不向后兼容</b>」。</p>
+      <p>而且就像今天出版、教育、日常交流都通行简体字一样，<b>现在整个 Python 世界通行 Python 3</b>：2020 年 1 月 Python 2 官方停止维护后，学 Python 2 就像在现代社会学写繁体字——当作文化了解可以，当作日常书写就落伍了。你今天学的、未来要用的，默认全部是 Python 3。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>一场「壮士断腕」的大版本升级</h2>
+    <ul class="points">
+      <li><b>Python 3 于 2008 年发布</b>：为了修掉 Python 2 时代积累的设计缺陷（其中最出名的就是除法和字符编码问题），社区决定推出一个大版本——但代价是<b>不向后兼容</b>，很多 2.x 的老代码不能原样运行。</li>
+      <li><b>过渡期长达十多年</b>：旧项目迁移缓慢，社区一度「两代并存」。直到 <b>2020 年 1 月 Python 2 官方停止维护</b>（不再有安全更新），Python 3 才彻底成为<b>绝对主流</b>。</li>
+      <li><b>今天学的一切默认 Python 3</b>：本课程、主流教程、AI 领域的框架，全部基于 Python 3。</li>
+      <li><b>鉴别老代码的信号</b>：看到 <code>print "Hello"</code>（print 后直接跟内容、没括号），基本可以断定是 2.x 写法；看到 <code>xrange()</code> 也是同理。</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">🎬 交互示例</span>
+    <h2>三大核心差异：切换对比亲手看</h2>
+    <p class="muted">点击下方按钮，在 Python 2.x 与 Python 3.x 之间切换，观察同三件事的写法与结果差异：</p>
+    <div class="vcompare">
+      <div class="switch">
+        <button data-pane="pane-v2">Python 2.x（已退役）</button>
+        <button class="on" data-pane="pane-v3">Python 3.x（现行主流）</button>
+      </div>
+      <div class="pane" id="pane-v2">
+        <h3 class="v2">🧟 Python 2.x 写法（2020 年已停止维护）</h3>
+        <pre class="codeblock"><span class="bad">print "Hello"        # 打印输出：print 语句，不用括号
+1 / 2                # 除法运算：结果 0（整数除法，小数被截断）
+range(3) / xrange(3) # 迭代对象：range 与 xrange 两个并存</span></pre>
+        <p class="tip">⚠️ 注意 <code>1 / 2</code> 的结果：<b>0</b>。因为 2.x 里两个整数相除默认取整数部分，1 除以 2 等于 0.5，截断后剩 0——无数初学者的血泪坑。</p>
+      </div>
+      <div class="pane on" id="pane-v3">
+        <h3 class="v3">🚀 Python 3.x 写法（你正在学的版本）</h3>
+        <pre class="codeblock"><span class="good">print("Hello")       # 打印输出：print 函数，必须加括号
+1 / 2                # 除法运算：结果 0.5（浮点除法）
+range(3)             # 迭代对象：统一用 range()，xrange 已取消</span></pre>
+        <p class="tip">✅ 在 3.x 里 <code>1 / 2</code> 返回 <b>0.5</b>，符合数学直觉；<code>print</code> 变成了标准函数；<code>range()</code> 一统天下。</p>
+      </div>
+      <p class="tip">💡 结论：同样三行代码，两个版本的结果和规则完全不同——这就是「不向后兼容」的含义。网上搜到的老代码若跑不通，先怀疑版本问题。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">对比总结</span>
+    <h2>一张表记牢三大差异</h2>
+    <table>
+      <tr><th>核心特性</th><th>Python 2.x</th><th>Python 3.x</th></tr>
+      <tr><td>打印输出</td><td><code>print "Hello"</code>（语句，无括号）</td><td><code>print("Hello")</code>（函数，有括号）</td></tr>
+      <tr><td>除法运算</td><td><code>1/2 = 0</code>（整数除法）</td><td><code>1/2 = 0.5</code>（浮点除法）</td></tr>
+      <tr><td>迭代对象</td><td><code>range()</code> / <code>xrange()</code> 并存</td><td><code>range()</code>（统一）</td></tr>
+      <tr><td>发布 / 退役</td><td>2000 年发布 · 2020 年 1 月停止维护</td><td>2008 年发布 · 现行绝对主流</td></tr>
+    </table>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！Python 3 中 1/2 做浮点除法，结果是 0.5；整数除法取 0 那是 Python 2 的行为。"
+         data-no="❌ 不对哦。结果 0 是 Python 2 的整数除法（小数被截断）；Python 3 中两个整数相除返回浮点数，1/2 = 0.5。">
+      <p style="font-weight:700;margin-bottom:12px">在 <b>Python 3</b> 中，表达式 <code>1 / 2</code> 的结果是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 0（整数除法）</button>
+      <button class="opt" onclick="quizPick(this)">B. 0.5（浮点除法）</button>
+      <button class="opt" onclick="quizPick(this)">C. 2（取商的倒数）</button>
+      <button class="opt" onclick="quizPick(this)">D. 报错，整数不能相除</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="2 3|23|2、3" data-ok="✅ 正确！2020 年 Python 2 官方停止维护，Python 3 成为绝对主流——今天学的一切默认都是 Python 3。" data-no="❌ 再想想：2020 年 1 月官方停止维护的是旧版本（2），成为绝对主流的是新版本（3）。两个空的顺序对应题目顺序。">
+      <p>2020 年 Python <b>＿＿</b> 官方停止维护，Python <b>＿＿</b> 成为绝对主流。请依次填写两个版本号数字（如 1、2）：</p>
+      <div class="fill-row">
+        <input class="blank" id="blank1" placeholder="填两个数字，如：1、2">
+        <button class="btn btn-main" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">照抄网上代码报错？八成是版本不对</div>
+      <p>最常见的坑：从老教程或旧帖子里抄来 <code>print "Hello"</code>，在 Python 3 里直接报语法错误。记住信号：<b>print 后面没括号、出现 xrange、1/2 得 0</b>——这些都是 Python 2 的痕迹。老代码想用，要么改写成 3.x 语法（print 加括号、xrange 换 range），要么另找 3.x 版本的资料。</p>
+      <p>第二个坑：有些电脑同时装了 2 和 3，命令行敲 <code>python</code> 却启动了 2.x，作业怎么做都错。所以下一节的「试一试」请务必做——先确认版本，再写代码。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 2 与 Python 3 的区别：Python 3 于 2008 年发布且不向后兼容，2020 年 1 月 Python 2 停止维护。三大差异：打印输出（print "Hello" 与 print("Hello")）、除法运算（1/2 在 2.x 得 0 整数除法、在 3.x 得 0.5 浮点除法）、迭代对象（2.x 有 range 和 xrange、3.x 统一为 range）。请：1）再补充 2 个两者的其他差异；2）给我一段 Python 2 老代码让我练习改写成 Python 3，我改完你再批改；3）出 2 道单选题考我，等我作答后再公布答案。">
+      我刚学了 Python 2 与 Python 3 的区别：Python 3 于 2008 年发布且不向后兼容，2020 年 1 月 Python 2 停止维护。三大差异：打印输出（print "Hello" 与 print("Hello")）、除法运算（1/2 在 2.x 得 0 整数除法、在 3.x 得 0.5 浮点除法）、迭代对象（2.x 有 range 和 xrange、3.x 统一为 range）。请：1）再补充 2 个两者的其他差异；2）给我一段 Python 2 老代码让我练习改写成 Python 3，我改完你再批改；3）出 2 道单选题考我，等我作答后再公布答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：确认你的电脑跑的是 3.x（3 分钟）</span>
+    <ol class="steps">
+      <li>按 <code>Win + R</code> 输入 <code>cmd</code> 打开命令行，输入 <code>python --version</code> 回车。</li>
+      <li>看输出：若显示 <b>Python 3.x.x</b>（如 Python 3.11.5），恭喜，环境没问题，可以放心往下学。</li>
+      <li>若显示的是 <b>Python 2.x.x</b>，请按<b>第 1.17 节（Python 环境搭建）</b>的步骤重新安装 Python 3，别在 2.x 上写作业。</li>
+      <li>顺手再进交互模式验证本节所学：输入 <code>1 / 2</code>，如果输出 <code>0.5</code>，说明你确实跑在 Python 3 上——亲眼见证与 2.x 的差异。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p><b>Python 3 于 2008 年发布、不向后兼容；2020 年 1 月 Python 2 停止维护，Python 3 成为绝对主流</b>。三大差异记牢：<b>print "Hello" → print("Hello")；1/2=0 → 1/2=0.5；range()/xrange() → range() 统一</b>。今天学的一切默认 Python 3，看到无括号的 print 就知道那是 2.x 老代码。下一节，我们给 Python 本尊画像——它的六大特点。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="1.13.html"><span class="nav-label">← 上一节</span><span class="nav-title">1.13 The Zen of Python</span></a>
+        <a class="next" href="1.15.html"><span class="nav-label">下一节 →</span><span class="nav-title">1.15 Python 的六大特点</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* —— 本页无需额外 JS：.switch 分组切换已由 course.js 自动绑定 —— */
+</script>
+</body>
+</html>

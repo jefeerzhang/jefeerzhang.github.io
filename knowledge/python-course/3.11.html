@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.11 format 格式化输出 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第三章 字符串与列表 · 第 11 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.align-out{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;
+  padding:12px 16px;font-family:Consolas,Menlo,monospace;font-size:15px;white-space:pre}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch03.html">第三章 字符串与列表</a><span class="sep">/</span>
+          <span class="current">3.11</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">11</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第三章 · 字符串与列表</span>
+            <h1>format 格式化输出</h1>
+            <p class="hero-summary">第 11 / 21 节 · 约 13 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>字符串基础与三种引号</li>
+      <li>转义字符</li>
+      <li>字符串索引</li>
+      <li>字符串切片</li>
+      <li>实战：身份证号提取信息</li>
+      <li>字符串运算与内置函数</li>
+      <li>大小写转换方法</li>
+      <li>计数、查找与替换</li>
+      <li>分割、联合与剔除</li>
+      <li>判断字符串类别</li>
+      <li class="cur">format 格式化输出</li>
+      <li>f-string 格式化输出</li>
+      <li>列表定义与特性</li>
+      <li>列表的创建</li>
+      <li>列表索引与切片</li>
+      <li>列表增加元素</li>
+      <li>列表删除元素</li>
+      <li>列表修改元素</li>
+      <li>列表运算与函数</li>
+      <li>列表常用方法</li>
+      <li>实战：成绩排序和统计</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>「2/3 等于 0.6666666667」——能只显示两位吗？</h2>
+    <p>用逗号拼接的 print 输出又啰嗦又难控制：小数拖一长串、对不齐、想调换顺序还得重写整句话。<code>format()</code> 是 Python 的字符串格式化函数——用<b>大括号 <code>{}</code> 在字符串里占好座位</b>，把变量插到特定位置，还能用<b>格式控制符号</b>规定宽度、对齐、保留几位小数。这是本章作业第 5 题的核心考点。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">大括号是「留白的座位牌」，冒号后面是装饰要求</div>
+      <p>字符串里的 <code>{}</code> 像会议桌上的<b>座位牌</b>——位置留好了，等人入座。入座方式有三种：<b>按顺序入座</b>（空的 <code>{}</code>，谁先来谁坐）、<b>按号入座</b>（<code>{2}</code>，指定 2 号嘉宾坐这）、<b>按姓名入座</b>（<code>{C1}</code>，叫名字才坐）。而冒号后面的部分，是对这块座位牌的<b>装饰要求</b>：多宽（<code>:10</code>）、靠哪边（<code>&gt;</code> 右 / <code>&lt;</code> 左 / <code>^</code> 居中）、空处补什么（<code>:*&gt;10</code> 补星号）、显示成什么样（<code>:.2f</code> 两位小数）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>三种占位方式 + 格式控制符号</h2>
+    <p>用法为 <code>{参数名/参数位置:格式控制符号}</code>，注意<b>控制符号之间不要有空格</b>：</p>
+    <ul class="points">
+      <li><b>按顺序</b>：<code>"{}+{}={}"</code>——三个空 {} 依次吃进 format 的三个参数</li>
+      <li><b>按位置</b>：<code>"{2}={1}+{0}"</code>——大括号里写编号，可以乱序、重复用</li>
+      <li><b>按名字</b>：<code>"{C1}*{C2}"</code>——大括号里写名字，format 用 <code>C2=a</code> 这种关键字传入</li>
+      <li><b>宽度与对齐</b>：<code>&gt;</code> 右对齐、<code>&lt;</code> 左对齐、<code>^</code> 居中；前面的字符是填充符；数字是宽度，如 <code>:10</code> 表示宽度 10</li>
+      <li><b>数字格式</b>：<code>:e</code> 科学计数法、<code>:.2f</code> 保留两位小数</li>
+    </ul>
+    <pre class="codeblock">a, b = 2, 3
+print("{}+{}={}".format(a, b, a+b))            <span class="good">→ 2+3=5</span>
+print("{2}={1}+{0}".format(a, b, a+b))         <span class="good">→ 5=3+2</span>
+print("{C1}*{C2}={C3}".format(C2=a, C1=b, C3=a*b)) <span class="good">→ 3*2=6</span>
+print("{:*>10}{:-&lt;7}".format('Python', '123')) <span class="good">→ ****Python123----</span>
+print("{:^3}+{:^3}={:^3}".format(a, b, a+b))   <span class="good">→ 2 + 3 = 5</span>
+print("{}/{}等于{:e}, 约等于{:.2f}".format(a, b, a/b, a/b))
+<span class="good">→ 2/3等于6.666667e-01, 约等于0.67</span></pre>
+    <p class="muted">倒数十个宽度：「Python」占 6 格，左边补 4 个星号凑满 10（<code>&gt;</code> 靠右）；「123」占 3 格，右边补 4 个杠（<code>&lt;</code> 靠左）。</p>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>对齐三兄弟：&gt; ＜ ^</h2>
+    <p>同一个「Py」，三种对齐方式，宽度都是 10（或 7）：</p>
+    <div class="switch">
+      <button class="on" data-pane="a1">&gt; 右对齐补星</button>
+      <button data-pane="a2">&lt; 左对齐补杠</button>
+      <button data-pane="a3">^ 居中</button>
+    </div>
+    <div class="pane on" id="a1">
+      <pre class="codeblock">print("{:*>10}".format('Py'))</pre>
+      <div class="align-out">********Py</div>
+      <p class="muted" style="margin-top:8px">Py 占 2 格，离 10 差 8 格——<b>&gt; 表示靠右站</b>，8 个星号全补在左边。常用于数字对齐（个位对个位）。</p>
+    </div>
+    <div class="pane" id="a2">
+      <pre class="codeblock">print("{:-<7}".format('123'))</pre>
+      <div class="align-out">123----</div>
+      <p class="muted" style="margin-top:8px">123 占 3 格，离 7 差 4 格——<b>&lt; 表示靠左站</b>，4 个杠补在右边。注意填充符写在 &lt; 前面。</p>
+    </div>
+    <div class="pane" id="a3">
+      <pre class="codeblock">print("{:^3}+{:^3}={:^3}".format(2, 3, 5))</pre>
+      <div class="align-out"> 2 + 3 = 5 </div>
+      <p class="muted" style="margin-top:8px"><b>^ 表示居中</b>：宽度 3 里放 1 个字符，两边各空 1 格——「竖式加法」的排版效果就这么来的。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="0"
+         data-ok="✅ 答对了！Py 占 2 格，宽度 10 差 8 格，&gt; 靠右站，8 个星号全补在左边：********Py。"
+         data-no="❌ 拆开看 {:*>10}：* 是填充符、&gt; 是右对齐、10 是总宽度。Py 只有 2 格，差的 8 格补在左边——还是右边？想想「靠右站」的意思。">
+      <p style="font-weight:700;margin-bottom:12px"><code>"{:*&gt;10}".format('Py')</code> 的输出是？</p>
+      <button class="opt" onclick="quizPick(this)">A. ********Py</button>
+      <button class="opt" onclick="quizPick(this)">B. Py********</button>
+      <button class="opt" onclick="quizPick(this)">C. **Py******</button>
+      <button class="opt" onclick="quizPick(this)">D. 报错 IndexError</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer=":.2f|.2f" data-ok="✅ 正确！{:.2f} 表示保留两位小数，比如 2/3 会显示成 0.67。" data-no="❌ 冒号后面的格式控制符：f 代表小数（浮点数），前面的数字是保留位数。组合起来怎么写？">
+      <p>想让 2/3 显示成 <code>0.67</code>（<b>保留两位小数</b>），格式控制符号应写成 <code>____</code>。（从冒号开始写完整）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：:>10">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">空格是隐形炸弹，参数个数要对上</div>
+      <p><b>坑一：控制符号之间不要有空格。</b><code>{:.2f}</code> 写成 <code>{: .2f}</code> 会报 <code>ValueError: Invalid format specifier</code>；<code>{: &gt;10}</code> 里的空格本身是合法的<b>填充符</b>（用空格补齐宽度），不会报错但看不出效果、容易误解——对齐方式建议写全，如 <code>{:&gt;10}</code> 表示右对齐补空格。</p>
+      <p><b>坑二：参数个数与 {} 数量不匹配会报 IndexError。</b><code>{}</code> 会自动按位置编号，数量多于参数个数时报 <code>IndexError: Replacement index 2 out of range at position 0</code>；反过来参数给多了<b>不会报错</b>，多余的参数被忽略。按位置写法可以复用参数，但编号不能越界。</p>
+      <p><b>坑三：{:.2f} 只对数值有意义。</b>对字符串写 <code>"{:.2f}".format('abc')</code> 会报 <code>ValueError</code>——字符串没有「小数点后两位」的概念，别张冠李戴。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的 format() 格式化输出，掌握了三种占位方式（按顺序 {}、按位置 {2}、按名字 {C1}）和格式控制符号（&gt; 右对齐、&lt; 左对齐、^ 居中、:e 科学计数法、:.2f 两位小数）。请：1）逐个拆解 {:*>10} 和 {:-<7} 的每个字符含义；2）出 5 道「写出输出结果」的题考我（含对齐补位和保留小数），等我作答后公布答案和讲解。">
+      我刚学了 Python 的 format() 格式化输出，掌握了三种占位方式（按顺序 {}、按位置 {2}、按名字 {C1}）和格式控制符号（&gt; 右对齐、&lt; 左对齐、^ 居中、:e 科学计数法、:.2f 两位小数）。请：1）逐个拆解 {:*>10} 和 {:-<7} 的每个字符含义；2）出 5 道「写出输出结果」的题考我（含对齐补位和保留小数），等我作答后公布答案和讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：动手排版一张「成绩单」（5 分钟）</span>
+    <ol class="steps">
+      <li>交互模式输入 <code>name = '李雷'</code>，<code>score = 92.5</code>。</li>
+      <li>用 format 输出「姓名 + 成绩」，宽度 10 右对齐：<code>print("{:&gt;10}:{:&gt;10}".format(name, score))</code>，观察中文和数字怎么站位。</li>
+      <li>把右对齐换成左对齐 <code>&lt;</code> 和居中 <code>^</code>，对比三种效果。</li>
+      <li>试试用 0 填充：<code>print("{:0&gt;5}".format(42))</code>——成绩不足 5 位时前面补零，输出 <code>00042</code>。</li>
+      <li>挑战：用 <code>{:.2f}</code> 输出 <code>10/3</code>，只保留两位小数。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>format 用大括号占位：<b>按顺序 <code>{}</code>、按位置 <code>{2}</code>、按名字 <code>{C1}</code></b> 三种入座方式；冒号后是格式控制——<code>&gt;</code>/<code>&lt;</code>/<code>^</code> 对齐、填充符写在前面、<code>:e</code> 科学计数法、<code>:.2f</code> 两位小数；<b>控制符间不加空格、参数个数要对上、:.2f 只给数值用</b>。下一节：它的现代替代者——f-string，写起来更爽！</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="3.10.html"><span class="nav-label">← 上一节</span><span class="nav-title">3.10 判断字符串类别</span></a>
+        <a class="next" href="3.12.html"><span class="nav-label">下一节 →</span><span class="nav-title">3.12 f-string 格式化输出</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

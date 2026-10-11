@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.09 与 AI 高效协作的三技巧 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第一章 导论与 Python 环境 · 第 9 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+/* —— 本页专属：提示词改装车间 —— */
+.pw-box{border:1px solid var(--border);border-radius:12px;padding:16px;background:#fbfcfe;margin-bottom:12px}
+.pw-box .pw-label{font-size:12px;font-weight:700;display:inline-block;border-radius:999px;padding:2px 12px;margin-bottom:8px}
+.pw-box.vague{border-color:#f0cfcf;background:#fdf7f7}
+.pw-box.vague .pw-label{background:var(--err-soft);color:var(--err)}
+.pw-box.precise{border-color:#c8ecdb;background:#f7fcfa}
+.pw-box.precise .pw-label{background:var(--ok-soft);color:var(--ok)}
+.pw-box .pw-text{font-family:Consolas,Menlo,monospace;font-size:13.5px;background:var(--code-bg);
+     border-radius:8px;padding:8px 12px;margin-bottom:8px}
+.pw-box .pw-why{font-size:13.5px;color:var(--ink2)}
+.pw-parts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.pw-parts span{font-size:12px;font-weight:700;border-radius:999px;padding:3px 12px;
+     background:var(--accent-soft);color:var(--accent)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch01.html">第一章 导论与 Python 环境</a><span class="sep">/</span>
+          <span class="current">1.09</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">09</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第一章 · 导论与 Python 环境</span>
+            <h1>与 AI 高效协作的三技巧</h1>
+            <p class="hero-summary">第 9 / 18 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>计算机系统架构</li>
+      <li>操作系统及其分类</li>
+      <li>编程语言：人机沟通的桥梁</li>
+      <li>编程语言的三个层次</li>
+      <li>编译型 vs 解释型语言</li>
+      <li>TIOBE 排行与语言流行趋势</li>
+      <li>五大语言的诞生与用途</li>
+      <li>AI 时代的编程学习理念</li>
+      <li class="cur">与 AI 高效协作的三技巧</li>
+      <li>学习路径的三阶段</li>
+      <li>Python 的诞生与发展</li>
+      <li>PEP 与 PEP 8</li>
+      <li>The Zen of Python</li>
+      <li>Python 2 vs Python 3</li>
+      <li>Python 的六大特点</li>
+      <li>Python 的应用领域</li>
+      <li>Python 环境搭建</li>
+      <li>Anaconda 与 AI IDE</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>理念要落地：三个今天就能用的技巧</h2>
+    <p>上一节我们说“要当好会派活的老板”，这一节就教你<b>怎么派活</b>。同样是问 AI，有人一句话拿到能跑的代码，有人聊十轮还在原地打转——差距就在方法上。掌握这三个技巧，你的 AI 协作效率立刻翻倍：</p>
+    <ul class="points">
+      <li><b>精准的提示词工程</b>——让 AI 一听就懂，少走弯路；</li>
+      <li><b>批判性的代码审查</b>——AI 的代码不照单全收，你是最后一道关卡；</li>
+      <li><b>高效的智能调试</b>——报错不再自己干瞪眼，把现场交给 AI。</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">提示词工程，就像点菜</div>
+      <p>对厨师说“来点好吃的”——他真没法做：什么菜？什么口味？忌口吗？<b>“微辣、少油、番茄牛肉面、不要香菜”</b>，才能吃到你想要的。问 AI 也一样：“帮我做个网站”就是“来点好吃的”；把功能、技术、要求一样样说清，AI 才能端出合口的菜。<b>菜单越具体，菜越好吃；提示词越精准，代码越能跑。</b></p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>三张技巧卡，一张一张点开</h2>
+    <div class="grid g3">
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent)"></span>技巧一：精准的提示词工程</h4>
+        <div class="desc">说清楚需求，别让 AI 猜谜。</div>
+        <div class="more">
+          <p><b>清晰具体描述需求。</b>好提示词应包含四要素：</p>
+          <p>① <b>目标功能</b>——做什么；② <b>使用的技术栈</b>——用什么语言/框架；③ <b>输入输出示例</b>——给什么样、出什么样；④ <b>约束条件</b>——性能、风格等要求。</p>
+          <p>避免模糊指令如“帮我做个网站”，应改为“用 Python 的 Flask 框架写一个待办事项 API，包含增删改查功能，数据存储使用 SQLite 数据库”。</p>
+          <div class="hint">👆 点击展开完整阐述</div>
+        </div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--warn)"></span>技巧二：批判性的代码审查</h4>
+        <div class="desc">AI 的代码是初稿，你是资深工程师。</div>
+        <div class="more">
+          <p><b>不要直接复制粘贴</b> AI 生成的代码。养成审查习惯，逐项检查：</p>
+          <p><b>逻辑正确性</b>（结果对不对）、<b>效率</b>（跑得快不快）、<b>可读性</b>（看得懂吗）、<b>安全性</b>（有没有漏洞）。</p>
+          <p>把 AI 代码视为<b>初稿</b>，你扮演<b>资深工程师</b>的角色进行优化和重构——审查的过程，正是你学习最深的过程。</p>
+          <div class="hint">👆 点击展开完整阐述</div>
+        </div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--ok)"></span>技巧三：高效的智能调试</h4>
+        <div class="desc">报错了？把“案发现场”完整交给 AI。</div>
+        <div class="more">
+          <p>代码报错时，将<b>完整错误信息和相关代码片段</b>提供给 AI，帮助快速定位问题并给出解决方案，<b>节省反复搜索答案的时间</b>。</p>
+          <p>注意是“完整”错误信息：最后一行 Traceback、出错行号、报错类型，一个都别省——信息越全，AI 诊断越准。</p>
+          <div class="hint">👆 点击展开完整阐述</div>
+        </div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🛠️ 互动：提示词改装车间</span>
+    <h2>同一句话，改装前后大不同</h2>
+    <p>点下面的切换按钮，看一句模糊指令如何被“改装”成精准提示词：</p>
+    <div>
+      <div class="switch">
+        <button class="on" data-pane="pane-vague">🔀 原始模糊版</button>
+        <button data-pane="pane-precise">✨ 改装精准版</button>
+      </div>
+      <div class="pane on" id="pane-vague">
+        <div class="pw-box vague">
+          <span class="pw-label">模糊版 · 厨师接不了单</span>
+          <div class="pw-text">帮我做个网站。</div>
+          <div class="pw-why">四要素全缺：做什么网站？用什么语言框架？页面长什么样、数据怎么存？性能风格有什么要求？AI 只能给你一个万能模板，看了等于没看。</div>
+        </div>
+      </div>
+      <div class="pane" id="pane-precise">
+        <div class="pw-box precise">
+          <span class="pw-label">精准版 · 四要素齐活</span>
+          <div class="pw-text">用 Python 的 Flask 框架写一个待办事项 API，包含增删改查功能，数据存储使用 SQLite 数据库。</div>
+          <div class="pw-why">技术栈（Python + Flask + SQLite）、目标功能（待办事项 API、增删改查）全部明确，AI 可以直接产出可运行的代码框架。</div>
+          <div class="pw-parts">
+            <span>① 目标功能：待办事项 API、增删改查</span>
+            <span>② 技术栈：Python · Flask · SQLite</span>
+            <span>③ 约束：数据落库</span>
+          </div>
+          <p class="pw-why" style="margin-top:8px">进阶：还可以继续补上 ④ 输入输出示例（如请求 <code>POST /todos</code> 返回什么 JSON）和 ⑤ 更多约束（性能、代码风格），提示词就越写越专业。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="3"
+         data-ok="✅ 答对了！好提示词四要素：目标功能、使用的技术栈、输入输出示例、约束条件（性能、风格）——要素越全，AI 的产出越能直接用。"
+         data-no="❌ 不对哦。「简短」「神秘感」都不是好提示词的标志；故意留错让 AI 改更是浪费轮次。好提示词要一次说清：目标功能、技术栈、输入输出示例、约束条件。">
+      <p style="font-weight:700;margin-bottom:12px">按照「提示词工程」的要求，一个好的提示词应该包含哪些要素？</p>
+      <button class="opt" onclick="quizPick(this)">A. 尽量简短，最好不超过十个字</button>
+      <button class="opt" onclick="quizPick(this)">B. 留一点神秘感，考验 AI 的推理能力</button>
+      <button class="opt" onclick="quizPick(this)">C. 故意写错几处，让 AI 帮忙找错</button>
+      <button class="opt" onclick="quizPick(this)">D. 目标功能、技术栈、输入输出示例、约束条件</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="初稿" data-ok="✅ 正确！AI 代码只是初稿，你要以“资深工程师”的视角审查逻辑、效率、可读性和安全性，再做优化重构。" data-no="❌ 再想想：技巧二说，不要直接复制粘贴 AI 生成的代码，把它当成什么？两个字，写论文也常说的那个词。">
+      <p>AI 生成的代码应视为<b>＿＿</b>，需要你以「资深工程师」的视角进行审查（逻辑、效率、可读性、安全性）和重构。请在框里填写这两个字：</p>
+      <div class="fill-row">
+        <input class="blank" id="blank1" placeholder="填两个字，如：××">
+        <button class="btn btn-main" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车现场</div>
+      <p><b>翻车一：报错只截一半。</b>只把报错的最后一行丢给 AI，缺了 Traceback 上下文和代码片段，AI 只能瞎猜。要给就给<b>完整的错误信息 + 相关代码</b>。</p>
+      <p><b>翻车二：复制粘贴直接交。</b>AI 偶尔会生成“看起来对、跑起来错”的代码（尤其是引用了过时的库用法）。不审查就上交，错误全是你的。</p>
+      <p><b>翻车三：模糊指令反复试。</b>“不对，再改改”“还是不行”……与其第 10 轮还泛泛地催，不如回到技巧一，把四要素补齐重写提示词，一轮顶十轮。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了「与 AI 高效协作的三技巧」：精准的提示词工程、批判性的代码审查、高效的智能调试。请：1）把模糊指令「帮我写个爬虫」改写成包含目标功能、技术栈、输入输出示例和约束条件的精准提示词；2）给我一段藏了 3 个小问题的 Python 代码，让我练习批判性审查，我提交审查意见后你再逐条点评；3）出 2 道单选题考我，等我作答后再公布答案和讲解。">
+      我刚学了「与 AI 高效协作的三技巧」：精准的提示词工程、批判性的代码审查、高效的智能调试。请：1）把模糊指令「帮我写个爬虫」改写成包含目标功能、技术栈、输入输出示例和约束条件的精准提示词；2）给我一段藏了 3 个小问题的 Python 代码，让我练习批判性审查，我提交审查意见后你再逐条点评；3）出 2 道单选题考我，等我作答后再公布答案和讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：发一次“精准版提示词”（6 分钟）</span>
+    <ol class="steps">
+      <li>打开任一 AI 助手，先发一句模糊指令“帮我做个待办事项 API”，看看它返回什么。</li>
+      <li>再发精准版：<code>用 Python 的 Flask 框架写一个待办事项 API，包含增删改查功能，数据存储使用 SQLite 数据库</code>。</li>
+      <li>对比两次结果：第二次是不是<b>直接给出了技术选型、代码结构和建库方案</b>？</li>
+      <li>趁热打铁练技巧二：检查 AI 给的代码——路由是否齐全？增删改查逻辑有没有漏洞？挑出一处你觉得可以改进的地方，追问 AI“为什么这样写”。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>与 AI 高效协作三技巧：<b>① 精准的提示词工程</b>——好提示词包含目标功能、技术栈、输入输出示例、约束条件，拒绝“帮我做个网站”式模糊指令；<b>② 批判性的代码审查</b>——AI 代码是初稿，你以资深工程师视角检查逻辑、效率、可读性与安全性；<b>③ 高效的智能调试</b>——报错时把完整错误信息和相关代码交给 AI，快速定位问题。下一节，我们把三年的学习路线画成一张地图。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="1.08.html"><span class="nav-label">← 上一节</span><span class="nav-title">1.08 AI 时代的编程学习理念</span></a>
+        <a class="next" href="1.10.html"><span class="nav-label">下一节 →</span><span class="nav-title">1.10 学习路径的三阶段</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

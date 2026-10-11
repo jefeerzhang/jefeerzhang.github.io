@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8.12 综合案例：商品库存管理 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第八章 面向对象编程 · 第 12 / 12 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.cplay{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.crow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.cshop{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.ccard{border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;background:#fff}
+.ccard .nm{font-weight:800;font-size:15px;color:var(--ink)}
+.ccard .info{font-size:13px;color:var(--ink2);margin-top:4px;line-height:1.7}
+.ccard .info b{color:var(--accent)}
+.clog{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14px;min-height:130px;white-space:pre-wrap;line-height:1.8}
+.clog .warn{color:var(--err);font-weight:700}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch08.html">第八章 面向对象编程</a><span class="sep">/</span>
+          <span class="current">8.12</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">12</span>
+            <span class="lesson-hero-num-total">/ 12</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第八章 · 面向对象编程</span>
+            <h1>综合案例：商品库存管理</h1>
+            <p class="hero-summary">第 12 / 12 节 · 约 12 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 12 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>编程的两种范式</li>
+      <li>面向对象的三大特性</li>
+      <li>四个核心概念：类·对象·属性·方法</li>
+      <li>创建类：class·__init__·self</li>
+      <li>创建对象与访问成员</li>
+      <li>实例属性与类属性</li>
+      <li>三种方法：实例·类·静态</li>
+      <li>封装与私有属性</li>
+      <li>继承与 super()</li>
+      <li>多重继承</li>
+      <li>多态与方法重写</li>
+      <li class="cur">综合案例：商品库存管理</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>把本章学的一切，装进一个能跑的「小商店」</h2>
+    <p>前面十一节你已经集齐了面向对象的全部零件：类与对象、实例属性与类属性、三种方法、私有属性、继承与重写。现在到了「合体」时刻——这个<b>商品库存管理</b>案例把所有知识点用在同一个类里：公开名字、私有价格和库存、私有方法算折后价、实例方法卖货、类方法全场打折。看懂它，这一章就真正通了。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">Product 类像一家「连锁便利店」的运营手册</div>
+      <p>每个商品对象是一家分店：店名（name）挂在大门口人人可见——<b>公开属性</b>；现金和库存锁在后仓——<b>私有属性</b>；后仓的内部核价流程员工才懂——<b>私有方法</b>；收银台对顾客开放——<b>公开方法</b>；而「全场八折」是总部一条通知，所有分店同步生效——<b>类属性 + 类方法</b>。一家手册，千店运转，这正是封装与复用的味道。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>Product 类的设计思路</h2>
+    <ul class="points">
+      <li><b>类属性</b>：<code>discount = 1.0</code>——全场折扣，所有商品共享一个值，改一处全体生效</li>
+      <li><b>实例属性</b>：<code>self.name</code> 公开；<code>self.__price</code>、<code>self.__stock</code> 私有（双下划线开头），外部不能直接改价格、改库存</li>
+      <li><b>私有方法</b>：<code>__real_price()</code> 计算折后价 <code>self.__price * Product.discount</code>，只在类内部被调用</li>
+      <li><b>实例方法</b>：<code>sell(qty)</code> 卖货——库存够则扣库存、按折后价收款；不够则提示「库存不足！」</li>
+      <li><b>类方法</b>：<code>set_discount(d)</code> 用 <code>@classmethod</code> 修改类属性，实现「全场调价」</li>
+    </ul>
+
+    <div class="cplay">
+      <p style="font-weight:700;margin-bottom:10px">🔬 商店收银台实验台：点按钮执行 PPT 测试流程</p>
+      <div class="crow">
+        <button class="btn-main btn" onclick="cDo('sell1')">phone.sell(2)</button>
+        <button class="btn-main btn" onclick="cDo('sell2')">book.sell(1)</button>
+        <button class="btn-ghost btn" onclick="cDo('disc')">Product.set_discount(0.8)</button>
+        <button class="btn-main btn" onclick="cDo('sell3')">phone.sell(3)</button>
+        <button class="btn-ghost btn" onclick="cDo('sell4')">book.sell(200)</button>
+        <button class="btn-ghost btn" onclick="cDo('reset')">重置</button>
+      </div>
+      <div class="cshop" id="cshop"></div>
+      <div class="clog" id="clog">点按钮模拟收银～重置可回到初始状态（手机 2999 元 ×10，Python教材 59 元 ×200，无折扣）。</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>完整类定义（对照实验台逐行看）</h2>
+    <pre class="codeblock">class Product:
+    discount = 1.0                      # 类属性：全场折扣
+
+    def __init__(self, name, price, stock):   # 初始化方法
+        self.name = name                # 实例属性：公开
+        self.__price = price            # 私有属性
+        self.__stock = stock            # 私有属性
+
+    def __real_price(self):             # 私有方法：折后价
+        return self.__price * Product.discount
+
+    def sell(self, qty):                # 实例方法：卖货
+        if qty &lt;= self.__stock:
+            self.__stock -= qty
+            total = qty * self.__real_price()
+            print(f"卖出 {qty} 个{self.name}，收款 {total:.2f} 元")
+        else:
+            print("库存不足！")
+
+    @classmethod
+    def set_discount(cls, d):           # 类方法：全场调价
+        cls.discount = d
+        print(f"全场折扣已调整为 {int(d*10)}折")</pre>
+    <ul class="points">
+      <li>一个类里同时出现了：类属性、实例属性（含私有）、私有方法、实例方法、类方法——对照每行注释确认你都能认出来</li>
+      <li><code>__real_price</code> 只被 <code>sell</code> 内部调用——这就是「隐藏细节、暴露接口」</li>
+      <li><code>cls.discount = d</code> 改的是类属性，两个商品对象立即同步生效</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>测试运行与输出</h2>
+    <pre class="codeblock"># 创建商品
+phone = Product('手机', 2999, 10)
+book  = Product('Python教材', 59, 200)
+
+# 原价销售
+phone.sell(2)
+book.sell(1)
+
+# 开启八折活动
+Product.set_discount(0.8)
+phone.sell(3)
+
+# 超量购买
+book.sell(200)</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">卖出 2 个手机，收款 5998.00 元
+卖出 1 个Python教材，收款 59.00 元
+全场折扣已调整为 8折
+卖出 3 个手机，收款 7197.60 元
+库存不足！</pre>
+    <ul class="points">
+      <li>2999 × 2 = 5998.00（无折扣）；2999 × 0.8 × 3 = 7197.60（八折）——<code>:.2f</code> 保留两位小数</li>
+      <li><code>book.sell(200)</code>：库存 200 但前面卖掉 1 个只剩 199，200 &gt; 199 → 库存不足</li>
+      <li>整个过程外部代码从未直接碰过 <code>__price</code> 和 <code>__stock</code>——封装在悄悄保护数据</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！discount 是类属性，set_discount 用类方法修改它，所有 Product 对象共享同一个值——两部手机、教材全部同步打折。"
+         data-no="❌ discount 定义在类中方法外（类属性），set_discount 是类方法——修改后所有对象共享生效，这正是类属性「一处修改、全体生效」的特性。">
+      <p style="font-weight:700;margin-bottom:12px">执行 <code>Product.set_discount(0.8)</code> 后，为什么手机和 Python教材 的售价<b>同时</b>变成八折？</p>
+      <button class="opt" onclick="quizPick(this)">A. 因为 set_discount 是实例方法，逐个对象修改</button>
+      <button class="opt" onclick="quizPick(this)">B. 因为两个对象之间自动同步了私有属性</button>
+      <button class="opt" onclick="quizPick(this)">C. 因为 discount 是类属性，所有对象共享同一个值</button>
+      <button class="opt" onclick="quizPick(this)">D. 因为 Python 自动遍历了所有已创建的对象</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="类实例私有|类 实例 私有" data-ok="✅ 全对！类属性全体共享、实例属性各自独立、双下划线开头的是私有属性——三大概念各就各位。" data-no="❌ 提示：三空分别对应——全体对象共享的是＿＿属性；每个对象独立拥有的是＿＿属性；双下划线开头、外部无法直接访问的是＿＿属性。">
+      <p>Product 类中：discount 由所有对象共享，它是<b>＿＿</b>属性；name 每个商品各自一份，它是<b>＿＿</b>属性；__price 双下划线开头外部无法直接访问，它是<b>＿＿</b>属性。（三空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：类 实例 私有">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>私有属性直接访问会报错</b>：<code>phone.__price</code> 抛 AttributeError——价格只能通过 sell 等公开方法间接影响；</p>
+      <p>②<b>类方法里写 self 会 NameError</b>：<code>@classmethod</code> 的第一个参数是 <code>cls</code>，操作类属性要用 <code>cls.discount</code>；</p>
+      <p>③<b>忘记库存会变</b>：sell 会扣减 __stock，同一批对象多卖几次后「库存不足」可能提前出现——实验台里点重置再试一遍就能对上 PPT 的输出。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学完 Python 面向对象编程，读了一个商品库存管理综合案例（类属性 discount、私有属性 __price/__stock、私有方法 __real_price、实例方法 sell、类方法 set_discount）。请：1）逐段点评这个类的设计好在哪；2）出 5 道针对这段代码的读代码题考我（含私有属性访问报错、类方法调用方式）；3）给我一个类似难度的小项目（如图书借阅管理）让我自己写，写完帮我 review。">
+      我刚学完 Python 面向对象编程，读了一个商品库存管理综合案例（类属性 discount、私有属性 __price/__stock、私有方法 __real_price、实例方法 sell、类方法 set_discount）。请：1）逐段点评这个类的设计好在哪；2）出 5 道针对这段代码的读代码题考我（含私有属性访问报错、类方法调用方式）；3）给我一个类似难度的小项目（如图书借阅管理）让我自己写，写完帮我 review。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：扩展这个小商店（10 分钟）</span>
+    <ol class="steps">
+      <li>给 Product 增加一个 <code>restock(qty)</code> 公开方法：补货必须为正数，否则打印提示——用 if 守住入口，体会「接口校验」。</li>
+      <li>试着在类外直接执行 <code>phone.__price = 1</code>，再卖出一次看看收款有没有变——理解为什么说私有属性「保护」了数据。</li>
+      <li>新建一个 <code>Food(Product)</code> 子类，重写 <code>sell</code>：卖食品前先检查保质期（可以简化为随机 True/False）——练继承与方法重写。</li>
+      <li>挑战：把第六章的 Student 类升级——成绩 score 改为私有属性，增加 set_score 方法校验 0~100 分。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">本章回顾——你现在知道了</div>
+      <p>类是图纸、对象是实例：class + __init__ + self 三件套创建类；实例属性各自独立、类属性全体共享；实例方法操作实例属性、类方法（@classmethod + cls）操作类属性、静态方法通常两者都不碰（需要时可显式访问类名）；三大特性——封装（__私有隐藏细节）、继承（super() 复用 + 多重继承）、多态（方法重写各显神通）。这个商品库存案例把它们全部串了起来。<b>面向对象是扩展知识，不安排作业</b>——把「试一试」当练手即可。全课程七章正课 + 本章扩展到此完结，恭喜！</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="8.11.html"><span class="nav-label">← 上一节</span><span class="nav-title">8.11 多态与方法重写</span></a>
+        <a class="next" href="ch08.html"><span class="nav-label">下一节 →</span><span class="nav-title">第八章 课程目录</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：商店收银台实验台（模拟 Product 类行为） */
+let shop, disc, logs;
+function cReset(){
+  shop = { phone: {name:'手机', price:2999, stock:10}, book: {name:'Python教材', price:59, stock:200} };
+  disc = 1.0;
+  logs = ['# 创建 phone = Product(\'手机\', 2999, 10) / book = Product(\'Python教材\', 59, 200)'];
+  cRender();
+}
+function cShop(){
+  const el = document.getElementById('cshop');
+  el.innerHTML = '';
+  for (const k in shop){
+    const p = shop[k];
+    const d = document.createElement('div');
+    d.className = 'ccard';
+    d.innerHTML = '<div class="nm">📦 ' + p.name + '</div><div class="info">原价 <b>' + p.price + '</b> 元 · 折后价 <b>' + (p.price * disc).toFixed(2) + '</b> 元 · 库存 <b>' + p.stock + '</b></div>';
+    el.appendChild(d);
+  }
+}
+function cRender(){
+  cShop();
+  document.getElementById('clog').textContent = logs.join('\n');
+}
+function sell(key, qty){
+  const p = shop[key];
+  if (qty <= p.stock){
+    p.stock -= qty;
+    const total = qty * p.price * disc;
+    logs.push("卖出 " + qty + " 个" + p.name + "，收款 " + total.toFixed(2) + " 元");
+  } else {
+    logs.push('库存不足！');
+  }
+  cRender();
+}
+function cDo(op){
+  if (op === 'reset'){ cReset(); return; }
+  if (op === 'sell1') sell('phone', 2);
+  if (op === 'sell2') sell('book', 1);
+  if (op === 'sell3') sell('phone', 3);
+  if (op === 'sell4') sell('book', 200);
+  if (op === 'disc'){
+    disc = 0.8;
+    logs.push('全场折扣已调整为 8折');
+    cRender();
+  }
+}
+window.addEventListener('DOMContentLoaded', cReset);
+</script>
+</body>
+</html>

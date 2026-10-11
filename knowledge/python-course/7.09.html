@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7.09 文件指针：tell 与 seek · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第七章 文件及目录操作 · 第 9 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.fplay{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.frow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.fbar{display:flex;flex-wrap:wrap;gap:3px;padding:14px 10px 26px;background:var(--code-bg);
+  border:1px solid var(--border);border-radius:10px;position:relative}
+.fcell{display:inline-block;min-width:24px;padding:6px 2px;text-align:center;background:#fff;
+  border:1px solid var(--border);border-radius:6px;font-size:13px}
+.fcell.nl{color:#94a3b8;font-size:11px}
+.fcell.done{opacity:.35}
+.fcell.at{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:800}
+.fptr{position:absolute;top:0;height:100%;left:0;width:0;pointer-events:none;transition:left .25s}
+.fout{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14.5px;min-height:110px;white-space:pre-wrap;line-height:1.8}
+.fout .hl{color:var(--accent);font-weight:800}
+.fnote{font-size:13px;color:var(--ink2);margin-top:10px;line-height:1.7}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch07.html">第七章 文件及目录操作</a><span class="sep">/</span>
+          <span class="current">7.09</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">09</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第七章 · 文件及目录操作</span>
+            <h1>文件指针：tell 与 seek</h1>
+            <p class="hero-summary">第 9 / 18 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>文件与目录的基本概念</li>
+      <li>文件类型：文本与二进制</li>
+      <li>绝对路径与相对路径</li>
+      <li>文件操作三步曲</li>
+      <li>打开文件与打开模式</li>
+      <li>关闭文件与 with 语句</li>
+      <li>写文件：write 与 writelines</li>
+      <li>读文件三方法</li>
+      <li class="cur">文件指针：tell 与 seek</li>
+      <li>目录路径两大模块</li>
+      <li>工作目录</li>
+      <li>新建目录</li>
+      <li>展示目录内容</li>
+      <li>重命名与移动</li>
+      <li>删除文件和目录</li>
+      <li>判断路径</li>
+      <li>获取文件信息</li>
+      <li>路径的合并与分解</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>read() 读完一次再读，为什么什么都读不到？</h2>
+    <p>上一节连续调用两次 <code>readline()</code>，第一次读第一行、第二次读第二行——文件又没动，Python 怎么知道「上次读到哪」？答案是：<b>文件指针</b>。它是文件对象里记录「当前读写位置」的隐形游标，<b>直接决定下一次读写的起点</b>。看懂指针，你才能真正随心所欲地控制「读哪一段」，作业第 2 题逐行读成绩也离不开它。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">文件指针像「书签」：tell 看书签在第几页，seek 把书签夹到第 N 页</div>
+      <p>读文件就像翻一本书：<code>read()</code> 是「从书签处往后读」，读完书签自动后移；<code>file.tell()</code> 是「看一眼书签夹在第几页」；<code>file.seek(n)</code> 是「把书签直接移到第 n 个位置」——下一回 <code>read()</code> 就从那里开始。书签不动，每次读到的都是同一段；书签夹错了地方，读出来的内容就「跳戏」了。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>两个指针方法</h2>
+    <ul class="points">
+      <li><b>file.tell()</b>：查看当前指针位置，返回一个<b>非负整数</b>（开头是 0）</li>
+      <li><b>file.seek(offset, whence)</b>：移动文件指针。<b>offset</b> 是偏移量，<b>whence</b> 是参考位置——0 表示文件开头、1 表示当前位置、2 表示文件结尾，<b>默认为 0</b>（从文件开头数 offset 个单位）</li>
+      <li>读操作会把指针<b>自动向后移</b>到刚读内容的末尾——这就是「连续 readline 自动读下一行」的原因</li>
+      <li>文本模式下，tell/seek 返回的数值<b>与文件编码有关</b>（中文一个字符可能占多个字节），不必死记具体数字，重点是「指针在动」这件事</li>
+    </ul>
+
+    <div class="fplay">
+      <p style="font-weight:700;margin-bottom:10px">🔬 指针实验台：对着《悯农》操作，看指针（👆）怎么动</p>
+      <div class="frow">
+        <button class="btn-main btn" onclick="fDo('readline')">file.readline()</button>
+        <button class="btn-main btn" onclick="fDo('read3')">file.read(3)</button>
+        <button class="btn-ghost btn" onclick="fDo('tell')">file.tell()</button>
+        <button class="btn-ghost btn" onclick="fDo('seek0')">file.seek(0)</button>
+        <button class="btn-ghost btn" onclick="fDo('seek14')">file.seek(14)</button>
+        <button class="btn-ghost btn" onclick="fDo('reset')">重置</button>
+      </div>
+      <div class="fbar" id="fbar"></div>
+      <div class="fout" id="fout">指针停在文件开头（位置 0）。点上面的按钮试试～</div>
+      <p class="fnote">📌 本实验台用「1 个字符占 1 个位置」的<b>简化模型</b>，方便看清指针怎么走（每行 6 字符 + 1 个换行符 = 7 个位置，全诗 4 行共 28 个位置，所以第三句开头在位置 14）。下面的真实代码里单位是<b>字节</b>：UTF-8 编码下每个汉字和全角标点各占 3 字节，一行「锄禾日当午，」加换行符正好 19 字节，所以 tell() 得到 19、第三句开头在位置 38。<b>两套数字对不上是正常的，差别只在单位（字符 vs 字节），指针机制完全一样</b>——别背数字，记住「指针在动」。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：readline 之后 seek 跳转</h2>
+    <pre class="codeblock">with open('《悯农》.txt', 'r', encoding='utf-8') as file:
+    file.readline()
+    print(file.tell())
+    file.seek(38)
+    print(file.readline())</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">19
+谁知盘中餐，</pre>
+    <ul class="points">
+      <li>第 2 行 <code>readline()</code> 读走第一行，指针自动移到第一行末尾</li>
+      <li>第 3 行 <code>print(file.tell())</code> 看到指针当前位置（数值与编码有关）</li>
+      <li>第 4 行 <code>file.seek(38)</code> 把指针直接夹到第三句开头——「书签」重定位</li>
+      <li>第 5 行再 <code>readline()</code>，读到的就不是第二行、而是第三行了</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>seek(0) 的经典用法：重读一遍</h2>
+    <pre class="codeblock">with open('《悯农》.txt', 'r', encoding='utf-8') as file:
+    print(file.read(3))    # 读前 3 个字符
+    file.seek(0)           # 书签夹回开头
+    print(file.read(3))    # 又能读「锄禾日」了</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">锄禾日
+锄禾日</pre>
+    <ul class="points">
+      <li>不 seek 的话，指针停在位置 3，第二次 <code>read(3)</code> 只能读到「当午，」——不是从头再读一遍</li>
+      <li><code>seek(0)</code> 是最常用的指针操作：把指针拨回文件开头，重新读一遍</li>
+      <li>读大文件时常用「seek + read(size)」分段处理，不必一次性载入内存</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！readline() 读走「锄禾日当午，」后指针已移到第二行开头，read(3) 自然从第二行接着读「汗滴禾」——书签不会自己跳回去。"
+         data-no="❌ 指针会随读取自动后移：第一次 readline() 读完，指针已停在第二行开头，read(3) 从「汗滴禾」开始。想重读要用 seek(0)。">
+      <p style="font-weight:700;margin-bottom:12px">对刚打开的文件依次执行 <code>file.readline()</code> 和 <code>file.read(3)</code>，第二个方法读到的是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 锄禾日（文件重新开始读）</button>
+      <button class="opt" onclick="quizPick(this)">B. 汗滴禾下土。（读完整行）</button>
+      <button class="opt" onclick="quizPick(this)">C. 汗滴禾（第二行开头 3 个字符）</button>
+      <button class="opt" onclick="quizPick(this)">D. 空字符串（文件已读完）</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="tellseek|tell seek" data-ok="✅ 正确！tell() 查看当前指针位置（从 0 开始），seek(offset, whence) 移动指针，whence 默认 0 表示从文件开头算偏移。" data-no="❌ 两个方法名：看指针位置的、移动指针的。前者返回从 0 开始的正整数，后者可指定偏移量和参考位置。">
+      <p><b>＿＿</b>() 用于查看当前指针位置，返回从 0 开始的正整数；<b>＿＿</b>(offset, whence) 用于移动文件指针，whence=0 表示从文件开头算起。（两空填方法名，用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：tell seek">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>别死记 tell/seek 的数字</b>：文本模式下数值与编码（UTF-8 / GBK）有关，PPT 例子里的 19、38 换成 GBK 保存就会变成别的数字——记住机制，别背数字；</p>
+      <p>②<b>读完一次再读是「接续」不是「重来」</b>：连续 read 只会往下读，想重读必须先 <code>seek(0)</code>；</p>
+      <p>③<b>w 模式一打开指针虽在开头，但文件已被清空</b>：别以为 seek 能救回被覆盖的内容——写模式打开的那一刻，旧内容已经没了。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 文件指针的 tell() 和 seek()。请：1）用「书签」的类比解释指针如何随读取自动后移；2）给一段代码（open 后依次 read(2)、tell()、seek(0)、read(2)），让我 predicting 每步的返回值，再逐行讲解；3）说明为什么文本模式下 tell 的数值和编码有关，以及 seek(0) 的常见用途。">
+      我刚学了 Python 文件指针的 tell() 和 seek()。请：1）用「书签」的类比解释指针如何随读取自动后移；2）给一段代码（open 后依次 read(2)、tell()、seek(0)、read(2)），让我预测每步的返回值，再逐行讲解；3）说明为什么文本模式下 tell 的数值和编码有关，以及 seek(0) 的常见用途。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：直接演练作业第 2 题（5 分钟）</span>
+    <ol class="steps">
+      <li>作业第 2 题要从 scores.txt 读成绩求平均：先想好用 <code>readline()</code> 逐行读、还是 <code>for line in file</code> 遍历——两种方式都依赖指针自动后移。</li>
+      <li>把上一节创建的《悯农》.txt 用 <code>read()</code> 读完一次，再 <code>print(file.read())</code> 看看输出什么（空！），然后 <code>seek(0)</code> 救回来。</li>
+      <li>在实验台里点「seek(14)」再点「readline()」，验证指针跳转后读的是第三句。</li>
+      <li>挑战：不重新打开文件，用 seek(0) + readline() 把同一行读两遍。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>文件指针记录当前读写位置，读操作后指针自动后移；tell() 看位置、seek(offset, whence) 挪位置（默认从文件开头算）；seek(0) 可实现重读；文本模式下的数值与编码有关，记机制不记数字。下一节进入第二部分：用 os 和 pathlib 两大模块管理目录与路径。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="7.08.html"><span class="nav-label">← 上一节</span><span class="nav-title">7.08 读文件三方法</span></a>
+        <a class="next" href="7.10.html"><span class="nav-label">下一节 →</span><span class="nav-title">7.10 目录路径两大模块</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：指针实验台（按「1 字符 = 1 位置」的简化模型，真实 tell/seek 的单位是字节） */
+const LINES = ['锄禾日当午，', '汗滴禾下土。', '谁知盘中餐，', '粒粒皆辛苦。'];
+const TEXT = LINES.map(s => s + '\n');
+const TOTAL = TEXT.join('').length;   // 28（简化模型：1 字符 = 1 位置）
+let fpos = 0;
+function fRender(){
+  const bar = document.getElementById('fbar');
+  bar.innerHTML = '';
+  let idx = 0;
+  TEXT.forEach((line, li) => {
+    for (const ch of line){
+      const d = document.createElement('span');
+      const isNl = ch === '\n';
+      d.className = 'fcell' + (isNl ? ' nl' : '') + (idx < fpos ? ' done' : '') + (idx === fpos ? ' at' : '');
+      d.textContent = isNl ? '⏎' : ch;
+      d.title = '位置 ' + idx;
+      bar.appendChild(d);
+      idx++;
+    }
+    bar.appendChild(document.createElement('br'));
+  });
+  document.getElementById('fout').innerHTML = document.getElementById('fout').innerHTML;
+}
+function fSay(html){
+  document.getElementById('fout').innerHTML = html;
+}
+function fDo(op){
+  if (op === 'reset'){ fpos = 0; fSay('指针回到文件开头（位置 0）。'); fRender(); return; }
+  if (op === 'tell'){ fSay('file.tell()　→　<b class="hl">' + fpos + '</b>（当前指针位置）'); fRender(); return; }
+  if (op === 'seek0'){ fpos = 0; fSay('file.seek(0)　→　指针移回文件开头，下次读从「锄」开始'); fRender(); return; }
+  if (op === 'seek14'){ fpos = 14; fSay('file.seek(14)　→　指针跳到位置 14 = 第三句「谁」开头（2 行 × 7，本实验台的简化模型；真实字节位置见右侧说明）'); fRender(); return; }
+  if (op === 'readline'){
+    if (fpos >= TOTAL){ fSay('file.readline()　→　<b class="hl">""</b>（指针已在文件末尾，读不到内容了——想重读先 seek(0)）'); return; }
+    const startLine = Math.floor(fpos / 7) * 7;
+    const rest = TEXT.slice(startLine / 7).join('');
+    const got = rest.slice(0, 7 - (fpos - startLine));
+    fpos += got.length;
+    fSay('file.readline()　→　<b class="hl">' + JSON.stringify(got) + '</b>（读一行，指针自动后移到 ' + fpos + '）');
+    fRender(); return;
+  }
+  if (op === 'read3'){
+    if (fpos >= TOTAL){ fSay('file.read(3)　→　<b class="hl">""</b>（文件已读完）'); return; }
+    const got = TEXT.join('').slice(fpos, fpos + 3);
+    fpos = Math.min(fpos + 3, TOTAL);
+    fSay('file.read(3)　→　<b class="hl">' + JSON.stringify(got) + '</b>（读 3 个字符，指针移到 ' + fpos + '）');
+    fRender(); return;
+  }
+}
+window.addEventListener('DOMContentLoaded', () => { fRender(); fSay('指针停在文件开头（位置 0）。点上面的按钮试试～'); });
+</script>
+</body>
+</html>

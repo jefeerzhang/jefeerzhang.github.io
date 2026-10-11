@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.15 列表索引与切片 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第三章 字符串与列表 · 第 15 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.cm{color:#8a93a6}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch03.html">第三章 字符串与列表</a><span class="sep">/</span>
+          <span class="current">3.15</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">15</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第三章 · 字符串与列表</span>
+            <h1>列表索引与切片</h1>
+            <p class="hero-summary">第 15 / 21 节 · 约 12 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>字符串基础与三种引号</li>
+      <li>转义字符</li>
+      <li>字符串索引</li>
+      <li>字符串切片</li>
+      <li>实战：身份证号提取信息</li>
+      <li>字符串运算与内置函数</li>
+      <li>大小写转换方法</li>
+      <li>计数、查找与替换</li>
+      <li>分割、联合与剔除</li>
+      <li>判断字符串类别</li>
+      <li>format 格式化输出</li>
+      <li>f-string 格式化输出</li>
+      <li>列表定义与特性</li>
+      <li>列表的创建</li>
+      <li class="cur">列表索引与切片</li>
+      <li>列表增加元素</li>
+      <li>列表删除元素</li>
+      <li>列表修改元素</li>
+      <li>列表运算与函数</li>
+      <li>列表常用方法</li>
+      <li>实战：成绩排序和统计</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>字符串取字符的本领，列表全都有——还更强</h2>
+    <p>列表和字符串一样都属于<b>有序序列</b>，因此也可以通过序号进行<b>索引和切片</b>。不同之处在于：字符串索引对应的是<b>字符</b>，列表索引对应的是<b>列表元素</b>——而列表的元素<b>也可能是列表</b>，因此可以通过<b>多次索引</b>找到「元素的元素」。这一手「套娃访问」是本章的重要考点。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">快递箱里还有小快递箱：先拆外箱，再拆内箱</div>
+      <p>列表套列表，就像<b>快递箱里还装着小快递箱</b>。<code>L4[3]</code> 是拆开外箱——拿到里面的整个小箱子 <code>['A', 'B', 'C']</code>；<code>L4[3][1]</code> 是再拆内箱——从小箱子里拿出第 2 件物品 <code>'B'</code>。想取到最里面的东西，就<b>一层一层往下拆</b>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>索引、切片与套娃访问</h2>
+    <ul class="points">
+      <li>索引和切片的<b>规则与字符串完全一致</b>：左闭右开、可省略、可负数、可加步长</li>
+      <li>区别：字符串索引取到<b>字符</b>，列表索引取到<b>元素</b>（元素可以是任何类型）</li>
+      <li>元素还是列表时，用<b>多次索引</b>层层深入：<code>L4[3][1]</code></li>
+    </ul>
+    <pre class="codeblock">L4 = [1, 2, 3, ['A', 'B', 'C']]
+print(L4[2], L4[-2])          <span class="cm"># 3 3</span>
+print(L4[3][1], L4[-1][-1])   <span class="cm"># B C</span>
+print(L4[:2], L4[2:], L4[3][1:])
+print(L4[::2], L4[::-1], L4[3][::-1])</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">3 3
+B C
+[1, 2] [3, ['A', 'B', 'C']] ['B', 'C']
+[1, 3] [['A', 'B', 'C'], 3, 2, 1] ['C', 'B', 'A']</pre>
+    <ul class="points">
+      <li>第 1 行：正、负索引都指向同一个元素 3</li>
+      <li>第 2 行：<code>L4[3]</code> 拿到内层列表，再 <code>[1]</code> 拿到 'B'——套娃访问；负索引同理，<code>L4[-1]</code> 是最后一个元素（内层列表），<code>L4[-1][-1]</code> 就是 'C'</li>
+      <li>第 3 行：切片规则照旧，<code>L4[3][1:]</code> 是对内层列表切片</li>
+      <li>第 4 行：<code>L4[::-1]</code> 整个列表倒序——内层列表作为「一个元素」被原样搬动</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">🔬 交互示例</span>
+    <h2>套娃拆解：一层一层看清楚</h2>
+    <div>
+      <div class="switch">
+        <button class="on" data-pane="pane-l1">第一层：L4[3]</button>
+        <button data-pane="pane-l2">第二层：L4[3][1]</button>
+        <button data-pane="pane-l3">切片版：L4[3][1:]</button>
+      </div>
+      <div class="pane on" id="pane-l1">
+        <pre class="codeblock">L4 = [1, 2, 3, ['A', 'B', 'C']]
+print(L4[3])</pre>
+        <p>输出结果：</p>
+        <pre class="codeblock out">['A', 'B', 'C']</pre>
+        <p>拆开外箱——索引 3 取出的是<b>整个内层列表</b>，还不是一个字符。</p>
+      </div>
+      <div class="pane" id="pane-l2">
+        <pre class="codeblock">L4 = [1, 2, 3, ['A', 'B', 'C']]
+print(L4[3][1])</pre>
+        <p>输出结果：</p>
+        <pre class="codeblock out">B</pre>
+        <p>先拆外箱再拆内箱——第二次索引 <code>[1]</code> 从内层列表里取出单个元素 'B'。</p>
+      </div>
+      <div class="pane" id="pane-l3">
+        <pre class="codeblock">L4 = [1, 2, 3, ['A', 'B', 'C']]
+print(L4[3][1:])</pre>
+        <p>输出结果：</p>
+        <pre class="codeblock out">['B', 'C']</pre>
+        <p>对内层列表切片——从索引 1 取到末尾，左闭右开的规矩原样适用。</p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！L4[3] 取出内层列表 ['A', 'B', 'C']，再 [1] 取出索引 1 上的 'B'。"
+         data-no="❌ 再想想：L4[3] 拿到的是内层列表，还没取到字符；要再 [1] 才能拿到 'B'——这就是两次索引的套娃访问。">
+      <p style="font-weight:700;margin-bottom:12px">L4 = [1, 2, 3, ['A', 'B', 'C']]，<code>L4[3][1]</code> 的值是？</p>
+      <button class="opt" onclick="quizPick(this)">A. ['A', 'B', 'C']</button>
+      <button class="opt" onclick="quizPick(this)">B. 'B'</button>
+      <button class="opt" onclick="quizPick(this)">C. 'C'</button>
+      <button class="opt" onclick="quizPick(this)">D. 程序报错</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="多次|两次" data-ok="✅ 正确！列表的元素也可能是列表，通过多次索引就能找到元素的元素。" data-no="❌ 再想想：套娃要拆几层？外箱拆一次、内箱再拆一次，这种访问叫＿＿索引。">
+      <p>列表的元素也可能是列表，可以通过＿＿索引找到元素的元素。</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="填两个字">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">L4[3] 和 L4[3:4] 不是一回事</div>
+      <p><code>L4[3]</code> 是<b>索引</b>，直接得到内层列表本身 <code>['A', 'B', 'C']</code>；<code>L4[3:4]</code> 是<b>切片</b>，得到的是「装着内层列表的新列表」 <code>[['A', 'B', 'C']]</code>——外面还多套一层。考试最爱在这里设陷阱。</p>
+      <p>另外：套娃访问别忘了第二次索引——只写 <code>L4[3]</code> 拿到的还是列表，要取 'B' 必须再 <code>[1]</code>。索引越界才报错、切片越界不报错，和字符串完全一样的规矩。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 列表的索引、切片和套娃访问（列表元素还是列表时用多次索引）。请：1）用拆快递箱的类比解释 L[3][1] 这种写法；2）说明 L[3] 和 L[3:4] 的区别；3）以 L=[1, 2, 3, ['A', 'B', 'C']] 为例出 4 道求值题（含切片、负索引、套娃各一道），等我作答后公布答案和讲解。">
+      我刚学了 Python 列表的索引、切片和套娃访问（列表元素还是列表时用多次索引）。请：1）用拆快递箱的类比解释 L[3][1] 这种写法；2）说明 L[3] 和 L[3:4] 的区别；3）以 L=[1, 2, 3, ['A', 'B', 'C']] 为例出 4 道求值题（含切片、负索引、套娃各一道），等我作答后公布答案和讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试（4 分钟）</span>
+    <ol class="steps">
+      <li>交互模式构造 <code>L = [[1, 2], [3, 4]]</code>。</li>
+      <li>输入 <code>L[1]</code>，取出 <code>[3, 4]</code>——一层索引，拿到的是整个内层列表。</li>
+      <li>再输入 <code>L[1][1]</code>，取出 <code>4</code>——两层索引，拿到的是单个数字。体会一层与两层的区别。</li>
+      <li>挑战：试试 <code>L[1][:1]</code>，想想为什么结果是 <code>[3]</code> 而不是 3。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>列表是有序序列，<b>索引与切片规则和字符串完全一致</b>（左闭右开、可省略、可负步长）；区别在于索引对应的是<b>元素</b>而非字符。元素也可能是列表，通过<b>多次索引</b>层层深入（<code>L4[3][1]</code> → 'B'），切片同理（<code>L4[3][1:]</code> → ['B', 'C']）。下一节：往列表里加元素的三种方法。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="3.14.html"><span class="nav-label">← 上一节</span><span class="nav-title">3.14 列表的创建</span></a>
+        <a class="next" href="3.16.html"><span class="nav-label">下一节 →</span><span class="nav-title">3.16 列表增加元素</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

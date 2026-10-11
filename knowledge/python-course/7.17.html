@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7.17 获取文件信息 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第七章 文件及目录操作 · 第 17 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.mtable{width:100%;border-collapse:collapse;margin:16px 0;font-size:14.5px;line-height:1.7}
+.mtable th,.mtable td{border:1px solid var(--border);padding:10px 12px;text-align:left;vertical-align:top}
+.mtable th{background:var(--code-bg);font-weight:700;white-space:nowrap}
+.play{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.play-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.fcard{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.8;margin-bottom:12px}
+.play-out{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14.5px;min-height:52px;white-space:pre-wrap}
+.play-out .hl{color:var(--accent);font-weight:800}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch07.html">第七章 文件及目录操作</a><span class="sep">/</span>
+          <span class="current">7.17</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">17</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第七章 · 文件及目录操作</span>
+            <h1>获取文件信息</h1>
+            <p class="hero-summary">第 17 / 18 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>文件与目录的基本概念</li>
+      <li>文件类型：文本与二进制</li>
+      <li>绝对路径与相对路径</li>
+      <li>文件操作三步曲</li>
+      <li>打开文件与打开模式</li>
+      <li>关闭文件与 with 语句</li>
+      <li>写文件：write 与 writelines</li>
+      <li>读文件三方法</li>
+      <li>文件指针：tell 与 seek</li>
+      <li>目录路径两大模块</li>
+      <li>工作目录</li>
+      <li>新建目录</li>
+      <li>展示目录内容</li>
+      <li>重命名与移动</li>
+      <li>删除文件和目录</li>
+      <li>判断路径</li>
+      <li class="cur">获取文件信息</li>
+      <li>路径的合并与分解</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>文件多大？什么时候改的？——不打开文件也能「验明正身」</h2>
+    <p>做下载进度条要算文件大小，做备份工具要比对修改时间——这些信息都藏在文件系统里。本节的 <b>getsize</b> 和几个 get*time 方法就像文件的「体检报告」：不用打开文件，一查就知道<b>大小（字节）</b>和<b>创建 / 修改 / 访问时间</b>。作业第 3 题（获取文件信息）就是把这批方法挨个用一遍。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">文件信息像「体检报告」：体重（大小）+ 三个时间戳（出生、最近改动、最近来看病）</div>
+      <p><code>getsize</code> 是量<b>体重</b>——单位是字节；<code>getctime</code>、<code>getmtime</code>、<code>getatime</code> 分别记录「<b>出生</b>（创建）、最近一次<b>动手术</b>（修改）、最近一次<b>来看病</b>（访问）」的时间。只是报告上的时间是「Unix 时间戳」这种医生才懂的写法（从 1970 年起的秒数），得用 <code>datetime.fromtimestamp()</code> 翻译成人话。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>两组等价写法</h2>
+    <table class="mtable">
+      <tr><th>os.path 写法</th><th>pathlib 写法</th><th>作用</th></tr>
+      <tr><td><code>path.getsize(p)</code></td><td><code>Path(p).stat().st_size</code></td><td>获取文件大小（<b>字节</b>）</td></tr>
+      <tr><td><code>path.getctime(p)</code></td><td><code>Path(p).stat().st_ctime</code></td><td>获取文件创建时间（Windows 上是创建时间；Linux / macOS 上是元数据最后变更时间）</td></tr>
+      <tr><td><code>path.getmtime(p)</code></td><td><code>Path(p).stat().st_mtime</code></td><td>获取文件最后修改时间</td></tr>
+      <tr><td><code>path.getatime(p)</code></td><td><code>Path(p).stat().st_atime</code></td><td>获取文件最后访问时间</td></tr>
+    </table>
+    <ul class="points">
+      <li>返回的时间值是 <b>Unix 时间戳</b>（浮点型秒数，从 1970-01-01 起算），不能直接给人看</li>
+      <li>用 <code>datetime.fromtimestamp(时间戳)</code> 转换为可读时间格式（datetime 模块第四章学过）</li>
+      <li>pathlib 版要先 <code>.stat()</code> 拿到「体检报告」对象，再取属性 <code>st_size / st_ctime / st_mtime / st_atime</code></li>
+      <li>注意属性拼写是 <b>st_ctime / st_mtime</b>（time 结尾）——PPT 例子里误写成 st_ctme / st_mtme，照抄会 AttributeError，本页一律用正确拼写</li>
+    </ul>
+
+    <div class="play">
+      <p style="font-weight:700;margin-bottom:10px">🔬 体检实验台：对校训.txt（内容「追求真理、造福社会、自强不息」，14 个汉字）开一份体检报告</p>
+      <div class="fcard">📄 校训.txt　内容：追求真理、造福社会、自强不息（14 个字符，UTF-8 编码保存）</div>
+      <div class="play-row">
+        <button class="btn-main btn" onclick="show('size')">path.getsize('校训.txt')</button>
+        <button class="btn-main btn" onclick="show('ctime')">path.getctime('校训.txt')</button>
+        <button class="btn-main btn" onclick="show('mtime')">path.getmtime('校训.txt')</button>
+        <button class="btn-main btn" onclick="show('atime')">path.getatime('校训.txt')</button>
+        <button class="btn-ghost btn" onclick="show('conv')">datetime.fromtimestamp() 转换</button>
+      </div>
+      <div class="play-out" id="out">点按钮查看各项「体检指标」～</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：先写文件，再体检</h2>
+    <pre class="codeblock">import os.path as path
+from datetime import datetime
+
+with open('校训.txt', 'w', encoding='utf-8') as file:
+    file.write("追求真理、造福社会、自强不息")
+
+print(path.getsize('校训.txt'))
+print(path.getctime('校训.txt'))
+print(datetime.fromtimestamp(path.getctime('校训.txt')))</pre>
+    <p>输出结果（时间因电脑而异）：</p>
+    <pre class="codeblock out">42
+1776325658.91659
+2026-04-16 15:47:38.916590</pre>
+    <ul class="points">
+      <li><b>42 = 14 个字符 × 3 字节/汉字</b>（UTF-8 编码；标点「、」同样占 3 字节）——大小是<b>字节数不是字符数</b>，这是本节最重要的一课</li>
+      <li>getctime 返回 1776325658.91659 这样的浮点数——Unix 时间戳，人看不懂</li>
+      <li>fromtimestamp 把时间戳翻译成 <code>2026-04-16 15:47:38.916590</code> 这样的可读时间</li>
+      <li>第 9 行把 getctime 的结果「套」进 fromtimestamp——方法嵌套调用，从里往外读</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>pathlib 版：先 stat() 拿报告，再取属性</h2>
+    <pre class="codeblock">from pathlib import Path
+from datetime import datetime
+
+st = Path('校训.txt').stat()
+print(st.st_size)
+print(datetime.fromtimestamp(st.st_mtime))</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">42
+2026-04-16 15:47:38.916590</pre>
+    <ul class="points">
+      <li><code>.stat()</code> 一次拿到整份「体检报告」，存进 st 之后想查几项查几项</li>
+      <li>属性名 <b>st_size、st_mtime</b> 千万别照 PPT 抄成 st_ctme、st_mtme——time 结尾，抄错直接 AttributeError</li>
+      <li><b>ctime 与 mtime 是两回事</b>：ctime 是创建时间、mtime 是最后修改时间。刚写完文件时两者几乎相同，改过内容之后 mtime 才会变新，别把它们当成同一个值</li>
+      <li>os.path 版适合「只查一项」，pathlib 版适合「一次查多项」——各有所长</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！14 个汉字在 UTF-8 编码下每个占 3 字节（标点「、」同样占 3 字节），14 × 3 = 42——getsize 返回的是字节数，不是字符数。"
+         data-no="❌ getsize 返回的是字节数：UTF-8 编码下一个汉字占 3 字节，14 个字符 × 3 = 42 字节。如果存成 GBK（2 字节/汉字）就会是 28——同一段文字，编码不同结果就不同。">
+      <p style="font-weight:700;margin-bottom:12px">文件「校训.txt」内容是 14 个汉字，以 <b>UTF-8</b> 编码保存，<code>path.getsize('校训.txt')</code> 返回？</p>
+      <button class="opt" onclick="quizPick(this)">A. 14</button>
+      <button class="opt" onclick="quizPick(this)">B. 28</button>
+      <button class="opt" onclick="quizPick(this)">C. 42</button>
+      <button class="opt" onclick="quizPick(this)">D. 报错</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="字节时间戳fromtimestamp|字节 时间戳 fromtimestamp" data-ok="✅ 正确！getsize 的单位是字节；时间方法是 Unix 时间戳（浮点秒数），用 datetime.fromtimestamp() 转成可读时间。" data-no="❌ 三个空：getsize 返回大小的单位；get*time 返回的是 Unix＿＿（浮点秒数）；转换用 datetime.＿＿()。">
+      <p><b>path.getsize</b>(p) 返回的文件大小单位是<b>＿＿</b>；各时间方法返回 Unix<b>＿＿</b>（浮点型秒数），可用 datetime.<b>＿＿</b>() 转换为可读时间格式。（三空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：字节 时间戳 fromtimestamp">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>大小是字节数不是字符数</b>：汉字在 GBK 里占 2 字节、UTF-8 里占 3 字节——同一篇文章不同编码的 getsize 结果不同，别按字符数心算；</p>
+      <p>②<b>时间戳不能直接给人看</b>：1776325658.91659 不是「1776 年」，是距 1970 年的秒数——展示前先 fromtimestamp 转换；</p>
+      <p>③<b>拼写陷阱</b>：属性是 <code>st_ctime / st_mtime</code>（time 结尾），PPT 例子里误写为 st_ctme / st_mtme，照抄会报 AttributeError——以本页为准。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 获取文件信息：os.path 的 getsize / getctime / getmtime / getatime，以及 pathlib 的 stat() 配 st_size / st_ctime / st_mtime / st_atime。请：1）用「体检报告」的类比解释大小和三个时间戳；2）出一道题：内容 10 个汉字的文件分别以 GBK 和 UTF-8 保存，getsize 各返回多少？让我先答再讲；3）示范用 datetime.fromtimestamp() 把时间戳转成可读时间，并解释什么是 Unix 时间戳。">
+      我刚学了 Python 获取文件信息：os.path 的 getsize / getctime / getmtime / getatime，以及 pathlib 的 stat() 配 st_size / st_ctime / st_mtime / st_atime。请：1）用「体检报告」的类比解释大小和三个时间戳；2）出一道题：内容 10 个汉字的文件分别以 GBK 和 UTF-8 保存，getsize 各返回多少？让我先答再讲；3）示范用 datetime.fromtimestamp() 把时间戳转成可读时间，并解释什么是 Unix 时间戳。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：直接演练作业第 3 题（5 分钟）</span>
+    <ol class="steps">
+      <li>先用 with open 写出「校训.txt」（PPT 原例的写文件部分，复习 7.06）。</li>
+      <li>作业第 3 题主线：<code>print(path.getsize('校训.txt'))</code>，再 getctime、getmtime、getatime 各打一遍。</li>
+      <li>给每个时间戳套上 <code>datetime.fromtimestamp()</code>，对照输出验证翻译成功。</li>
+      <li>挑战：换 pathlib 写法，<code>st = Path('校训.txt').stat()</code> 后用 st.st_size 和 st.st_mtime 取同样两项信息。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>getsize 返回文件大小（字节数！汉字 UTF-8 占 3 字节、GBK 占 2 字节，同一段文字编码不同结果就不同）；getctime / getmtime / getatime 返回创建、修改、访问时间的 Unix 时间戳，用 datetime.fromtimestamp() 转成可读时间；pathlib 版先 stat() 再取 st_size / st_ctime / st_mtime / st_atime（time 结尾，别照 PPT 抄错）。最后一节：路径的合并与分解——收好本章的「螺丝刀套装」。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="7.16.html"><span class="nav-label">← 上一节</span><span class="nav-title">7.16 判断路径</span></a>
+        <a class="next" href="7.18.html"><span class="nav-label">下一节 →</span><span class="nav-title">7.18 路径的合并与分解</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：体检实验台（模拟 getsize 与时间戳） */
+const RESULT = {
+  size: "path.getsize('校训.txt')　→　<b class=\"hl\">42</b>　（14 个字符 × 3 字节/汉字，UTF-8 编码——大小是字节数不是字符数）",
+  ctime: "path.getctime('校训.txt')　→　<b class=\"hl\">1776325658.91659</b>　（创建时间，Unix 时间戳：浮点型秒数）",
+  mtime: "path.getmtime('校训.txt')　→　<b class=\"hl\">1776325658.91659</b>　（时间戳，只有刚写完文件时才和 getctime 相同）",
+  atime: "path.getatime('校训.txt')　→　<b class=\"hl\">1776325702.08431</b>　（最后访问时间的时间戳）",
+  conv: "datetime.fromtimestamp(1776325658.91659)　→　<b class=\"hl\">2026-04-16 15:47:38.916590</b>　（时间戳翻译成人话，才能给人看）"
+};
+function show(op){
+  document.getElementById('out').innerHTML = RESULT[op];
+}
+</script>
+</body>
+</html>

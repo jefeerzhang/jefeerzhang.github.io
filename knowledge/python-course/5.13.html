@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.13 循环嵌套 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第五章 程序控制 · 第 13 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.clockdemo{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin:10px 0}
+.clockdemo .outer-step{font-size:15px;font-weight:800;color:var(--accent);margin-bottom:8px}
+.clockdemo .inner-runs{display:flex;gap:6px;flex-wrap:wrap}
+.clockdemo .irun{border:1px dashed var(--accent2);border-radius:10px;padding:8px 10px;font-size:13px;color:var(--ink2)}
+.clockdemo .irun b{color:var(--accent2)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch05.html">第五章 程序控制</a><span class="sep">/</span>
+          <span class="current">5.13</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">13</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第五章 · 程序控制</span>
+            <h1>循环嵌套</h1>
+            <p class="hero-summary">第 13 / 17 节 · 约 12 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序控制结构概述</li>
+      <li>单分支结构 if</li>
+      <li>双分支结构 if-else</li>
+      <li>IF 表达式</li>
+      <li>多分支结构 if-elif-else</li>
+      <li>嵌套分支结构</li>
+      <li>嵌套与多分支对比</li>
+      <li>无限循环 while</li>
+      <li>range 函数与遍历整数</li>
+      <li>遍历字符串列表元组</li>
+      <li>遍历字典</li>
+      <li>循环控制 break 与 continue</li>
+      <li class="cur">循环嵌套</li>
+      <li>常见语法错误</li>
+      <li>常见运行异常</li>
+      <li>异常处理语句</li>
+      <li>综合实战：古算题与成绩单</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>一层循环不够用，就往里再套一层</h2>
+    <p><b>循环嵌套</b>是指在一个循环的循环体内部，再写入一个或多个循环：外层的叫<b>外层循环</b>，内部的叫<b>内层循环</b>。它是处理<b>二维数据、排列组合</b>等场景的核心语法——打九九乘法表、遍历棋盘格子、穷举所有买法组合，都离不开它。本章压轴的「百钱百鸡」古算题，就是两层 for 的经典应用。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">循环嵌套像「钟表」：秒针（内层）每转完一整圈，分针（外层）才走一格</div>
+      <p>外层循环每执行 1 次，内层循环必须<b>完整跑完所有轮次</b>——就像分针走一格的功夫，秒针已经转了一整圈 60 格。百钱百鸡则像「试遍所有买法组合，符合账目的记下来」：公鸡数、母鸡数各管一层循环，把所有组合都试一遍，账目对上的就是答案。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>语法与三条铁律</h2>
+    <ul class="points">
+      <li><b>语法</b>：<code>for &lt;循环变量1&gt; in &lt;迭代对象1&gt;:</code> 外层缩进块内再写 <code>for &lt;循环变量2&gt; in &lt;迭代对象2&gt;:</code> 及其内层语句块</li>
+      <li><b>铁律一：靠缩进区分内外层</b>——内层循环的所有代码必须比外层<b>多一层缩进</b>（缩进错 = 逻辑错）</li>
+      <li><b>铁律二：外层走 1 步，内层跑完整一圈</b>——外层每执行 1 次，内层循环必须完整跑完所有轮次，外层才进入下一轮</li>
+      <li><b>铁律三：总循环次数 = 外层循环次数 × 每轮外层对应的内层循环次数</b></li>
+      <li>while 也可以嵌套，for 与 while 混搭同样合法；层数理论上不限，但层数越多总次数增长越猛，两三层最常见</li>
+    </ul>
+
+    <div class="switch">
+      <button class="on" data-pane="pane-clock">时钟比喻：执行顺序</button>
+      <button data-pane="pane-ji">百钱百鸡拆解</button>
+    </div>
+
+    <div class="pane on" id="pane-clock">
+      <div class="clockdemo">
+        <p style="font-weight:700;margin-bottom:10px">外层 x 走 3 步、内层 y 每圈跑 4 步——总共跑 3 × 4 = 12 次：</p>
+        <div class="outer-step">外层 x = 0　→　内层完整一圈</div>
+        <div class="inner-runs"><span class="irun">y = 0</span><span class="irun">y = 1</span><span class="irun">y = 2</span><span class="irun">y = 3</span></div>
+        <div class="outer-step" style="margin-top:10px">外层 x = 1　→　内层又完整一圈</div>
+        <div class="inner-runs"><span class="irun">y = 0</span><span class="irun">y = 1</span><span class="irun">y = 2</span><span class="irun">y = 3</span></div>
+        <div class="outer-step" style="margin-top:10px">外层 x = 2　→　内层再完整一圈</div>
+        <div class="inner-runs"><span class="irun">y = 0</span><span class="irun">y = 1</span><span class="irun">y = 2</span><span class="irun">y = 3</span></div>
+      </div>
+      <p class="muted">分针（x）走一格，秒针（y）跑完一整圈——顺序是「x=0 圈内跑完 → x=1 圈内跑完 → …」，内层绝不会半途跳到下一个 x。</p>
+    </div>
+
+    <div class="pane" id="pane-ji">
+      <p style="font-weight:700">《算经》原题：鸡翁一值钱五，鸡母一值钱三，鸡雏三值钱一。百钱买百鸡，问鸡翁、鸡母、鸡雏各几何？</p>
+      <pre class="codeblock"># 假设公鸡是 x，母鸡是 y，小鸡是 z
+# 有两个条件等式：x + y + z = 100，5*x + 3*y + z/3 = 100
+# x 的取值范围是 0 到 20（100 元全买公鸡最多 20 只）
+# y 的取值范围是 0 到 33（100 元全买母鸡最多 33 只）
+for x in range(0, int(100/5+1)):            # 公鸡：0~20，共 21 种
+    for y in range(0, int(100/3+1)):        # 母鸡：0~33，共 34 种
+        z = 100 - x - y                     # 小鸡不用循环！由 x+y+z=100 直接推出
+        if 5 * x + 3 * y + z / 3 == 100:    # 只剩一个等式要验证
+            print(f'公鸡: {x}只, 母鸡: {y}只, 小鸡: {z}只')</pre>
+      <pre class="codeblock">公鸡: 0只, 母鸡: 25只, 小鸡: 75只
+公鸡: 4只, 母鸡: 18只, 小鸡: 78只
+公鸡: 8只, 母鸡: 11只, 小鸡: 81只
+公鸡: 12只, 母鸡: 4只, 小鸡: 84只</pre>
+      <ul class="points">
+        <li><b>x 为什么是 0~20</b>：公鸡 5 元一只，100 元最多买 <code>int(100/5)</code> = 20 只</li>
+        <li><b>y 为什么是 0~33</b>：母鸡 3 元一只，100 元最多买 <code>int(100/3)</code> = 33 只</li>
+        <li><b>z 为什么不用循环</b>：三个未知数两个等式，用 <code>z = 100 - x - y</code> 消元，z 由 x、y 直接决定——「暴力枚举 + 数学消元」的经典组合</li>
+        <li><b>总检查次数</b>：外层 21 次 × 内层 34 次 = 714 次组合检查，每次只验证一个等式</li>
+      </ul>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="3"
+         data-ok="✅ 答对了！总循环次数 = 外层次数 × 内层次数 = 21 × 34 = 714。"
+         data-no="❌ 用铁律三算：外层 range(21) 有 21 次，内层 range(34) 有 34 次，21 × 34 = 714，不是相加。">
+      <p style="font-weight:700;margin-bottom:12px"><code>for x in range(21):</code> 嵌套 <code>for y in range(34):</code>，内层循环体总共执行多少次？</p>
+      <button class="opt" onclick="quizPick(this)">A. 55 次</button>
+      <button class="opt" onclick="quizPick(this)">B. 34 次</button>
+      <button class="opt" onclick="quizPick(this)">C. 21 次</button>
+      <button class="opt" onclick="quizPick(this)">D. 714 次</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="完整跑完所有轮次" data-ok="✅ 正确！外层走 1 步，内层必须完整跑完所有轮次，外层才进入下一轮。" data-no="❌ 想想钟表：分针走一格的功夫，秒针要做什么？答案是：完整跑完所有轮次。">
+      <p>外层循环每执行 1 次，内层循环必须<b>＿＿</b>。（一个空，描述内层的执行要求）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：完整跑完所有轮次">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>内层缩进必须比外层多一层</b>：<code>for y</code> 如果和 <code>for x</code> 平齐，那就不是嵌套而是先后两个独立循环——缩进错 = 逻辑错，程序不报错但结果全不对；</p>
+      <p>②<b>break 只能跳出当前层</b>：内层循环里的 break 跳出内层后，外层还会继续下一轮——想一步跳出两层，要借助标志变量或函数，现在先知道即可；</p>
+      <p>③<b>z/3 是浮点除法</b>：<code>5*x + 3*y + z/3 == 100</code> 中 z/3 可能带小数，判断相等时要留意精度；z 还必须是 3 的倍数才符合「鸡雏三值钱一」的题意（巧的是四个答案里 z 都满足）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 循环嵌套。请：1）用「秒针转一圈分针才走一格」的类比，讲清外层与内层的执行顺序和总次数公式；2）逐行讲解百钱百鸡的双层穷举解法，说明 x、y 范围怎么定、z 为什么不用循环；3）出 5 道循环嵌套输出题考我（含一道数次数、一道打印图形），最后带我写一遍九九乘法表。">
+      我刚学了 Python 循环嵌套。请：1）用「秒针转一圈分针才走一格」的类比，讲清外层与内层的执行顺序和总次数公式；2）逐行讲解百钱百鸡的双层穷举解法，说明 x、y 范围怎么定、z 为什么不用循环；3）出 5 道循环嵌套输出题考我（含一道数次数、一道打印图形），最后带我写一遍九九乘法表。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：从古算题到乘法表（5 分钟）</span>
+    <ol class="steps">
+      <li>把百钱百鸡完整代码跑一遍，对照输出的四组答案：公鸡 0/4/8/12 只，小鸡数都是 75~84 且能被 3 整除。</li>
+      <li>数一数：外层 range(0, 21) 21 次 × 内层 range(0, 34) 34 次 = 714 次组合检查，和铁律三对上了。</li>
+      <li>再写循环嵌套的入门经典——九九乘法表：<code>for i in range(1, 10):</code> 嵌套 <code>for j in range(1, i+1):</code>，循环体用 <code>print(f'{j}×{i}={i*j}', end='\t')</code>，内层结束后补一个 <code>print()</code> 换行。</li>
+      <li>挑战：把乘法表改成打印直角三角形星星阵（第 i 行打印 i 个 *），体会「内层次数由外层变量决定」的套路。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>循环嵌套是在一个循环体内再写循环：靠缩进区分内外层，外层每走 1 步、内层完整跑完所有轮次，总次数 = 外层次数 × 内层次数。百钱百鸡用双层穷举 x、y，z 由 x+y+z=100 消元直接推出，714 次检查找到四组解。下一节：常见语法错误，把前面踩过的坑正式盘一遍。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="5.12.html"><span class="nav-label">← 上一节</span><span class="nav-title">5.12 循环控制 break 与 continue</span></a>
+        <a class="next" href="5.14.html"><span class="nav-label">下一节 →</span><span class="nav-title">5.14 常见语法错误</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

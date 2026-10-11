@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.09 集合运算：交差并补 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第四章 元组、集合和字典 · 第 9 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.play{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.opbtn{padding:9px 16px;border-radius:10px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:14px;font-weight:700;color:var(--ink)}
+.opbtn.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.venn{display:flex;justify-content:center;margin:14px 0 8px}
+.venn svg{max-width:100%}
+.vcell{font-family:Consolas,monospace;font-size:13px}
+.play-out{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:15px;min-height:52px;word-break:break-all}
+.play-out .err{color:var(--err);font-weight:700}
+.oprow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.opdesc{font-size:13px;color:var(--ink2);margin-bottom:10px}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch04.html">第四章 元组、集合和字典</a><span class="sep">/</span>
+          <span class="current">4.09</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">09</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第四章 · 元组、集合和字典</span>
+            <h1>集合运算：交差并补</h1>
+            <p class="hero-summary">第 9 / 21 节 · 约 11 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>元组的定义与特性</li>
+      <li>元组的创建</li>
+      <li>元组索引与切片</li>
+      <li>元组运算</li>
+      <li>元组函数与方法</li>
+      <li>元组的不可变性</li>
+      <li>集合的定义与特性</li>
+      <li>集合的创建</li>
+      <li class="cur">集合运算：交差并补</li>
+      <li>集合操作：增删元素</li>
+      <li>集合运算并更新</li>
+      <li>集合函数与判断方法</li>
+      <li>序列与映射</li>
+      <li>字典的定义与特性</li>
+      <li>字典的创建</li>
+      <li>字典访问与三视图</li>
+      <li>字典添加与修改</li>
+      <li>字典删除</li>
+      <li>字典其他操作</li>
+      <li>组合数据类型总结</li>
+      <li>数据类型转换</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>两堆数据放一起，怎么问「共同有什么、谁多出来了」？</h2>
+    <p>上一节你会创建集合了，但集合真正的威力在于<b>集合之间的运算</b>：求两个班的共同名单（交集）、找只在 A 班的人（差集）、把两班合并（并集）、找「只属于一方」的人（补集）。本章作业第 3 题（两个列表的公共元素与差集）就是它的直接考点。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">两个朋友圈的四种问法</div>
+      <p>把集合 A、B 想成两个人的朋友圈：<b>交集</b>是「你俩共同的好友」；<b>差集 A-B</b> 是「A 有而 B 没有的好友」；<b>并集</b>是「两人认识的所有人（去重）」；<b>补集 ^</b> 是「只有一方认识、另一方不认识的人」——像朋友圈的「擦边地带」。注意：<b>差集要分方向</b>，A-B 和 B-A 结果不同，而其他三个运算不分方向。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>四大运算：符号版与方法版</h2>
+    <p>集合间的运算主要包括<b>交、差、并、补</b>四大操作，每种都有「符号」和「方法」两种写法，<b>结果完全相同，且都会产生新的集合</b>（原集合不变）：</p>
+    <table>
+      <tr><th>操作</th><th>符号</th><th>方法</th></tr>
+      <tr><td>交集（共同拥有）</td><td><code>st1 &amp; st2</code></td><td><code>st1.intersection(st2)</code></td></tr>
+      <tr><td>差集（我有你没有）</td><td><code>st1 - st2</code></td><td><code>st1.difference(st2)</code></td></tr>
+      <tr><td>并集（合起来去重）</td><td><code>st1 | st2</code></td><td><code>st1.union(st2)</code></td></tr>
+      <tr><td>补集（只有一方有）</td><td><code>st1 ^ st2</code></td><td><code>st1.symmetric_difference(st2)</code></td></tr>
+    </table>
+    <ul class="points">
+      <li>符号版简洁，方法版语义更明确——考试两种都要认识</li>
+      <li>四大运算均产生<b>新集合</b>，不会改动 st1、st2 本身（想覆盖回 st1 要用下一节的 <code>*_update</code> 方法）</li>
+      <li>补集又叫「对称差集」：等于并集减去交集</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>🔬 集合运算实验台</h2>
+    <div class="play">
+      <p style="font-weight:700;margin-bottom:6px">ST4 = {1, 2, 3, 4, 5}　　ST5 = {4, 5, 6, 7}</p>
+      <p class="opdesc">点击一个运算符，看看两个集合会碰撞出什么（高亮区域即为结果）：</p>
+      <div class="oprow">
+        <button class="opbtn on" onclick="setOp('and')">A &amp; B 交集</button>
+        <button class="opbtn" onclick="setOp('sub')">A - B 差集</button>
+        <button class="opbtn" onclick="setOp('subr')">B - A 差集</button>
+        <button class="opbtn" onclick="setOp('or')">A | B 并集</button>
+        <button class="opbtn" onclick="setOp('xor')">A ^ B 补集</button>
+      </div>
+      <div class="venn">
+        <svg viewBox="0 0 560 240" width="560" height="240">
+          <circle id="cA" cx="210" cy="120" r="95" fill="#e8f0fe" stroke="#5b7fd4" stroke-width="2.5"/>
+          <circle id="cB" cx="330" cy="120" r="95" fill="#fdf3e3" stroke="#d4913a" stroke-width="2.5" opacity="0.9"/>
+          <text x="130" y="42" font-size="15" font-weight="700" fill="#5b7fd4">ST4 {1,2,3,4,5}</text>
+          <text x="360" y="42" font-size="15" font-weight="700" fill="#d4913a">ST5 {4,5,6,7}</text>
+          <g class="vcell" fill="#3a4a63" font-weight="700">
+            <text id="v1" x="150" y="125">1</text>
+            <text id="v2" x="175" y="150">2</text>
+            <text id="v3" x="160" y="100">3</text>
+            <text id="v45" x="263" y="120">4 5</text>
+            <text id="v6" x="395" y="125">6</text>
+            <text id="v7" x="380" y="150">7</text>
+          </g>
+        </svg>
+      </div>
+      <div class="play-out" id="out">点击上方按钮试试！</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：一行代码验四种运算</h2>
+    <pre class="codeblock">ST4 = {1, 2, 3, 4, 5}
+ST5 = {4, 5, 6, 7}
+print(ST4.intersection(ST5), ST4&amp;ST5)
+print(ST4.difference(ST5), ST4-ST5)
+print(ST5.difference(ST4), ST5-ST4)
+print(ST4.union(ST5), ST4|ST5)
+print(ST4.symmetric_difference(ST5), ST4^ST5)</pre>
+    <p>输出结果（符号版与方法版结果完全一致）：</p>
+    <pre class="codeblock out">{4, 5} {4, 5}
+{1, 2, 3} {1, 2, 3}
+{6, 7} {6, 7}
+{1, 2, 3, 4, 5, 6, 7} {1, 2, 3, 4, 5, 6, 7}
+{1, 2, 3, 6, 7} {1, 2, 3, 6, 7}</pre>
+    <ul class="points">
+      <li>注意第 2、3 行：<b>差集分方向</b>——ST4-ST5 拿到 {1,2,3}，ST5-ST4 拿到 {6,7}</li>
+      <li>并集自动去重：4、5 两个集合都有，结果里只出现一次</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！A-B 是「A 有而 B 没有」，4、5 两边都有被减掉，剩 {1, 2, 3}。"
+         data-no="❌ 差集 A-B 是「从 A 中去掉与 B 共同的部分」。4、5 在 B 里也有，所以被去掉，剩 {1, 2, 3}。">
+      <p style="font-weight:700;margin-bottom:12px">ST4 = {1, 2, 3, 4, 5}，ST5 = {4, 5, 6, 7}，<code>ST4 - ST5</code> 的结果是？</p>
+      <button class="opt" onclick="quizPick(this)">A. {6, 7}</button>
+      <button class="opt" onclick="quizPick(this)">B. {1, 2, 3}</button>
+      <button class="opt" onclick="quizPick(this)">C. {4, 5}</button>
+      <button class="opt" onclick="quizPick(this)">D. {1, 2, 3, 6, 7}</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="&amp;|intersection|交|交集" data-ok="✅ 正确！求交集既可以用 &amp; 符号，也可以用 intersection 方法。" data-no="❌ 再想想：要找两个集合「共同拥有」的元素，该用哪个运算？（符号或方法名都可以）">
+      <p>要取两个集合的交集，可以使用符号 <code>st1 ___ st2</code>，也可以使用方法 <code>st1.intersection(st2)</code>。（填一个符号或一个词）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：&amp;">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">并集符号是 |，不是 ||，更不是 U</div>
+      <p>并集的符号是<b>竖线 |</b>（键盘上回车键上面那个，按 Shift+\ 输入），数学课本上的 ∪ 在 Python 里不存在。新手常见错误：把 | 写成 1 或 l（小写 L），报语法错。</p>
+      <p>另一个坑：四大运算<b>都返回新集合</b>，<code>ST4 &amp; ST5</code> 之后 ST4 还是原来的样子——打印 <code>ST4 &amp; ST5</code> 有人却写成 <code>ST4</code>，看到的当然是「没变」。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 集合的交差并补四种运算（&amp; - | ^ 和 intersection/difference/union/symmetric_difference 方法）。请：1）用两个朋友圈的类比解释四种运算并强调差集分方向；2）以 A={1,2,3,4}、B={3,4,5} 为例出 5 道集合运算求值题考我；3）讲讲补集（对称差）等于并集减去交集这件事为什么成立。">
+      我刚学了 Python 集合的交差并补四种运算（&amp; - | ^ 和 intersection/difference/union/symmetric_difference 方法）。请：1）用两个朋友圈的类比解释四种运算并强调差集分方向；2）以 A={1,2,3,4}、B={3,4,5} 为例出 5 道集合运算求值题考我；3）讲讲补集（对称差）等于并集减去交集这件事为什么成立。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：直接演练作业第 3 题（5 分钟）</span>
+    <ol class="steps">
+      <li>把作业数据转成集合：<code>s1 = set([1, 2, 3, 5, 6, 3, 2])</code>、<code>s2 = set([2, 5, 7, 8, 9])</code>（集合自动去重）。</li>
+      <li>同时存在于两个列表中的数：就是 <code>s1 &amp; s2</code>。</li>
+      <li>在 lst1 中但不在 lst2 中的数：<code>s1 - s2</code>。</li>
+      <li>总共有多少个不同的数：<code>len(s1 | s2)</code>。</li>
+      <li>把结果按作业要求包装好（如需转回列表用 <code>list()</code>）。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>集合四大运算：<b>交 &amp;、差 -、并 |、补 ^</b>（对应 intersection / difference / union / symmetric_difference 方法）；差集分方向，其他三个不分；四大运算都产生<b>新集合</b>、原集合不变。下一节：往集合里加元素、删元素。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="4.08.html"><span class="nav-label">← 上一节</span><span class="nav-title">4.08 集合的创建</span></a>
+        <a class="next" href="4.10.html"><span class="nav-label">下一节 →</span><span class="nav-title">4.10 集合操作：增删元素</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：集合运算实验台（韦恩图高亮） */
+const SETA = new Set([1,2,3,4,5]);
+const SETB = new Set([4,5,6,7]);
+const OPS = {
+  and: { expr: 'print(ST4 &amp; ST5)', res: '{4, 5}', zones: {v45:1}, desc: '交集：两边都有的元素' },
+  sub: { expr: 'print(ST4 - ST5)',  res: '{1, 2, 3}', zones: {v1:1,v2:1,v3:1}, desc: '差集：ST4 有而 ST5 没有的' },
+  subr:{ expr: 'print(ST5 - ST4)',  res: '{6, 7}', zones: {v6:1,v7:1}, desc: '差集换方向：ST5 有而 ST4 没有的' },
+  or:  { expr: 'print(ST4 | ST5)',  res: '{1, 2, 3, 4, 5, 6, 7}', zones: {v1:1,v2:1,v3:1,v45:1,v6:1,v7:1}, desc: '并集：合起来并自动去重' },
+  xor: { expr: 'print(ST4 ^ ST5)',  res: '{1, 2, 3, 6, 7}', zones: {v1:1,v2:1,v3:1,v6:1,v7:1}, desc: '补集：只有一方有的元素（4、5 被排除）' }
+};
+let curOp = 'and';
+function setOp(key){
+  curOp = key;
+  document.querySelectorAll('.opbtn').forEach((b,i)=>{
+    b.classList.toggle('on', ['and','sub','subr','or','xor'][i] === key);
+  });
+  render();
+}
+function render(){
+  const o = OPS[curOp];
+  // 韦恩图高亮
+  const inOnlyA = ['and','sub'].includes(curOp) ? curOp==='sub' : ['subr','or','xor'].includes(curOp);
+  const inOnlyB = ['and','subr'].includes(curOp) ? curOp==='subr' : ['sub','or','xor'].includes(curOp);
+  const both    = ['and','or'].includes(curOp) || curOp==='xor' ? (curOp==='and'||curOp==='or') : false;
+  // 简化：直接按 zones 控制
+  ['v1','v2','v3','v45','v6','v7'].forEach(id=>{
+    const el = document.getElementById(id);
+    el.setAttribute('fill', o.zones[id] ? '#c0392b' : '#3a4a63');
+    el.setAttribute('opacity', o.zones[id] ? '1' : '0.28');
+  });
+  document.getElementById('cA').setAttribute('fill',
+    (curOp==='sub'||curOp==='or'||curOp==='xor') ? '#ffe3e0' : '#e8f0fe');
+  document.getElementById('cB').setAttribute('fill',
+    (curOp==='subr'||curOp==='or'||curOp==='xor') ? '#ffe9c9' : '#fdf3e3');
+  document.getElementById('out').innerHTML =
+    '<b>' + o.expr + '</b>　→　输出：<b>' + o.res + '</b>　<span style="color:var(--ink2);font-size:13px">（' + o.desc + '）</span>';
+}
+window.addEventListener('DOMContentLoaded', render);
+</script>
+</body>
+</html>

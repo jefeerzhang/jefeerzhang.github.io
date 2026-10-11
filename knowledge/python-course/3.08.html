@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.08 计数、查找与替换 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第三章 字符串与列表 · 第 8 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.vs-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:10px}
+.vs-box .who{font-weight:800;font-size:15px;margin-bottom:6px}
+.vs-box .who.find{color:var(--ok)}
+.vs-box .who.index{color:var(--err)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch03.html">第三章 字符串与列表</a><span class="sep">/</span>
+          <span class="current">3.08</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">08</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第三章 · 字符串与列表</span>
+            <h1>计数、查找与替换</h1>
+            <p class="hero-summary">第 8 / 21 节 · 约 11 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>字符串基础与三种引号</li>
+      <li>转义字符</li>
+      <li>字符串索引</li>
+      <li>字符串切片</li>
+      <li>实战：身份证号提取信息</li>
+      <li>字符串运算与内置函数</li>
+      <li>大小写转换方法</li>
+      <li class="cur">计数、查找与替换</li>
+      <li>分割、联合与剔除</li>
+      <li>判断字符串类别</li>
+      <li>format 格式化输出</li>
+      <li>f-string 格式化输出</li>
+      <li>列表定义与特性</li>
+      <li>列表的创建</li>
+      <li>列表索引与切片</li>
+      <li>列表增加元素</li>
+      <li>列表删除元素</li>
+      <li>列表修改元素</li>
+      <li>列表运算与函数</li>
+      <li>列表常用方法</li>
+      <li>实战：成绩排序和统计</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>「这个词出现了几次？在哪里？能全换掉吗？」</h2>
+    <p>处理文本的三大刚需：<b>数一数</b>某个字符出现几次、<b>找一找</b>某个子串在哪里、<b>批量替换</b>敏感词或错别字。这四个方法 <code>count()</code>、<code>find()</code>、<code>index()</code>、<code>replace()</code> 就是干这些的，也是本章作业第 2 题的直接考点。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">点名器、定位器和「查找替换」功能</div>
+      <p><code>count()</code> 像<b>点名器报数</b>——喊一声某个名字，报出全班举了几次手；<code>find()</code> 和 <code>index()</code> 是<b>定位器</b>——告诉你目标第一次出现的位置，区别在于性格：find 找不到时<b>耸耸肩</b>，优雅地退场给你 <code>-1</code>；index 找不到时<b>当场翻脸</b>，直接抛 <code>ValueError</code> 报错；<code>replace()</code> 就是 Word 里的「<b>查找替换</b>」功能——一键把所有旧词换成新词。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>四个方法各管一摊</h2>
+    <ul class="points">
+      <li><code>str.count(sub)</code>：返回 sub 在字符串中<b>出现的次数</b></li>
+      <li><code>str.find(sub)</code>：返回第一个 sub 的<b>索引</b>，找不到返回 <code>-1</code></li>
+      <li><code>str.index(sub)</code>：返回第一个 sub 的<b>索引</b>，找不到<b>报错</b>（ValueError）</li>
+      <li><code>str.replace(old, new)</code>：把 <b>old 全部替换成 new</b>，返回新字符串</li>
+      <li>⭐ <b>铁律：这些方法都不改变原字符串</b>——尤其 replace，返回的新字符串必须用变量接住，否则替换结果就丢了</li>
+    </ul>
+    <pre class="codeblock">print('hello world'.count('l'))       <span class="good">→ 3</span>
+print('hello world'.index('o'))       <span class="good">→ 4</span>
+print('hello world'.find('0'))        <span class="good">→ -1　（字母 o 和数字 0 是两回事，找不到）</span>
+print('hello world'.replace('l', 'L')) <span class="good">→ heLLo worLd</span></pre>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>方法速查表 + find vs index 大对决</h2>
+    <table>
+      <tr><th>方法</th><th>作用</th><th>找不到时</th><th>示例</th></tr>
+      <tr><td>str.count(sub)</td><td>返回 sub 出现次数</td><td>返回 0</td><td><code>'hello world'.count('l') → 3</code></td></tr>
+      <tr><td>str.find(sub)</td><td>返回第一个 sub 的索引</td><td><b>返回 -1</b></td><td><code>'hello world'.find('0') → -1</code></td></tr>
+      <tr><td>str.index(sub)</td><td>返回第一个 sub 的索引</td><td><b>报错 ValueError</b></td><td><code>'hello world'.index('o') → 4</code></td></tr>
+      <tr><td>str.replace(old, new)</td><td>old 全部替换成 new</td><td>原样返回新串</td><td><code>'hello world'.replace('l','L') → heLLo worLd</code></td></tr>
+    </table>
+    <p style="margin-top:14px">同样找「不存在的 z」，两种性格当场对比：</p>
+    <div class="switch">
+      <button class="on" data-pane="f1">find：优雅退场</button>
+      <button data-pane="f2">index：当场翻脸</button>
+    </div>
+    <div class="pane on" id="f1">
+      <div class="vs-box">
+        <div class="who find">🤝 find——找不到不吵不闹</div>
+        <pre class="codeblock">print('hello world'.find('z'))
+<span class="good">→ -1</span></pre>
+        <p style="font-size:13.5px;color:var(--ink2);margin-top:6px">返回 -1 这个「哨兵值」，程序可以继续往下跑，用 <code>if result != -1</code> 判断即可。</p>
+      </div>
+    </div>
+    <div class="pane" id="f2">
+      <div class="vs-box">
+        <div class="who index">💥 index——找不到直接报错</div>
+        <pre class="codeblock">print('hello world'.index('z'))
+<span class="bad">→ ValueError: substring not found</span></pre>
+        <p style="font-size:13.5px;color:var(--ink2);margin-top:6px">程序当场中断。除非你<b>确定</b>子串一定存在，否则日常更推荐 find。</p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="0"
+         data-ok="✅ 答对了！find 找不到目标时不报错，而是返回哨兵值 -1——这就是它比 index 更「优雅」的地方。"
+         data-no="❌ 注意：find 找不到不会报错，也不会返回 0 或 None，而是返回 -1。记住这个哨兵值。">
+      <p style="font-weight:700;margin-bottom:12px"><code>'hello world'.find('z')</code> 的输出是？</p>
+      <button class="opt" onclick="quizPick(this)">A. -1</button>
+      <button class="opt" onclick="quizPick(this)">B. 报错 ValueError</button>
+      <button class="opt" onclick="quizPick(this)">C. 0</button>
+      <button class="opt" onclick="quizPick(this)">D. None</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="old|old子串|子串old" data-ok="✅ 正确！replace(old, new) 把字符串中所有的 old 子串全部替换成 new，并返回新字符串。" data-no="❌ 回忆一下 replace 的两个参数：第一个参数是被替换的对象，第二个是替换后的内容。第一个参数叫什么？">
+      <p><code>str.replace(old, new)</code> 会将字符串中的 <code>____</code> 全部替换成 new，并返回新字符串。（填参数名）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="填一个单词">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">大小写敏感 + 结果要接住</div>
+      <p><b>坑一：都区分大小写。</b><code>'Good'.count('o')</code> 得到 <code>2</code>（只数小写 o），写 <code>'Good'.count('O')</code> 才是 <code>1</code>；<code>'python is Good'.count('g')</code> 是 0 而不是 1——大写 G 根本不认。想不分大小写统计，可以先用 <code>s.lower()</code> 统一后再数。</p>
+      <p><b>坑二：字母 o 和数字 0 长得像但不是一回事</b>，<code>'hello world'.find('0')</code> 返回 -1 就是这个原因，敲代码时看仔细。</p>
+      <p><b>坑三：replace 返回新字符串，原串不变。</b><code>'abc'.replace('a', 'x')</code> 执行完，原来的 <code>'abc'</code> 还在原地——必须写成 <code>s = s.replace('a', 'x')</code> 用变量接住结果。这是「字符串不可变」这条铁律最常见的翻车现场。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的 count()、find()、index()、replace() 四个字符串方法。请：1）解释 find 和 index 找不到子串时的区别，并说说各自适合什么场景；2）举一个 replace 结果没用变量接住导致「看起来替换了其实没替换」的例子；3）出 4 道求值题考我（含一道大小写陷阱题），等我作答后公布答案和讲解。">
+      我刚学了 Python 的 count()、find()、index()、replace() 四个字符串方法。请：1）解释 find 和 index 找不到子串时的区别，并说说各自适合什么场景；2）举一个 replace 结果没用变量接住导致「看起来替换了其实没替换」的例子；3）出 4 道求值题考我（含一道大小写陷阱题），等我作答后公布答案和讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：本章作业第 2 题直接相关（5 分钟）</span>
+    <ol class="steps">
+      <li>交互模式输入 <code>s = 'python is Good'</code>。</li>
+      <li>数一数：<code>print(s.count('o'))</code>——注意大小写，大写 O 不算，结果应该是 3。</li>
+      <li>找一找：<code>print(s.find('t'))</code>——t 第一次出现在哪个下标？先自己猜，再运行验证。</li>
+      <li>换一换：<code>print(s.replace('o', '0'))</code>，把所有字母 o 换成数字 0，看看效果；再打印 <code>s</code> 确认原串没变。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p><code>count()</code> 报数、<code>find()</code>/<code>index()</code> 定位（找不到时前者给 -1、后者报错）、<code>replace()</code> 全文替换；四个方法<b>区分大小写</b>、<b>都不改变原字符串</b>，replace 的结果必须用变量接住。下一节：把字符串拆开、接上、修边——分割、联合与剔除！</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="3.07.html"><span class="nav-label">← 上一节</span><span class="nav-title">3.07 大小写转换方法</span></a>
+        <a class="next" href="3.09.html"><span class="nav-label">下一节 →</span><span class="nav-title">3.09 分割、联合与剔除</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

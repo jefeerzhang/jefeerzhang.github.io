@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.02 变量：概念与赋值 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第二章 基础概念与数值 · 第 2 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch02.html">第二章 基础概念与数值</a><span class="sep">/</span>
+          <span class="current">2.02</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">02</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第二章 · 基础概念与数值</span>
+            <h1>变量：概念与赋值</h1>
+            <p class="hero-summary">第 2 / 17 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序构成的两大核心</li>
+      <li class="cur">变量：概念与赋值</li>
+      <li>变量命名规则</li>
+      <li>数据类型总览</li>
+      <li>type() 查看类型</li>
+      <li>保留字（关键字）</li>
+      <li>函数：定义与调用</li>
+      <li>常用内置函数</li>
+      <li>输入输出函数</li>
+      <li>缩进与注释规范</li>
+      <li>数值类型总览</li>
+      <li>整数与四种进制</li>
+      <li>浮点数与精度陷阱</li>
+      <li>算术与增强赋值运算符</li>
+      <li>比较与逻辑运算符</li>
+      <li>运算符优先级</li>
+      <li>数值函数与 math 模块</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>程序的"收纳盒"，从这里开始</h2>
+    <p>上一章你已经在交互模式里算过 <code>1 / 2</code> 了，但结果算完就"丢了"。想让程序<b>记住</b>一个数、之后反复用它，就需要<b>变量</b>。这一节解决三个问题：</p>
+    <ul class="points">
+      <li>变量到底是什么？它住在<b>内存</b>里，有三个"身份证信息"</li>
+      <li>怎么把数据"装进"变量？——赋值的语法和三种姿势</li>
+      <li>为什么 <code>=</code> 不是数学里的"相等"？</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">变量 = 贴了标签的收纳盒</div>
+      <p>内存就像一排快递储物柜，<b>变量就是其中一个贴了名字标签的柜子</b>。执行 <code>age = 21</code>，就是把数字 21 放进名叫 age 的柜子里。柜子里的东西可以随时换（<code>age = 22</code>），换完标签还挂在原处——<b>变的是"值"，不变的是"名字"</b>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>变量是什么？</h2>
+    <ul class="points">
+      <li><b>定义</b>：程序中用于表示数据的符号，存储于<b>内存</b>中。</li>
+      <li><b>三大属性</b>：<code>id</code>（内存地址）、<code>type</code>（数据类型）、<code>value</code>（值）——每个变量都有这三张"身份证"。</li>
+      <li><b>Python 三大特性</b>：①使用前<b>无需声明类型</b>；②使用前<b>必须赋值</b>（没赋值就用会报错）；③<b>类型动态</b>——类型由值决定，且可随时改变。</li>
+      <li><b>基本形式</b>：<code>变量名 = 数据值</code>。注意：等号（=）表示<b>"赋值动作"而非数学"相等"</b>；左侧必须是变量名，右侧是值，<b>不可交换</b>。</li>
+    </ul>
+
+    <div class="quiz" style="margin-top:6px">
+      <p style="font-weight:700;margin-bottom:12px">🔍 变量档案卡：同一个变量 x，换个值类型就变——点击切换体验「类型动态」</p>
+      <div class="switch">
+        <button class="on" data-pane="pane-x1">x = 7</button>
+        <button data-pane="pane-x2">x = 3.14</button>
+        <button data-pane="pane-x3">x = '你好'</button>
+      </div>
+      <div class="pane on" id="pane-x1">
+        <pre class="codeblock">x = 7
+print(x, type(x))</pre>
+        <p>输出：<code>7 &lt;class 'int'&gt;</code>　—— x 此刻是<b>整数</b>型变量</p>
+      </div>
+      <div class="pane" id="pane-x2">
+        <pre class="codeblock">x = 3.14
+print(x, type(x))</pre>
+        <p>输出：<code>3.14 &lt;class 'float'&gt;</code>　—— 没声明过类型，<b>值是什么类型，变量就是什么类型</b></p>
+      </div>
+      <div class="pane" id="pane-x3">
+        <pre class="codeblock">x = '你好'
+print(x, type(x))</pre>
+        <p>输出：<code>你好 &lt;class 'str'&gt;</code>　—— 同一个名字 x，类型随时可变，这就是<b>动态类型</b></p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">实战演示</span>
+    <h2>赋值的三种姿势</h2>
+    <div class="quiz" style="margin-bottom:14px">
+      <div class="switch">
+        <button class="on" data-pane="pane-a1">① 单变量赋值</button>
+        <button data-pane="pane-a2">② 多变量赋相同值</button>
+        <button data-pane="pane-a3">③ 多变量赋不同值</button>
+      </div>
+      <div class="pane on" id="pane-a1">
+        <pre class="codeblock">A = 1
+print(A)</pre>
+        <p>输出：<code>1</code>　—— 最基本的「变量名 = 值」</p>
+      </div>
+      <div class="pane" id="pane-a2">
+        <pre class="codeblock">a = b = c = 2
+print(a, b, c)</pre>
+        <p>输出：<code>2 2 2</code>　—— 链式赋值，三个变量指向同一个值</p>
+      </div>
+      <div class="pane" id="pane-a3">
+        <pre class="codeblock">c, d, e = 3, 4, 5
+print(c, d, e)</pre>
+        <p>输出：<code>3 4 5</code>　—— 多元赋值，等号两边按顺序一一对应</p>
+      </div>
+    </div>
+    <pre class="codeblock"># 综合演示（课程例题）
+A = 1            # 1. 单变量赋值
+a = b = c = 2    # 2. 多变量赋相同值
+c, d, e = 3, 4, 5  # 3. 多变量赋不同值
+print(A, a, b, c, d, e)  # 结果为 1 2 2 3 4 5</pre>
+    <p class="muted">💡 注意：上面的 <code>c</code> 先被赋值为 2，随后又被覆盖为 3——<b>后一次赋值会覆盖前一次</b>，这也正是"变量"名字的由来。</p>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！变量具有 id（地址）、type（类型）、value（值）三大属性。"
+         data-no="❌ 不对哦。变量在内存中有三大属性：id（地址）、type（类型）、value（值），漏了哪一个都不完整。">
+      <p style="font-weight:700;margin-bottom:12px">下列哪一项<b>不属于</b>变量的三大属性？</p>
+      <button class="opt" onclick="quizPick(this)">A. id（内存地址）</button>
+      <button class="opt" onclick="quizPick(this)">B. name（变量名本身）</button>
+      <button class="opt" onclick="quizPick(this)">C. type（数据类型）</button>
+      <button class="opt" onclick="quizPick(this)">D. value（值）</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="赋值动态|赋值 动态|赋值,动态" data-ok="✅ 正确！= 是赋值动作；Python 的类型是动态的，由值决定。" data-no="❌ 再想想：等号表示什么动作？类型是静态还是动态的？（提示：参考上面的核心概念）">
+      <p>① 在 Python 中，<code>=</code> 表示<b>＿＿</b>动作而非数学上的相等；② Python 变量的类型是<b>＿＿</b>的，由值决定且可随时改变。（两空连填，中间用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：×× ××">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">变量没用过就使用，会怎样？</div>
+      <p>Python 变量<b>必须先赋值后使用</b>。直接写 <code>print(score)</code> 而从没给 score 赋过值，会报 <code>NameError: name 'score' is not defined</code>——名字还没定义，程序不认识它。</p>
+      <p>另一个坑：<code>10 = x</code> 是<b>非法的</b>。赋值号左边必须是变量名，右边是值，方向不能反，否则报 <code>SyntaxError</code>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 变量的概念与赋值。请：1）用一个生活类比解释变量、赋值和动态类型；2）分别演示单变量赋值、链式赋值 a=b=c=2、多元赋值 x,y=3,4，并说明输出结果；3）出 2 道单选题考我，等我作答后再公布答案。">
+      我刚学了 Python 变量的概念与赋值。请：1）用一个生活类比解释变量、赋值和动态类型；2）分别演示单变量赋值、链式赋值 a=b=c=2、多元赋值 x,y=3,4，并说明输出结果；3）出 2 道单选题考我，等我作答后再公布答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：让电脑记住三个数（3 分钟）</span>
+    <ol class="steps">
+      <li>打开命令行输入 <code>python</code> 进入交互模式（第一章学过）。</li>
+      <li>依次输入：<code>A = 1</code> 回车、<code>a = b = c = 2</code> 回车、<code>c, d, e = 3, 4, 5</code> 回车。</li>
+      <li>输入 <code>print(A, a, b, c, d, e)</code> 回车，对照本页的预期结果 <code>1 2 2 3 4 5</code>——注意 c 是 3 还是 2？想明白为什么。</li>
+      <li>再输入 <code>type(c)</code> 看看类型；然后 <code>c = 3.5</code>，再 <code>type(c)</code>——亲眼见证「类型动态」。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>变量是内存中表示数据的符号，有 <b>id / type / value</b> 三大属性；赋值用 <code>=</code>，它是<b>动作</b>不是相等；Python 变量无需声明、必须先赋值、类型动态可变。赋值有单变量、链式、多元三种姿势，后赋的值会覆盖先前的。下一节：给变量起名字有哪些规矩？</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="2.01.html"><span class="nav-label">← 上一节</span><span class="nav-title">2.01 程序构成的两大核心</span></a>
+        <a class="next" href="2.03.html"><span class="nav-label">下一节 →</span><span class="nav-title">2.03 变量命名规则</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

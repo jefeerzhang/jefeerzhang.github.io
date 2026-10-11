@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6.16 递归执行逻辑：递推与回溯 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第六章 函数 · 第 16 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.rplay{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.rrow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.stack{display:flex;flex-direction:column-reverse;gap:6px;min-height:120px;padding:12px;
+  background:var(--code-bg);border:1.5px dashed var(--border);border-radius:10px}
+.frame{font-family:Consolas,monospace;font-size:15px;padding:8px 12px;border-radius:8px;
+  background:#fff;border:1px solid var(--border);transition:all .25s}
+.frame.push{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:800}
+.frame.base{background:#fff7ed;border-color:#f59e0b;color:#b45309;font-weight:800}
+.frame.done{opacity:.75}
+.phase{font-weight:800;font-size:15px;margin-bottom:8px}
+.phase .p1{color:var(--accent)}
+.phase .p2{color:#b45309}
+.rlog{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14.5px;min-height:120px;white-space:pre-wrap;line-height:1.8}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch06.html">第六章 函数</a><span class="sep">/</span>
+          <span class="current">6.16</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">16</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第六章 · 函数</span>
+            <h1>递归执行逻辑：递推与回溯</h1>
+            <p class="hero-summary">第 16 / 18 节 · 约 12 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>函数的定义与优点</li>
+      <li>函数的分类</li>
+      <li>函数的定义</li>
+      <li>函数的调用</li>
+      <li>形参与实参</li>
+      <li>参数传递的两种方式</li>
+      <li>必须参数与可选参数</li>
+      <li>不定长参数</li>
+      <li>参数值的数据类型</li>
+      <li>变量作用域：局部与全局</li>
+      <li>global 修改全局变量</li>
+      <li>匿名函数 lambda</li>
+      <li>高阶函数：map 与 filter</li>
+      <li>高阶函数：sorted 与 key</li>
+      <li>递归函数：概念与两要素</li>
+      <li class="cur">递归执行逻辑：递推与回溯</li>
+      <li>递归实战：阶乘</li>
+      <li>递归实战：字符串逆序</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>函数调用自己？不看着它跑一遍，你永远觉得玄</h2>
+    <p>上一节知道了递归要有<b>递归链条</b>和<b>基项</b>。但很多人背得出口诀，一写代码还是晕——因为看不见计算机内部发生了什么。这一节我们把 <code>factorial(5)</code> 的执行过程<b>一层层拆开给你看</b>：递推时怎么「层层拆解」，回溯时怎么「步步返回」。看懂这一节，后面两节的递归代码就只是「照着流程翻译」而已。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">递归像「食堂传餐盘」：往下传是递推，往上端回是回溯</div>
+      <p>5 号窗口的同学要算 5!，他不直接算，而是在单子上写「4! 是多少？」传给 4 号窗口；4 号又写「3! 呢？」传给 3 号……一路传到 0 号窗口，他手里有现成答案「0! = 1」（这就是<b>基项</b>，不用再传了）。然后答案开始<b>往回端</b>：1 号拿到 1，算出 1×1=1 递上去；2 号算出 2×1=2；……5 号拿到 24，算出 5×24=120，完成任务。<b>往下传叫递推，往回端叫回溯</b>——递归 = 递推 + 回溯。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>以 factorial(5) 为例的两个阶段</h2>
+    <ul class="points">
+      <li><b>递推阶段（Recursion）</b>：问题一层层拆小——factorial(5) → 5 × factorial(4) → 4 × factorial(3) → … 每次调用自身时<b>参数一定要变化</b>（n 在变小），否则永远传不到底</li>
+      <li><b>基项触发</b>：拆到 n = 0 时命中基项 <code>if n==0: return 1</code>，停止继续调用——「传餐盘」到此为止</li>
+      <li><b>回溯阶段（Backtracking）</b>：答案步步返回——factorial(0)=1 → factorial(1)=1×1=1 → factorial(2)=2×1=2 → … → factorial(5)=5×24=<b>120</b></li>
+      <li><b>核心逻辑一句话</b>：递归 = 递推（层层拆解）+ 回溯（步步返回）</li>
+    </ul>
+    <p class="muted" style="font-size:13px">📌 小提示：PPT 流程示意以「基线 n=1」为例；本页按课堂代码 <code>if n==0: return 1</code> 的实际语义演示，基项在 n=0 处触发——两种写法都正确，只是基项选的位置不同。</p>
+
+    <div class="rplay">
+      <p style="font-weight:700;margin-bottom:10px">🔬 递归单步实验台：factorial(5) 到底怎么跑？点「下一步」逐帧看</p>
+      <div class="rrow">
+        <button class="btn-main btn" onclick="rStep()">下一步 →</button>
+        <button class="btn-ghost btn" onclick="rAuto()">自动播放</button>
+        <button class="btn-ghost btn" onclick="rReset()">重置</button>
+        <span id="rphase" class="phase" style="margin:0"></span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div>
+          <p style="font-size:13px;font-weight:700;color:var(--ink2);margin-bottom:6px">📤 调用栈（最上面是最新一层）</p>
+          <div class="stack" id="rstack"></div>
+        </div>
+        <div>
+          <p style="font-size:13px;font-weight:700;color:var(--ink2);margin-bottom:6px">📜 执行日志</p>
+          <div class="rlog" id="rlog">点「下一步」开始演示 factorial(5)……</div>
+        </div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>边看实验台，边对照代码</h2>
+    <pre class="codeblock">def factorial(n):
+    if n == 0:
+        return 1          # 基项：拆到这里就停
+    else:
+        return n * factorial(n-1)   # 递归链条：参数 n 变小
+
+print(factorial(5))</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">120</pre>
+    <ul class="points">
+      <li>前 5 次调用都在走 <code>else</code> 分支（递推），每次 n 减 1</li>
+      <li>n = 0 时走 <code>if</code> 分支返回 1（基项），此后不再有新的调用</li>
+      <li>之后的计算全部发生在「返回的路上」（回溯）：1×1 → 2×1 → 3×2 → 4×6 → 5×24</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>换一个问题再跑一遍：字符串逆序 rev(s)</h2>
+    <pre class="codeblock">def rev(s):
+    if len(s) == 0:
+        return s                      # 基项：空串直接返回
+    else:
+        return rev(s[1:]) + s[0]      # 链条：去掉头，接到尾
+
+print(rev("12345"))</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">54321</pre>
+    <ul class="points">
+      <li>递推：rev("12345") → rev("2345") + '1' → rev("345") + '2' → … → rev("") 触发基项</li>
+      <li>回溯："" + '5' = "5" → "5"+"4" = "54" → … → "5432"+"1" = "54321"</li>
+      <li>和阶乘对照：链条都是「问题变小」，基项都是「小到不用再拆」——结构完全同构</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！回溯是从基项开始步步返回：先得 factorial(0)=1，再算 factorial(1)=1，然后 2、6，最后 5×24=120——「往回端餐盘」的顺序。"
+         data-no="❌ 回想「传餐盘」：答案是从最底层的基项开始往回算的。factorial(0) 先返回 1，然后才轮到 factorial(1)、factorial(2)……">
+      <p style="font-weight:700;margin-bottom:12px">按课堂代码 <code>if n==0: return 1</code>，factorial(3) 在<b>回溯阶段</b>最先算出的是哪个值？</p>
+      <button class="opt" onclick="quizPick(this)">A. factorial(3) = 6</button>
+      <button class="opt" onclick="quizPick(this)">B. factorial(2) = 2</button>
+      <button class="opt" onclick="quizPick(this)">C. factorial(0) = 1</button>
+      <button class="opt" onclick="quizPick(this)">D. 3 × factorial(2)</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="递归链条基项递推回溯|递归链条 基项 递推 回溯" data-ok="✅ 全对！递归两要素：递归链条 + 基项；执行两阶段：递推（层层拆解）+ 回溯（步步返回）。" data-no="❌ 提示：四个空分别对应——递归问题的两大特征（链条与停止条件）、执行的两个阶段名称。">
+      <p>递归问题必须满足两大特征：<b>＿＿</b>（后一项依赖前一项）和<b>＿＿</b>（不需要再递归的停止点）；递归的执行分为<b>＿＿</b>（层层拆解）和<b>＿＿</b>（步步返回）两个阶段。（四空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：递归链条 基项 递推 回溯">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>忘写基项</b>：只有链条没有停止点，递归会一直拆下去，最后抛 <code>RecursionError: maximum recursion depth exceeded</code>（超过最大递归深度）；</p>
+      <p>②<b>链条参数不变</b>：写成 <code>return n * factorial(n)</code>，n 永远不变，同样拆不到基项——参数必须向基项「靠近」；</p>
+      <p>③<b>把递推当回溯</b>：乘法发生在<b>返回的路上</b>，不是调用的时候。先拆到底、再步步往回乘——顺序搞反，手算结果就对不上。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 递归函数的执行逻辑。请：1）用「食堂传餐盘」的类比解释递推和回溯两个阶段；2）画出或列出 factorial(4) 从调用到返回的完整步骤（含每层返回值）；3）出 3 道「给定递归代码求输出」的题考我，并等我答完再讲解。">
+      我刚学了 Python 递归函数的执行逻辑。请：1）用「食堂传餐盘」的类比解释递推和回溯两个阶段；2）画出或列出 factorial(4) 从调用到返回的完整步骤（含每层返回值）；3）出 3 道「给定递归代码求输出」的题考我，并等我答完再讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：直接演练作业第 6 题（5 分钟）</span>
+    <ol class="steps">
+      <li>作业第 6 题要求用递归求 1+2+…+N：先写出递归链条 <code>mysum(n) = n + mysum(n-1)</code>，再确定基项（n 等于几时直接返回几？）。</li>
+      <li>在纸上手动拆解 mysum(4)：递推 4 层、回溯 4 步，和实验台演示的 factorial(5) 对照。</li>
+      <li>故意删掉基项运行一次，亲眼看看 RecursionError 长什么样（这是最安全的「翻车体验」）。</li>
+      <li>挑战：用 <code>print</code> 在函数开头和 return 前各打一行，观察递推与回溯的打印顺序差别。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>递归执行分两阶段：递推（层层拆解，参数向基项靠近）+ 回溯（步步返回，计算发生在返回路上）；基项命中后停止调用；递归链条和基项缺一不可。下一节：把这套流程翻译成阶乘代码。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="6.15.html"><span class="nav-label">← 上一节</span><span class="nav-title">6.15 递归函数：概念与两要素</span></a>
+        <a class="next" href="6.17.html"><span class="nav-label">下一节 →</span><span class="nav-title">6.17 递归实战：阶乘</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：递归单步实验台（factorial(5)，按课堂代码 n==0 基项语义） */
+const STEPS = [
+  {act:'push', n:5, log:'调用 factorial(5)：5 != 0，走 else → 返回 5 * factorial(4)'},
+  {act:'push', n:4, log:'调用 factorial(4)：4 != 0，走 else → 返回 4 * factorial(3)'},
+  {act:'push', n:3, log:'调用 factorial(3)：3 != 0，走 else → 返回 3 * factorial(2)'},
+  {act:'push', n:2, log:'调用 factorial(2)：2 != 0，走 else → 返回 2 * factorial(1)'},
+  {act:'push', n:1, log:'调用 factorial(1)：1 != 0，走 else → 返回 1 * factorial(0)'},
+  {act:'push', n:0, log:'调用 factorial(0)：n == 0，命中【基项】→ 直接 return 1，不再调用！', base:true},
+  {act:'pop', n:1, val:1, log:'回溯：factorial(0) 返回 1 → factorial(1) = 1 * 1 = 1'},
+  {act:'pop', n:2, val:2, log:'回溯：factorial(1) 返回 1 → factorial(2) = 2 * 1 = 2'},
+  {act:'pop', n:3, val:6, log:'回溯：factorial(2) 返回 2 → factorial(3) = 3 * 2 = 6'},
+  {act:'pop', n:4, val:24, log:'回溯：factorial(3) 返回 6 → factorial(4) = 4 * 6 = 24'},
+  {act:'pop', n:5, val:120, log:'回溯：factorial(4) 返回 24 → factorial(5) = 5 * 24 = 120 ✅ 最终答案'}
+];
+let ri = 0, rTimer = null;
+function rReset(){
+  if (rTimer){ clearInterval(rTimer); rTimer = null; }
+  ri = 0;
+  document.getElementById('rstack').innerHTML = '<div class="frame">（空——还没有任何调用）</div>';
+  document.getElementById('rlog').textContent = '点「下一步」开始演示 factorial(5)……';
+  document.getElementById('rphase').innerHTML = '';
+}
+function rRender(){
+  const idx = ri;
+  document.getElementById('rstack').innerHTML = '';
+  for (let s = 0; s < idx; s++){
+    const st = STEPS[s];
+    if (st.act !== 'push') continue;
+    const d = document.createElement('div');
+    let cls = 'frame';
+    if (s === idx - 1) cls += st.base ? ' base' : ' push';
+    else cls += ' done';
+    d.className = cls;
+    d.textContent = 'factorial(' + st.n + ')' + (st.base ? '  ← 基项！' : '');
+    document.getElementById('rstack').appendChild(d);
+  }
+  if (idx === 0){
+    document.getElementById('rstack').innerHTML = '<div class="frame">（空——还没有任何调用）</div>';
+  }
+  let logs = [];
+  for (let s = 0; s < idx; s++) logs.push((s+1) + '. ' + STEPS[s].log);
+  document.getElementById('rlog').textContent = logs.length ? logs.join('\n') : '点「下一步」开始演示 factorial(5)……';
+  const ph = document.getElementById('rphase');
+  if (idx === 0){ ph.innerHTML = ''; }
+  else {
+    const last = STEPS[idx-1];
+    if (last.act === 'push' && !last.base) ph.innerHTML = '<span class="p1">阶段：递推（层层拆解 ↓）</span>';
+    else if (last.base) ph.innerHTML = '<span class="p2">基项触发！准备回溯 ↑</span>';
+    else ph.innerHTML = '<span class="p2">阶段：回溯（步步返回 ↑）</span>';
+  }
+}
+function rStep(){
+  if (rTimer){ clearInterval(rTimer); rTimer = null; }
+  if (ri >= STEPS.length){ document.getElementById('rlog').textContent += '\n—— 演示结束，重置可再看一遍 ——'; return; }
+  ri++;
+  rRender();
+}
+function rAuto(){
+  if (rTimer) clearInterval(rTimer);
+  rTimer = setInterval(() => {
+    if (ri >= STEPS.length){ clearInterval(rTimer); rTimer = null; return; }
+    ri++;
+    rRender();
+  }, 900);
+}
+window.addEventListener('DOMContentLoaded', rReset);
+</script>
+</body>
+</html>

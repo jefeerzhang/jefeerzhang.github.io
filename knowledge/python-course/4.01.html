@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.01 元组的定义与特性 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第四章 元组、集合和字典 · 第 1 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.play{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch04.html">第四章 元组、集合和字典</a><span class="sep">/</span>
+          <span class="current">4.01</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">01</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第四章 · 元组、集合和字典</span>
+            <h1>元组的定义与特性</h1>
+            <p class="hero-summary">第 1 / 21 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li class="cur">元组的定义与特性</li>
+      <li>元组的创建</li>
+      <li>元组索引与切片</li>
+      <li>元组运算</li>
+      <li>元组函数与方法</li>
+      <li>元组的不可变性</li>
+      <li>集合的定义与特性</li>
+      <li>集合的创建</li>
+      <li>集合运算：交差并补</li>
+      <li>集合操作：增删元素</li>
+      <li>集合运算并更新</li>
+      <li>集合函数与判断方法</li>
+      <li>序列与映射</li>
+      <li>字典的定义与特性</li>
+      <li>字典的创建</li>
+      <li>字典访问与三视图</li>
+      <li>字典添加与修改</li>
+      <li>字典删除</li>
+      <li>字典其他操作</li>
+      <li>组合数据类型总结</li>
+      <li>数据类型转换</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>列表太自由了，有些数据我想「锁起来」</h2>
+    <p>第三章你学会了列表——想加就加、想删就删、随时能改。但现实中很多数据恰恰<b>不希望被改动</b>：一组固定配置、一个坐标点、一年 12 个月的名称……如果代码里某处不小心把它们改了，bug 会藏得很深很难查。Python 为这种「只读数据」准备了专门的类型：<b>元组（tuple）</b>。</p>
+    <p>元组是<b>由 0 个或多个元素组成的有序序列</b>，在 Python 中属于<b>有序且不可变</b>的序列数据类型，使用小括号 () 包裹元素。它兼具列表的序列特性与常量的稳定性，适合存储固定配置或异构数据集合。本章作业第 1 题（用元组存坐标）就是它的直接应用。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">从白板到塑封卡片</div>
+      <p>延续第三章的比喻：字符串是「刻在石碑上的字」，列表是「白板上的购物清单」——想擦就擦、想加就加；而<b>元组是「塑封好的卡片」</b>——卡片上的内容看得见、传得动，但塑封之后谁也涂改不了。需要展示和传递固定信息时，塑封卡片远比白板可靠。这个「塑封」的比喻会贯穿整个元组部分，请记住它。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>三大特性：有序、不可变、任意类型</h2>
+    <ul class="points">
+      <li><b>有序性</b>：元素按插入顺序排列，支持通过索引（Index）直接访问——和字符串、列表的规则一样</li>
+      <li><b>不可变性</b>：一旦创建，无法修改、添加或删除元素，数据安全性高——这是元组与列表最本质的区别</li>
+      <li><b>任意类型</b>：元素可以包含数字、字符串、列表，甚至其他元组等不同类型，想混装就混装</li>
+      <li>一句话记住：元组 = 有序 + 只读 + 什么都能装</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>🔬 点开三张卡片，看元组的三个特性</h2>
+    <div class="play">
+      <div class="grid g3">
+        <div class="icard" data-toggle>
+          <h4><span class="dot" style="background:var(--accent)"></span>有序性</h4>
+          <div class="desc">元素按顺序排队，索引直达</div>
+          <div class="more">tp = (10, 20, 30) 中，tp[0] 是 10，tp[-1] 是 30——正向从 0 起、反向从 -1 起，与列表完全相同（下一节细讲）。</div>
+          <div class="hint">点击展开说明</div>
+        </div>
+        <div class="icard" data-toggle>
+          <h4><span class="dot" style="background:var(--err)"></span>不可变性</h4>
+          <div class="desc">创建之后只读，谁也改不了</div>
+          <div class="more">tp = (1, 2, 3) 之后执行 tp[0] = 99，会直接报 TypeError。想「改」元组，只能创建一个新的元组来代替。</div>
+          <div class="hint">点击展开说明</div>
+        </div>
+        <div class="icard" data-toggle>
+          <h4><span class="dot" style="background:var(--ok)"></span>任意类型</h4>
+          <div class="desc">数字、字符串、列表都能装</div>
+          <div class="more">(1, 'a', [2, 3], (4, 5)) 是完全合法的元组——甚至能嵌套元组。装列表时列表内部仍可修改，这个问题 4.06 会彻底讲清。</div>
+          <div class="hint">点击展开说明</div>
+        </div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！不可变性是元组的灵魂——创建之后无法修改、添加或删除元素，其余三条说法都正确。"
+         data-no="❌ 注意题目问的是「错误」的说法：元组的核心特性是不可变，一旦创建就无法修改、添加或删除元素，B 恰恰说反了。">
+      <p style="font-weight:700;margin-bottom:12px">下列哪种说法是<b>错误</b>的？</p>
+      <button class="opt" onclick="quizPick(this)">A. 元组是有序序列，支持通过索引直接访问元素</button>
+      <button class="opt" onclick="quizPick(this)">B. 元组创建之后，仍然可以修改、添加或删除元素</button>
+      <button class="opt" onclick="quizPick(this)">C. 元组使用小括号 () 包裹元素</button>
+      <button class="opt" onclick="quizPick(this)">D. 元组的元素可以是数字、字符串、列表等不同类型</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="修改 添加 删除|修改添加删除|修改，添加，删除"
+         data-ok="✅ 正确！修改、添加、删除三条路全被封死，这就是元组的不可变性。"
+         data-no="❌ 再想想：元组一旦创建，三种常见的「动数据」操作全都不允许——是哪三种？（用空格隔开三个词）">
+      <p>元组一旦创建，无法____、____或____元素。（三空连填，用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：修改 添加 删除">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">括号不是身份证，逗号才是</div>
+      <p>新手常以为「加了小括号就是元组」——错！<code>type((5))</code> 的结果是 <code>&lt;class 'int'&gt;</code>，因为 (5) 只是带括号的数字 5；<code>type((5,))</code> 才是 <code>&lt;class 'tuple'&gt;</code>。真正标志元组身份的是<b>逗号</b>，这个本章第一大坑下一节专门讲透。</p>
+      <p>另一个坑：「不可变」不等于「元素内部完全不可改」——如果元素本身是个列表，比如 (1, [2, 3])，那个列表<b>内部</b>仍然可以修改。这个问题 4.06 会用 id 帮你彻底搞懂。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 元组的定义与特性：元组是由 0 个或多个元素组成的有序序列，是有序且不可变的序列数据类型，用小括号包裹，三大特性是有序性、不可变性、元素任意类型。请：1）用「塑封卡片」的比喻再解释一遍元组和列表的区别；2）出 4 道判断题考我元组的特性；3）举 3 个现实中适合用元组而非列表存储的数据例子并说明理由。">
+      我刚学了 Python 元组的定义与特性：元组是由 0 个或多个元素组成的有序序列，是有序且不可变的序列数据类型，用小括号包裹，三大特性是有序性、不可变性、元素任意类型。请：1）用「塑封卡片」的比喻再解释一遍元组和列表的区别；2）出 4 道判断题考我元组的特性；3）举 3 个现实中适合用元组而非列表存储的数据例子并说明理由。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：验证混装与类型（5 分钟）</span>
+    <ol class="steps">
+      <li>打开 IDLE 的交互模式（Shell），输入 <code>(1, 'a', [2, 3], (4, 5))</code> 并回车——整数、字符串、列表、元组混装，完全合法。</li>
+      <li>输入 <code>x = (1, 'a', [2, 3], (4, 5))</code>，再输入 <code>type(x)</code>——看到 <code>&lt;class 'tuple'&gt;</code>，确认它就是元组。</li>
+      <li>输入 <code>len(x)</code>——结果是 4：不管元素是什么类型，元组只按「个数」计数。</li>
+      <li>试着输入 <code>x[0] = 99</code>——亲眼看看不可变性的报错长什么样（学完下一节索引后你会更明白）。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>元组是由 0 个或多个元素组成的<b>有序序列</b>，是 Python 中有序且不可变的序列数据类型，用小括号 () 包裹。三大特性：<b>有序性</b>（索引访问）、<b>不可变性</b>（不能改、加、删元素）、<b>任意类型</b>（元素可混装嵌套）。它适合存固定配置和受保护数据。下一节：元组的各种创建姿势——单元素元组有个天大的坑。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="ch04.html"><span class="nav-label">← 上一节</span><span class="nav-title">第四章课程目录</span></a>
+        <a class="next" href="4.02.html"><span class="nav-label">下一节 →</span><span class="nav-title">4.02 元组的创建</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

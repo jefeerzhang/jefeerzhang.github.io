@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.11 集合运算并更新 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第四章 元组、集合和字典 · 第 11 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.pane .tip{font-size:13.5px;color:var(--ink2);margin:8px 0 0}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch04.html">第四章 元组、集合和字典</a><span class="sep">/</span>
+          <span class="current">4.11</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">11</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第四章 · 元组、集合和字典</span>
+            <h1>集合运算并更新</h1>
+            <p class="hero-summary">第 11 / 21 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>元组的定义与特性</li>
+      <li>元组的创建</li>
+      <li>元组索引与切片</li>
+      <li>元组运算</li>
+      <li>元组函数与方法</li>
+      <li>元组的不可变性</li>
+      <li>集合的定义与特性</li>
+      <li>集合的创建</li>
+      <li>集合运算：交差并补</li>
+      <li>集合操作：增删元素</li>
+      <li class="cur">集合运算并更新</li>
+      <li>集合函数与判断方法</li>
+      <li>序列与映射</li>
+      <li>字典的定义与特性</li>
+      <li>字典的创建</li>
+      <li>字典访问与三视图</li>
+      <li>字典添加与修改</li>
+      <li>字典删除</li>
+      <li>字典其他操作</li>
+      <li>组合数据类型总结</li>
+      <li>数据类型转换</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>想让运算结果「直接写回原集合」？</h2>
+    <p>上一节的四大运算（<code>&amp;</code> <code>-</code> <code>|</code> <code>^</code>）都会<b>产生新集合</b>，原集合保持不变。但很多时候我们就是想把结果<b>直接覆盖回 st1</b>——这节先讲三个 <code>*_update</code> 方法，最后再补一个同样就地修改的 <code>st1.update(st2)</code>。它们还有个共同的「怪脾气」：返回值是 None，考试特别爱考。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">算完抄新纸 vs 算完撕账本重写</div>
+      <p>普通集合运算像「算完<b>抄在新纸</b>上」——原账本一个字都不动；<code>*_update</code> 方法像「算完<b>直接把账本撕了重写</b>」——账本还是那个账本（内存里的对象没变），内容已经被运算结果覆盖了。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>三个 *_update：运算 + 覆盖，一步到位</h2>
+    <table>
+      <tr><th>方法</th><th>作用</th><th>等价写法</th></tr>
+      <tr><td><code>st1.intersection_update(st2)</code></td><td>取交集，并把结果覆盖到 st1</td><td><code>st1 = st1 &amp; st2</code></td></tr>
+      <tr><td><code>st1.difference_update(st2)</code></td><td>取差集，并把结果覆盖到 st1</td><td><code>st1 = st1 - st2</code></td></tr>
+      <tr><td><code>st1.symmetric_difference_update(st2)</code></td><td>取对称差（并集去掉交集），并把结果覆盖到 st1</td><td><code>st1 = st1 ^ st2</code></td></tr>
+      <tr><td><code>st1.update(st2)</code></td><td>把 st2 的元素并进 st1（就地并集，不去重以外的额外操作）</td><td><code>st1 = st1 | st2</code></td></tr>
+    </table>
+    <ul class="points">
+      <li><b>就地修改</b>：把运算结果直接覆盖回 st1，思路类似列表的 <code>sort()</code></li>
+      <li><b>返回值都是 None</b>——打印方法调用本身，只能看到 None</li>
+      <li>等价写法 <code>st1 = st1 &amp; st2</code> 效果相同，考试两种都要会</li>
+    </ul>
+    <pre class="codeblock">ST8 = {1, 2, 3}
+print(ST8.intersection_update({2, 3, 4, 5}))
+# None　→　方法的返回值是 None！
+print(ST8)
+# {2, 3}　→　但 ST8 已被覆盖成交集
+ST8 = ST8 &amp; {3, 4, 5}
+print(ST8)
+# {3}</pre>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>🔀 两种写法，殊途同归</h2>
+    <p>同一个任务「把 ST8 覆盖为它与 {2, 3, 4, 5} 的交集」，两种写法结果一样：</p>
+    <div>
+      <div class="switch">
+        <button class="on" data-pane="pane-method">update 方法版</button>
+        <button data-pane="pane-assign">等价赋值版</button>
+      </div>
+      <div class="pane on" id="pane-method">
+        <pre class="codeblock">ST8 = {1, 2, 3}
+ST8.intersection_update({2, 3, 4, 5})
+print(ST8)
+<span class="good"># {2, 3}</span></pre>
+        <p class="tip">方法直接改 ST8 本尊，返回值 None 被丢弃。</p>
+      </div>
+      <div class="pane" id="pane-assign">
+        <pre class="codeblock">ST8 = {1, 2, 3}
+ST8 = ST8 &amp; {2, 3, 4, 5}
+print(ST8)
+<span class="good"># {2, 3}</span></pre>
+        <p class="tip">先算出新集合，再让 ST8 这个名字指向它。</p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！intersection_update 就地覆盖 ST8，但它自己的返回值是 None。"
+         data-no="❌ 注意题目打印的是方法的「返回值」——*_update 系列就地修改集合，返回值一律是 None。">
+      <p style="font-weight:700;margin-bottom:12px"><code>ST8 = {1, 2, 3}</code>，<code>print(ST8.intersection_update({2, 3, 4, 5}))</code> 的输出是？</p>
+      <button class="opt" onclick="quizPick(this)">A. {2, 3}</button>
+      <button class="opt" onclick="quizPick(this)">B. {1, 2, 3}</button>
+      <button class="opt" onclick="quizPick(this)">C. None</button>
+      <button class="opt" onclick="quizPick(this)">D. {2, 3, 4, 5}</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="-|-号|减号|负号|减"
+         data-ok="✅ 正确！difference（差集）对应减号 -。"
+         data-no="❌ 提示：difference 的意思是「差」——符号版的差集用哪个运算符号？">
+      <p><code>st1.difference_update(st2)</code> 取差集并覆盖回 st1，等价于 <code>st1 = st1 ___ st2</code>。（填一个运算符号）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：&amp;">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">返回 None！千万别把 None 赋回去</div>
+      <p>经典错误：<code>st1 = st1.intersection_update(st2)</code>——方法已经<b>就地改好</b>了 st1，却把返回值 None 又赋给 st1，集合当场变成 None，后面再用就报错。</p>
+      <p>另一个高频考点：上一节「<code>&amp; - | ^</code> 产生<b>新集合</b>、原集合不变」与这一节「*_update <b>就地覆盖</b>、返回 None」的区别，考试经常拿来对比。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 集合的三个就地更新方法：intersection_update、difference_update、symmetric_difference_update。请：1）对比普通集合运算（产生新集合、原集合不变）和 *_update（就地覆盖、返回 None）的区别；2）出 5 道「给代码猜输出」的题，专考「返回 None」和「别把 None 赋回去」这个坑；3）讲讲这种设计为什么和列表的 sort() 是一个思路。">
+      我刚学了 Python 集合的三个就地更新方法：intersection_update、difference_update、symmetric_difference_update。请：1）对比普通集合运算（产生新集合、原集合不变）和 *_update（就地覆盖、返回 None）的区别；2）出 5 道「给代码猜输出」的题，专考「返回 None」和「别把 None 赋回去」这个坑；3）讲讲这种设计为什么和列表的 sort() 是一个思路。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：盯住 None 的出场顺序（5 分钟）</span>
+    <ol class="steps">
+      <li>运行 <code>ST8 = {1, 2, 3}</code>，再 <code>print(ST8.intersection_update({2, 3, 4, 5}))</code>——先看到 None。</li>
+      <li>紧接着 <code>print(ST8)</code>，确认集合已变成 {2, 3}——记住这个输出顺序：先 None，后 {2, 3}。</li>
+      <li>继续 <code>ST8 = ST8 &amp; {3, 4, 5}</code> 和 <code>print(ST8)</code>，得到 {3}。</li>
+      <li>试一下反面教材：<code>st = st.intersection_update({1})</code> 再 <code>print(st)</code>，看看它是不是变成了 None。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>三个 <code>*_update</code> 方法 = <b>运算 + 覆盖回 st1</b>，等价于 <code>st1 = st1 □ st2</code>（□ 为对应运算符号）；返回值<b>全是 None</b>，千万别再赋回去；「产生新集合」与「就地更新」的区分是考试高频。下一节：集合的函数与判断方法，给集合做「体检」。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="4.10.html"><span class="nav-label">← 上一节</span><span class="nav-title">4.10 集合操作：增删元素</span></a>
+        <a class="next" href="4.12.html"><span class="nav-label">下一节 →</span><span class="nav-title">4.12 集合函数与判断方法</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

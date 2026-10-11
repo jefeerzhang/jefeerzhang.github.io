@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.14 列表的创建 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第三章 字符串与列表 · 第 14 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.cm{color:#8a93a6}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch03.html">第三章 字符串与列表</a><span class="sep">/</span>
+          <span class="current">3.14</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">14</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第三章 · 字符串与列表</span>
+            <h1>列表的创建</h1>
+            <p class="hero-summary">第 14 / 21 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>字符串基础与三种引号</li>
+      <li>转义字符</li>
+      <li>字符串索引</li>
+      <li>字符串切片</li>
+      <li>实战：身份证号提取信息</li>
+      <li>字符串运算与内置函数</li>
+      <li>大小写转换方法</li>
+      <li>计数、查找与替换</li>
+      <li>分割、联合与剔除</li>
+      <li>判断字符串类别</li>
+      <li>format 格式化输出</li>
+      <li>f-string 格式化输出</li>
+      <li>列表定义与特性</li>
+      <li class="cur">列表的创建</li>
+      <li>列表索引与切片</li>
+      <li>列表增加元素</li>
+      <li>列表删除元素</li>
+      <li>列表修改元素</li>
+      <li>列表运算与函数</li>
+      <li>列表常用方法</li>
+      <li>实战：成绩排序和统计</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>认识了列表，怎么把数据「装进去」？</h2>
+    <p>上一节知道了列表是「白板上的购物清单」，这一节解决第一个动作：<b>把清单写出来</b>。Python 提供两条路：用中括号直接写，或者用 <code>list()</code> 函数把现成的数据「转换」成列表。两种方式都要熟练——作业和考试里它们经常一起出现。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">装行李箱 vs 拆包裹重新分装</div>
+      <p>中括号直接创建像<b>自己动手装行李箱</b>：想要什么，就亲手把什么放进去，放什么、放几个全由你决定。</p>
+      <p><code>list()</code> 则像<b>把现成的包裹拆开重新分装</b>：拿到字符串 <code>'12345'</code>，拆开后把 5 个单字符一个一个装进新列表。注意——拆出来的是「字符」，不是数字，这个坑下面细说。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>两种创建方式</h2>
+    <ul class="points">
+      <li><b>直接创建</b>：使用中括号 <code>[]</code> 直接包含元素，是最直观的方式</li>
+      <li><b>list() 函数</b>：将字符串、元组、range 对象等<b>可迭代对象</b>转换为列表</li>
+      <li><code>list()</code> 不传参数 → 得到<b>空列表</b> <code>[]</code></li>
+      <li><code>list(字符串)</code> → 把每个<b>字符</b>拆开，逐个变成列表元素</li>
+    </ul>
+    <pre class="codeblock">L1 = list()
+print(L1)        <span class="cm"># []</span>
+print(type(L1))  <span class="cm"># &lt;class 'list'&gt;</span>
+
+L2 = [1, None, '3', True, L1]
+print(L2)        <span class="cm"># [1, None, '3', True, []]</span>
+
+L3 = list('12345')
+print(L3)        <span class="cm"># ['1', '2', '3', '4', '5']</span></pre>
+    <p>看懂这三段：<code>L1</code> 是空参数得到空列表；<code>L2</code> 演示了混装任意类型——数字、None、字符串、布尔值，甚至把另一个列表 <code>L1</code> 整个嵌套进去；<code>L3</code> 演示了 <code>list(字符串)</code> 把 '12345' 拆成 5 个单字符。</p>
+  </section>
+      <section>
+    <span class="tag">🔬 交互示例</span>
+    <h2>两种创建方式对比</h2>
+    <div>
+      <div class="switch">
+        <button class="on" data-pane="pane-direct">中括号直接创建</button>
+        <button data-pane="pane-list">list() 转换</button>
+      </div>
+      <div class="pane on" id="pane-direct">
+        <pre class="codeblock">langs = ['Python', 'C', 'Java']
+nums = [10, 20, 30]
+empty = []
+print(langs, nums, empty)</pre>
+        <p>输出结果：</p>
+        <pre class="codeblock out">['Python', 'C', 'Java'] [10, 20, 30] []</pre>
+        <p>想装什么就写什么，元素类型随意、数量随意，一行搞定。</p>
+      </div>
+      <div class="pane" id="pane-list">
+        <pre class="codeblock">print(list('abc'))      <span class="cm"># 拆开字符串</span>
+print(list((1, 2, 3)))  <span class="cm"># 元组转列表</span>
+print(list())           <span class="cm"># 不传参数 → 空列表</span></pre>
+        <p>输出结果：</p>
+        <pre class="codeblock out">['a', 'b', 'c']
+[1, 2, 3]
+[]</pre>
+        <p><code>list()</code> 负责「拆开重装」：把可迭代对象里的东西一个一个取出来，装进新列表。</p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！list(字符串) 会把每个字符拆开，逐个变成列表元素，所以得到 3 个单字符字符串。"
+         data-no="❌ 再想想：list() 是「拆开重装」——把 'abc' 的每个字符一个一个取出来装进新列表，结果里是 3 个独立的字符串。">
+      <p style="font-weight:700;margin-bottom:12px"><code>list('abc')</code> 的结果是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 'abc'</button>
+      <button class="opt" onclick="quizPick(this)">B. ['a', 'b', 'c']</button>
+      <button class="opt" onclick="quizPick(this)">C. ['abc']</button>
+      <button class="opt" onclick="quizPick(this)">D. 程序报错</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="空" data-ok="✅ 正确！list() 不传参数时得到空列表 []，常用来先建一个空清单、以后再往里加东西。" data-no="❌ 再想想：不往行李箱里放任何东西，箱子是什么状态？">
+      <p><code>list()</code> 不传参数时得到＿＿列表。</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="填一个字">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">拆出来的是字符，不是数字</div>
+      <p><code>list('12345')</code> 得到的是 <code>['1', '2', '3', '4', '5']</code>——5 个<b>字符串</b>，不是数字 1~5！想得到数字列表，需要用后面章节的循环或推导式，先把这颗雷记在心里。</p>
+      <p>另一个坑：<code>list(123)</code> 会报 <code>TypeError: 'int' object is not iterable</code>——数字不是可迭代对象。<code>list()</code> 只能拆字符串、元组、range 这类「能一个一个取出来」的东西，单个数字没法拆。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 创建列表的两种方式：中括号直接创建、list() 函数转换。请：1）用「装行李箱 vs 拆包裹分装」的类比解释两种方式的适用场景；2）解释为什么 list('12345') 的结果里是字符串而不是数字；3）出 3 道求值题考我（含一道会报错的），等我作答后公布答案和讲解。">
+      我刚学了 Python 创建列表的两种方式：中括号直接创建、list() 函数转换。请：1）用「装行李箱 vs 拆包裹分装」的类比解释两种方式的适用场景；2）解释为什么 list('12345') 的结果里是字符串而不是数字；3）出 3 道求值题考我（含一道会报错的），等我作答后公布答案和讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试（3 分钟）</span>
+    <ol class="steps">
+      <li>交互模式输入 <code>list('川农')</code>，观察结果——一个中文字符也是一个元素。</li>
+      <li>再输入 <code>list(range(4))</code>——range 还没正式学，先看效果：结果是什么？</li>
+      <li>对照一下：两个结果各有几个元素？里面的东西是什么类型？</li>
+      <li>挑战：输入 <code>list(123)</code>，看看报什么错，并用自己的话解释原因。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>创建列表的两种方式：<b>中括号 <code>[]</code> 直接包含元素</b>（最直观）；<b><code>list()</code> 函数</b>把字符串、元组、range 等可迭代对象转成列表（不传参数得到空列表）。<code>list(字符串)</code> 把每个字符拆开变成元素——拆出来的是字符串不是数字；<code>list(数字)</code> 会报错。列表可以混装任意类型，甚至嵌套另一个列表。下一节：像字符串一样对列表索引和切片。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="3.13.html"><span class="nav-label">← 上一节</span><span class="nav-title">3.13 列表定义与特性</span></a>
+        <a class="next" href="3.15.html"><span class="nav-label">下一节 →</span><span class="nav-title">3.15 列表索引与切片</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

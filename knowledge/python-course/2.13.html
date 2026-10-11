@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.13 浮点数与精度陷阱 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第二章 基础概念与数值 · 第 13 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch02.html">第二章 基础概念与数值</a><span class="sep">/</span>
+          <span class="current">2.13</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">13</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第二章 · 基础概念与数值</span>
+            <h1>浮点数与精度陷阱</h1>
+            <p class="hero-summary">第 13 / 17 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序构成的两大核心</li>
+      <li>变量：概念与赋值</li>
+      <li>变量命名规则</li>
+      <li>数据类型总览</li>
+      <li>type() 查看类型</li>
+      <li>保留字（关键字）</li>
+      <li>函数：定义与调用</li>
+      <li>常用内置函数</li>
+      <li>输入输出函数</li>
+      <li>缩进与注释规范</li>
+      <li>数值类型总览</li>
+      <li>整数与四种进制</li>
+      <li class="cur">浮点数与精度陷阱</li>
+      <li>算术与增强赋值运算符</li>
+      <li>比较与逻辑运算符</li>
+      <li>运算符优先级</li>
+      <li>数值函数与 math 模块</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>小数不"老实"，先给它立规矩</h2>
+    <p>浮点数（float）就是带小数部分的数，但它有几个"不老实"的地方，初学时最容易被坑：</p>
+    <ul class="points">
+      <li><code>10.</code> 也是浮点数——<code>type(10.)</code> 得到 <code>&lt;class 'float'&gt;</code>，<b>只要带小数点就是 float</b></li>
+      <li>支持<b>科学计数法</b>：<code>5e3</code> 就是 5000.0，<code>-5E-3</code> 就是 -0.005</li>
+      <li>浮点数用<b>二进制存储</b>，可能导致精度问题：<code>0.1 + 0.2</code> 竟然不等于 <code>0.3</code>！</li>
+    </ul>
+    <p>这一节就带你亲眼看看这些"惊喜"，并学会正确应对。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">二进制存小数 = 用 1/2、1/4、1/8 凑零钱</div>
+      <p>计算机存小数只能用 2 的负次幂（0.5、0.25、0.125……）去"凑零钱"。十进制的 0.1 在二进制里是<b>无限循环小数</b>，就像让你用 5 角、2 角 5 分、1 角 2 分 5 厘……永远凑不出整 1 角，只能凑到<b>非常接近</b>为止。所以 <code>0.1</code> 存进电脑里其实是个"近似值"——这不是 Python 的 bug，而是<b>所有编程语言的通病</b>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>浮点数的三个"性格"</h2>
+    <ul class="points">
+      <li><b>带点就是 float</b>：<code>type(10.)</code> → <code>&lt;class 'float'&gt;</code>。小数点后哪怕不写数字，也是浮点数。</li>
+      <li><b>科学计数法照单全收</b>：<code>5e3</code> 表示 5×10³ = 5000.0；<code>-5E-3</code> 表示 -5×10⁻³ = -0.005。e 或 E 都行，结果是 float。</li>
+      <li><b>存储精度有极限</b>：<code>0.1 == 0.1000000000000001</code> → <code>False</code>，但 <code>0.1 == 0.10000000000000001</code> → <code>True</code>——说明 float 大约有 15–17 位<b>有效数字</b>的精度，再往后的差异就"看不出来"了。</li>
+    </ul>
+    <div class="quiz" style="margin-top:6px">
+      <p style="font-weight:700;margin-bottom:12px">🔍 点击切换，看两组经典演示：</p>
+      <div class="switch">
+        <button class="on" data-pane="pane-f1">科学计数法</button>
+        <button data-pane="pane-f2">精度惊吓</button>
+      </div>
+      <div class="pane on" id="pane-f1">
+        <pre class="codeblock">print(5e3)     # 5×10³
+print(-5E-3)   # -5×10⁻³
+print(type(10.))</pre>
+        <p>输出：<code>5000.0</code>、<code>-0.005</code>、<code>&lt;class 'float'&gt;</code>　—— 科学计数法结果是 float，10. 带个小数点也是 float</p>
+      </div>
+      <div class="pane" id="pane-f2">
+        <pre class="codeblock">print(0.1 == 0.1000000000000001)
+print(0.1 == 0.10000000000000001)
+print(0.1 + 0.2)</pre>
+        <p>输出：<code>False</code>、<code>True</code>、<code>0.30000000000000004</code>　—— 0.1 的存储精度极限约 16 位小数；0.1+0.2 的"零头"正是二进制近似存储留下的痕迹</p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">实战演示</span>
+    <h2>为什么 0.1 + 0.2 ≠ 0.3？</h2>
+    <pre class="codeblock">print(0.1 + 0.2)          # 输出：<span class="bad">0.30000000000000004</span>
+print(0.1 + 0.2 == 0.3)   # 输出：<span class="bad">False</span>！</pre>
+    <p><b>原因拆解</b>：计算机用二进制存小数，十进制的 0.1 换算成二进制是无限循环小数（0.000110011…），内存空间有限，只能<b>截断近似存储</b>。两个"近似值"相加，误差就露馅了——于是得到了 0.30000000000000004。</p>
+    <p class="muted">💡 记住：这是<b>所有编程语言的通病</b>（C、Java、JavaScript 都一样），不是 Python 出了 bug。二进制存储浮点数导致精度问题，是浮点数的天性。</p>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！0.1 + 0.2 的真实输出就是 0.30000000000000004，二进制近似存储的杰作。"
+         data-no="❌ 不对哦。直觉会说 0.3，但实际输出是 0.30000000000000004——0.1 和 0.2 都是二进制的近似值，相加后误差露了出来。">
+      <p style="font-weight:700;margin-bottom:12px"><code>print(0.1 + 0.2)</code> 的输出是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 0.3</button>
+      <button class="opt" onclick="quizPick(this)">B. 0.30</button>
+      <button class="opt" onclick="quizPick(this)">C. 0.30000000000000004</button>
+      <button class="opt" onclick="quizPick(this)">D. 报错</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="5000.0|5000" data-ok="✅ 正确！5e3 = 5×10³ = 5000.0，科学计数法的结果是浮点数。" data-no="❌ 再想想：e3 表示 10 的 3 次方，5×1000 等于多少？（提示：写 5000.0 或 5000 都算对）">
+      <p><code>5e3</code> 的值是<b>＿＿</b>；而 <code>-5E-3</code> 的值是 -0.005。（写 5000.0 或 5000 均可）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：5×10³">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">千万别用 == 直接比较两个浮点数！</div>
+      <p><code>0.1 + 0.2 == 0.3</code> 的结果是 <code>False</code>——用 == 判断浮点数相等是经典大坑。正确姿势有两种：</p>
+      <p>① 用 <code>round()</code> 四舍五入到合理位数后再比较：</p>
+      <pre class="codeblock"><span class="good">round(0.1 + 0.2, 10) == 0.3   # True</span></pre>
+      <p>② 或判断两数之差的绝对值是否小于一个很小的数：</p>
+      <pre class="codeblock"><span class="good">abs(0.1 + 0.2 - 0.3) &lt; 1e-9   # True</span></pre>
+      <p>两种方法都在说同一件事：<b>浮点数只谈"足够接近"，不谈"完全相等"</b>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 浮点数的精度陷阱。请：1）解释为什么 0.1 + 0.2 不等于 0.3（用二进制存小数的原理）；2）演示 round() 和 abs(a-b) &lt; 1e-9 两种正确的浮点数比较方法；3）出 2 道判断题考我浮点数比较的写法对错，等我作答后再公布答案。">
+      我刚学了 Python 浮点数的精度陷阱。请：1）解释为什么 0.1 + 0.2 不等于 0.3（用二进制存小数的原理）；2）演示 round() 和 abs(a-b) &lt; 1e-9 两种正确的浮点数比较方法；3）出 2 道判断题考我浮点数比较的写法对错，等我作答后再公布答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：亲眼见证精度陷阱（3 分钟）</span>
+    <ol class="steps">
+      <li>打开命令行输入 <code>python</code> 进入交互模式。</li>
+      <li>输入 <code>print(0.1 + 0.2)</code> 回车——看看是不是真的输出 <code>0.30000000000000004</code>。</li>
+      <li>输入 <code>0.1 == 0.10000000000000001</code> 回车——输出 <code>True</code>？想想这说明了 0.1 的存储精度极限在哪里。</li>
+      <li>再用正确姿势试试：<code>round(0.1 + 0.2, 10) == 0.3</code> 和 <code>abs(0.1 + 0.2 - 0.3) &lt; 1e-9</code>，确认都返回 <code>True</code>。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>浮点数带小数点即是 float（<code>10.</code> 也是），支持科学计数法（<code>5e3</code>=5000.0、<code>-5E-3</code>=-0.005）。由于<b>二进制存储</b>，0.1 这类小数只能近似保存，精度极限约 15–17 位有效数字（<code>sys.float_info.dig</code> 的值是 15），于是 <code>0.1 + 0.2</code> 得到 0.30000000000000004——这是所有编程语言的通病。比较浮点数要用 <code>round()</code> 或 <code>abs(a-b) &lt; 1e-9</code>，别用 ==。下一节：算术运算符与增强赋值。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="2.12.html"><span class="nav-label">← 上一节</span><span class="nav-title">2.12 整数与四种进制</span></a>
+        <a class="next" href="2.14.html"><span class="nav-label">下一节 →</span><span class="nav-title">2.14 算术与增强赋值运算符</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

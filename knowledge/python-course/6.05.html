@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6.05 形参与实参 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第六章 函数 · 第 5 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:680px){.pair{grid-template-columns:1fr}}
+.pair .icard h4{justify-content:center}
+.arrow-mid{text-align:center;font-size:22px;color:var(--accent);font-weight:800;padding:2px 0}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch06.html">第六章 函数</a><span class="sep">/</span>
+          <span class="current">6.05</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">05</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第六章 · 函数</span>
+            <h1>形参与实参</h1>
+            <p class="hero-summary">第 5 / 18 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>函数的定义与优点</li>
+      <li>函数的分类</li>
+      <li>函数的定义</li>
+      <li>函数的调用</li>
+      <li class="cur">形参与实参</li>
+      <li>参数传递的两种方式</li>
+      <li>必须参数与可选参数</li>
+      <li>不定长参数</li>
+      <li>参数值的数据类型</li>
+      <li>变量作用域：局部与全局</li>
+      <li>global 修改全局变量</li>
+      <li>匿名函数 lambda</li>
+      <li>高阶函数：map 与 filter</li>
+      <li>高阶函数：sorted 与 key</li>
+      <li>递归函数：概念与两要素</li>
+      <li>递归执行逻辑：递推与回溯</li>
+      <li>递归实战：阶乘</li>
+      <li>递归实战：字符串逆序</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>上一节说「把 3 传给 a」——a 到底是谁的？3 又是谁的？</h2>
+    <p><code>getsum(3, 5)</code> 里的 a、b 和 3、5，其实是<b>两种身份完全不同的东西</b>：一个是函数设计者造的「占位变量」，一个是调用者拿出来的「实际数据」。考试最爱考「谁是形参、谁是实参」，而且分不清它们，后面学参数传递方式、作用域都会跟着糊涂。这一节把这两个概念一次掰清。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">形参像快递单上的「收件人」空栏，实参是你实际填进去的那个名字</div>
+      <p>快递公司印了十万张一样的快递单，每张单上「收件人：＿＿」都是<b>空栏</b>——这就是<b>形参</b>：设计单据（函数定义）时规定的位置和名字，本身没有内容。你寄件时在空栏里写上「lihua」——这就是<b>实参</b>：调用（寄件）时提供的实际数据。空栏可以填任何名字（参数换值复用），但空栏本身的规则（格式、位置）是设计者定的。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>形参 vs 实参：一张表看穿</h2>
+    <div class="pair">
+      <div class="icard">
+        <h4><span class="dot" style="background:#4f6ef7"></span>形参（形式参数）</h4>
+        <p style="font-size:14px;margin:6px 0">出现在<b>函数定义</b>时，是设计者定义的<b>参数名称</b>——一个占位变量，等调用时才被赋值。</p>
+        <pre class="codeblock">def welcome(name):
+    print(f"Hello, {name}")</pre>
+        <p style="font-size:13px;color:var(--ink2)">这里的 <code>name</code> 是形参——它只是个「空栏」。</p>
+      </div>
+      <div class="icard">
+        <h4><span class="dot" style="background:#f59e0b"></span>实参（实际参数）</h4>
+        <p style="font-size:14px;margin:6px 0">出现在<b>函数调用</b>时，是调用者提供的<b>参数数据</b>——实际值，可以是字面值或已赋值变量。</p>
+        <pre class="codeblock">Name = 'lihua'
+welcome(Name)</pre>
+        <p style="font-size:13px;color:var(--ink2)">这里的 <code>Name</code>（存着 'lihua'）是实参——它是「填进空栏的内容」。</p>
+      </div>
+    </div>
+    <div class="arrow-mid">调用时：实参 → 形参　（Name 的值被传递给 name）</div>
+    <ul class="points">
+      <li><b>形参</b>：定义时设计者定的名字，本质是函数体里用的占位变量</li>
+      <li><b>实参</b>：调用时调用者给的值，本质是要传进去的实际数据</li>
+      <li>两者的连接发生在调用瞬间：实参的值被传递给形参（称为<b>参数传递</b>，下一节细讲传递的两种方式）</li>
+      <li>名字可以不同（形参叫 name、实参变量叫 Name），Python 认位置和对应关系，不认「名字像不像」</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：一次完整的「空栏 → 填写」过程</h2>
+    <pre class="codeblock">def welcome(name):
+    print(f"Hello, {name}")
+
+Name = 'lihua'
+welcome(Name)</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">Hello, lihua</pre>
+    <ul class="points">
+      <li>第 1 行：定义函数，<code>name</code> 是<b>形参</b>（设计 welcome 这张「快递单」时留的空栏）</li>
+      <li>第 4 行：<code>Name = 'lihua'</code>，变量 Name 存好了实际数据</li>
+      <li>第 5 行：调用 <code>welcome(Name)</code>，<code>Name</code> 是<b>实参</b>——它的值 'lihua' 被传递给形参 name，于是函数体里的 <code>{name}</code> 变成了 lihua</li>
+      <li>注意大小写：形参 name 和实参变量 Name 是<b>两个不同的东西</b>，靠实参的值传递联系，不靠名字相同</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>同一张「快递单」，填不同的名字</h2>
+    <pre class="codeblock">def welcome(name):
+    print(f"Hello, {name}")
+
+welcome('xiaoming')     # 实参是字面值
+yourname = 'tom'
+welcome(yourname)       # 实参是已赋值变量
+welcome('lihua')        # 同一形参，反复使用</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">Hello, xiaoming
+Hello, tom
+Hello, lihua</pre>
+    <ul class="points">
+      <li>形参 name 始终只有一个；实参每次调用都可以不同——这正是「一次定义、多次使用」的实现机制</li>
+      <li>实参既可以直接写字面值 <code>'xiaoming'</code>，也可以传已赋值的变量 <code>yourname</code></li>
+      <li>每次调用相当于「填一张新快递单」，互不影响</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！定义行的括号里是形参 name，调用行的括号里是实参 'lihua'——空栏 vs 填进去的内容。"
+         data-no="❌ 判断标准看出现的位置：出现在 def 定义行的是形参，出现在调用语句里的是实参。别被两个名字拼写相同迷惑。">
+      <p style="font-weight:700;margin-bottom:12px">有代码 <code>def greet(name): print(f"Hi, {name}")</code> 和调用 <code>greet('lihua')</code>。下列说法正确的是？</p>
+      <button class="opt" onclick="quizPick(this)">A. name 是实参，'lihua' 是形参</button>
+      <button class="opt" onclick="quizPick(this)">B. name 是形参，'lihua' 是实参</button>
+      <button class="opt" onclick="quizPick(this)">C. name 和 'lihua' 都是形参</button>
+      <button class="opt" onclick="quizPick(this)">D. name 和 'lihua' 都是实参</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="定义名称调用数据" data-ok="✅ 全对！形参在定义时由设计者起名，实参在调用时由调用者提供数据。" data-no="❌ 提示：前两空关于形参——出现在函数＿＿时，是设计者定义的参数＿＿；后两空关于实参——出现在函数＿＿时，是调用者提供的参数＿＿。">
+      <p>形参是函数<b>＿＿</b>时设计者定义的参数<b>＿＿</b>；实参是函数<b>＿＿</b>时调用者提供的参数<b>＿＿</b>。（四空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：定义 名称 调用 数据">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>位置颠倒</b>：答「调用时的参数是形参」——恰恰相反，定义时的是形参、调用时的才是实参，判断标准永远是「出现在哪一行」；</p>
+      <p>②<b>以为名字必须相同</b>：形参 name、实参变量 Name、实参 'lihua'，三者互不相干地命名也完全没问题——传递靠调用时的对应关系；</p>
+      <p>③<b>以为传的是变量本身</b>：<code>welcome(Name)</code> 传进去的是 Name 指向的那个字符串对象 'lihua'，函数体里把 name 重新赋值不会影响外面的 Name——因为重新赋值只是让 name 这个名字指向别的对象，并没有改动原来那份数据。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的形参与实参：形参是定义时设计者定的参数名称（占位变量），实参是调用时调用者提供的实际数据。请：1）用「快递单收件人空栏」的类比各举一个形参、实参的例子；2）给我 3 段代码，让我指出每一处参数是形参还是实参（故意混入大小写不同、字面值与变量混用的情况）；3）出 2 道判断题考我「函数内修改形参，影不影响外面的变量」，等我答完再讲解。">
+      我刚学了 Python 的形参与实参：形参是定义时设计者定的参数名称（占位变量），实参是调用时调用者提供的实际数据。请：1）用「快递单收件人空栏」的类比各举一个形参、实参的例子；2）给我 3 段代码，让我指出每一处参数是形参还是实参（故意混入大小写不同、字面值与变量混用的情况）；3）出 2 道判断题考我「函数内修改形参，影不影响外面的变量」，等我答完再讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试</span>
+    <ol class="steps">
+      <li>把 PPT 原例敲进 IDLE，运行后把 <code>Name = 'lihua'</code> 改成 <code>Name = 'wangfang'</code> 再运行，观察输出变化——实参换了，形参栏位没变。</li>
+      <li>写一个 <code>intro(name, age)</code> 函数打印「我是 name，今年 age 岁」，分别用「两个字面值」和「两个变量」做实参各调用一次。</li>
+      <li>故意把实参个数传错（如 <code>intro('tom')</code>），看看 Python 怎么提示你——认识 missing 报错。</li>
+      <li>挑战：作业里凡是「带参数的函数题」，先在草稿纸上标出——哪一行是形参、哪一行是实参，再动键盘写代码。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>形参：定义时设计者定义的参数名称，是占位变量（快递单空栏）；实参：调用时调用者提供的参数数据（实际填的名字），可以是字面值或已赋值变量；调用瞬间发生参数传递——实参的值传给形参；两者名字可以不同。下一节：传递实参的两种方式——按位置与按名称。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="6.04.html"><span class="nav-label">← 上一节</span><span class="nav-title">6.04 函数的调用</span></a>
+        <a class="next" href="6.06.html"><span class="nav-label">下一节 →</span><span class="nav-title">6.06 参数传递的两种方式</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

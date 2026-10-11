@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.16 异常处理语句 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第五章 程序控制 · 第 16 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.route{list-style:none;margin:8px 0}
+.route li{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px dashed var(--border);font-size:14.5px}
+.route li:last-child{border-bottom:none}
+.route .step{flex:none;width:86px;text-align:center;background:var(--accent-soft);color:var(--accent);
+  border-radius:8px;font-weight:700;padding:4px 0;font-family:Consolas,monospace}
+.route .step.warn{background:var(--warn-soft);color:var(--warn)}
+.route .step.ok{background:var(--ok-soft);color:var(--ok)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch05.html">第五章 程序控制</a><span class="sep">/</span>
+          <span class="current">5.16</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">16</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第五章 · 程序控制</span>
+            <h1>异常处理语句</h1>
+            <p class="hero-summary">第 16 / 17 节 · 约 13 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序控制结构概述</li>
+      <li>单分支结构 if</li>
+      <li>双分支结构 if-else</li>
+      <li>IF 表达式</li>
+      <li>多分支结构 if-elif-else</li>
+      <li>嵌套分支结构</li>
+      <li>嵌套与多分支对比</li>
+      <li>无限循环 while</li>
+      <li>range 函数与遍历整数</li>
+      <li>遍历字符串列表元组</li>
+      <li>遍历字典</li>
+      <li>循环控制 break 与 continue</li>
+      <li>循环嵌套</li>
+      <li>常见语法错误</li>
+      <li>常见运行异常</li>
+      <li class="cur">异常处理语句</li>
+      <li>综合实战：古算题与成绩单</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>程序崩溃太狼狈？给代码装上「安全气囊」</h2>
+    <p>上一节的异常一抛出来程序就直接崩溃，对用户太不友好了。针对异常可以使用保留字 <b>try、except、else 和 finally</b> 进行处理：把可能有风险的代码放进 try 块里监控，一旦出异常就按预案接管，程序不再崩溃、而是优雅地继续运行。这一节的「除法计算器」就是本章作业第 6 题的直接模板。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">try 像「保险柜」：把有风险的代码锁进去，出事有预案、不出事有奖励</div>
+      <p><b>try</b> 是保险柜——把可能出问题的代码锁进去重点看护；<b>except</b> 是「出险理赔方案」——真出事了按条款赔付（执行处理代码）；<b>else</b> 是「平安无事奖励」——全程没出险才发；<b>finally</b> 是「离场手续」——无论出没出险，走的时候都要办（资源清理）。四件套各司其职，缺一不可乱序。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>try-except-else-finally 四件套</h2>
+    <ul class="points">
+      <li><b>try（必选）</b>：包含可能引发异常的代码，是<b>监控区域</b>——一旦某行出异常，立刻跳出 try 块</li>
+      <li><b>except（必选）</b>：捕获并处理 try 块中抛出的异常；<b>可写多个</b>、可指定异常类型、可用元组同时捕获多种（如 <code>except (ValueError, SyntaxError, TypeError):</code>）</li>
+      <li><b>else（可选）</b>：仅当 try 块中<b>没有发生异常</b>时才执行</li>
+      <li><b>finally（可选）</b>：<b>无论是否异常都会执行</b>，常用于资源清理（关文件、提示收尾等）</li>
+    </ul>
+    <p>执行规则：如果程序没有异常，则正常执行完代码块 1，然后执行代码块 3；如果程序有异常，则从异常代码处跳出代码块 1，转而执行代码块 2。<b>最后，不论有没有异常，都执行代码块 4。</b></p>
+    <pre class="codeblock">try:
+    &lt;代码块1&gt;    # 可能出异常的代码（监控区域）
+except:
+    &lt;代码块2&gt;    # 出异常时执行（处理预案）
+else:
+    &lt;代码块3&gt;    # 没出异常时才执行（平安奖励）
+finally:
+    &lt;代码块4&gt;    # 无论是否异常都执行（离场手续）</pre>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>两条执行路线 + 课堂例程「除法计算器」</h2>
+    <div class="switch">
+      <button class="on" data-pane="r1">🟢 无异常路线</button>
+      <button data-pane="r2">🔴 有异常路线</button>
+    </div>
+    <div class="pane on" id="r1">
+      <ul class="route">
+        <li><span class="step">try</span><span>代码块 1 <b>从头到尾执行完毕</b>，没有触发任何异常</span></li>
+        <li><span class="step ok">else</span><span>「平安无事」——接着执行代码块 3</span></li>
+        <li><span class="step">finally</span><span>最后照例执行代码块 4</span></li>
+        <li><span class="step" style="background:var(--code-bg);color:var(--ink2)">except</span><span style="color:var(--ink2)">整段被跳过，一行都不执行</span></li>
+      </ul>
+    </div>
+    <div class="pane" id="r2">
+      <ul class="route">
+        <li><span class="step">try</span><span>代码块 1 执行到<b>出异常的那一行立刻中断</b>，后面没跑的行不再执行</span></li>
+        <li><span class="step warn">except</span><span>跳出来执行代码块 2——按预案处理，程序不崩溃</span></li>
+        <li><span class="step">finally</span><span>最后照例执行代码块 4</span></li>
+        <li><span class="step" style="background:var(--code-bg);color:var(--ink2)">else</span><span style="color:var(--ink2)">出过异常，奖励没了——整段被跳过</span></li>
+      </ul>
+    </div>
+
+    <p style="font-weight:700;margin-top:18px">课堂例程：除法计算器（while True + 四件套）</p>
+    <pre class="codeblock">while True:
+    try:
+        a = float(input('请输入被除数：'))
+        b = float(input('请输入除数：'))
+        print(f'运算结果为：{a/b}')
+    except ZeroDivisionError:
+        print("除数为0！")
+    except (ValueError, SyntaxError, TypeError):
+        print("输入错误，请重新输入。")
+    else:
+        print("运行无误")
+        break
+    finally:
+        print("请重新运行")</pre>
+    <p>这个例子的妙处：<b>break 放在 else 里</b>——只有真正算对了（无异常）才会执行「运行无误」并退出 while True 循环；除零、乱输入都会被对应的 except 接住，循环继续。而 finally 每一轮都会打印「请重新运行」。</p>
+
+    <p style="font-weight:700;margin-top:16px">三次运行实录：每轮输入走了哪条路？</p>
+    <table>
+      <tr><th style="width:22%">输入</th><th style="width:22%">触发情况</th><th style="width:28%">实际执行路线</th><th>本轮输出</th></tr>
+      <tr><td>10、0</td><td>ZeroDivisionError（除零）</td><td>try 中断 → except ① → finally</td><td>除数为0！<br>请重新运行</td></tr>
+      <tr><td>20、xyz</td><td>ValueError（xyz 转不成小数）</td><td>try 中断 → except ② → finally</td><td>输入错误，请重新输入。<br>请重新运行</td></tr>
+      <tr><td>30、5</td><td>无异常</td><td>try 全部执行 → else（含 break）→ finally</td><td>运算结果为：6.0<br>运行无误<br>请重新运行</td></tr>
+    </table>
+    <p>完整输出：</p>
+    <pre class="codeblock out">请输入被除数：10
+请输入除数：0
+除数为0！
+请重新运行
+请输入被除数：20
+请输入除数：xyz
+输入错误，请重新输入。
+请重新运行
+请输入被除数：30
+请输入除数：5
+运算结果为：6.0
+运行无误
+请重新运行</pre>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！finally 无论是否发生异常都会执行——课堂例程里每一轮都打印「请重新运行」，包括最后一轮。"
+         data-no="❌ 回顾四件套分工：try 监控、except 接异常、else 只在无异常时执行——「无论是否异常都执行」的是 finally。">
+      <p style="font-weight:700;margin-bottom:12px">无论是否发生异常都会执行的代码块，应该放在哪个保留字后面？</p>
+      <button class="opt" onclick="quizPick(this)">A. try</button>
+      <button class="opt" onclick="quizPick(this)">B. except</button>
+      <button class="opt" onclick="quizPick(this)">C. finally</button>
+      <button class="opt" onclick="quizPick(this)">D. else</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="34|三四|3,4|3 4" data-ok="✅ 正确！无异常路线：try（代码块1）→ else（代码块3）→ finally（代码块4），except 被完全跳过。" data-no="❌ 回忆无异常路线：代码块1 跑完后执行「平安奖励」代码块3，最后执行「离场手续」代码块4。两空连填，如 3 4。">
+      <p>try 块中代码无异常时，执行完代码块 1 后接着执行代码块 <b>＿＿</b>，最后执行代码块 <b>＿＿</b>。（两空连填，中间用空格或直接相连）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：3 4">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>else 必须跟在所有 except 之后、finally 之前</b>：顺序写错（如 else 放在 except 前面）会直接报语法错误——记忆口诀「try → except×N → else → finally」；</p>
+      <p>②<b>except 不写类型会捕获一切异常</b>：写起来省事，但会把没预料到的 bug 也悄悄吞掉、掩盖问题。初学阶段可以接受，以后要养成指定异常类型的好习惯；</p>
+      <p>③<b>finally 每轮都执行，包括最后一轮</b>：课堂例程算对了 30÷5 之后，else 里的 break 先退出循环，但 finally 的「请重新运行」仍然会打印——这正是「不论有没有异常都执行」的体现，别以为是程序写错了。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的 try-except-else-finally 异常处理四件套。请：1）用「保险柜、理赔方案、平安奖励、离场手续」的类比帮我复述无异常和有异常两条执行路线；2）出 3 道执行顺序判断题考我（含一道 finally 一定会执行的陷阱题）；3）带我逐行读懂课堂例程「除法计算器」，重点解释为什么 break 要放在 else 里、except (ValueError, SyntaxError, TypeError) 元组写法的好处。">
+      我刚学了 Python 的 try-except-else-finally 异常处理四件套。请：1）用「保险柜、理赔方案、平安奖励、离场手续」的类比帮我复述无异常和有异常两条执行路线；2）出 3 道执行顺序判断题考我（含一道 finally 一定会执行的陷阱题）；3）带我逐行读懂课堂例程「除法计算器」，重点解释为什么 break 要放在 else 里、except (ValueError, SyntaxError, TypeError) 元组写法的好处。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：跑通除法计算器（8 分钟）</span>
+    <ol class="steps">
+      <li>把课堂例程原样敲进 IDLE 运行，依次输入 <b>10 和 0</b>——观察走了 except ①（除数为0！），循环没有退出。</li>
+      <li>再输入 <b>20 和 xyz</b>——观察走了 except ②（输入错误），体会 float('xyz') 抛 ValueError 被元组写法接住。</li>
+      <li>最后输入 <b>30 和 5</b>——观察 try 全跑完、else 打印「运行无误」并 break 退出，但 finally 的「请重新运行」仍打印了一次。</li>
+      <li>对照「三次运行实录」表格逐轮核对输出。本章作业第 6 题「防摔计数器」就是这套结构的直接应用——骨架完全一样，换掉 try 块里的业务代码即可。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>try-except-else-finally 四件套：try 监控风险代码、except 接住异常（可多个、可指定类型、可元组捕获多种）、else 只在无异常时执行、finally 无条件执行。无异常走 try→else→finally，有异常走 try（中断）→except→finally。break 放进 else，就能实现「算对了才退出循环」。下一节：综合实战，把本章三套结构串成完整程序。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="5.15.html"><span class="nav-label">← 上一节</span><span class="nav-title">5.15 常见运行异常</span></a>
+        <a class="next" href="5.17.html"><span class="nav-label">下一节 →</span><span class="nav-title">5.17 综合实战：古算题与成绩单</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.20 组合数据类型总结 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第四章 元组、集合和字典 · 第 20 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.scene-q{font-size:15px;font-weight:700;margin-bottom:8px}
+.scene-ans{background:var(--ok-soft);border:1px solid #c8ecdb;border-radius:10px;padding:10px 14px;margin-bottom:8px;font-size:14.5px}
+.scene-why{font-size:14px;color:var(--ink2)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch04.html">第四章 元组、集合和字典</a><span class="sep">/</span>
+          <span class="current">4.20</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">20</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第四章 · 元组、集合和字典</span>
+            <h1>组合数据类型总结</h1>
+            <p class="hero-summary">第 20 / 21 节 · 约 12 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>元组的定义与特性</li>
+      <li>元组的创建</li>
+      <li>元组索引与切片</li>
+      <li>元组运算</li>
+      <li>元组函数与方法</li>
+      <li>元组的不可变性</li>
+      <li>集合的定义与特性</li>
+      <li>集合的创建</li>
+      <li>集合运算：交差并补</li>
+      <li>集合操作：增删元素</li>
+      <li>集合运算并更新</li>
+      <li>集合函数与判断方法</li>
+      <li>序列与映射</li>
+      <li>字典的定义与特性</li>
+      <li>字典的创建</li>
+      <li>字典访问与三视图</li>
+      <li>字典添加与修改</li>
+      <li>字典删除</li>
+      <li>字典其他操作</li>
+      <li class="cur">组合数据类型总结</li>
+      <li>数据类型转换</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>学完四大容器，是时候「一表定乾坤」了</h2>
+    <p>这一章你认识了<b>列表、元组、集合、字典</b>四种组合数据类型，各自的方法学了一大堆。但真正拉开差距的是：<b>拿到一个实际问题，你能不能选对容器？</b>这一页是全章收官——一张总结表 + 一组场景选择题，帮你把零散的知识点串成「选型直觉」。本章作业第 6 题会同时用到这四种类型。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">四种容器 = 四种收纳工具</div>
+      <p><b>列表是「背包」</b>：啥都往里装、随取随放、按顺序排队（有序、可变、可重复）；<b>元组是「塑封袋」</b>：装好就封死，谁也改不了（有序、不可变、可重复）；<b>集合是「抽奖箱」</b>：只认人不认顺序、绝不重复（无序、可变、不重复）；<b>字典是「带标签的抽屉柜」</b>：凭标签（键）秒找东西（靠键定位、键值对、键唯一）。下次选容器前，先想想：我要背包、塑封袋、抽奖箱，还是抽屉柜？</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>四大容器一表定乾坤</h2>
+    <p>这是本章最重要的一张表（PPT 原表），建议截图保存：</p>
+    <table>
+      <tr><th>数据类型</th><th>核心特性</th><th>适用场景</th></tr>
+      <tr><td>列表 List</td><td>有序、可变、可重复</td><td>存储有序、需要频繁修改的数据，如动态变化的序列</td></tr>
+      <tr><td>元组 Tuple</td><td>有序、不可变、可重复</td><td>存储不可修改的常量数据，如坐标点、配置信息或其他受保护的数据</td></tr>
+      <tr><td>集合 Set</td><td>无序、可变、不重复</td><td>需要对数据进行去重操作，或需要进行交集、并集等数学集合运算的数据</td></tr>
+      <tr><td>字典 Dict</td><td>靠键定位、键值对、键唯一</td><td>存储具有映射关系的数据，如对象属性、配置项或通过关键字快速查找</td></tr>
+    </table>
+    <ul class="points">
+      <li>记忆抓手：四组「核心特性」各三个词，考试爱考原文</li>
+      <li>「有序」是列表、元组的专利；「不重复 / 键唯一」是集合、字典的看家本领</li>
+      <li>元组是四者中<b>唯一不可变</b>的——所以它能当字典的键、能放进集合</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>🔬 四张特性卡 + 场景选择题训练</h2>
+    <div class="grid g3">
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#4f6ef7"></span>列表 List</h4>
+        <div class="desc">有序 · 可变 · 可重复</div>
+        <div class="more">写法 <code>[1, 2, 2, 3]</code>。 背包本尊：增删改查全都会，append / insert / remove / pop / sort 一应俱全。要「排队的、能改的」就用它。</div>
+        <div class="hint">点击展开细节</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#1a9e6c"></span>元组 Tuple</h4>
+        <div class="desc">有序 · 不可变 · 可重复</div>
+        <div class="more">写法 <code>(30.57, 104.07)</code>。塑封袋：创建后不能增删改。好处是安全（数据不会被误改）且能作字典键、能进集合。</div>
+        <div class="hint">点击展开细节</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#d97706"></span>集合 Set</h4>
+        <div class="desc">无序 · 可变 · 不重复</div>
+        <div class="more">写法 <code>{1, 2, 3}</code>。抽奖箱：自动去重，支持交 &amp; 差 - 并 | 补 ^ 运算。要「去重」或「数学运算」就想到它。</div>
+        <div class="hint">点击展开细节</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#7c5cf0"></span>字典 Dict</h4>
+        <div class="desc">无序 · 键值对 · 键唯一</div>
+        <div class="more">写法 <code>{'name': '张三'}</code>。抽屉柜：凭键取值 O(1) 级速度，d[key]、keys / values / items 三视图。要「按键查找」就选它。</div>
+        <div class="hint">点击展开细节</div>
+      </div>
+    </div>
+    <p style="margin-top:16px;font-weight:700">场景选择题：先自己心里作答，再点开看答案。</p>
+    <div class="switch">
+      <button class="on" data-pane="sc1">① 坐标点</button>
+      <button data-pane="sc2">② 成绩单</button>
+      <button data-pane="sc3">③ 去重</button>
+      <button data-pane="sc4">④ 查电话</button>
+    </div>
+    <div class="pane on" id="sc1">
+      <p class="scene-q">要存一个地理坐标点 (30.57, 104.07)，存进去之后<b>绝不允许被改动</b>，选哪种类型？</p>
+      <div class="scene-ans">✅ 答案：元组 Tuple</div>
+      <p class="scene-why">理由：坐标是典型的「不可修改的常量数据」。元组不可变，谁也改不了它，天然受保护；写成列表万一被误改，误差就是几十公里。</p>
+    </div>
+    <div class="pane" id="sc2">
+      <p class="scene-q">要存全班成绩单，需要<b>按分数排序、随时增删</b>，选哪种类型？</p>
+      <div class="scene-ans">✅ 答案：列表 List</div>
+      <p class="scene-why">理由：这是「有序、需要频繁修改的数据」的标准画像。sort() 排序、append() 添加、remove() 删除，列表的看家本领全部用上。</p>
+    </div>
+    <div class="pane" id="sc3">
+      <p class="scene-q">手上有一列数据，只想<b>快速去掉重复项</b>，选哪种类型？</p>
+      <div class="scene-ans">✅ 答案：集合 Set</div>
+      <p class="scene-why">理由：set() 转换一步到位、自动去重。如果还要做交集、并集等数学集合运算，更是只有集合能干（下一节讲转换细节）。</p>
+    </div>
+    <div class="pane" id="sc4">
+      <p class="scene-q">要存「姓名 → 电话号码」的对应关系，<b>输入姓名立刻查到电话</b>，选哪种类型？</p>
+      <div class="scene-ans">✅ 答案：字典 Dict</div>
+      <p class="scene-why">理由：这是「具有映射关系的数据」——键唯一（姓名）、值对应电话，d['张三'] 一步取值。列表要一个个比对，字典凭键秒查。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！去重 + 交并运算正是集合的两大看家本领：无序、可变、不重复。"
+         data-no="❌ 再想想：哪个类型的核心特性是「无序、可变、不重复」？去重和交差并补运算都是它的本职工作。">
+      <p style="font-weight:700;margin-bottom:12px">需要对一批数据<b>去重</b>，还要做<b>交集、并集</b>运算，应该选哪种数据类型？</p>
+      <button class="opt" onclick="quizPick(this)">A. 列表 List</button>
+      <button class="opt" onclick="quizPick(this)">B. 元组 Tuple</button>
+      <button class="opt" onclick="quizPick(this)">C. 集合 Set</button>
+      <button class="opt" onclick="quizPick(this)">D. 字典 Dict</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="不可变,键" data-ok="✅ 正确！元组：有序、不可变、可重复；字典：靠键定位、键值对、键唯一——两大类型的核心特性张口就来。" data-no="❌ 对照上面的总结表：元组三词是「有序、不可变、可重复」，字典是「靠键定位、键值对、键唯一」。两空连填，用中文逗号隔开，例如：某某，某某。">
+      <p>元组核心特性：有序、____、可重复；字典核心特性：靠键定位、键值对、____唯一。（<b>两空连填</b>，中间用中文逗号隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：某某，某某" style="width:240px">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">没有「万能容器」——选型前先问自己三个问题</div>
+      <p>很多同学写作业永远只用列表，什么数据都往背包里塞。正确姿势是选型前<b>三连问</b>：<b>① 要不要顺序？</b>要 → 列表 / 元组；不要 → 集合 / 字典。<b>② 要不要改？</b>要改 → 列表 / 集合 / 字典；不许改 → 元组。<b>③ 要不要按键查？</b>要 → 字典，没得商量。</p>
+      <p>另外注意：元组「不可变」常被记成「不能删除整个元组」——准确说法是<b>不能增删改其中的元素</b>，del 整个元组是可以的。核心特性背错一个词，考试就丢分。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚总结了 Python 四大组合数据类型的选型：列表（有序、可变、可重复）、元组（有序、不可变、可重复）、集合（无序、可变、不重复）、字典（靠键定位、键值对、键唯一）。请：1）用背包、塑封袋、抽奖箱、抽屉柜的比喻帮我串一遍；2）随机出 8 道场景选型题考我（每题给一个生活场景让我选容器并说理由）；3）出 4 道填空题考四大类型的「核心特性」原文。">
+      我刚总结了 Python 四大组合数据类型的选型：列表（有序、可变、可重复）、元组（有序、不可变、可重复）、集合（无序、可变、不重复）、字典（靠键定位、键值对、键唯一）。请：1）用背包、塑封袋、抽奖箱、抽屉柜的比喻帮我串一遍；2）随机出 8 道场景选型题考我（每题给一个生活场景让我选容器并说理由）；3）出 4 道填空题考四大类型的「核心特性」原文。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：合上笔记默写核心特性（8 分钟）</span>
+    <ol class="steps">
+      <li>合上笔记和本页，拿一张草稿纸，默写四大类型的「核心特性」（每类三个词）。</li>
+      <li>翻回上面的总结表逐词对照，错一个词用红笔圈出来。</li>
+      <li>把四个场景（坐标点 / 成绩单 / 去重 / 查电话）各自讲一遍选型理由，讲给自己听。</li>
+      <li>预告：本章作业第 6 题会<b>同时用到这四种类型</b>——做题时每声明一个变量，先默念它属于哪种容器、为什么。</li>
+      <li>带着这张表进入下一节「数据类型转换」，看四种容器之间怎么互相变身。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>四大容器的核心特性与适用场景：<b>列表（有序、可变、可重复）</b>装动态序列；<b>元组（有序、不可变、可重复）</b>装受保护的常量；<b>集合（无序、可变、不重复）</b>管去重与集合运算；<b>字典（靠键定位、键值对、键唯一）</b>做按键快速查找。选型三连问：要不要顺序？要不要改？要不要按键查？下一节是全章最后一节：四种容器互相转换。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="4.19.html"><span class="nav-label">← 上一节</span><span class="nav-title">4.19 字典其他操作</span></a>
+        <a class="next" href="4.21.html"><span class="nav-label">下一节 →</span><span class="nav-title">4.21 数据类型转换</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

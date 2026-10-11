@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6.03 函数的定义 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第六章 函数 · 第 3 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.ana-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media(max-width:720px){.ana-grid{grid-template-columns:1fr}}
+.syn{font-family:Consolas,monospace;background:var(--code-bg);border:1.5px solid var(--accent);
+  border-radius:10px;padding:14px 16px;font-size:15.5px;line-height:2;text-align:center}
+.syn .hi{background:#fff7ed;border-bottom:2px dashed #f59e0b;font-weight:700;padding:1px 4px;border-radius:4px}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch06.html">第六章 函数</a><span class="sep">/</span>
+          <span class="current">6.03</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">03</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第六章 · 函数</span>
+            <h1>函数的定义</h1>
+            <p class="hero-summary">第 3 / 18 节 · 约 11 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>函数的定义与优点</li>
+      <li>函数的分类</li>
+      <li class="cur">函数的定义</li>
+      <li>函数的调用</li>
+      <li>形参与实参</li>
+      <li>参数传递的两种方式</li>
+      <li>必须参数与可选参数</li>
+      <li>不定长参数</li>
+      <li>参数值的数据类型</li>
+      <li>变量作用域：局部与全局</li>
+      <li>global 修改全局变量</li>
+      <li>匿名函数 lambda</li>
+      <li>高阶函数：map 与 filter</li>
+      <li>高阶函数：sorted 与 key</li>
+      <li>递归函数：概念与两要素</li>
+      <li>递归执行逻辑：递推与回溯</li>
+      <li>递归实战：阶乘</li>
+      <li>递归实战：字符串逆序</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>上一节说要「自己造函数」，怎么造？从 def 这一行学起</h2>
+    <p>内置函数是别人的成果，第三方库是社区的成果——而<b>自定义函数是你自己的成果</b>。定义函数有一套固定语法：<code>def</code> 开头、函数名、参数、冒号、缩进的函数体，需要时再加一句 <code>return</code>。这套语法里有 6 个「零件」，缺一个都会报错。这一节我们把语法解剖开，每个零件点开看清楚，以后写函数就不会漏件。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">定义函数像「写菜谱」：def 是「菜谱」两个字，参数是配料表，函数体是步骤，return 是端上桌的成品</div>
+      <p><code>def</code> 相当于在菜谱本上写「菜谱：」（告诉 Python：接下来登记一道新菜）；菜名是<b>函数名</b>；「用料：鸡蛋 2 个」是<b>参数</b>；后面的步骤（打蛋、搅拌、下锅）是<b>缩进的函数体</b>；最后「装盘上桌」是 <code>return</code> 返回结果。菜谱写好了菜不会自动做好——<b>定义 ≠ 执行</b>，要等有人「点菜」（调用），下节细讲。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>语法解剖图：6 个零件逐个看</h2>
+    <div class="syn">
+      <span class="hi">def</span> 函数名(参数):<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;缩进的函数体<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="hi">return</span> 返回值
+    </div>
+    <p class="muted" style="font-size:13px;margin-top:12px">👇 六张卡片<b>点击展开</b>，每个零件都有细节：</p>
+    <div class="ana-grid">
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#4f6ef7"></span>① def</h4>
+        <div class="desc">定义函数的保留字，不能用作变量名</div>
+        <div class="more"><p style="font-size:13.5px"><code>def</code> 是 Python 的<b>保留字</b>（关键字），意思是「我要定义一个函数了」。它就像菜谱本封面的「菜谱」两个字——见到它，Python 就知道后面登记的是函数。</p></div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#7c5cf0"></span>② 函数名</h4>
+        <div class="desc">命名规则与变量类似：任何有效的标识符</div>
+        <div class="more"><p style="font-size:13.5px">函数名的命名规则<b>与变量一样</b>（字母、数字、下划线，不能以数字开头），建议「见名知义」：算 sums 就叫 <code>getsum</code>，打招呼就叫 <code>welcome</code>。同样要避开保留字和内置函数名。</p></div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#f59e0b"></span>③ 参数</h4>
+        <div class="desc">零个或多个，逗号分隔；无参数也要保留括号</div>
+        <div class="more"><p style="font-size:13.5px">参数可以有<b>零个或多个</b>，多个参数之间用<b>逗号分隔</b>，如 <code>def getsum(a, b):</code>。即使没有任何参数，<b>一对圆括号也必须保留</b>，如 <code>def hello():</code>——括号是「这是个函数」的标志。</p></div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#10b981"></span>④ 冒号</h4>
+        <div class="desc">冒号必须要有；冒号下一行缩进也是语法要求</div>
+        <div class="more"><p style="font-size:13.5px">第一行末尾的<b>冒号必须要有</b>，少了就报 SyntaxError；而且<b>冒号下一行必须缩进</b>——这两条都是语法要求，和 if、for、while 的规矩一脉相承（第五章的缩进习惯这里直接复用）。</p></div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#ef476f"></span>⑤ 函数体</h4>
+        <div class="desc">实现功能的那组代码，每次被调用时执行</div>
+        <div class="more"><p style="font-size:13.5px">缩进的那一段就是<b>函数体</b>，装着「这道菜的做法」。注意：<b>函数体每次被调用时才执行</b>——定义时 Python 只是把它登记造册，一行都不会跑。</p></div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#0ea5e9"></span>⑥ return</h4>
+        <div class="desc">返回值的保留字；无返回值时返回 None</div>
+        <div class="more"><p style="font-size:13.5px"><code>return</code> 是<b>保留字</b>，作用是「把结果端出去」：函数执行到 return 就结束，并把后面的值交回给调用处。如果函数里<b>没有 return</b>，调用后返回的是 <code>None</code>（空值）——这个坑 6.04 重点讲。</p></div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+    </div>
+    <ul class="points" style="margin-top:14px">
+      <li>六条注意事项合起来记：<b>def 是保留字；函数名与变量命名类似；参数零或多个、逗号分隔、无参也留括号；冒号必须有、下一行必须缩进；函数体每次被调用时执行；return 是保留字，无返回值时返回 None</b></li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：从无参、双参到返回两个值</h2>
+    <p>例 1：无参数、无 return——只负责打印：</p>
+    <pre class="codeblock">def hello():
+    print("Hello World!")</pre>
+    <p>例 2：两个参数、一个返回值——返回 a + b 的和：</p>
+    <pre class="codeblock">def getsum(a, b):
+    c = a + b
+    return c</pre>
+    <p>例 3：一个 return 同时返回两个值——圆的面积和周长：</p>
+    <pre class="codeblock">def circular(r):
+    area = 3.14 * r**2
+    perimeter = 2 * 3.14 * r
+    return area, perimeter</pre>
+    <ul class="points">
+      <li>例 1 对照零件：无参数 → 括号照样保留；没有 return → 调用后返回 None</li>
+      <li>例 2 对照零件：参数 a、b 逗号分隔；<code>return c</code> 把计算结果交出去</li>
+      <li>例 3 的 <code>return area, perimeter</code> <b>一次返回两个值</b>——它们会被打包成一个<b>元组</b>，正是第四章「元组」的用武之地，下节调用时用 <code>S, L = circular(30)</code> 解包接收</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>缺一个零件会怎样？报错现场还原</h2>
+    <pre class="codeblock"># 零件 ④ 缺失：忘写冒号
+def hello()
+    print("Hello World!")
+
+SyntaxError: expected ':'</pre>
+    <pre class="codeblock"># 零件 ③ 乱来：无参数却不写括号
+def hello:
+    print("Hello World!")
+
+SyntaxError: expected '('</pre>
+    <ul class="points">
+      <li>冒号、括号是「语法件」——缺了直接 SyntaxError，程序根本跑不起来</li>
+      <li>return 是「逻辑件」——不写不报错，只是拿不到返回值（返回 None），这种错更隐蔽</li>
+      <li>把函数名命名成 <code>def</code> 这种保留字同样直接报错</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="3"
+         data-ok="✅ 答对了！函数体是「每次被调用时」才执行，定义时只是登记，一行都不会跑——菜谱写好不等于菜做好了。"
+         data-no="❌ A、B、C 都是定义函数的硬性语法要求，缺了就报错。剩下那个说法把「定义」和「执行」搞反了——函数体要等调用时才执行。">
+      <p style="font-weight:700;margin-bottom:12px">关于函数的定义语法，下列说法<b>错误</b>的是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 第一行末尾的冒号必须要有</button>
+      <button class="opt" onclick="quizPick(this)">B. 冒号下一行的缩进也是语法要求</button>
+      <button class="opt" onclick="quizPick(this)">C. 没有参数时，也必须保留一对圆括号</button>
+      <button class="opt" onclick="quizPick(this)">D. 函数体在定义完成的那一刻就会执行一遍</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="def冒号缩进None" data-ok="✅ 全对！def 定义、冒号收尾、函数体缩进、无 return 时返回 None。" data-no="❌ 提示：四个空分别是——定义函数的保留字、第一行末尾的符号、函数体的格式要求（两个字）、无 return 时函数的返回值。">
+      <p>定义函数用保留字<b>＿＿</b>；第一行末尾必须有<b>＿＿</b>；函数体必须<b>＿＿</b>；函数中没有 return 语句时，调用后返回<b>＿＿</b>。（四空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：def 冒号 缩进 None">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>忘写冒号 / 忘缩进</b>：def 行末没冒号、或函数体顶格写，都是 SyntaxError——冒号和缩进是绑定的语法要求；</p>
+      <p>②<b>无参数时省略括号</b>：写成 <code>def hello:</code> 直接报错——括号是函数的「身份证」，哪怕没有参数也不能省；</p>
+      <p>③<b>把「返回两个值」当成返回两个独立的量</b>：<code>return area, perimeter</code> 实际返回的是<b>一个元组</b> (area, perimeter)——接收时要用 <code>S, L = circular(30)</code> 解包，第四章的知识点在这里接上了。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 用 def 定义函数的语法（def、函数名、参数、冒号、缩进函数体、return 六个零件）。请：1）用「写菜谱」的类比把这六个零件串成一段话；2）给出 3 段「缺了不同零件」的错误定义代码，让我当 compiler 指出错在哪；3）写一个返回两个值的函数示例，并演示用两个变量解包接收，出 2 道题考我。">
+      我刚学了 Python 用 def 定义函数的语法（def、函数名、参数、冒号、缩进函数体、return 六个零件）。请：1）用「写菜谱」的类比把这六个零件串成一段话；2）给出 3 段「缺了不同零件」的错误定义代码，让我当 compiler 指出错在哪；3）写一个返回两个值的函数示例，并演示用两个变量解包接收，出 2 道题考我。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试</span>
+    <ol class="steps">
+      <li>把本页三个 PPT 原例（hello、getsum、circular）亲手敲进 IDLE——只定义、先别调用，确认不报错（体会「定义不执行」）。</li>
+      <li>故意删掉 <code>def hello():</code> 里的冒号运行一次，看清 SyntaxError 的样子，再把冒号补回来。</li>
+      <li>试着定义一个 <code>getmean(a, b, c)</code> 返回三个数的平均值——练习「多参数 + 逗号分隔 + return」。</li>
+      <li>挑战：写一个函数返回长方形的长和宽对应的周长和面积（返回两个值），为下一节的调用解包做准备。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>定义函数的语法：<code>def 函数名(参数):</code> + 缩进函数体 + 可选的 <code>return 返回值</code>；def 和 return 都是保留字；函数名命名同变量；参数零或多个、逗号分隔、无参也留括号；冒号与缩进是语法要求；函数体每次被调用时才执行；无 return 时返回 None；一个 return 可以返回多个值（打包成元组）。下一节：调用这些函数。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="6.02.html"><span class="nav-label">← 上一节</span><span class="nav-title">6.02 函数的分类</span></a>
+        <a class="next" href="6.04.html"><span class="nav-label">下一节 →</span><span class="nav-title">6.04 函数的调用</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

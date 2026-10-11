@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.14 字典的定义与特性 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第四章 元组、集合和字典 · 第 14 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.anno{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.anno span{font-size:12.5px;border-radius:999px;padding:3px 12px;background:var(--code-bg);border:1px solid var(--border);color:var(--ink2)}
+.anno span b{color:var(--accent)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch04.html">第四章 元组、集合和字典</a><span class="sep">/</span>
+          <span class="current">4.14</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">14</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第四章 · 元组、集合和字典</span>
+            <h1>字典的定义与特性</h1>
+            <p class="hero-summary">第 14 / 21 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>元组的定义与特性</li>
+      <li>元组的创建</li>
+      <li>元组索引与切片</li>
+      <li>元组运算</li>
+      <li>元组函数与方法</li>
+      <li>元组的不可变性</li>
+      <li>集合的定义与特性</li>
+      <li>集合的创建</li>
+      <li>集合运算：交差并补</li>
+      <li>集合操作：增删元素</li>
+      <li>集合运算并更新</li>
+      <li>集合函数与判断方法</li>
+      <li>序列与映射</li>
+      <li class="cur">字典的定义与特性</li>
+      <li>字典的创建</li>
+      <li>字典访问与三视图</li>
+      <li>字典添加与修改</li>
+      <li>字典删除</li>
+      <li>字典其他操作</li>
+      <li>组合数据类型总结</li>
+      <li>数据类型转换</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>列表装「一队人」，字典装「一个人的全部档案」</h2>
+    <p>序列解决的是「一批同类的值怎么放」，但现实数据常常是<b>成对出现</b>的：姓名对应张三、年龄对应 20、语文成绩对应 80。把一堆「键-值」对装进一个容器，就是<b>字典</b>——它是 Python 里最常用的映射类型。本章作业第 4、5 题（购物流程、成绩统计）全靠它，前面的思维升级这一节正式落地。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">它真的很像《新华字典》</div>
+      <p>Python 的字典就像真正的《新华字典》：<b>按「字」（键）查「释义」（值）</b>，没有人按「第几页第几行」查字典——这正是上一节说的映射思维。而且：同一个字不会收录两次（<b>键唯一</b>），但释义想写多长写多长（<b>值随意</b>）；字典再厚也能增补新字、修订旧释义（<b>动态可变</b>）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>字典：包含 0 个或多个「键-值」对的数据集合</h2>
+    <p>字典类型具有<b>和集合类似的性质</b>：键值对之间<b>没有「第几个」的编号</b>且<b>键不能重复</b>。字典用<b>大括号 {}</b> 表示，每个元素是一个「键-值」对：<b>键与值用冒号分隔，「键-值」对之间用逗号分隔</b>：</p>
+    <pre class="codeblock">{<span class="good">1</span>: 2, <span class="good">'姓名'</span>: '张三', <span class="good">'年龄'</span>: 15, <span class="good">'语文'</span>: 80}</pre>
+    <div class="anno">
+      <span><b>键</b>：1、'姓名'、'年龄'、'语文'</span>
+      <span><b>冒号</b>：把键和值连成一对</span>
+      <span><b>值</b>：2、'张三'、15、80（类型随意）</span>
+      <span><b>逗号</b>：分隔多个键值对</span>
+    </div>
+    <p>字典有四大特性，点击卡片逐一揭晓：</p>
+    <div class="grid g2">
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#4f6ef7"></span>① 无序性</h4>
+        <div class="desc">键值对没有「第几个」的编号</div>
+        <div class="more">字典中的键值对<b>没有固定的顺序</b>，不能通过索引（第几个）访问——想取值只能报键的名字。</div>
+        <div class="hint">点击展开详解</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#7c5cf0"></span>② 键的唯一性</h4>
+        <div class="desc">键 Key 必须唯一且不可变</div>
+        <div class="more">键必须<b>唯一</b>（同一个键只出现一次），且必须<b>可哈希（hashable）</b>——字符串、数字、元组都可以当键，列表不行。</div>
+        <div class="hint">点击展开详解</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#1a9e6c"></span>③ 值的可变性</h4>
+        <div class="desc">值 Value 可以是任意数据类型</div>
+        <div class="more">值<b>没有任何类型限制</b>：数字、字符串、列表甚至另一个字典都行，并且支持<b>随时修改</b>。</div>
+        <div class="hint">点击展开详解</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#d97706"></span>④ 动态可变</h4>
+        <div class="desc">创建后可灵活增删改</div>
+        <div class="more">字典创建以后，可以<b>灵活地添加、删除或修改</b>其中的键值对——它是和列表一样「活」的容器。</div>
+        <div class="hint">点击展开详解</div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！键必须唯一（不能重复）且不可变（字符串、数字、元组可以，列表不行）。"
+         data-no="❌ 回忆四大特性：同一个键不能出现两次（唯一）；列表这种可变类型当键会直接报错（不可变）。">
+      <p style="font-weight:700;margin-bottom:12px">字典的键（Key）必须满足什么条件？</p>
+      <button class="opt" onclick="quizPick(this)">A. 唯一且可变</button>
+      <button class="opt" onclick="quizPick(this)">B. 唯一且不可变</button>
+      <button class="opt" onclick="quizPick(this)">C. 可以重复，但必须不可变</button>
+      <button class="opt" onclick="quizPick(this)">D. 必须是字符串</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="冒号 逗号|冒号,逗号|冒号、逗号"
+         data-ok="✅ 正确！键与值用冒号分隔，键值对之间用逗号分隔。"
+         data-no="❌ 看 {1: 2, '姓名': '张三'} 这个例子：键和值中间是哪个符号？两对之间又是哪个符号？（两空连填）">
+      <p>字典中，键与值用 <code>___</code> 分隔，「键-值」对之间用 <code>___</code> 分隔。（两空连填，中间用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：冒号 逗号" style="width:220px">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">键唯一的「后者覆盖」与列表不能当键</div>
+      <p><b>键必须唯一</b>：给同一个键重复赋值，不会报错，而是「<b>后者覆盖前者</b>」——<code>{'a': 1, 'a': 2}</code> 创建出来只剩 <code>{'a': 2}</code>，前面的 1 被悄悄覆盖，新手常在这里丢数据还不自知。</p>
+      <p><b>键必须不可变</b>：<code>d[[1,2]] = 'x'</code> 会直接报 <code>TypeError: unhashable type: 'list'</code>——列表可变，不能当键；把列表换成元组 <code>d[(1,2)]</code> 就没问题。</p>
+      <p><b>值没有限制</b>：值想是列表、字典都行，四大特性里「不可变」只约束键，不约束值。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 字典的定义与四大特性：字典是包含 0 个或多个键值对的集合，用大括号表示，键值对无序且键不能重复；键必须唯一且不可变（字符串、数字、元组可以，列表不行），值可以是任意类型并支持修改，字典整体可动态增删改。请：1）用《新华字典》的类比再讲一遍四大特性；2）出 5 道「这个能不能当键」的判断题（包含列表、元组、数字、字符串、浮点数）；3）解释 {'a': 1, 'a': 2} 的结果为什么是 {'a': 2}。">
+      我刚学了 Python 字典的定义与四大特性：字典是包含 0 个或多个键值对的集合，用大括号表示，键值对无序且键不能重复；键必须唯一且不可变（字符串、数字、元组可以，列表不行），值可以是任意类型并支持修改，字典整体可动态增删改。请：1）用《新华字典》的类比再讲一遍四大特性；2）出 5 道「这个能不能当键」的判断题（包含列表、元组、数字、字符串、浮点数）；3）解释 {'a': 1, 'a': 2} 的结果为什么是 {'a': 2}。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：亲眼看看「键唯一」（5 分钟）</span>
+    <ol class="steps">
+      <li>在 IDLE 里输入 <code>d = {'a': 1, 'a': 2}</code>，回车。</li>
+      <li>输入 <code>print(d)</code>，观察结果：<code>{'a': 2}</code>——只剩下后写的那个，'a':1 被「后者覆盖」了。</li>
+      <li>再试 <code>d = {[1,2]:'x'}</code>，看看报什么错（TypeError：列表不能当键）。</li>
+      <li>最后试 <code>d = {(1,2):'x'}</code>——元组当键，成功了。体会「键不可变」这条铁律。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>字典是包含 0 个或多个「键-值」对的数据集合，用大括号 {} 表示，键冒号值、对间逗号；键值对<b>无序且键不重复</b>。四大特性：<b>无序、键唯一且不可变、值任意可改、整体动态可变</b>。下一节：用哪几种方式把字典创建出来。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="4.13.html"><span class="nav-label">← 上一节</span><span class="nav-title">4.13 序列与映射</span></a>
+        <a class="next" href="4.15.html"><span class="nav-label">下一节 →</span><span class="nav-title">4.15 字典的创建</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.17 综合实战：古算题与成绩单 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第五章 程序控制 · 第 17 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.mission{background:var(--accent-soft);border:1px dashed var(--accent);border-radius:10px;
+  padding:10px 14px;font-size:14px;margin-bottom:10px}
+.mission b{color:var(--accent)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch05.html">第五章 程序控制</a><span class="sep">/</span>
+          <span class="current">5.17</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">17</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第五章 · 程序控制</span>
+            <h1>综合实战：古算题与成绩单</h1>
+            <p class="hero-summary">第 17 / 17 节 · 约 15 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序控制结构概述</li>
+      <li>单分支结构 if</li>
+      <li>双分支结构 if-else</li>
+      <li>IF 表达式</li>
+      <li>多分支结构 if-elif-else</li>
+      <li>嵌套分支结构</li>
+      <li>嵌套与多分支对比</li>
+      <li>无限循环 while</li>
+      <li>range 函数与遍历整数</li>
+      <li>遍历字符串列表元组</li>
+      <li>遍历字典</li>
+      <li>循环控制 break 与 continue</li>
+      <li>循环嵌套</li>
+      <li>常见语法错误</li>
+      <li>常见运行异常</li>
+      <li>异常处理语句</li>
+      <li class="cur">综合实战：古算题与成绩单</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>收官之战：把选择、循环、异常三套结构串成完整程序</h2>
+    <p>到这里，本章 17 节只剩最后一步：单独认识 if、while、for、try 都不难，<b>难的是在一个程序里让它们协同工作</b>。这一节用三个递进任务做总演练——古算题练「枚举 + 条件」，成绩单练「遍历 + 多分支 + 分装」，防摔计数器练「while True + try-except + break」——它们正是本章作业第 1~6 题的综合缩影。冲过这一关，本章就圆满收官了。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">这一节像「驾考综合路考」——方向盘、油门、安全气囊一起用，才算是会开车了</div>
+      <p>科目二练单项目：倒库（选择结构）、坡起（循环结构）都能过。但真正上路，要<b>方向盘（选择）随时判断路况、油门（循环）持续前进、安全气囊（异常处理）兜底保命</b>三者配合。下面三个任务就是三段「路考路线」，跑通了，你就从「会写语句」升级成「会写程序」。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>三个任务的「配方」各是什么</h2>
+    <ul class="points">
+      <li><b>任务一「物不知数」</b>：枚举范式——for 遍历所有候选 + if 多条件筛选。世上没有直接公式时，「挨个试」就是计算机最擅长的笨办法</li>
+      <li><b>任务二「成绩单流水线」</b>：数据处理范式——遍历字典 + if-elif 判档 + 列表分装，这是作业第 5 题的完整思路</li>
+      <li><b>任务三「防摔计数器」</b>：健壮交互范式——while True + try-except + break，异常不退出、算对才收工，这是作业第 6 题的骨架</li>
+      <li><b>三个任务共享一个思想</b>：先想清楚「谁是循环、谁是判断、哪里会出意外」，再动手写代码</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>三大任务实战：点按钮逐个解锁</h2>
+    <div class="switch">
+      <button class="on" data-pane="t1">任务一 · 物不知数</button>
+      <button data-pane="t2">任务二 · 成绩单流水线</button>
+      <button data-pane="t3">任务三 · 防摔计数器</button>
+    </div>
+
+    <div class="pane on" id="t1">
+      <div class="mission">📋 <b>任务卡</b>：「有物不知其数，三三数之剩二，五五数之剩三，七七数之剩二。问物几何？」——找出 200 以内所有满足条件的数（呼应 5.02 的单分支版，这里升级为遍历版）</div>
+      <pre class="codeblock"># 物不知数：三三数之剩二，五五数之剩三，七七数之剩二
+for num in range(1, 200):
+    if num % 3 == 2 and num % 5 == 3 and num % 7 == 2:
+        print(num, end=' ')</pre>
+      <p>输出结果：</p>
+      <pre class="codeblock out">23 128</pre>
+      <ul class="points">
+        <li><b>枚举 + 条件</b>范式：range(1, 200) 把 1~199 全部试一遍，if 三个余数条件用 and 连接，同时满足才打印</li>
+        <li>最小解是 23，下一个解是 23 + 105 = 128（3、5、7 的最小公倍数是 105，解每隔 105 出现一个）</li>
+        <li>对比 5.02：那时只用 if 判断一个已知的数，现在用 for 遍历——<b>「循环负责海选，选择负责终审」</b></li>
+      </ul>
+    </div>
+
+    <div class="pane" id="t2">
+      <div class="mission">📋 <b>任务卡</b>：把成绩单里及格的装进一个列表、不及格的装进另一个列表（呼应 5.05 五分制转换的判档思路 + 5.11 遍历字典）——这是作业第 5 题的思路骨架，<b>作业请自己完成</b>，下面留了两处空让你填</div>
+      <pre class="codeblock">scores = {'张三': 95, '李四': 58, '王五': 82, '赵六': 44}
+pass_list = []        # 及格名单
+fail_list = []        # 不及格名单
+for k, v in scores.items():
+    if v >= 60:
+        pass_list.append(k)      # ① 及格：把「谁」装进去？
+    elif v < 60:
+        fail_list.append(____)   # ② 不及格：这里该装什么？
+print(f'及格：{pass_list}')
+print(f'不及格：{fail_list}')</pre>
+      <ul class="points">
+        <li><code>scores.items()</code> 每轮给出一对「键值 (k, v)」——k 是姓名、v 是分数（5.11 遍历字典）</li>
+        <li>判档用 if-elif：v &gt;= 60 走及格分支，否则走不及格分支（5.05 多分支思想）</li>
+        <li>①② 两空的答案都是变量 <b>k</b>——装进名单的是「人名」而不是分数。补全后输出应为：<code>及格：['张三', '王五']</code> 和 <code>不及格：['李四', '赵六']</code></li>
+        <li>作业第 5 题在此基础上再加判档细分（优/良/及格/不及格），思路完全同款——请独立完成</li>
+      </ul>
+    </div>
+
+    <div class="pane" id="t3">
+      <div class="mission">📋 <b>任务卡</b>：不断让用户输入正数并累加，输入非法字符不崩溃（提示后继续），输入非正数才结束——这是作业第 6 题的骨架（呼应 5.16 除法计算器），<b>作业请自己补全</b></div>
+      <pre class="codeblock">total = 0
+while True:
+    try:
+        x = float(input('输入一个数：'))
+    except ValueError:
+        print('输入无效')
+        continue          # 异常不退出，回到循环开头重新输入
+    if x <= 0:
+        break             # 只有合法输入才走到这里，非正数才收工
+    total += x
+print(f'总和为{total}')</pre>
+      <ul class="points">
+        <li><b>三套结构各就各位</b>：while True 提供无限循环，try-except 接住乱输入的 ValueError，break 负责正常退出</li>
+        <li>用户输 'abc' → float() 抛 ValueError → except 打印提示后 continue，程序不崩溃、循环继续（5.15 + 5.16 的合体）</li>
+        <li><b>关键在执行顺序</b>：只有 try 块成功执行（x 拿到了合法数值），才轮得到 if 和 break——把 break 放在 try 外面紧跟其后，正合 5.16 里「else 里放 break」的同款思路</li>
+        <li>输入 3、5、abc、4、-1 试跑，应输出：输入无效 和 总和为12.0</li>
+      </ul>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！range(1, 200) 内满足条件的数是 23 和 128 两个，程序输出「23 128」。"
+         data-no="❌ 看任务一的实际输出：23 128，共两个解。注意 128 也小于 200，别把它漏数了。">
+      <p style="font-weight:700;margin-bottom:12px">按任务一的代码 <code>for num in range(1, 200)</code> 运行，程序共输出几个解？</p>
+      <button class="opt" onclick="quizPick(this)">A. 1 个（只有 23）</button>
+      <button class="opt" onclick="quizPick(this)">B. 2 个（23 和 128）</button>
+      <button class="opt" onclick="quizPick(this)">C. 3 个</button>
+      <button class="opt" onclick="quizPick(this)">D. 0 个</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="try|try块|try块1|代码块1" data-ok="✅ 正确！只有 try 块成功执行（拿到合法输入），break 才有机会执行到；乱输入会被 except 截住走 continue。" data-no="❌ 提示：防摔计数器里，break 位于 try 块之后——如果输入非法，流程根本走不到 break。填四件套里的监控块名字。">
+      <p>防摔计数器中：while True 循环里，只有 <b>＿＿</b> 块中的代码成功执行后，流程才能走到 break、正常退出循环。（填保留字）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：try">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">综合实战的三个高频翻车点</div>
+      <p>①<b>range 上界差一</b>：想枚举到 199 就写 range(1, 200)，写成 range(1, 199) 会漏掉 199——左闭右开永远记得「要多大就多写 1」；</p>
+      <p>②<b>分装列表时装错东西</b>：任务二里 append 的应该是姓名 k，顺手写成 v 就成了「及格分数表」——先想清楚列表里要存什么；</p>
+      <p>③<b>continue 和 break 用反</b>：异常后想「重来」用 continue，想「结束」用 break——写反了要么死循环要么提前收工，跑一遍输入 'abc' 就能验证。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚完成了 Python 第五章「程序控制」的综合实战：物不知数（for 枚举 + if 多条件）、成绩单流水线（遍历字典 + if-elif 判档 + 列表分装）、防摔计数器（while True + try-except + break）。请：1）用「驾考综合路考」的类比帮我梳理三套结构如何在一个程序里协同；2）各出一道同范式的变形题让我练手（如换余数条件的古算题、按价格分档的商品清单、防摔的求平均值计数器）；3）检查我的三段代码有没有「continue/break 用反、append 装错变量、range 差一」这三类问题。">
+      我刚完成了 Python 第五章「程序控制」的综合实战：物不知数（for 枚举 + if 多条件）、成绩单流水线（遍历字典 + if-elif 判档 + 列表分装）、防摔计数器（while True + try-except + break）。请：1）用「驾考综合路考」的类比帮我梳理三套结构如何在一个程序里协同；2）各出一道同范式的变形题让我练手（如换余数条件的古算题、按价格分档的商品清单、防摔的求平均值计数器）；3）检查我的三段代码有没有「continue/break 用反、append 装错变量、range 差一」这三类问题。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：冲刺本章作业 6 题（15 分钟）</span>
+    <ol class="steps">
+      <li><b>第 1 题 多分支</b>：用 if-elif-else 给分数判档——照 5.05 的模板，注意 else 兜底。</li>
+      <li><b>第 2 题 月份天数</b>：输入月份输出天数——多分支 + 2 月特殊判断（可提示闰年条件：<code>year%4==0 and year%100!=0 or year%400==0</code>）。</li>
+      <li><b>第 3 题 5 的倍数</b>：从列表筛选 5 的倍数——<code>range(5, 100, 5)</code> 或 <code>i % 5 == 0</code> 两条路都试试。</li>
+      <li><b>第 4 题 阶乘求和</b>：1+2!+3!+…+10!——两层循环嵌套或「边乘边加」，range(1, 11) 别差一。</li>
+      <li><b>第 5 题 成绩分栏</b>：参照任务二的骨架补全两处空，再按作业要求细化判档。</li>
+      <li><b>第 6 题 防摔计数器</b>：参照任务三的骨架，按题目要求改输入提示与统计逻辑——try-except 结构直接复用 5.16 的模板。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">本章通关！你现在知道了</div>
+      <p>选择结构负责判断（if / if-else / if-elif-else / 嵌套），循环结构负责重复（while / for + range / break、continue / 循环嵌套），异常处理负责兜底（try-except-else-finally）。三个综合任务示范了「枚举 + 条件」「遍历 + 判档 + 分装」「无限循环 + 异常接住 + 条件退出」三大范式。三套结构协同起来，就能把任何想法变成完整程序——第五章「程序控制」全部 17 节完成，去做作业吧！</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="5.16.html"><span class="nav-label">← 上一节</span><span class="nav-title">5.16 异常处理语句</span></a>
+        <a class="next" href="ch05.html"><span class="nav-label">下一节 →</span><span class="nav-title">本章课程目录（17 节已完成）</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.06 TIOBE 排行与语言流行趋势 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第一章 导论与 Python 环境 · 第 6 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+/* —— 本页专属：榜单视角切换说明条 —— */
+.chart-note{font-size:13px;color:var(--ink2);margin-top:10px;display:flex;gap:6px;align-items:flex-start}
+.chart-note .ic{flex:none}
+.pane-title{font-size:15px;font-weight:700;margin-bottom:10px;color:var(--ink)}
+.pane-title small{font-weight:400;color:var(--ink2);margin-left:8px}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch01.html">第一章 导论与 Python 环境</a><span class="sep">/</span>
+          <span class="current">1.06</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">06</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第一章 · 导论与 Python 环境</span>
+            <h1>TIOBE 排行与语言流行趋势</h1>
+            <p class="hero-summary">第 6 / 18 节 · 约 8 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>计算机系统架构</li>
+      <li>操作系统及其分类</li>
+      <li>编程语言：人机沟通的桥梁</li>
+      <li>编程语言的三个层次</li>
+      <li>编译型 vs 解释型语言</li>
+      <li class="cur">TIOBE 排行与语言流行趋势</li>
+      <li>五大语言的诞生与用途</li>
+      <li>AI 时代的编程学习理念</li>
+      <li>与 AI 高效协作的三技巧</li>
+      <li>学习路径的三阶段</li>
+      <li>Python 的诞生与发展</li>
+      <li>PEP 与 PEP 8</li>
+      <li>The Zen of Python</li>
+      <li>Python 2 vs Python 3</li>
+      <li>Python 的六大特点</li>
+      <li>Python 的应用领域</li>
+      <li>Python 环境搭建</li>
+      <li>Anaconda 与 AI IDE</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>编程语言也有“热搜榜”？</h2>
+    <p>追星有榜单，学编程也有榜单。选学校看排名，选方向看趋势——了解<b>编程语言流行度</b>，能帮你回答一个很现实的问题：<b>我现在花时间学的 Python，到底值不值？</b>看完这一节你会发现：</p>
+    <ul class="points">
+      <li>TIOBE 是什么？它凭什么给编程语言<b>排座次</b>？</li>
+      <li>为什么 Python 能在近十年里<b>排名持续攀升、常年霸榜第一</b>？</li>
+      <li>学会看趋势，你就能理解：<b>选 Python 入门，是踩在时代的节拍上</b>。</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">TIOBE 就像“编程语言界的百度风云榜”</div>
+      <p>它每个月统计一次：全网有多少人在<b>搜索、讨论、雇佣</b>某种语言的工程师。热度高的语言排名就靠前，就像热搜榜——上榜不代表“最好吃”，但一定代表<b>最多人在用、最多人在问</b>。对你来说，热门语言意味着：<b>教程多、社区大、工作机会多、遇到问题容易搜到答案</b>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>TIOBE 是什么？Python 凭什么登顶？</h2>
+    <ul class="points">
+      <li><b>TIOBE 编程语言流行度指数（TIOBE Index）</b>：由 TIOBE 公司发布的编程语言流行度排行榜，<b>每月更新一次</b>，衡量的是各种编程语言在全网的热门程度（关注搜索结果、技术讨论等指标），而不是“哪种语言最好用”。</li>
+      <li><b>Python 近年稳居前列</b>：在 AI（人工智能）与数据分析热潮的推动下，Python 的排名近十年持续攀升，长期处在 TIOBE 榜单的<b>第一位</b>（个别月份曾被 C 或 C++ 短暂反超）。</li>
+      <li><b>趋势洞察</b>：语言的流行度跟着应用风口走——十年前是企业软件的天下（Java 领跑），如今是 AI 与数据的天下（Python 领跑）。<b>学语言，本质上是选赛道。</b></li>
+    </ul>
+
+    <div>
+      <div class="switch">
+        <button class="on" data-pane="pane2026">2026 年视角</button>
+        <button data-pane="pane2016">2016 年视角</button>
+      </div>
+      <div class="pane on" id="pane2026">
+        <div class="pane-title">TIOBE 前五示意 · 2026 年 <small>Python 一骑绝尘</small></div>
+        <div class="barwrap">
+          <div class="barrow"><div class="barname">Python</div><div class="bartrack"><div class="bar top" style="width:92%">约 20% 上下</div></div><div class="pct">1st</div></div>
+          <div class="barrow"><div class="barname">C</div><div class="bartrack"><div class="bar" style="width:40%"></div></div><div class="pct">2nd</div></div>
+          <div class="barrow"><div class="barname">C++</div><div class="bartrack"><div class="bar" style="width:36%"></div></div><div class="pct">3rd</div></div>
+          <div class="barrow"><div class="barname">Java</div><div class="bartrack"><div class="bar" style="width:34%"></div></div><div class="pct">4th</div></div>
+          <div class="barrow"><div class="barname">C#</div><div class="bartrack"><div class="bar" style="width:18%"></div></div><div class="pct">5th</div></div>
+        </div>
+        <div class="chart-note"><span class="ic">📌</span><span>数据为教学示意（只体现相对差距，Python 明显领先），实际百分比以 <b>TIOBE 官网每月发布</b>为准，不要把本图当精确数据引用。</span></div>
+      </div>
+      <div class="pane" id="pane2016">
+        <div class="pane-title">TIOBE 前五示意 · 2016 年 <small>当时还是 Java 的天下</small></div>
+        <div class="barwrap">
+          <div class="barrow"><div class="barname">Java</div><div class="bartrack"><div class="bar top" style="width:80%"></div></div><div class="pct">1st</div></div>
+          <div class="barrow"><div class="barname">C</div><div class="bartrack"><div class="bar" style="width:62%"></div></div><div class="pct">2nd</div></div>
+          <div class="barrow"><div class="barname">C++</div><div class="bartrack"><div class="bar" style="width:30%"></div></div><div class="pct">3rd</div></div>
+          <div class="barrow"><div class="barname">C#</div><div class="bartrack"><div class="bar" style="width:20%"></div></div><div class="pct">4th</div></div>
+          <div class="barrow"><div class="barname">Python</div><div class="bartrack"><div class="bar" style="width:17%"></div></div><div class="pct">5th</div></div>
+        </div>
+        <div class="chart-note"><span class="ic">📌</span><span>同样是<b>教学示意</b>（只体现“十年前 Python 还排在第一梯队末尾”的大势），实际数据以 TIOBE 历史存档为准。</span></div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">📈 互动：十年之间，榜单换主人</span>
+    <h2>切换视角，看见 Python 的攀升</h2>
+    <p>点上面的“2016 年视角 / 2026 年视角”切换按钮，对比两张示意图：十年前 Python 只在第五名左右徘徊，如今<b>遥遥领先、稳居第一</b>。这正是“AI 与数据分析热潮推动语言流行”的直观体现。想一想：</p>
+    <ul class="points">
+      <li>什么技术浪潮让 Python 的使用量暴增？（提示：深度学习、ChatGPT、数据科学）</li>
+      <li>你身边哪些专业（经管、生科、新闻……）也开始要求学 Python 了？</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！在 AI 与数据分析热潮的推动下，Python 近十年排名持续攀升，近年来在 TIOBE 排行榜中稳居第一。"
+         data-no="❌ 不对哦。C/C++ 和 Java 虽然长期名列前茅，但近年榜首一直是 Python——AI 与数据分析把它送上了王座。">
+      <p style="font-weight:700;margin-bottom:12px">近年的 TIOBE 编程语言流行度排行榜中，<b>稳居第一</b>的是哪种语言？</p>
+      <button class="opt" onclick="quizPick(this)">A. Java</button>
+      <button class="opt" onclick="quizPick(this)">B. Python</button>
+      <button class="opt" onclick="quizPick(this)">C. C 语言</button>
+      <button class="opt" onclick="quizPick(this)">D. JavaScript</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="流行" data-ok="✅ 正确！TIOBE 指数衡量的是编程语言的“流行度”（热门程度），每月更新一次。" data-no="❌ 再想想：TIOBE 排的是“热不热门”，不是“好不好用”。衡量的是哪种语言的关注与使用热度？（提示：编程语言的＿＿度）">
+      <p>TIOBE 指数<b>每月更新一次</b>，衡量的是编程语言的<b>＿＿度</b>（也就是全网的热门程度）。请在框里填写这两个字：</p>
+      <div class="fill-row">
+        <input class="blank" id="blank1" placeholder="填两个字，如：××">
+        <button class="btn btn-main" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">“排行榜第一 = 最好的语言”？这是个误读</div>
+      <p>第一，TIOBE 衡量的是<b>流行度（热度）</b>，不是<b>质量或速度</b>——它不评测语言“好不好”，只统计“多少人在谈论它、搜索它”。</p>
+      <p>第二，别把本页示意图当成精确数据。TIOBE 的真实百分比<b>每个月都在变</b>，写报告、做作业时请以 TIOBE 官网当月数据为准，并注明查询日期。</p>
+      <p>第三，不要“唯榜单论”：做底层驱动 C/C++ 更合适，做企业后端 Java 依然坚挺。榜单帮你<b>感知风向</b>，不能替你<b>做选择</b>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了「TIOBE 排行与语言流行趋势」。请：1）用两句话解释 TIOBE 指数衡量的是什么、多久更新一次；2）分析 Python 近十年排名持续攀升的三个原因，各配一个真实应用场景；3）出 2 道单选题考我，等我作答后再公布答案和讲解。">
+      我刚学了「TIOBE 排行与语言流行趋势」。请：1）用两句话解释 TIOBE 指数衡量的是什么、多久更新一次；2）分析 Python 近十年排名持续攀升的三个原因，各配一个真实应用场景；3）出 2 道单选题考我，等我作答后再公布答案和讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：查一查本月的真实榜单（5 分钟）</span>
+    <ol class="steps">
+      <li>打开浏览器，搜索关键词 <code>TIOBE index</code>，进入 TIOBE 官网的 TIOBE Index 页面。</li>
+      <li>找到<b>本月</b>的排行榜，记下<b>前三名</b>的语言名称和大致百分比，并记录查询日期。</li>
+      <li>回到本页上方“2026 年视角”示意图，对照一下：<b>顺序一致吗？差距方向一致吗？</b>（示意图只保趋势，不保精确数字）</li>
+      <li>顺便看看 TIOBE 页面上 Python 的评级趋势曲线，感受一下“近十年持续攀升”这条线长什么样。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p><b>TIOBE 编程语言流行度指数每月更新一次，衡量的是各语言的热门程度</b>。在 AI 与数据分析热潮的推动下，Python 近十年排名持续攀升，已成为最热门、常年霸榜第一的编程语言。热门意味着教程多、社区大、机会多——你现在学 Python，正是踩在时代的节拍上。下一节，我们认识榜单上几位“老熟人”的出身与本领。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="1.05.html"><span class="nav-label">← 上一节</span><span class="nav-title">1.05 编译型 vs 解释型语言</span></a>
+        <a class="next" href="1.07.html"><span class="nav-label">下一节 →</span><span class="nav-title">1.07 五大语言的诞生与用途</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8.03 四个核心概念：类·对象·属性·方法 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第八章 面向对象编程 · 第 3 / 12 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch08.html">第八章 面向对象编程</a><span class="sep">/</span>
+          <span class="current">8.03</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">03</span>
+            <span class="lesson-hero-num-total">/ 12</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第八章 · 面向对象编程</span>
+            <h1>四个核心概念：类·对象·属性·方法</h1>
+            <p class="hero-summary">第 3 / 12 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 12 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>编程的两种范式</li>
+      <li>面向对象的三大特性</li>
+      <li class="cur">四个核心概念：类·对象·属性·方法</li>
+      <li>创建类：class·__init__·self</li>
+      <li>创建对象与访问成员</li>
+      <li>实例属性与类属性</li>
+      <li>三种方法：实例·类·静态</li>
+      <li>封装与私有属性</li>
+      <li>继承与 super()</li>
+      <li>多重继承</li>
+      <li>多态与方法重写</li>
+      <li>综合案例：商品库存管理</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>面向对象的世界里，先把这四个词分清</h2>
+    <p>从这节起你会频繁听到四个词：<b>类、对象、属性、方法</b>。它们是面向对象的「四面墙」，后续每一节都在这四个词上做文章。先把概念和比喻建立起来，下一节动手写类时就不会晕。<b>类和对象的关系</b>第二章其实打过前站：函数像 y=f(x) 的加工流水线——类是这条流水线的<b>升级版</b>：不仅装函数（能加工），还装数据（记得住状态）。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">一张汽车图纸，生产出千千万万辆真车</div>
+      <p><b>类</b>是汽车的设计图纸——它规定「车应该有几个轮子、能做什么动作」，但图纸本身不能开上路；<b>对象</b>是按图纸生产出的<b>具体汽车</b>——每辆都真真切切能开；<b>属性</b>是每辆车自带的数据——颜色、品牌、价格；<b>方法</b>是每辆车会做的动作——驾驶、刹车、鸣笛。图纸一张，车造千辆：这就是「类是模板、对象是实例」。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>四大概念卡片：点开看细节</h2>
+    <div class="grid g2">
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent)"></span>① 类 Class · 抽象模板</h4>
+        <div class="desc">定义共同特征（属性）与共同行为（方法）的抽象蓝图</div>
+        <div class="more">
+          <b>定义</b>：类定义某一类事物的<b>共同特征</b>（属性）与<b>共同行为</b>（方法），是抽象的蓝图、模板。<br><br>
+          <b>比喻</b>：汽车的设计图纸——规定结构，但不能直接上路。<br><br>
+          <b>关键词</b>：抽象、模板、蓝图——「描述一类东西，而不是某个具体东西」。
+        </div>
+        <div class="hint">👆 点击展开 / 收起</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent2)"></span>② 对象 Object · 具体实例</h4>
+        <div class="desc">根据类模板创建的具体实体，是类的具象化体现</div>
+        <div class="more">
+          <b>定义</b>：对象是根据类模板创建出的<b>具体实体</b>，拥有类定义的全部属性和方法。<br><br>
+          <b>比喻</b>：图纸生产出的具体汽车——一辆真正能开的车。<br><br>
+          <b>关键词</b>：实例、具象、真实存在——「由类生成，一个类可以造出任意多个对象」。
+        </div>
+        <div class="hint">👆 点击展开 / 收起</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--warn)"></span>③ 属性 Attribute · 数据特征</h4>
+        <div class="desc">对象拥有的静态数据或特征，描述对象的状态</div>
+        <div class="more">
+          <b>定义</b>：属性是对象拥有的<b>静态数据或特征</b>，通常对应类中的变量，描述对象当前的状态。<br><br>
+          <b>比喻</b>：汽车的颜色、品牌、价格——看一眼就知道的数据。<br><br>
+          <b>关键词</b>：变量、状态、数据——「它是什么样子的」。
+        </div>
+        <div class="hint">👆 点击展开 / 收起</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--ok)"></span>④ 方法 Method · 动态行为</h4>
+        <div class="desc">对象可执行的动态操作或行为，通常对应类中的函数</div>
+        <div class="more">
+          <b>定义</b>：方法是对象可执行的<b>动态操作或行为</b>，通常对应类中的函数。<br><br>
+          <b>比喻</b>：汽车的驾驶、刹车、鸣笛——需要「做出来」的动作。<br><br>
+          <b>关键词</b>：函数、行为、操作——「它能干什么」。
+        </div>
+        <div class="hint">👆 点击展开 / 收起</div>
+      </div>
+    </div>
+    <ul class="points" style="margin-top:14px">
+      <li><b>类 vs 对象</b>：类是图纸（抽象），对象是车（具体）；先有类，后有对象</li>
+      <li><b>属性 vs 方法</b>：属性是「静态的数据」，方法是「动态的行为」；一个回答「长什么样」，一个回答「会做什么」</li>
+      <li><b>和函数的关系</b>：类像第二章 y=f(x) 流水线的升级版——不仅装函数，还装数据</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>在代码里认出这四个概念</h2>
+    <pre class="codeblock">class Car:                              # ① 类：一张「汽车设计图纸」
+    def __init__(self, brand, color, price):
+        self.brand = brand              # ③ 属性：数据特征
+        self.color = color
+        self.price = price
+
+    def drive(self):                    # ④ 方法：动态行为
+        print(f'{self.color}的{self.brand}正在行驶')
+
+    def brake(self):
+        print(f'{self.brand}刹车了')
+
+my_car = Car('比亚迪', '白色', 150000)   # ② 对象：图纸造出的具体汽车
+print(my_car.brand)      # 访问属性：比亚迪
+my_car.drive()           # 调用方法：让这辆车干活</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">比亚迪
+白色的比亚迪正在行驶</pre>
+    <ul class="points">
+      <li><code>class Car:</code> 定义类；<code>Car('比亚迪', '白色', 150000)</code> 创建对象——语法下一节正式拆解</li>
+      <li>brand、color、price 是<b>属性</b>；drive、brake 是<b>方法</b></li>
+      <li>同一个 Car 类还可以再造 <code>Car('特斯拉', '红色', 250000)</code>——一张图纸，多辆真车</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！类是抽象模板，对象是根据类创建的具体实例——先有图纸后有车，一个类能创建任意多个对象。"
+         data-no="❌ A、B 把两者说反了：类是抽象模板、对象是具体实例；D 错在一张图纸可以生产任意多辆汽车——一个类可以创建多个对象。">
+      <p style="font-weight:700;margin-bottom:12px">关于类和对象的关系，下列说法<b>正确</b>的是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 类是对象的具体实例</button>
+      <button class="opt" onclick="quizPick(this)">B. 对象是类的抽象模板</button>
+      <button class="opt" onclick="quizPick(this)">C. 类是抽象模板，对象是根据类创建的具体实例</button>
+      <button class="opt" onclick="quizPick(this)">D. 一个类只能创建一个对象</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="类 对象 属性 方法" data-ok="✅ 四个概念全部对号入座：类是模板、对象是实例、属性是数据、方法是行为。" data-no="❌ 提示：四个空按顺序——抽象的蓝图模板叫＿＿；根据类创建的具体实体叫＿＿；描述对象状态的静态数据叫＿＿；对象可执行的动态行为叫＿＿。（四空用空格隔开）">
+      <p>抽象的蓝图与模板叫<b>＿＿</b>；根据类模板创建的具体实体叫<b>＿＿</b>；对象拥有的静态数据特征叫<b>＿＿</b>；对象可执行的动态行为叫<b>＿＿</b>。（四空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：类 对象 属性 方法">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个初学误区</div>
+      <p>①<b>「类」和「对象」混用</b>：Student 是<b>类</b>（图纸），stu = Student() 造出来的 stu 才是<b>对象</b>（具体的学生）——说「stu 这个类」就错了；</p>
+      <p>②<b>属性和方法分不清</b>：写括号调用的是方法（<code>my_car.drive()</code>），直接取值的是属性（<code>my_car.color</code>）——属性后面不跟括号；</p>
+      <p>③<b>以为改类会影响已造好的对象</b>：实例属性在创建时就写到对象自己身上，改类<b>不会</b>回头改动它们（图纸改了，造好的车不会自动变色）。但<b>类属性</b>是另一回事——它属于类、被所有对象共享，改类属性时，没有单独设过同名属性的对象会立刻跟着变（见 8.06）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 面向对象的四个核心概念：类、对象、属性、方法。请：1）不要用「汽车设计图纸」的比喻，换一个新比喻（如食谱与菜品、模具与饼干）把四者关系再讲一遍；2）给一段类定义代码，让我指出哪一行定义类、哪些是属性、哪些是方法；3）出 5 道概念判断题考我，答完帮我逐题讲解。">
+      我刚学了 Python 面向对象的四个核心概念：类、对象、属性、方法。请：1）不要用「汽车设计图纸」的比喻，换一个新比喻（如食谱与菜品、模具与饼干）把四者关系再讲一遍；2）给一段类定义代码，让我指出哪一行定义类、哪些是属性、哪些是方法；3）出 5 道概念判断题考我，答完帮我逐题讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：概念落到代码里（10 分钟）</span>
+    <ol class="steps">
+      <li>点开上面四张概念卡，合上后自测一遍比喻：类=图纸、对象=具体汽车、属性=颜色品牌价格、方法=驾驶刹车鸣笛。</li>
+      <li>读 Car 类代码：<code>my_car.price</code> 的值是多少？<code>my_car.brake()</code> 会打印什么？先预测再运行验证。</li>
+      <li>给 Car 类增加一个属性 <code>seats</code>（座位数）和一个方法 <code>horn()</code>，打印「滴滴滴！」——练「模板上添东西」。</li>
+      <li>挑战：用四个核心概念描述「手机」——类名叫什么、有哪些属性（品牌、电量）、有哪些方法（打电话、充电），写成一段话。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p><b>类</b>是抽象模板（图纸），<b>对象</b>是根据类创建的具体实例（真车），<b>属性</b>是对象的静态数据特征（颜色/品牌/价格），<b>方法</b>是对象的动态行为（驾驶/刹车/鸣笛）；类是 y=f(x) 流水线的升级版——既装数据又装函数。下一节：动手创建第一个类。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="8.02.html"><span class="nav-label">← 上一节</span><span class="nav-title">8.02 面向对象的三大特性</span></a>
+        <a class="next" href="8.04.html"><span class="nav-label">下一节 →</span><span class="nav-title">8.04 创建类：class·__init__·self</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

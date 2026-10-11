@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6.12 匿名函数 lambda · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第六章 函数 · 第 12 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.lplay{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.lrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.lrow label{font-size:14px;color:var(--ink2);font-weight:600}
+.lrow input{width:80px;font-family:Consolas,monospace;font-size:15px;padding:8px 10px;
+  border:1.5px solid var(--border);border-radius:8px;outline:none;color:var(--ink)}
+.lrow input:focus{border-color:var(--accent)}
+.lout{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:15px;min-height:52px;word-break:break-all}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch06.html">第六章 函数</a><span class="sep">/</span>
+          <span class="current">6.12</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">12</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第六章 · 函数</span>
+            <h1>匿名函数 lambda</h1>
+            <p class="hero-summary">第 12 / 18 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>函数的定义与优点</li>
+      <li>函数的分类</li>
+      <li>函数的定义</li>
+      <li>函数的调用</li>
+      <li>形参与实参</li>
+      <li>参数传递的两种方式</li>
+      <li>必须参数与可选参数</li>
+      <li>不定长参数</li>
+      <li>参数值的数据类型</li>
+      <li>变量作用域：局部与全局</li>
+      <li>global 修改全局变量</li>
+      <li class="cur">匿名函数 lambda</li>
+      <li>高阶函数：map 与 filter</li>
+      <li>高阶函数：sorted 与 key</li>
+      <li>递归函数：概念与两要素</li>
+      <li>递归执行逻辑：递推与回溯</li>
+      <li>递归实战：阶乘</li>
+      <li>递归实战：字符串逆序</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>有些小功能，配得上一个「名字」吗？</h2>
+    <p>前面学的函数都要用 <code>def</code> 郑重其事地起个名字。可有时候你只想算一句「两数相加」「两数取大」，为它专门写 def、起名字，像借图书馆的书只为了翻一眼。Python 提供了<b>匿名函数</b>：不用名字、一行搞定、随手写随手用。更重要的是，它可以<b>作为参数传给别的函数</b>——下一节的 map、filter，以及作业第 5 题的 sorted 排序，全都靠它出场。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">lambda 像「一次性纸杯」：用完即弃，不占名字；def 是「正式水杯」</div>
+      <p><code>def</code> 定义的函数像<b>正式水杯</b>：有名字、能反复用、摆在工位上谁都能拿来喝。<b>lambda 像一次性纸杯</b>：接杯水（算个结果）就扔了，不值得刻上名字、也不占地方——「用完即弃、不增加额外变量」。但纸杯装不了满汉全席（只能写一行、功能有限），要干重活得用正式水杯。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>lambda 参数: 表达式</h2>
+    <ul class="points">
+      <li><b>语法</b>：<code>lambda 参数: 表达式</code>——lambda 是希腊字母 λ，冒号前面放参数，冒号后面放<b>一个表达式</b>，表达式的值就是返回值（不需要写 return）</li>
+      <li><b>优点</b>：① 代码简洁精炼，<b>不增加额外变量</b>（不用起函数名）；② 可以<b>作为参数传递</b>给其他函数——这是它最大的用武之地</li>
+      <li><b>缺点</b>：① 可读性较差；② <b>只能写一行</b>，能实现的功能有限，复杂逻辑还得用 def</li>
+      <li><b>本质上仍是函数</b>：可以赋值给一个变量，之后像普通函数一样调用——<code>f = lambda x, y, z: x + y + z</code> 之后 <code>f(1, 2, 3)</code> 就是 <code>6</code></li>
+      <li><b>冒号后可以放 IF 表达式</b>：衔接 5.04 学的 <code>a if 条件 else b</code>，让 lambda 也能做「二选一」的判断</li>
+    </ul>
+
+    <div class="lplay">
+      <p style="font-weight:700;margin-bottom:10px">🔬 lambda 实验台：两个现成的匿名函数，填数字现场调用</p>
+      <div class="lrow">
+        <label>x</label><input id="inX" value="1">
+        <label>y</label><input id="inY" value="2">
+        <label>z</label><input id="inZ" value="3">
+        <button class="btn-main btn" onclick="doSum()">调用 f(x, y, z)</button>
+        <button class="btn-ghost btn" onclick="doMax()">调用 Max(x, y)</button>
+      </div>
+      <div class="lout" id="lout">点上面按钮试试——f 是三元求和，Max 是二元取大</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：求和与取大</h2>
+    <pre class="codeblock">f = lambda x, y, z: x + y + z
+print(f(1, 2, 3))
+
+Max = lambda x, y: x if x &gt; y else y
+print(Max(3, 5))</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">6
+5</pre>
+    <ul class="points">
+      <li><code>f = lambda x, y, z: x + y + z</code>：三个参数相加，调用 <code>f(1, 2, 3)</code> 得 6——冒号后的表达式直接就是返回值</li>
+      <li><code>Max = lambda x, y: x if x &gt; y else y</code>：冒号后是 IF 表达式（5.04 学过）——条件成立返回 x，否则返回 y；<code>Max(3, 5)</code> 中 3 &gt; 5 不成立，返回 5</li>
+      <li>对照 def 版：同样的功能 def 要写 3 行（def 行、return 行、调用），lambda 一行搞定——但函数体一多，lambda 就写不下了</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>同一个功能，def 版 vs lambda 版</h2>
+    <pre class="codeblock"># def 标准版：有名字，三行
+def add(a, b):
+    return a + b
+print(add(10, 20))
+
+# lambda 版：一行
+add2 = lambda a, b: a + b
+print(add2(10, 20))
+
+# 真正的匿名用法：不起名字，直接当参数传给 sorted（作业第 5 题预告）
+scores = [('张三', 85), ('李四', 92)]
+scores.sort(key=lambda x: x[1])
+print(scores)</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">30
+30
+[('张三', 85), ('李四', 92)]</pre>
+    <ul class="points">
+      <li>前两个输出完全一样——lambda 版只是「更省事」，功能上没有任何区别</li>
+      <li>第三段是 lambda 的主场：<code>key=lambda x: x[1]</code> 把「按第二个元素排」这条规则<b>现场递给</b> sort，用完即弃——如果用 def 还得专门起个名字，反而累赘</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！Max(3, 5) 中条件 3 > 5 不成立，走 else 分支返回 y 即 5——IF 表达式「条件在前，二选一」的规则和 5.04 完全一致。"
+         data-no="❌ 回想 IF 表达式 a if 条件 else b：条件成立取 a，不成立取 b。3 > 5 是不成立的，所以取的是冒号后 else 那边的 y。">
+      <p style="font-weight:700;margin-bottom:12px"><code>Max = lambda x, y: x if x &gt; y else y</code>，则 <code>Max(3, 5)</code> 的返回值是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 3</button>
+      <button class="opt" onclick="quizPick(this)">B. 8</button>
+      <button class="opt" onclick="quizPick(this)">C. 5</button>
+      <button class="opt" onclick="quizPick(this)">D. 报错，lambda 不能做判断</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="lambda一return参数|lambda 一 return 参数" data-ok="✅ 全对！lambda 定义匿名函数，冒号后只能写一行表达式，表达式的值自动作为返回值，不用写 return。" data-no="❌ 提示：定义匿名函数的关键字是哪个希腊字母？它的函数体只能有几行？返回值要不要写 return 语句？">
+      <p>匿名函数用关键字 <b>＿＿</b> 定义；冒号后只能写<b>＿＿</b>行表达式；表达式的值就是返回值，不需要写 <b>＿＿</b> 语句；冒号前面放的是<b>＿＿</b>。（四空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：lambda 一 return 参数">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>冒号后想写多行</b>：lambda 函数体<b>只能是一行表达式</b>，写 if 语句块、循环体都会语法报错——要判断用 IF 表达式，要循环就老实用 def；</p>
+      <p>②<b>忘了写 return 也以为要写</b>：def 里返回值得写 return，lambda 里表达式<b>本身就求值</b>，多写 return 反而报错；</p>
+      <p>③<b>可读性牺牲过度</b>：把复杂逻辑硬塞进一行 lambda，过两周自己都看不懂——「一行能写清才用 lambda」是实用底线，功能复杂就回到 def。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的匿名函数 lambda。请：1）用「一次性纸杯 vs 正式水杯」的类比解释 lambda 和 def 的适用场景；2）把 3 个 def 写的小函数改写成 lambda 给我看，再举一个 lambda 写不了、必须用 def 的例子；3）出 3 道「给 lambda 表达式求值」的题考我（至少一道含 IF 表达式），等我答完再讲解。">
+      我刚学了 Python 的匿名函数 lambda。请：1）用「一次性纸杯 vs 正式水杯」的类比解释 lambda 和 def 的适用场景；2）把 3 个 def 写的小函数改写成 lambda 给我看，再举一个 lambda 写不了、必须用 def 的例子；3）出 3 道「给 lambda 表达式求值」的题考我（至少一道含 IF 表达式），等我答完再讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：为作业第 5 题热身（5 分钟）</span>
+    <ol class="steps">
+      <li>在交互模式定义 <code>f = lambda x, y, z: x + y + z</code>，试 <code>f(1, 2, 3)</code> 和 <code>f(10, 20, 30)</code>，确认冒号后表达式直接返回结果。</li>
+      <li>把 <code>Max = lambda x, y: x if x &gt; y else y</code> 抄下来，分别试 <code>Max(3, 5)</code>、<code>Max(9, 2)</code>，体会 IF 表达式的「二选一」。</li>
+      <li>作业第 5 题要给字典按成绩排序，排序规则就靠 lambda 提供。提前感受一下：<code>sorted([3, 1, 2], key=lambda n: -n)</code>，看看结果为什么是倒着排的。</li>
+      <li>故意写 <code>g = lambda x: x = x + 1</code> 试试，看看报什么错——体会「冒号后只能是表达式，不能是赋值语句」。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>lambda 定义匿名函数：语法「lambda 参数: 表达式」，一行搞定、表达式的值即返回值；优点是简洁、可作参数传递，缺点是可读性差、只能一行；冒号后可配合 IF 表达式做二选一。它的主场是把「规则」当参数传给别的函数——下一节的 map 和 filter 正是如此。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="6.11.html"><span class="nav-label">← 上一节</span><span class="nav-title">6.11 global 修改全局变量</span></a>
+        <a class="next" href="6.13.html"><span class="nav-label">下一节 →</span><span class="nav-title">6.13 高阶函数：map 与 filter</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：lambda 实验台（三元求和 + 二元取大） */
+function doSum(){
+  const x = parseFloat(document.getElementById('inX').value);
+  const y = parseFloat(document.getElementById('inY').value);
+  const z = parseFloat(document.getElementById('inZ').value);
+  if ([x, y, z].some(v => isNaN(v))){
+    document.getElementById('lout').innerHTML = '<span style="color:var(--err)">请把 x、y、z 都填成数字。</span>';
+    return;
+  }
+  document.getElementById('lout').innerHTML =
+    'f = lambda x, y, z: x + y + z<br>print(f(' + x + ', ' + y + ', ' + z + '))　→　<b>' + (x + y + z) + '</b>';
+}
+function doMax(){
+  const x = parseFloat(document.getElementById('inX').value);
+  const y = parseFloat(document.getElementById('inY').value);
+  if (isNaN(x) || isNaN(y)){
+    document.getElementById('lout').innerHTML = '<span style="color:var(--err)">请把 x、y 都填成数字。</span>';
+    return;
+  }
+  const m = x > y ? x : y;
+  const branch = x > y ? '条件 x &gt; y 成立 → 取 x' : '条件 x &gt; y 不成立 → 取 y';
+  document.getElementById('lout').innerHTML =
+    'Max = lambda x, y: x if x &gt; y else y<br>print(Max(' + x + ', ' + y + '))　→　<b>' + m + '</b>　（' + branch + '）';
+}
+</script>
+</body>
+</html>

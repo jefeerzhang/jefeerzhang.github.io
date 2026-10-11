@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.12 循环控制 break 与 continue · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第五章 程序控制 · 第 12 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.trace{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.trace .tc{display:inline-flex;flex-direction:column;align-items:center;gap:2px;
+  min-width:52px;padding:8px 6px;border-radius:10px;border:1px solid var(--border);
+  background:#fff;font-family:Consolas,monospace;font-size:14px}
+.trace .tc .ch{font-size:18px;font-weight:800}
+.trace .tc .st{font-size:11px;color:var(--ink2)}
+.trace .tc.pass{border-color:var(--ok);background:var(--ok-soft)}
+.trace .tc.skip{border-color:var(--warn);background:var(--warn-soft)}
+.trace .tc.stop{border-color:var(--err);background:var(--err-soft)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch05.html">第五章 程序控制</a><span class="sep">/</span>
+          <span class="current">5.12</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">12</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第五章 · 程序控制</span>
+            <h1>循环控制 break 与 continue</h1>
+            <p class="hero-summary">第 12 / 17 节 · 约 12 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序控制结构概述</li>
+      <li>单分支结构 if</li>
+      <li>双分支结构 if-else</li>
+      <li>IF 表达式</li>
+      <li>多分支结构 if-elif-else</li>
+      <li>嵌套分支结构</li>
+      <li>嵌套与多分支对比</li>
+      <li>无限循环 while</li>
+      <li>range 函数与遍历整数</li>
+      <li>遍历字符串列表元组</li>
+      <li>遍历字典</li>
+      <li class="cur">循环控制 break 与 continue</li>
+      <li>循环嵌套</li>
+      <li>常见语法错误</li>
+      <li>常见运行异常</li>
+      <li>异常处理语句</li>
+      <li>综合实战：古算题与成绩单</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>循环跑起来之后，还得会「踩刹车」和「跳过这轮」</h2>
+    <p>循环结构有两个<b>辅助循环控制的保留字</b>：<code>break</code> 和 <code>continue</code>。<b>break 可以结束当前所在层的整个循环</b>，即当前所在层程序终止；而 <b>continue 用于跳过当前所在层的本次循环</b>，直接继续执行下次循环。一个管「提前收工」，一个管「这轮不要，接着来」——没有它们，<code>while True</code> 死循环就出不来，筛选「不要的元素」也得写得很别扭。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">continue 像「跳绳绊了一下，甩掉这次继续跳」；break 像「绳断了直接收工」</div>
+      <p>跳绳时绊了一下，你不会脱鞋回家，而是重新起跳——这就是 continue：本次剩下的动作不做了，下一轮照常。绳子断了没法跳了，只能收工——这就是 break：整个循环当场终止。<code>while True + if …: break</code> 则像「闹钟叫你起床」——不停响，直到条件满足才停。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>break 与 continue 的分工</h2>
+    <ul class="points">
+      <li><b>break</b>：结束<b>当前所在层的整个循环</b>，程序跳到循环之后继续执行——「整层终止」</li>
+      <li><b>continue</b>：跳过<b>当前所在层的本次循环</b>中剩余的语句，直接进入下一次循环判断——「只废这一轮」</li>
+      <li>两者通常和 <code>if</code> 搭配：满足某个条件时才触发</li>
+      <li><b>break 是逃出 while True 死循环的标配</b>：循环条件永远为真，靠内部条件判断 + break 收场</li>
+      <li>只作用于「当前所在层」：嵌套循环里，break 只能跳出它所在的那一层，不能一步跳出两层（5.13 细讲）</li>
+    </ul>
+
+    <div class="switch">
+      <button class="on" data-pane="pane-cont">continue 版（跳过 H）</button>
+      <button data-pane="pane-brk">break 版（H 处终止）</button>
+    </div>
+
+    <div class="pane on" id="pane-cont">
+      <pre class="codeblock">for c in 'PYTHON':
+    if c == 'H':
+        continue
+    print(c, end=" ")</pre>
+      <pre class="codeblock">P Y T O N</pre>
+      <div class="trace">
+        <span class="tc pass"><span class="ch">P</span><span class="st">打印</span></span>
+        <span class="tc pass"><span class="ch">Y</span><span class="st">打印</span></span>
+        <span class="tc pass"><span class="ch">T</span><span class="st">打印</span></span>
+        <span class="tc skip"><span class="ch">H</span><span class="st">continue 跳过</span></span>
+        <span class="tc pass"><span class="ch">O</span><span class="st">打印</span></span>
+        <span class="tc pass"><span class="ch">N</span><span class="st">打印</span></span>
+      </div>
+      <p class="muted">H 踩雷：print 被 continue 跳过，但循环还活着，继续把 O、N 跑完。</p>
+    </div>
+
+    <div class="pane" id="pane-brk">
+      <pre class="codeblock">for c in 'PYTHON':
+    if c == 'H':
+        break
+    print(c, end=" ")</pre>
+      <pre class="codeblock">P Y T</pre>
+      <div class="trace">
+        <span class="tc pass"><span class="ch">P</span><span class="st">打印</span></span>
+        <span class="tc pass"><span class="ch">Y</span><span class="st">打印</span></span>
+        <span class="tc pass"><span class="ch">T</span><span class="st">打印</span></span>
+        <span class="tc stop"><span class="ch">H</span><span class="st">break 终止整层</span></span>
+        <span class="tc" style="opacity:.4"><span class="ch">O</span><span class="st">没轮到</span></span>
+        <span class="tc" style="opacity:.4"><span class="ch">N</span><span class="st">没轮到</span></span>
+      </div>
+      <p class="muted">H 及其后全部终止：O、N 根本没被取出，循环当场收工。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 示例 02：break 逃死循环、continue 筛奇数</h2>
+    <pre class="codeblock"># 用 break 逃出 while True 死循环：输出三行后停止
+count = 0
+while True:
+    print("热血男儿当自强。")
+    count += 1
+    if count == 3:
+        break</pre>
+    <pre class="codeblock">热血男儿当自强。
+热血男儿当自强。
+热血男儿当自强。</pre>
+    <pre class="codeblock"># 用 continue 只让奇数累加：跳过所有偶数
+total = 0
+i = 0
+while i &lt; 100:
+    i += 1
+    if i % 2 == 0:
+        continue
+    total += i
+print(f"1+3+5+...+99={total}")</pre>
+    <pre class="codeblock">1+3+5+...+99=2500</pre>
+    <ul class="points">
+      <li>第一段：<code>while True</code> 条件永真，全靠 <code>if count == 3: break</code> 刹车——break 是死循环唯一的出口</li>
+      <li>第二段：i 为偶数时 <code>continue</code> 跳过 <code>total += i</code>，只剩奇数被累加：1+3+5+…+99 = 2500</li>
+      <li>注意 <code>i += 1</code> 放在 continue <b>之前</b>——如果放在后面，偶数轮 i 永远不再更新，直接死循环</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！break 在 c=='H' 时终止整层循环，只有 P、Y、T 被打印出来。"
+         data-no="❌ 回看上面的逐字符示意：H 处 break 直接终止整层循环，H 本身没打印，O、N 也没轮到——只有 P Y T 三个。">
+      <p style="font-weight:700;margin-bottom:12px"><code>for c in 'PYTHON':</code> 中，当 <code>c == 'H'</code> 时执行 <code>break</code>，一共打印几个字母？</p>
+      <button class="opt" onclick="quizPick(this)">A. 6 个（一个不少）</button>
+      <button class="opt" onclick="quizPick(this)">B. 5 个（跳过 H）</button>
+      <button class="opt" onclick="quizPick(this)">C. 3 个（P Y T）</button>
+      <button class="opt" onclick="quizPick(this)">D. 0 个</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="整个本次|整个 本次|整个、本次" data-ok="✅ 正确！break 结束当前所在层的整个循环，continue 只跳过本次循环、继续下次。" data-no="❌ 两个空分别对应：break 管的是「整层收工」，continue 管的是「这一轮不干」。两空用 | 之外的空格或中文顿号连接都可以，答案是：整个、本次。">
+      <p>break 结束当前所在层的<b>＿＿</b>循环，continue 跳过<b>＿＿</b>循环，直接继续执行下次循环。（两空连填，中间用空格或顿号隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：整个 本次">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">两个高频翻车点</div>
+      <p>①<b>break / continue 只作用于「当前所在层」循环</b>：嵌套循环里内层的 break 只跳出内层，外层照常运转，<b>不能一步跳出两层</b>——想跳两层要借助标志变量或函数，5.13 会再见到它；</p>
+      <p>②<b>while 里用 continue，小心更新语句的位置</b>：<code>i += 1</code> 若写在 continue 之后，一旦触发 continue 就轮不到它执行，i 永远不变、条件永远成立——死循环伺候。正确姿势是把更新语句放在 continue 之前（对照上面奇数求和的写法）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 循环控制保留字 break 和 continue。请：1）用「跳绳绊一下继续跳 vs 绳断了收工」的类比，讲清两者对循环的影响差异；2）出 5 道含 break 或 continue 的 for/while 输出题考我（含一道 while 中 continue 导致更新语句被跳过的死循环陷阱）；3）示范如何用 while True + break 写一个用户输入 0 就退出的程序。">
+      我刚学了 Python 循环控制保留字 break 和 continue。请：1）用「跳绳绊一下继续跳 vs 绳断了收工」的类比，讲清两者对循环的影响差异；2）出 5 道含 break 或 continue 的 for/while 输出题考我（含一道 while 中 continue 导致更新语句被跳过的死循环陷阱）；3）示范如何用 while True + break 写一个用户输入 0 就退出的程序。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：四段代码全部跑通（5 分钟）</span>
+    <ol class="steps">
+      <li>把 PPT 示例 01 的 continue 版和 break 版（遍历 'PYTHON'）各跑一遍，对照输出 P Y T O N 与 P Y T。</li>
+      <li>再跑示例 02 的两段：while True + break（输出三行后停）和 continue 版奇数求和（2500）。</li>
+      <li>做个危险实验（体验即可，别上瘾）：把奇数求和里的 <code>i += 1</code> 挪到 continue 之后，感受一下死循环，再 Ctrl+C 停掉。</li>
+      <li>前置练习本章作业第 6 题：把 5.08 的 while True 版改成「输入负数就 break」的雏形——<code>while True: n = int(input()); if n &lt; 0: break</code>。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>break 与 continue 是两个辅助循环控制的保留字：break 结束当前所在层的整个循环，continue 跳过本次循环直接进入下次；break 是逃出 while True 死循环的标配；while 里用 continue 时，更新语句必须放在它前面。下一节：循环嵌套，外层走一步、内层跑一圈。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="5.11.html"><span class="nav-label">← 上一节</span><span class="nav-title">5.11 遍历字典</span></a>
+        <a class="next" href="5.13.html"><span class="nav-label">下一节 →</span><span class="nav-title">5.13 循环嵌套</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.18 Anaconda 与 AI IDE · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第一章 导论与 Python 环境 · 第 18 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+/* —— 本页专属：对比卡与模式徽标 —— */
+.vs-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+        box-shadow:var(--shadow);padding:20px}
+.vs-card .badge{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;
+        padding:3px 12px;margin-bottom:10px}
+.vs-card h3{font-size:19px;margin-bottom:4px}
+.vs-card .sub{font-size:13px;color:var(--ink2);margin-bottom:12px}
+.vs-card ul{list-style:none;margin:8px 0}
+.vs-card ul li{padding:5px 0 5px 22px;position:relative;font-size:14px}
+.vs-card ul li::before{content:"✦";position:absolute;left:2px;color:var(--accent);font-size:12px}
+.b-ana .badge{background:var(--ok-soft);color:var(--ok)}
+.b-trae .badge{background:var(--accent2-soft);color:var(--accent2)}
+.b-ana ul li::before{color:var(--ok)}
+.b-trae ul li::before{color:var(--accent2)}
+.mode{display:inline-block;font-size:12px;font-weight:700;background:var(--accent2-soft);
+      color:var(--accent2);border-radius:6px;padding:2px 8px;margin-right:6px}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch01.html">第一章 导论与 Python 环境</a><span class="sep">/</span>
+          <span class="current">1.18</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">18</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第一章 · 导论与 Python 环境</span>
+            <h1>Anaconda 与 AI IDE</h1>
+            <p class="hero-summary">第 18 / 18 节 · 约 8 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>计算机系统架构</li>
+      <li>操作系统及其分类</li>
+      <li>编程语言：人机沟通的桥梁</li>
+      <li>编程语言的三个层次</li>
+      <li>编译型 vs 解释型语言</li>
+      <li>TIOBE 排行与语言流行趋势</li>
+      <li>五大语言的诞生与用途</li>
+      <li>AI 时代的编程学习理念</li>
+      <li>与 AI 高效协作的三技巧</li>
+      <li>学习路径的三阶段</li>
+      <li>Python 的诞生与发展</li>
+      <li>PEP 与 PEP 8</li>
+      <li>The Zen of Python</li>
+      <li>Python 2 vs Python 3</li>
+      <li>Python 的六大特点</li>
+      <li>Python 的应用领域</li>
+      <li>Python 环境搭建</li>
+      <li class="cur">Anaconda 与 AI IDE</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>本章最后一节：给自己选一套趁手的装备</h2>
+    <p>上一节你装好了官方 Python 这台「发动机」，也开了三种基础「驾驶舱」。但市面上还有两类更流行的选择：<b>Anaconda</b>（数据分析全家桶）和 <b>TRAE 等 AI IDE</b>（人工智能加持的编程工具）。这一节帮你搞清楚：</p>
+    <ul class="points">
+      <li>Anaconda 到底是什么，为什么说它是<b>数据分析首选</b>？</li>
+      <li>TRAE 的 <b>Builder / Chat / SOLO</b> 三种模式分别能干什么？</li>
+      <li>结合你的电脑配置和专业，<b>本学期到底该用哪一套</b>？</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">毛坯房、精装房与带智能管家的新房</div>
+      <p>官网 Python 是<b>毛坯房</b>：干净清爽，但要自己添置家具（一个个装库）。Anaconda 是<b>精装房、拎包入住</b>：Python 加上 NumPy、Pandas 等大量家具家电（数据科学库）全部预装好，一键安装直接开工。而 TRAE 这样的 AI IDE 是<b>带智能管家的新房</b>：你说一句「帮我装修」（用中文描述需求），它就动手干活——生成代码、回答问题、调试纠错。房子越智能越舒服，但<b>水电煤（基础概念）你总得自己懂一点</b>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>两大选手，各是什么来头？</h2>
+    <ul class="points">
+      <li><b>Anaconda（数据分析首选）</b>：一个 Python 发行版，集成了 Python 本体和<b>大量数据科学库（如 NumPy、Pandas）</b>，一键安装、环境管理便捷，非常适合数据科学初学者——省去逐个装库的麻烦。</li>
+      <li><b>TRAE（支持 AI 的 IDE）</b>：深度融合 AI 能力的集成开发环境，支持通过<b>自然语言（中文）描述需求</b>，自动生成完整项目（Builder 模式）、实时问答与调试（Chat 模式），甚至端到端自主开发（SOLO 模式）。（各模式的具体名称与能力以 TRAE 官方说明为准。）</li>
+      <li>它们不是互斥的：Anaconda 管「库和环境」，TRAE 管「写代码的方式」，有经验的开发者两者都装。但对你来说，<b>先选一个，跑通再说</b>。</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">👆 点击卡片，看定位、亮点与适合谁</span>
+    <h2>Anaconda vs TRAE，逐个点开看</h2>
+    <div class="grid g2">
+      <div class="icard b-ana" data-toggle>
+        <h4><span class="dot" style="background:#1a9e6c"></span>Anaconda</h4>
+        <div class="desc">数据分析首选的 Python 发行版</div>
+        <div class="more"><b>定位</b>：精装房——Python + 数百个数据科学库打包发行。<b>亮点</b>：NumPy、Pandas、Matplotlib、Jupyter Notebook 开箱即用；自带的 conda 工具能一键创建、切换多个独立环境，避免库版本打架。<b>适合谁</b>：想学数据分析、机器学习的同学——正好覆盖经济、投资类专业的主战场。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard b-trae" data-toggle>
+        <h4><span class="dot" style="background:#7c5cf0"></span>TRAE</h4>
+        <div class="desc">深度融合 AI 能力的新一代 IDE</div>
+        <div class="more"><b>定位</b>：带智能管家的代码编辑器。<b>亮点</b>：<span class="mode">Builder</span>用中文描述需求，自动生成完整项目；<span class="mode">Chat</span>边写边问，实时问答与调试；<span class="mode">SOLO</span>端到端自主开发，你说目标它交活（模式名称以 TRAE 官方说明为准）。<b>适合谁</b>：想让 AI 帮忙写代码、加快学习节奏的同学；对英语不自信的人尤其友好，全程可以用中文交流。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🧭 该选哪个？三秒决策小测试</span>
+    <h2>按你的情况对号入座</h2>
+    <div>
+      <div class="switch">
+        <button class="on" data-pane="pick-ana">我想学数据分析</button>
+        <button data-pane="pick-trae">想让 AI 帮我写代码</button>
+        <button data-pane="pick-mi">只想轻装入门</button>
+      </div>
+      <div class="pane on" id="pick-ana">
+        <div class="callout">
+          <div class="co-title">选 Anaconda</div>
+          <p>你的方向和它高度重合：数据分析要用的 NumPy、Pandas、Matplotlib 全部预装，还附赠 Notebook 交互环境，特别适合边学边练。注意检查电脑剩余空间，它装完要占好几个 GB。</p>
+        </div>
+      </div>
+      <div class="pane" id="pick-trae">
+        <div class="callout">
+          <div class="co-title">选 TRAE（或同类 AI IDE）</div>
+          <p>你想体验「用中文指挥 AI 写代码」的快感，Builder 模式能快速搭出小项目，Chat 模式像随身助教。但请配合 1.08 节的理念使用：<b>让 AI 解释给你听，而不是替你学</b>。</p>
+        </div>
+      </div>
+      <div class="pane" id="pick-mi">
+        <div class="callout">
+          <div class="co-title">选官网 Python + IDLE</div>
+          <p>电脑配置一般、硬盘紧张，或者只想先把这门课的基础打好？上一节装的官方 Python 加自带 IDLE 完全够用，轻便、纯净、没有额外概念负担。<b>先用轻装备跑完全程，以后随时升级。</b></p>
+        </div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！Anaconda 是集成了 Python 和大量数据科学库（如 NumPy、Pandas）的发行版，一键安装、环境管理便捷，是数据分析首选。"
+         data-no="❌ 不对哦。IDLE 是 Python 自带的简易编辑器，官方安装包是毛坯房，PEP 是 Python 增强提案。集成数据科学库的发行版是 Anaconda。">
+      <p style="font-weight:700;margin-bottom:12px">集成了 Python 和 NumPy、Pandas 等大量数据科学库、一键安装的发行版是？</p>
+      <button class="opt" onclick="quizPick(this)">A. IDLE</button>
+      <button class="opt" onclick="quizPick(this)">B. 官方 Python 安装包</button>
+      <button class="opt" onclick="quizPick(this)">C. Anaconda</button>
+      <button class="opt" onclick="quizPick(this)">D. PEP 8</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="Builder|builder|builder模式|Builder模式" data-ok="✅ 正确！Builder 模式支持通过自然语言（中文）描述需求，自动生成完整项目。" data-no="❌ 再想想：那种「像建筑师一样按需求造出整个项目」的模式叫什么？（提示：英文单词，建造者的意思）">
+      <p>TRAE 的 <b>＿＿</b> 模式支持通过中文描述需求、自动生成完整项目。请在框里填写：</p>
+      <div class="fill-row">
+        <input class="blank" id="blank1" placeholder="输入一个英文单词">
+        <button class="btn btn-main" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">装之前想清楚，用 AI 时留个心眼</div>
+      <p><b>关于 Anaconda</b>：它是出了名的「体积大」——下载包几百 MB，装完轻松占用数 GB 硬盘空间。电脑空间紧张的话，<b>先用官方 Python + pip 按需装库</b>，等真做数据分析项目再上 Anaconda 也不迟。别为了「看起来专业」把硬盘塞满。</p>
+      <p><b>关于 AI IDE</b>：工具再智能也只是工具。1.08 节讲过的理念在这里依然成立——<b>概念还不熟时，别让 AI 全自动生成代码</b>。你可以让它生成，但必须让它逐段解释、自己动手复现一遍；全程一键 SOLO，期末考试和面试不会替你出场。先学会走，再让管家推着你跑。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它帮你做选型参谋：</p>
+    <div class="prompt-box" data-text="我刚学了 Anaconda 和 TRAE 的区别：Anaconda 是集成 Python 和 NumPy、Pandas 等数据科学库的发行版，一键安装、环境管理便捷；TRAE 是支持 AI 的 IDE，有 Builder、Chat、SOLO 三种模式。我的专业是××，电脑剩余硬盘空间约××GB。请：1）帮我分析我更适合先装哪一个，给出理由；2）用毛坯房、精装房、智能管家的比喻帮我复述三者（官网 Python、Anaconda、AI IDE）的定位；3）提醒我使用 AI 写代码时要注意什么。">
+      我刚学了 Anaconda 和 TRAE 的区别：Anaconda 是集成 Python 和 NumPy、Pandas 等数据科学库的发行版，一键安装、环境管理便捷；TRAE 是支持 AI 的 IDE，有 Builder、Chat、SOLO 三种模式。我的专业是××，电脑剩余硬盘空间约××GB。请：1）帮我分析我更适合先装哪一个，给出理由；2）用毛坯房、精装房、智能管家的比喻帮我复述三者（官网 Python、Anaconda、AI IDE）的定位；3）提醒我使用 AI 写代码时要注意什么。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：选定你本学期的环境方案（5 分钟）</span>
+    <ol class="steps">
+      <li>查看自己电脑的配置：剩余硬盘空间、内存大小（Windows 可在「设置 → 系统 → 关于」里看）。</li>
+      <li>对照本节的「三秒决策」：学数据分析选 Anaconda，要 AI 帮写代码选 TRAE，轻装入门选官网 Python + IDLE。</li>
+      <li>在笔记本上写下<b>一句话理由</b>，例如：「我的专业偏数据分析、硬盘剩余 100GB，本学期用 Anaconda。」</li>
+      <li>按选定方案把环境装好并验证（官网方案参考 1.17 节），以后整门课都用它，不要中途频繁换装备。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了，第一章也全部完成了！</div>
+      <p>三套装备各自的定位：<b>官网 Python 是毛坯房（纯净、轻便），Anaconda 是精装房（数据科学库全配、环境管理便捷、数据分析首选），TRAE 等 AI IDE 是带智能管家的房子（Builder 生成项目、Chat 问答调试、SOLO 自主开发，具体名称以官方说明为准）</b>。选择原则：匹配专业方向与电脑配置，选定就坚持用。至此，18 节的导论章全部学完——你已经从「什么是计算机」一路走到「亲手装好 Python」。下一章，正式开始写代码！</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="1.17.html"><span class="nav-label">← 上一节</span><span class="nav-title">1.17 Python 环境搭建</span></a>
+        <a class="next" href="ch01.html"><span class="nav-label">下一节 →</span><span class="nav-title">本章课程目录（18 节已完成）</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

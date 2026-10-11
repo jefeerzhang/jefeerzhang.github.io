@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6.07 必须参数与可选参数 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第六章 函数 · 第 7 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.play{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.play-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.play-row label{font-size:14px;color:var(--ink2);font-weight:600}
+.play-row input{width:110px;font-family:Consolas,monospace;font-size:15px;padding:8px 10px;
+  border:1.5px solid var(--border);border-radius:8px;outline:none;color:var(--ink)}
+.play-row input:focus{border-color:var(--accent)}
+.play-out{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:15px;min-height:52px;word-break:break-all;color:#dbe2f0}
+.play-out .err{color:#ff9b9b;font-weight:700}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch06.html">第六章 函数</a><span class="sep">/</span>
+          <span class="current">6.07</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">07</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第六章 · 函数</span>
+            <h1>必须参数与可选参数</h1>
+            <p class="hero-summary">第 7 / 18 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>函数的定义与优点</li>
+      <li>函数的分类</li>
+      <li>函数的定义</li>
+      <li>函数的调用</li>
+      <li>形参与实参</li>
+      <li>参数传递的两种方式</li>
+      <li class="cur">必须参数与可选参数</li>
+      <li>不定长参数</li>
+      <li>参数值的数据类型</li>
+      <li>变量作用域：局部与全局</li>
+      <li>global 修改全局变量</li>
+      <li>匿名函数 lambda</li>
+      <li>高阶函数：map 与 filter</li>
+      <li>高阶函数：sorted 与 key</li>
+      <li>递归函数：概念与两要素</li>
+      <li>递归执行逻辑：递推与回溯</li>
+      <li>递归实战：阶乘</li>
+      <li>递归实战：字符串逆序</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>有的参数每次都得给，有的可以「不给就用老的」</h2>
+    <p>上一节学了按位置传参和按名称传参，但还有一个更实际的问题：调用函数时，是不是<b>每个参数都必须亲手给值</b>？答案是：调用执行时每个参数都必须有值——但定义函数时，我们可以提前给某些参数<b>指定默认值</b>，这样调用者不给它传值也能跑。这两类参数分别叫<b>必须参数</b>和<b>可选参数</b>，学会了函数会灵活得多。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">定义函数像点奶茶：杯子必选，甜度可以不选</div>
+      <p>点单页上有两栏：<b>杯子</b>——不选就没法下单，这是<b>必须参数</b>；<b>甜度</b>——你不说，店员就默认给你「五分甜」，这是<b>可选参数</b>（定义时已经写好了默认值）。但注意：你要是主动说了「七分甜」，店员就按七分甜做——<b>一旦传了值，默认值就被覆盖</b>。还有一个店规：可选的那栏必须排在必选的后面，否则点单机器直接罢工。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>必须参数与可选参数的分工</h2>
+    <ul class="points">
+      <li><b>铁律：调用执行时每个参数必须有值</b>——可选参数「可以不传」，是因为定义时已经有默认值兜底，不是因为它不需要值</li>
+      <li><b>必须参数</b>：必须由调用者提供值，一个都不能少，少传就报 TypeError</li>
+      <li><b>可选参数</b>：定义时指定了默认值（如 <code>b=2</code>），调用者不提供就用默认值，提供了就用新值</li>
+      <li><b>位置规则（必考）</b>：可选参数必须位于所有必须参数<b>后面</b>——先排「不给不行」的，再排「有默认」的</li>
+      <li>一个函数可以既有必须参数又有可选参数，也可以全部是可选参数</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：getpow(a, b=2)</h2>
+    <pre class="codeblock">def getpow(a, b=2):
+    c = a ** b
+    return c
+
+print(getpow(5))     # a 必须参数；b 可选参数，用默认值 2
+print(getpow(5, 3))  # b 用传入的 3，默认值被覆盖</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">25
+125</pre>
+    <ul class="points">
+      <li><code>getpow(5)</code>：只传了 a=5，b 自动取默认值 2，算 5² = 25</li>
+      <li><code>getpow(5, 3)</code>：a=5、b=3 都传了，算 5³ = 125</li>
+      <li>同一个函数，调用 1 次或 2 次参数都行——这就是可选参数带来的灵活性</li>
+    </ul>
+
+    <div class="play">
+      <p style="font-weight:700;margin-bottom:10px">🔬 getpow 实验台：填 a（必填）和 b（可留空），看默认值什么时候生效</p>
+      <div class="play-row">
+        <label>a（必须参数）</label><input id="gpa" placeholder="必填" value="5">
+        <label>b（可选参数）</label><input id="gpb" placeholder="留空=用默认值2" value="">
+        <button class="btn-main btn" onclick="gpRun()">调用 getpow</button>
+      </div>
+      <div class="play-out" id="gpout">print(getpow(…))　→　点「调用 getpow」试试</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！demo(5) 只提供了 a=5，b 用默认值 2，所以 5 ** 2 = 25。"
+         data-no="❌ 想想「甜度没选就默认五分甜」：b 没传就自动取定义时的默认值 2，算 5 ** 2。">
+      <p style="font-weight:700;margin-bottom:12px"><code>def demo(a, b=2): return a ** b</code>，<code>print(demo(5))</code> 的输出是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 10</button>
+      <button class="opt" onclick="quizPick(this)">B. 25</button>
+      <button class="opt" onclick="quizPick(this)">C. 报错，因为少传了一个参数</button>
+      <button class="opt" onclick="quizPick(this)">D. 125</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="必须 可选 后" data-ok="✅ 全对！必须参数由调用者提供；可选参数带默认值、可传可不传，且必须写在所有必须参数后面。" data-no="❌ 提示：三个空依次是——调用者必须提供的参数名、有默认值的参数名、位置上排在所有必须参数的哪一面。">
+      <p>调用执行时每个参数都必须有值：必须由调用者提供值的参数叫<b>＿＿</b>参数；定义时指定了默认值的参数叫<b>＿＿</b>参数，它必须位于所有必须参数<b>＿＿</b>面。（三空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：必须 可选 后">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">四个高频翻车点</div>
+      <p>①<b>可选参数写到了必须参数前面</b>：<code>def getpow(a=2, b)</code> 直接 SyntaxError（parameter without a default follows parameter with a default）——有默认值的必须排后面；</p>
+      <p>②<b>传了新值还以为用默认</b>：<code>getpow(5, 3)</code> 里 b 已经是 3，别再按默认值 2 算成 25——一旦传值，默认值立即被覆盖；</p>
+      <p>③<b>必须参数一个都不能少</b>：<code>getpow()</code> 报 TypeError——a 是必须参数，没有默认值兜底，「点奶茶不选杯子」是下不了单的。</p>
+      <p>④<b>可变对象不能直接当默认值</b>：<code>def add(x, lst=[])</code> 里的 <code>[]</code> 只在定义函数时创建一次，之后每次调用都共用同一个列表，结果越攒越多。默认值要写 <code>None</code> 占位，进函数后再判断 <code>if lst is None: lst = []</code>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 函数的必须参数与可选参数。请：1）用「点奶茶」的类比解释必须参数、可选参数和默认值覆盖规则；2）说明为什么可选参数必须写在所有必须参数后面；3）出 5 道「给定函数定义和调用，求输出或判断是否报错」的题考我，其中至少 2 道是报错题，等我答完再讲解。">
+      我刚学了 Python 函数的必须参数与可选参数。请：1）用「点奶茶」的类比解释必须参数、可选参数和默认值覆盖规则；2）说明为什么可选参数必须写在所有必须参数后面；3）出 5 道「给定函数定义和调用，求输出或判断是否报错」的题考我，其中至少 2 道是报错题，等我答完再讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试（5 分钟）</span>
+    <ol class="steps">
+      <li>定义 <code>def myfun(x, n=2): return x ** n</code>，分别用 <code>myfun(3)</code> 和 <code>myfun(3, 4)</code> 调用，对照输出 9 和 81。</li>
+      <li>故意把定义写成 <code>def myfun(n=2, x)</code>，运行看 SyntaxError——亲眼见过才不容易犯。</li>
+      <li>定义 <code>def greet(name, greeting='你好'): return greeting + '，' + name</code>，试试 <code>greet('小明')</code> 和 <code>greet('小明', '早安')</code>，看默认值与覆盖。</li>
+      <li>预习：第六章作业第 3 题要「传多少个数都能求和」——一个一个写参数肯定不够用，学完下一节「不定长参数」就能漂亮地解决。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>调用执行时每个参数都必须有值；必须参数由调用者提供，可选参数定义时带默认值、不给就用默认、给了就覆盖；可选参数必须位于所有必须参数后面。下一节：参数数量不定怎么办——不定长参数 *args 与 **kwargs。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="6.06.html"><span class="nav-label">← 上一节</span><span class="nav-title">6.06 参数传递的两种方式</span></a>
+        <a class="next" href="6.08.html"><span class="nav-label">下一节 →</span><span class="nav-title">6.08 不定长参数</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：getpow 实验台（模拟默认值生效 / 覆盖两种情况） */
+function gpRun(){
+  var aRaw = document.getElementById('gpa').value.trim();
+  var bRaw = document.getElementById('gpb').value.trim();
+  var out = document.getElementById('gpout');
+  var a = parseFloat(aRaw);
+  if (aRaw === '' || isNaN(a)){
+    out.innerHTML = '<span class="err">TypeError: getpow() 缺少必须参数 a（点奶茶不选杯子，下不了单！）</span>';
+    return;
+  }
+  if (bRaw === ''){
+    var r = Math.pow(a, 2);
+    out.innerHTML = '实际调用：getpow(' + a + ')　b 未提供 → 用默认值 2　→　输出 <b>' + r + '</b>（' + a + ' 的平方）';
+  } else {
+    var b = parseFloat(bRaw);
+    if (isNaN(b)){
+      out.innerHTML = '<span class="err">b 要填数字哦（留空则用默认值 2）</span>';
+      return;
+    }
+    var r2 = Math.pow(a, b);
+    out.innerHTML = '实际调用：getpow(' + a + ', ' + b + ')　b 已提供 → 默认值被覆盖　→　输出 <b>' + r2 + '</b>';
+  }
+}
+</script>
+</body>
+</html>

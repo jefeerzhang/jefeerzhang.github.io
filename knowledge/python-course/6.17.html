@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6.17 递归实战：阶乘 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第六章 函数 · 第 17 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.tplay{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.trow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.trow label{font-size:14px;color:var(--ink2);font-weight:600}
+.trow input{width:90px;font-family:Consolas,monospace;font-size:15px;padding:8px 10px;
+  border:1.5px solid var(--border);border-radius:8px;outline:none;color:var(--ink)}
+.trow input:focus{border-color:var(--accent)}
+.tout{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14.5px;min-height:64px;white-space:pre-wrap;line-height:1.8}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch06.html">第六章 函数</a><span class="sep">/</span>
+          <span class="current">6.17</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">17</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第六章 · 函数</span>
+            <h1>递归实战：阶乘</h1>
+            <p class="hero-summary">第 17 / 18 节 · 约 8 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>函数的定义与优点</li>
+      <li>函数的分类</li>
+      <li>函数的定义</li>
+      <li>函数的调用</li>
+      <li>形参与实参</li>
+      <li>参数传递的两种方式</li>
+      <li>必须参数与可选参数</li>
+      <li>不定长参数</li>
+      <li>参数值的数据类型</li>
+      <li>变量作用域：局部与全局</li>
+      <li>global 修改全局变量</li>
+      <li>匿名函数 lambda</li>
+      <li>高阶函数：map 与 filter</li>
+      <li>高阶函数：sorted 与 key</li>
+      <li>递归函数：概念与两要素</li>
+      <li>递归执行逻辑：递推与回溯</li>
+      <li class="cur">递归实战：阶乘</li>
+      <li>递归实战：字符串逆序</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>把数学公式「翻译」成递归代码——递归的第一门手艺</h2>
+    <p>6.15 搭好了两要素的骨架，6.16 在「食堂传餐盘」实验台里看完了执行过程。这一节做一件事：<b>把数学公式翻译成代码</b>。阶乘 n! = n × (n-1) × … × 1 是递归的「标准入门题」，公式里两要素清清楚楚——<b>递推关系式 n! = n × (n-1)! 对应 else 分支，基项 0! = 1 对应 if 分支</b>。作业第 6 题的递归求和是它的同构题，学会了这一节，那道题就是「换个零件再装一遍」。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">翻译公式像「填双栏对照表」：左栏数学式，右栏代码行</div>
+      <p>写递归代码别凭感觉，做一张对照表：<b>左栏写数学事实</b>——「0! = 1」「n! = n × (n-1)!」；<b>右栏填代码</b>——前者译成 <code>if n == 0: return 1</code>，后者译成 <code>else: return n * factorial(n-1)</code>。上一节「食堂传餐盘」里的往下传单子，就是 <code>factorial(n-1)</code> 被一层层调用；往回端餐盘，就是每一层的 <code>n × …</code> 在返回的路上算出来。公式会写，代码就会写。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>从公式到代码的三步翻译法</h2>
+    <ul class="points">
+      <li><b>第一步：写出递推关系式</b>——n! = n × (n-1)!，即 F(n) = F(n-1) × n（呼应 6.15 的递归链条：后一项依赖前一项）</li>
+      <li><b>第二步：找出基项</b>——0! = 1（数学规定），这是链条拆到头时的现成答案，不需要再递归</li>
+      <li><b>第三步：对号入座翻译</b>——基项 → <code>if n == 0: return 1</code>；链条 → <code>else: return n * factorial(n-1)</code>；参数 n-1 保证每层向基项靠近</li>
+      <li><b>执行过程回顾</b>：factorial(5) 先递推拆到 factorial(0)，再回溯步步相乘：1 → 1 → 2 → 6 → 24 → <b>120</b>（完整单步演示见上一节实验台）</li>
+    </ul>
+
+    <div class="tplay">
+      <p style="font-weight:700;margin-bottom:10px">🔬 阶乘计算器：输入 n，看「翻译好的代码」算出什么</p>
+      <div class="trow">
+        <label>n =</label><input id="inN" value="5">
+        <button class="btn-main btn" onclick="doFact()">计算 factorial(n)</button>
+        <button class="btn-ghost btn" onclick="setDemo(6)">试 n=6</button>
+      </div>
+      <div class="tout" id="tout">点「计算」看看递推与回溯各走了几步</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：factorial</h2>
+    <pre class="codeblock">def factorial(n):
+    if n == 0:
+        return 1
+    else:
+        return n * factorial(n-1)
+
+print(factorial(5))</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">120</pre>
+    <ul class="points">
+      <li><code>if n == 0: return 1</code>：基项 0! = 1，守住停止点</li>
+      <li><code>else: return n * factorial(n-1)</code>：链条 F(n) = F(n-1) × n，参数每层减 1</li>
+      <li>验证：5! = 5 × 4 × 3 × 2 × 1 = 120，和递归结果一致</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>手算 factorial(4)：递推 5 层，回溯 4 步</h2>
+    <pre class="codeblock"># 递推（层层拆解 ↓）
+factorial(4) = 4 * factorial(3)
+factorial(3) = 3 * factorial(2)
+factorial(2) = 2 * factorial(1)
+factorial(1) = 1 * factorial(0)
+factorial(0) = 1        # 基项！不再调用
+
+# 回溯（步步返回 ↑）
+factorial(1) = 1 * 1 = 1
+factorial(2) = 2 * 1 = 2
+factorial(3) = 3 * 2 = 6
+factorial(4) = 4 * 6 = 24</pre>
+    <ul class="points">
+      <li>递推阶段<b>不做任何计算</b>，只负责「把问题拆小、把调用压下去」</li>
+      <li>所有乘法都发生在<b>回溯的路上</b>：从基项的 1 开始，一层乘回来</li>
+      <li>「翻译公式」和「看懂执行」是两回事：这一节练前者，后者的单步动画在 6.16 实验台</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！递推拆到基项 factorial(0)=1，回溯：1×1=1 → 2×1=2 → 3×2=6 → 4×6=24。4! = 24。"
+         data-no="❌ 用回溯法手算一遍：基项 factorial(0) 返回 1，然后 factorial(1)=1，factorial(2)=2，factorial(3)=6，最后 factorial(4)=4×6。别把 4×3×2×1 乘成 12 哦。">
+      <p style="font-weight:700;margin-bottom:12px">按课堂代码，<code>factorial(4)</code> 的返回值是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 12</button>
+      <button class="opt" onclick="quizPick(this)">B. 16</button>
+      <button class="opt" onclick="quizPick(this)">C. 24</button>
+      <button class="opt" onclick="quizPick(this)">D. 120</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="F(n-1)01回溯|F(n-1) 0 1 回溯" data-ok="✅ 全对！链条 F(n)=F(n-1)×n；基项是 0!=1（if 分支返回 1）；所有乘法发生在回溯（返回）的路上。" data-no="❌ 提示：四个空分别是——链条里 factorial 的参数变成什么？基项是 n 等于几？基项返回值是几？乘法发生在递推还是回溯阶段？">
+      <p>阶乘的递归链条是 F(n) = <b>＿＿</b> × n；基项是 <b>＿＿</b>! = 1，对应代码里 if 分支的 return <b>＿＿</b>；所有乘法都发生在<b>＿＿</b>（返回）的路上。（四空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：F(n-1) 0 1 回溯">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>基项写成 0! = 0</b>：写成 <code>if n == 0: return 0</code>，回溯时一路上全是乘 0，任何 n 算出来都是 0——基项的<b>值</b>必须准确；</p>
+      <p>②<b>else 分支漏乘 n</b>：写成 <code>return factorial(n-1)</code>，只拆不乘，最后返回的是基项的 1——递推关系式里的「× n」一个都不能丢；</p>
+      <p>③<b>负数没有基项兜底</b>：factorial(-1) 会越过 n==0 一路负下去直到 RecursionError——基项只挡住了「从 0 往上拆」的路，这提醒我们基项必须是链条真正的「终点」。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 递归实现阶乘。请：1）把 n! 的数学公式和 factorial 代码做成一张「左右对照翻译表」，逐行解释哪个部分是递归链条、哪个是基项；2）列出 factorial(5) 递推 6 层、回溯 5 步的完整清单（含每层返回值）；3）出 3 道改错题考我（基项值错、漏乘 n、参数没变化），等我答完再讲解。">
+      我刚学了 Python 递归实现阶乘。请：1）把 n! 的数学公式和 factorial 代码做成一张「左右对照翻译表」，逐行解释哪个部分是递归链条、哪个是基项；2）列出 factorial(5) 递推 6 层、回溯 5 步的完整清单（含每层返回值）；3）出 3 道改错题考我（基项值错、漏乘 n、参数没变化），等我答完再讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：直接演练作业第 6 题（5 分钟）</span>
+    <ol class="steps">
+      <li>作业第 6 题要求递归求 1+2+…+N：先翻译公式——链条 <code>mysum(n) = n + mysum(n-1)</code>，基项 n==1 时返回 1（或 n==0 时返回 0）。</li>
+      <li>套用三步翻译法写出完整代码：<code>def mysum(n):</code> if 分支放基项，else 分支放 <code>return n + mysum(n-1)</code>，和 factorial 只差一个运算符。</li>
+      <li>手算 mysum(4)：递推 mysum(4)=4+mysum(3) → … → mysum(1)=1，回溯 1 → 3 → 6 → 10，再用代码验证。</li>
+      <li>作业第 2 题需要「返回多个值」的函数配合（衔接第四章元组），可以先用 factorial 热身：<code>def fun(): return factorial(3), factorial(4)</code>，看看返回的是什么。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>递归阶乘 = 公式翻译：链条 F(n)=F(n-1)×n → else 分支；基项 0!=1 → if 分支。三步翻译法「写关系式 → 找基项 → 对号入座」适用于一切递归题。下一节用同样的方法攻克最后一个实战：字符串逆序。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="6.16.html"><span class="nav-label">← 上一节</span><span class="nav-title">6.16 递归执行逻辑：递推与回溯</span></a>
+        <a class="next" href="6.18.html"><span class="nav-label">下一节 →</span><span class="nav-title">6.18 递归实战：字符串逆序</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：阶乘计算器（展示递推层数与回溯步骤） */
+function doFact(){
+  const n = parseInt(document.getElementById('inN').value, 10);
+  const out = document.getElementById('tout');
+  if (isNaN(n) || n < 0 || n > 12){
+    out.innerHTML = '<span style="color:var(--err)">请输入 0 到 12 之间的整数（数值再大，一步一步演示也没有必要）。</span>';
+    return;
+  }
+  let lines = ['print(factorial(' + n + '))'];
+  for (let i = n; i > 0; i--) lines.push('递推：factorial(' + i + ') = ' + i + ' * factorial(' + (i-1) + ')');
+  lines.push('递推：factorial(0) 命中【基项】→ return 1');
+  let acc = 1;
+  for (let i = 1; i <= n; i++){
+    acc *= i;
+    lines.push('回溯：factorial(' + i + ') = ' + i + ' * ' + (acc / i) + ' = ' + acc);
+  }
+  lines.push('—— 最终结果：' + acc + ' ——');
+  out.textContent = lines.join('\n');
+}
+function setDemo(v){
+  document.getElementById('inN').value = v;
+  doFact();
+}
+</script>
+</body>
+</html>

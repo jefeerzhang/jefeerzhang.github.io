@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.01 计算机系统架构 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第一章 导论与 Python 环境 · 第 1 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+/* —— 本页专属：计算机系统金字塔 —— */
+.pyr{display:flex;flex-direction:column;align-items:center;gap:12px;margin:16px 0 4px}
+.pyr .icard{width:100%;padding:14px 18px}
+.pyr .l1{max-width:58%}.pyr .l2{max-width:72%}.pyr .l3{max-width:86%}.pyr .l4{max-width:100%}
+@media(max-width:680px){.pyr .l1,.pyr .l2,.pyr .l3,.pyr .l4{max-width:100%}}
+.pyr .icard h4{justify-content:center}
+.pyr .more{text-align:left}
+.l1 .dot{background:#7c5cf0}.l2 .dot{background:#4f6ef7}
+.l3 .dot{background:#1a9e6c}.l4 .dot{background:#d97706}
+.hw-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px}
+.hw-chip{background:#fff;border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:13.5px;flex:1;min-width:150px}
+.hw-chip b{display:block;color:var(--accent);font-size:14px;margin-bottom:2px}
+button.btn{font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;
+      padding:10px 18px;cursor:pointer;background:var(--accent);color:#fff}
+button.btn:active{transform:scale(.97)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch01.html">第一章 导论与 Python 环境</a><span class="sep">/</span>
+          <span class="current">1.01</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">01</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第一章 · 导论与 Python 环境</span>
+            <h1>计算机系统架构</h1>
+            <p class="hero-summary">第 1 / 18 节 · 约 7 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li class="cur">计算机系统架构</li>
+      <li>操作系统及其分类</li>
+      <li>编程语言：人机沟通的桥梁</li>
+      <li>编程语言的三个层次</li>
+      <li>编译型 vs 解释型语言</li>
+      <li>TIOBE 排行与语言流行趋势</li>
+      <li>五大语言的诞生与用途</li>
+      <li>AI 时代的编程学习理念</li>
+      <li>与 AI 高效协作的三技巧</li>
+      <li>学习路径的三阶段</li>
+      <li>Python 的诞生与发展</li>
+      <li>PEP 与 PEP 8</li>
+      <li>The Zen of Python</li>
+      <li>Python 2 vs Python 3</li>
+      <li>Python 的六大特点</li>
+      <li>Python 的应用领域</li>
+      <li>Python 环境搭建</li>
+      <li>Anaconda 与 AI IDE</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>Python 到底跑在什么东西上？</h2>
+    <p>你马上要在这台电脑上安装 Python、写代码、跑程序。可「计算机」到底是什么构成的？为什么有的电脑跑 Python 快、有的慢？把计算机系统的架构搞清楚，后面「环境搭建」「编译与解释」这些概念才不会悬在半空。学完这一节，你能回答：</p>
+    <ul class="points">
+      <li>计算机系统由哪<b>两大部分</b>组成？（第一章常考）</li>
+      <li>硬件的「五大件」分别是什么，谁是核心？</li>
+      <li>为什么说<b>没有软件的计算机只是一台「裸机」</b>，什么都干不了？</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">一家餐厅：硬件是厨房设备，软件是菜谱和管理制度</div>
+      <p><b>硬件</b>就像餐厅的灶台、冰箱、锅碗瓢盆——看得见摸得着，但光有设备做不出菜。<b>软件</b>是菜谱和管理流程——告诉设备「先切菜、再开火、炒几分钟」。两者缺一不可：只有硬件的餐厅开不了张，只有软件（没有厨房）的餐厅更是空中楼阁。</p>
+      <p>而<b>操作系统</b>就是这家餐厅的<b>大堂经理</b>：调度厨师（CPU）、安排库房（存储器）、对接服务员（输入输出设备）。下一节我们就专门讲这位经理。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>计算机系统 = 硬件 + 软件</h2>
+    <ul class="points">
+      <li><b>硬件</b>：构成计算机的物理部件，经典说法是「五大件」——<b>运算器</b>（负责算）、<b>控制器</b>（负责指挥），两者合称 <b>CPU</b>（中央处理器，整台电脑的大脑）；<b>存储器</b>（内存断电即忘、速度快，外存如硬盘断电不忘、容量大）；<b>输入设备</b>（键盘、鼠标、麦克风）；<b>输出设备</b>（显示器、音箱、打印机）。</li>
+      <li><b>软件</b>：运行在硬件上的程序与数据的总称，分两大类——<b>系统软件</b>（操作系统、驱动程序等，负责管理硬件、为其他软件提供运行环境）和<b>应用软件</b>（微信、浏览器、Python 等直接帮用户干活的程序）。</li>
+      <li><b>裸机</b>：只有硬件、没装任何软件的计算机。裸机几乎什么都做不了——「没有软件的计算机是裸机」，这句是判断题常客。</li>
+    </ul>
+
+    <div class="hw-row">
+      <div class="hw-chip"><b>运算器 + 控制器</b>合称 CPU，负责计算与指挥全局</div>
+      <div class="hw-chip"><b>存储器</b>内存快而小、外存慢而大，分工合作</div>
+      <div class="hw-chip"><b>输入 / 输出设备</b>人机交互的「耳朵嘴巴」和「脸和嗓子」</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🖱️ 交互示例</span>
+    <h2>点击揭开「计算机系统金字塔」</h2>
+    <p class="muted">从上往下依次点一点，看看每一层是什么、靠谁撑起来：</p>
+    <div class="pyr">
+      <div class="icard l1" data-toggle="1">
+        <h4><span class="dot"></span>👤 用户（就是你）</h4>
+        <div class="desc">最顶层 · 只跟应用软件打交道</div>
+        <div class="more">你敲键盘、点鼠标、看屏幕，其实从未直接「摸到」硬件——所有操作都由下面的层层层代劳。你点开 Python 写下第一行代码，就是站在金字塔顶端发号施令。</div>
+        <div class="hint">👆 点击展开说明</div>
+      </div>
+      <div class="icard l2" data-toggle="1">
+        <h4><span class="dot"></span>🧩 应用软件</h4>
+        <div class="desc">直接帮用户干活的程序</div>
+        <div class="more">Python、微信、浏览器、游戏、剪辑软件……它们解决具体问题，但自己不直接驱动硬件，而是「呼叫」系统软件帮忙。本课程的主角 Python 就住在这一层。</div>
+        <div class="hint">👆 点击展开说明</div>
+      </div>
+      <div class="icard l3" data-toggle="1">
+        <h4><span class="dot"></span>⚙️ 系统软件</h4>
+        <div class="desc">操作系统 + 驱动程序 · 应用软件的地基</div>
+        <div class="more">操作系统（Windows、macOS、鸿蒙等）统一管理 CPU、内存、文件和外设；驱动程序负责「翻译」具体某个硬件的动作。没有这一层，应用软件根本无法运行。</div>
+        <div class="hint">👆 点击展开说明</div>
+      </div>
+      <div class="icard l4" data-toggle="1">
+        <h4><span class="dot"></span>🔌 硬件</h4>
+        <div class="desc">五大件 · 一切计算的物理基础</div>
+        <div class="more">CPU（运算器 + 控制器）、存储器（内存 / 外存）、输入设备、输出设备。这是金字塔的底座——上面每一层的所有动作，最终都要落到硬件的电信号上才算数。</div>
+        <div class="hint">👆 点击展开说明</div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！CPU = 运算器（负责算数）+ 控制器（负责指挥），两者合起来才叫中央处理器。"
+         data-no="❌ 不对哦。内存和外存属于存储器，输入 / 输出设备是另外的部件。CPU 只由运算器和控制器两部分组成，往上翻「核心概念」再看看。">
+      <p style="font-weight:700;margin-bottom:12px">CPU（中央处理器）由哪两部分组成？</p>
+      <button class="opt" onclick="quizPick(this)">A. 内存和外存</button>
+      <button class="opt" onclick="quizPick(this)">B. 运算器和控制器</button>
+      <button class="opt" onclick="quizPick(this)">C. 输入设备和输出设备</button>
+      <button class="opt" onclick="quizPick(this)">D. 存储器和显示器</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="硬件 软件|软件 硬件" data-ok="✅ 正确！计算机系统 = 硬件 + 软件，两者相辅相成、缺一不可。" data-no="❌ 再想想：一个看得见摸得着（五大件），一个看不见摸不着（程序与数据）。这两个词分别是什么？">
+      <p>计算机系统由<b>＿＿</b>和<b>＿＿</b>两大部分组成。请在框里按顺序填这两个词（空格隔开，先后顺序不限）：</p>
+      <div class="fill-row">
+        <input class="blank" id="blank1" placeholder="如：×× 和 ××">
+        <button class="btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">这三个常见误解，考试里最爱挖坑</div>
+      <p><b>误区一：「CPU 就是机箱」。</b>机箱里装着主板、硬盘、电源等一大堆部件，CPU 只是里面指甲盖大小的一块芯片——它是核心，但远不是全部。</p>
+      <p><b>误区二：「内存和硬盘是一回事」。</b>内存断电后数据全部丢失、速度快、容量小；硬盘（外存）断电不忘、速度慢、容量大。买电脑说的「16G 内存 + 512G 硬盘」就是这两样。</p>
+      <p><b>误区三：「显示器是核心部件」。</b>显示器属于输出设备，负责把结果「演」给你看；它坏了电脑照样能算，只是你看不到结果。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了「计算机系统 = 硬件 + 软件」：硬件五大件是运算器、控制器（合称 CPU）、存储器、输入设备、输出设备；软件分系统软件和应用软件。请：1）用快递站或餐厅的类比把这套架构再讲一遍；2）出 2 道单选题和 1 道填空题考我，等我作答后再公布答案；3）告诉我内存和外存最关键的两点区别。">
+      我刚学了「计算机系统 = 硬件 + 软件」：硬件五大件是运算器、控制器（合称 CPU）、存储器、输入设备、输出设备；软件分系统软件和应用软件。请：1）用快递站或餐厅的类比把这套架构再讲一遍；2）出 2 道单选题和 1 道填空题考我，等我作答后再公布答案；3）告诉我内存和外存最关键的两点区别。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：认识你自己的「金字塔底座」（3 分钟）</span>
+    <ol class="steps">
+      <li>Windows 用户：打开<b>设置 → 系统 → 关于</b>，找到「设备规格」，查看你的 <b>CPU 型号</b>（如 Intel Core i5-12500H）和<b>已安装内存（RAM）</b>大小。</li>
+      <li>Mac 用户：点屏幕左上角  → <b>关于本机</b>，同样能看到芯片与内存信息。</li>
+      <li>对照本节内容大声说出：「我的 CPU 里包含运算器和控制器；这个 16G 是内存，512G 是外存硬盘。」</li>
+      <li>进阶：按 <code>Ctrl + Shift + Esc</code> 打开任务管理器，看「性能」标签里 CPU 和内存的实时占用——你正在亲眼看见硬件被操作系统调度。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p><b>计算机系统 = 硬件 + 软件</b>。硬件五大件：运算器、控制器（合称 CPU）、存储器（内存 / 外存）、输入设备、输出设备；软件分系统软件（操作系统、驱动）与应用软件；没有软件的计算机叫<b>裸机</b>。从用户到硬件，一层层分工、层层支撑——就像刚才点开的金字塔。下一节，我们去认识金字塔里最重要的一位「中间管理者」：操作系统。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="ch01.html"><span class="nav-label">← 上一节</span><span class="nav-title">课程目录</span></a>
+        <a class="next" href="1.02.html"><span class="nav-label">下一节 →</span><span class="nav-title">1.02 操作系统及其分类</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

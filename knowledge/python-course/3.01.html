@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.01 字符串基础与三种引号 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第三章 字符串与列表 · 第 1 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch03.html">第三章 字符串与列表</a><span class="sep">/</span>
+          <span class="current">3.01</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">01</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第三章 · 字符串与列表</span>
+            <h1>字符串基础与三种引号</h1>
+            <p class="hero-summary">第 1 / 21 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li class="cur">字符串基础与三种引号</li>
+      <li>转义字符</li>
+      <li>字符串索引</li>
+      <li>字符串切片</li>
+      <li>实战：身份证号提取信息</li>
+      <li>字符串运算与内置函数</li>
+      <li>大小写转换方法</li>
+      <li>计数、查找与替换</li>
+      <li>分割、联合与剔除</li>
+      <li>判断字符串类别</li>
+      <li>format 格式化输出</li>
+      <li>f-string 格式化输出</li>
+      <li>列表定义与特性</li>
+      <li>列表的创建</li>
+      <li>列表索引与切片</li>
+      <li>列表增加元素</li>
+      <li>列表删除元素</li>
+      <li>列表修改元素</li>
+      <li>列表运算与函数</li>
+      <li>列表常用方法</li>
+      <li>实战：成绩排序和统计</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>程序世界里的「文字」，都叫字符串</h2>
+    <p>你打的每一句话、你的名字、一个手机号，在 Python 里都以<b>字符串</b>的形式存在。它是编程中<b>最常用的数据类型之一</b>——表示文本数据，离了它，程序连一句「Hello」都说不出口。本章的一切（索引、切片、格式化……）都建立在这一节的基础上，先把「怎么把一段文字装进 Python」学扎实。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">引号是字符串的「包装袋」</div>
+      <p>想让 Python 认出「这是文字」，就得把它装进引号这个包装袋里。袋子有三种规格：单层（单引号）、双层（双引号）、加厚款（三引号）。但有一条铁律：<b>袋子必须成对使用，不能交叉</b>——就像袜子要配对，左脚棉的右脚丝的，走起路来准出乱子。<code>'Hello"</code> 这样一边单引号一边双引号，Python 会直接报错。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>字符串是什么，怎么写？</h2>
+    <ul class="points">
+      <li><b>定义</b>：字符串是由 <b>0 个或多个字符组成的有序字符序列</b>，用于表示文本数据</li>
+      <li><b>单引号</b>：<code>'Hello, Python!'</code></li>
+      <li><b>双引号</b>：<code>"Hello, World!"</code></li>
+      <li><b>三引号</b>：<code>'''多行字符串'''</code>——<b>支持直接换行</b></li>
+      <li><b>引号必须成对出现，不能交叉使用</b>；单引号和双引号在功能上完全等价，三引号可以换行</li>
+      <li>空字符串 <code>''</code> 也是合法的字符串——「0 个字符」也行</li>
+    </ul>
+
+    <p style="margin-top:14px">最容易被忽略的一点：<b>数值和字符串的区别就在于有没有引号</b>。看这段课堂代码：</p>
+    <pre class="codeblock"># 数值和字符串的区别在于引号
+print(123, "123")
+print(type(123), type("123"))</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">123 123
+&lt;class 'int'&gt; &lt;class 'str'&gt;</pre>
+    <p>打印出来长得一样，但 <code>123</code> 是整数 int（能做加减乘除），<code>"123"</code> 是字符串 str（是三个「字符」）。<code>123 + 1</code> 得 124，而 <code>"123" + 1</code> 会报错。</p>
+
+    <div class="switch" style="margin-top:18px">
+      <button class="on" data-pane="p1">单引号</button>
+      <button data-pane="p2">双引号</button>
+      <button data-pane="p3">三引号</button>
+    </div>
+    <div class="pane on" id="p1">
+      <pre class="codeblock">print('Hello, Python!')</pre>
+      <ul class="points">
+        <li>最简洁的写法，适合不含单引号的文本</li>
+        <li>要在单引号字符串里换行？须在行尾加续行符 <code>\</code>——注意它只是「把代码折到下一行写」，输出<b>不会</b>换行；真要在字符串里换行得写 <code>\n</code>，或者改用三引号。例如 <code>print('abc \
+123')</code></li>
+      </ul>
+    </div>
+    <div class="pane" id="p2">
+      <pre class="codeblock">print("Hello, World!")</pre>
+      <ul class="points">
+        <li>和单引号完全等价，两种引号给了你选择空间</li>
+        <li>同理，双引号字符串也能用 <code>\</code> 折行（同样不产生换行），如 <code>print("abc \
+123")</code></li>
+      </ul>
+    </div>
+    <div class="pane" id="p3">
+      <pre class="codeblock"># 三引号可以直接换行
+print('''a
+b
+c''')</pre>
+      <ul class="points">
+        <li>三个单引号（或三个双引号）包裹，<b>内容里可以直接按回车换行</b>，不用任何续行符</li>
+        <li>写多行文本（如一首诗、一段说明）时最方便</li>
+      </ul>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！带引号的就是字符串，type() 告诉我们它是 str 类型。"
+         data-no="❌ 再想想：123 是 int，那加了双引号的“123”是什么类型？注意输出格式是 &lt;class '...'&gt;。">
+      <p style="font-weight:700;margin-bottom:12px"><code>print(type("123"))</code> 的输出是？</p>
+      <button class="opt" onclick="quizPick(this)">A. &lt;class 'int'&gt;</button>
+      <button class="opt" onclick="quizPick(this)">B. &lt;class 'str'&gt;</button>
+      <button class="opt" onclick="quizPick(this)">C. 123</button>
+      <button class="opt" onclick="quizPick(this)">D. "123"</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="引|引号" data-ok="✅ 正确！三引号字符串支持直接换行；单双引号字符串里要换行得写 \n（\ 只是把代码折行，不产生换行）。" data-no="❌ 提示：三种包装袋里，哪种是「加厚款」、可以直接按回车换行？">
+      <p>三＿＿号字符串支持直接换行。（填一个字或一个词）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：双">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">成对、不交叉、别用中文引号</div>
+      <p>三个高频报错：<b>① 引号不成对</b>——<code>'hello</code> 少了收口的袋子，报 SyntaxError；<b>② 引号交叉</b>——<code>'hello"</code> 左单右双，Python 不认；<b>③ 打成中文引号</b>——键盘输入法切到中文状态后打出 <code>"hello"</code>，这几个弯引号（‘ ’ 与 “ ”）在 Python 眼里只是普通字符，根本起不到「包装」的作用。写代码时务必切回英文输入法。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 字符串基础与三种引号（单引号、双引号、三引号）。请：1）用 3 个例子说明 123 与“123”的区别；2）演示三引号多行字符串和单双引号加 \ 续行的区别；3）出 3 道判断/选择题考我（含引号不成对、交叉使用、中文引号的报错场景），等我作答后公布答案和讲解。">
+      我刚学了 Python 字符串基础与三种引号（单引号、双引号、三引号）。请：1）用 3 个例子说明 123 与 "123" 的区别；2）演示三引号多行字符串和单双引号加 \ 续行的区别；3）出 3 道判断/选择题考我（含引号不成对、交叉使用、中文引号的报错场景），等我作答后公布答案和讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：三种引号亲手打一遍（5 分钟）</span>
+    <ol class="steps">
+      <li>打开 IDLE，进入交互模式（提示符 <code>&gt;&gt;&gt;</code> 后直接输入）。</li>
+      <li>输入 <code>'hello'</code> 回车——Python 把字符串<b>原样显示</b>给你看，还带着单引号。</li>
+      <li>输入 <code>"hello"</code> 回车——结果一样，说明单双引号等价。</li>
+      <li>输入三引号多行字符串：<code>'''床前</code> 回车（提示符变成 <code>...</code>），<code>明月光'''</code> 回车，看看多行是怎么被完整保存的。</li>
+      <li>最后故意输入 <code>'hello"</code> 交叉引号，亲眼看看报错长什么样，以后就能一眼认出来。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>字符串是 0 个或多个字符组成的<b>有序字符序列</b>，用来表示文本；单引号、双引号等价，三引号<b>支持直接换行</b>；引号必须<b>成对、不交叉</b>，还要避开中文引号；带引号的是 str，不带的是数值——<code>type()</code> 一验便知。下一节：引号里有些「特殊字符」打不出来怎么办？转义字符登场！</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="ch03.html"><span class="nav-label">← 上一节</span><span class="nav-title">第三章课程目录</span></a>
+        <a class="next" href="3.02.html"><span class="nav-label">下一节 →</span><span class="nav-title">3.02 转义字符</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

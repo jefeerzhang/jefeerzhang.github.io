@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.21 数据类型转换 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第四章 元组、集合和字典 · 第 21 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.demo pre{margin:10px 0}
+.demo p.lab{font-size:13px;font-weight:700;color:var(--ink2);margin-bottom:2px}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch04.html">第四章 元组、集合和字典</a><span class="sep">/</span>
+          <span class="current">4.21</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">21</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第四章 · 元组、集合和字典</span>
+            <h1>数据类型转换</h1>
+            <p class="hero-summary">第 21 / 21 节 · 约 12 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>元组的定义与特性</li>
+      <li>元组的创建</li>
+      <li>元组索引与切片</li>
+      <li>元组运算</li>
+      <li>元组函数与方法</li>
+      <li>元组的不可变性</li>
+      <li>集合的定义与特性</li>
+      <li>集合的创建</li>
+      <li>集合运算：交差并补</li>
+      <li>集合操作：增删元素</li>
+      <li>集合运算并更新</li>
+      <li>集合函数与判断方法</li>
+      <li>序列与映射</li>
+      <li>字典的定义与特性</li>
+      <li>字典的创建</li>
+      <li>字典访问与三视图</li>
+      <li>字典添加与修改</li>
+      <li>字典删除</li>
+      <li>字典其他操作</li>
+      <li>组合数据类型总结</li>
+      <li class="cur">数据类型转换</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>数据在四种容器之间「变身」，全靠这几个构造函数</h2>
+    <p>四种容器各有本领，但实际问题经常需要<b>中途换容器</b>：列表有重复想去重？转集合。集合想排序？转列表。一堆元素想快速拼成字典？用 fromkeys()。这些「变身」全部通过 <code>str()</code>、<code>list()</code>、<code>tuple()</code>、<code>set()</code>、<code>dict()</code> 这几个构造函数完成。这一节是全章最后一节，也是本章作业第 6 题的直接考点。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">拍照存档、拆包裹重装箱、挑剔的登记处</div>
+      <p><b>str() 是「拍照存档」</b>——不管你是什么对象，都能拍成一张字符串照片，长得和原来一模一样，但只是一张照片。<b>list() / tuple() / set() 是「拆包裹重装箱」</b>——把可迭代对象拆开，把里面的元素重新分装到新箱子（列表 / 元组 / 集合）里。<b>dict() 最挑剔</b>——不能随便收货，要通过 <code>dict.fromkeys()</code> 这个「登记处」办手续：元素登记成键，值统一先空着（None）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>五大构造函数：谁能转什么</h2>
+    <table>
+      <tr><th>构造函数</th><th>能转换的数据</th><th>注意</th></tr>
+      <tr><td><code>str()</code></td><td>所有类型的数据</td><td>转成它的字符串形式；字符串本身原样返回</td></tr>
+      <tr><td><code>list()</code></td><td>可迭代数据（字符串、元组、集合、字典）</td><td>字典只保留键</td></tr>
+      <tr><td><code>tuple()</code></td><td>可迭代数据（字符串、列表、集合、字典）</td><td>字典只保留键</td></tr>
+      <tr><td><code>set()</code></td><td>可迭代数据（字符串、列表、元组、字典）</td><td>元素必须是可哈希类型</td></tr>
+      <tr><td><code>dict()</code></td><td>可迭代数据（字符串、列表、元组、集合）</td><td>元素必须是「键值对」（如 <code>[(1, 2), (3, 4)]</code>）；想从一个序列建字典用 <code>dict.fromkeys()</code></td></tr>
+    </table>
+    <ul class="points">
+      <li><b>str() 万物可转</b>：把对象「拍照」成字符串，转换后是「长得像容器的字符串」</li>
+      <li>list / tuple / set 互转都走<b>「拆开可迭代对象」</b>的路线：字符串按字符拆、字典只保留键</li>
+      <li>set() 转换<b>顺带去重</b>，但元素必须不可变（集合元素不可变的老规矩）</li>
+      <li>dict() 特殊：要用 <code>dict.fromkeys()</code> 生成「键为元素、值为 None」的字典</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>🔬 三连示例：str → list/tuple → set/dict</h2>
+    <p>以下三组代码共用同一批初始数据，点标签逐组看：</p>
+    <div class="switch">
+      <button class="on" data-pane="ex1">示例 1 · str 转换</button>
+      <button data-pane="ex2">示例 2 · list / tuple 转换</button>
+      <button data-pane="ex3">示例 3 · set / dict 转换</button>
+    </div>
+
+    <div class="pane on demo" id="ex1">
+      <p class="lab">初始数据：ls 是列表、tp 是元组、st 是集合、dc 是字典</p>
+      <pre class="codeblock">ls = [1, [2], 3]
+tp = (4, (5, 6), 7)
+st = {'abc', 'def'}
+dc = {1: 'abc', 2: 'def'}
+print(str(ls), len(str(ls)))
+print(str(tp), len(str(tp)))
+print(str(st), len(str(st)))
+print(str(dc), len(str(dc)))</pre>
+      <p class="lab">输出：</p>
+      <pre class="codeblock out">[1, [2], 3] 11
+(4, (5, 6), 7) 14
+{'abc', 'def'} 14
+{1: 'abc', 2: 'def'} 20</pre>
+      <p class="muted">看第二列：转成字符串后 len() 数的是<b>字符个数</b>（连括号、逗号、空格都算），比如 str(dc) 共 20 个字符——str() 是拍照，不是复制容器。</p>
+    </div>
+
+    <div class="pane demo" id="ex2">
+      <p class="lab">list() 与 tuple()：拆开可迭代对象重新分装</p>
+      <pre class="codeblock">s = '3.14'
+print(list(s), list(tp))
+print(list(st), list(dc))
+print(tuple(s), tuple(ls))
+print(tuple(st), tuple(dc))</pre>
+      <p class="lab">输出：</p>
+      <pre class="codeblock out">['3', '.', '1', '4'] [4, (5, 6), 7]
+['abc', 'def'] [1, 2]
+('3', '.', '1', '4') (1, [2], 3)
+('abc', 'def') (1, 2)</pre>
+      <p class="muted">三个细节：①字符串按<b>单个字符</b>拆（'3.14' 拆成 4 个字符）；②字典只保留<b>键</b>（list(dc) 是 [1, 2]，值没了）；③列表 / 元组里的子容器（如 (5, 6)、[2]）作为整体保留，不再深拆。</p>
+    </div>
+
+    <div class="pane demo" id="ex3">
+      <p class="lab">set() 转换顺带去重；dict() 要走 fromkeys() 登记处</p>
+      <pre class="codeblock">ls2 = [1, 2, 3]
+print(set(s), set(ls2))
+print(set(tp), set(dc))
+print(dict.fromkeys(s))
+print(dict.fromkeys(ls2))
+print(dict.fromkeys(tp))
+print(dict.fromkeys(st))</pre>
+      <p class="lab">输出：</p>
+      <pre class="codeblock out">{'4', '3', '1', '.'} {1, 2, 3}
+{4, (5, 6), 7} {1, 2}
+{'3': None, '.': None, '1': None, '4': None}
+{1: None, 2: None, 3: None}
+{4: None, (5, 6): None, 7: None}
+{'abc': None, 'def': None}</pre>
+      <p class="muted">①set(s) 的输出顺序和 s 不同——集合无序，别按位置记元素；②dict.fromkeys(可迭代) 生成「元素当键、值全是 None」的字典，元组 (5, 6) 也能整体当键（因为它不可变）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！list() / tuple() / set() 作用在字典上时都只保留键，list({1: 'abc', 2: 'def'}) 得到 [1, 2]，值被丢掉了。"
+         data-no="❌ 再想想：可迭代函数拆字典时拆的是什么？——只保留「键」！所以 list(dc) 是 [1, 2]，而不是值的列表，更不是键值对列表。">
+      <p style="font-weight:700;margin-bottom:12px"><code>dc = {1: 'abc', 2: 'def'}</code>，<code>list(dc)</code> 的结果是？</p>
+      <button class="opt" onclick="quizPick(this)">A. ['abc', 'def']</button>
+      <button class="opt" onclick="quizPick(this)">B. [1, 2]</button>
+      <button class="opt" onclick="quizPick(this)">C. [(1, 'abc'), (2, 'def')]</button>
+      <button class="opt" onclick="quizPick(this)">D. 报错</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="fromkeys|dict.fromkeys" data-ok="✅ 正确！dict() 转换需使用 fromkeys() 方法，生成「元素当键、值为 None」的字典。" data-no="❌ 提示：dict() 最挑剔，要找一个「登记处」方法把元素登记成键——方法是 dict.___()。">
+      <p>使用 dict() 进行转换时，需使用____方法生成键值对。</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="填一个方法名" style="width:220px">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点，考前必看</div>
+      <p><b>坑一：list(字典) 得到的是键的列表，值全丢了。</b>这是新手最容易踩的坑——想拿值列表要写 <code>list(dc.values())</code>。作业里「只想要值」却写出 list(dc)，结果怎么都对不上。</p>
+      <p><b>坑二：set() 转换时元素含列表会报错。</b>比如 set([1, [2], 3]) 直接 TypeError——列表可变、不可哈希，当不了集合元素。元组可以，set(tp) 里的 (5, 6) 好好的。</p>
+      <p><b>坑三：str() 转换后是「长得像容器的字符串」，不能当容器用。</b>str(ls) 得到字符串 "[1, [2], 3]"，它没有 append、不能索引取元素；len(str(ls)) 数的是字符个数（11），不是元素个数（3）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 数据类型转换：str() 万物可转（把对象拍照成字符串）；list()/tuple()/set() 都走「拆开可迭代对象」路线（字符串按字符拆、字典只保留键），set() 顺带去重但元素必须不可变；dict() 要用 dict.fromkeys() 生成键为元素、值为 None 的字典。请：1）出 8 道给出代码让我判断输出或是否报错的题（故意混入 list(dc)、set([1,[2],3]) 这类坑）；2）讲讲为什么元组能当集合元素和字典键而列表不行；3）总结一张「什么能转什么」的速查表。">
+      我刚学了 Python 数据类型转换：str() 万物可转（把对象拍照成字符串）；list()/tuple()/set() 都走「拆开可迭代对象」路线（字符串按字符拆、字典只保留键），set() 顺带去重但元素必须不可变；dict() 要用 dict.fromkeys() 生成键为元素、值为 None 的字典。请：1）出 8 道给出代码让我判断输出或是否报错的题（故意混入 list(dc)、set([1,[2],3]) 这类坑）；2）讲讲为什么元组能当集合元素和字典键而列表不行；3）总结一张「什么能转什么」的速查表。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：收官演练——作业第 6 题的转换链（8 分钟）</span>
+    <ol class="steps">
+      <li>新建 <code>ch21.py</code>，写出作业第 6 题的数据：<code>names = ['张三', '李四', '张三', '赵六']</code>。</li>
+      <li>依次转换并打印：<code>print(tuple(names))</code> → <code>print(set(names))</code> → <code>print(dict.fromkeys(names))</code>，先猜后跑。</li>
+      <li>对照输出：set() 帮你把重复的「张三」去掉了；fromkeys() 把剩下的名字变成了键。</li>
+      <li>再试一步组合拳：<code>print(list(dict.fromkeys(names)))</code>——这是「去重且保持原顺序」的经典写法，很多老程序员都这么写。</li>
+      <li>完成后恭喜你：第四章 21 节全部通关！可以回目录页总复习，然后挑战本章作业。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了（全章完）</div>
+      <p>五大构造函数各司其职：<b>str() 万物可转</b>（拍照存档）；<b>list() / tuple() / set() 拆开可迭代对象</b>重装箱（字符串按字符拆、字典只保留键），set() 顺带去重但元素必须不可变；<b>dict() 走 fromkeys() 登记处</b>，生成键为元素、值为 None 的字典。至此第四章「元组、集合和字典」21 节全部完成，作业第 6 题所需的四种类型与转换技巧都已备齐——去作业里大显身手吧！</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="4.20.html"><span class="nav-label">← 上一节</span><span class="nav-title">4.20 组合数据类型总结</span></a>
+        <a class="next" href="ch04.html"><span class="nav-label">下一节 →</span><span class="nav-title">本章课程目录（21 节已完成）</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

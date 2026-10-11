@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7.03 绝对路径与相对路径 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第七章 文件及目录操作 · 第 3 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.pth{width:100%;border-collapse:collapse;margin-top:14px;background:var(--card);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);font-size:14.5px}
+.pth th,.pth td{border:1px solid var(--border);padding:10px 12px;text-align:left}
+.pth th{background:var(--accent-soft);color:var(--accent);font-weight:700}
+.pth td code{font-family:Consolas,monospace;font-size:13.5px}
+.pth td .rel{color:var(--accent);font-weight:700}
+.pth-wrap{margin-top:18px}
+.pth-note{font-size:13px;color:var(--ink2);margin-top:8px;line-height:1.7}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch07.html">第七章 文件及目录操作</a><span class="sep">/</span>
+          <span class="current">7.03</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">03</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第七章 · 文件及目录操作</span>
+            <h1>绝对路径与相对路径</h1>
+            <p class="hero-summary">第 3 / 18 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>文件与目录的基本概念</li>
+      <li>文件类型：文本与二进制</li>
+      <li class="cur">绝对路径与相对路径</li>
+      <li>文件操作三步曲</li>
+      <li>打开文件与打开模式</li>
+      <li>关闭文件与 with 语句</li>
+      <li>写文件：write 与 writelines</li>
+      <li>读文件三方法</li>
+      <li>文件指针：tell 与 seek</li>
+      <li>目录路径两大模块</li>
+      <li>工作目录</li>
+      <li>新建目录</li>
+      <li>展示目录内容</li>
+      <li>重命名与移动</li>
+      <li>删除文件和目录</li>
+      <li>判断路径</li>
+      <li>获取文件信息</li>
+      <li>路径的合并与分解</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>open('scores.txt') 到底打开的是哪个 scores.txt？</h2>
+    <p>你的电脑上可能有 10 个文件夹里各有一个 <code>scores.txt</code>。<code>open()</code> 怎么知道你要哪个？答案藏在<b>路径</b>里：要么给它一个<b>绝对路径</b>（从根目录开始的全名），要么给它一个<b>相对路径</b>（从「程序现在站的地方」出发的短名）。作业第 1、2 题读写 scores.txt 时写错路径，就会撞上 <code>FileNotFoundError</code>——先把这一节吃透，能少踩一半的坑。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">绝对路径是「完整地址」，相对路径是「从我这儿走」</div>
+      <p>给快递员写「北京市海淀区XX路XX号」（绝对路径），谁在哪儿寄都能送到，但啰嗦；跟室友说「楼下超市往右拐」（相对路径），前提是你们俩都站在宿舍里——短小灵活，但换个「参考位置」就指错地方了。<b>程序运行时站的地方叫当前工作目录</b>，相对路径全靠它定位。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>两种定位方式 + 两个定位符</h2>
+    <ul class="points">
+      <li><b>绝对路径</b>：从<b>根目录</b>开始向下寻找，提供完整位置信息，<b>唯一且精确</b>。Windows 例：<code>C:\Users\YourName\Documents\report.txt</code>；Linux/macOS 例：<code>/home/yourname/Documents/report.txt</code></li>
+      <li><b>相对路径</b>：相对<b>当前程序运行目录</b>（当前工作目录）定位，无需完整路径、更短更灵活，是<b>项目开发首选</b>——代码挪到别的电脑也能跑（可移植性好）</li>
+      <li><b>定位符 .</b>（一个点）：代表<b>当前目录</b>，写在路径最前面时点号可以省略——<code>./logs/app.log</code> 等价于 <code>logs/app.log</code></li>
+      <li><b>定位符 ..</b>（两个点）：代表<b>上一级目录</b>，可以<b>连续使用</b>往上跳多级——<code>../notes.txt</code> 是「回到上一级找 notes.txt」，<code>../../x.txt</code> 是「往上跳两级」</li>
+      <li>书写建议：Windows 里反斜杠 <code>\</code> 是转义字符，路径要写成<b>双反斜杠</b> <code>\\</code>，或者干脆用<b>正斜杠</b> <code>/</code>（两个系统都认，最省心）</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：同一文件的不同写法</h2>
+    <pre class="codeblock"># 绝对路径：从根目录开始，写全写死
+file = open('C:\\xxx.py')              # 双反斜杠，转义安全（用完记得 file.close()，或改用 with 语句）
+file = open('C:/xxx.py')               # 正斜杠写法，与上面等价
+
+# 相对路径：相对当前工作目录
+file = open('xxx.py')                  # 就在当前目录里，点号可省略
+file = open('./xxx.py')                # 加上 . 也可以
+file = open('a_file/aa.txt')           # 当前目录下的 a_file 文件夹里</pre>
+    <ul class="points">
+      <li>第 2、3 行：同一个文件的两种绝对路径写法，<b>推荐正斜杠</b></li>
+      <li>第 6、7 行：<code>'xxx.py'</code> 和 <code>'./xxx.py'</code> 完全等价</li>
+      <li>作业里把 scores.txt 和程序放在<b>同一个文件夹</b>，直接 <code>open('scores.txt')</code> 最省事</li>
+    </ul>
+    <div class="pth-wrap">
+      <p style="font-weight:700;margin-bottom:4px">📋 PPT 原表：相对路径怎么「翻译」成绝对路径</p>
+      <table class="pth">
+        <tr><th>假设当前工作目录</th><th>路径写法</th><th>含义</th></tr>
+        <tr><td rowspan="2">C:\（file 所在处）</td><td><code>'xxx.py'</code></td><td>等价 <code>'C:\\xxx.py'</code></td></tr>
+        <tr><td><code>'a_file\\aa.txt'</code></td><td>等价 <code>'C:\\a_file\\aa.txt'</code></td></tr>
+        <tr><td rowspan="2">C:\b_file</td><td><code>'..\\xxx.py'</code></td><td>先回上一级 C:\，再找 xxx.py，等价 <code>'C:\\xxx.py'</code></td></tr>
+        <tr><td><code>'..\\a_file\\aa.txt'</code></td><td>先回上一级，等价 <code>'C:\\a_file\\aa.txt'</code></td></tr>
+      </table>
+      <p class="pth-note">📌 读法：看到相对路径，就把它拼到「当前工作目录」后面；看到 <code>..</code>，先往回退一级再拼。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>为可移植性，优先用相对路径</h2>
+    <pre class="codeblock"># 反例：绝对路径——换个电脑、挪个文件夹就失效
+file = open('C:/Users/hhq/Desktop/homework/scores.txt', 'r', encoding='utf-8')
+
+# 正例：相对路径——只要 scores.txt 和程序在同一文件夹，走哪儿都能跑
+file = open('scores.txt', 'r', encoding='utf-8')</pre>
+    <ul class="points">
+      <li>绝对路径把 <code>hhq</code> 写死在代码里，交作业时老师的电脑上根本没有这个目录</li>
+      <li>相对路径只说「就在旁边」，代码拷到哪儿都能找到文件——这就是<b>可移植性</b></li>
+      <li>「当前工作目录」具体是哪儿？本章第 11 节（工作目录）会专门讲怎么查看和修改</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！当前在 C:\b_file，.. 先退回上一级 C:\，再找 notes.txt，所以指向 C:\notes.txt。"
+         data-no="❌ .. 的意思是「先回上一级目录」：从 C:\b_file 退回 C:\，再找 notes.txt，结果就是 C:\notes.txt。">
+      <p style="font-weight:700;margin-bottom:12px">当前工作目录是 <code>C:\b_file</code>，相对路径 <code>..\notes.txt</code> 指向哪里？</p>
+      <button class="opt" onclick="quizPick(this)">A. C:\b_file\notes.txt</button>
+      <button class="opt" onclick="quizPick(this)">B. C:\notes.txt</button>
+      <button class="opt" onclick="quizPick(this)">C. C:\b_file\..\notes.txt（按字面理解）</button>
+      <button class="opt" onclick="quizPick(this)">D. 直接报错，路径不存在</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="当前上一级|当前 上一级" data-ok="✅ 正确！. 代表当前目录（写在开头时可省略），.. 代表上一级目录，且 .. 可以连续使用往上跳多级。" data-no="❌ 一个点是「就在这儿」，两个点是「回上一层楼」。再想想 .. 在快递比喻里像什么？">
+      <p>相对路径中，<b>.</b> 代表<b>＿＿</b>目录（点号可省略），<b>..</b> 代表<b>＿＿</b>目录（可重复使用）。（两空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：当前 上一级">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>单反斜杠会「吃字」</b>：Windows 路径 <code>'C:\table\note.txt'</code> 里 <code>\t</code>、<code>\n</code> 被当成转义符（制表符、换行符），路径面目全非——写成 <code>C:\\table\\note.txt</code> 或直接用正斜杠 <code>C:/table/note.txt</code>；</p>
+      <p>②<b>相对路径的「参照物」是程序运行目录，不是 .py 文件所在目录</b>：从 IDE 不同位置运行，参照物可能不同，报 FileNotFoundError 时先想想「程序现在站在哪儿」；</p>
+      <p>③<b>大小写与拼写</b>：<code>'Scores.txt'</code> 和 <code>'scores.txt'</code> 是两个名字——路径错一个字母都找不到文件。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的绝对路径与相对路径。请：1）用「完整地址 vs 从我这儿走」的类比讲两者区别和各自的适用场景；2）出 5 道题：给定当前工作目录和一个相对路径（含 .. 和 .），让我说出最终指向的绝对路径，我答完再批改；3）解释 Windows 下为什么推荐用正斜杠写路径，以及 .. 连续使用时怎么一步步往回退。">
+      我刚学了 Python 的绝对路径与相对路径。请：1）用「完整地址 vs 从我这儿走」的类比讲两者区别和各自的适用场景；2）出 5 道题：给定当前工作目录和一个相对路径（含 .. 和 .），让我说出最终指向的绝对路径，我答完再批改；3）解释 Windows 下为什么推荐用正斜杠写路径，以及 .. 连续使用时怎么一步步往回退。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：给作业文件选对写法（5 分钟）</span>
+    <ol class="steps">
+      <li>作业第 1、2 题都要用 scores.txt：把它和 .py 程序放进<b>同一个文件夹</b>，代码里只写 <code>open('scores.txt', …)</code>。</li>
+      <li>故意把路径写错（如 <code>open('scors.txt', 'r')</code>），看看 FileNotFoundError 长什么样——见过才不怕。</li>
+      <li>在文件夹里建一个子文件夹 data，把 scores.txt 挪进去，练习用 <code>'data/scores.txt'</code> 访问它。</li>
+      <li>挑战：再把 scores.txt 挪到程序文件夹的<b>外面</b>（上一级），用 <code>'../scores.txt'</code> 找回它。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>绝对路径从根目录开始、唯一精确但写死；相对路径相对当前工作目录、短小灵活且可移植，是项目首选。. 代表当前目录（可省略），.. 代表上一级目录（可连续使用）。Windows 下路径用双反斜杠或正斜杠避免转义问题。下一节：把打开、读写、关闭三步串成「文件操作三步曲」。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="7.02.html"><span class="nav-label">← 上一节</span><span class="nav-title">7.02 文件类型：文本与二进制</span></a>
+        <a class="next" href="7.04.html"><span class="nav-label">下一节 →</span><span class="nav-title">7.04 文件操作三步曲</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

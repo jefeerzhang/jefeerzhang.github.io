@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.05 多分支结构 if-elif-else · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第五章 程序控制 · 第 5 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.journey{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;margin-top:14px}
+.journey .jstep{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--border)}
+.journey .jstep:last-child{border-bottom:none}
+.journey .jno{flex:none;width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);
+  font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.journey .jtext{font-size:14.5px}
+.journey .jtext b.hit{color:var(--ok)}
+.journey .jtext b.miss{color:var(--ink2)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch05.html">第五章 程序控制</a><span class="sep">/</span>
+          <span class="current">5.05</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">05</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第五章 · 程序控制</span>
+            <h1>多分支结构 if-elif-else</h1>
+            <p class="hero-summary">第 5 / 17 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序控制结构概述</li>
+      <li>单分支结构 if</li>
+      <li>双分支结构 if-else</li>
+      <li>IF 表达式</li>
+      <li class="cur">多分支结构 if-elif-else</li>
+      <li>嵌套分支结构</li>
+      <li>嵌套与多分支对比</li>
+      <li>无限循环 while</li>
+      <li>range 函数与遍历整数</li>
+      <li>遍历字符串列表元组</li>
+      <li>遍历字典</li>
+      <li>循环控制 break 与 continue</li>
+      <li>循环嵌套</li>
+      <li>常见语法错误</li>
+      <li>常见运行异常</li>
+      <li>异常处理语句</li>
+      <li>综合实战：古算题与成绩单</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>成绩分五档，难道要写五个 if 吗？</h2>
+    <p>前面学过单分支和双分支，可现实中的判断往往不止两档：成绩分 A~E 五档、BMI 分四类、优惠券分三级。<b>多分支结构</b>就是「有多条判断语句，根据判断条件不同，执行不同代码块」的分支结构——用一条 if-elif-else 链把所有档位串起来，是本章作业里出场率最高的写法。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">多分支像「景区分道检票」：从 A 道口开始依次问，符合就进，后面的道口不再看</div>
+      <p>检票员站在第一个道口问：「你的票符合条件 1 吗？」符合就放行进园，<b>后面的道口他一眼都不再看</b>；不符合才走到第二个道口接着问……一直问到兜底的 else 通道。所以<b>队伍的排序（条件的顺序）非常重要</b>——要是把普通票通道排在 VIP 通道前面，VIP 也会被先拦进普通通道，因为「命中即停」。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>if-elif-else 语法与四条注意事项</h2>
+    <pre class="codeblock">if &lt;条件1&gt;:
+    &lt;代码块_真1&gt;
+elif &lt;条件2&gt;:
+    &lt;代码块_真2&gt;
+elif &lt;条件3&gt;:
+    &lt;代码块_真3&gt;
+……
+else:
+    &lt;代码块_假&gt;</pre>
+    <ul class="points">
+      <li><b>if 语句必须作为起始语句</b>，不可或缺——整条链从它开始</li>
+      <li><b>elif 语句位于中间，数量不限</b>——想要多少档就写多少个</li>
+      <li><b>else 语句必须放在结尾，可以省略</b>——省略后可能所有条件都不满足、一个分支也不执行</li>
+      <li><b>条件判断从上到下依次执行</b>：某一条件为真就执行它所属的代码块，<b>后续语句均不会执行</b>；条件为假则向下继续判断，直至 else 语句。因此，<b>语句顺序十分重要</b></li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：百分制成绩转五分制</h2>
+    <pre class="codeblock">score = float(input("请输入一个百分制成绩："))
+if score &gt;= 90.0:
+    grade = "A"
+elif score &gt;= 80.0:
+    grade = "B"
+elif score &gt;= 70.0:
+    grade = "C"
+elif score &gt;= 60.0:
+    grade = "D"
+else:
+    grade = "E"
+print(f"对应的五分制成绩是：{grade}")</pre>
+    <ul class="points">
+      <li>输入 <code>80</code>：80 不满足 &gt;=90，往下走；满足 &gt;=80，得到 <b>B</b>，后面全部跳过</li>
+      <li>输入 <code>59</code>：前四个条件全为假，落到 else，得到 <b>E</b></li>
+      <li>elif 的条件是<b>隐含前置条件</b>的：<code>elif score &gt;= 80.0</code> 能被执行到，说明 <code>score &gt;= 90.0</code> 已经不成立了——这正是顺序在暗中帮忙</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>顺序对了才靠谱：正确顺序 vs 顺序写反</h2>
+    <div class="switch">
+      <button class="on" data-pane="p-ok" onclick="switchPane(this, 'p-ok')">正确顺序</button>
+      <button data-pane="p-bad" onclick="switchPane(this, 'p-bad')">顺序写反（易错）</button>
+    </div>
+    <div class="pane on" id="p-ok">
+      <pre class="codeblock">score = float(input("请输入一个百分制成绩："))
+<span class="good">if score &gt;= 90.0:
+    grade = "A"
+elif score &gt;= 80.0:
+    grade = "B"
+elif score &gt;= 70.0:
+    grade = "C"
+elif score &gt;= 60.0:
+    grade = "D"
+else:
+    grade = "E"</span></pre>
+      <p>条件<b>从严格到宽松</b>排列，输入 95 → A，输入 80 → B，输入 59 → E，全部正确。</p>
+    </div>
+    <div class="pane" id="p-bad">
+      <pre class="codeblock">score = float(input("请输入一个百分制成绩："))
+<span class="bad">if score &gt;= 60.0:
+    grade = "D"   # ← 95 分也会先命中这里！</span>
+elif score &gt;= 90.0:
+    grade = "A"
+elif score &gt;= 80.0:
+    grade = "B"
+elif score &gt;= 70.0:
+    grade = "C"
+else:
+    grade = "E"</pre>
+      <p>把 <code>&gt;=60</code> 放到最前面后，输入 <b>95</b>：第一个条件 95&gt;=60 就为真，命中 <b>D</b>，后面的 A、B、C <b>根本没机会被判断</b>——这就是本章最经典的易错点：<b>命中即停，顺序排错就错档</b>。</p>
+    </div>
+    <div class="journey">
+      <div style="font-weight:700;margin-bottom:6px">🚌 输入 80 的判定之旅（正确顺序版）</div>
+      <div class="jstep"><div class="jno">1</div><div class="jtext">条件 1：<code>80 &gt;= 90.0</code>？<b class="miss">假</b>，向下继续判断</div></div>
+      <div class="jstep"><div class="jno">2</div><div class="jtext">条件 2：<code>80 &gt;= 80.0</code>？<b class="hit">真</b>！执行 <code>grade = "B"</code></div></div>
+      <div class="jstep"><div class="jno">3</div><div class="jtext">后面的 elif、else <b>全部跳过不再判断</b>，直接执行最后一行 print</div></div>
+      <div class="jstep"><div class="jno">4</div><div class="jtext">输出：<code>对应的五分制成绩是：B</code></div></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！85 先撞上 &gt;=90（假），再撞上 &gt;=80（真），命中 grade=&quot;B&quot;，后面不再判断。"
+         data-no="❌ 从上到下依次判断：85 不满足 &gt;=90，但满足 &gt;=80，命中 B 后后面的分支全部跳过。">
+      <p style="font-weight:700;margin-bottom:12px">上面的成绩转换程序，输入 <code>85</code> 时输出什么？</p>
+      <button class="opt" onclick="quizPick(this)">A. 对应的五分制成绩是：A</button>
+      <button class="opt" onclick="quizPick(this)">B. 对应的五分制成绩是：B</button>
+      <button class="opt" onclick="quizPick(this)">C. 对应的五分制成绩是：C</button>
+      <button class="opt" onclick="quizPick(this)">D. 对应的五分制成绩是：E</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="不限结尾|不限 结尾" data-ok="✅ 正确！if 打头、elif 居中且数量不限、else 收尾可省略——这就是多分支的队形。" data-no="❌ 回忆一下队形：elif 在中间，想要几档写几个；else 必须站在整条链的最后。">
+      <p>多分支结构中：<b>if</b> 语句必须作为起始语句；<b>elif</b> 语句位于中间，数量＿＿；<b>else</b> 语句必须放在＿＿，可以省略。（两空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：不限 结尾">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>条件顺序要从严格到宽松</b>：先 &gt;=90 再 &gt;=80 再 &gt;=60……反着写就会像上面那样把 95 分误判成 D；</p>
+      <p>②<b>elif 是关键字，不是 else if</b>：从 C、Java 等语言转过来的同学常写成 <code>else if</code>，Python 里会直接语法错误——Python 的写法就是 <code>elif</code>；</p>
+      <p>③<b>else 可以省略，但要想清楚</b>：省略 else 后如果所有条件都为假，整个分支一个代码块都不执行，程序会「沉默地」跳过——不报错，但可能不是你想要的。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的多分支结构 if-elif-else。请：1）用「景区分道检票」的类比解释「条件从上到下判断、命中即停」；2）出一道把条件顺序写反导致误判的改错题让我找 bug；3）讲清 elif 和 else if 的区别、else 省略后会发生什么；4）出 5 道给分数判断输出档位的求值题考我。">
+      我刚学了 Python 的多分支结构 if-elif-else。请：1）用「景区分道检票」的类比解释「条件从上到下判断、命中即停」；2）出一道把条件顺序写反导致误判的改错题让我找 bug；3）讲清 elif 和 else if 的区别、else 省略后会发生什么；4）出 5 道给分数判断输出档位的求值题考我。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：直接演练本章作业第 1 题（5 分钟）</span>
+    <ol class="steps">
+      <li>作业第 1 题是<b>三档 + 兜底</b>：&gt;=90 输出「优秀」、&gt;=70 输出「良好」、&gt;=60 输出「及格」、否则输出「不及格」——注意它和 PPT 五档示例的分档不同，别照抄。</li>
+      <li>自己排条件顺序：想一想三档条件应该<b>从严格到宽松</b>（90 → 70 → 60），还是反过来？为什么？</li>
+      <li>分别输入 95、75、62、30 跑一遍，对照输出是否为 优秀 / 良好 / 及格 / 不及格。</li>
+      <li>挑战：故意把 <code>&gt;=60</code> 挪到第一行，输入 95 看看输出什么——亲手复现一次「顺序写反」的经典错误，印象最深。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>多分支用一条 if-elif-else 链处理多档判断：if 必须打头、elif 居中数量不限、else 收尾可省略；条件<b>从上到下判断、命中即停</b>，后面的分支不再执行，所以条件要<b>从严格到宽松</b>排序、语句顺序十分重要。下一节：当判断需要「先分大类再分小类」时，把分支套进分支——嵌套分支结构。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="5.04.html"><span class="nav-label">← 上一节</span><span class="nav-title">5.04 IF 表达式</span></a>
+        <a class="next" href="5.06.html"><span class="nav-label">下一节 →</span><span class="nav-title">5.06 嵌套分支结构</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：切换「正确顺序 / 顺序写反」两个 pane */
+function switchPane(btn, id){
+  btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  const panes = btn.closest('section').querySelectorAll('.pane');
+  panes.forEach(p => p.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+</script>
+</body>
+</html>

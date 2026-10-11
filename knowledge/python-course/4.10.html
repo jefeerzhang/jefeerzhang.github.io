@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.10 集合操作：增删元素 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第四章 元组、集合和字典 · 第 10 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.pane .tip{font-size:13.5px;color:var(--ink2);margin:8px 0 0}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch04.html">第四章 元组、集合和字典</a><span class="sep">/</span>
+          <span class="current">4.10</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">10</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第四章 · 元组、集合和字典</span>
+            <h1>集合操作：增删元素</h1>
+            <p class="hero-summary">第 10 / 21 节 · 约 11 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>元组的定义与特性</li>
+      <li>元组的创建</li>
+      <li>元组索引与切片</li>
+      <li>元组运算</li>
+      <li>元组函数与方法</li>
+      <li>元组的不可变性</li>
+      <li>集合的定义与特性</li>
+      <li>集合的创建</li>
+      <li>集合运算：交差并补</li>
+      <li class="cur">集合操作：增删元素</li>
+      <li>集合运算并更新</li>
+      <li>集合函数与判断方法</li>
+      <li>序列与映射</li>
+      <li>字典的定义与特性</li>
+      <li>字典的创建</li>
+      <li>字典访问与三视图</li>
+      <li>字典添加与修改</li>
+      <li>字典删除</li>
+      <li>字典其他操作</li>
+      <li>组合数据类型总结</li>
+      <li>数据类型转换</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>集合不是建好就完事——元素要能加、能删</h2>
+    <p>集合是可变类型，增删元素是它的基本功：加元素有 <b>add（加一个）</b>和 <b>update（加一批）</b>两个方法；删元素有 <b>pop、remove、discard、clear</b> 四个方法。其中 remove 和 discard 只差几个字母，遇到「元素不存在」时反应却完全不同——这是考试高频考点。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">社团的人事变动</div>
+      <p><b>add</b> 像「邀请一位新社员」，一次只来一个人；<b>update</b> 像「整批转入」，另一个班整个并进来。<b>remove</b> 和 <b>discard</b> 都像「请出社团」：一个较真——名单上没这人当场吵起来（报错）；一个佛系——没这人就算了。<b>pop</b> 则是「随机抽一人离场，还告诉你是谁」。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>两加四删，六般武艺</h2>
+    <p><b>增加元素（2 个方法）：</b></p>
+    <table>
+      <tr><th>方法</th><th>作用</th></tr>
+      <tr><td><code>st.add(x)</code></td><td>向集合 st 中添加一个元素 x</td></tr>
+      <tr><td><code>st.update(iter)</code></td><td>向集合中扩充添加可迭代对象 iter（列表、元组、集合、字符串）</td></tr>
+    </table>
+    <p style="margin-top:14px"><b>删除元素（4 个方法）：</b></p>
+    <table>
+      <tr><th>方法</th><th>作用</th></tr>
+      <tr><td><code>st.pop()</code></td><td>删除集合 st 中随机元素，并返回该元素</td></tr>
+      <tr><td><code>st.remove(x)</code></td><td>删除集合 st 中的元素 x，如果 x 不存在，则报错</td></tr>
+      <tr><td><code>st.discard(x)</code></td><td>删除集合 st 中的元素 x，如果 x 不存在，不报错</td></tr>
+      <tr><td><code>st.clear()</code></td><td>清空集合 st 中的所有元素</td></tr>
+    </table>
+    <pre class="codeblock" style="margin-top:14px">ST6 = {1, 2, 3, 4, 5}
+ST6.add(0)
+print(ST6)               # {0, 1, 2, 3, 4, 5}
+ST6.update({4, 5, 6})
+print(ST6)               # {0, 1, 2, 3, 4, 5, 6}（重复的 4、5 不会加进去）</pre>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>⚔️ remove vs discard 大对决</h2>
+    <p>同样是「删除一个可能不存在的元素」，两位选手的反应截然不同：</p>
+    <div>
+      <div class="switch">
+        <button class="on" data-pane="pane-remove">remove（严格派）</button>
+        <button data-pane="pane-discard">discard（稳妥派）</button>
+      </div>
+      <div class="pane on" id="pane-remove">
+        <pre class="codeblock">ST7 = {1, 2, 3, 4, 5}
+ST7.remove(99)
+<span class="bad"># KeyError: 99　→　没有此人，当场报错！</span></pre>
+        <p class="tip">remove：要删的元素不存在就报 KeyError，程序直接中断。</p>
+      </div>
+      <div class="pane" id="pane-discard">
+        <pre class="codeblock">ST7 = {1, 2, 3, 4, 5}
+ST7.discard(99)
+print(ST7)
+<span class="good"># {1, 2, 3, 4, 5}　→　没有就算了，默默返回 None</span></pre>
+        <p class="tip">discard：元素不存在也不报错，集合原样不动。</p>
+      </div>
+    </div>
+    <p style="margin-top:16px;font-weight:700">课堂代码：删除四连（对照输出逐行看）</p>
+    <pre class="codeblock out">ST7 = {1, 2, 3, 4, 5}
+print(ST7.pop(), ST7)        # 1 {2, 3, 4, 5}（删哪个是随机的）
+# print(ST7.remove(5), ST7)  # remove 删除指定元素，不存在会报错
+print(ST7.discard(6), ST7)   # None {2, 3, 4, 5}（没有 6 也不报错）
+print(ST7.clear(), ST7)      # None set()（清空后返回 None）</pre>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！remove 是严格派：要删的元素不存在，立刻报 KeyError。"
+         data-no="❌ 回忆「大对决」：remove 较真，元素不存在是要报错的——换成 discard 才相安无事。">
+      <p style="font-weight:700;margin-bottom:12px">已知 <code>st = {1, 2, 3}</code>，执行 <code>st.remove(99)</code> 会发生什么？</p>
+      <button class="opt" onclick="quizPick(this)">A. 集合变成 {1, 2, 3, 99}</button>
+      <button class="opt" onclick="quizPick(this)">B. 程序报错 KeyError</button>
+      <button class="opt" onclick="quizPick(this)">C. 什么都不会发生</button>
+      <button class="opt" onclick="quizPick(this)">D. 集合变成 set()</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="add,update|add(),update()"
+         data-ok="✅ 正确！add 一次加一个，update 拆开可迭代对象逐个加入。"
+         data-no="❌ 提示：两空分别填两个方法名，一个 3 个字母（添加），一个 6 个字母（扩充）。">
+      <p>向集合添加<b>一个</b>元素用 ____ 方法；扩充添加可迭代对象（列表、元组、集合、字符串）用 ____ 方法。（两空连填，中间用逗号隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：add,update">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">add 加不了一个列表；pop 你说了不算</div>
+      <p>坑一：<code>st.add([7, 8])</code> 会报 TypeError——列表不可哈希，没资格当集合元素；想批量加请用 <code>update</code>。而且 <b>update 会把可迭代对象拆开</b>逐个加入：<code>update('ab')</code> 加进去的是 'a' 和 'b' 两个字符，不是字符串 'ab'。</p>
+      <p>坑二：<code>pop</code> 删的是<b>随机</b>元素，你不能指定删谁；想指定删除请用 remove / discard。另外记住：所有删除操作都<b>直接改变原集合</b>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 集合的增删元素：add、update、pop、remove、discard、clear。请：1）用「社团人事变动」的类比把六个方法再讲一遍；2）重点对比 remove 和 discard 的区别，并出 3 道情景题考我；3）解释为什么 st.add([7,8]) 会报错而 st.update([7,8]) 不会。">
+      我刚学了 Python 集合的增删元素：add、update、pop、remove、discard、clear。请：1）用「社团人事变动」的类比把六个方法再讲一遍；2）重点对比 remove 和 discard 的区别，并出 3 道情景题考我；3）解释为什么 st.add([7,8]) 会报错而 st.update([7,8]) 不会。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：把课堂代码跑一遍（5 分钟）</span>
+    <ol class="steps">
+      <li>运行 <code>ST6</code> 的四行代码，体会 add 的「一个」与 update 的「一批」。</li>
+      <li>运行 <code>ST7</code> 的 pop / discard / clear 三行，对照注释核对输出。</li>
+      <li>重新定义 <code>ST7 = {1, 2, 3, 4, 5}</code> 后，故意执行 <code>ST7.remove(99)</code>（报 KeyError）和 <code>ST7.discard(99)</code>（安然无恙），左右互搏一遍。</li>
+      <li>再试 <code>ST6.add('ab')</code> 与 <code>ST6.update('ab')</code>，看看后者是不是加进了 'a'、'b' 两个字符。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>增：<b>add 加一个、update 加一批</b>（拆开可迭代对象逐个进）；删：<b>pop 随机弹、remove 有错必报、discard 佛系无声、clear 一键清空</b>；所有删除都<b>就地修改</b>原集合。下一节：把集合运算结果「直接覆盖回去」的 *_update 三兄弟。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="4.09.html"><span class="nav-label">← 上一节</span><span class="nav-title">4.09 集合运算：交差并补</span></a>
+        <a class="next" href="4.11.html"><span class="nav-label">下一节 →</span><span class="nav-title">4.11 集合运算并更新</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

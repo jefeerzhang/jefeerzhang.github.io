@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.05 元组函数与方法 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第四章 元组、集合和字典 · 第 5 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.play{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.pane p{font-size:14px;color:var(--ink2)}
+.icard table{margin-top:8px;font-size:13px}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch04.html">第四章 元组、集合和字典</a><span class="sep">/</span>
+          <span class="current">4.05</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">05</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第四章 · 元组、集合和字典</span>
+            <h1>元组函数与方法</h1>
+            <p class="hero-summary">第 5 / 21 节 · 约 11 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>元组的定义与特性</li>
+      <li>元组的创建</li>
+      <li>元组索引与切片</li>
+      <li>元组运算</li>
+      <li class="cur">元组函数与方法</li>
+      <li>元组的不可变性</li>
+      <li>集合的定义与特性</li>
+      <li>集合的创建</li>
+      <li>集合运算：交差并补</li>
+      <li>集合操作：增删元素</li>
+      <li>集合运算并更新</li>
+      <li>集合函数与判断方法</li>
+      <li>序列与映射</li>
+      <li>字典的定义与特性</li>
+      <li>字典的创建</li>
+      <li>字典访问与三视图</li>
+      <li>字典添加与修改</li>
+      <li>字典删除</li>
+      <li>字典其他操作</li>
+      <li>组合数据类型总结</li>
+      <li>数据类型转换</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>元组不能增删改，那能对它做什么？</h2>
+    <p>元组自己不能增删改，但拿到一个元组能做的「加工」其实不少：求长度、找最大最小值、求和、排序、数个数、查位置——这些活儿全靠<b>内置函数</b>（len、max、min、sum、sorted、reversed）和它仅有的两个<b>方法</b>（count 与 index）完成。作业里「求最高分」「统计某元素出现次数」「找元素位置」类题目都要靠它们。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">元组不能自己整队，就请外援</div>
+      <p>元组是塑封卡片，队形永远定死，没法「整队」。想看排好序的样子？<b>sorted 像叫外卖</b>——把队员名字<b>抄到一张新纸（列表）</b>上整好队送回来，塑封卡片本身毫发无损。而 count 和 index 是元组仅有的两个自带方法，都只「看」不「改」，属于纯只读操作——一个数人数，一个查座位号。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>六个内置函数 + 两个只读方法</h2>
+    <ul class="points">
+      <li><b>函数</b>：len 求长度、max/min 求极值、sum 求和、sorted 排序（返回列表）、reversed 逆序（返回迭代器）</li>
+      <li><b>方法</b>：<code>tp.count(x)</code> 数 x 出现几次；<code>tp.index(x)</code> 查 x 的位置，找不到会报错</li>
+      <li>max / min 要求元素之间<b>能互相比较</b>——数字之间、字符串之间都行，但数字和字符串混在一起会报 <code>TypeError: '&gt;' not supported between instances of 'str' and 'int'</code>；sum 要求<b>全为数字</b>才能求和</li>
+      <li>sorted 和 reversed 都不改动原元组——一个返回新列表，一个返回迭代器</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>🔬 点开两张卡片认识全套工具 + sorted vs reversed 大对决</h2>
+    <div class="play">
+      <p style="font-weight:700;margin-bottom:8px">TP6 = (2, 1, 5, 3, 4)</p>
+      <div class="grid g2">
+        <div class="icard" data-toggle>
+          <h4><span class="dot" style="background:var(--accent)"></span>函数表（6 个）</h4>
+          <div class="desc">len / max / min / sum / sorted / reversed</div>
+          <div class="more">
+            <table>
+              <tr><th>函数</th><th>说明</th></tr>
+              <tr><td><code>len(tp)</code></td><td>求长度，返回元组元素数量</td></tr>
+              <tr><td><code>max(tp)</code> <code>min(tp)</code></td><td>求极值，返回最大/最小值；元素之间必须能互相比较（数字与字符串混放会报 TypeError）</td></tr>
+              <tr><td><code>sum(tp)</code></td><td>求和；全为数字才能求和</td></tr>
+              <tr><td><code>sorted(tp)</code></td><td>排序，返回一个列表</td></tr>
+              <tr><td><code>reversed(tp)</code></td><td>逆序，返回一个迭代器</td></tr>
+            </table>
+          </div>
+          <div class="hint">点击展开说明</div>
+        </div>
+        <div class="icard" data-toggle>
+          <h4><span class="dot" style="background:var(--accent2)"></span>方法表（仅 2 个）</h4>
+          <div class="desc">count 计数 / index 求索引</div>
+          <div class="more">
+            <table>
+              <tr><th>方法</th><th>说明</th></tr>
+              <tr><td><code>tp.count(x)</code></td><td>计数，返回元组 tp 中元素 x 的数量</td></tr>
+              <tr><td><code>tp.index(x)</code></td><td>求索引，返回元素 x 的索引值；找不到会报错</td></tr>
+            </table>
+          </div>
+          <div class="hint">点击展开说明</div>
+        </div>
+      </div>
+      <div class="switch" style="margin-top:16px">
+        <button class="on" data-pane="p-sorted">sorted：返回列表</button>
+        <button data-pane="p-reversed">reversed：返回迭代器</button>
+      </div>
+      <div class="pane on" id="p-sorted">
+        <pre class="codeblock">print(sorted(TP6))
+print(type(sorted(TP6)))</pre>
+        <p>输出：</p>
+        <pre class="codeblock out">[1, 2, 3, 4, 5]
+&lt;class 'list'&gt;</pre>
+        <p>解读：sorted 返回排好序的<b>列表</b>——元组的排队结果装在列表里交给你，原元组不变。</p>
+      </div>
+      <div class="pane" id="p-reversed">
+        <pre class="codeblock">print(reversed(TP6))
+print(tuple(reversed(TP6)))</pre>
+        <p>输出：</p>
+        <pre class="codeblock out">&lt;reversed object at 0x1BFA1B1C6A0&gt;
+(4, 3, 5, 1, 2)</pre>
+        <p>解读：reversed 返回的是<b>迭代器对象</b>，直接 print 只能看到类型和内存地址（地址每次运行都不同，这里只是示意）；必须用 tuple() 或 list() 包一层才能看到内容。</p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：五行代码全考点</h2>
+    <pre class="codeblock">TP6 = (2, 1, 5, 3, 4)
+print(len(TP6), sum(TP6), max(TP6), min(TP6))
+print(sorted(TP6, reverse=True))
+print(reversed(TP6), tuple(reversed(TP6)))
+print(TP6.count(5), TP6.count(0))
+print(TP6.index(5))
+# print(TP6.index(0))  # 找不到会报错</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">5 15 5 1
+[5, 4, 3, 2, 1]
+&lt;reversed object at 0x1BFA1B1C6A0&gt; (4, 3, 5, 1, 2)
+1 0
+2</pre>
+    <ul class="points">
+      <li>len=5、sum=15、max=5、min=1：四个函数一行看全</li>
+      <li>sorted(TP6, reverse=True) 返回列表 [5, 4, 3, 2, 1]——加 reverse=True 即降序</li>
+      <li>count(0) 返回 0 表示「没找到但不报错」；index(0) 找不到会直接报错，所以那行被注释掉了</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！sorted 把元素抄到一张新纸上整队——返回的是排好序的列表；想要元组得再 tuple() 一次。"
+         data-no="❌ sorted 的返回值永远是列表，哪怕输入是元组；返回迭代器的是 reversed，别搞混。">
+      <p style="font-weight:700;margin-bottom:12px"><code>sorted(TP6)</code> 的返回类型是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 元组</button>
+      <button class="opt" onclick="quizPick(this)">B. 列表</button>
+      <button class="opt" onclick="quizPick(this)">C. 迭代器对象</button>
+      <button class="opt" onclick="quizPick(this)">D. 字符串</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="列表 迭代器|list 迭代器|列表 迭代器对象|列表，迭代器"
+         data-ok="✅ 正确！sorted 返回列表，reversed 返回迭代器——这一对是本节最爱考的区别。"
+         data-no="❌ 再想想：sorted 像叫外卖，把结果抄到一张新纸上（什么类型？）；reversed 直接给的是一个看不了内容的东西（什么类型？）（用空格隔开两个词）">
+      <p>sorted() 返回一个____，reversed() 返回一个____。（两空连填，用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：列表 迭代器">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个最容易翻车的返回值</div>
+      <p>坑一：<code>reversed(TP6)</code> 直接打印是对象地址 <code>&lt;reversed object at ...&gt;</code>，不是内容——必须用 tuple() / list() 包一层。</p>
+      <p>坑二：<code>sorted(tp)</code> 返回的是<b>列表</b>不是元组——类型变了！想要元组要再 <code>tuple(sorted(tp))</code> 一次。</p>
+      <p>坑三：<code>tp.index(x)</code> 找不到会报 ValueError，而 <code>tp.count(x)</code> 找不到只安静地返回 0——查位置前最好先用 in 或 count 确认元素存在。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 元组的函数与方法：内置函数 len/max/min/sum/sorted/reversed，以及仅有的两个方法 tp.count(x)、tp.index(x)。请：1）用「元组不能自己整队，sorted 像叫外卖把名字抄到新纸上」的比喻解释 sorted 为什么返回列表；2）出 6 道「写结果」题，要包含 reversed 直接打印、count 找不到、index 找不到报错的情况；3）总结 sorted 与 reversed 的三大区别。">
+      我刚学了 Python 元组的函数与方法：内置函数 len/max/min/sum/sorted/reversed，以及仅有的两个方法 tp.count(x)、tp.index(x)。请：1）用「元组不能自己整队，sorted 像叫外卖把名字抄到新纸上」的比喻解释 sorted 为什么返回列表；2）出 6 道「写结果」题，要包含 reversed 直接打印、count 找不到、index 找不到报错的情况；3）总结 sorted 与 reversed 的三大区别。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：跑代码 + 主动踩坑（6 分钟）</span>
+    <ol class="steps">
+      <li>把 TP6 和课堂代码五行 print 抄进交互模式运行，逐一核对输出。</li>
+      <li>试 <code>TP6.index(0)</code>——看看 ValueError 的报错信息。</li>
+      <li>试 <code>tuple(sorted(TP6))</code>——列表变回元组的正确姿势。</li>
+      <li>对照试 <code>sum(TP6)</code> 和 <code>sum((1, 'a'))</code>——后者报 TypeError，体会「全为数字才能求和」。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>元组的加工靠内置函数 <b>len / max / min / sum / sorted / reversed</b> 和仅有的两个只读方法 <b>count / index</b>；sorted 返回<b>列表</b>、reversed 返回<b>迭代器</b>（要包一层才能看内容）；index 找不到报 ValueError、count 找不到返回 0；max/min 要能比较、sum 要全数字。下一节：挖到底——「不可变」三个字的真正含义。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="4.04.html"><span class="nav-label">← 上一节</span><span class="nav-title">4.04 元组运算</span></a>
+        <a class="next" href="4.06.html"><span class="nav-label">下一节 →</span><span class="nav-title">4.06 元组的不可变性</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

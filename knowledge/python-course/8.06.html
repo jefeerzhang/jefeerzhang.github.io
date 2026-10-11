@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8.06 实例属性与类属性 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第八章 面向对象编程 · 第 6 / 12 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.play{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.crow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.clog{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14px;min-height:120px;white-space:pre-wrap;line-height:1.8}
+.sw-row{display:flex;gap:10px;margin-bottom:12px}
+.sw-btn{flex:1;padding:10px 0;border:1.5px solid var(--border);border-radius:10px;background:#fff;
+  font-weight:700;font-size:14px;cursor:pointer;color:var(--ink2)}
+.sw-btn.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.sw-pane{border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;background:#fff}
+.sw-pane table{width:100%;border-collapse:collapse;font-size:14px}
+.sw-pane td{padding:8px 10px;border-bottom:1px dashed var(--border);vertical-align:top;line-height:1.7}
+.sw-pane td:first-child{width:96px;font-weight:800;color:var(--accent);white-space:nowrap}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch08.html">第八章 面向对象编程</a><span class="sep">/</span>
+          <span class="current">8.06</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">06</span>
+            <span class="lesson-hero-num-total">/ 12</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第八章 · 面向对象编程</span>
+            <h1>实例属性与类属性</h1>
+            <p class="hero-summary">第 6 / 12 节 · 约 8 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 12 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>编程的两种范式</li>
+      <li>面向对象的三大特性</li>
+      <li>四个核心概念：类·对象·属性·方法</li>
+      <li>创建类：class·__init__·self</li>
+      <li>创建对象与访问成员</li>
+      <li class="cur">实例属性与类属性</li>
+      <li>三种方法：实例·类·静态</li>
+      <li>封装与私有属性</li>
+      <li>继承与 super()</li>
+      <li>多重继承</li>
+      <li>多态与方法重写</li>
+      <li>综合案例：商品库存管理</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>有的东西每人一份，有的东西全班共享一份</h2>
+    <p>班里每个同学都有<b>自己的名字</b>（各不相同、各自保管），但全校共用<b>同一块校名牌</b>（改一次、全校生效）。对象的属性也一样：上一节的 <code>self.name</code> 是每个对象独立一份的「实例属性」，而直接写在类里的属性是全体对象共享的「类属性」。分不清这两种，后面读代码时就会出现「我明明只改了一个对象，怎么大家都变了？」这种灵异事件——这一节就是给属性「查户口」的。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">实例属性像「校服上绣的名字」，类属性像「校门口的校名牌」</div>
+      <p>校服名字（实例属性）<b>每人绣各人的</b>，绣在哪件校服上就是哪件的事，别人管不着；校名牌（类属性）<b>挂在校门口</b>，属于学校本身，全校师生抬头都能看到它——学校改一次牌子，所有师生「看到的内容」同时更新。但如果你偷偷在自己校服上也别了一枚写着别名的胸牌，那你看到的就只剩自己的胸牌了——这就是下一节避坑里讲的「遮住」。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>两种属性，四个维度对照</h2>
+    <div class="play">
+      <p style="font-weight:700;margin-bottom:10px">🔀 点击切换两种属性，对照四个维度</p>
+      <div class="sw-row">
+        <button class="sw-btn on" onclick="swPane('inst', this)">实例属性（self.属性名）</button>
+        <button class="sw-btn" onclick="swPane('cls', this)">类属性（属性名 = 值）</button>
+      </div>
+      <div class="sw-pane" id="pane-inst">
+        <table>
+          <tr><td>定义位置</td><td>在 <code>__init__</code> 方法内，以 <code>self.属性名 = 值</code> 定义</td></tr>
+          <tr><td>归属</td><td>每个对象<b>独立拥有</b>各自的值，互不影响</td></tr>
+          <tr><td>访问方式</td><td>只能通过 <code>对象名.属性名</code> 访问（用类名访问会报错）</td></tr>
+          <tr><td>典型例子</td><td><code>self.name = name</code>——每只狗有自己的名字</td></tr>
+        </table>
+      </div>
+      <div class="sw-pane" id="pane-cls" style="display:none">
+        <table>
+          <tr><td>定义位置</td><td>在类中<b>直接定义</b>（不在任何方法内），写法就是 <code>属性名 = 值</code></td></tr>
+          <tr><td>归属</td><td>所有对象<b>共享同一个值</b>，一处修改全体生效</td></tr>
+          <tr><td>访问方式</td><td><code>类名.属性名</code> 和 <code>对象名.属性名</code> 都能访问</td></tr>
+          <tr><td>典型例子</td><td><code>species = '犬科动物'</code>——所有狗共同的物种</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="play" style="margin-top:14px">
+      <p style="font-weight:700;margin-bottom:10px">🔬 一改全改实验台：改 Dog.species，看 d1.species 跟不跟着变</p>
+      <div class="crow">
+        <button class="btn-main btn" onclick="dDo('create')">d1 = Dog('旺财')</button>
+        <button class="btn-ghost btn" onclick="dDo('show1')">print(Dog.species, d1.species)</button>
+        <button class="btn-ghost btn" onclick="dDo('show2')">print(d1.name)</button>
+        <button class="btn-main btn" onclick="dDo('change')">Dog.species = '犬科'</button>
+        <button class="btn-ghost btn" onclick="dDo('show3')">print(Dog.species, d1.species)</button>
+        <button class="btn-ghost btn" onclick="dDo('reset')">重置</button>
+      </div>
+      <div class="clog" id="clog">先创建对象 d1，再执行 PPT 的两条打印，然后改类属性试试。</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：Dog 类的两种属性</h2>
+    <pre class="codeblock">class Dog:
+    species = '犬科动物'          # 类属性：写在类中、方法外
+
+    def __init__(self, name):
+        self.name = name         # 实例属性：写在 __init__ 内
+
+d1 = Dog('旺财')
+
+print(Dog.species, d1.species)   # 类名和对象名都能访问类属性
+print(d1.name)                   # 实例属性只能通过对象访问</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">犬科动物 犬科动物
+旺财</pre>
+    <ul class="points">
+      <li><code>species</code> 定义在类里、所有方法之外——它是类属性，<code>Dog.species</code> 和 <code>d1.species</code> 读到的是同一份</li>
+      <li><code>name</code> 在 <code>__init__</code> 里挂在 <code>self</code> 身上——它是实例属性，只有 <code>d1.name</code> 能访问</li>
+      <li>实例化时 <code>__init__</code> 执行一次，实例属性就「刻」在对象身上一份；类属性始终只有一份，挂在类身上</li>
+      <li>把 <code>Dog.species = '犬科'</code> 之后，<code>d1.species</code> 也变成 '犬科'——共享、一改全改</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！species 是类属性，d1.species 本来就读的是类身上那一份——类属性一改，所有对象跟着变。"
+         data-no="❌ species 是定义在类中方法外的类属性，所有对象共享同一份——Dog.species 改成什么，d1.species 读到的就是什么。">
+      <p style="font-weight:700;margin-bottom:12px">接 PPT 原例，执行 <code>Dog.species = '犬科'</code> 之后，<code>print(d1.species)</code> 的输出是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 报错 AttributeError</button>
+      <button class="opt" onclick="quizPick(this)">B. 犬科动物</button>
+      <button class="opt" onclick="quizPick(this)">C. 犬科</button>
+      <button class="opt" onclick="quizPick(this)">D. 旺财</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="实例类对象|实例 类 对象" data-ok="✅ 全对！实例属性各有一份、类属性全体共享、类属性用类名或对象名都能访问。" data-no="❌ 提示：三个空分别是——每个对象各自拥有的是＿＿属性；所有对象共享一份、一改全改的是＿＿属性；类属性既可用类名访问，也可用＿＿名访问。">
+      <p>每个对象各自拥有、互不影响的是<b>＿＿</b>属性；所有对象共享同一个值、一处修改全体生效的是<b>＿＿</b>属性；类属性既可以用 类名.属性名 访问，也可以用 <b>＿＿</b>.属性名 访问。（三空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：实例 类 对象">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>用类名访问实例属性</b>：<code>Dog.name</code> 报 AttributeError——实例属性挂在对象身上，只能 <code>d1.name</code> 这样访问；</p>
+      <p>②<b>在 <code>__init__</code> 里漏写 self.</b>：<code>name = name</code> 只是方法内的普通局部变量，函数一结束就消失——必须写 <code>self.name = name</code> 才是实例属性；</p>
+      <p>③<b>给对象单独赋值会「遮住」类属性</b>：执行 <code>d1.species = '小汪'</code> 后，d1 身上多了一份自己的实例属性，以后 <code>d1.species</code> 读的是自己那份，类属性再改也影响不到它。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的实例属性与类属性：实例属性在 __init__ 里用 self.属性名 定义、每个对象独立一份；类属性直接写在类中方法外、所有对象共享、类名和对象名都能访问。请：1）用「校服绣名字 vs 校门口校名牌」类比讲一遍两者的区别；2）出 5 道读代码预测输出题考我（含一改全改、对象单独赋值遮住类属性）；3）讲讲什么时候该把属性设计成类属性、什么时候该设计成实例属性。">
+      我刚学了 Python 的实例属性与类属性：实例属性在 __init__ 里用 self.属性名 定义、每个对象独立一份；类属性直接写在类中方法外、所有对象共享、类名和对象名都能访问。请：1）用「校服绣名字 vs 校门口校名牌」类比讲一遍两者的区别；2）出 5 道读代码预测输出题考我（含一改全改、对象单独赋值遮住类属性）；3）讲讲什么时候该把属性设计成类属性、什么时候该设计成实例属性。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：当一回「属性侦探」（10 分钟）</span>
+    <ol class="steps">
+      <li>读代码预测：创建 <code>d2 = Dog('小黑')</code> 后再执行 <code>Dog.species = '犬科'</code>，先猜 <code>d2.species</code> 是什么，再到实验台验证。</li>
+      <li>改代码试效果：在实验台改完 <code>Dog.species = '犬科'</code> 之后，再在自己电脑上执行 <code>d1.species = '小汪'</code>，然后打印 <code>d1.species</code> 和 <code>Dog.species</code>——观察「遮住」现象（实验台只提供打印按钮，这一句要你在 IDLE 里自己敲）。</li>
+      <li>在 Dog 类里加一个类属性 <code>legs = 4</code> 和实例属性 <code>self.nickname = '汪汪'</code>，分别用类名和对象名各访问一遍，记录哪个报错、哪个正常。</li>
+      <li>挑战：写一个 Counter 类，用类属性 count 统计一共创建过多少个对象（提示：在 <code>__init__</code> 里写 <code>Counter.count += 1</code>）。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>实例属性在 <code>__init__</code> 中以 <code>self.属性名</code> 定义，每个对象独立拥有各自的值，只能通过对象访问；类属性在类中直接定义（不在方法内），所有对象共享同一个值，类名和对象名都能访问，一处修改全体生效。下一节：方法也分三种——实例方法、类方法、静态方法，和今天的属性划分正好呼应。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="8.05.html"><span class="nav-label">← 上一节</span><span class="nav-title">8.05 创建对象与访问成员</span></a>
+        <a class="next" href="8.07.html"><span class="nav-label">下一节 →</span><span class="nav-title">8.07 三种方法：实例·类·静态</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：switch 双 pane + 一改全改实验台 */
+function swPane(id, btn){
+  document.getElementById('pane-inst').style.display = (id === 'inst') ? '' : 'none';
+  document.getElementById('pane-cls').style.display  = (id === 'cls')  ? '' : 'none';
+  const btns = document.querySelectorAll('.sw-btn');
+  for (const b of btns) b.classList.remove('on');
+  btn.classList.add('on');
+}
+let hasD1, dogSpecies, logs;
+function dReset(){
+  hasD1 = false; dogSpecies = '犬科动物';
+  logs = ['# Dog.species = 犬科动物（类属性，创建前就存在）'];
+  dRender();
+}
+function dRender(){
+  document.getElementById('clog').textContent = logs.join('\n');
+}
+function dDo(op){
+  if (op === 'reset'){ dReset(); return; }
+  if (op === 'create'){
+    hasD1 = true;
+    logs.push("d1 = Dog('旺财')");
+    logs.push('# __init__ 执行 → d1.name = 旺财（实例属性）');
+    dRender(); return;
+  }
+  if (!hasD1){ logs.push('# d1 还不存在，请先创建对象！'); dRender(); return; }
+  if (op === 'show1'){ logs.push('print(Dog.species, d1.species)', '→ ' + dogSpecies + ' ' + dogSpecies); }
+  if (op === 'show2'){ logs.push('print(d1.name)', '→ 旺财'); }
+  if (op === 'change'){
+    dogSpecies = '犬科';
+    logs.push("Dog.species = '犬科'");
+    logs.push('# 类属性被修改——所有对象共享的这一份都变了');
+  }
+  if (op === 'show3'){ logs.push('print(Dog.species, d1.species)', '→ ' + dogSpecies + ' ' + dogSpecies, '# d1.species 跟着变了：一改全改'); }
+  dRender();
+}
+window.addEventListener('DOMContentLoaded', dReset);
+</script>
+</body>
+</html>

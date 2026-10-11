@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.08 集合的创建 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第四章 元组、集合和字典 · 第 8 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.pane .tip{font-size:13.5px;color:var(--ink2);margin:8px 0 0}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch04.html">第四章 元组、集合和字典</a><span class="sep">/</span>
+          <span class="current">4.08</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">08</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第四章 · 元组、集合和字典</span>
+            <h1>集合的创建</h1>
+            <p class="hero-summary">第 8 / 21 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>元组的定义与特性</li>
+      <li>元组的创建</li>
+      <li>元组索引与切片</li>
+      <li>元组运算</li>
+      <li>元组函数与方法</li>
+      <li>元组的不可变性</li>
+      <li>集合的定义与特性</li>
+      <li class="cur">集合的创建</li>
+      <li>集合运算：交差并补</li>
+      <li>集合操作：增删元素</li>
+      <li>集合运算并更新</li>
+      <li>集合函数与判断方法</li>
+      <li>序列与映射</li>
+      <li>字典的定义与特性</li>
+      <li>字典的创建</li>
+      <li>字典访问与三视图</li>
+      <li>字典添加与修改</li>
+      <li>字典删除</li>
+      <li>字典其他操作</li>
+      <li>组合数据类型总结</li>
+      <li>数据类型转换</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>数据到手，怎么把它变成一个集合？</h2>
+    <p>拿到一个充满重复值的列表或字符串，想快速去重？这节教你集合的两种创建方式。但先剧透两个「现象」：<b>空的大括号 {} 造出来的其实是字典</b>（本章第一大坑），以及<b>去重后的输出顺序可能和书写顺序不同</b>——这些都不是你代码写错了。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">{} 是一扇双开门，空集合要走侧门</div>
+      <p><code>{}</code> 像一扇<b>双开门</b>——推开是<b>字典</b>的家（Python 规定：空的大括号就是空字典）；想进空集合，只能走 <code>set()</code> 的<b>侧门</b>。而带内容的门牌倒很分明：大括号里有冒号是字典，没有冒号就是集合。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>两种创建方式 + 一个必须记住的例外</h2>
+    <ul class="points">
+      <li><b>直接创建</b>：使用大括号 <code>{}</code> 直接包含元素，逗号分隔；<b>如果有重复元素，会自动去重</b></li>
+      <li><b>set 函数</b>：把字符串、列表、元组等<b>可迭代对象</b>转换为集合（转换顺便完成去重）</li>
+      <li><b>空集合只能通过函数创建</b>：写 <code>set()</code>——<code>{}</code> 创建的是空字典，不是空集合！</li>
+    </ul>
+    <pre class="codeblock">ST1 = {1, 2, 3, 2, 1}
+print(ST1)       # 输出 {1, 2, 3}：5 个元素进去，重复的自动消失
+ST2 = set()
+print(ST2)       # 输出 set()：这才是空集合
+ST3 = set('12321')
+print(ST3)       # 输出 {'3', '2', '1'}：字符串被拆成单字符再去重</pre>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>🔬 创建方式切换台</h2>
+    <div>
+      <div class="switch">
+        <button class="on" data-pane="pane-type">{} vs set()</button>
+        <button data-pane="pane-dedup">去重现场</button>
+        <button data-pane="pane-str">set(字符串)</button>
+      </div>
+      <div class="pane on" id="pane-type">
+        <div class="grid g2">
+          <div>
+            <pre class="codeblock">x = {}
+print(type(x))
+<span class="bad"># &lt;class 'dict'&gt;</span></pre>
+            <p class="tip">空的大括号造出来的是<b>字典</b>！</p>
+          </div>
+          <div>
+            <pre class="codeblock">y = set()
+print(type(y))
+<span class="good"># &lt;class 'set'&gt;</span></pre>
+            <p class="tip">空集合只能这样造。</p>
+          </div>
+        </div>
+      </div>
+      <div class="pane" id="pane-dedup">
+        <pre class="codeblock">ST1 = {1, 2, 3, 2, 1}
+print(ST1)
+<span class="good"># {1, 2, 3}</span></pre>
+        <p class="tip">五个元素进去，三个元素出来——「不重复性」现场发挥。</p>
+      </div>
+      <div class="pane" id="pane-str">
+        <pre class="codeblock">ST3 = set('12321')
+print(ST3)
+<span class="good"># {'3', '2', '1'}</span></pre>
+        <p class="tip">字符串被拆成一个个字符，再自动去重；顺序带「随机感」是无序性的正常表现。</p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！空的大括号 {} 是空字典，空集合必须写 set()。"
+         data-no="❌ 这是本章第一大坑：{} 在 Python 里表示空字典，不是空集合。">
+      <p style="font-weight:700;margin-bottom:12px">在 Python 中执行 <code>type({})</code>，结果是？</p>
+      <button class="opt" onclick="quizPick(this)">A. &lt;class 'set'&gt;</button>
+      <button class="opt" onclick="quizPick(this)">B. &lt;class 'dict'&gt;</button>
+      <button class="opt" onclick="quizPick(this)">C. &lt;class 'list'&gt;</button>
+      <button class="opt" onclick="quizPick(this)">D. &lt;class 'tuple'&gt;</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="set()|set|set 函数|set函数"
+         data-ok="✅ 正确！空集合 set()，空字典 {}，别再混了。"
+         data-no="❌ 提示：要走的那扇「侧门」——三个字母的函数名，后面加一对空括号。">
+      <p>创建空集合只能通过函数 ____，因为空的大括号 {} 在 Python 里表示空字典。</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：set()">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">{} 不是空集合；输出顺序「随机」不是 bug</div>
+      <p>坑一：<code>ST = {}</code> 造出来的是<b>空字典</b>。之后调用 <code>add()</code>、<code>remove()</code> 等集合方法统统报 AttributeError。想要空集合，永远写 <code>set()</code>。</p>
+      <p>坑二：<code>set('12321')</code> 输出 <code>{'3', '2', '1'}</code>，顺序和书写不一致、每次运行还可能不同——这是集合<b>无序性</b>的正常表现，不是程序出错，也不必去「修正」它。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 集合的创建方式：{} 直接创建（自动去重）、set() 建空集合、set(可迭代对象) 转换。请：1）解释为什么 {} 创建的是空字典而不是空集合；2）出 5 道「给代码猜输出」的小题，重点考自动去重和 set(字符串)；3）讲讲用 set() 去重为什么无法保留原来的顺序。">
+      我刚学了 Python 集合的创建方式：{} 直接创建（自动去重）、set() 建空集合、set(可迭代对象) 转换。请：1）解释为什么 {} 创建的是空字典而不是空集合；2）出 5 道「给代码猜输出」的小题，重点考自动去重和 set(字符串)；3）讲讲用 set() 去重为什么无法保留原来的顺序。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：三种创建逐个跑（5 分钟）</span>
+    <ol class="steps">
+      <li>依次运行 <code>type({})</code> 和 <code>type(set())</code>，亲眼确认 dict 与 set 的区别。</li>
+      <li>运行 <code>ST1 = {1, 2, 3, 2, 1}</code> 后 <code>print(ST1)</code>，数一数：进去 5 个，出来 3 个。</li>
+      <li>运行 <code>ST3 = set('12321')</code> 后 <code>print(ST3)</code>，多运行几次，观察顺序的变化。</li>
+      <li>本章作业第 2 题（列表去重）就靠它：<code>set(列表)</code> 一下，重复元素全部消失。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>创建集合两条路：<b>带元素的大括号 <code>{}</code>（自动去重）</b>与 <b>set(可迭代对象) 转换</b>；<b>空集合只能 set()</b>，<code>{}</code> 是空字典；输出顺序不固定是<b>无序性</b>的正常表现。下一节：集合真正的威力——交、差、并、补四大运算。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="4.07.html"><span class="nav-label">← 上一节</span><span class="nav-title">4.07 集合的定义与特性</span></a>
+        <a class="next" href="4.09.html"><span class="nav-label">下一节 →</span><span class="nav-title">4.09 集合运算：交差并补</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

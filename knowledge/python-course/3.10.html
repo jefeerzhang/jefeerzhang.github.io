@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.10 判断字符串类别 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第三章 字符串与列表 · 第 10 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.circles{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:14px 18px;
+  font-family:Consolas,Menlo,monospace;font-size:14px;line-height:1.9;white-space:pre-wrap}
+.circles b{color:#c2452d}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch03.html">第三章 字符串与列表</a><span class="sep">/</span>
+          <span class="current">3.10</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">10</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第三章 · 字符串与列表</span>
+            <h1>判断字符串类别</h1>
+            <p class="hero-summary">第 10 / 21 节 · 约 12 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>字符串基础与三种引号</li>
+      <li>转义字符</li>
+      <li>字符串索引</li>
+      <li>字符串切片</li>
+      <li>实战：身份证号提取信息</li>
+      <li>字符串运算与内置函数</li>
+      <li>大小写转换方法</li>
+      <li>计数、查找与替换</li>
+      <li>分割、联合与剔除</li>
+      <li class="cur">判断字符串类别</li>
+      <li>format 格式化输出</li>
+      <li>f-string 格式化输出</li>
+      <li>列表定义与特性</li>
+      <li>列表的创建</li>
+      <li>列表索引与切片</li>
+      <li>列表增加元素</li>
+      <li>列表删除元素</li>
+      <li>列表修改元素</li>
+      <li>列表运算与函数</li>
+      <li>列表常用方法</li>
+      <li>实战：成绩排序和统计</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>用户到底输的是「纯数字」「纯字母」还是「乱七八糟」？</h2>
+    <p>写程序经常要<b>验货</b>：注册时验证「用户名只含字母和数字」、填表时验证「手机号全为数字」、处理文本时跳过空白行。这一族以 <code>is</code> 开头的方法就是验货员——它们不改造字符串，只回答一个问题：<b>True（是）还是 False（不是）</b>。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">数字三兄弟：小圈套大圈</div>
+      <p>判断数字的三个方法像<b>三个套在一起的圈</b>：<code>isdecimal()</code> 是最里面的小圈，只认十进制数字字符，上标 ² 和汉字「五」都不认，最严格；<code>isdigit()</code> 是中圈，除了 0-9 还认上标数字（如 <code>²</code>）；<code>isnumeric()</code> 是最大的圈，最宽容——连汉字「五」、罗马数字「Ⅴ」、分数「½」都认。小圈里的都是大圈里的，反之不然。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>六个 is 验货员</h2>
+    <p>点击下面六张卡片，展开每个方法的说明和例子：</p>
+    <div class="grid g3">
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#4f6ef7"></span>isalnum()</h4>
+        <div class="desc">全由字母或数字组成？</div>
+        <div class="more">且<b>非空</b>才返回 True。<br><code>"Python3".isalnum() → True</code><br><code>"Python 3".isalnum() → False</code>（有空格混入）</div>
+        <div class="hint">点击展开 ▾</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#7c5cf0"></span>isalpha()</h4>
+        <div class="desc">全由字母组成？</div>
+        <div class="more">且<b>非空</b>才返回 True。<br><code>"Python".isalpha() → True</code><br><code>"Python3".isalpha() → False</code>（混入了数字）</div>
+        <div class="hint">点击展开 ▾</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#1a9e6c"></span>isdecimal()</h4>
+        <div class="desc">仅含十进制数字 0-9？</div>
+        <div class="more">最严格的小圈。<br><code>"123".isdecimal() → True</code><br><code>"123²".isdecimal() → False</code></div>
+        <div class="hint">点击展开 ▾</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#d97706"></span>isdigit()</h4>
+        <div class="desc">数字字符（含上标/下标数字）？</div>
+        <div class="more">中圈，比 isdecimal 宽。<br><code>"123²".isdigit() → True</code><br><code>"五".isdigit() → False</code></div>
+        <div class="hint">点击展开 ▾</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#e05252"></span>isnumeric()</h4>
+        <div class="desc">任何数字字符都算？</div>
+        <div class="more">最大的圈，最宽容。<br><code>"五".isnumeric() → True</code>（汉字数字）<br><code>"a".isnumeric() → False</code></div>
+        <div class="hint">点击展开 ▾</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#5b6472"></span>isspace()</h4>
+        <div class="desc">全为空白字符？</div>
+        <div class="more">空格、\t、\n、\r 都算空白。<br><code>" \t\n".isspace() → True</code><br><code>" a ".isspace() → False</code>（混进了字母）</div>
+        <div class="hint">点击展开 ▾</div>
+      </div>
+    </div>
+
+    <p style="margin-top:18px">PPT 原例完整跑一遍：</p>
+    <pre class="codeblock">print("Python3".isalnum())   <span class="good">→ True</span>
+print("Python 3".isalnum())  <span class="good">→ False</span>
+print("Python".isalpha())    <span class="good">→ True</span>
+print("Python3".isalpha())   <span class="good">→ False</span>
+print("123".isdecimal())     <span class="good">→ True</span>
+print("123²".isdecimal())    <span class="good">→ False</span>
+print("123²".isdigit())      <span class="good">→ True</span>
+print("五".isdigit())         <span class="good">→ False</span>
+print("五".isnumeric())       <span class="good">→ True</span>
+print("a".isnumeric())       <span class="good">→ False</span>
+print(" \t\n".isspace())     <span class="good">→ True</span></pre>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>数字三兄弟的包含关系：层层放宽</h2>
+    <div class="switch">
+      <button class="on" data-pane="n1">看例子层层放宽</button>
+      <button data-pane="n2">看结论圈层图</button>
+    </div>
+    <div class="pane on" id="n1">
+      <pre class="codeblock">print("123".isdecimal(), "123".isdigit(), "123".isnumeric())
+<span class="good">→ True True True　（纯阿拉伯数字：三兄弟都认）</span>
+
+print("123²".isdecimal(), "123²".isdigit(), "123²".isnumeric())
+<span class="good">→ False True True　（上标数字：小圈不认，中圈大圈认）</span>
+
+print("五".isdecimal(), "五".isdigit(), "五".isnumeric())
+<span class="good">→ False False True　（汉字数字：只有最大圈认）</span></pre>
+    </div>
+    <div class="pane" id="n2">
+      <div class="circles"><b>外圈</b> isnumeric()：0-9 ＋ 上标² ＋ 汉字「五」＋ 罗马Ⅴ ＋ 分数½
+  <b>中圈</b> isdigit()：0-9 ＋ 上标²
+    <b>内圈</b> isdecimal()：十进制数字（最严格，上标 ² 与汉字「五」都不认）</div>
+      <p style="margin-top:10px">记忆口诀：<b>圈越大越宽容，判断为 True 的字符越多</b>。处理「用户输入的阿拉伯数字」时用最严格的 <code>isdecimal()</code> 最稳妥。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！汉字「五」虽然表示数字，但不在 isdigit 的中圈里——它只有最大圈 isnumeric 才认。"
+         data-no="❌ 回忆三兄弟的圈层：isdigit 认十进制数字和上标 / 下标数字（如 ²、₂），但不认汉字「五」；汉字「五」要找最大圈 isnumeric() 才会返回 True。">
+      <p style="font-weight:700;margin-bottom:12px"><code>"五".isdigit()</code> 的输出是？</p>
+      <button class="opt" onclick="quizPick(this)">A. True</button>
+      <button class="opt" onclick="quizPick(this)">B. False</button>
+      <button class="opt" onclick="quizPick(this)">C. 报错 TypeError</button>
+      <button class="opt" onclick="quizPick(this)">D. '五'</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="isspace|.isspace()|isspace()" data-ok="✅ 正确！isspace() 判断字符串是否全为空白字符（空格、\t、\n、\r 等）。" data-no="❌ 六个验货员里，专门负责「全为空白字符」的那一位叫什么？is 开头 + 空格的英文。">
+      <p>判断字符串<b>全为空白字符</b>（空格、<code>\t</code>、<code>\n</code>）应该用 <code>____</code> 方法。（填方法名）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：isalpha">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">空串一律 False，空格会「污染」判断</div>
+      <p><b>坑一：空串所有 is 判断都是 False。</b><code>"".isalpha()</code>、<code>"".isalnum()</code> 都返回 False——isalnum 和 isalpha 更是<b>明确要求非空</b>才可能为 True。判断用户输入前，先想想「他是不是什么都没输」。</p>
+      <p><b>坑二：一个空格毁掉全部。</b><code>"Python 3".isalnum()</code> 是 False，就因为中间混进了一个空格；<code>" 123 ".isdigit()</code> 同理也是 False。读入的输入常带两端空格，验证前先 <code>strip()</code> 一下是好习惯。</p>
+      <p><b>坑三：三兄弟别混用。</b>验证「手机号」这类纯阿拉伯数字用 <code>isdecimal()</code> 最严格；如果用 <code>isnumeric()</code>，用户输入「五」也能混过关——这是宽容的代价。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 六个判断字符串类别的方法：isalnum、isalpha、isdecimal、isdigit、isnumeric、isspace。请：1）用圈层图帮我讲清 isdecimal ⊂ isdigit ⊂ isnumeric 的包含关系；2）解释为什么空字符串调用这些方法都返回 False；3）出 5 道判断题考我（各方法混着来，含空串和带空格的陷阱），等我作答后公布答案和讲解。">
+      我刚学了 Python 六个判断字符串类别的方法：isalnum、isalpha、isdecimal、isdigit、isnumeric、isspace。请：1）用圈层图帮我讲清 isdecimal ⊂ isdigit ⊂ isnumeric 的包含关系；2）解释为什么空字符串调用这些方法都返回 False；3）出 5 道判断题考我（各方法混着来，含空串和带空格的陷阱），等我作答后公布答案和讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：为实战课做铺垫（5 分钟）</span>
+    <ol class="steps">
+      <li>交互模式输入 <code>name = input('请输入用户名：')</code>，随便输入一个内容。</li>
+      <li>验证「用户名只含字母数字」该用哪个方法？想好再执行 <code>print(name.isalnum())</code> 验证。</li>
+      <li>试试在输入里混一个空格，看看结果怎么变；再先 <code>name.strip().isalnum()</code> 对比。</li>
+      <li>挑战：验证「手机号」——用 <code>len(name) == 11 and name.isdecimal()</code> 组合判断，这便是将来写 if 语句的雏形。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>六个 is 方法只回答 True/False：<code>isalnum</code> 字母数字、<code>isalpha</code> 纯字母、<code>isspace</code> 纯空白；数字三兄弟是套圈——<code>isdecimal</code>（只认 0-9）⊂ <code>isdigit</code>（加上标）⊂ <code>isnumeric</code>（汉字、罗马数字都认）；<b>空串一律 False、带空格易污染</b>。下一节：让输出变漂亮——format 格式化输出！</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="3.09.html"><span class="nav-label">← 上一节</span><span class="nav-title">3.09 分割、联合与剔除</span></a>
+        <a class="next" href="3.11.html"><span class="nav-label">下一节 →</span><span class="nav-title">3.11 format 格式化输出</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

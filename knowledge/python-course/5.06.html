@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.06 嵌套分支结构 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第五章 程序控制 · 第 6 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.gate{display:flex;gap:10px;align-items:center;background:var(--accent-soft);border:1px solid #d8e0fc;
+  border-radius:10px;padding:8px 14px;margin:8px 0;font-size:14px}
+.gate .lv{flex:none;font-weight:800;color:var(--accent);font-size:12px;background:#fff;border-radius:6px;padding:2px 8px}
+.ind-tag{display:inline-block;font-family:Consolas,monospace;font-size:12px;background:#fff;
+  border:1px solid var(--border);border-radius:6px;padding:1px 8px;margin-left:8px;color:var(--ink2)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch05.html">第五章 程序控制</a><span class="sep">/</span>
+          <span class="current">5.06</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">06</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第五章 · 程序控制</span>
+            <h1>嵌套分支结构</h1>
+            <p class="hero-summary">第 6 / 17 节 · 约 11 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序控制结构概述</li>
+      <li>单分支结构 if</li>
+      <li>双分支结构 if-else</li>
+      <li>IF 表达式</li>
+      <li>多分支结构 if-elif-else</li>
+      <li class="cur">嵌套分支结构</li>
+      <li>嵌套与多分支对比</li>
+      <li>无限循环 while</li>
+      <li>range 函数与遍历整数</li>
+      <li>遍历字符串列表元组</li>
+      <li>遍历字典</li>
+      <li>循环控制 break 与 continue</li>
+      <li>循环嵌套</li>
+      <li>常见语法错误</li>
+      <li>常见运行异常</li>
+      <li>异常处理语句</li>
+      <li>综合实战：古算题与成绩单</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>先分大类、再分小类——分支里还能装分支</h2>
+    <p>很多判断是<b>有层次</b>的：先看是不是本校学生，再看是不是本班；先看成绩是否及格，及格了再看是良好还是优秀。在分支语句中再包含一个或多个分支语句，就是<b>嵌套分支结构</b>。学会它，你才能真正读懂别人的代码——因为缩进从此不只是「好看」，而是<b>决定逻辑</b>的东西。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">嵌套像「两道门」：先过大门（外层 if），进了大门才有资格被小门（内层 if）拦住问话</div>
+      <p>外层条件是<b>大门</b>：「是本校学生吗？」不是，直接走大门的 else 通道；是，才来到<b>小门</b>前：「是本班的吗？」是或不是，走的是小门的两条路。两道门有主次关系——而<b>缩进</b>就是门牌：哪个 else 缩进到哪一层，它就挂在哪个门上。缩进错一格，「本班的判断」就挂到错误的大门上去了。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>嵌套分支的语法与三条注意事项</h2>
+    <pre class="codeblock">if &lt;条件1&gt;:
+    内层 if &lt;条件2&gt;:
+        &lt;代码块_真1_真2&gt;
+    else:
+        &lt;代码块_真1_假2&gt;
+else:
+    内层 if &lt;条件3&gt;:
+        &lt;代码块_假1_真3&gt;
+    else:
+        &lt;代码块_假1_假3&gt;</pre>
+    <ul class="points">
+      <li><b>if 语句和 else 语句都能有新的分支结构</b>——四个角落（真1真2 / 真1假2 / 假1真3 / 假1假3）各有一条路</li>
+      <li><b>不同层次的分支语句的对应关系取决于其缩进程度，相同缩进的为同一层</b>——else 挂在谁头上，看缩进，不看距离远近</li>
+      <li><b>嵌套不宜超过 2 层</b>；嵌套分支结构可以转换为多分支结构，<b>建议使用多分支结构</b>（下一节就对比给你看）</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>缩进挪一格，语义全变：示例 1 vs 示例 2</h2>
+    <div class="switch">
+      <button class="on" data-pane="p-s1" onclick="switchPane(this, 'p-s1')">示例 1：内层有 else</button>
+      <button data-pane="p-s2" onclick="switchPane(this, 'p-s2')">示例 2：else 提到外层</button>
+    </div>
+    <div class="pane on" id="p-s1">
+      <pre class="codeblock">a = eval(input("请您输入数字a的值"))
+if a &gt;= 0:
+    if a &gt; 0:
+        print("a大于0！")
+    else:                    <span class="ind-tag">缩进 4 格：跟内层 if 对齐 → 是内层的 else</span>
+        print("a等于0！")</pre>
+      <div class="gate"><span class="lv">外层</span>a &gt;= 0 ？→ 真，才进内层</div>
+      <div class="gate"><span class="lv">内层</span>a &gt; 0 ？→ 真 输出「a大于0！」；假 输出「a等于0！」</div>
+      <ul class="points">
+        <li>输入 <code>0</code>：外层 0&gt;=0 真 → 内层 0&gt;0 假 → 走<b>内层 else</b>，输出「a等于0！」</li>
+        <li>输入 <code>5</code>：外层真 → 内层真 → 输出「a大于0！」</li>
+        <li>输入 <code>-1</code>：外层 0&gt;=-1 为假，外层<b>没有 else</b> → 什么都不输出</li>
+      </ul>
+    </div>
+    <div class="pane" id="p-s2">
+      <pre class="codeblock">a = eval(input("请您输入数字a的值"))
+if a &gt;= 0:
+    if a &gt; 0:
+        print("a大于0！")
+else:                        <span class="ind-tag">缩进 0 格：跟外层 if 对齐 → 是外层的 else</span>
+    print("a小于0！")</pre>
+      <div class="gate"><span class="lv">外层</span>a &gt;= 0 ？→ 真 走内层；假 输出「a小于0！」</div>
+      <div class="gate"><span class="lv">内层</span>a &gt; 0 ？→ 真 输出「a大于0！」；<b>假？没有 else 接住！</b></div>
+      <ul class="points">
+        <li>输入 <code>-1</code>：外层假 → 走<b>外层 else</b>，输出「a小于0！」</li>
+        <li>输入 <code>0</code>：外层真 → 内层 0&gt;0 假，而内层<b>没有 else</b> → <b>什么都不输出</b>（「沉默」）</li>
+        <li>两段代码字符几乎一样，<b>只差内层 else 的缩进位置</b>，语义却完全不同——这就是 Python 的缩进即逻辑</li>
+      </ul>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="3"
+         data-ok="✅ 答对了！示例 2 的 else 缩进 0 格、挂在外层 if 上，内层 if a&gt;0 为假时没有 else 接住，程序就沉默了——这是逻辑漏洞的典型样子。"
+         data-no="❌ 注意示例 2 的 else 缩进 0 格，跟外层 if 对齐：输入 0 时外层条件为真、进入内层，而内层 if a&gt;0 为假且没有 else——程序什么都不输出。">
+      <p style="font-weight:700;margin-bottom:12px">运行<b>示例 2</b>（else 与外层 if 对齐的易错版），输入 <code>0</code>，输出是什么？</p>
+      <button class="opt" onclick="quizPick(this)">A. a大于0！</button>
+      <button class="opt" onclick="quizPick(this)">B. a等于0！</button>
+      <button class="opt" onclick="quizPick(this)">C. a小于0！</button>
+      <button class="opt" onclick="quizPick(this)">D. 什么都不输出</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="缩进同一|缩进 同一" data-ok="✅ 正确！Python 里缩进就是层次：相同缩进的分支属于同一层，else 挂在谁头上全看缩进。" data-no="❌ 回忆一下：决定 else 归属的不是距离远近，而是每行开头的空格数——相同缩进即同一层。">
+      <p>嵌套分支中：不同层次的分支语句的对应关系取决于其＿＿程度，相同缩进的为＿＿层。（两空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：缩进 同一">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>嵌套不宜超过 2 层</b>（PPT 原文建议）：层数一多，缩进层层叠叠，谁也读不懂——能转成多分支就转（下一节教你转）；</p>
+      <p>②<b>写内层分支时，先想清楚它的 else 挂在哪一层</b>：是跟内层 if 对齐（缩进 4 格），还是跟外层 if 对齐（缩进 0 格）？位置不同，逻辑天差地别；</p>
+      <p>③<b>示例 2 输入 0 时程序「沉默」不是 bug</b>：它没报错也没输出，是因为内层 if a&gt;0 为假且内层没有 else，分支没覆盖到这种输入——这是<b>逻辑漏洞的典型样子</b>，比报错更难发现，写完代码要把每种输入都过一遍。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的嵌套分支结构。请：1）用「大门和小门」的类比解释外层 if 与内层 if 的主次关系；2）给我两段只差 else 缩进位置的嵌套代码，让我判断输入 0 和 -1 时分别输出什么，再帮我核对；3）解释为什么「程序不报错也不输出」往往是分支没覆盖到的逻辑漏洞；4）出一道把嵌套改写成多分支的练习并附答案。">
+      我刚学了 Python 的嵌套分支结构。请：1）用「大门和小门」的类比解释外层 if 与内层 if 的主次关系；2）给我两段只差 else 缩进位置的嵌套代码，让我判断输入 0 和 -1 时分别输出什么，再帮我核对；3）解释为什么「程序不报错也不输出」往往是分支没覆盖到的逻辑漏洞；4）出一道把嵌套改写成多分支的练习并附答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：亲自动手跑两个示例（5 分钟）</span>
+    <ol class="steps">
+      <li>把示例 1 和示例 2 分别敲进编辑器，<b>逐字符对照</b>：唯一的区别是 else 前面有没有那 4 个空格。</li>
+      <li>两个程序分别输入 <code>-1</code>、<code>0</code>、<code>5</code> 跑一遍，把 6 种输出记在纸上（其中有两种是「什么都不输出」），体会缩进位置带来的行为差异。</li>
+      <li>改代码：给示例 2 的<b>内层</b> if 补上 else（缩进跟内层 if 对齐），让它输入 0 时也能输出——亲手体会「else 挂在哪一层」。</li>
+      <li>本章作业第 2 题（输入月份输出天数）可以用多分支也可以用嵌套实现：先用嵌套写一版（外层分大小月，内层再分 2 月），感受一下哪种更清爽。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>在分支语句中再包含分支语句就是嵌套分支：if 和 else 都能有新分支，<b>层次由缩进决定、相同缩进是同一层</b>；else 的缩进位置不同，语义可能完全不同，还要小心分支没覆盖到时程序「沉默」。嵌套不宜超过 2 层，能转多分支就转多分支。下一节：把同一道酒驾判定题的两种写法摆在一起，看看多分支为什么更清爽。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="5.05.html"><span class="nav-label">← 上一节</span><span class="nav-title">5.05 多分支结构 if-elif-else</span></a>
+        <a class="next" href="5.07.html"><span class="nav-label">下一节 →</span><span class="nav-title">5.07 嵌套与多分支对比</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：切换「示例1 / 示例2」两个 pane */
+function switchPane(btn, id){
+  btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  const panes = btn.closest('section').querySelectorAll('.pane');
+  panes.forEach(p => p.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+</script>
+</body>
+</html>

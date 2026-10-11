@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.08 常用内置函数 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第二章 基础概念与数值 · 第 8 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch02.html">第二章 基础概念与数值</a><span class="sep">/</span>
+          <span class="current">2.08</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">08</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第二章 · 基础概念与数值</span>
+            <h1>常用内置函数</h1>
+            <p class="hero-summary">第 8 / 17 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序构成的两大核心</li>
+      <li>变量：概念与赋值</li>
+      <li>变量命名规则</li>
+      <li>数据类型总览</li>
+      <li>type() 查看类型</li>
+      <li>保留字（关键字）</li>
+      <li>函数：定义与调用</li>
+      <li class="cur">常用内置函数</li>
+      <li>输入输出函数</li>
+      <li>缩进与注释规范</li>
+      <li>数值类型总览</li>
+      <li>整数与四种进制</li>
+      <li>浮点数与精度陷阱</li>
+      <li>算术与增强赋值运算符</li>
+      <li>比较与逻辑运算符</li>
+      <li>运算符优先级</li>
+      <li>数值函数与 math 模块</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>不用自己造轮子，Python 已经帮你造好了</h2>
+    <p>上一节你学会了函数的定义与调用，但大部分常用功能<b>根本不用自己写</b>——Python 解释器出厂就自带了一批「成品函数」。会用它们，你的编程效率直接翻倍。这一节解决三个问题：</p>
+    <ul class="points">
+      <li>Python 的函数按来源分哪<b>三类</b>？</li>
+      <li>最常用的<b>内置函数</b>有哪些？怎么用？</li>
+      <li>拿到一个新函数，如何<b>快速试出</b>它的效果？</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">函数三类来源 = 手机的三种 App</div>
+      <p><b>内置函数</b>像手机<b>出厂自带的 App</b>（计算器、相机）——开机就能用，不需要安装；<b>第三方库函数</b>像<b>应用商店的 App</b>——得先下载安装（安装库）再导入使用；<b>自定义函数</b>像你<b>自己开发的小工具</b>——按自己的业务需求量身编写。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>函数按来源分三类</h2>
+    <ul class="points">
+      <li><b>内置函数（Built-in）</b>：解释器自带，<b>无需导入</b>，直接使用——本节主角。</li>
+      <li><b>第三方库函数</b>：由其他开发者编写，需先<b>安装并导入库</b>才能使用（后面的 math 模块会再见）。</li>
+      <li><b>自定义函数</b>：根据具体业务需求<b>自行编写</b>的函数（上一节学的 def）。</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">实战演示</span>
+    <h2>常用内置函数四大家族（点击卡片展开清单）</h2>
+    <div class="grid g2">
+      <div class="icard" data-toggle="1">
+        <h4><span class="dot" style="background:#4f6ef7"></span>① 数值处理</h4>
+        <div class="desc">对数字进行计算的函数</div>
+        <div class="more">
+          <code>abs()</code> 绝对值　<code>round()</code> 四舍五入（实为「四舍六入五成双」的银行家舍入，详见 2.17）<br>
+          <code>pow()</code> 幂运算　<code>sum()</code> 求和
+        </div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle="1">
+        <h4><span class="dot" style="background:#7c5cf0"></span>② 类型转换</h4>
+        <div class="desc">把数据从一种类型变到另一种</div>
+        <div class="more">
+          <code>int()</code> 转整数　<code>float()</code> 转浮点数<br>
+          <code>str()</code> 转字符串　<code>list()</code> 转列表
+        </div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle="1">
+        <h4><span class="dot" style="background:#1a9e6c"></span>③ 数据结构操作</h4>
+        <div class="desc">处理一组数据的常用工具</div>
+        <div class="more">
+          <code>len()</code> 获取序列长度<br>
+          <code>max()</code> 最大值　<code>min()</code> 最小值
+        </div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle="1">
+        <h4><span class="dot" style="background:#d97706"></span>④ 其他常用</h4>
+        <div class="desc">查询类的小帮手</div>
+        <div class="more">
+          <code>type()</code> 查看数据类型（2.05 学过）<br>
+          <code>help()</code> 获取帮助文档
+        </div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+    </div>
+
+    <div class="quiz" style="margin-top:14px">
+      <p style="font-weight:700;margin-bottom:12px">🔍 试算演示：先自己猜输出，再切换看答案</p>
+      <div class="switch">
+        <button class="on" data-pane="pane-b1">数值处理三连</button>
+        <button data-pane="pane-b2">统计与长度</button>
+      </div>
+      <div class="pane on" id="pane-b1">
+        <pre class="codeblock">print(abs(-10))          <span class="good"># 输出：10</span>
+print(round(3.14159, 2)) <span class="good"># 输出：3.14（保留 2 位小数）</span>
+print(sum([1, 2, 3]))    <span class="good"># 输出：6（列表求和）</span></pre>
+        <p>要点：<code>round(x, n)</code> 的第二个参数 n 表示<b>保留几位小数</b>；<code>sum()</code> 通常接收一个列表。</p>
+      </div>
+      <div class="pane" id="pane-b2">
+        <pre class="codeblock">print(len('Python'))  <span class="good"># 输出：6（数一数有几个字符）</span>
+print(max(1, 2, 3))   <span class="good"># 输出：3</span>
+print(min(1, 2, 3))   <span class="good"># 输出：1</span></pre>
+        <p>要点：<code>len()</code> 数的是<b>序列的长度</b>；<code>max()</code> / <code>min()</code> 可以直接接收多个参数。</p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！abs() 求绝对值，负数变正数：abs(-10) = 10。"
+         data-no="❌ 不对哦。abs() 是求<b>绝对值</b>，-10 的绝对值是 10（负数的绝对值是它的相反数）。">
+      <p style="font-weight:700;margin-bottom:12px"><code>abs(-10)</code> 的结果是？</p>
+      <button class="opt" onclick="quizPick(this)">A. -10</button>
+      <button class="opt" onclick="quizPick(this)">B. 0</button>
+      <button class="opt" onclick="quizPick(this)">C. 10</button>
+      <button class="opt" onclick="quizPick(this)">D. 报错</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="导入|import|导入库" data-ok="✅ 正确！内置函数是解释器自带的，无需导入即可直接使用。" data-no="❌ 再想想：内置函数像手机出厂自带的 App，开机就能用——它不需要做哪一步？（对比第三方库函数要先安装再做什么）">
+      <p>内置函数由解释器自带，<b>无需＿＿</b>即可直接使用。（填一个词）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：××">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">别给变量起内置函数的名字！</div>
+      <p>如果你写了 <code>len = 100</code>，那么之后调用 <code>len('Python')</code> 就会报错——因为 <code>len</code> 这个名字已经被你的整数 100 「占用」了，原来的内置函数被覆盖掉了。同理，<code>max</code>、<code>sum</code>、<code>type</code> 这些名字都不要拿来当变量名（这正是上一节「命名规则」的实战应用）。</p>
+      <p>另一个提醒：类型转换函数不是「万能钥匙」——<code>int('abc')</code> 会直接报错，字符串里必须是合法的数字才行。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 常用内置函数。请：1）用「出厂自带 App / 应用商店 App / 自己开发的小工具」类比讲清内置函数、第三方库函数、自定义函数的区别；2）逐个演示 abs、round、pow、sum、int、float、str、len、max、min 的调用并给出输出；3）出 2 道单选题考我，等我作答后再公布答案。">
+      我刚学了 Python 常用内置函数。请：1）用「出厂自带 App / 应用商店 App / 自己开发的小工具」类比讲清内置函数、第三方库函数、自定义函数的区别；2）逐个演示 abs、round、pow、sum、int、float、str、len、max、min 的调用并给出输出；3）出 2 道单选题考我，等我作答后再公布答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：亲手试算 5 个内置函数（4 分钟）</span>
+    <ol class="steps">
+      <li>打开命令行输入 <code>python</code> 进入交互模式。</li>
+      <li>依次运行本页演示过的 5 个调用：<code>abs(-10)</code>、<code>round(3.14159, 2)</code>、<code>sum([1, 2, 3])</code>、<code>len('Python')</code>、<code>max(1, 2, 3)</code>。</li>
+      <li>每运行一个，先<b>心里猜答案</b>再回车，对照本页的预期输出：10、3.14、6、6、3。</li>
+      <li>进阶：试试 <code>help(len)</code>——用内置函数 <code>help()</code> 查看另一个内置函数的说明文档。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>函数按来源分三类：<b>内置函数</b>（自带免导入）、<b>第三方库函数</b>（安装并导入）、<b>自定义函数</b>（自己写）。四大家族要记牢：数值处理 abs / round / pow / sum，类型转换 int / float / str / list，数据结构 len / max / min，查询类 type / help。下一节：最常用的输入输出函数 input() 和 print()。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="2.07.html"><span class="nav-label">← 上一节</span><span class="nav-title">2.07 函数：定义与调用</span></a>
+        <a class="next" href="2.09.html"><span class="nav-label">下一节 →</span><span class="nav-title">2.09 输入输出函数</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

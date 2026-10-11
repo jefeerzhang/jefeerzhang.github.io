@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.13 序列与映射 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第四章 元组、集合和字典 · 第 13 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.seqlab{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+.seqgrid{display:inline-grid;grid-template-columns:repeat(6,64px);gap:6px;margin:10px 0}
+.seqgrid .idx{background:var(--accent-soft);color:var(--accent);border-radius:8px;text-align:center;padding:6px 0;font-family:Consolas,monospace;font-size:13px;font-weight:700}
+.seqgrid .val{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;text-align:center;padding:6px 0;font-family:Consolas,monospace;font-size:16px;font-weight:700}
+.kvlist{display:flex;flex-direction:column;gap:8px;margin:10px 0}
+.kvrow{display:flex;align-items:center;gap:10px}
+.kvrow .kkey{flex:none;width:76px;text-align:center;background:var(--accent);color:#fff;border-radius:8px;padding:6px 0;font-size:14px;font-weight:700}
+.kvrow .kval{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:14px;font-family:Consolas,monospace}
+.kvrow .arrow{color:var(--ink2);font-size:13px}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch04.html">第四章 元组、集合和字典</a><span class="sep">/</span>
+          <span class="current">4.13</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">13</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第四章 · 元组、集合和字典</span>
+            <h1>序列与映射</h1>
+            <p class="hero-summary">第 13 / 21 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>元组的定义与特性</li>
+      <li>元组的创建</li>
+      <li>元组索引与切片</li>
+      <li>元组运算</li>
+      <li>元组函数与方法</li>
+      <li>元组的不可变性</li>
+      <li>集合的定义与特性</li>
+      <li>集合的创建</li>
+      <li>集合运算：交差并补</li>
+      <li>集合操作：增删元素</li>
+      <li>集合运算并更新</li>
+      <li>集合函数与判断方法</li>
+      <li class="cur">序列与映射</li>
+      <li>字典的定义与特性</li>
+      <li>字典的创建</li>
+      <li>字典访问与三视图</li>
+      <li>字典添加与修改</li>
+      <li>字典删除</li>
+      <li>字典其他操作</li>
+      <li>组合数据类型总结</li>
+      <li>数据类型转换</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>从「第几个」到「叫什么」——本章最重要的思维升级</h2>
+    <p>前两节学的字符串、列表、元组都属于<b>序列</b>：数据排成一队，每个值有固定的位置，靠<b>数字索引</b>（第 0 个、第 1 个……）去找。但生活中很多信息天生不是「排队」的：查张三的籍贯，你不会问「他的第 4 个信息是什么」，而是直接问——<b>「籍贯」是什么</b>。这种「凭名字取值」的组织方式就叫<b>映射</b>，它正是接下来 6 节的主角——字典的底层思想。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">电影院座位 vs 通讯录</div>
+      <p><b>序列像电影院座位</b>：你凭票上的「第几排第几座」（数字索引）找到位置，座位编号是固定的、有顺序的。<b>映射像通讯录</b>：你凭「姓名」（键）查「电话号码」（值），完全不关心张三排在通讯录第几位——换个手机导入，顺序可能全变了，但「张三 → 电话」这个对应关系永远不变。问「张三的籍贯」，问的是「键」，不是「序号」。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>序列靠「第几个」，映射靠「叫什么」</h2>
+    <p>字符串、列表、元组都属于<b>有序的序列</b>，序列中的值是有顺序的；字典属于<b>映射</b>，映射类型不靠「第几个」定位，而是靠<b>键和值的对应关系</b>。对比一下两种找数据的方式：</p>
+    <table>
+      <tr><th>对比项</th><th>序列（字符串/列表/元组）</th><th>映射（字典）</th></tr>
+      <tr><td>组织方式</td><td>值排成一队，有顺序</td><td>键值对成对出现，靠键定位</td></tr>
+      <tr><td>找数据的凭据</td><td>数字索引：第 0 个、第 1 个…</td><td>关键字 key：叫什么名字</td></tr>
+      <tr><td>典型提问</td><td>「'PYTHON' 的第 3 个字符是？」</td><td>「张三的籍贯是什么？」</td></tr>
+      <tr><td>索引能否改动含义</td><td>位置固定，索引即含义</td><td>顺序无所谓，键才是身份</td></tr>
+    </table>
+    <ul class="points">
+      <li>以 <code>'PYTHON'</code> 为例：索引 0~5 依次对应值 P、Y、T、H、O、N——这是序列视角</li>
+      <li>以学生信息为例：键「姓名/性别/年龄/籍贯/民族/学历」对应值「张三/男/20/四川/汉族/本科」——这是映射视角</li>
+      <li>映射里问「第 4 个信息是什么」是没有意义的，只能按<b>键</b>取值</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>🔬 同一批数据，两种视角</h2>
+    <div class="seqlab">
+      <div class="switch">
+        <button class="on" data-pane="pane-seq">序列视角</button>
+        <button data-pane="pane-map">映射视角</button>
+      </div>
+      <div class="pane on" id="pane-seq">
+        <p style="font-weight:700;margin-bottom:4px">s = 'PYTHON'　——　每个字符有固定座位号</p>
+        <div class="seqgrid">
+          <div class="idx">0</div><div class="idx">1</div><div class="idx">2</div><div class="idx">3</div><div class="idx">4</div><div class="idx">5</div>
+          <div class="val">P</div><div class="val">Y</div><div class="val">T</div><div class="val">H</div><div class="val">O</div><div class="val">N</div>
+        </div>
+        <p style="font-size:14px;color:var(--ink2)">取值方式：<code>s[0]</code> → 'P'，<code>s[4]</code> → 'O'。凭「第几个」（数字索引）找值。</p>
+      </div>
+      <div class="pane" id="pane-map">
+        <p style="font-weight:700;margin-bottom:4px">学生信息　——　每个信息有一个名字</p>
+        <div class="kvlist">
+          <div class="kvrow"><span class="kkey">姓名</span><span class="arrow">键 → 值</span><span class="kval">'张三'</span></div>
+          <div class="kvrow"><span class="kkey">性别</span><span class="arrow">键 → 值</span><span class="kval">'男'</span></div>
+          <div class="kvrow"><span class="kkey">年龄</span><span class="arrow">键 → 值</span><span class="kval">20</span></div>
+          <div class="kvrow"><span class="kkey">籍贯</span><span class="arrow">键 → 值</span><span class="kval">'四川'</span></div>
+          <div class="kvrow"><span class="kkey">民族</span><span class="arrow">键 → 值</span><span class="kval">'汉族'</span></div>
+          <div class="kvrow"><span class="kkey">学历</span><span class="arrow">键 → 值</span><span class="kval">'本科'</span></div>
+        </div>
+        <p style="font-size:14px;color:var(--ink2)">取值方式：凭「叫什么」（键）找值——要籍贯就直接问「籍贯」，不问「第 4 个信息是什么」。</p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！字典属于映射类型，按「键 key」存取数据，而不是按序号。"
+         data-no="❌ 再想想：查张三的籍贯时，你是问「第几个信息」，还是直接问「籍贯」？字典凭名字（键）取值。">
+      <p style="font-weight:700;margin-bottom:12px">字典（映射）按什么存取数据？</p>
+      <button class="opt" onclick="quizPick(this)">A. 序号 index（第几个）</button>
+      <button class="opt" onclick="quizPick(this)">B. 键 key（叫什么）</button>
+      <button class="opt" onclick="quizPick(this)">C. 值 value</button>
+      <button class="opt" onclick="quizPick(this)">D. 排列顺序</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="序列 映射|序列映射|序列,映射|序列、映射"
+         data-ok="✅ 正确！字符串、列表、元组是有序序列，字典是映射类型。"
+         data-no="❌ 提示：前三种按「第几个」找值，是序列；字典按「键」找值，是映射。（两空连填，中间用空格隔开）">
+      <p>字符串、列表、元组都属于有序 <code>___</code>，字典属于 <code>___</code> 类型。（两空连填，中间用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：序列 映射" style="width:220px">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">别用序列的老习惯去碰映射</div>
+      <p>学完元组和列表，很容易顺手写 <code>dc[0]</code> 想拿「第一个」——字典没有「第一个」，<code>0</code> 会被当成一个<b>键</b>去找，找不到就报 <code>KeyError</code>。映射<b>没有顺序</b>，索引、切片这些序列操作统统用不上。</p>
+      <p>反过来，也别拿映射的方便去要求序列：问列表「'张三' 这一项叫什么」是没有名字的，只有下标。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 中序列与映射两种数据组织方式的区别：序列（字符串、列表、元组）靠数字索引「第几个」取值，映射（字典）靠键「叫什么」取值。请：1）用电影院座位和通讯录的类比各举一个生活例子；2）出 4 道判断题考我「这句话描述的是序列还是映射」；3）解释为什么查学生信息用字典比用列表更合适。">
+      我刚学了 Python 中序列与映射两种数据组织方式的区别：序列（字符串、列表、元组）靠数字索引「第几个」取值，映射（字典）靠键「叫什么」取值。请：1）用电影院座位和通讯录的类比各举一个生活例子；2）出 4 道判断题考我「这句话描述的是序列还是映射」；3）解释为什么查学生信息用字典比用列表更合适。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：想一想你的微信通讯录（5 分钟）</span>
+    <ol class="steps">
+      <li>打开脑中的微信好友列表：如果它是一个<b>序列</b>，那每个好友就有「第 1 个、第 2 个……」的位置。</li>
+      <li>再想想顶部的<b>搜索框</b>：输入「张三」直接定位到人——这正是映射的「凭键取值」行为。</li>
+      <li>思考：搜索框在乎好友排在列表第几位吗？不在乎——就像字典不在乎键值对的顺序。</li>
+      <li>最后想一想：为什么删掉一个好友，其他好友「不会错位」？因为映射里每个数据靠<b>键</b>标识身份，不靠序号。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>字符串、列表、元组都是<b>有序序列</b>，靠数字索引「第几个」取值；字典是<b>映射</b>，没有顺序，靠键「叫什么」取值。记住本章最核心的思维升级：查「张三的籍贯」问的是键，不是序号。下一节：正式认识字典的定义与四大特性。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="4.12.html"><span class="nav-label">← 上一节</span><span class="nav-title">4.12 集合函数与判断方法</span></a>
+        <a class="next" href="4.14.html"><span class="nav-label">下一节 →</span><span class="nav-title">4.14 字典的定义与特性</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

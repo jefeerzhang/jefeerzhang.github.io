@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.16 列表增加元素 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第三章 字符串与列表 · 第 16 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.cm{color:#8a93a6}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch03.html">第三章 字符串与列表</a><span class="sep">/</span>
+          <span class="current">3.16</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">16</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第三章 · 字符串与列表</span>
+            <h1>列表增加元素</h1>
+            <p class="hero-summary">第 16 / 21 节 · 约 12 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>字符串基础与三种引号</li>
+      <li>转义字符</li>
+      <li>字符串索引</li>
+      <li>字符串切片</li>
+      <li>实战：身份证号提取信息</li>
+      <li>字符串运算与内置函数</li>
+      <li>大小写转换方法</li>
+      <li>计数、查找与替换</li>
+      <li>分割、联合与剔除</li>
+      <li>判断字符串类别</li>
+      <li>format 格式化输出</li>
+      <li>f-string 格式化输出</li>
+      <li>列表定义与特性</li>
+      <li>列表的创建</li>
+      <li>列表索引与切片</li>
+      <li class="cur">列表增加元素</li>
+      <li>列表删除元素</li>
+      <li>列表修改元素</li>
+      <li>列表运算与函数</li>
+      <li>列表常用方法</li>
+      <li>实战：成绩排序和统计</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>清单写好了，还想再加几样？</h2>
+    <p>字符串是「石碑」，写完就不能加字；列表是「白板」，想加就加。往列表里加元素有三种常用方法：<code>append</code>、<code>insert</code>、<code>extend</code>。它们都<b>直接改变原列表</b>——这正是上一节说的「列表可变」最直接的体现。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">整箱上架、插队、拆箱倒货</div>
+      <p><b>append</b> 像「整箱上架」：一次一件，放到货架最末端；<b>insert</b> 像「插队」：指定一个位置硬塞进去，后面的人集体往后挪；<b>extend</b> 像「拆箱倒货」：把包裹里的东西<b>逐个倒</b>进货架，而不是把整包扔上去。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>三个增员方法</h2>
+    <table>
+      <tr><th>方法</th><th>作用</th></tr>
+      <tr><td>ls.append(M)</td><td>向列表 ls 的<b>最后一个位置</b>添加一个元素 M</td></tr>
+      <tr><td>ls.insert(i, M)</td><td>向列表 ls 的<b>第 i 个位置</b>添加一个元素 M</td></tr>
+      <tr><td>ls.extend(iter)</td><td>向列表 ls <b>最后面扩充</b>添加可迭代对象 iter（列表、元组、字符串）</td></tr>
+    </table>
+    <pre class="codeblock">L5 = [1, 2]
+L5.append(4)         <span class="cm"># [1, 2, 4]</span>
+L5.insert(2, 'ABC')  <span class="cm"># [1, 2, 'ABC', 4]</span>
+L5.extend('DE')      <span class="cm"># [1, 2, 'ABC', 4, 'D', 'E']</span>
+print(L5)</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">[1, 2, 'ABC', 4, 'D', 'E']</pre>
+    <ul class="points">
+      <li><code>insert(2, 'ABC')</code> 是插到<b>索引 2</b> 的位置，原来的 4 被往后挤</li>
+      <li><code>extend('DE')</code> 把字符串<b>拆开</b>成 'D'、'E' 两个元素，逐个加到末尾</li>
+      <li>三个方法都在原地修改 L5，列表越变越长</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">🔬 交互示例</span>
+    <h2>append vs extend 关键对决</h2>
+    <div>
+      <div class="switch">
+        <button class="on" data-pane="pane-app">append('DE')</button>
+        <button data-pane="pane-ext">extend('DE')</button>
+      </div>
+      <div class="pane on" id="pane-app">
+        <pre class="codeblock">L = [1, 2]
+L.append('DE')
+print(L)</pre>
+        <p>输出结果：</p>
+        <pre class="codeblock out">[1, 2, 'DE']</pre>
+        <p><b>整箱上架</b>——'DE' 整个字符串被当成<b>一个</b>元素塞到末尾，列表只多 1 个元素。</p>
+      </div>
+      <div class="pane" id="pane-ext">
+        <pre class="codeblock">L = [1, 2]
+L.extend('DE')
+print(L)</pre>
+        <p>输出结果：</p>
+        <pre class="codeblock out">[1, 2, 'D', 'E']</pre>
+        <p><b>拆箱倒货</b>——字符串被拆开，'D'、'E' 作为<b>两个</b>元素逐个加入，列表多 2 个元素。</p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！append 一次只加「一个元素」，传 [3, 4] 就把整个列表作为 1 个元素塞进末尾，形成嵌套。"
+         data-no="❌ 再想想：append 是「整箱上架」，不会拆开——[3, 4] 被整体塞入，成为 L 的第 3 个元素（它本身是个列表）。">
+      <p style="font-weight:700;margin-bottom:12px">L = [1, 2]，执行 <code>L.append([3, 4])</code> 后，L 是？</p>
+      <button class="opt" onclick="quizPick(this)">A. [1, 2, 3, 4]</button>
+      <button class="opt" onclick="quizPick(this)">B. [1, 2, [3, 4]]</button>
+      <button class="opt" onclick="quizPick(this)">C. [[1, 2], 3, 4]</button>
+      <button class="opt" onclick="quizPick(this)">D. 程序报错</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="insert" data-ok="✅ 正确！insert(i, M) 向列表第 i 个位置添加一个元素 M，后面的元素依次后移。" data-no="❌ 再想想：三个方法里，哪个可以「指定位置塞进去」？">
+      <p>向列表第 i 个位置插入元素用＿＿方法。</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="填方法名">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">append 只认「一个元素」，方法都返回 None</div>
+      <p>append 一次只加「一个元素」——哪怕传的是列表 <code>[7, 8]</code>，也会<b>整体塞入</b>变成嵌套（L 多 1 个元素），不会拆开；想拆开请用 extend。insert 的位置 i 超过列表长度时<b>不会报错</b>，等效于加到末尾。</p>
+      <p>最重要的坑：append / insert / extend 都<b>直接改变原列表、返回 None</b>。写成 <code>L = L.append(4)</code> 反而会把 L 变成 None！列表是可变的，原地修改即可，不需要（也不能）接收返回值。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 列表增加元素的三个方法 append、insert、extend。请：1）用「整箱上架、插队、拆箱倒货」的类比解释三者区别；2）说明为什么 L = L.append(...) 会把 L 变成 None；3）出 3 道求值题考我（含一道 append 嵌套列表、一道 append 与 extend 对照），等我作答后公布答案和讲解。">
+      我刚学了 Python 列表增加元素的三个方法 append、insert、extend。请：1）用「整箱上架、插队、拆箱倒货」的类比解释三者区别；2）说明为什么 L = L.append(...) 会把 L 变成 None；3）出 3 道求值题考我（含一道 append 嵌套列表、一道 append 与 extend 对照），等我作答后公布答案和讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试（4 分钟）</span>
+    <ol class="steps">
+      <li>把本节的三段代码逐行跑一遍：<code>L5 = [1, 2]</code>，依次 append、insert、extend，每步 <code>print(L5)</code> 对照注释结果。</li>
+      <li>新建 <code>L = [1, 2]</code>，试试 <code>L.append('DE')</code>，对照 <code>extend('DE')</code> 的结果，看清「整箱」与「倒货」的差别。</li>
+      <li>试试 <code>L.insert(100, 'X')</code>，看看位置远超长度时会发生什么。</li>
+      <li>挑战：输入 <code>print(L.append('Y'))</code>，想想为什么输出是 None。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p><code>append(M)</code> 末尾加一个元素；<code>insert(i, M)</code> 在第 i 个位置插入；<code>extend(iter)</code> 把可迭代对象拆开逐个扩充到末尾。记住口诀：<b>append 整体塞、extend 拆开加</b>；三者都<b>直接改变原列表、返回 None</b>——列表可变，原地增员。下一节：把元素从列表里删掉。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="3.15.html"><span class="nav-label">← 上一节</span><span class="nav-title">3.15 列表索引与切片</span></a>
+        <a class="next" href="3.17.html"><span class="nav-label">下一节 →</span><span class="nav-title">3.17 列表删除元素</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

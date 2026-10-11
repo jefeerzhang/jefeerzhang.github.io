@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.07 集合的定义与特性 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第四章 元组、集合和字典 · 第 7 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.icard:nth-child(1) .dot{background:var(--accent)}
+.icard:nth-child(2) .dot{background:var(--accent2)}
+.icard:nth-child(3) .dot{background:var(--ok)}
+.icard:nth-child(4) .dot{background:var(--warn)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch04.html">第四章 元组、集合和字典</a><span class="sep">/</span>
+          <span class="current">4.07</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">07</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第四章 · 元组、集合和字典</span>
+            <h1>集合的定义与特性</h1>
+            <p class="hero-summary">第 7 / 21 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>元组的定义与特性</li>
+      <li>元组的创建</li>
+      <li>元组索引与切片</li>
+      <li>元组运算</li>
+      <li>元组函数与方法</li>
+      <li>元组的不可变性</li>
+      <li class="cur">集合的定义与特性</li>
+      <li>集合的创建</li>
+      <li>集合运算：交差并补</li>
+      <li>集合操作：增删元素</li>
+      <li>集合运算并更新</li>
+      <li>集合函数与判断方法</li>
+      <li>序列与映射</li>
+      <li>字典的定义与特性</li>
+      <li>字典的创建</li>
+      <li>字典访问与三视图</li>
+      <li>字典添加与修改</li>
+      <li>字典删除</li>
+      <li>字典其他操作</li>
+      <li>组合数据类型总结</li>
+      <li>数据类型转换</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>重复数据满天飞，谁来一键帮你去掉？</h2>
+    <p>处理名单、成绩、日志时，重复元素几乎不可避免。Python 的<b>集合（set）</b>正是为此而生：它是由 0 个或多个元素组成的、<b>无序且不重复</b>的可变数据类型。更亲切的是，它和你初中数学学的「集合」一脉相承——后面要学的交、并、补运算，就是数学课上的那一套。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">集合像一张「社团签到表」</div>
+      <p>社团签到表只登记「来过哪些人」：<b>不记先来后到</b>——谁先谁后根本不影响名单（无序）；<b>同一人签一百次只算一次</b>（不重复）；<b>名单可以随时增删</b>（可变）；而且<b>只收「固定不变」的成员</b>——一个会变来变去的家伙（比如列表）没法登记在册（元素必须不可变）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>四大特性，一条主线</h2>
+    <p>集合使用大括号 <code>{}</code> 包裹元素，元素之间用逗号分隔，例如 <code>{1, 2, 3}</code>。它有四个核心特性：</p>
+    <ul class="points">
+      <li><b>无序性</b>：元素没有固定顺序，不支持通过索引访问（<code>s[0]</code> 会报错）</li>
+      <li><b>不重复性</b>：自动过滤重复元素，所有元素唯一——常用于<b>数据去重</b>操作</li>
+      <li><b>可变性</b>：创建后可以动态添加或删除元素，集合大小不固定</li>
+      <li><b>元素类型限制</b>：元素必须是<b>可哈希（hashable）类型</b>（如数字、字符串、元组），不能包含列表、集合和字典</li>
+    </ul>
+    <pre class="codeblock">s = {3, 1, 2}
+print(s)    # 输出顺序不保证和书写顺序一致（无序性的体现）
+# s[0]      # ❌ 报 TypeError：集合不支持索引访问</pre>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>🖱️ 点击卡片，揭开四大特性</h2>
+    <p class="muted">每张卡片都藏着一段「详细说明」，点击展开看看：</p>
+    <div class="grid g2">
+      <div class="icard" data-toggle="1">
+        <h4><span class="dot"></span>无序性</h4>
+        <div class="desc">元素没有固定顺序</div>
+        <div class="more">元素无固定顺序，因此<b>不支持通过索引访问</b>——<code>s[0]</code>、切片统统不可用；打印集合时，顺序也可能和书写顺序不同。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle="1">
+        <h4><span class="dot"></span>不重复性</h4>
+        <div class="desc">所有元素自动唯一</div>
+        <div class="more">自动过滤重复元素，<code>{1, 2, 2, 3}</code> 存进去就只剩 <code>{1, 2, 3}</code>——因此集合常用于<b>数据去重</b>操作。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle="1">
+        <h4><span class="dot"></span>可变性</h4>
+        <div class="desc">创建后可增可删</div>
+        <div class="more">创建后可以动态添加或删除元素，集合大小不固定——add、remove 等方法后面几节细讲。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle="1">
+        <h4><span class="dot"></span>元素类型限制</h4>
+        <div class="desc">元素必须不可变</div>
+        <div class="more">元素必须是<b>可哈希（hashable）类型</b>（如数字、字符串、元组）；<b>不能包含列表、集合和字典</b>——「会被改动的东西」没法被登记在册。「可哈希」通常等于「不可变」，字典的键也守同一条规矩（见 4.14）。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="3"
+         data-ok="✅ 答对了！[1, 2] 是列表，属于可变类型，不能放进集合；3.14、'abc'、(1, 2) 都不可变，都可以。"
+         data-no="❌ 四个选项里只有一个是「可变类型」。回忆一下：集合元素必须是可哈希（hashable）类型——谁最善变？">
+      <p style="font-weight:700;margin-bottom:12px">下列哪个元素<b>不能</b>放进集合？</p>
+      <button class="opt" onclick="quizPick(this)">A. 3.14</button>
+      <button class="opt" onclick="quizPick(this)">B. 'abc'</button>
+      <button class="opt" onclick="quizPick(this)">C. (1, 2)</button>
+      <button class="opt" onclick="quizPick(this)">D. [1, 2]</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="不可变|immutable"
+         data-ok="✅ 正确！数字、字符串、元组都是可哈希类型，都能当集合元素。"
+         data-no="❌ 提示：正因为元素必须是这一类类型，列表、集合、字典才被拒之门外。">
+      <p>集合的元素必须是 ____ 类型，因此不能包含列表、集合和字典。</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：不可变">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">集合没有下标；可变的是集合，不是元素</div>
+      <p>坑一：因为<b>无序</b>，集合不能用 <code>s[0]</code>、切片这类索引操作，直接报 TypeError。想按位置取数据，请用列表或元组。</p>
+      <p>坑二：集合可变 ≠ 元素可变。可以往集合里添加、删除元素，但元素本身必须不可变——<code>{[1, 2], 3}</code> 一写出来就报错。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 集合的定义与四大特性（无序、不重复、可变、元素必须不可变）。请：1）用「社团签到表」的类比把这四个特性再讲一遍；2）出 5 道判断题考我「什么能放进集合、什么不能」；3）解释为什么列表不能当集合元素，而元组可以。">
+      我刚学了 Python 集合的定义与四大特性（无序、不重复、可变、元素必须不可变）。请：1）用「社团签到表」的类比把这四个特性再讲一遍；2）出 5 道判断题考我「什么能放进集合、什么不能」；3）解释为什么列表不能当集合元素，而元组可以。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：亲手验证四大特性（5 分钟）</span>
+    <ol class="steps">
+      <li>新建 <code>set_test.py</code>，输入 <code>s = {1, 'a', (2, 3)}</code> 并 <code>print(s)</code>——数字、字符串、元组三种可哈希类型都进得去。</li>
+      <li>再试 <code>s2 = {1, [2]}</code>，运行后观察 TypeError（报错信息里会出现 unhashable，「不可哈希」）。</li>
+      <li>故意写 <code>print(s[0])</code>，亲自验证集合不支持索引访问。</li>
+      <li>打印 <code>{1, 1, 2, 2, 3}</code>，数一数 Python 最终给你留了几个元素。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>集合：用大括号包裹、逗号分隔；<b>无序</b>（不支持下标）、<b>不重复</b>（去重神器）、<b>可变</b>（可增删），且<b>元素必须可哈希</b>（数字、字符串、元组可以；列表、集合、字典不行）。下一节：怎么创建集合——以及本章第一大坑「空集合不能用 {}」。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="4.06.html"><span class="nav-label">← 上一节</span><span class="nav-title">4.06 元组的不可变性</span></a>
+        <a class="next" href="4.08.html"><span class="nav-label">下一节 →</span><span class="nav-title">4.08 集合的创建</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.17 字典添加与修改 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第四章 元组、集合和字典 · 第 17 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch04.html">第四章 元组、集合和字典</a><span class="sep">/</span>
+          <span class="current">4.17</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">17</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第四章 · 元组、集合和字典</span>
+            <h1>字典添加与修改</h1>
+            <p class="hero-summary">第 17 / 21 节 · 约 11 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>元组的定义与特性</li>
+      <li>元组的创建</li>
+      <li>元组索引与切片</li>
+      <li>元组运算</li>
+      <li>元组函数与方法</li>
+      <li>元组的不可变性</li>
+      <li>集合的定义与特性</li>
+      <li>集合的创建</li>
+      <li>集合运算：交差并补</li>
+      <li>集合操作：增删元素</li>
+      <li>集合运算并更新</li>
+      <li>集合函数与判断方法</li>
+      <li>序列与映射</li>
+      <li>字典的定义与特性</li>
+      <li>字典的创建</li>
+      <li>字典访问与三视图</li>
+      <li class="cur">字典添加与修改</li>
+      <li>字典删除</li>
+      <li>字典其他操作</li>
+      <li>组合数据类型总结</li>
+      <li>数据类型转换</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>字典不是「建好就不动」的——它是活的</h2>
+    <p>字典是动态可变的：程序跑起来随时会往里<b>添加</b>新键值对（顾客加购商品）、<b>修改</b>旧值（改数量）、<b>批量合并</b>另一本字典。这一节三个方法各有分工：<code>dc[key]=value</code> 一招两用、<code>update()</code> 批量合并、<code>setdefault()</code> 只加不改。本章作业第 4 题（小明购物流程）就是连续使用 <code>dc[key]=value</code> 的添加和修改。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">旅馆前台与只营业新房间</div>
+      <p><b>dc[key]=value 像「旅馆前台」</b>：报上房间号，有这间房就换住客（<b>修改</b>原值），没这间房就新开一间（<b>添加</b>新键值对）——同一个动作，两副面孔，全看房间在不在。<b>setdefault 像「只营业新房间」</b>：只给没住过的房间安排客人；老房间谁来都不换人，原住客照旧。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>三个方法，三种「加改」策略</h2>
+    <table>
+      <tr><th>方法</th><th>说明</th></tr>
+      <tr><td><code>dc[key] = value</code></td><td>键 key 不存在，将<b>添加</b>新键值对；否则将<b>修改</b>原值为新值</td></tr>
+      <tr><td><code>dc1.update(dc2)</code></td><td>根据字典 dc2 的键值对，<b>添加或修改</b>原字典 dc1（键在则改、不在则加）</td></tr>
+      <tr><td><code>dc.setdefault(key, value)</code></td><td>键 key 不存在，将<b>添加</b>新的键值对，<b>不会修改</b>原值</td></tr>
+    </table>
+    <ul class="points">
+      <li>dc[key]=value 是<b>一招两用</b>：写法只有一个，行为取决于键是否已存在</li>
+      <li>update() 是<b>批量版</b>的 dc[key]=value：把另一个字典的键值对逐个「并入」，键已存在时覆盖原值</li>
+      <li>setdefault() 是<b>保守派</b>：只加不改；键已存在时返回现有值，不存在时添加并返回新值（没给 value 则默认 None）</li>
+      <li>这些操作都<b>直接改变原字典</b>，不会产生新字典</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>🔬 两副面孔与保守策略</h2>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px">
+      <div class="switch">
+        <button class="on" data-pane="pane-faces">dc[key]=v 的两副面孔</button>
+        <button data-pane="pane-default">setdefault 的保守策略</button>
+      </div>
+      <div class="pane on" id="pane-faces">
+        <p style="font-weight:700;margin-bottom:6px">同一个写法：键不存在 = 添加，键存在 = 修改</p>
+        <pre class="codeblock">DC7 = {'a': 1, 'b': 2, 'c': 3}
+DC7['d'] = 4      # 键 'd' 不存在 → 添加
+DC7['a'] = 99     # 键 'a' 已存在 → 修改
+print(DC7)</pre>
+        <p>输出结果：</p>
+        <pre class="codeblock out"><span class="good">{'a': 99, 'b': 2, 'c': 3, 'd': 4}</span></pre>
+        <p style="font-size:14px;color:var(--ink2)">'d' 是新开的房间（添加），'a' 是换了住客（1 → 99，修改）——一行代码两副面孔。</p>
+      </div>
+      <div class="pane" id="pane-default">
+        <p style="font-weight:700;margin-bottom:6px">setdefault：只加不改，返回的是「值」</p>
+        <pre class="codeblock">DC7 = {'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6}
+print(DC7.setdefault('g'), DC7)
+print(DC7.setdefault('a', 7), DC7)</pre>
+        <p>输出结果：</p>
+        <pre class="codeblock out"><span class="good">None {'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6, 'g': None}
+1 {'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6, 'g': None}</span></pre>
+        <p style="font-size:14px;color:var(--ink2)">第一行：'g' 不存在 → 添加 'g': None，返回值 None；第二行：'a' 已存在 → 原值 1 原样不动，返回现有值 1。「只营业新房间」，老房间谁来都不换人。</p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：DC7 的完整加改过程</h2>
+    <pre class="codeblock">DC7 = {'a': 1, 'b': 2, 'c': 3}
+DC7['d'] = 4
+print(DC7)              # 添加
+DC7.update({'e': 5, 'f': 6})
+print(DC7)              # 批量添加
+print(DC7.setdefault('g'), DC7)
+print(DC7.setdefault('a', 7), DC7)</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out"><span class="good">{'a': 1, 'b': 2, 'c': 3, 'd': 4}
+{'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6}
+None {'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6, 'g': None}
+1 {'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6, 'g': None}</span></pre>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！setdefault 只加不改：键 'a' 已存在，原值 1 不动，方法返回现有值 1。"
+         data-no="❌ 注意 setdefault 的「保守」：它不会修改已有键的值。DC7['a'] 还是 1，99 根本没住进去。">
+      <p style="font-weight:700;margin-bottom:12px"><code>DC7 = {'a': 1}</code>，执行 <code>DC7.setdefault('a', 99)</code> 后，<code>DC7['a']</code> 的值是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 99</button>
+      <button class="opt" onclick="quizPick(this)">B. 1</button>
+      <button class="opt" onclick="quizPick(this)">C. None</button>
+      <button class="opt" onclick="quizPick(this)">D. 报 KeyError 错误</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="添加 修改|添加 覆盖|新增 修改|添加 修改原值|添加新键值对 修改原值|添加 修改值"
+         data-ok="✅ 正确！dc[key] = value：键不存在时添加新键值对，键存在时修改原值为新值——一招两用。"
+         data-no="❌ 回看旅馆前台的比方：房间不在就新开一间（？），房间在就换住客（？）。（两空连填）">
+      <p><code>dc[key] = value</code>：键 key 不存在时将 <code>___</code>，键存在时将 <code>___</code>。（两空连填，中间用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：添加 修改" style="width:220px">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">返回值不是字典、update 会覆盖</div>
+      <p><b>setdefault 返回的是值不是字典</b>：<code>print(DC7.setdefault('g'))</code> 打出的 None、<code>print(DC7.setdefault('a', 7))</code> 打出的 1，都是方法的<b>返回值</b>；字典本身的变化要看逗号后面 print 出来的 DC7。新手常把返回的 None 误当成「字典变成了 None」。</p>
+      <p><b>update 的键已存在时会覆盖原值</b>：它不是保守派，DC 本来有 'a':1，<code>update({'a': 100})</code> 之后 'a' 就变成 100 了——想「只加不改」请用 setdefault。</p>
+      <p><b>这些操作都直接改变原字典</b>，改完原字典就真变了，需要保留原样的要先复制一份。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 字典的添加与修改：dc[key]=value 键不存在时添加、存在时修改（一招两用）；dc1.update(dc2) 批量并入另一个字典，键在则改、不在则加；dc.setdefault(key, value) 只加不改，键已存在时返回现有值，不存在时添加并返回新值（默认 None）。请：1）用旅馆前台和只营业新房间的类比复述三个方法；2）出一道模拟购物流程的练习（用 dc[key]=value 连续添加和修改商品数量）；3）出 5 道「给出代码写出输出」的题。">
+      我刚学了 Python 字典的添加与修改：dc[key]=value 键不存在时添加、存在时修改（一招两用）；dc1.update(dc2) 批量并入另一个字典，键在则改、不在则加；dc.setdefault(key, value) 只加不改，键已存在时返回现有值，不存在时添加并返回新值（默认 None）。请：1）用旅馆前台和只营业新房间的类比复述三个方法；2）出一道模拟购物流程的练习（用 dc[key]=value 连续添加和修改商品数量）；3）出 5 道「给出代码写出输出」的题。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：跑完 DC7 的四段代码（5 分钟）</span>
+    <ol class="steps">
+      <li>创建 <code>DC7 = {'a': 1, 'b': 2, 'c': 3}</code>，执行 <code>DC7['d'] = 4</code> 后 print——看到 'd' 被添加。</li>
+      <li>执行 <code>DC7.update({'e': 5, 'f': 6})</code> 后 print——两个新键值对批量加入。</li>
+      <li>执行 <code>print(DC7.setdefault('g'), DC7)</code>——返回 None，字典里多了 'g': None。</li>
+      <li>执行 <code>print(DC7.setdefault('a', 7), DC7)</code>——返回 1，字典原样，体会「只加不改」。</li>
+      <li>连做本章作业第 4 题：小明购物流程就是连续用 <code>dc[key]=value</code> 添加新商品、修改已有商品的数量。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p><code>dc[key]=value</code> 一招两用（不存在=添加，存在=修改）；<code>update()</code> 批量合并（键在则改、不在则加）；<code>setdefault()</code> 只加不改（已存在返回现有值）。三者都直接改变原字典。下一节：怎么把键值对从字典里删掉。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="4.16.html"><span class="nav-label">← 上一节</span><span class="nav-title">4.16 字典访问与三视图</span></a>
+        <a class="next" href="4.18.html"><span class="nav-label">下一节 →</span><span class="nav-title">4.18 字典删除</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

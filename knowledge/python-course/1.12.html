@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.12 PEP 与 PEP 8 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第一章 导论与 Python 环境 · 第 12 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+/* —— 本页专属：改造前后展示区 —— */
+.refactor{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+          box-shadow:var(--shadow);padding:22px}
+.refactor .tip{font-size:13px;color:var(--ink2);margin-top:12px}
+.diffgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+@media(max-width:680px){.diffgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch01.html">第一章 导论与 Python 环境</a><span class="sep">/</span>
+          <span class="current">1.12</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">12</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第一章 · 导论与 Python 环境</span>
+            <h1>PEP 与 PEP 8</h1>
+            <p class="hero-summary">第 12 / 18 节 · 约 7 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>计算机系统架构</li>
+      <li>操作系统及其分类</li>
+      <li>编程语言：人机沟通的桥梁</li>
+      <li>编程语言的三个层次</li>
+      <li>编译型 vs 解释型语言</li>
+      <li>TIOBE 排行与语言流行趋势</li>
+      <li>五大语言的诞生与用途</li>
+      <li>AI 时代的编程学习理念</li>
+      <li>与 AI 高效协作的三技巧</li>
+      <li>学习路径的三阶段</li>
+      <li>Python 的诞生与发展</li>
+      <li class="cur">PEP 与 PEP 8</li>
+      <li>The Zen of Python</li>
+      <li>Python 2 vs Python 3</li>
+      <li>Python 的六大特点</li>
+      <li>Python 的应用领域</li>
+      <li>Python 环境搭建</li>
+      <li>Anaconda 与 AI IDE</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>代码能跑就行了，为什么还要管「写法好不好看」？</h2>
+    <p>很多零基础同学的第一反应是：程序只要不出错、能出结果不就完了吗？但真实的世界里，代码<b>首先是写给人看的，其次才是给机器执行的</b>。这一节要讲的 PEP 与 PEP 8，就是 Python 社区管理这门语言、统一写法风格的两大机制：</p>
+    <ul class="points">
+      <li>理解 <b>PEP 是什么</b>——Python 社区讨论新功能、制定标准、管理语言演进方向的「提案机制」（考试常考其全称与含义）。</li>
+      <li>认识 <b>PEP 8</b>——最著名的 Python 代码风格指南，从今天起养成规范的书写习惯，交作业、写项目都受益。</li>
+      <li>当你和 AI 协作、或阅读网上代码时，能一眼判断哪些写法是「规范」的、哪些是「能跑但难看」的。</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">PEP 8 像「书法字帖」</div>
+      <p>同样是写一个「永」字，有人写得龙飞凤舞、只有自己认识；有人写得横平竖直、人人称赞。<b>代码能跑，只是「及格」；写得规范、人人看得懂，才是「好字」。</b>PEP 8 就是 Python 界统一发放的字帖——它不改变字的意思（程序功能），只规定笔画怎么摆（代码怎么写）。</p>
+      <p>而 <b>PEP</b> 本身，则像学校的「提案制度」：任何人都可以向教务处（Python 社区）提交建议书，讨论要不要建新教学楼（新功能）、修订校规（技术标准）。PEP 8 只是众多提案中最出名的一份。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>PEP：社区管理语言演进的「提案机制」</h2>
+    <ul class="points">
+      <li><b>PEP（Python Enhancement Proposals）</b>即「Python 增强提案」，是 Python 社区的<b>核心规范文档</b>，用于<b>讨论新功能、制定技术标准、管理语言演变方向</b>。</li>
+      <li><b>人人可提案</b>：PEP 是开放的机制——任何开发者都可以撰写提案，经社区讨论、评审后被采纳或否决。Python 的重要变化（如新语法、新标准）几乎都先经过 PEP。</li>
+      <li><b>PEP 8 是最著名的一份</b>：它是 <b>Python 代码风格指南</b>，规定了代码的<b>排版、命名规范</b>等细节，旨在<b>提高代码的可读性和一致性</b>，是每位 Python 开发者的必修课。</li>
+      <li>两个数字别记混：<b>PEP 8</b> 管风格（怎么写好看），<b>PEP 0</b> 是所有提案的索引目录（想查某份提案从这里找）。</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">🎬 交互示例</span>
+    <h2>亲眼看 PEP 8 的「改造魔法」</h2>
+    <p class="muted">下面是同一段功能完全相同的代码，点击按钮切换「改造前 / 改造后」，对比两边的可读性：</p>
+    <div class="refactor">
+      <div class="switch">
+        <button class="on" data-pane="pane-before">🔧 改造前（难看，还有写法直接报错）</button>
+        <button data-pane="pane-after">✨ 改造后（符合 PEP 8）</button>
+      </div>
+      <div class="pane on" id="pane-before">
+        <pre class="codeblock"><span class="bad">print( x =1 )
+print( "他的名字是" ,  StudentName )
+x=1;y=2;Z=x+y
+print ( Z  )
+def CalSum(a,b ):
+    Return=a+b
+    return  Return</span></pre>
+        <p class="tip">❌ 问题：<code>print( x =1 )</code> 把赋值写法塞进了 print 的参数位，运行会直接报 <code>TypeError: print() got an unexpected keyword argument 'x'</code>；变量名 <code>StudentName</code>、<code>CalSum</code> 用了大写开头；一行塞多条语句；算出来的结果应该用 <code>return</code> 交出去，而不是塞进一个改名的大写变量。对照下方修改后的代码就能看出差别。</p>
+      </div>
+      <div class="pane" id="pane-after">
+        <pre class="codeblock"><span class="good">x = 1
+print("他的名字是", student_name)
+y = 2
+z = x + y
+print(z)
+
+def cal_sum(a, b):
+    total = a + b
+    return total</span></pre>
+        <p class="tip">✅ 改进：运算符两侧各留一个空格（<code>x = 1</code>）；变量与函数用 <code>snake_case</code> 小写蛇形命名（<code>student_name</code>、<code>cal_sum</code>）；一行一条语句；逗号后加空格；函数体内统一缩进整齐（PEP 8 约定用 4 个空格）。</p>
+      </div>
+      <p class="tip">💡 结论：改造前那份不但难看，还有写法直接跑不通；改造后那份才真正跑得起来、也符合 PEP 8——同事接手不头疼、AI 读了不误解、三个月后的自己也能看懂——这就是 PEP 8 追求的<b>可读性和一致性</b>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="0"
+         data-ok="✅ 答对了！PEP（Python Enhancement Proposals）即 Python 增强提案，是社区讨论新功能、制定标准、管理语言演进方向的核心机制。"
+         data-no="❌ 不对哦。它既不是模块也不是错误系统——PEP 全称 Python Enhancement Proposals（Python 增强提案），往上翻核心概念再确认。">
+      <p style="font-weight:700;margin-bottom:12px">PEP 指的是什么？</p>
+      <button class="opt" onclick="quizPick(this)">A. Python 增强提案，社区讨论新功能、制定标准、管理语言演进方向的规范文档</button>
+      <button class="opt" onclick="quizPick(this)">B. Python 的一个内置模块，负责自动美化代码</button>
+      <button class="opt" onclick="quizPick(this)">C. Python 官方的错误提示系统</button>
+      <button class="opt" onclick="quizPick(this)">D. 一种必须付费购买的代码审查服务</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="命名" data-ok="✅ 正确！PEP 8 规定了代码的排版和命名规范（如 snake_case 小写蛇形命名），目的是提高可读性和一致性。" data-no="❌ 再想想：PEP 8 除了管排版，还规定了变量、函数怎么取名字——这类规则叫什么规范？（提示：两个字）">
+      <p>PEP 8 是最著名的 Python 代码风格指南，规定了代码的排版和 <b>＿＿规范</b>，目的是提高代码的可读性和一致性。请填写这两个字：</p>
+      <div class="fill-row">
+        <input class="blank" id="blank1" placeholder="填两个字">
+        <button class="btn btn-main" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">「PEP 8 = Python 语法规则」？别混淆</div>
+      <p>最大的误区是把 PEP 8 当成「不遵守就报错」的<b>语法规则</b>。实际上：<b>PEP 8 是风格指南，违反它程序照样能跑</b>，只是难读、不专业。而<b>语法错误</b>（如漏了冒号、括号不配对）是程序直接跑不起来的硬性错误——两者性质完全不同。</p>
+      <p>第二个误区：以为 PEP 8 是唯一一份 PEP。其实 PEP 是一个庞大的提案体系，<b>PEP 8 只是其中最著名的一份</b>。另外，养成好习惯要趁早：从第一行代码起就按 PEP 8 写，比以后回头「戒掉坏习惯」容易得多。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 PEP 和 PEP 8：PEP（Python Enhancement Proposals）是 Python 社区讨论新功能、制定技术标准、管理语言演变方向的提案机制；PEP 8 是最著名的代码风格指南，规定排版和命名规范。请：1）给我总结 5 条最适合新手入门的 PEP 8 规则并各配正反例；2）解释 PEP 提案从提出到被采纳的大致流程；3）写 3 行故意违反 PEP 8 的代码让我来「挑毛病」，我答完再公布正确改法。">
+      我刚学了 PEP 和 PEP 8：PEP（Python Enhancement Proposals）是 Python 社区讨论新功能、制定技术标准、管理语言演变方向的提案机制；PEP 8 是最著名的代码风格指南，规定排版和命名规范。请：1）给我总结 5 条最适合新手入门的 PEP 8 规则并各配正反例；2）解释 PEP 提案从提出到被采纳的大致流程；3）写 3 行故意违反 PEP 8 的代码让我来「挑毛病」，我答完再公布正确改法。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：见一见「活的标准」（4 分钟）</span>
+    <ol class="steps">
+      <li>按 <code>Win + R</code> 输入 <code>cmd</code> 打开命令行，输入 <code>python -m this</code> 回车。</li>
+      <li>你会看到一段有趣的英文输出——这是 Python 的官方「设计哲学」彩蛋，它的存在本身就是通过一份 PEP 定下来的。先混个眼熟，<b>下一节我们逐句精读它</b>。</li>
+      <li>再搜索「PEP 8 官方文档」（python.org 网站上的 pep-0008），打开后<b>不用逐条读</b>，扫一眼左侧或顶部的目录：你会看到 Code lay-out（排版）、Naming Conventions（命名规范）等标题——正是本节讲的内容。</li>
+      <li>顺手检查一下你之前写过的代码：等号两边有空格吗？变量名是小写蛇形吗？发现「改造前」风格的，试着动手改一改。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p><b>PEP（Python Enhancement Proposals）是 Python 增强提案</b>，社区靠它讨论新功能、制定技术标准、管理语言演变方向，任何人都可以提案；<b>PEP 8 是其中最著名的代码风格指南</b>，规定排版与命名规范，追求可读性与一致性。记住：PEP 8 违反了不报错，但写得规范是每个 Pythoner 的必修课。下一节，我们去读 Python 的「价值观说明书」——The Zen of Python。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="1.11.html"><span class="nav-label">← 上一节</span><span class="nav-title">1.11 Python 的诞生与发展</span></a>
+        <a class="next" href="1.13.html"><span class="nav-label">下一节 →</span><span class="nav-title">1.13 The Zen of Python</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* —— 本页无需额外 JS：.switch 切换已由 course.js 自动绑定 —— */
+</script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.17 Python 环境搭建 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第一章 导论与 Python 环境 · 第 17 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+/* —— 本页专属：终端窗口样式 —— */
+.term{background:#1f2430;border-radius:12px;overflow:hidden;margin:12px 0;box-shadow:var(--shadow)}
+.term-bar{background:#2a3040;padding:8px 14px;display:flex;align-items:center;gap:6px}
+.term-bar .tdot{width:11px;height:11px;border-radius:50%}
+.term-bar .tname{margin-left:8px;font-size:12px;color:#8b93a7;font-family:Consolas,monospace}
+.term pre{margin:0;padding:14px 16px;font-family:Consolas,Menlo,monospace;font-size:13.5px;line-height:1.9;
+         color:#dbe2f0;overflow-x:auto}
+.term .pmt{color:#7ce3b0}
+.term .out{color:#8b93a7}
+.stepnum{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;
+         background:var(--accent);color:#fff;font-size:13px;font-weight:700;margin-right:8px;flex:none}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch01.html">第一章 导论与 Python 环境</a><span class="sep">/</span>
+          <span class="current">1.17</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">17</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第一章 · 导论与 Python 环境</span>
+            <h1>Python 环境搭建</h1>
+            <p class="hero-summary">第 17 / 18 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>计算机系统架构</li>
+      <li>操作系统及其分类</li>
+      <li>编程语言：人机沟通的桥梁</li>
+      <li>编程语言的三个层次</li>
+      <li>编译型 vs 解释型语言</li>
+      <li>TIOBE 排行与语言流行趋势</li>
+      <li>五大语言的诞生与用途</li>
+      <li>AI 时代的编程学习理念</li>
+      <li>与 AI 高效协作的三技巧</li>
+      <li>学习路径的三阶段</li>
+      <li>Python 的诞生与发展</li>
+      <li>PEP 与 PEP 8</li>
+      <li>The Zen of Python</li>
+      <li>Python 2 vs Python 3</li>
+      <li>Python 的六大特点</li>
+      <li>Python 的应用领域</li>
+      <li class="cur">Python 环境搭建</li>
+      <li>Anaconda 与 AI IDE</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>说了这么多，先把 Python 装进你的电脑</h2>
+    <p>概念学了一圈，是时候真刀真枪动手了——<b>本章作业第 6 题就要求你完成环境搭建并输出 Hello World</b>，这一节是必做项。环境搭建只有一件事：把 Python 本体（解释器）装进电脑。装好之后，你还会认识三种「和 Python 对话」的方式。这节过后：</p>
+    <ul class="points">
+      <li>你的电脑将具备<b>运行任何 Python 代码</b>的能力；</li>
+      <li>你会知道命令行交互、IDLE、运行 .py 文件<b>三种方式各适合什么场景</b>；</li>
+      <li>你将亲手避开 90% 新手都会踩的 <b>Add to PATH 大坑</b>。</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">先装「发动机」，驾驶舱随你挑</div>
+      <p>Python 本体（官方解释器）就像汽车的<b>发动机</b>——没有它，代码什么也跑不起来。而 IDLE、命令行、后面要讲的 Anaconda 和各种 AI IDE，都是不同的<b>驾驶舱</b>：有的简朴耐用，有的豪华智能。学习顺序很重要：<b>先把发动机装好（本节），驾驶舱以后随你的需求挑（下一节）</b>。别一上来就折腾最豪华的座舱，结果发动机还没点火。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>装好之后，三种方式和 Python 对话</h2>
+    <ul class="points">
+      <li><b>① 命令行交互模式（Command Line）</b>：在 cmd 里输入 <code>python</code>，出现 <code>&gt;&gt;&gt;</code> 提示符，<b>输一行、跑一行、马上看结果</b>——适合试验小代码、验证想法。</li>
+      <li><b>② IDLE 集成开发环境</b>：安装 Python 时<b>自带</b>的简易 IDE（ Integrated Development Environment，集成开发环境），有编辑窗口能保存代码——适合初学者写小脚本。</li>
+      <li><b>③ 脚本文件方式</b>：把代码存成 <code>.py</code> 文件，在命令行用 <code>python 文件名.py</code> 一次性运行——适合编写正式、可反复使用的程序。</li>
+      <li>一句话分工：<b>试验用交互模式，写小脚本用 IDLE，正式程序存成 .py 跑</b>。</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">🔧 安装步骤（跟着点就行，Windows / Mac 通用）</span>
+    <h2>四步装好 Python 本体</h2>
+    <ol class="steps">
+      <li><span class="stepnum">1</span>访问官网下载页：<code>python.org</code> → 顶部菜单 <b>Downloads</b>，网站会自动识别你的系统并给出最新的黄色下载按钮（目前是 Python 3.15.x 系列）。<b>只认 python.org，别从第三方下载站下</b>。</li>
+      <li><span class="stepnum">2</span>双击安装包。Windows 用户<b>务必先勾选安装窗口底部的「Add python.exe to PATH」</b>，再点 Install Now——这是全页最重要的一步！</li>
+      <li><span class="stepnum">3</span>等待进度条走完，出现「Setup was successful」即安装成功，可以顺手点 Close。</li>
+      <li><span class="stepnum">4</span>验证：按 <code>Win + R</code> 输入 <code>cmd</code> 回车，先输入 <code>python --version</code> 看到版本号，再输入 <code>python</code> 进入交互模式——看到 <code>&gt;&gt;&gt;</code> 就成功了。</li>
+    </ol>
+    <div class="term">
+      <div class="term-bar"><span class="tdot" style="background:#ff5f57"></span><span class="tdot" style="background:#febc2e"></span><span class="tdot" style="background:#28c840"></span><span class="tname">cmd — 命令行交互模式</span></div>
+      <pre><span class="pmt">C:\Users\you&gt;</span> python --version
+<span class="out">Python 3.15.0</span>
+<span class="pmt">C:\Users\you&gt;</span> python
+<span class="out">Python 3.15.0 (tags/v3.15.0) on win32
+Type "help", "copyright", "credits" or "license"
+for more information.</span>
+<span class="pmt">&gt;&gt;&gt;</span> print("Hello World")
+<span class="out">Hello World</span>
+<span class="pmt">&gt;&gt;&gt;</span> 1 + 2
+<span class="out">3</span>
+<span class="pmt">&gt;&gt;&gt;</span> exit()
+<span class="out">（退出交互模式，回到普通命令行）</span></pre>
+    </div>
+    <p class="muted">💡 看懂这个会话：绿色的 <code>&gt;&gt;&gt;</code> 是 Python 在说「我准备好了，请下指令」；你输一行，它答一行，这就是<b>交互模式</b>。Mac 用户在终端（Terminal）里同样适用，Mac 一般预装了 python3，命令写成 <code>python3</code> 即可。</p>
+  </section>
+      <section>
+    <span class="tag">🖥️ 三种使用方式，点按钮切换体验</span>
+    <h2>哪种方式适合现在的你？</h2>
+    <div>
+      <div class="switch">
+        <button class="on" data-pane="pane-cli">命令行交互</button>
+        <button data-pane="pane-idle">IDLE</button>
+        <button data-pane="pane-file">运行 .py 文件</button>
+      </div>
+      <div class="pane on" id="pane-cli">
+        <p><b>适合：试验、验证、做作业里的单行小练习。</b>不用建文件，打开 cmd 输 <code>python</code> 就开工，输一行跑一行，临时算个数、试试函数最方便。缺点是<b>关掉窗口代码就没了</b>，不能保存。</p>
+        <div class="term">
+          <div class="term-bar"><span class="tdot" style="background:#ff5f57"></span><span class="tdot" style="background:#febc2e"></span><span class="tdot" style="background:#28c840"></span><span class="tname">交互模式 — 适合试验</span></div>
+          <pre><span class="pmt">&gt;&gt;&gt;</span> 0.1 + 0.2
+<span class="out">0.30000000000000004</span>
+<span class="pmt">&gt;&gt;&gt;</span> print("人生苦短，我用 Python")
+<span class="out">人生苦短，我用 Python</span></pre>
+        </div>
+      </div>
+      <div class="pane" id="pane-idle">
+        <p><b>适合：初学者写并保存小脚本。</b>IDLE 是安装 Python 时<b>自带</b>的简易 IDE，不用额外下载。开始菜单搜「IDLE」打开的是交互 Shell；点菜单 <b>File → New File</b> 会弹出一个编辑窗口，写好几行代码后保存为 .py，按 <b>F5</b> 运行。</p>
+        <div class="term">
+          <div class="term-bar"><span class="tdot" style="background:#ff5f57"></span><span class="tdot" style="background:#febc2e"></span><span class="tdot" style="background:#28c840"></span><span class="tname">IDLE — 新文件窗口</span></div>
+          <pre><span class="out"># 第一份小脚本 first.py</span>
+name = input("你叫什么名字？")
+print("你好，" + name + "！欢迎来到 Python 世界")
+
+<span class="out"># 按 F5 运行，结果出现在 IDLE Shell 中</span></pre>
+        </div>
+      </div>
+      <div class="pane" id="pane-file">
+        <p><b>适合：正式、可反复运行的程序。</b>用任意编辑器把代码存成 <code>.py</code> 文件，在命令行进入该文件所在目录，输入 <code>python 文件名.py</code> 一次执行全部代码。以后写爬虫、做数据分析，都是这种方式。</p>
+        <div class="term">
+          <div class="term-bar"><span class="tdot" style="background:#ff5f57"></span><span class="tdot" style="background:#febc2e"></span><span class="tdot" style="background:#28c840"></span><span class="tname">cmd — 脚本文件方式</span></div>
+          <pre><span class="out"># 文件 hello.py 的内容：</span>
+<span class="out"># print("我的第一个 Python 程序！")</span>
+
+<span class="pmt">C:\Users\you\Desktop&gt;</span> python hello.py
+<span class="out">我的第一个 Python 程序！</span></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！勾选 Add python.exe to PATH 会把 Python 写入系统环境变量，cmd 才认识 python 命令——这是 Windows 安装最关键的一步。"
+         data-no="❌ 不对哦。Install Now 和 Customize 只是安装方式，勾不勾都不影响命令可用性。忘勾 Add python.exe to PATH，cmd 才会提示「python 不是内部或外部命令」。">
+      <p style="font-weight:700;margin-bottom:12px">在 Windows 上安装 Python 时，忘记勾选哪个选项会导致 cmd 里提示「python 不是内部或外部命令」？</p>
+      <button class="opt" onclick="quizPick(this)">A. Install Now</button>
+      <button class="opt" onclick="quizPick(this)">B. Add python.exe to PATH</button>
+      <button class="opt" onclick="quizPick(this)">C. Customize installation</button>
+      <button class="opt" onclick="quizPick(this)">D. Use admin privileges when installing py.exe</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="python" data-ok="✅ 正确！在命令行输入 python 回车，看到 >>> 提示符就说明进入交互模式了。" data-no="❌ 再想想：要进入 Python 的交互模式，输入的就是这门语言本身的名字（小写）。">
+      <p>在命令行输入 <b>＿＿</b> 即可进入 Python 交互模式（提示符是 <code>&gt;&gt;&gt;</code>）。请在框里填写：</p>
+      <div class="fill-row">
+        <input class="blank" id="blank1" placeholder="输入一个小写单词">
+        <button class="btn btn-main" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">两个新手必踩的坑，提前给你拆了</div>
+      <p><b>坑一：忘勾 Add python.exe to PATH。</b>装完后在 cmd 输入 <code>python</code>，系统回复「'python' 不是内部或外部命令」。原因是系统在 PATH 环境变量里找不到 Python 的位置。<b>解决思路</b>：最省事的办法是卸载后重装、这次记得勾上；不想重装，也可以手动把 Python 的安装路径（如 <code>C:\Users\you\AppData\Local\Programs\Python\Python315</code>）添加到系统环境变量 PATH 中。</p>
+      <p><b>坑二：下载时点到第三方捆绑安装包。</b>某些下载站的「高速下载」「国内镜像下载」按钮会附带全家桶软件。认准 <b>python.org 官网</b>的黄色 Download 按钮，文件名形如 <code>python-3.15.0-amd64.exe</code>，别的不点。</p>
+      <p><b>验证口诀</b>：装完必做 <code>python --version</code>——有版本号输出才算真的装好，别自我感觉良好。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手（按你的系统改一改），遇到问题随时问它：</p>
+    <div class="prompt-box" data-text="我的电脑是 Windows 11。我刚学了 Python 环境搭建，正在动手安装。请：1）给我一份从 python.org 下载安装的逐步清单，重点提醒 Add python.exe to PATH 这一步；2）用大白话解释 PATH 环境变量到底是什么、有什么用；3）如果我在 cmd 输入 python 提示「不是内部或外部命令」，请按顺序给我排查步骤。">
+      我的电脑是 Windows 11。我刚学了 Python 环境搭建，正在动手安装。请：1）给我一份从 python.org 下载安装的逐步清单，重点提醒 Add python.exe to PATH 这一步；2）用大白话解释 PATH 环境变量到底是什么、有什么用；3）如果我在 cmd 输入 python 提示「不是内部或外部命令」，请按顺序给我排查步骤。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：完成作业第 6 题（本章必做，10 分钟）</span>
+    <ol class="steps">
+      <li>按上面的「四步」在电脑上安装好 Python，注意勾选 <b>Add python.exe to PATH</b>（Mac 用户直接官网下载或用自带的 python3）。</li>
+      <li>验证：打开 cmd，输入 <code>python --version</code>，确认输出版本号。</li>
+      <li>输入 <code>python</code> 进入交互模式，看到 <code>&gt;&gt;&gt;</code> 提示符。</li>
+      <li>输入 <code>print("Hello World")</code> 回车，看到输出 Hello World——恭喜，你的第一个程序跑通了！按作业要求截图保存并提交。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>环境搭建 = 从 <b>python.org</b> 下载官方解释器 + Windows 记得勾 <b>Add python.exe to PATH</b> + 用 <code>python --version</code> 验证。装好「发动机」后，你有三种驾驶方式：<b>命令行交互模式（输一行跑一行，适合试验）、IDLE（自带的简易 IDE，适合小脚本）、把代码存成 .py 文件用 python 文件名.py 运行（适合正式程序）</b>。下一节看看更豪华的座舱：Anaconda 数据分析全家桶和 AI IDE。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="1.16.html"><span class="nav-label">← 上一节</span><span class="nav-title">1.16 Python 的应用领域</span></a>
+        <a class="next" href="1.18.html"><span class="nav-label">下一节 →</span><span class="nav-title">1.18 Anaconda 与 AI IDE</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

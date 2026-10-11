@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.02 操作系统及其分类 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第一章 导论与 Python 环境 · 第 2 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+/* —— 本页专属：操作系统家族卡片 —— */
+.pill{display:inline-block;background:var(--accent-soft);color:var(--accent);
+      border-radius:999px;padding:3px 12px;font-size:13px;font-weight:600;margin:3px 4px 0 0}
+.pill.cn{background:var(--err-soft);color:#c2452d}
+.os-note{font-size:13px;color:var(--ink2);margin-top:8px}
+button.btn{font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;
+      padding:10px 18px;cursor:pointer;background:var(--accent);color:#fff}
+button.btn:active{transform:scale(.97)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch01.html">第一章 导论与 Python 环境</a><span class="sep">/</span>
+          <span class="current">1.02</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">02</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第一章 · 导论与 Python 环境</span>
+            <h1>操作系统及其分类</h1>
+            <p class="hero-summary">第 2 / 18 节 · 约 6 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>计算机系统架构</li>
+      <li class="cur">操作系统及其分类</li>
+      <li>编程语言：人机沟通的桥梁</li>
+      <li>编程语言的三个层次</li>
+      <li>编译型 vs 解释型语言</li>
+      <li>TIOBE 排行与语言流行趋势</li>
+      <li>五大语言的诞生与用途</li>
+      <li>AI 时代的编程学习理念</li>
+      <li>与 AI 高效协作的三技巧</li>
+      <li>学习路径的三阶段</li>
+      <li>Python 的诞生与发展</li>
+      <li>PEP 与 PEP 8</li>
+      <li>The Zen of Python</li>
+      <li>Python 2 vs Python 3</li>
+      <li>Python 的六大特点</li>
+      <li>Python 的应用领域</li>
+      <li>Python 环境搭建</li>
+      <li>Anaconda 与 AI IDE</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>装 Python 之前，先认识它的「房东」</h2>
+    <p>第一章作业里有一道题：写出你所用操作系统的名字。听起来简单，但很多同学分不清「我的电脑是 Windows 11 还是 Windows 10」「鸿蒙和安卓到底什么关系」。更重要的是：<b>Python 必须安装在某个操作系统上才能运行</b>，后面「环境搭建」一步选安装包，第一件事就是问「你是什么系统」。学完这节，你要能：</p>
+    <ul class="points">
+      <li>说清操作系统<b>是干什么的</b>（一句话：管理硬件的大总管）。</li>
+      <li>按<b>服务器、移动设备、个人电脑</b>三大场景，报出各自的常用操作系统。</li>
+      <li>知道我国自主研发的<b>鸿蒙 HarmonyOS</b> 属于哪一类。</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">操作系统 = 你家的大总管 + 翻译官</div>
+      <p>想象你雇了一位<b>大总管</b>：你说「我要听歌」，你根本不用关心细节——总管自己去安排<b>CPU</b> 解码音频、腾出<b>内存</b>缓存数据、调用<b>声卡</b>发声，最后你只管享受音乐。CPU、内存、文件、外设这些「家当」，全由总管统一管理、按需分配，这就是操作系统。</p>
+      <p>同时它还是一位<b>翻译官</b>：你点一下鼠标、敲一个键，这些「人话」要先被它翻译成硬件听得懂的电信号指令，硬件干完活再把结果翻译回来呈现给你。<b>没有总管，你和硬件根本没法对话。</b></p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>操作系统是什么，分哪些类</h2>
+    <ul class="points">
+      <li><b>定义</b>：操作系统（Operating System，OS）是<b>最基本的系统软件</b>，直接管理计算机的硬件与软件资源——CPU 调度、内存分配、文件管理、外设控制，全归它管。</li>
+      <li><b>地位</b>：它是所有应用软件运行的地基——Python、微信、浏览器都得「住」在操作系统之上；上一节的金字塔里，它就是「系统软件」这一层的主力。</li>
+      <li><b>分类（按使用场景）</b>：不同场景的「口味」不同，于是形成了三大操作系统家族。点击下面的卡片看看各家阵容 👇</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">🖱️ 交互示例</span>
+    <h2>点卡片，看三大场景的操作系统家族</h2>
+    <div class="grid g3">
+      <div class="icard" data-toggle="1">
+        <h4><span class="dot" style="background:#1a9e6c"></span>🖥️ 服务器领域</h4>
+        <div class="desc">机房里 24 小时待命的「幕后劳力」</div>
+        <div class="more">
+          <span class="pill">Unix</span><span class="pill">Linux</span><span class="pill">Windows Server</span>
+          <div class="os-note">三巨头各有地盘：Unix 资历最老，Linux 免费开源、占有率最高，Windows Server 常用于企业内部环境。</div>
+        </div>
+        <div class="hint">👆 点击揭示家族成员</div>
+      </div>
+      <div class="icard" data-toggle="1">
+        <h4><span class="dot" style="background:#4f6ef7"></span>📱 移动设备</h4>
+        <div class="desc">手机、平板里的操作系统</div>
+        <div class="more">
+          <span class="pill">iOS</span><span class="pill">Android</span><span class="pill cn">鸿蒙 HarmonyOS</span>
+          <div class="os-note">iPhone 专属 iOS，多数手机用 Android（安卓）；<b>鸿蒙 HarmonyOS 是我国自主研发的操作系统</b>，值得记住。</div>
+        </div>
+        <div class="hint">👆 点击揭示家族成员</div>
+      </div>
+      <div class="icard" data-toggle="1">
+        <h4><span class="dot" style="background:#d97706"></span>💻 个人电脑</h4>
+        <div class="desc">你每天写作业用的那台</div>
+        <div class="more">
+          <span class="pill">Windows</span><span class="pill">macOS</span>
+          <div class="os-note">两大主流：Windows 装在各品牌 PC 上、装机量最大；macOS 只装在苹果 Mac 电脑上。你装 Python 前第一步就是确认自己是哪一派。</div>
+        </div>
+        <div class="hint">👆 点击揭示家族成员</div>
+      </div>
+    </div>
+    <p class="muted" style="margin-top:10px">💡 一句话记：<b>服务器看 Unix / Linux / Windows Server，手机看 iOS / Android / 鸿蒙，电脑看 Windows / macOS。</b></p>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！iPhone 使用的就是 iOS——它和 Mac 电脑上的 macOS 出自同一家公司，但分别面向移动设备和电脑。"
+         data-no="❌ 不对哦。iPhone 用的是 iOS；Android 主要用于各品牌的安卓手机，macOS 装在苹果电脑上，Windows 则多见于普通 PC。">
+      <p style="font-weight:700;margin-bottom:12px">iPhone 使用的操作系统是？</p>
+      <button class="opt" onclick="quizPick(this)">A. Android</button>
+      <button class="opt" onclick="quizPick(this)">B. iOS</button>
+      <button class="opt" onclick="quizPick(this)">C. macOS</button>
+      <button class="opt" onclick="quizPick(this)">D. Windows</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="Linux" data-ok="✅ 正确！服务器领域三大件：Unix、Linux、Windows Server——其中 Linux 免费开源，如今绝大多数网站服务器都跑在它上面。" data-no="❌ 再想想：那个免费开源、在服务器市场占有率最高的系统，和 Unix 是「亲戚」，名字以 L 开头。">
+      <p>服务器领域常用的操作系统有 Unix、<b>＿＿</b> 和 Windows Server。请在框里填出这个以 L 开头的系统名：</p>
+      <div class="fill-row">
+        <input class="blank" id="blank1" placeholder="填一个系统名">
+        <button class="btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">容易答错的三个细节</div>
+      <p><b>误区一：「macOS 和 iOS 是两个公司的」。</b>不对，它们都是苹果公司的产品，只是分别用在 Mac 电脑和 iPhone / iPad 上——设备不同、系统名不同。</p>
+      <p><b>误区二：「鸿蒙就是套壳安卓」。</b>鸿蒙 HarmonyOS 是我国自主研发的操作系统，有自己的内核与技术体系，早期为兼容生态可运行安卓应用，但「能装安卓 App」不等于「就是安卓」。</p>
+      <p><b>误区三：「手机不需要操作系统」。</b>手机恰恰是操作系统竞争最激烈的战场——你刷视频、扫码支付的背后，都是 iOS / Android / 鸿蒙在调度芯片和内存。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了「操作系统及其分类」：操作系统是管理计算机软硬件资源的最基本系统软件，像大总管加翻译官；按场景分为服务器（Unix、Linux、Windows Server）、移动设备（iOS、Android、鸿蒙 HarmonyOS）、个人电脑（Windows、macOS）三大类。请：1）用酒店经理的类比再讲一遍操作系统的职责；2）出 2 道单选题和 1 道填空题考我，等我作答后再公布答案；3）用 3 句话介绍鸿蒙 HarmonyOS 为什么重要。">
+      我刚学了「操作系统及其分类」：操作系统是管理计算机软硬件资源的最基本系统软件，像大总管加翻译官；按场景分为服务器（Unix、Linux、Windows Server）、移动设备（iOS、Android、鸿蒙 HarmonyOS）、个人电脑（Windows、macOS）三大类。请：1）用酒店经理的类比再讲一遍操作系统的职责；2）出 2 道单选题和 1 道填空题考我，等我作答后再公布答案；3）用 3 句话介绍鸿蒙 HarmonyOS 为什么重要。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：报出你设备的「总管」名字（3 分钟）</span>
+    <ol class="steps">
+      <li>Windows 电脑：按 <code>Win + R</code>，输入 <code>winver</code> 回车，弹窗里能看到确切的 Windows 版本号；或在<b>设置 → 系统 → 关于</b>里查看。</li>
+      <li>Mac 电脑：点左上角  → <b>关于本机</b>，记下 macOS 版本。</li>
+      <li>手机：打开<b>设置 → 关于手机 / 关于本机</b>，查看系统名称与版本（iOS、Android 或 HarmonyOS 各看一处）。</li>
+      <li>对照本节卡片，把「服务器 / 移动设备 / 个人电脑」三大家族各自的成员完整背一遍——第一章作业常考。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>操作系统是<b>最基本的系统软件</b>：像大总管一样替你管理 CPU、内存、文件这些家当，又像翻译官把你的点击变成硬件动作。按使用场景分三大类：<b>服务器领域</b>常用 Unix、Linux、Windows Server；<b>移动设备</b>有 iOS、Android 和我国自主研发的鸿蒙 HarmonyOS；<b>个人电脑</b>主流是 Windows 和 macOS。下一节，我们看看人类是怎么和这台被总管管着的机器「说话」的。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="1.01.html"><span class="nav-label">← 上一节</span><span class="nav-title">1.01 计算机系统架构</span></a>
+        <a class="next" href="1.03.html"><span class="nav-label">下一节 →</span><span class="nav-title">1.03 编程语言：人机沟通的桥梁</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

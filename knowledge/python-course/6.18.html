@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6.18 递归实战：字符串逆序 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第六章 函数 · 第 18 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.vplay{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.vrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.vrow input{width:220px;font-family:Consolas,monospace;font-size:15px;padding:8px 10px;
+  border:1.5px solid var(--border);border-radius:8px;outline:none;color:var(--ink)}
+.vrow input:focus{border-color:var(--accent)}
+.vout{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14.5px;min-height:64px;white-space:pre-wrap;line-height:1.8;word-break:break-all}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch06.html">第六章 函数</a><span class="sep">/</span>
+          <span class="current">6.18</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">18</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第六章 · 函数</span>
+            <h1>递归实战：字符串逆序</h1>
+            <p class="hero-summary">第 18 / 18 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>函数的定义与优点</li>
+      <li>函数的分类</li>
+      <li>函数的定义</li>
+      <li>函数的调用</li>
+      <li>形参与实参</li>
+      <li>参数传递的两种方式</li>
+      <li>必须参数与可选参数</li>
+      <li>不定长参数</li>
+      <li>参数值的数据类型</li>
+      <li>变量作用域：局部与全局</li>
+      <li>global 修改全局变量</li>
+      <li>匿名函数 lambda</li>
+      <li>高阶函数：map 与 filter</li>
+      <li>高阶函数：sorted 与 key</li>
+      <li>递归函数：概念与两要素</li>
+      <li>递归执行逻辑：递推与回溯</li>
+      <li>递归实战：阶乘</li>
+      <li class="cur">递归实战：字符串逆序</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>本章最后一战：把「翻译法」用在字符串上</h2>
+    <p>阶乘翻的是数字公式，这一节翻<b>文字问题</b>：把字符串「123456789」变成「987654321」。思路和阶乘一模一样——<b>每次把第一个字符摘出来放到最后</b>，剩下的字符串继续递归，直到剩下的是空串。它比阶乘多了一个新工具：<b>切片</b> <code>s[1:]</code>（3.04 学过，「从下标 1 取到末尾」＝去掉第一个字符）。这是本章最后一节，学完你就能独立完成「公式 → 递归代码」的全套翻译。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">逆序像「发牌收牌」：每次抽最左一张放桌尾，抽完牌堆空了，桌上从右往左就是答案</div>
+      <p>把字符串想成一排扑克牌：每次从左边<b>抽出第一张</b>（s[0]），扣在桌子末端（<code>+ s[0]</code>），剩下的牌继续照此办理；直到<b>牌抽光了</b>（空串，基项）。桌上那叠牌从上往下看，正好是原串的逆序。和 6.16 的「食堂传餐盘」对上号：抽牌往下传是<b>递推</b>，每抽一张桌上多一层「待拼接的字符」；串从空往回长出来是<b>回溯</b>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>字符串逆序的两要素与翻译</h2>
+    <ul class="points">
+      <li><b>问题描述</b>：将字符串的<b>第一个字符放到最后</b>，再对剩下的字符串做同样的事，依次执行，直到剩下字符串为空停止</li>
+      <li><b>递归链条</b>：rev(s) = rev(s[1:]) + s[0]——「去掉头的串」逆序后，把「头」接到末尾；参数从 s 变成 s[1:]，每次少一个字符</li>
+      <li><b>基项</b>：len(s) == 0（空串）时直接返回 s——空串逆序还是空串，不必再拆</li>
+      <li><b>切片工具</b>：<code>s[1:]</code> 表示「下标 1 取到末尾」，即去掉第一个字符（衔接 3.04 字符串切片）；<code>s[0]</code> 是第一个字符</li>
+      <li><b>对照表</b>：基项「串空 → 返回空串」→ <code>if len(s) == 0: return s</code>；链条「去头逆序接尾」→ <code>else: return rev(s[1:]) + s[0]</code>——和阶乘的翻译法完全同构，只是「× n」换成了「+ s[0]」</li>
+    </ul>
+
+    <div class="vplay">
+      <p style="font-weight:700;margin-bottom:10px">🔬 逆序实验台：输入一个字符串，看它被递归翻转</p>
+      <div class="vrow">
+        <input id="inS" value="123456789" placeholder="随便输一串字符">
+        <button class="btn-main btn" onclick="doRev()">逆序！</button>
+      </div>
+      <div class="vout" id="vout">点「逆序！」看递推与回溯全过程</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：rev</h2>
+    <pre class="codeblock">def rev(s):
+    if len(s) == 0:
+        return s
+    else:
+        return rev(s[1:]) + s[0]
+
+print(rev("123456789"))</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">987654321</pre>
+    <ul class="points">
+      <li><code>if len(s) == 0: return s</code>：基项——空串直接返回，停止递归</li>
+      <li><code>else: return rev(s[1:]) + s[0]</code>：链条——先逆序「剩下的」，再把摘下的头接在末尾</li>
+      <li>注意顺序：<code>rev(s[1:]) + s[0]</code> 是「头放<b>最后</b>」；若写成 <code>s[0] + rev(s[1:])</code> 就成了原样返回——拼接方向决定成败</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>手算 rev("12345")：递推五层拆空，回溯五步长成</h2>
+    <pre class="codeblock"># 递推（层层拆解 ↓，每层摘走一个头）
+rev("12345") = rev("2345") + '1'
+rev("2345")  = rev("345")  + '2'
+rev("345")   = rev("45")   + '3'
+rev("45")    = rev("5")    + '4'
+rev("5")     = rev("")     + '5'
+rev("")      = ""           # 基项！串空停止
+
+# 回溯（步步返回 ↑，串从空长成答案）
+rev("5")  = ""  + '5' = "5"
+rev("45") = "5" + '4' = "54"
+rev("345")  = "54"  + '3' = "543"
+rev("2345") = "543" + '2' = "5432"
+rev("12345") = "5432" + '1' = "54321"</pre>
+    <ul class="points">
+      <li>递推阶段一个字符都没拼上，只是「摘头、留字、往下传」</li>
+      <li>回溯阶段从空串开始，<b>每次把之前摘下的字符接到串尾</b>——先摘的后接上，所以恰好逆序</li>
+      <li>和阶乘对照：链条「问题变小」、基项「小到不用再拆」、拼接/乘法都发生在返回路上——结构完全同构</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="0"
+         data-ok="✅ 答对了！递推到空串时触发基项直接返回，之后回溯：空串 + '9' = '9' → '98' → … → '987654321'。最先拼上去的是递推时最后摘下的 '9'。"
+         data-no="❌ 回想回溯的顺序：基项（空串）先返回，然后一层层往回走。递推时最后摘下的字符（'9'）最先被拼上——先摘的后接，所以是逆序。">
+      <p style="font-weight:700;margin-bottom:12px">执行 <code>rev("123456789")</code> 时，<b>回溯阶段第一个被拼接到结果串上的字符</b>是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 字符 '9'</button>
+      <button class="opt" onclick="quizPick(this)">B. 字符 '1'</button>
+      <button class="opt" onclick="quizPick(this)">C. 空串 ""</button>
+      <button class="opt" onclick="quizPick(this)">D. 整串 "123456789"</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="s[1:]s[0]len(s)==0回溯|s[1:] s[0] len(s)==0 回溯" data-ok="✅ 全对！链条 rev(s[1:]) + s[0]：去头的串逆序后接上头；基项是串空（len(s)==0）；拼接发生在回溯阶段。" data-no="❌ 提示：四个空分别是——链条里用什么切片表示「去掉第一个字符的串」？摘下来的头怎么写？基项的判断条件？拼接发生在递推还是回溯阶段？">
+      <p>字符串逆序的递归链条是 rev(<b>＿＿</b>) + <b>＿＿</b>；基项是 <b>＿＿</b> 时返回空串；所有拼接都发生在<b>＿＿</b>（返回）的路上。（四空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：s[1:] s[0] len(s)==0 回溯">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>拼接方向写反</b>：<code>s[0] + rev(s[1:])</code> 得到的是原字符串——「第一个字符放到<b>最后</b>」意味着头要接在<b>右边</b>：rev(s[1:]) + s[0]；</p>
+      <p>②<b>基项漏写</b>：没有 <code>if len(s) == 0</code>，切片 s[1:] 会一路切到空串还要继续切，最终报 <code>RecursionError</code>——空串就是「抽完牌的桌子」；</p>
+      <p>③<b>切片下标手误</b>：写成 <code>s[:1]</code> 拿到的是「只剩第一个字符」而不是「去掉第一个字符」——s[1:] 才是去头，切错方向递归永远拆不到头。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 递归实现字符串逆序。请：1）列出 rev(abcde) 递推 6 层、回溯 6 步的完整清单（含每层的拼接结果）；2）解释 rev(s[1:]) + s[0] 和 s[0] + rev(s[1:]) 的输出为什么一个逆序一个原样；3）出 3 道「给递归字符串代码求输出」的题考我（比如统计字符个数、判断回文的递归写法），等我答完再讲解。">
+      我刚学了 Python 递归实现字符串逆序。请：1）列出 rev(abcde) 递推 6 层、回溯 6 步的完整清单（含每层的拼接结果）；2）解释 rev(s[1:]) + s[0] 和 s[0] + rev(s[1:]) 的输出为什么一个逆序一个原样；3）出 3 道「给递归字符串代码求输出」的题考我（比如统计字符个数、判断回文的递归写法），等我答完再讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：变着花样玩 rev（5 分钟）</span>
+    <ol class="steps">
+      <li>把课堂代码抄进交互模式，试 <code>rev("Python")</code> 和 <code>rev("上海自来水来自海上")</code>——中文也能逆序，后者逆序后还是它自己（回文）。</li>
+      <li>改拼接方向：<code>return s[0] + rev(s[1:])</code>，确认输出等于原串，体会「头放最后」与「头放最前」的区别。</li>
+      <li>改造基项：让 rev 只逆序前 n 个字符——写 <code>def revn(s, n):</code>，链条 <code>revn(s[1:], n-1) + s[0]</code>，基项 <code>n == 0</code> 返回空串，试试 revn("abcdef", 3)。</li>
+      <li>用递归数一数：<code>def slen(s):</code> 空串返回 0，否则 <code>return 1 + slen(s[1:])</code>——同一个「去头」套路还能算长度。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了——顺便把整章串起来</div>
+      <p>字符串逆序 = 链条 <code>rev(s[1:]) + s[0]</code>（去头逆序接尾）+ 基项 <code>len(s) == 0</code>（空串停止），拼接发生在回溯路上。<b>本章两大板块</b>至此收官：① 函数基础（定义、调用、参数、作用域、global）——学会「造工具、用工具」；② 特殊函数（lambda、map/filter、sorted、递归）——学会「把函数当值传递、让函数调用自己」。函数是后面一切内容的基石，下一章我们进入<b>第七章《文件及目录操作》</b>，让程序真正读写硬盘上的数据。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="6.17.html"><span class="nav-label">← 上一节</span><span class="nav-title">6.17 递归实战：阶乘</span></a>
+        <a class="next" href="ch06.html"><span class="nav-label">下一节 →</span><span class="nav-title">已完成本章全部 18 节</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：逆序实验台（展示递推摘头与回溯拼接全过程） */
+function doRev(){
+  const s = document.getElementById('inS').value;
+  const out = document.getElementById('vout');
+  if (s.length === 0){ out.innerHTML = '<span style="color:var(--err)">输入为空——空串正好是基项，直接返回空串，递归一层都不会展开。</span>'; return; }
+  if (s.length > 9){ out.innerHTML = '<span style="color:var(--err)">太长了会刷爆日志，请输入 9 个字符以内。</span>'; return; }
+  const lines = ['print(rev("' + s + '"))', ''];
+  // 递推
+  let cur = s;
+  lines.push('—— 递推（层层拆解 ↓）——');
+  while (cur.length > 0){
+    const head = cur[0];
+    const rest = cur.slice(1);
+    if (rest.length === 0){
+      lines.push('rev("' + cur + '") = rev("") + ' + quote(head));
+    } else {
+      lines.push('rev("' + cur + '") = rev("' + rest + '") + ' + quote(head));
+    }
+    cur = rest;
+  }
+  lines.push('rev("") 命中【基项】→ return ""');
+  lines.push('');
+  // 回溯
+  lines.push('—— 回溯（步步返回 ↑）——');
+  let acc = '';
+  for (let i = s.length - 1; i >= 0; i--){
+    acc = acc + s[i];
+    const left = s.slice(i);
+    lines.push('rev("' + left + '") = ' + quote(acc.slice(0, -1)) + ' + ' + quote(s[i]) + ' = ' + quote(acc));
+  }
+  lines.push('—— 最终结果：' + acc + ' ——');
+  out.textContent = lines.join('\n');
+}
+function quote(t){ return '"' + t + '"'; }
+</script>
+</body>
+</html>

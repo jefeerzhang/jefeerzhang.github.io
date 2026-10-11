@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.07 大小写转换方法 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第三章 字符串与列表 · 第 7 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.demo-out{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;
+  padding:12px 16px;font-family:Consolas,Menlo,monospace;font-size:14px;line-height:2}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch03.html">第三章 字符串与列表</a><span class="sep">/</span>
+          <span class="current">3.07</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">07</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第三章 · 字符串与列表</span>
+            <h1>大小写转换方法</h1>
+            <p class="hero-summary">第 7 / 21 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>字符串基础与三种引号</li>
+      <li>转义字符</li>
+      <li>字符串索引</li>
+      <li>字符串切片</li>
+      <li>实战：身份证号提取信息</li>
+      <li>字符串运算与内置函数</li>
+      <li class="cur">大小写转换方法</li>
+      <li>计数、查找与替换</li>
+      <li>分割、联合与剔除</li>
+      <li>判断字符串类别</li>
+      <li>format 格式化输出</li>
+      <li>f-string 格式化输出</li>
+      <li>列表定义与特性</li>
+      <li>列表的创建</li>
+      <li>列表索引与切片</li>
+      <li>列表增加元素</li>
+      <li>列表删除元素</li>
+      <li>列表修改元素</li>
+      <li>列表运算与函数</li>
+      <li>列表常用方法</li>
+      <li>实战：成绩排序和统计</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>用户输入「pYtHoN」，怎么统一成小写？</h2>
+    <p>真实程序里经常要把输入<b>统一格式</b>：验证码不区分大小写、姓名首字母大写、标题格式规范化……这些全靠四个大小写转换方法：<code>lower()</code>、<code>upper()</code>、<code>title()</code>、<code>capitalize()</code>。它们也是本章作业第 1 题的直接考点，学会这一节，第 1 题基本就稳了。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">全班点名：立正、稍息、点名班长</div>
+      <p><code>lower()</code> 和 <code>upper()</code> 像「<b>全体稍息 / 全体立正</b>」——所有字母一起变，一个都不落下；<code>title()</code> 像「<b>每句话点名</b>」——每个单词的打头字母被点到，起立（大写），其余坐好（小写）；<code>capitalize()</code> 像「<b>只点班长</b>」——整串里只有第一个字母起立，后面所有人保持小写。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>四个转换方法，一个铁律</h2>
+    <ul class="points">
+      <li><code>str.lower()</code>：返回新字符串，<b>全部转小写</b></li>
+      <li><code>str.upper()</code>：返回新字符串，<b>全部转大写</b></li>
+      <li><code>str.title()</code>：返回新字符串，<b>所有单词首字母大写、其他小写</b></li>
+      <li><code>str.capitalize()</code>：返回新字符串，<b>第一个字母大写、其他小写</b></li>
+      <li>⭐ <b>铁律：这些方法都不改变原字符串</b>，而是返回一个新字符串——因为字符串是不可变的。想留下结果，必须用变量接住：<code>s = s.lower()</code></li>
+    </ul>
+    <pre class="codeblock">print('aBc'.lower())            <span class="good">→ abc</span>
+print(str.upper('aBc'))         <span class="good">→ ABC</span>
+print('hello world'.title())    <span class="good">→ Hello World</span>
+print('hello world'.capitalize()) <span class="good">→ Hello world</span></pre>
+    <p class="muted">注意第二行：方法也可以用 <code>str.upper('aBc')</code> 这种「类.方法(对象)」的形式调用，效果和 <code>'aBc'.upper()</code> 一样。</p>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>方法速查表 + 输出竞猜</h2>
+    <table>
+      <tr><th>方法</th><th>作用</th><th>示例</th><th>返回</th></tr>
+      <tr><td>str.lower()</td><td>全部转小写</td><td><code>'aBc'.lower()</code></td><td><code>abc</code></td></tr>
+      <tr><td>str.upper()</td><td>全部转大写</td><td><code>str.upper('aBc')</code></td><td><code>ABC</code></td></tr>
+      <tr><td>str.title()</td><td>每个单词首字母大写</td><td><code>'hello world'.title()</code></td><td><code>Hello World</code></td></tr>
+      <tr><td>str.capitalize()</td><td>仅首字母大写</td><td><code>'hello world'.capitalize()</code></td><td><code>Hello world</code></td></tr>
+    </table>
+    <p style="margin-top:14px">先自己心里默答，再切换对照输出：</p>
+    <div class="switch">
+      <button class="on" data-pane="p1">四个调用</button>
+      <button data-pane="p2">输出对照</button>
+    </div>
+    <div class="pane on" id="p1">
+      <pre class="codeblock">print('aBc'.lower())
+print(str.upper('aBc'))
+print('hello world'.title())
+print('hello world'.capitalize())</pre>
+    </div>
+    <div class="pane" id="p2">
+      <div class="demo-out">abc<br>ABC<br>Hello World<br>Hello world</div>
+      <p class="muted" style="margin-top:8px">对比后两行：<code>title()</code> 让 world 的 w 也大写了，<code>capitalize()</code> 只有句首的 H 大写。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！capitalize() 只让整串第一个字母大写，其余全部小写，所以是 Hello world（world 的 w 是小写）。"
+         data-no="❌ 再想想：capitalize() 是「只点班长」——只有整串的第一个字符大写，后面的字母统统变小写。正确答案是 Hello world。">
+      <p style="font-weight:700;margin-bottom:12px"><code>'hello world'.capitalize()</code> 的输出是？</p>
+      <button class="opt" onclick="quizPick(this)">A. Hello World</button>
+      <button class="opt" onclick="quizPick(this)">B. Hello world</button>
+      <button class="opt" onclick="quizPick(this)">C. hello world</button>
+      <button class="opt" onclick="quizPick(this)">D. HELLO WORLD</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="title|.title()|title()" data-ok="✅ 正确！title() 会把每个单词的首字母大写、其余小写。" data-no="❌ 回忆一下「每句话点名」的比方：每个单词打头的那个字母被点名起立，用的是哪个方法？">
+      <p>想让字符串中<b>所有单词首字母大写</b>、其他字母小写，应该用 <code>____</code> 方法。（填方法名）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：lower">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频坑：撇号、中文、原串不变</div>
+      <p><b>坑一：</b><code>title()</code> 按「非字母后就是新单词」判断，遇到 <code>don't</code>、<code>we're</code> 这类撇号词，会把撇号后面的字母也大写——<code>"don't stop".title()</code> 得到 <code>Don'T Stop</code>。另外<b>中文没有大小写概念</b>，中文字符经过这些方法原样保留。</p>
+      <p><b>坑二：</b><code>capitalize()</code> 只认<b>整串的第一个字符</b>，不是每个单词的第一个——这是它和 <code>title()</code> 最容易混的地方。</p>
+      <p><b>坑三：</b>再强调一次铁律：<code>s.lower()</code> 执行完，<code>s</code> 本身<b>纹丝不动</b>。只写 <code>s.lower()</code> 不接结果，等于白做。正确写法：<code>s = s.lower()</code>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的四个大小写转换方法 lower()、upper()、title()、capitalize()。请：1）用一个生活类比帮我区分 title() 和 capitalize() 的区别；2）举一个 title() 处理撇号词（如 don't）出错的例子；3）出 4 道求值题考我（字符串里混合大小写字母和空格），等我作答后公布答案和讲解。">
+      我刚学了 Python 的四个大小写转换方法 lower()、upper()、title()、capitalize()。请：1）用一个生活类比帮我区分 title() 和 capitalize() 的区别；2）举一个 title() 处理撇号词（如 don't）出错的例子；3）出 4 道求值题考我（字符串里混合大小写字母和空格），等我作答后公布答案和讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：本章作业第 1 题的答案雏形（5 分钟）</span>
+    <ol class="steps">
+      <li>交互模式输入 <code>s = 'python is Good'</code>。</li>
+      <li>分别执行 <code>print(s.lower())</code>、<code>print(s.upper())</code>、<code>print(s.title())</code>、<code>print(s.capitalize())</code>，把四个结果抄在作业本上。</li>
+      <li>执行完四条后再 <code>print(s)</code>——你会发现 <code>s</code> 还是原样！这就是「方法不改变原字符串」的现场证据。</li>
+      <li>想真的改掉它？执行 <code>s = s.upper()</code>，再打印 <code>s</code> 看看。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p><code>lower()</code> 全小写、<code>upper()</code> 全大写、<code>title()</code> 每个单词首字母大写、<code>capitalize()</code> 只第一个字母大写；四种方法<b>都不改变原字符串</b>，而是返回新字符串；title 对撇号词会误伤、中文无大小写。下一节：数一数、找一找、换一换——计数、查找与替换！</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="3.06.html"><span class="nav-label">← 上一节</span><span class="nav-title">3.06 字符串运算与内置函数</span></a>
+        <a class="next" href="3.08.html"><span class="nav-label">下一节 →</span><span class="nav-title">3.08 计数、查找与替换</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

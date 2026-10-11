@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.01 程序控制结构概述 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第五章 程序控制 · 第 1 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.flow{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin:8px 0 2px}
+.fnode{background:var(--accent-soft);border:1.5px solid var(--accent);color:var(--accent);
+  border-radius:8px;padding:4px 10px;font-size:12.5px;font-weight:700;white-space:nowrap}
+.fnode.dec{background:var(--warn-soft);border-color:var(--warn);color:var(--warn)}
+.farrow{color:var(--ink2);font-size:13px;font-weight:700}
+.flow2{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin:4px 0 2px}
+.icard .more .flow,.icard .more .flow2{margin-top:6px}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch05.html">第五章 程序控制</a><span class="sep">/</span>
+          <span class="current">5.01</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">01</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第五章 · 程序控制</span>
+            <h1>程序控制结构概述</h1>
+            <p class="hero-summary">第 1 / 17 节 · 约 8 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li class="cur">程序控制结构概述</li>
+      <li>单分支结构 if</li>
+      <li>双分支结构 if-else</li>
+      <li>IF 表达式</li>
+      <li>多分支结构 if-elif-else</li>
+      <li>嵌套分支结构</li>
+      <li>嵌套与多分支对比</li>
+      <li>无限循环 while</li>
+      <li>range 函数与遍历整数</li>
+      <li>遍历字符串列表元组</li>
+      <li>遍历字典</li>
+      <li>循环控制 break 与 continue</li>
+      <li>循环嵌套</li>
+      <li>常见语法错误</li>
+      <li>常见运行异常</li>
+      <li>异常处理语句</li>
+      <li>综合实战：古算题与成绩单</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>程序凭什么「听话」？——因为你能控制它</h2>
+    <p>程序控制对于任何一门编程语言来说都是<b>至关重要</b>的，它提供了控制程序执行的方法。默认情况下，程序将按照代码顺序<b>依次执行</b>——从上到下，一句不落。但用户可以根据需求调整程序执行的顺序：想让程序「看情况办事」，就用<b>选择结构</b>；想让程序「重复劳动」，就用<b>循环结构</b>。本章 17 个小节，讲的全是这件事。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">三种结构，三个生活场景</div>
+      <p><b>顺序结构</b>像「按菜谱从头炒到尾」——先放油、再放菜、最后加盐，一步不乱；<b>选择结构</b>像「到路口看红绿灯」——绿灯直行、红灯转弯，看情况走不同的路；<b>循环结构</b>像「操场跑圈直到老师说停」——同样动作反复做，条件满足了才停。写程序，就是把生活里的这些「套路」翻译给计算机听。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>三种基本控制结构</h2>
+    <ul class="points">
+      <li><b>顺序结构</b>：默认的执行方式，从上到下依次执行每一句，不需要任何关键字</li>
+      <li><b>选择（分支）结构</b>：根据条件的真假，决定执行哪一段代码——本章作业第 1、2 题的核心</li>
+      <li><b>循环结构</b>：让一段代码反复执行，直到条件不满足——本章作业第 3、4、5、6 题都要靠它</li>
+      <li><b>异常处理</b>：让程序「摔倒了爬起来」，出错不崩溃——作业第 6 题还会用到</li>
+      <li>三种结构可以<b>自由组合、互相嵌套</b>：循环里面可以有分支，分支里面也可以再套循环</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>点一点：三种结构长什么样</h2>
+    <div class="grid g3">
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent)"></span>顺序结构</h4>
+        <div class="desc">一条道走到黑，从上到下依次执行</div>
+        <div class="more">
+          <p style="font-size:13.5px">没有一点花样：写几句就执行几句，顺序永不改变。前四章我们写的所有程序都是顺序结构。</p>
+          <div class="flow"><span class="fnode">语句1</span><span class="farrow">→</span><span class="fnode">语句2</span><span class="farrow">→</span><span class="fnode">语句3</span></div>
+          <p style="font-size:13px;color:var(--accent);font-weight:700">📖 对应小节：5.01（就是本节）</p>
+        </div>
+        <div class="hint">👆 点击展开说明与流程示意</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--warn)"></span>选择（分支）结构</h4>
+        <div class="desc">到路口看红绿灯，条件真假定走法</div>
+        <div class="more">
+          <p style="font-size:13.5px">先判断条件：为真走这条路，为假走那条路（或者干脆不动）。分支之间互斥，每次只走一条。</p>
+          <div class="flow"><span class="fnode dec">条件？</span><span class="farrow">—真→</span><span class="fnode">代码块A</span></div>
+          <div class="flow2"><span class="fnode dec">条件？</span><span class="farrow">—假→</span><span class="fnode">代码块B</span></div>
+          <p style="font-size:13px;color:var(--accent);font-weight:700">📖 对应小节：5.02 ~ 5.07</p>
+        </div>
+        <div class="hint">👆 点击展开说明与流程示意</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--ok)"></span>循环结构</h4>
+        <div class="desc">操场跑圈直到老师说停</div>
+        <div class="more">
+          <p style="font-size:13.5px">条件满足就反复执行同一段代码，条件不满足才停下来往下走。重复劳动全交给它。</p>
+          <div class="flow"><span class="fnode dec">条件？</span><span class="farrow">—真→</span><span class="fnode">循环体</span><span class="farrow">↩ 回到条件</span></div>
+          <p style="font-size:13px;color:var(--accent);font-weight:700">📖 对应小节：5.08 ~ 5.13</p>
+        </div>
+        <div class="hint">👆 点击展开说明与流程示意</div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="0"
+         data-ok="✅ 答对了！不加任何控制语句时，程序就是老老实实从上到下按书写顺序执行。"
+         data-no="❌ 再想想：默认情况下，程序按照代码书写的先后顺序依次执行，不会自己乱跳。">
+      <p style="font-weight:700;margin-bottom:12px">不加任何控制语句时，程序默认的执行方式是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 从上到下，按书写顺序依次执行每一句</button>
+      <button class="opt" onclick="quizPick(this)">B. 哪句短就先执行哪句</button>
+      <button class="opt" onclick="quizPick(this)">C. 由操作系统随机决定执行顺序</button>
+      <button class="opt" onclick="quizPick(this)">D. 所有语句同时一起执行</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="选择循环" data-ok="✅ 正确！程序的三种基本控制结构就是：顺序结构、选择结构、循环结构。" data-no="❌ 回忆一下三张卡片：除了顺序结构，另外两个分别叫什么？（两空连填，中间不用加空格）">
+      <p>程序的三种基本控制结构：顺序结构、<b>＿＿</b>结构、<b>＿＿</b>结构。（两空连填，如：甲乙）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：甲乙">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个常见误解</div>
+      <p>①<b>别以为程序会「聪明地」自己找地方跳</b>——没有控制语句时，它就是死板地从上到下一句句执行，想改变流程必须显式写出 if、while 这些语句；</p>
+      <p>②<b>缩进不只是「好看」</b>——在 Python 里，缩进本身就是语法，它决定哪些行属于同一个代码块，从下一节开始你会反复体会到这一点；</p>
+      <p>③<b>三种结构不是三选一</b>——真实程序是三者的组合嵌套，比如本章作业第 6 题，就要同时用到循环和异常处理。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 程序控制结构概述（顺序、选择、循环三种基本结构）。请：1）用生活化的例子各写一个顺序、选择、循环结构的 Python 代码片段（各不超过 5 行）并逐行讲解；2）出 3 段混合了多种结构的短代码让我判断各用到了哪些结构；3）解释为什么说在 Python 里「缩进是语法」而很多其他语言只把缩进当风格。">
+      我刚学了 Python 程序控制结构概述（顺序、选择、循环三种基本结构）。请：1）用生活化的例子各写一个顺序、选择、循环结构的 Python 代码片段（各不超过 5 行）并逐行讲解；2）出 3 段混合了多种结构的短代码让我判断各用到了哪些结构；3）解释为什么说在 Python 里「缩进是语法」而很多其他语言只把缩进当风格。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：给自己画一张本章地图（5 分钟）</span>
+    <ol class="steps">
+      <li>打开本章目录 <a href="index.html">index.html</a>，从头到尾浏览 17 个小节的标题。</li>
+      <li>把 17 个小节按「选择结构」「循环结构」「其他」分三类抄在笔记本上（提示：5.02~5.07 是选择，5.08~5.13 是循环）。</li>
+      <li>找出与「异常处理」相关的小节（5.15、5.16），想想「摔倒了爬起来」对应的是哪几节。</li>
+      <li>预习本章作业第 1~6 题，猜一猜每道题会用到哪种结构——学完本章回头验证你的猜测。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>程序控制提供控制程序执行的方法；默认按代码顺序依次执行；三种基本控制结构是<b>顺序、选择（分支）、循环</b>——选择让程序看情况办事，循环让程序重复劳动，异常处理让程序摔倒了爬起来。三种结构可以自由组合。下一节：从最基本的选择结构——单分支 if 学起。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="ch05.html"><span class="nav-label">← 上一节</span><span class="nav-title">第五章课程目录</span></a>
+        <a class="next" href="5.02.html"><span class="nav-label">下一节 →</span><span class="nav-title">5.02 单分支结构 if</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

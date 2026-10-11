@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.05 type() 查看类型 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第二章 基础概念与数值 · 第 5 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch02.html">第二章 基础概念与数值</a><span class="sep">/</span>
+          <span class="current">2.05</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">05</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第二章 · 基础概念与数值</span>
+            <h1>type() 查看类型</h1>
+            <p class="hero-summary">第 5 / 17 节 · 约 8 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序构成的两大核心</li>
+      <li>变量：概念与赋值</li>
+      <li>变量命名规则</li>
+      <li>数据类型总览</li>
+      <li class="cur">type() 查看类型</li>
+      <li>保留字（关键字）</li>
+      <li>函数：定义与调用</li>
+      <li>常用内置函数</li>
+      <li>输入输出函数</li>
+      <li>缩进与注释规范</li>
+      <li>数值类型总览</li>
+      <li>整数与四种进制</li>
+      <li>浮点数与精度陷阱</li>
+      <li>算术与增强赋值运算符</li>
+      <li>比较与逻辑运算符</li>
+      <li>运算符优先级</li>
+      <li>数值函数与 math 模块</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>不确定类型？问 Python 本人</h2>
+    <p>上一节你认识了数据类型大家庭，但「听名字」和「验真身」是两回事。比如 <code>{1, 2, 3}</code> 和 <code>{"name": "张三"}</code> 都是大括号，到底哪个是集合哪个是字典？</p>
+    <p>好消息是：Python 自带一台「类型透视机」——内置函数 <code>type()</code>。这一节就学它：</p>
+    <ul class="points">
+      <li><code>type()</code> 是 Python 的<b>内置函数</b>，给它一个对象，它返回该对象的<b>数据类型</b></li>
+      <li>返回结果的固定格式是 <code>&lt;class 'xxx'&gt;</code>，其中 xxx 就是上一节学的类型英文名</li>
+      <li>它是你调试程序、排查类型错误时<b>用得最勤</b>的工具，必须练到肌肉记忆</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">type() = 机场安检的透视机</div>
+      <p>行李箱外面看不出装的什么，放上安检机扫一下，屏幕上立刻显示「液体 / 电子产品 / 衣物」。变量也一样——光看字面（<code>{1, 2}</code> 是集合还是字典？）容易猜错，放进 <code>type()</code> 里「扫一下」，类型立刻原形毕露。而且安检机<b>只看不改</b>：type() 只报告类型，不会动你的数据。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>type() 用法与输出格式</h2>
+    <ul class="points">
+      <li><b>语法</b>：<code>type(对象)</code>——把任何数据（或变量）放进括号里即可。</li>
+      <li><b>返回值格式</b>：<code>&lt;class 'xxx'&gt;</code>——「class」意为「类」，引号里的名字就是类型名，如 <code>&lt;class 'int'&gt;</code>、<code>&lt;class 'str'&gt;</code>。</li>
+      <li>上一节的 10 个类型英文名（int / float / complex / str / bool / NoneType / list / tuple / set / dict）在这里<b>全部对上号</b>。</li>
+    </ul>
+    <p>下面是完整代码与输出，一行对一行：</p>
+    <pre class="codeblock out">print(type(1), type(1.0), type(1 + 2j))
+print(type('A'), type("China"))
+print(type(None))
+print(type(True), type(False))
+print(type([1, 2, 3]))
+print(type((1, 2, 3)))
+print(type({1, 2, 3}))
+print(type({"name": "张三", "age": 18}))</pre>
+    <pre class="codeblock"><span class="good">&lt;class 'int'&gt; &lt;class 'float'&gt; &lt;class 'complex'&gt;</span>
+<span class="good">&lt;class 'str'&gt; &lt;class 'str'&gt;</span>
+<span class="good">&lt;class 'NoneType'&gt;</span>
+<span class="good">&lt;class 'bool'&gt; &lt;class 'bool'&gt;</span>
+<span class="good">&lt;class 'list'&gt;</span>
+<span class="good">&lt;class 'tuple'&gt;</span>
+<span class="good">&lt;class 'set'&gt;</span>
+<span class="good">&lt;class 'dict'&gt;</span></pre>
+    <p class="muted">💡 观察第 1 行：<code>1</code> 是 int 而 <code>1.0</code> 是 float——只差一个小数点，类型就不同；再对比第 7 行和第 8 行，同样是大括号，没有键值对是 set，有键值对就是 dict。</p>
+  </section>
+      <section>
+    <span class="tag">实战演示</span>
+    <h2>先猜再看：你的直觉准吗？</h2>
+    <p class="muted">先在心里猜答案，再点击卡片揭晓——全部猜对说明类型名已经记牢。</p>
+    <div class="grid g2" style="margin-top:6px">
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent)"></span>print(type(3.14))</h4>
+        <div class="desc">输出是什么？</div>
+        <div class="more">输出 <code>&lt;class 'float'&gt;</code>——带小数点，就是浮点数。</div>
+        <div class="hint">👆 点击揭晓答案</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent)"></span>print(type('20'))</h4>
+        <div class="desc">加了引号的 20 是什么？</div>
+        <div class="more">输出 <code>&lt;class 'str'&gt;</code>——引号一加，数字变字符串！<b>这是新手第一大坑</b>。</div>
+        <div class="hint">👆 点击揭晓答案</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--ok)"></span>print(type(True))</h4>
+        <div class="desc">布尔值的类型名？</div>
+        <div class="more">输出 <code>&lt;class 'bool'&gt;</code>——注意类名是 bool，不是 boolean。</div>
+        <div class="hint">👆 点击揭晓答案</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--ok)"></span>print(type(3 &gt; 5))</h4>
+        <div class="desc">一个比较表达式？</div>
+        <div class="more">输出 <code>&lt;class 'bool'&gt;</code>——3 &gt; 5 的结果 False 也是布尔值。比较运算返回的就是 bool。</div>
+        <div class="hint">👆 点击揭晓答案</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent2)"></span>print(type({1, 2, 3}))</h4>
+        <div class="desc">大括号装一串数？</div>
+        <div class="more">输出 <code>&lt;class 'set'&gt;</code>——没有「键: 值」结构，是集合。</div>
+        <div class="hint">👆 点击揭晓答案</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent2)"></span>print(type(None))</h4>
+        <div class="desc">「空」的类型名？</div>
+        <div class="more">输出 <code>&lt;class 'NoneType'&gt;</code>——None 的类型名最长，别写成 None。</div>
+        <div class="hint">👆 点击揭晓答案</div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="3"
+         data-ok="✅ 答对了！type() 返回的固定格式就是 <class 'str'>，带尖括号和 class 字样。"
+         data-no="❌ 不对哦。type() 的返回结果有固定格式：<class 'xxx'>。所以 print(type('China')) 输出的是 <class 'str'>，而不是光秃秃的 str。">
+      <p style="font-weight:700;margin-bottom:12px"><code>print(type("China"))</code> 的输出是？</p>
+      <button class="opt" onclick="quizPick(this)">A. str</button>
+      <button class="opt" onclick="quizPick(this)">B. int</button>
+      <button class="opt" onclick="quizPick(this)">C. class str</button>
+      <button class="opt" onclick="quizPick(this)">D. &lt;class 'str'&gt;</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="type|type()" data-ok="✅ 正确！type() 是 Python 内置函数，可以返回对象的数据类型。" data-no="❌ 再想想：哪个内置函数像安检透视机一样能「扫」出数据的类型？（提示：本节标题就是它）">
+      <p>使用 Python 内置函数 <b>＿＿</b> 可以返回对象的数据类型，输出格式形如 <code>&lt;class 'int'&gt;</code>。</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：××()">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">两个高频翻车现场</div>
+      <p><b>坑一：加引号 = 变字符串。</b><code>type(20)</code> 是 <code>&lt;class 'int'&gt;</code>，<code>type('20')</code> 却是 <code>&lt;class 'str'&gt;</code>。从 input() 读进来的数字也是字符串（后面学输入输出函数时细讲），先 type() 查一查再运算，能省很多调试时间。</p>
+      <p><b>坑二：把输出格式当成类型名。</b>类型名是引号里的部分：<code>'int'</code>、<code>'str'</code>。填空或写代码时别把尖括号和 class 一起抄进去。<b>注意：在 Python 里写 <code>&lt;class 'str'&gt;</code> 是代码输出，尖括号要交给 print 显示，自己敲代码时只写 <code>type(...)</code>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 内置函数 type()：传入对象返回其数据类型，输出格式是 <class 'xxx'>。请：1）给我 8 个不同的数据（含数字、字符串、None、True、各种括号组合），让我先猜 type() 的输出再公布答案；2）解释 type(20) 和 type('20') 为什么不同；3）出 2 道单选题考我，等我作答后再公布答案。">
+      我刚学了 Python 内置函数 type()：传入对象返回其数据类型，输出格式是 &lt;class 'xxx'&gt;。请：1）给我 8 个不同的数据（含数字、字符串、None、True、各种括号组合），让我先猜 type() 的输出再公布答案；2）解释 type(20) 和 type('20') 为什么不同；3）出 2 道单选题考我，等我作答后再公布答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：把代码敲进交互模式（5 分钟）</span>
+    <ol class="steps">
+      <li>打开命令行输入 <code>python</code> 进入交互模式。</li>
+      <li>把本页核心概念里的 8 行 <code>print(type(...))</code> 代码<b>逐行敲进去</b>，每行回车后对照预期输出。</li>
+      <li>重点对比两处：<code>type(1)</code> 与 <code>type(1.0)</code>；<code>type({1, 2, 3})</code> 与 <code>type({"name": "张三"})</code>。</li>
+      <li>自由发挥：随手写几个数据，先口算类型，再用 type() 验证——练到连续 5 个全对。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p><code>type()</code> 是 Python 内置函数，返回对象的数据类型，输出固定格式为 <code>&lt;class 'xxx'&gt;</code>。它像安检透视机：只看不改、原形毕露。重点记住三组对照——<code>1</code> 是 int、<code>1.0</code> 是 float；<code>{1,2,3}</code> 是 set、<code>{"k": v}</code> 是 dict；<code>20</code> 是 int、<code>'20'</code> 是 str。下一节：有一批单词被 Python 系统征用了，起变量名时绝不能碰——认识保留字。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="2.04.html"><span class="nav-label">← 上一节</span><span class="nav-title">2.04 数据类型总览</span></a>
+        <a class="next" href="2.06.html"><span class="nav-label">下一节 →</span><span class="nav-title">2.06 保留字（关键字）</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

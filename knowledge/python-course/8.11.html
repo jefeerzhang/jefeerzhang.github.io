@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8.11 多态与方法重写 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第八章 面向对象编程 · 第 11 / 12 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.play{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.play-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.play-out{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14px;min-height:120px;white-space:pre-wrap;line-height:1.8}
+.play-out .err{color:var(--err);font-weight:700}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch08.html">第八章 面向对象编程</a><span class="sep">/</span>
+          <span class="current">8.11</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">11</span>
+            <span class="lesson-hero-num-total">/ 12</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第八章 · 面向对象编程</span>
+            <h1>多态与方法重写</h1>
+            <p class="hero-summary">第 11 / 12 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 12 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>编程的两种范式</li>
+      <li>面向对象的三大特性</li>
+      <li>四个核心概念：类·对象·属性·方法</li>
+      <li>创建类：class·__init__·self</li>
+      <li>创建对象与访问成员</li>
+      <li>实例属性与类属性</li>
+      <li>三种方法：实例·类·静态</li>
+      <li>封装与私有属性</li>
+      <li>继承与 super()</li>
+      <li>多重继承</li>
+      <li class="cur">多态与方法重写</li>
+      <li>综合案例：商品库存管理</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>同一句 speak()，为什么狗叫汪汪、猫叫喵喵？</h2>
+    <p>继承让子类「全盘接收」父类的方法，但接收来的方法未必合身——Animal 的 speak() 对 Dog 和 Cat 来说都该「开口」，可开口的声音理应不同。<b>多态</b>指同一个方法在不同子类对象上调用时，会根据对象所属子类的不同产生<b>不同的行为</b>。实现它的手段是<b>方法重写</b>：子类中定义与父类同名的方法，覆盖父类的实现。这是面向对象三大特性的最后一块拼图。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">多态像「舞台上的指挥家」：统一手势，各自发声</div>
+      <p>指挥家做出统一的「演奏」手势（统一的接口），面前的小提琴、鼓、长笛接收到<b>同一个指令</b>后，根据自身特性发出完全不同的声音。代码里也是如此：我们只管对每个对象调用 <code>speak()</code>，至于是「汪汪汪」还是「喵喵喵」，由对象<b>自己的类</b>说了算——调用方不用写一堆 if 去分辨对象类型，这就是多态的省心之处。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>实现多态：继承打底，重写发声</h2>
+    <ul class="points">
+      <li><b>继承 + 方法重写</b>：多态通过继承和方法重写实现——先有父子关系，子类再覆盖同名方法</li>
+      <li><b>方法重写（Override）</b>：子类中定义与父类<b>同名</b>的方法，覆盖父类的实现；调用时执行子类自己的版本</li>
+      <li><b>方法名必须完全一致</b>：重写要求方法名称完全一致；参数的数量和位置<b>不强制</b>，保持一致才符合「同一个接口、不同实现」的多态本意</li>
+      <li><b>不强制类型检查</b>：Python 不检查对象的类型，只要对象<b>有这个方法</b>就能调用，从而轻松实现多态</li>
+      <li><b>与 super() 的分工</b>（对照 8.09）：重写是「覆盖换新」——子类完全用自己的版本；<code>super()</code> 是「先借父类的再用」——在父类实现的基础上补充</li>
+    </ul>
+
+    <div class="play">
+      <p style="font-weight:700;margin-bottom:10px">🔬 多态实验台：点按钮执行 PPT 测试流程（Dog、Cat 都重写了 speak）</p>
+      <div class="play-row">
+        <button class="btn-main btn" onclick="pDo('dog')">Dog().speak()</button>
+        <button class="btn-main btn" onclick="pDo('cat')">Cat().speak()</button>
+        <button class="btn-ghost btn" onclick="pDo('loop')">统一指挥：for a in [Dog(), Cat()]: a.speak()</button>
+        <button class="btn-ghost btn" onclick="pDo('bad')">翻车演示：方法名拼错成 Speak</button>
+        <button class="btn-ghost btn" onclick="pDo('reset')">重置</button>
+      </div>
+      <div class="play-out" id="pout">点按钮模拟运行～同一句 speak()，不同对象不同声音。</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：Animal 家族的重写</h2>
+    <pre class="codeblock">class Animal:                       # 父类：只定接口
+    def speak(self):
+        pass
+
+class Dog(Animal):
+    def speak(self):                # 重写父类方法
+        print('汪汪汪！')
+
+class Cat(Animal):
+    def speak(self):                # 重写父类方法
+        print('喵喵喵~')
+
+Dog().speak()
+Cat().speak()</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">汪汪汪！
+喵喵喵~</pre>
+    <ul class="points">
+      <li>两个子类都定义了与父类<b>同名</b>的 <code>speak</code>——各自的版本覆盖了父类的 <code>pass</code></li>
+      <li>调用 <code>Dog().speak()</code> 和 <code>Cat().speak()</code> 写法完全一样，行为却不同——这就是多态</li>
+      <li>就算写成 <code>for a in [Dog(), Cat()]: a.speak()</code>，循环也无需判断类型：每个对象自动调用自己的 speak</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！Python 不检查对象类型，循环里每个对象自动调用自己的 speak：狗先汪汪、猫再喵喵——这就是多态，调用方完全不用写 if 判断类型。"
+         data-no="❌ 回想实验台：Python 不强制类型检查，只要对象有 speak 方法就能调用，每个对象执行的都是自己类里重写的版本——先输出汪汪汪！，再输出喵喵喵~。">
+      <p style="font-weight:700;margin-bottom:12px">执行 <code>for a in [Dog(), Cat()]: a.speak()</code>（沿用课堂代码），输出是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 两行都是「汪汪汪！」，因为 Dog 定义在前面</button>
+      <button class="opt" onclick="quizPick(this)">B. 报错：循环里 a 的类型不确定</button>
+      <button class="opt" onclick="quizPick(this)">C. 先输出「汪汪汪！」，再输出「喵喵喵~」</button>
+      <button class="opt" onclick="quizPick(this)">D. 先输出「喵喵喵~」，再输出「汪汪汪！」</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="名称 位置|名字 位置" data-ok="✅ 全对！重写要求方法名称完全一致，参数的数量和位置尽量保持一致——名字对上、参数对齐，覆盖才成立。" data-no="❌ 提示：两空分别对应——重写要求方法＿＿必须完全一致；参数的数量和＿＿尽量保持一致。两空之间用空格隔开。">
+      <p>方法重写的规矩：子类中定义与父类<b>＿＿</b>完全相同的方法，覆盖父类的实现；同时要求参数的数量和<b>＿＿</b>尽量保持一致。（两空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：名称 位置">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>方法名拼错就不算重写</b>：写成 <code>Speak</code>（大写 S）或 <code>speak2</code>，Python 不会报错，只会当成<b>新增方法</b>——调用时执行的仍是父类的 pass，一声不吭；</p>
+      <p>②<b>重写 __init__ 别忘 super()</b>：多态常伴着重写，但重写 <code>__init__</code> 时要回到 8.09 的铁律——先 <code>super().__init__()</code>，否则父类属性没初始化；</p>
+      <p>③<b>「有该方法」是前提</b>：Python 不检查类型，但对象<b>没有</b>这个方法时照样 AttributeError——比如让一个既没继承 Animal、自己也没写 speak() 的对象去调用 speak() 就会翻车；只要它继承了 Animal，父类的 speak() 照样能调。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 多态与方法重写：子类定义与父类同名的方法覆盖父类实现，同一个方法在不同子类对象上调用产生不同行为；Python 不强制类型检查，只要对象有该方法就能调用；重写要求方法名完全一致、参数数量和位置尽量一致；重写是「覆盖换新」，super() 是「先借父类的再用」。请：1）用「指挥家」的类比再讲一遍多态；2）出 3 道读代码题考我（含一道方法名拼错不算重写的陷阱题）；3）对比讲讲「重写」和「调用 super()」分别适合什么场景；4）布置一个小练习：Shape 类加 area 方法，Circle、Rectangle 子类各自重写，我写完帮我 review。">
+      我刚学了 Python 多态与方法重写：子类定义与父类同名的方法覆盖父类实现，同一个方法在不同子类对象上调用产生不同行为；Python 不强制类型检查，只要对象有该方法就能调用；重写要求方法名完全一致、参数数量和位置尽量一致；重写是「覆盖换新」，super() 是「先借父类的再用」。请：1）用「指挥家」的类比再讲一遍多态；2）出 3 道读代码题考我（含一道方法名拼错不算重写的陷阱题）；3）对比讲讲「重写」和「调用 super()」分别适合什么场景；4）布置一个小练习：Shape 类加 area 方法，Circle、Rectangle 子类各自重写，我写完帮我 review。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：自拟小练习（10 分钟）</span>
+    <ol class="steps">
+      <li>读代码预测输出：在课堂代码后面加 <code>class Duck(Animal):</code>，重写 speak 输出「嘎嘎！」——先想清楚 <code>for a in [Dog(), Duck()]: a.speak()</code> 会输出什么，再运行验证。</li>
+      <li>动手试效果：把 Cat 里的 speak 故意改名为 <code>Speak</code>，再调用 <code>Cat().speak()</code>——观察它一声不吭，理解「名字不一致就不算重写」。</li>
+      <li>体会 super()：给 Animal 的 speak 改成 <code>print('动物在叫：')</code>，在 Dog.speak 里先 <code>super().speak()</code> 再打印「汪汪汪！」——对比「先借父类的再用」和「覆盖换新」的差异。</li>
+      <li>挑战：写 <code>class Pig(Animal):</code>，重写 speak 输出「哼哼~」，把它加进同一个 for 循环——体会「新增一个子类，调用代码一行都不用改」正是多态的价值。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>多态指同一个方法在不同子类对象上调用时，会根据对象所属子类的不同产生不同的行为；它通过<b>继承 + 方法重写</b>实现：子类定义与父类同名的方法覆盖父类实现，方法名必须完全一致，参数的数量和位置最好也保持一致；Python 不强制类型检查，只要对象有该方法就能调用，轻松实现多态。对照 8.09 记一句：重写是「覆盖换新」，super() 是「先借父类的再用」。下一节综合案例把本章所有知识合体——收尾之战！</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="8.10.html"><span class="nav-label">← 上一节</span><span class="nav-title">8.10 多重继承</span></a>
+        <a class="next" href="8.12.html"><span class="nav-label">下一节 →</span><span class="nav-title">8.12 综合案例：商品库存管理</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：多态实验台（模拟 Animal 家族方法重写行为） */
+function pDo(op){
+  const out = document.getElementById('pout');
+  if (op === 'reset'){ out.textContent = '点按钮模拟运行～同一句 speak()，不同对象不同声音。'; return; }
+  if (op === 'dog'){
+    out.textContent = "Dog().speak()\n汪汪汪！   # 执行 Dog 重写后的版本";
+    return;
+  }
+  if (op === 'cat'){
+    out.textContent = "Cat().speak()\n喵喵喵~   # 执行 Cat 重写后的版本";
+    return;
+  }
+  if (op === 'loop'){
+    out.textContent = "for a in [Dog(), Cat()]:\n    a.speak()\n汪汪汪！\n喵喵喵~   # 无需判断类型，各调各的重写版本";
+    return;
+  }
+  if (op === 'bad'){
+    out.innerHTML = "# 陷阱：Cat 里方法名拼成 Speak（大写 S）\ncat = Cat()\ncat.speak()\n# 无输出——Speak 是新增方法，speak 仍是父类的 pass\n# cat.Speak()\n喵喵喵~   <span class='err'># 名字不一致就不算重写！</span>";
+    return;
+  }
+}
+</script>
+</body>
+</html>

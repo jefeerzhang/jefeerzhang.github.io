@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.09 分割、联合与剔除 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第三章 字符串与列表 · 第 9 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.demo-out{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;
+  padding:12px 16px;font-family:Consolas,Menlo,monospace;font-size:14px;line-height:2}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch03.html">第三章 字符串与列表</a><span class="sep">/</span>
+          <span class="current">3.09</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">09</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第三章 · 字符串与列表</span>
+            <h1>分割、联合与剔除</h1>
+            <p class="hero-summary">第 9 / 21 节 · 约 11 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>字符串基础与三种引号</li>
+      <li>转义字符</li>
+      <li>字符串索引</li>
+      <li>字符串切片</li>
+      <li>实战：身份证号提取信息</li>
+      <li>字符串运算与内置函数</li>
+      <li>大小写转换方法</li>
+      <li>计数、查找与替换</li>
+      <li class="cur">分割、联合与剔除</li>
+      <li>判断字符串类别</li>
+      <li>format 格式化输出</li>
+      <li>f-string 格式化输出</li>
+      <li>列表定义与特性</li>
+      <li>列表的创建</li>
+      <li>列表索引与切片</li>
+      <li>列表增加元素</li>
+      <li>列表删除元素</li>
+      <li>列表修改元素</li>
+      <li>列表运算与函数</li>
+      <li>列表常用方法</li>
+      <li>实战：成绩排序和统计</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>「按逗号切开存起来，用完再拼回去」</h2>
+    <p>读入一行「张三,18,计算机」，想拆成三份数据分别处理——用 <code>split()</code>；处理完想用逗号拼回一句话——用 <code>join()</code>；从文件或输入读来的字符串两头带着多余空格——用 <code>strip()</code>。这三个方法是<b>字符串和列表之间的桥梁</b>：split 把字符串变成列表，join 把列表变回字符串。这一节学会了，后面学列表会顺畅得多。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">切香肠、串珠子、修盆栽</div>
+      <p><code>split()</code> 像「<b>按记号切香肠</b>」——沿着逗号（或指定符号）一刀刀切下去，得到一节一节的香肠（一个列表）；<code>join()</code> 像「<b>用线把珠子串回去</b>」——拿一根线（连接符），把一串珠子（列表元素）重新穿成一条项链（字符串）；<code>strip()</code> 像「<b>修剪盆栽两侧的杂叶</b>」——只动左右两边的叶子，中间的枝叶一概不碰。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>三个方法：拆、接、修</h2>
+    <ul class="points">
+      <li><code>str.split(sep=None)</code>：按 sep 符号<b>分割</b>字符串，<b>返回列表</b>；不指定 sep 时默认按空白字符切</li>
+      <li><code>str.join(iter)</code>：用 str 符号把 iter 对象里的所有元素<b>连接</b>起来，返回新字符串</li>
+      <li><code>str.strip(chars)</code>：<b>剔除</b>字符串两侧的 chars 字符，<b>默认剔除空格</b>，返回新字符串</li>
+      <li>⭐ <b>split ↔ join 互为逆操作</b>：<code>'.'.join('3.14'.split('.'))</code> 又变回了 <code>'3.14'</code>（严格说只在「join 用的分隔符和原字符串里的分隔符一致」时才互逆：<code>''.join('a,b'.split(','))</code> 得到 <code>'ab'</code>，并没有还原）</li>
+      <li>⭐ <b>铁律：strip 也返回新字符串</b>，不改变原字符串，需要时用变量接住</li>
+    </ul>
+    <pre class="codeblock">print('3.14'.split('.'))      <span class="good">→ ['3', '14']</span>
+print('.'.join(['3', '14']))  <span class="good">→ 3.14</span>
+print(' 123 '.strip())        <span class="good">→ 123</span>
+print('%123%'.strip('%'))     <span class="good">→ 123</span></pre>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>方法速查表 + split ↔ join 互逆实验</h2>
+    <table>
+      <tr><th>方法</th><th>作用</th><th>返回</th><th>示例</th></tr>
+      <tr><td>str.split(sep=None)</td><td>按 sep 分割字符串</td><td><b>列表</b></td><td><code>'3.14'.split('.') → ['3','14']</code></td></tr>
+      <tr><td>str.join(iter)</td><td>用 str 连接所有元素</td><td>新字符串</td><td><code>'.'.join(['3','14']) → '3.14'</code></td></tr>
+      <tr><td>str.strip(chars)</td><td>剔除两侧的 chars（默认空格）</td><td>新字符串</td><td><code>' 123 '.strip() → '123'</code></td></tr>
+    </table>
+    <p style="margin-top:14px">一对互逆操作，先拆再接，见证原地复原：</p>
+    <div class="switch">
+      <button class="on" data-pane="j1">第一步：split 拆开</button>
+      <button data-pane="j2">第二步：join 粘回去</button>
+    </div>
+    <div class="pane on" id="j1">
+      <pre class="codeblock">parts = '3.14'.split('.')
+print(parts, type(parts))</pre>
+      <div class="demo-out">['3', '14'] &lt;class 'list'&gt;<br><span style="font-family:inherit;color:var(--ink2)">字符串被按「.」切成了两个元素的<b>列表</b></span></div>
+    </div>
+    <div class="pane" id="j2">
+      <pre class="codeblock">s = '.'.join(['3', '14'])
+print(s, type(s))</pre>
+      <div class="demo-out">3.14 &lt;class 'str'&gt;<br><span style="font-family:inherit;color:var(--ink2)">列表又被「.」粘回了<b>字符串</b>——分隔符一致时，一来一回正好还原</span></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！split 的返回值是列表（list），['a', 'b', 'c'] 就是按逗号切出来的三节「香肠」。"
+         data-no="❌ 注意：split 返回的是列表不是字符串！'a,b,c'.split(',') 得到列表 ['a', 'b', 'c']。">
+      <p style="font-weight:700;margin-bottom:12px"><code>'a,b,c'.split(',')</code> 的结果<b>类型和值</b>是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 字符串 'a,b,c'</button>
+      <button class="opt" onclick="quizPick(this)">B. 列表 ['a', 'b', 'c']</button>
+      <button class="opt" onclick="quizPick(this)">C. 元组 ('a', 'b', 'c')</button>
+      <button class="opt" onclick="quizPick(this)">D. 报错 ValueError</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="空格|空白|空白字符" data-ok="✅ 正确！strip() 不指定参数时，默认剔除字符串两侧的空格（以及 \t、\n 等空白字符）。" data-no="❌ 想想盆栽的比方：不告诉你修哪种叶子时，它默认修的是什么？最常见的就是那个看不见的字符。">
+      <p><code>strip()</code> 不指定参数时，默认删除字符串<b>两侧</b>的 <code>____</code>。（填两个字）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="填两个字">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">strip 只管两侧，join 只收字符串</div>
+      <p><b>坑一：strip 只处理两侧。</b><code>'1 2 3'.strip()</code> 的结果还是 <code>'1 2 3'</code>——中间的空格原样保留，盆栽中间的枝叶它一概不碰。想去掉中间空格得用 <code>replace(' ', '')</code>。</p>
+      <p><b>坑二：split 返回的是列表。</b><code>'3.14'.split('.')</code> 的结果是 <code>['3', '14']</code>，不能直接当字符串用，要取某一段得用列表索引（下一节就学）。</p>
+      <p><b>坑三：join 的元素必须是字符串。</b><code>'-'.join([1, 2, 3])</code> 会报 <code>TypeError</code>——数字不是珠子是石头，线穿不过去。要先把数字转成字符串：<code>'-'.join([str(1), str(2), str(3)])</code>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的 split()、join()、strip() 三个字符串方法。请：1）用生活类比解释 split 和 join 为什么叫互逆操作；2）举两个新手常见报错：join 一个含数字的列表、strip 想去掉中间空格；3）给我一行用逗号分隔的学生信息字符串，让我练习拆分、剔除空格再拼回去，等我作答后点评。">
+      我刚学了 Python 的 split()、join()、strip() 三个字符串方法。请：1）用生活类比解释 split 和 join 为什么叫互逆操作；2）举两个新手常见报错：join 一个含数字的列表、strip 想去掉中间空格；3）给我一行用逗号分隔的学生信息字符串，让我练习拆分、剔除空格再拼回去，等我作答后点评。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：本章作业第 4 题相关（5 分钟）</span>
+    <ol class="steps">
+      <li>交互模式输入 <code>s = '  python  '</code>（两头各留两个空格）。</li>
+      <li>执行 <code>print(s.strip(), len(s.strip()), len(s))</code>——观察剔除空格前后的长度差。</li>
+      <li>输入 <code>lst = ['姓名', '年龄', '专业']</code>，执行 <code>print('-'.join(lst))</code>，看看串成了什么。</li>
+      <li>挑战：<code>print(' '.join('%姓名%'.strip('%').split()))</code> 像不像「修边→拆开→串回」一条龙？试着拆解它每一步的结果。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p><code>split()</code> 按符号拆成<b>列表</b>、<code>join()</code> 把列表串成字符串（元素必须是字符串）、<code>strip()</code> 只剔除<b>两侧</b>字符（默认空格）；split 和 join 互为逆操作；三个方法都返回新结果、不改变原字符串。下一节：一眼判断字符串的「成分」——判断字符串类别！</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="3.08.html"><span class="nav-label">← 上一节</span><span class="nav-title">3.08 计数、查找与替换</span></a>
+        <a class="next" href="3.10.html"><span class="nav-label">下一节 →</span><span class="nav-title">3.10 判断字符串类别</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

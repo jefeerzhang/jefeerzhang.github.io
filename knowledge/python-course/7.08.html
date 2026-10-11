@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7.08 读文件三方法 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第七章 文件及目录操作 · 第 8 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.cmp{width:100%;border-collapse:collapse;margin:14px 0;font-size:14.5px}
+.cmp th,.cmp td{border:1px solid var(--border);padding:9px 10px;text-align:left;vertical-align:top;line-height:1.6}
+.cmp th{background:var(--code-bg);white-space:nowrap}
+.cmp code{white-space:nowrap}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch07.html">第七章 文件及目录操作</a><span class="sep">/</span>
+          <span class="current">7.08</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">08</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第七章 · 文件及目录操作</span>
+            <h1>读文件三方法</h1>
+            <p class="hero-summary">第 8 / 18 节 · 约 11 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>文件与目录的基本概念</li>
+      <li>文件类型：文本与二进制</li>
+      <li>绝对路径与相对路径</li>
+      <li>文件操作三步曲</li>
+      <li>打开文件与打开模式</li>
+      <li>关闭文件与 with 语句</li>
+      <li>写文件：write 与 writelines</li>
+      <li class="cur">读文件三方法</li>
+      <li>文件指针：tell 与 seek</li>
+      <li>目录路径两大模块</li>
+      <li>工作目录</li>
+      <li>新建目录</li>
+      <li>展示目录内容</li>
+      <li>重命名与移动</li>
+      <li>删除文件和目录</li>
+      <li>判断路径</li>
+      <li>获取文件信息</li>
+      <li>路径的合并与分解</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>文件写进去了，怎么「读出来」才算会用？</h2>
+    <p>上一节你把《悯农》和成绩表写进了文件，但数据存进去不是目的，<b>用的时候要能读出来</b>。Python 提供三个读文件方法：<b>read()、readline()、readlines()</b>——一个读全部、一个读一行、一个读成列表。选错方法，轻则浪费内存、重则程序卡死；作业第 2 题读 scores.txt 求平均分，就要挑对方法。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">read 像「整本书复印」，readline 像「一次读一行」，readlines 像「撕成一张张纸条装进袋子」</div>
+      <p><code>read()</code> 一口气把整本书复印到手——省事，但书越厚占的地方越大；<code>readline()</code> 每次只读一行，读多少占多少，再厚的书也不怕；<code>readlines()</code> 把全书按行撕成纸条<b>装进一个袋子（列表）</b>，每张纸条就是一行，方便按条处理，但整本书还是都在袋子里。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>三个方法对比一览</h2>
+    <table class="cmp">
+      <tr><th>方法</th><th>返回值</th><th>内存占用</th><th>适合场景</th></tr>
+      <tr>
+        <td><code>read(size)</code></td>
+        <td>字符串：读取 size 个字符；<b>无参数或 size 为负数则读取全部内容</b></td>
+        <td>高（一次性读完）</td>
+        <td>小文件整体读取</td>
+      </tr>
+      <tr>
+        <td><code>readline()</code></td>
+        <td>字符串：读取<b>一行</b>内容（<b>包含末尾的换行符 \n</b>）</td>
+        <td>低（逐行读取）</td>
+        <td>大文件逐行处理</td>
+      </tr>
+      <tr>
+        <td><code>readlines()</code></td>
+        <td>列表：读取所有行，<b>每行是列表的一个元素</b>（含 \n）</td>
+        <td>中（一次性读完）</td>
+        <td>中等文件按行操作</td>
+      </tr>
+    </table>
+    <ul class="points">
+      <li>文件对象<b>本身也是可迭代对象</b>：<code>for line in file</code> 可以逐行遍历，效果类似 readline 的循环版，内存占用低</li>
+      <li>读取会推动文件指针后移（下一节细讲）：连续调用是<b>接续着读</b>，不是每次都从头读</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：三方法连用，指针接续读</h2>
+    <p>《悯农》.txt 已含四行诗。同一段代码里连用三个方法：</p>
+    <pre class="codeblock">with open('《悯农》.txt', 'r', encoding='utf-8') as file:
+    print(file.readline())
+    print(file.read(3))
+    print(file.readlines())</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">锄禾日当午，
+
+汗滴禾
+['下土。\n', '谁知盘中餐，\n', '粒粒皆辛苦。\n']</pre>
+    <ul class="points">
+      <li><code>readline()</code> 读走第一行「锄禾日当午，\n」——行末含换行符，<code>print()</code> 又补一个换行，所以下面多出一个<b>空行</b></li>
+      <li><code>read(3)</code> 从第二行开头接着读 3 个字符「汗滴禾」——<b>指针接续，不是从头读</b></li>
+      <li><code>readlines()</code> 把剩下的三行装进列表返回，每个元素都带着 <code>\n</code></li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>for line in file：逐行遍历最优雅</h2>
+    <pre class="codeblock">with open('《悯农》.txt', 'r', encoding='utf-8') as file:
+    for line in file:
+        print(line, end='')</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">锄禾日当午，
+汗滴禾下土。
+谁知盘中餐，
+粒粒皆辛苦。</pre>
+    <ul class="points">
+      <li>文件对象就是可迭代对象，for 每轮拿到一行（含 <code>\n</code>）</li>
+      <li><code>print(line, end='')</code> 用 end 参数把 print 自带的换行<b>关掉</b>——因为 line 末尾已经有 <code>\n</code> 了，不然会隔行打印</li>
+      <li>处理大文件首选这种方式：一行一行读，内存稳得住</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！readlines() 返回列表，每个元素对应一行，且行末的换行符 \n 也包含在内。"
+         data-no="❌ readlines() 返回的是列表：文件有几行，列表就有几个元素，每个元素是一行字符串、末尾带 \n。返回整篇字符串的是 read()。">
+      <p style="font-weight:700;margin-bottom:12px">对一个 4 行的文件执行 <code>file.readlines()</code>，返回值是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 一个字符串，包含文件全部内容</button>
+      <button class="opt" onclick="quizPick(this)">B. 一个 4 元素列表，每个元素是一行（含换行符）</button>
+      <button class="opt" onclick="quizPick(this)">C. 一个 4 元素列表，每行不含换行符</button>
+      <button class="opt" onclick="quizPick(this)">D. 一个文件对象，可继续逐行读取</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="readreadlinesreadline|read readlines readline" data-ok="✅ 正确！read() 全读返回字符串；readlines() 全读返回列表；readline() 一次读一行、内存占用最低。" data-no="❌ 三个方法名：整体读成字符串的、整体读成列表的、逐行读的。注意区分 readlines 和 readline 的单复数。">
+      <p>读取整个文件、返回一个字符串，用<b>＿＿</b>()；读取所有行、返回一个列表，用<b>＿＿</b>()；每次读一行、内存占用最低，用<b>＿＿</b>()。（填方法名，用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：read readlines readline">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">四个高频翻车点</div>
+      <p>①<b>print 输出隔行打印</b>：readline / for line 读到的行末尾<b>自带 \n</b>，print 又加一个换行——处理前先 <code>line.strip()</code> 或 print 时用 <code>end=''</code>；</p>
+      <p>②<b>readlines 的元素直接当数字算报错</b>：元素是带 \n 的字符串，要先 <code>strip()</code> 去掉换行、再拆分转换；</p>
+      <p>③<b>大文件用 read() 一口吞</b>：内存占用高，几百 MB 的日志文件会把程序撑垮——改用 readline 或 for line in file；</p>
+      <p>④<b>读完一次再读是接续不是重来</b>：连续两次 readline 读到的是第一行、第二行，想重读得等下一节的 seek(0)。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 读文件的三个方法：read(size)、readline()、readlines()。请：1）用「复印整本书 / 一次读一行 / 撕成纸条装袋」的类比解释三者的返回值和内存占用差异；2）给一段对 4 行文件连用 readline、read(3)、readlines 的代码，让我预测每步输出（提示指针接续），再逐行讲解；3）说明为什么 readline 读到的行末尾带 \n、print 时会出现空行，以及 for line in file 加 end='' 的写法要点。">
+      我刚学了 Python 读文件的三个方法：read(size)、readline()、readlines()。请：1）用「复印整本书 / 一次读一行 / 撕成纸条装袋」的类比解释三者的返回值和内存占用差异；2）给一段对 4 行文件连用 readline、read(3)、readlines 的代码，让我预测每步输出（提示指针接续），再逐行讲解；3）说明为什么 readline 读到的行末尾带 \n、print 时会出现空行，以及 for line in file 加 end='' 的写法要点。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：直接演练作业第 2 题（5 分钟）</span>
+    <ol class="steps">
+      <li>作业第 2 题要读上一节写的 scores.txt 求平均分：用 <code>r</code> 模式打开，先 <code>print(file.read())</code> 看看文件长什么样。</li>
+      <li>推荐写法：<code>for line in file</code> 逐行读，每行先用 <code>split()</code> 拆开——这正好衔接第三章学的字符串拆分方法。</li>
+      <li>拆出来的成绩是字符串，用 <code>float()</code> 转成数字再累加，最后除以人数得到平均分。</li>
+      <li>挑战：换成 <code>readlines()</code> 的写法实现同样的功能，体会两种方式各自要处理的细节（换行符 strip、下标访问）。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>read(size) 读取指定字符数（无参读全部）、返回字符串，适合小文件；readline() 一次读一行（含 \n）、内存占用低，适合大文件；readlines() 返回每行为元素的列表，适合中等文件按行操作；for line in file 是逐行遍历的首选写法；print 出现空行是因为行末自带 \n。下一节揭秘：读取时在背后默默移动的文件指针 tell 与 seek。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="7.07.html"><span class="nav-label">← 上一节</span><span class="nav-title">7.07 写文件：write 与 writelines</span></a>
+        <a class="next" href="7.09.html"><span class="nav-label">下一节 →</span><span class="nav-title">7.09 文件指针：tell 与 seek</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

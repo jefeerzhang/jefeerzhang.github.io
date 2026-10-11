@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.10 缩进与注释规范 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第二章 基础概念与数值 · 第 10 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch02.html">第二章 基础概念与数值</a><span class="sep">/</span>
+          <span class="current">2.10</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">10</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第二章 · 基础概念与数值</span>
+            <h1>缩进与注释规范</h1>
+            <p class="hero-summary">第 10 / 17 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序构成的两大核心</li>
+      <li>变量：概念与赋值</li>
+      <li>变量命名规则</li>
+      <li>数据类型总览</li>
+      <li>type() 查看类型</li>
+      <li>保留字（关键字）</li>
+      <li>函数：定义与调用</li>
+      <li>常用内置函数</li>
+      <li>输入输出函数</li>
+      <li class="cur">缩进与注释规范</li>
+      <li>数值类型总览</li>
+      <li>整数与四种进制</li>
+      <li>浮点数与精度陷阱</li>
+      <li>算术与增强赋值运算符</li>
+      <li>比较与逻辑运算符</li>
+      <li>运算符优先级</li>
+      <li>数值函数与 math 模块</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>Python 的「卷面分」是硬指标</h2>
+    <p>别的语言用花括号 <code>{ }</code> 划分代码块，Python 却靠<b>缩进</b>——缩进不是「好看」，而是<b>语法的一部分</b>，错一个空格程序就跑不起来。而<b>注释</b>则是写给「三个月后的自己」的备忘录。这一节两件事：</p>
+    <ul class="points">
+      <li><b>缩进规则</b>：同一代码块为什么必须对齐？错在哪会报什么错？</li>
+      <li><b>注释规范</b>：单行注释、行尾注释、多行注释分别怎么写？</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">缩进像作文段落空两格，注释像快递单备注</div>
+      <p>写作文时，<b>同一段落必须整齐对齐</b>——段落开头空两格、每行左对齐，错乱了老师会直接退回。Python 解释器就是那位严格的老师：缩进错乱？直接报错退稿。而<b>注释</b>像快递单上的备注：「易碎，轻拿轻放」——是写给<b>以后的自己和他人</b>看的说明，程序运行时会完全无视它。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>缩进规则与注释规范</h2>
+    <ul class="points">
+      <li><b>缩进核心规则</b>：同一代码块必须保持<b>相同缩进量</b>，用于区分语句层级。</li>
+      <li><b>规范建议</b>：按 PEP 8，推荐用 <b>4 个空格</b>作为一个缩进层级（在 IDLE 里按 Tab 键会自动补成 4 个空格）。</li>
+      <li><b>应用场景</b>：<code>if</code>、<code>while</code>、<code>for</code>、<code>def</code>、<code>class</code> 等关键字后的子句块——它们的<b>标志是冒号(:)</b>，冒号下面就是缩进的代码块。</li>
+      <li><b>错误提示</b>：出现 <code>unexpected indent</code> 错误，说明存在<b>语句缩进问题</b>。</li>
+      <li><b>单行注释</b>：以 <code>#</code> 开头，可位于行首（行注释），也可放在代码结尾（行尾注释）。</li>
+      <li><b>多行注释</b>：用<b>三个单引号或双引号</b>包裹（俗称「三引号字符串」——Python 并没有专门的多行注释语法，是借它当注释用），通常用于对整个函数或模块进行说明。</li>
+      <li><b>最佳实践</b>：注释应解释<b>为什么这么做</b>，而非做了什么。</li>
+      <li><b>快捷方式</b>：添加注释可使用快捷键 <code>CTRL+/</code>。</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">实战演示</span>
+    <h2>缩进对与错，一眼定输赢</h2>
+    <div class="quiz">
+      <div class="switch">
+        <button class="on" data-pane="pane-d1">✅ 缩进正确</button>
+        <button data-pane="pane-d2">❌ 缩进错误</button>
+      </div>
+      <div class="pane on" id="pane-d1">
+        <pre class="codeblock"><span class="good">if 1 &gt; 0:
+    print('条件成立')    # 同一代码块，缩进一致
+    print('执行完毕')    # 缩进量与上一行相同</span></pre>
+        <p>两条 print 都属于 if 的子句块，缩进量完全相同——运行正常，两行都输出。</p>
+      </div>
+      <div class="pane" id="pane-d2">
+        <pre class="codeblock">if 1 &gt; 0:
+    print('条件成立')
+  print('执行完毕')       <span class="bad"># ← IndentationError！这行缩进量比上一行少</span></pre>
+        <p>这行比上一行少缩进 2 格，又对不上外层的任何一级缩进，解释器当场报错：<code>IndentationError: unindent does not match any outer indentation level</code>——意思是「减少缩进后，和外面任何一级缩进都对不上」。</p>
+      </div>
+    </div>
+
+    <p style="margin-top:14px">再来看<b>注释三兄弟</b>的完整演示（课程例题）：</p>
+    <pre class="codeblock"># 这是行注释：单独占一行，解释下面的代码
+print(123)  # 这是行尾注释：跟在代码后面
+
+def fun1(a):
+    '''这是多行注释：用三引号包裹，
+    通常用于说明整个函数的功能'''
+    pass  # 函数实现没想好，用 pass 占位
+
+print(fun1.__doc__)  # 输出函数说明</pre>
+    <p>输出结果：<code>123</code> 与 <code>这是多行注释：用三引号包裹，</code><br><code>通常用于说明整个函数的功能</code></p>
+    <p class="muted">💡 说明：注释本身不参与运行，所以第一个输出是 123；<code>fun1.__doc__</code> 会取出函数体开头那段三引号注释（学名「文档字符串」），这就是多行注释的妙用。注意 Python 3.13 起编译器会自动剥掉 docstring 每行共有的前导空白，所以第二行那 4 个缩进空格不会出现在 <code>__doc__</code> 里。函数还没想好怎么写时，用 <code>pass</code> 占位防止报错。</p>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="0"
+         data-ok="✅ 答对了！unexpected indent 是缩进错误：同一代码块里出现了不一致的缩进量。"
+         data-no="❌ 不对哦。unexpected indent（意外缩进）是缩进问题——同一代码块的缩进量不一致，或在不该缩进的地方缩进了。">
+      <p style="font-weight:700;margin-bottom:12px">程序运行出现 <code>unexpected indent</code> 错误，说明了什么？</p>
+      <button class="opt" onclick="quizPick(this)">A. 存在语句缩进问题</button>
+      <button class="opt" onclick="quizPick(this)">B. 变量名拼写错误</button>
+      <button class="opt" onclick="quizPick(this)">C. 忘记安装第三方库</button>
+      <button class="opt" onclick="quizPick(this)">D. 注释写太多了</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="#CTRL+/|# CTRL+/" data-ok="✅ 正确！单行注释以 # 开头，编辑器里按 CTRL+/ 可以快速添加注释。" data-no="❌ 再想想：井号开头的那个符号是什么？添加注释的快捷键（提示：CTRL 加一个斜杠键）。">
+      <p>单行注释以<b>＿＿</b>开头；添加注释的快捷键是<b>＿＿</b>。（两空连填，中间用空格隔开，如：@ CTRL+X 的格式）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：# CTRL+/">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">空格和 Tab 混用，是缩进错误的高发区</div>
+      <p>规范建议每个缩进层级用 <b>4 个空格</b>，不要手动敲一长串空格，更不要混用 Tab。最隐蔽的坑是<b>空格与 Tab 混用</b>：屏幕上看两行「对齐了」，但空格算 1 个字符、Tab 算 1 个缩进单位，解释器眼里它们并不相等，照样报 <code>TabError: inconsistent use of tabs and spaces in indentation</code>（TabError 是 IndentationError 的子类）。所以：同一份代码里只能用一种，别混用。</p>
+      <p>另一个提醒：三引号要<b>成对出现</b>——开了 <code>'''</code> 就必须用 <code>'''</code> 收尾，混用不同引号会让字符串一直「吃」到很远的地方，报一堆莫名其妙的错。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的缩进与注释规范。请：1）解释为什么缩进在 Python 里是语法的一部分，unexpected indent 错误是怎么回事；2）分别演示行注释、行尾注释、三引号多行注释和 __doc__ 的用法；3）出 2 道单选题考我，等我作答后再公布答案。">
+      我刚学了 Python 的缩进与注释规范。请：1）解释为什么缩进在 Python 里是语法的一部分，unexpected indent 错误是怎么回事；2）分别演示行注释、行尾注释、三引号多行注释和 __doc__ 的用法；3）出 2 道单选题考我，等我作答后再公布答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：故意制造一个缩进错误（3 分钟）</span>
+    <ol class="steps">
+      <li>打开命令行输入 <code>python</code> 进入交互模式。</li>
+      <li>输入 <code>if 1&gt;0:</code> 回车——注意行尾的冒号，它宣告「下面是一个缩进块」。</li>
+      <li>下一行先正常输入 <code>print('ok')</code> 回车，应该输出 ok。</li>
+      <li>再来一次：输入 <code>if 1&gt;0:</code> 回车后，<b>先敲 4 个空格</b>输入 <code>print('a')</code>，再<b>只敲 2 个空格</b>输入 <code>print('b')</code>——把缩进「倒回去」，但没回到最外层。</li>
+      <li>观察报错信息：<code>IndentationError: unindent does not match any outer indentation level</code>（箭头指向 <code>print('b')</code> 那一行）——恭喜，你亲手复现了本节最重要的错误。注意：如果只是在缩进块里「多敲几个空格」，Python 反而<b>不报错</b>，只要这一块内部保持一致即可。</li>
+      <li>再试试把 <code># 这是注释</code> 敲进去，观察解释器如何「无视」它。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>缩进是 Python 的<b>语法</b>：同一代码块必须缩进一致，冒号(:)后跟缩进块，Tab 键缩进更规范，缩进出错会报 <code>IndentationError</code>（如 <code>unexpected indent</code>、<code>unindent does not match any outer indentation level</code>）。注释有三种：<code>#</code> 行注释、行尾注释、三引号多行注释（可用 <code>__doc__</code> 取出），快捷键 <code>CTRL+/</code>，最佳实践是写「为什么」而不是「做了什么」。下一节：正式进入数值世界——数值类型总览。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="2.09.html"><span class="nav-label">← 上一节</span><span class="nav-title">2.09 输入输出函数</span></a>
+        <a class="next" href="2.11.html"><span class="nav-label">下一节 →</span><span class="nav-title">2.11 数值类型总览</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.18 字典删除 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第四章 元组、集合和字典 · 第 18 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch04.html">第四章 元组、集合和字典</a><span class="sep">/</span>
+          <span class="current">4.18</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">18</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第四章 · 元组、集合和字典</span>
+            <h1>字典删除</h1>
+            <p class="hero-summary">第 18 / 21 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>元组的定义与特性</li>
+      <li>元组的创建</li>
+      <li>元组索引与切片</li>
+      <li>元组运算</li>
+      <li>元组函数与方法</li>
+      <li>元组的不可变性</li>
+      <li>集合的定义与特性</li>
+      <li>集合的创建</li>
+      <li>集合运算：交差并补</li>
+      <li>集合操作：增删元素</li>
+      <li>集合运算并更新</li>
+      <li>集合函数与判断方法</li>
+      <li>序列与映射</li>
+      <li>字典的定义与特性</li>
+      <li>字典的创建</li>
+      <li>字典访问与三视图</li>
+      <li>字典添加与修改</li>
+      <li class="cur">字典删除</li>
+      <li>字典其他操作</li>
+      <li>组合数据类型总结</li>
+      <li>数据类型转换</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>加得进去，也要删得出去</h2>
+    <p>上一节学会了添加和修改，这一节补齐另一半：删除。字典删除有四种姿势——<code>del</code>、<code>pop()</code>、<code>popitem()</code>、<code>clear()</code>，它们「删东西」的方式不同、<b>「有没有返回值」也不同</b>，这是考试最爱对比的点：删完还要用那个值，就选 pop；只是默默删掉，就选 del。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">撕名册、退房还行李、后进先出、整栋清空</div>
+      <p><b>del dc[key] 像「直接撕掉名册一行」</b>：删得干脆，什么都不留下（没有返回值）。<b>pop(key) 像「退房时把行李还给你」</b>：人走了，但行李（value）交到你手上。 <b>popitem() 像「最后入住的先退房」</b>：删掉最后插入的一组键值对并返回它，后进先出。<b>clear() 像「整栋楼清空但楼还在」</b>：键值对全没了，字典 dc 还在，只是空了。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>四种删除方法一览</h2>
+    <table>
+      <tr><th>方法</th><th>说明</th></tr>
+      <tr><td><code>del dc[key]</code></td><td>删除键为 key 的键值对，<b>没有返回值</b></td></tr>
+      <tr><td><code>dc.pop(key)</code></td><td>删除键为 key 的键值对，返回值为 key 对应的 <b>value</b></td></tr>
+      <tr><td><code>dc.popitem()</code></td><td>删除字典里<b>最后插入</b>的一组键值对，并返回该键值对</td></tr>
+      <tr><td><code>dc.clear()</code></td><td>清空字典，<b>没有返回值</b></td></tr>
+    </table>
+    <ul class="points">
+      <li>del 和 clear 是「闷声删」：无返回值；pop 和 popitem 是「删完还给你」：有返回值</li>
+      <li>pop 返回的是<b>值</b>，popitem 返回的是 <b>(键, 值) 元组</b>——别搞混</li>
+      <li>clear 之后 dc 是空字典 {}（名字还在）；<code>del dc</code> 是连整个名字一起删（呼应第三章 del 列表）</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>🔬 del vs pop：同一个任务，两种做法</h2>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-bottom:20px">
+      <div class="switch">
+        <button class="on" data-pane="pane-del">del：闷声删</button>
+        <button data-pane="pane-pop">pop：删完还给你</button>
+      </div>
+      <div class="pane on" id="pane-del">
+        <p style="font-weight:700;margin-bottom:6px">任务：删掉键 'b' —— del 版</p>
+        <pre class="codeblock">DC8 = {'a': 1, 'b': 2, 'c': '3', 'd': 4, 'e': 5}
+del DC8['b']
+print(DC8)</pre>
+        <p>输出结果：</p>
+        <pre class="codeblock out"><span class="good">{'a': 1, 'c': '3', 'd': 4, 'e': 5}</span></pre>
+        <p style="font-size:14px;color:var(--ink2)">'b' 的键值对没了，del 没有返回值——闷声删，值 2 就此消失，事后拿不回来。</p>
+      </div>
+      <div class="pane" id="pane-pop">
+        <p style="font-weight:700;margin-bottom:6px">任务：删掉键 'b' —— pop 版</p>
+        <pre class="codeblock">DC8 = {'a': 1, 'b': 2, 'c': '3', 'd': 4, 'e': 5}
+print(DC8.pop('b'))
+print(DC8)</pre>
+        <p>输出结果：</p>
+        <pre class="codeblock out"><span class="good">2
+{'a': 1, 'c': '3', 'd': 4, 'e': 5}</span></pre>
+        <p style="font-size:14px;color:var(--ink2)">同样删掉 'b'，但 pop 把值 2 返回给你——删完还要用这个值，就选 pop。</p>
+      </div>
+    </div>
+    <h2>🔬 PPT 原例：DC8 的四步删除流程</h2>
+    <pre class="codeblock">DC8 = {'a': 1, 'b': 2, 'c': '3', 'd': 4, 'e': 5}
+del DC8['c']
+print(DC8)
+print(DC8.pop('b'), DC8)
+print(DC8.popitem(), DC8)
+print(DC8.clear(), DC8)</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out"><span class="good">{'a': 1, 'b': 2, 'd': 4, 'e': 5}
+2 {'a': 1, 'd': 4, 'e': 5}
+('e', 5) {'a': 1, 'd': 4}
+None {}</span></pre>
+    <ul class="points">
+      <li>popitem 返回 <code>('e', 5)</code>——'e' 是最后插入的一组，后进先出，返回的是 (键, 值) 元组</li>
+      <li>clear 返回 None，但 DC8 变成了空字典 {}——楼还在，人全搬走了</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！pop(key) 删除键值对的同时返回 key 对应的 value，所以 print(DC8.pop('b')) 输出 2。"
+         data-no="❌ pop 返回的是被删键对应的「值」而不是键本身：pop('b') 删掉 'b':2，返回 2。">
+      <p style="font-weight:700;margin-bottom:12px"><code>DC8 = {'a': 1, 'b': 2}</code>，<code>print(DC8.pop('b'))</code> 输出的是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 'b'</button>
+      <button class="opt" onclick="quizPick(this)">B. 2</button>
+      <button class="opt" onclick="quizPick(this)">C. {'b': 2}</button>
+      <button class="opt" onclick="quizPick(this)">D. None</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="最后|最后插入|末尾"
+         data-ok="✅ 正确！popitem() 删除字典里最后插入的一组键值对，并返回该键值对——后进先出。"
+         data-no="❌ 提示：popitem 删的不是随机一组，也不是第一组，而是「最后插入」的那一组。">
+      <p><code>dc.popitem()</code> 删除字典里 <code>___</code> 插入的一组键值对，并返回该键值对。（填一个词）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：最后">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">KeyError、后进先出与「楼还在」</div>
+      <p><b>del dc[key] 和 pop(key) 在键不存在时都报 KeyError</b>——删之前要确定键在；拿不准就先 <code>if key in dc</code> 判断（字典的 in 判断在 4.19 学过）。</p>
+      <p><b>popitem 删的是「最后插入」的键值对</b>，不是随机一组——很多同学以为它跟随机有关，这是错的（Python 3.7+ 字典保持插入顺序）。</p>
+      <p><b>clear 之后 dc 还在</b>，只是变成了空字典 {}；想让 dc 这个名字彻底消失，要用 <code>del dc</code> 删整个变量——清空和删除是两码事（呼应第三章 del 列表）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 字典的四种删除方法：del dc[key] 删除指定键值对无返回值；dc.pop(key) 删除并返回对应的 value；dc.popitem() 删除最后插入的一组键值对并返回 (键, 值) 元组；dc.clear() 清空字典无返回值，clear 后 dc 仍是空字典。请：1）用撕名册、退房还行李、后进先出、整栋清空的类比复述四种方法；2）出 5 道「给出代码写出输出」的删除题；3）讲讲 del dc[key] 与 del dc 的区别。">
+      我刚学了 Python 字典的四种删除方法：del dc[key] 删除指定键值对无返回值；dc.pop(key) 删除并返回对应的 value；dc.popitem() 删除最后插入的一组键值对并返回 (键, 值) 元组；dc.clear() 清空字典无返回值，clear 后 dc 仍是空字典。请：1）用撕名册、退房还行李、后进先出、整栋清空的类比复述四种方法；2）出 5 道「给出代码写出输出」的删除题；3）讲讲 del dc[key] 与 del dc 的区别。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：完整跑 DC8 的四步删除（5 分钟）</span>
+    <ol class="steps">
+      <li>创建 <code>DC8 = {'a': 1, 'b': 2, 'c': '3', 'd': 4, 'e': 5}</code>（注意 'c' 的值是字符串 '3'，故意埋的类型坑）。</li>
+      <li>第一步 <code>del DC8['c']</code> 后 print，对照本页输出 <code>{'a': 1, 'b': 2, 'd': 4, 'e': 5}</code>。</li>
+      <li>第二步 <code>print(DC8.pop('b'), DC8)</code>——确认返回值是 2。</li>
+      <li>第三步 <code>print(DC8.popitem(), DC8)</code>——确认返回 ('e', 5) 这个元组。</li>
+      <li>第四步 <code>print(DC8.clear(), DC8)</code>——确认输出 None {}，收工对照 PPT。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>删除四法：<code>del dc[key]</code> 无返回值闷声删、<code>pop(key)</code> 返回被删的值、<code>popitem()</code> 删最后插入的一组并返回 (键, 值) 元组、<code>clear()</code> 清空成 {} 但字典还在。删完还要用值选 pop，键不存在都会 KeyError。下一节：字典的其他常用操作。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="4.17.html"><span class="nav-label">← 上一节</span><span class="nav-title">4.17 字典添加与修改</span></a>
+        <a class="next" href="4.19.html"><span class="nav-label">下一节 →</span><span class="nav-title">4.19 字典其他操作</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

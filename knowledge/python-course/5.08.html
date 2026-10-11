@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.08 无限循环 while · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第五章 程序控制 · 第 8 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.treadmill{display:flex;align-items:center;gap:12px;background:var(--accent-soft);border:1px solid #d8e0fc;
+  border-radius:12px;padding:12px 16px;margin:10px 0;font-size:14px;flex-wrap:wrap}
+.treadmill .tp{background:#fff;border:1.5px solid var(--accent);color:var(--accent);border-radius:999px;
+  padding:4px 14px;font-weight:700;font-size:13px}
+.treadmill .arr{color:var(--accent);font-weight:800}
+.count{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.count span{font-family:Consolas,monospace;background:#fff;border:1px solid var(--border);border-radius:8px;
+  min-width:36px;text-align:center;padding:6px 4px;font-size:14px;font-weight:700;color:var(--ink)}
+.count span.launch{background:var(--accent);border-color:var(--accent);color:#fff;width:auto;padding:6px 12px}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch05.html">第五章 程序控制</a><span class="sep">/</span>
+          <span class="current">5.08</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">08</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第五章 · 程序控制</span>
+            <h1>无限循环 while</h1>
+            <p class="hero-summary">第 8 / 17 节 · 约 12 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序控制结构概述</li>
+      <li>单分支结构 if</li>
+      <li>双分支结构 if-else</li>
+      <li>IF 表达式</li>
+      <li>多分支结构 if-elif-else</li>
+      <li>嵌套分支结构</li>
+      <li>嵌套与多分支对比</li>
+      <li class="cur">无限循环 while</li>
+      <li>range 函数与遍历整数</li>
+      <li>遍历字符串列表元组</li>
+      <li>遍历字典</li>
+      <li>循环控制 break 与 continue</li>
+      <li>循环嵌套</li>
+      <li>常见语法错误</li>
+      <li>常见运行异常</li>
+      <li>异常处理语句</li>
+      <li>综合实战：古算题与成绩单</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>for 循环要先知道次数，可有些循环「跑几次」事先说不准</h2>
+    <p>「用户不停输成绩，输到负数为止」「倒计时 10 秒发射」「从 1 加到 100」——这类任务的共同点是：<b>循环次数不确定</b>，得看条件什么时候不成立。<b>无限循环</b>就是有一定条件控制的循环运行方式：条件成立时循环进行，条件不成立时循环终止。它是 while 家族的第一课，也是本章作业第 6 题的关键。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">while 像「跑步机」：条件是教练的口令，更新是你迈的步子</div>
+      <p>教练喊「还没到 10 就继续跑」（<code>while a &lt; 10</code>），你每跑一步数字就 +2（<code>a += 2</code>），终于达到 10，口令停了，你才能下来。<b>要是你光跑不迈步子（忘了写更新语句）呢？</b>数字永远不变、口令永远不停——这就是「永远跑不到终点」的<b>死循环</b>：机器越跑越烫，程序永远不结束。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>while 语法与注意事项</h2>
+    <pre class="codeblock">while &lt;条件&gt;:
+    &lt;循环语句块&gt;</pre>
+    <ul class="points">
+      <li><b>当条件不成立，循环语句不会执行</b>——哪怕一次都不执行（看下面的 while False 例子）</li>
+      <li><b>当条件恒成立，循环语句不会终止，称为死循环</b>，即循环次数无限制（如 <code>while True</code>）</li>
+      <li><b>一定注意控制循环终止的循环条件</b>——条件里用到的变量必须在循环体内被更新，否则就是死循环</li>
+    </ul>
+    <table>
+      <tr><th>循环三要素（以示例 02「输出 10 以内的奇数」为例）</th><th>代码</th><th>作用</th></tr>
+      <tr><td>① 初始化</td><td><code>a = 1</code></td><td>给条件里的变量一个起点</td></tr>
+      <tr><td>② 条件</td><td><code>while a &lt; 10</code></td><td>决定继续跑还是停</td></tr>
+      <tr><td>③ 更新</td><td><code>a += 2</code></td><td>让变量朝「条件不成立」的方向靠近</td></tr>
+    </table>
+    <p style="margin-top:10px">三要素缺一不可：<b>忘写更新语句，就是死循环</b>。</p>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例 01：while False 与 while True 的两个极端</h2>
+    <div class="switch">
+      <button class="on" data-pane="p-false" onclick="switchPane(this, 'p-false')">while False：一次不执行</button>
+      <button data-pane="p-true" onclick="switchPane(this, 'p-true')">while True：死循环</button>
+    </div>
+    <div class="pane on" id="p-false">
+      <pre class="codeblock">print("开始")
+while False:
+    print("热血男儿当自强。")
+print("结束")</pre>
+      <p>输出结果：</p>
+      <pre class="codeblock out">开始
+结束</pre>
+      <ul class="points">
+        <li>条件 <code>False</code> 一开始就不成立 → 循环体<b>一次都不执行</b>，直接跳到 <code>print("结束")</code></li>
+        <li>这印证了注意事项第 1 条：<b>当条件不成立，循环语句不会执行</b></li>
+      </ul>
+    </div>
+    <div class="pane" id="p-true">
+      <pre class="codeblock">print("开始")
+while True:
+    print("热血男儿当自强。")
+print("结束")</pre>
+      <p>输出结果：</p>
+      <pre class="codeblock out">开始
+热血男儿当自强。
+热血男儿当自强。
+热血男儿当自强。
+……（永远停不下来，「结束」永远打不出来）</pre>
+      <ul class="points">
+        <li>条件 <code>True</code> 恒成立 → <b>死循环</b>，循环次数无限制，程序不会自己停</li>
+        <li>想让它停下来：<b>按 Ctrl+C 强制停止</b>（命令行里）或点编辑器的停止按钮</li>
+      </ul>
+    </div>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>PPT 原例 02、03：从奇数到倒计时到累加和</h2>
+    <h3 style="font-size:16px;margin:10px 0 4px">任务 1：输出 10 以内的奇数（循环三要素齐全）</h3>
+    <pre class="codeblock">a = 1          <span class="good"># ① 初始化</span>
+while a &lt; 10:  <span class="good"># ② 条件</span>
+    print(a)
+    a += 2     <span class="good"># ③ 更新：每次 +2，保证只经过奇数</span></pre>
+    <p>输出结果：<code>1</code>、<code>3</code>、<code>5</code>、<code>7</code>、<code>9</code>，五个数各占一行（<code>print(a)</code> 默认换行；想连成一行要像任务 2 那样加 <code>end=" "</code>）——走到 9 后 a 变成 11，条件 <code>11 &lt; 10</code> 不成立，循环终止。</p>
+    <h3 style="font-size:16px;margin:16px 0 4px">任务 2：10 的倒计时（end=" " 不换行）</h3>
+    <pre class="codeblock">n = 10
+while n &gt; 0:
+    print(n, end=" ")
+    n -= 1
+print("发射！")</pre>
+    <p>输出结果：</p>
+    <div class="count"><span>10</span><span>9</span><span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span><span class="launch">🚀 发射！</span></div>
+    <ul class="points">
+      <li><code>end=" "</code> 让 print 打印完不换行（默认 <code>end="\n"</code>），多个数字才连在同一行——呼应 2.09 学过的 print 参数</li>
+    </ul>
+    <h3 style="font-size:16px;margin:16px 0 4px">任务 3：求 1 到 100 累计和（经典累加器）</h3>
+    <pre class="codeblock">total = 0        <span class="good"># 累加器先清零</span>
+i = 1          <span class="good"># ① 初始化</span>
+while i &lt;= 100:  <span class="good"># ② 条件</span>
+    total += i
+    i += 1     <span class="good"># ③ 更新</span>
+print(f"1+2+3+...+100={total}")</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">1+2+3+...+100=5050</pre>
+    <ul class="points">
+      <li><code>total += i</code> 是「累加器」套路：每次循环往 total 上加一个 i，循环结束 total 就是总和</li>
+      <li>条件是 <code>i &lt;= 100</code>，若误写成 <code>i &lt; 100</code>，100 就加不进去，答案是 4950——边界值要盯紧</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！while True 条件恒成立、循环永远不会终止，这就是 PPT 里说的死循环——循环次数无限制。"
+         data-no="❌ 回忆注意事项：当条件恒成立，循环语句不会终止，这种循环有一个专门的名字——以「死」字开头的三个字。">
+      <p style="font-weight:700;margin-bottom:12px"><code>while True:</code> 构成的循环称为？</p>
+      <button class="opt" onclick="quizPick(this)">A. 空循环</button>
+      <button class="opt" onclick="quizPick(this)">B. 死循环</button>
+      <button class="opt" onclick="quizPick(this)">C. 遍历循环</button>
+      <button class="opt" onclick="quizPick(this)">D. 嵌套循环</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="不会死循环|不会 死循环" data-ok="✅ 正确！条件不成立一次都不执行，条件恒成立永不终止——while 的两个极端都见识过了。" data-no="❌ 两个空：条件不成立时循环语句＿执行（while False 那个例子）；条件恒成立时循环不会终止，称为＿。">
+      <p>while 循环中：当条件不成立，循环语句＿＿执行；当条件恒成立，循环语句不会终止，称为＿＿。（两空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：不会 死循环">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>死循环了怎么办</b>：程序卡住不结束，在命令行按 <b>Ctrl+C</b> 强制停止（或点编辑器的停止按钮）——死循环本身不报错，它只是「永远跑不完」；</p>
+      <p>②<b>更新语句的缩进必须在循环体内</b>：把 <code>i += 1</code> 顶格写在 while 外面，它每次循环后都不会被执行（只在循环彻底结束后跑一次），条件永远成立，照样死循环；</p>
+      <p>③<b>边界值差一个，结果差 100</b>：求 1~100 的和，条件 <code>i &lt;= 100</code> 得 5050，写成 <code>i &lt; 100</code> 就得 4950——差了整整一个 100。写完循环，先拿小数据（比如 1~10）验一遍边界。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的 while 无限循环。请：1）用「跑步机」的类比解释循环三要素（初始化、条件、更新），并说明忘写更新为什么是死循环；2）出 5 道 while 循环求输出结果的题考我（含一道 while False、一道边界值差一、一道累加器）；3）讲讲 while True 加 break 的「持续接收输入」套路什么时候用；4）给我一段故意写成死循环的代码，让我找出问题并改正。">
+      我刚学了 Python 的 while 无限循环。请：1）用「跑步机」的类比解释循环三要素（初始化、条件、更新），并说明忘写更新为什么是死循环；2）出 5 道 while 循环求输出结果的题考我（含一道 while False、一道边界值差一、一道累加器）；3）讲讲 while True 加 break 的「持续接收输入」套路什么时候用；4）给我一段故意写成死循环的代码，让我找出问题并改正。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：跑通三段经典代码（8 分钟）</span>
+    <ol class="steps">
+      <li>把示例 02 的三段代码（奇数、倒计时、累加和）敲进编辑器逐个跑通，输出应分别为 <code>1</code>、<code>3</code>、<code>5</code>、<code>7</code>、<code>9</code>（每个数一行）、<code>10 9 8 7 6 5 4 3 2 1 发射！</code>、<code>5050</code>。</li>
+      <li>破坏性实验：把奇数那段的 <code>a += 2</code> 注释掉（或删掉），跑一下体验死循环，然后 <b>Ctrl+C</b> 强停——亲身体会「忘写更新 = 死循环」，比背十遍都管用。</li>
+      <li>边界实验：把累加和的条件改成 <code>i &lt; 100</code>，看输出是不是 4950；再改回 <code>i &lt;= 100</code> 验证 5050。</li>
+      <li>预习本章作业第 6 题（持续接收输入直到输入负数停止）：它没法提前知道要输几个数，是 while 的典型应用——循环条件可以写成 <code>True</code>，在循环体内检测到负数时用 <code>break</code> 退出（break 在后面「循环控制 break 与 continue」那节详讲，先照着敲）。提示模板：<code>while True:</code> 里先 <code>input</code>，再 <code>if x &lt; 0: break</code>，最后处理合法数据。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>while 适合<b>循环次数不确定</b>的任务：条件成立就循环，不成立就终止；条件不成立时循环体一次都不执行，条件恒成立就是<b>死循环</b>（Ctrl+C 强停）。写 while 必备<b>三要素</b>：初始化、条件、更新——忘写更新就是死循环，边界值差一结果就错。下一节：range 函数与遍历整数——给「次数确定」的循环配上自动发号器。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="5.07.html"><span class="nav-label">← 上一节</span><span class="nav-title">5.07 嵌套与多分支对比</span></a>
+        <a class="next" href="5.09.html"><span class="nav-label">下一节 →</span><span class="nav-title">5.09 range 函数与遍历整数</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：切换「while False / while True」两个 pane */
+function switchPane(btn, id){
+  btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  const panes = btn.closest('section').querySelectorAll('.pane');
+  panes.forEach(p => p.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+</script>
+</body>
+</html>

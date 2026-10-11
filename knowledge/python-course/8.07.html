@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8.07 三种方法：实例·类·静态 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第八章 面向对象编程 · 第 7 / 12 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.play{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.crow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.clog{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14px;min-height:130px;white-space:pre-wrap;line-height:1.8}
+.tblwrap{overflow-x:auto;margin-top:14px}
+table.m3{width:100%;border-collapse:collapse;font-size:14px;background:#fff;border:1.5px solid var(--border)}
+table.m3 th, table.m3 td{padding:10px 12px;border:1px solid var(--border);text-align:left;line-height:1.7;vertical-align:top}
+table.m3 th{background:var(--accent-soft);color:var(--ink);font-weight:800;white-space:nowrap}
+table.m3 td:first-child{font-weight:800;color:var(--accent);white-space:nowrap}
+table.m3 code{white-space:nowrap}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch08.html">第八章 面向对象编程</a><span class="sep">/</span>
+          <span class="current">8.07</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">07</span>
+            <span class="lesson-hero-num-total">/ 12</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第八章 · 面向对象编程</span>
+            <h1>三种方法：实例·类·静态</h1>
+            <p class="hero-summary">第 7 / 12 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 12 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>编程的两种范式</li>
+      <li>面向对象的三大特性</li>
+      <li>四个核心概念：类·对象·属性·方法</li>
+      <li>创建类：class·__init__·self</li>
+      <li>创建对象与访问成员</li>
+      <li>实例属性与类属性</li>
+      <li class="cur">三种方法：实例·类·静态</li>
+      <li>封装与私有属性</li>
+      <li>继承与 super()</li>
+      <li>多重继承</li>
+      <li>多态与方法重写</li>
+      <li>综合案例：商品库存管理</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>类里的方法不止一种「打开方式」</h2>
+    <p>你早就写过 <code>def get_name(self)</code> 这样的方法了——但它只是三种方法之一。有的方法要操作<b>某个对象自己的</b>数据，有的要操作<b>全体共享的</b>类属性，还有的逻辑上属于这个类、却谁的属性都不碰。上一节刚分完「实例属性 vs 类属性」，这一节的三种方法正好一一对应：管自己的、管全班的、谁都不管的。考试读代码题最爱在这张对比表里出题。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">一对一辅导、发全校通知、借个教室开讲座</div>
+      <p><b>实例方法</b>像班主任给<b>某个学生</b>做一对一辅导——必须先指定是哪个学生（self），才能辅导他本人；<b>类方法</b>像教务处发<b>全校通知</b>——面向整个年级（cls），不需要针对某一个人；<b>静态方法</b>像校外机构<b>借学校教室开讲座</b>——活动挂在学校名下，但既不针对某个学生、也不针对全班，谁的数据都不动。口诀：<b>self 管自己、cls 管全班、静态方法像路过借个地方写函数</b>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>三种方法对比表（完整版）</h2>
+    <div class="tblwrap">
+      <table class="m3">
+        <tr><th>特征</th><th>实例方法</th><th>类方法</th><th>静态方法</th></tr>
+        <tr><td>装饰器</td><td>无</td><td><code>@classmethod</code></td><td><code>@staticmethod</code></td></tr>
+        <tr><td>必填参数</td><td><code>self</code>（位列第 1）</td><td><code>cls</code>（位列第 1）</td><td>无</td></tr>
+        <tr><td>能操作的属性</td><td>实例属性</td><td>类属性</td><td>通常都不碰（需要时可显式访问）</td></tr>
+        <tr><td>调用方式</td><td>只能由对象调用</td><td>类、对象都可以</td><td>类、对象都可以</td></tr>
+        <tr><td>使用场景</td><td>需要操作实例属性的场景</td><td>需要操作类属性的场景</td><td>逻辑上属于类、但不需要操作实例属性和类属性的场景</td></tr>
+      </table>
+    </div>
+
+    <div class="play" style="margin-top:14px">
+      <p style="font-weight:700;margin-bottom:10px">🔬 三种方法调用实验台：每种方法点一遍，看谁能用类名调、谁能用对象调</p>
+      <div class="crow">
+        <button class="btn-main btn" onclick="mDo('create')">s = Student('张三')</button>
+        <button class="btn-ghost btn" onclick="mDo('get_name')">print(s.get_name())</button>
+        <button class="btn-ghost btn" onclick="mDo('get_count')">print(Student.get_count())</button>
+        <button class="btn-ghost btn" onclick="mDo('is_adult')">print(Student.is_adult(20))</button>
+        <button class="btn-main btn" onclick="mDo('create2')">再创建一个 Student('李四')</button>
+        <button class="btn-ghost btn" onclick="mDo('get_count2')">print(Student.get_count())</button>
+        <button class="btn-ghost btn" onclick="mDo('reset')">重置</button>
+      </div>
+      <div class="clog" id="clog">先创建一个对象（count 从 0 变 1），再把三种方法各调用一次。</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：一个类里装齐三种方法</h2>
+    <pre class="codeblock">class Student:
+    count = 0                          # 类属性：学生总数
+
+    def __init__(self, name):
+        self.name = name               # 实例属性：学生姓名
+        Student.count += 1             # 每创建一个对象，计数 +1
+
+    def get_name(self):                # 实例方法：操作实例属性
+        return self.name
+
+    @classmethod
+    def get_count(cls):                # 类方法：操作类属性
+        return f'当前共 {cls.count} 名学生'
+
+    @staticmethod
+    def is_adult(age):                 # 静态方法：谁的属性都不碰
+        return age &gt;= 18
+
+s = Student('张三')
+print(s.get_name())
+print(Student.get_count())
+print(Student.is_adult(20))</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">张三
+当前共 1 名学生
+True</pre>
+    <ul class="points">
+      <li><code>get_name(self)</code> 没有装饰器——实例方法，读的是 s 自己的 name，只能由对象调用</li>
+      <li><code>get_count(cls)</code> 带 <code>@classmethod</code>——第一个参数 cls 指向类本身，读类属性 count；用 <code>Student.get_count()</code> 调用</li>
+      <li><code>is_adult(age)</code> 带 <code>@staticmethod</code>——没有 self 也没有 cls，参数只有外面的 age，逻辑上属于类但不碰任何属性</li>
+      <li>创建对象时 <code>__init__</code> 里执行 <code>Student.count += 1</code>——用类属性统计「一共建过几个对象」，注意这里用的是<b>类名</b>而不是 self</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！静态方法既没有 self 也没有 cls，不能操作实例属性和类属性，只负责一段逻辑上属于类的通用功能。"
+         data-no="❌ 回看对比表：静态方法没有 self/cls 必填参数，也不能操作实例属性和类属性——选项 C 说的正是它的本质特征。">
+      <p style="font-weight:700;margin-bottom:12px">关于静态方法（@staticmethod），下列说法<b>正确</b>的是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 第一个参数必须是 cls</button>
+      <button class="opt" onclick="quizPick(this)">B. 只能由对象调用</button>
+      <button class="opt" onclick="quizPick(this)">C. 不能操作实例属性和类属性</button>
+      <button class="opt" onclick="quizPick(this)">D. 必须至少接收一个参数</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="self@classmethod静态|self @classmethod 静态" data-ok="✅ 全对！self 管自己（实例方法）、@classmethod 管全班（类方法）、静态方法谁都不管。" data-no="❌ 提示：三个空分别是——实例方法的第一个参数是＿＿；类方法需要加的装饰器是＿＿；既不操作实例属性也不操作类属性的是＿＿方法。">
+      <p>实例方法的第一个参数是<b>＿＿</b>；类方法要用装饰器<b>＿＿</b>来标记；三种方法中，逻辑上属于类但既不需要操作实例属性、也不需要操作类属性的是<b>＿＿</b>方法。（三空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：self @classmethod 静态">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>类方法里写 self</b>：<code>@classmethod</code> 的第一个参数是 <code>cls</code>，方法体里写 self 直接 NameError——读类属性要用 <code>cls.count</code>；</p>
+      <p>②<b>用类名调实例方法</b>：<code>Student.get_name()</code> 报 TypeError——实例方法的 self 没着落（没说是哪个对象），只能由对象调用；</p>
+      <p>③<b>静态方法里偷偷用 self</b>：静态方法根本没有 self 这个参数，方法体里写 self 必然 NameError——它就是「谁的属性都不碰」。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的三种方法：实例方法（第一个参数 self，操作实例属性，只能由对象调用）、类方法（@classmethod + cls，操作类属性，类和对象都能调）、静态方法（@staticmethod，无必填参数，什么属性都不操作）。请：1）用「一对一辅导 / 发全校通知 / 借教室开讲座」的类比帮我区分三种方法；2）出 5 道判断「该用哪种方法」的设计题考我（如统计对象总数、判断年龄是否成年、计算每个学生的平均分）；3）各给一个用错方法类型的报错示例并解释报错原因。">
+      我刚学了 Python 的三种方法：实例方法（第一个参数 self，操作实例属性，只能由对象调用）、类方法（@classmethod + cls，操作类属性，类和对象都能调）、静态方法（@staticmethod，无必填参数，什么属性都不操作）。请：1）用「一对一辅导 / 发全校通知 / 借教室开讲座」的类比帮我区分三种方法；2）出 5 道判断「该用哪种方法」的设计题考我（如统计对象总数、判断年龄是否成年、计算每个学生的平均分）；3）各给一个用错方法类型的报错示例并解释报错原因。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：当一回「方法设计师」（10 分钟）</span>
+    <ol class="steps">
+      <li>读代码预测：在实验台依次点「s = Student('张三')」和「再创建一个 Student('李四')」，再点 <code>print(Student.get_count())</code>——先猜输出是几名，再验证。（必须先创建对象，实验台才允许调用 <code>get_count()</code>。）</li>
+      <li>改代码试效果：给 Student 加一个类方法 <code>reset_count(cls)</code>，把 count 清零并打印「计数已清零」，然后先创建几个对象再调用它。</li>
+      <li>把 <code>is_adult</code> 的装饰器去掉、加上 self 参数改成实例方法，试试 <code>Student.is_adult(20)</code> 还能不能直接调——体会「实例方法只能由对象调用」。</li>
+      <li>挑战：设计一个 Temperature 类，用静态方法 <code>c2f(c)</code> 把摄氏温度转成华氏温度（公式 f = c × 1.8 + 32），既不碰实例属性也不碰类属性。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>三种方法一张表记住：实例方法——无装饰器、self 在第 1 位、操作实例属性、只能由对象调用；类方法——<code>@classmethod</code>、cls 在第 1 位、操作类属性、类和对象都能调；静态方法——<code>@staticmethod</code>、无必填参数、什么属性都不操作、类和对象都能调。口诀：self 管自己、cls 管全班、静态方法借个地方写函数。下一节：用双下划线把属性「藏」起来——封装与私有属性。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="8.06.html"><span class="nav-label">← 上一节</span><span class="nav-title">8.06 实例属性与类属性</span></a>
+        <a class="next" href="8.08.html"><span class="nav-label">下一节 →</span><span class="nav-title">8.08 封装与私有属性</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：三种方法调用实验台（模拟 Student 类行为） */
+let count, sName, logs;
+function mReset(){
+  count = 0; sName = null;
+  logs = ['# Student.count = 0（类属性）· 还没有对象'];
+  mRender();
+}
+function mRender(){
+  document.getElementById('clog').textContent = logs.join('\n');
+}
+function mDo(op){
+  if (op === 'reset'){ mReset(); return; }
+  if (op === 'create'){
+    count += 1; sName = '张三';
+    logs.push("s = Student('张三')");
+    logs.push('# __init__ 执行：Student.count += 1 → count = ' + count);
+    mRender(); return;
+  }
+  if (op === 'create2'){
+    count += 1;
+    logs.push("s2 = Student('李四')");
+    logs.push('# 又创建一个对象 → count = ' + count);
+    mRender(); return;
+  }
+  if (!sName){ logs.push('# 还没有对象，请先创建 s = Student(...)！'); mRender(); return; }
+  if (op === 'get_name'){ logs.push('print(s.get_name())', '→ ' + sName, '# 实例方法：由对象 s 调用，读自己的 name'); }
+  if (op === 'get_count'){
+    logs.push('print(Student.get_count())', '→ 当前共 ' + count + ' 名学生', '# 类方法：用类名调用，读类属性 count');
+  }
+  if (op === 'is_adult'){ logs.push('print(Student.is_adult(20))', '→ ' + (20 >= 18), '# 静态方法：类名直接调，不碰任何属性'); }
+  if (op === 'get_count2'){
+    logs.push('print(Student.get_count())', '→ 当前共 ' + count + ' 名学生', '# 类属性被 __init__ 累加过，所以是 ' + count + ' 名');
+  }
+  mRender();
+}
+window.addEventListener('DOMContentLoaded', mReset);
+</script>
+</body>
+</html>

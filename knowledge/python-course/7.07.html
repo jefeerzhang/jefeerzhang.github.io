@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7.07 写文件：write 与 writelines · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第七章 文件及目录操作 · 第 7 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch07.html">第七章 文件及目录操作</a><span class="sep">/</span>
+          <span class="current">7.07</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">07</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第七章 · 文件及目录操作</span>
+            <h1>写文件：write 与 writelines</h1>
+            <p class="hero-summary">第 7 / 18 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>文件与目录的基本概念</li>
+      <li>文件类型：文本与二进制</li>
+      <li>绝对路径与相对路径</li>
+      <li>文件操作三步曲</li>
+      <li>打开文件与打开模式</li>
+      <li>关闭文件与 with 语句</li>
+      <li class="cur">写文件：write 与 writelines</li>
+      <li>读文件三方法</li>
+      <li>文件指针：tell 与 seek</li>
+      <li>目录路径两大模块</li>
+      <li>工作目录</li>
+      <li>新建目录</li>
+      <li>展示目录内容</li>
+      <li>重命名与移动</li>
+      <li>删除文件和目录</li>
+      <li>判断路径</li>
+      <li>获取文件信息</li>
+      <li>路径的合并与分解</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>open 模式学了一堆，内容到底怎么「写进去」？</h2>
+    <p>上一节你已经会用 <code>w</code>、<code>a</code> 模式打开文件了，但光打开不动手，文件里还是空的。真正把文字写进文件靠两个方法：<b>write()</b> 一笔一笔写，<b>writelines()</b> 一批一批写。作业第 1 题要把成绩表写进 scores.txt，用的就是它们。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">write 像「逐句往本子上抄」，writelines 像「把一沓纸条按顺序贴上去」</div>
+      <p><code>file.write(str)</code> 是抄一句、落一句；<code>file.writelines(iterable)</code> 是手里有一沓纸条（列表等迭代对象），按顺序一张张贴进本子，不用一句一句调用。但注意：Python 先把内容写在「草稿纸」（<b>缓冲区</b>）上，要等<b>文件关闭或缓冲区刷新（flush）</b>后，才真正誊到磁盘文件里——没关闭前去打开文件看，可能是空的。还有：本子不会自动翻页，<b>想换行必须自己写换行符 \n</b>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>两个写文件的方法</h2>
+    <ul class="points">
+      <li><b>file.write(str)</b>：将字符串 str 写入文件，<b>返回写入的字符数</b>，适合写入单行文本</li>
+      <li><b>file.writelines(iterable)</b>：将迭代对象中每个元素（<b>必须是字符串</b>）依次写入文件，<b>没有返回值</b>，适合大批量文本写入</li>
+      <li><b>缓冲区机制</b>：在文件关闭或 flush 之前，内容先存在缓冲区里，此时打开文件是看不到新写入的内容的</li>
+      <li><b>换行要自己加 \n</b>：两个方法都不会自动换行，写完一行记得在末尾补上换行符</li>
+      <li>配合打开模式体会差别：<code>w</code> 模式打开即<b>清空重来</b>，<code>a</code> 模式在<b>末尾接续追加</b></li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例 1：write 写入两行诗</h2>
+    <pre class="codeblock">with open('《悯农》.txt', 'w', encoding='utf-8') as file:
+    file.write('锄禾日当午，\n汗滴禾下土。\n')</pre>
+    <p>运行后《悯农》.txt 的文件内容（两行）：</p>
+    <pre class="codeblock">锄禾日当午，
+汗滴禾下土。</pre>
+    <ul class="points">
+      <li><code>w</code> 模式打开：文件不存在就新建，存在就清空</li>
+      <li>字符串里写了两个 <code>\n</code>，所以文件内容正好分成两行——<b>换行全靠它</b></li>
+      <li><code>with</code> 代码块结束时文件自动关闭，缓冲区内容落盘，这时打开文件才能看到内容</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>PPT 原例 2：writelines 用 a 模式接续写</h2>
+    <pre class="codeblock">with open('《悯农》.txt', 'a', encoding='utf-8') as file:
+    file.writelines(['谁知盘中餐，\n', '粒粒皆辛苦。\n'])</pre>
+    <p>运行后文件内容变成（四行）：</p>
+    <pre class="codeblock">锄禾日当午，
+汗滴禾下土。
+谁知盘中餐，
+粒粒皆辛苦。</pre>
+    <ul class="points">
+      <li>列表里每个元素是一段字符串，writelines 按<b>顺序</b>全部写入</li>
+      <li>这次用 <code>a</code> 追加模式：如果还用 <code>w</code>，前两句就被清空了——只留下后两句</li>
+      <li>对照记忆：<b>w 是「重写整篇」，a 是「续写后文」</b></li>
+      <li>试试把例 1 改成 <code>print(file.write('锄禾日当午，\n汗滴禾下土。\n'))</code>，会输出 <b>14</b>——write 的返回值就是写入的字符数</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！write() 返回写入的字符数：「锄禾日当午，」正好 6 个字符，所以返回 6。"
+         data-no="❌ write() 的返回值是写入的字符数（整数）。「锄禾日当午，」共 6 个字符，返回 6。注意 writelines() 才没有返回值。">
+      <p style="font-weight:700;margin-bottom:12px">执行 <code>n = file.write('锄禾日当午，')</code> 后，n 的值是？</p>
+      <button class="opt" onclick="quizPick(this)">A. None（write 没有返回值）</button>
+      <button class="opt" onclick="quizPick(this)">B. 6</button>
+      <button class="opt" onclick="quizPick(this)">C. 锄禾日当午，</button>
+      <button class="opt" onclick="quizPick(this)">D. 7</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="字符串\n|字符串 \n" data-ok="✅ 正确！write 的参数和 writelines 的元素都必须是字符串；换行符 \n 要自己加，两个方法都不会自动换行。" data-no="❌ 两个空：write/writelines 里内容的类型要求，以及控制换行的转义字符（反斜杠 + n）。">
+      <p>write() 的参数和 writelines() 的每个元素都必须是<b>＿＿</b>类型；想在文件里换行，必须自己在末尾添加<b>＿＿</b>（写作反斜杠加 n）。</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：字符串 \n">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">四个高频翻车点</div>
+      <p>①<b>忘了加 \n，全挤成一行</b>：write('锄禾日当午，') 后接着 write('汗滴禾下土。')，文件里是「锄禾日当午，汗滴禾下土。」连在一起；</p>
+      <p>②<b>文件没关闭就去看，内容是空的</b>：内容还在缓冲区里，等 close 或 flush 才落盘——用 with 语句就没这个烦恼；</p>
+      <p>③<b>该追加却用了 w</b>：writelines 追加后两句时若开 w 模式，前两句会被清空；</p>
+      <p>④<b>writelines 的元素不是字符串直接报错</b>：传 <code>[95, 88, 79]</code> 会抛 TypeError，数字要先 <code>str()</code> 转换。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的 file.write() 和 file.writelines()。请：1）用「抄本子 + 草稿纸缓冲区」的类比解释写入过程和缓冲区机制；2）给一段代码（w 模式 write 两句诗、再 a 模式 writelines 一个列表），让我预测文件最终内容，再逐行讲解；3）对比 write 和 writelines 的返回值、适用场景，并解释为什么必须自己加 \n、w 和 a 模式对写入结果的影响。">
+      我刚学了 Python 的 file.write() 和 file.writelines()。请：1）用「抄本子 + 草稿纸缓冲区」的类比解释写入过程和缓冲区机制；2）给一段代码（w 模式 write 两句诗、再 a 模式 writelines 一个列表），让我预测文件最终内容，再逐行讲解；3）对比 write 和 writelines 的返回值、适用场景，并解释为什么必须自己加 \n、w 和 a 模式对写入结果的影响。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：直接演练作业第 1 题（5 分钟）</span>
+    <ol class="steps">
+      <li>作业第 1 题要向 scores.txt 写成绩表：用 <code>w</code> 模式打开（第一次写，文件直接新建），<code>file.write()</code> 写入第一行。</li>
+      <li>三行成绩用 <code>\n</code> 分行，行内的姓名、成绩之间用<b>空格或制表符</b>隔开，例如写入 <code>'张三 95\n'</code>、<code>'李四 88\n'</code>、<code>'王五 79\n'</code>。</li>
+      <li>进阶：把三行先放进列表，再用 <code>writelines()</code> 一次写入，和逐行 write 对比哪种更顺手。</li>
+      <li>写完打开 scores.txt 检查是不是正好三行——如果全挤在一行，检查是不是漏了 <code>\n</code>。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>write(str) 写单条字符串并返回字符数；writelines(iterable) 把一串字符串依次写入、无返回值；内容先存缓冲区，关闭或 flush 后才落盘；换行必须自己加 \n；w 覆盖重写、a 接续追加。下一节反过来：把写好的文件读出来——读文件三方法。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="7.06.html"><span class="nav-label">← 上一节</span><span class="nav-title">7.06 关闭文件与 with 语句</span></a>
+        <a class="next" href="7.08.html"><span class="nav-label">下一节 →</span><span class="nav-title">7.08 读文件三方法</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.04 字符串切片 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第三章 字符串与列表 · 第 4 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.play{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.play-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.play-row label{font-size:14px;color:var(--ink2);font-weight:600}
+.play-row input{width:90px;font-family:Consolas,monospace;font-size:15px;padding:8px 10px;
+  border:1.5px solid var(--border);border-radius:8px;outline:none;color:var(--ink)}
+.play-row input:focus{border-color:var(--accent)}
+.play-out{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:15px;min-height:52px;word-break:break-all}
+.play-out .err{color:var(--err);font-weight:700}
+.idxbar{display:flex;gap:4px;flex-wrap:wrap;margin:6px 0 4px}
+.idcell{text-align:center;font-family:Consolas,monospace}
+.idcell .ch{display:inline-block;min-width:34px;padding:6px 0;background:#fff;border:1px solid var(--border);
+  border-radius:8px;font-size:15px}
+.idcell .ix{font-size:11px;color:var(--accent);margin-top:2px}
+.idcell.pick .ch{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:800}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch03.html">第三章 字符串与列表</a><span class="sep">/</span>
+          <span class="current">3.04</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">04</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第三章 · 字符串与列表</span>
+            <h1>字符串切片</h1>
+            <p class="hero-summary">第 4 / 21 节 · 约 12 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>字符串基础与三种引号</li>
+      <li>转义字符</li>
+      <li>字符串索引</li>
+      <li class="cur">字符串切片</li>
+      <li>实战：身份证号提取信息</li>
+      <li>字符串运算与内置函数</li>
+      <li>大小写转换方法</li>
+      <li>计数、查找与替换</li>
+      <li>分割、联合与剔除</li>
+      <li>判断字符串类别</li>
+      <li>format 格式化输出</li>
+      <li>f-string 格式化输出</li>
+      <li>列表定义与特性</li>
+      <li>列表的创建</li>
+      <li>列表索引与切片</li>
+      <li>列表增加元素</li>
+      <li>列表删除元素</li>
+      <li>列表修改元素</li>
+      <li>列表运算与函数</li>
+      <li>列表常用方法</li>
+      <li>实战：成绩排序和统计</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>不想全取，只想取"其中一段"？</h2>
+    <p>索引一次只能取<b>一个</b>字符，但真实需求往往是「取第 2 到第 6 个字符」「取后半段」「把字符串倒过来」——这就是<b>切片（Slice）</b>的舞台。它是 Python 最优雅的语法之一，也是第三章作业第 2、3 题的直接考点。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">切蛋糕：从第 M 刀切到第 N 刀之前</div>
+      <p>切片 <code>[M:N:K]</code> 像切蛋糕：<b>M 是下刀的位置，N 是停刀的位置，K 是每隔几块取一块</b>。最容易记错的一点：<b>N 那一块永远切不到</b>——这叫「左闭右开」区间。就像你说「切到 3 号为止」，3 号自己留在盘子里。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>[M:N:K] 三件套</h2>
+    <p>对字符串中某个<b>子串或区间</b>的检索被称为切片，使用方式为 <code>字符串名[M:N:K]</code>：</p>
+    <ul class="points">
+      <li><b>M</b>：起始序号；<b>N</b>：结束序号；<b>K</b>：步长（每隔 |K|-1 个字符取一个）</li>
+      <li><b>左闭右开</b>：<code>[M:N]</code> 的结果<b>不包括</b> N 对应的字符</li>
+      <li><b>M 省略</b>：默认从第一个字符开始（0）；<b>N 省略</b>：结果包含最后一个字符；<b>K 省略</b>：默认为 1</li>
+      <li><b>K 为负数</b>：反向取字符——<code>ns[::-1]</code> 就是经典的「字符串反转」</li>
+    </ul>
+
+    <div class="play">
+      <p style="font-weight:700;margin-bottom:10px">🔬 切片实验台：ns = "123456789"，随便填 M、N、K（可留空、可负数），点「切！」</p>
+      <div class="play-row">
+        <label>M</label><input id="inM" placeholder="可留空" value="1">
+        <label>N</label><input id="inN" placeholder="可留空" value="6">
+        <label>K</label><input id="inK" placeholder="可留空" value="1">
+        <button class="btn-main btn" onclick="doSlice()">切！</button>
+        <button class="btn-ghost btn" onclick="setK('')">重置 K</button>
+      </div>
+      <div class="idxbar" id="idxbar"></div>
+      <div class="play-out" id="out">print(ns[1:6])　→　请点击「切！」</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：一条语句看懂切片</h2>
+    <pre class="codeblock">ns = "123456789"
+print(ns[1:6], ns[:6], ns[3:])
+print(ns[-8:-3], ns[:-3], ns[-6:])
+print(ns[:], ns[::-1], ns[::2], ns[::-2])</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">23456 123456 456789
+23456 123456 456789
+123456789 987654321 13579 97531</pre>
+    <ul class="points">
+      <li>第 1 行：正向取段——<code>ns[1:6]</code> 取下标 1~5（不含 6）</li>
+      <li>第 2 行：负数索引照样能切片——<code>ns[-8:-3]</code> 与 <code>ns[1:6]</code> 结果相同</li>
+      <li>第 3 行：<code>ns[::-1]</code> 反转、<code>ns[::2]</code> 隔一个取一个（1,3,5,7,9）</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！左闭右开：取下标 1~5，即 23456，下标 6 的字符 7 不会包含。"
+         data-no="❌ 注意「左闭右开」：ns[1:6] 取下标 1 到 5 的字符，下标 6 不包含在内，所以是 23456。">
+      <p style="font-weight:700;margin-bottom:12px">ns = "123456789"，<code>print(ns[1:6])</code> 的输出是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 123456</button>
+      <button class="opt" onclick="quizPick(this)">B. 234567</button>
+      <button class="opt" onclick="quizPick(this)">C. 23456</button>
+      <button class="opt" onclick="quizPick(this)">D. 23456789</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="左 右|左闭右开" data-ok="✅ 正确！[M:N] 是左闭右开区间，N 对应的字符不包含在结果里。" data-no="❌ 再想想：M 对应的字符取不取？N 对应的字符取不取？两个空分别填一个字。">
+      <p>切片 <code>[M:N]</code> 是「＿＿闭＿＿开」区间，即结果中不包括 N 对应的字符。（两空连填，中间空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：× ×">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">切片越界不报错，索引越界才报错</div>
+      <p>新手以为「取多了」会出错，其实不会：<code>ns[5:100]</code> 不会报错，只是取到 <code>6789</code> 就停（有多少取多少）；但 <code>ns[100]</code> 这种<b>单字符索引越界</b>会直接报 <code>IndexError</code>。</p>
+      <p>另一个坑：<b>负步长时区间是「倒着走」的</b>——<code>ns[6:1:-1]</code> 是 76543，如果写成 <code>ns[1:6:-1]</code> 只会得到空串，因为从 1 走到 6 的反方向是死路。反向切片记住口诀：<b>起点在右，终点在左</b>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 字符串切片 [M:N:K]。请：1）用一个生活类比解释左闭右开和步长；2）以 s='python' 为例，各举一个省略 M、省略 N、K 为负数的切片并给出结果；3）出 3 道切片求值题考我（含一道反向切片），等我作答后公布答案和讲解。">
+      我刚学了 Python 字符串切片 [M:N:K]。请：1）用一个生活类比解释左闭右开和步长；2）以 s='python' 为例，各举一个省略 M、省略 N、K 为负数的切片并给出结果；3）出 3 道切片求值题考我（含一道反向切片），等我作答后公布答案和讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：预告下一节的实战（4 分钟）</span>
+    <ol class="steps">
+      <li>交互模式输入 <code>id_c = "110101199003077758"</code>（一个身份证号）。</li>
+      <li>用切片依次取：<code>id_c[:6]</code>（地区）、<code>id_c[6:10]</code>（出生年）、<code>id_c[10:12]</code>（月）、<code>id_c[12:14]</code>（日）。</li>
+      <li>试试 <code>id_c[16]</code>——第 17 位数字，奇数为男、偶数为女，下一节就用它做实战。</li>
+      <li>挑战：只用一行切片，把整个身份证号倒序输出。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>切片 <code>[M:N:K]</code> 从 M 取到 N 之前、步长为 K；<b>左闭右开</b>，N 取不到；M、N、K 都可省略（默认 0、末尾、1）；<code>[::-1]</code> 反转字符串；切片越界不报错、索引越界才报错。下一节：用切片破解真实身份证号！</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="3.03.html"><span class="nav-label">← 上一节</span><span class="nav-title">3.03 字符串索引</span></a>
+        <a class="next" href="3.05.html"><span class="nav-label">下一节 →</span><span class="nav-title">3.05 实战：身份证号提取信息</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：切片实验台（实现 Python 切片语义） */
+const NS = '123456789';
+function pySlice(s, m, n, k){
+  // m/n/k: null 表示省略
+  if (k === 0) return { err: 'ValueError: slice step cannot be zero（步长不能为 0）' };
+  const L = s.length;
+  const idx = i => i < 0 ? Math.max(L + i, k > 0 ? 0 : -1) : Math.min(i, k > 0 ? L : L - 1);
+  let out = '';
+  if (k > 0){
+    let start = m === null ? 0 : idx(m);
+    let stop  = n === null ? L : idx(n);
+    for (let i = start; i < stop; i += k) out += s[i];
+  } else {
+    let start = m === null ? L - 1 : (m < 0 ? Math.max(L + m, -1) : Math.min(m, L - 1));
+    let stop  = n === null ? -1  : (n < 0 ? Math.max(L + n, -1) : Math.min(n, L));
+    for (let i = start; i > stop; i += k) out += s[i];
+  }
+  return { val: out };
+}
+function parseNum(id){
+  const v = document.getElementById(id).value.trim();
+  if (v === '') return null;
+  const n = parseInt(v, 10);
+  return isNaN(n) ? null : n;
+}
+function doSlice(){
+  const m = parseNum('inM'), n = parseNum('inN'), k = parseNum('inK');
+  const kShow = k === null ? '' : String(k);
+  const r = pySlice(NS, m, n, k === null ? 1 : k);
+  const fmt = v => v === null ? '' : String(v);
+  // 高亮展示
+  const bar = document.getElementById('idxbar');
+  bar.innerHTML = '';
+  let picks = new Set();
+  if (!r.err){
+    for (let i = 0; i < NS.length; i++){
+      const inM = m === null ? 0 : m, inN = n === null ? NS.length : n;
+      const kk = k === null ? 1 : k;
+      let hit = false;
+      if (kk > 0 && i >= Math.max(inM, 0) && i < Math.min(inN, NS.length) && (i - Math.max(inM, 0)) % kk === 0) hit = true;
+      if (kk < 0){
+        const st = m === null ? NS.length - 1 : (m < 0 ? NS.length + m : Math.min(m, NS.length - 1));
+        const sp = n === null ? -1 : (n < 0 ? NS.length + n : n);
+        if (i <= st && i > sp && (st - i) % (-kk) === 0) hit = true;
+      }
+      if (hit) picks.add(i);
+    }
+  }
+  NS.split('').forEach((ch, i) => {
+    const d = document.createElement('span');
+    d.className = 'idcell' + (picks.has(i) ? ' pick' : '');
+    d.innerHTML = '<span class="ch">' + ch + '</span><div class="ix">' + i + ' / -' + (NS.length - i) + '</div>';
+    bar.appendChild(d);
+  });
+  const expr = 'print(ns[' + fmt(m) + ':' + fmt(n) + (kShow ? ':' + kShow : '') + '])';
+  document.getElementById('out').innerHTML = r.err
+    ? '<span class="err">' + expr + '　→　' + r.err + '</span>'
+    : expr + '　→　输出：<b>' + r.val + '</b>' + (r.val === '' ? '（空串，切片不越界报错）' : '');
+}
+// 首次加载演示
+window.addEventListener('DOMContentLoaded', doSlice);
+</script>
+</body>
+</html>

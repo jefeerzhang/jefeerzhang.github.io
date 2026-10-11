@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7.12 新建目录 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第七章 文件及目录操作 · 第 12 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.cmp{width:100%;border-collapse:collapse;margin:14px 0;font-size:14.5px}
+.cmp th,.cmp td{border:1px solid var(--border);padding:9px 10px;text-align:left;vertical-align:top;line-height:1.6}
+.cmp th{background:var(--code-bg);white-space:nowrap}
+.cmp code{white-space:nowrap}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch07.html">第七章 文件及目录操作</a><span class="sep">/</span>
+          <span class="current">7.12</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">12</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第七章 · 文件及目录操作</span>
+            <h1>新建目录</h1>
+            <p class="hero-summary">第 12 / 18 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>文件与目录的基本概念</li>
+      <li>文件类型：文本与二进制</li>
+      <li>绝对路径与相对路径</li>
+      <li>文件操作三步曲</li>
+      <li>打开文件与打开模式</li>
+      <li>关闭文件与 with 语句</li>
+      <li>写文件：write 与 writelines</li>
+      <li>读文件三方法</li>
+      <li>文件指针：tell 与 seek</li>
+      <li>目录路径两大模块</li>
+      <li>工作目录</li>
+      <li class="cur">新建目录</li>
+      <li>展示目录内容</li>
+      <li>重命名与移动</li>
+      <li>删除文件和目录</li>
+      <li>判断路径</li>
+      <li>获取文件信息</li>
+      <li>路径的合并与分解</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>整理文件第一步：先有文件夹</h2>
+    <p>程序写的文件越来越多，总不能全堆在工作目录里——得学会用代码<b>新建文件夹</b>。这一节有三个方法：<code>os.mkdir()</code>、<code>os.makedirs()</code> 和 <code>Path().mkdir()</code>。它们名字像、脾气不同：<b>有的只能建最后一层，有的能一路建到底</b>——这正是本页的核心考点，作业第 5 题新建 Python 文件夹也会用到。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">mkdir 像「在现成的柜子里放新抽屉」，makedirs 像「连柜子带抽屉一起定制」</div>
+      <p>想放一个新抽屉（最后一级目录），前提是<b>柜子（上级目录）已经存在</b>——这就是 <code>os.mkdir()</code>：柜子没有、或者抽屉已经有了，都会直接报错。而 <code>os.makedirs()</code> / <code>Path().mkdir(parents=True)</code> 是全屋定制：中间缺几层柜子就顺手造几层，一路装到底；再配上 <code>exist_ok=True</code>，抽屉已经存在也不闹脾气（不报错）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>三个方法对比一览</h2>
+    <table class="cmp">
+      <tr><th>方法</th><th>能力</th><th>注意</th></tr>
+      <tr>
+        <td><code>os.mkdir(path)</code></td>
+        <td>创建多层目录的<b>最后一层</b></td>
+        <td>上级目录不存在<b>报错</b>；目录已存在<b>报错</b></td>
+      </tr>
+      <tr>
+        <td><code>os.makedirs(path)</code></td>
+        <td><b>递归创建</b>多层目录</td>
+        <td>参数 <code>exist_ok=True</code> 可在目录已存在时不报错</td>
+      </tr>
+      <tr>
+        <td><code>Path(path).mkdir()</code></td>
+        <td>创建目录（pathlib 版）</td>
+        <td>参数 <code>parents=True</code> 可创建多层目录；<code>exist_ok=True</code> 不报错</td>
+      </tr>
+    </table>
+    <ul class="points">
+      <li>核心考点一句话：<b>mkdir 只能建最后一层（上级必须已存在），makedirs / parents=True 才能多层递归创建</b></li>
+      <li>目录已存在时默认都报 FileExistsError，加 <code>exist_ok=True</code>（makedirs 或 Path 版）可以容忍</li>
+      <li>运行代码后记得<b>打开文件夹亲眼看看</b>目录是否创建成功——这是本章实验的基本功</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：三种写法各建一个目录</h2>
+    <pre class="codeblock">import os
+from pathlib import Path
+
+os.mkdir('temp')
+os.makedirs('temp2//subtemp2', exist_ok=True)
+Path('temp3').mkdir()
+Path('temp4//subtemp4').mkdir(parents=True, exist_ok=True)</pre>
+    <p>运行后到文件夹里观察，四个目录都创建成功：</p>
+    <pre class="codeblock">temp          （单层目录）
+temp2         （里面含子目录 subtemp2）
+  └─ subtemp2
+temp3         （单层目录）
+temp4         （里面含子目录 subtemp4）
+  └─ subtemp4</pre>
+    <ul class="points">
+      <li><code>os.mkdir('temp')</code>：工作目录下直接建一层，上级（工作目录）本来就在，所以成功</li>
+      <li><code>os.makedirs('temp2//subtemp2', exist_ok=True)</code>：temp2 不存在也一并建出，<b>递归创建</b></li>
+      <li><code>Path('temp3').mkdir()</code>：pathlib 单层写法，等价于 os.mkdir</li>
+      <li><code>Path('temp4//subtemp4').mkdir(parents=True, exist_ok=True)</code>：<code>parents=True</code> 就是 pathlib 版的「递归」开关</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>什么情况下 mkdir 会翻车？</h2>
+    <pre class="codeblock">import os
+
+# 情况 1：上级目录不存在
+os.mkdir('a/b/c')        # a、b 都不存在 → FileNotFoundError！
+
+# 情况 2：目录已存在
+os.mkdir('temp')         # temp 已建过 → FileExistsError！
+
+# 正确做法：多层用 makedirs
+os.makedirs('a/b/c', exist_ok=True)   # 一路建到底，已存在也不报错</pre>
+    <ul class="points">
+      <li><code>os.mkdir('a/b/c')</code> 只想建最后一层 c，但 a、b 缺席——mkdir 不代劳，直接抛 FileNotFoundError</li>
+      <li>同一个目录重复 mkdir 会抛 FileExistsError，代码重跑一次就翻车——加 <code>exist_ok=True</code> 免疫</li>
+      <li>记忆口诀：<b>单层 mkdir，多层 makedirs（或 parents=True），怕重复 exist_ok=True</b></li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！mkdir 只创建最后一层，上级目录 a、b 不存在会直接报 FileNotFoundError；想多层递归要用 makedirs 或 parents=True。"
+         data-no="❌ os.mkdir() 只能创建多层目录的最后一层，且要求上级目录必须已存在——a、b 都不存在会抛 FileNotFoundError。递归创建请用 os.makedirs() 或 Path().mkdir(parents=True)。">
+      <p style="font-weight:700;margin-bottom:12px">目录 a、b 都不存在，执行 <code>os.mkdir('a/b/c')</code> 的结果是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 成功创建 a、b、c 三层目录</button>
+      <button class="opt" onclick="quizPick(this)">B. 报错 FileNotFoundError</button>
+      <button class="opt" onclick="quizPick(this)">C. 只创建 c，自动跳过不存在的上级</button>
+      <button class="opt" onclick="quizPick(this)">D. 只创建 b 和 c 两层</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="mkdirmakedirsparents|mkdir makedirs parents" data-ok="✅ 正确！os.mkdir 只建最后一层；os.makedirs 递归建多层；Path().mkdir(parents=True) 是 pathlib 版的多层递归。" data-no="❌ 三个空：只能建最后一层的 os 方法、递归建多层的方法名、pathlib 中开启多层创建的参数名。">
+      <p>只能创建多层目录的<b>最后一层</b>，用 os.<b>＿＿</b>()；递归创建多层目录，用 os.<b>＿＿</b>()；用 pathlib 时需要加 <b>＿＿</b>=True 参数才能创建多层目录。（填方法名 / 参数名，用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：mkdir makedirs parents">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">四个高频翻车点</div>
+      <p>①<b>目录已存在还硬建</b>：代码重跑第二次就抛 FileExistsError——makedirs 或 Path 版加 <code>exist_ok=True</code>；</p>
+      <p>②<b>mkdir 建多层</b>：<code>os.mkdir('a/b/c')</code> 上级不存在直接报错——多层需求换 makedirs / parents=True；</p>
+      <p>③<b>Windows 路径里的 \ 没转义</b>：写字符串路径要么用 <code>\\</code>、要么用 <code>/</code>，PPT 里的 <code>temp2//subtemp2</code> 双斜杠也能跑，但规范写法是单斜杠或双反斜杠；</p>
+      <p>④<b>建完不检查</b>：代码没报错不等于建对了位置——去工作目录（用上一节的 getcwd 确认）亲眼看看目录在不在。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 新建目录的三个方法：os.mkdir、os.makedirs、Path().mkdir(parents=True, exist_ok=True)。请：1）用「放抽屉 vs 全屋定制」的类比解释 mkdir 与 makedirs 的区别；2）出 4 道情景判断题（上级目录存在 / 不存在、目录已存在 / 不存在）考我每个方法会不会报错；3）给一段综合代码让我预测运行后目录树长什么样，并解释 exist_ok=True 和 parents=True 各自解决什么问题。">
+      我刚学了 Python 新建目录的三个方法：os.mkdir、os.makedirs、Path().mkdir(parents=True, exist_ok=True)。请：1）用「放抽屉 vs 全屋定制」的类比解释 mkdir 与 makedirs 的区别；2）出 4 道情景判断题（上级目录存在 / 不存在、目录已存在 / 不存在）考我每个方法会不会报错；3）给一段综合代码让我预测运行后目录树长什么样，并解释 exist_ok=True 和 parents=True 各自解决什么问题。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：直接演练作业第 5 题（5 分钟）</span>
+    <ol class="steps">
+      <li>作业第 5 题要求新建 Python 文件夹：最直接的写法 <code>os.mkdir('Python')</code>，运行后到工作目录里看看文件夹出现了没有。</li>
+      <li>换成 pathlib 写法 <code>Path('Python').mkdir()</code> 再建一个对比（注意：已存在会报错，可以换个名字或加 exist_ok 思路）。</li>
+      <li>故意重跑一次代码，观察 FileExistsError；再用 <code>os.makedirs('Python2', exist_ok=True)</code> 重跑两次验证不报错。</li>
+      <li>挑战：一行代码递归创建 <code>Python/ch03/data</code> 三层目录（提示：makedirs 或 parents=True），然后层层打开确认。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>新建目录三方法：os.mkdir(path) 只建最后一层（上级不存在、目录已存在都报错）；os.makedirs(path) 递归创建多层，exist_ok=True 容忍已存在；Path(path).mkdir() 是 pathlib 版，parents=True 开多层、exist_ok=True 不报错。口诀：单层 mkdir、多层 makedirs（或 parents=True）、怕重复 exist_ok=True。下一节：查看目录里都有什么——展示目录内容。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="7.11.html"><span class="nav-label">← 上一节</span><span class="nav-title">7.11 工作目录</span></a>
+        <a class="next" href="7.13.html"><span class="nav-label">下一节 →</span><span class="nav-title">7.13 展示目录内容</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

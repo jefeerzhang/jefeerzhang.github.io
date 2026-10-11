@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.14 算术与增强赋值运算符 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第二章 基础概念与数值 · 第 14 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch02.html">第二章 基础概念与数值</a><span class="sep">/</span>
+          <span class="current">2.14</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">14</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第二章 · 基础概念与数值</span>
+            <h1>算术与增强赋值运算符</h1>
+            <p class="hero-summary">第 14 / 17 节 · 约 11 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序构成的两大核心</li>
+      <li>变量：概念与赋值</li>
+      <li>变量命名规则</li>
+      <li>数据类型总览</li>
+      <li>type() 查看类型</li>
+      <li>保留字（关键字）</li>
+      <li>函数：定义与调用</li>
+      <li>常用内置函数</li>
+      <li>输入输出函数</li>
+      <li>缩进与注释规范</li>
+      <li>数值类型总览</li>
+      <li>整数与四种进制</li>
+      <li>浮点数与精度陷阱</li>
+      <li class="cur">算术与增强赋值运算符</li>
+      <li>比较与逻辑运算符</li>
+      <li>运算符优先级</li>
+      <li>数值函数与 math 模块</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>程序 = 数据 + 运算，运算符就是"发动机"</h2>
+    <p>数据装进变量之后，真正让程序"动起来"的是<b>运算</b>。Python 提供了 7 个基本算术运算符和 7 个对应的增强赋值运算符，其中 <code>/</code>、<code>//</code>、<code>%</code> 三个的行为和数学课上的直觉<b>不完全一样</b>，是考试和实战的常客。这一节逐一摸清它们的脾气。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">增强赋值 = 发工资直接入账</div>
+      <p><code>a += b</code> 就像发工资：把 a 账户里的钱加上 b，<b>直接存回 a 的账户</b>，省得先取出来再加再存两趟——它<b>基本</b>等价于 <code>a = a + b</code>，写起来更简洁（对数字、字符串这类不可变对象，两者完全等价；对列表这类可变对象，<code>+=</code> 是就地扩展，见 3.16）。同理 <code>a -= b</code> 是从 a 里扣掉 b，<code>a *= b</code> 是让 a 翻 b 倍……一套操作行云流水。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>7 个基本算术运算符</h2>
+    <table>
+      <tr><th>运算符</th><th>名称</th><th>示例</th><th>结果</th><th>备注</th></tr>
+      <tr><td>+</td><td>加法</td><td>10 + 2</td><td>12</td><td>常规</td></tr>
+      <tr><td>-</td><td>减法</td><td>10 - 2</td><td>8</td><td>常规</td></tr>
+      <tr><td>*</td><td>乘法</td><td>10 * 2</td><td>20</td><td>常规</td></tr>
+      <tr><td>/</td><td>除法</td><td>10 / 2</td><td>5.0</td><td>结果永远是<b>浮点数</b></td></tr>
+      <tr><td>//</td><td>整除</td><td>10 // 3</td><td>3</td><td><b>向下取整</b></td></tr>
+      <tr><td>%</td><td>取余</td><td>10 % 3</td><td>1</td><td>结果的符号<b>跟除数走</b></td></tr>
+      <tr><td>**</td><td>幂运算</td><td>10 ** 2</td><td>100</td><td>乘方</td></tr>
+    </table>
+
+    <h2 style="margin-top:22px">7 个增强赋值运算符</h2>
+    <table>
+      <tr><th>写法</th><th>等价于</th><th>名称</th></tr>
+      <tr><td>a += b</td><td>a = a + b</td><td>加法赋值（对列表是就地扩展）</td></tr>
+      <tr><td>a -= b</td><td>a = a - b</td><td>减法赋值</td></tr>
+      <tr><td>a *= b</td><td>a = a * b</td><td>乘法赋值</td></tr>
+      <tr><td>a /= b</td><td>a = a / b</td><td>除法赋值</td></tr>
+      <tr><td>a //= b</td><td>a = a // b</td><td>整除赋值</td></tr>
+      <tr><td>a %= b</td><td>a = a % b</td><td>取余赋值</td></tr>
+      <tr><td>a **= b</td><td>a = a ** b</td><td>幂赋值</td></tr>
+    </table>
+    <p class="muted">💡 记忆口诀：增强赋值就是「运算符 + 等号」的合体，先算后存，一步到位。</p>
+  </section>
+      <section>
+    <span class="tag">实战演示</span>
+    <h2>跑一遍 PPT 原例，看清"脾气"</h2>
+    <pre class="codeblock">print(10 + 2, 10 - 2, 10*2, 10 ** 2, 10/2)
+# 输出：<span class="good">12 8 20 100 5.0</span>　（注意：/ 的结果是浮点数 5.0，不是 5）</pre>
+    <p>再来看两个"反直觉"的重头戏——<b>整除</b>和<b>取余</b>，点击切换体验：</p>
+    <div class="quiz" style="margin-top:6px">
+      <div class="switch">
+        <button class="on" data-pane="pane-o1">向下取整实验</button>
+        <button data-pane="pane-o2">增强赋值推演</button>
+      </div>
+      <div class="pane on" id="pane-o1">
+        <pre class="codeblock">print(11 // 2, -11. // 2, -10.5 // 2)
+print(11 % 2, -11. % 2, -10.5 % 2)</pre>
+        <p>输出：<code>5 -6.0 -6.0</code>　和　<code>1 1.0 1.5</code></p>
+        <p class="muted">解读：// 是<b>向下取整</b>不是四舍五入，-11.0//2 得 -6.0 而不是 -5.0；% 的结果<b>符号跟除数走</b>——除数为正（2）时结果非负，所以 -11.0 % 2 是 1.0、-10.5 % 2 是 1.5。</p>
+      </div>
+      <div class="pane" id="pane-o2">
+        <pre class="codeblock">a, b = 10, 2
+a /= b        # 等价于 a = a / b → a 变成 5.0
+print(a, b)   # 输出：<span class="good">5.0 2</span>
+b /= a        # 等价于 b = b / a → b 变成 2/5.0
+print(a, b)   # 输出：<span class="good">5.0 0.4</span></pre>
+        <p class="muted">解读：a /= b 让 a 从 10 变成 5.0（/ 的结果带小数点）；接着 b /= a，b 从 2 变成 2÷5.0 = 0.4。每一步增强赋值都<b>立即更新</b>变量本身。</p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="0"
+         data-ok="✅ 答对了！10 // 3 = 3，整除就是向下取整，余数 1 被丢掉。"
+         data-no="❌ 不对哦。// 是整除（向下取整）：10 ÷ 3 = 3.33…，向下取整得 3，不是 3.3 也不是 4。">
+      <p style="font-weight:700;margin-bottom:12px"><code>10 // 3</code> 的结果是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 3</button>
+      <button class="opt" onclick="quizPick(this)">B. 3.3</button>
+      <button class="opt" onclick="quizPick(this)">C. 4</button>
+      <button class="opt" onclick="quizPick(this)">D. 1</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="浮点|float|浮点类型" data-ok="✅ 正确！/ 的结果永远是浮点数，10/2 得 5.0 而不是 5。" data-no="❌ 再想想：10 / 2 的输出是 5.0，带小数点，说明 / 的结果是什么类型？（浮点 或 float 都算对）">
+      <p><code>10 / 2</code> 的结果是 5.0，说明 <code>/</code> 的结果永远是<b>＿＿</b>类型。（填"浮点"或 float 均可）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：××类型">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三大"反直觉"陷阱，考试高频</div>
+      <p>① <b>/ 的结果永远是浮点数</b>：<code>10 / 2</code> 是 <code>5.0</code> 不是 <code>5</code>——哪怕整除得尽，也带小数点。</p>
+      <p>② <b>// 是向下取整，不是四舍五入</b>：<code>-11.0 // 2</code> 是 <code>-6.0</code> 不是 -5.0。往数轴<b>左边</b>取，负数时尤其容易翻车。</p>
+      <p>③ <b>取余结果的符号跟除数走</b>：<code>-11.0 % 2</code> 是 <code>1.0</code>、<code>-10.5 % 2</code> 是 <code>1.5</code>（除数为正，结果非负）；换成负除数就不一样了：<code>7 % -2</code> 是 <code>-1</code>、<code>10 % -3</code> 是 <code>-2</code>。所以别按"被除数的符号"猜，也别记成"一定非负"——<b>记「符号跟除数走」最稳</b>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的 7 个算术运算符（+ - * / // % **）和 7 个增强赋值运算符（+= -= *= /= //= %= **=）。请：1）用例子解释 / 永远得浮点数、// 向下取整、% 结果符号跟除数走这三个特性；2）演示 a, b = 10, 2 后连续执行 a /= b、b /= a 的每一步变化；3）出 3 道运算结果判断题考我，等我作答后再公布答案。">
+      我刚学了 Python 的 7 个算术运算符（+ - * / // % **）和 7 个增强赋值运算符（+= -= *= /= //= %= **=）。请：1）用例子解释 / 永远得浮点数、// 向下取整、% 结果符号跟除数走这三个特性；2）演示 a, b = 10, 2 后连续执行 a /= b、b /= a 的每一步变化；3）出 3 道运算结果判断题考我，等我作答后再公布答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：亲手踩一遍坑（4 分钟）</span>
+    <ol class="steps">
+      <li>打开命令行输入 <code>python</code> 进入交互模式。</li>
+      <li>输入 <code>print(11 // 2, -11.0 // 2)</code> 回车，对照预期输出 <code>5 -6.0</code>——体会"向下取整"。</li>
+      <li>输入 <code>a, b = 10, 2</code> 回车，然后连续执行 <code>a /= b</code> 回车、<code>b /= a</code> 回车。</li>
+      <li>输入 <code>print(a, b)</code> 回车，对照本页输出 <code>5.0 0.4</code>——想清楚 a 为什么从 10 变 5.0，b 为什么从 2 变 0.4。</li>
+      <li>加餐：<code>print(-10.5 % 2)</code>，看看是不是 1.5？</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>7 个算术运算符里，<b>/ 永远得浮点数</b>（10/2=5.0），<b>// 向下取整</b>（-11.0//2=-6.0），<b>% 结果符号跟除数走</b>（除数为正时 -11.0%2=1.0，除数为负时 7%-2=-1），<code>**</code> 是幂运算。7 个增强赋值运算符（<code>+=</code> 等）等价于「变量 = 变量 运算符 值」，先算后存一步到位。下一节：比较运算符与逻辑运算符，让程序学会"做判断"。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="2.13.html"><span class="nav-label">← 上一节</span><span class="nav-title">2.13 浮点数与精度陷阱</span></a>
+        <a class="next" href="2.15.html"><span class="nav-label">下一节 →</span><span class="nav-title">2.15 比较与逻辑运算符</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

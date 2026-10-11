@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.10 学习路径的三阶段 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第一章 导论与 Python 环境 · 第 10 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+/* —— 本页专属：阶段徽标与“当前位置”提示 —— */
+.stage-no{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;
+     border-radius:50%;background:var(--accent);color:#fff;font-size:13px;font-weight:800;flex:none}
+.stage-no.s2{background:var(--accent2)}
+.stage-no.s3{background:var(--ok)}
+.here{display:inline-block;font-size:11px;font-weight:700;color:var(--accent);
+     background:var(--accent-soft);border-radius:999px;padding:2px 10px;margin-left:8px}
+.srow{font-size:13.5px;padding:3px 0}
+.srow b{color:var(--accent)}
+.dur{font-size:12px;font-weight:700;color:var(--ink2);margin-left:8px}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch01.html">第一章 导论与 Python 环境</a><span class="sep">/</span>
+          <span class="current">1.10</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">10</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第一章 · 导论与 Python 环境</span>
+            <h1>学习路径的三阶段</h1>
+            <p class="hero-summary">第 10 / 18 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>计算机系统架构</li>
+      <li>操作系统及其分类</li>
+      <li>编程语言：人机沟通的桥梁</li>
+      <li>编程语言的三个层次</li>
+      <li>编译型 vs 解释型语言</li>
+      <li>TIOBE 排行与语言流行趋势</li>
+      <li>五大语言的诞生与用途</li>
+      <li>AI 时代的编程学习理念</li>
+      <li>与 AI 高效协作的三技巧</li>
+      <li class="cur">学习路径的三阶段</li>
+      <li>Python 的诞生与发展</li>
+      <li>PEP 与 PEP 8</li>
+      <li>The Zen of Python</li>
+      <li>Python 2 vs Python 3</li>
+      <li>Python 的六大特点</li>
+      <li>Python 的应用领域</li>
+      <li>Python 环境搭建</li>
+      <li>Anaconda 与 AI IDE</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>有了地图，才不会在半路迷航</h2>
+    <p>很多同学学编程的状态是：三天打鱼语法，两天晒网视频，两个月后还在“入门”。问题不在努力，而在<b>没有路线图</b>。这一节把从零基础到能驾驭 AI 的工程师之路，画成三个清晰的阶段——每个阶段学什么、AI 帮什么、达成什么目标，一目了然：</p>
+    <ul class="points">
+      <li>你现在站在<b>第一阶段</b>，本课程正是这段路的起点；</li>
+      <li>看清三个阶段的<b>接力关系</b>，就知道当下该把力气花在哪；</li>
+      <li>每个阶段 AI 的角色都不同——<b>越往后，你越是从“被帮”走向“驾驭”</b>。</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">学编程，就像考驾照</div>
+      <p><b>第一阶段夯实基础 = 科目一背交规</b>：变量、循环、函数、数据结构，就是编程世界的交规，背熟了才知道“什么能做、什么会违规”。<b>第二阶段项目驱动 = 科目二三四上路练</b>：爬虫、数据分析、简易网站，就是一条条真实路线，练的是手感。<b>第三阶段体系化 = 老司机</b>：懂车（计算机系统原理）、懂路（网络、数据库）、懂规矩（软件工程），不仅自己开得好，还能指挥自动驾驶（AI）替你开。<b>没有科目一的交规，上路就是危险驾驶。</b></p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>三个阶段，逐站点亮</h2>
+    <div class="grid g3">
+      <div class="icard" data-toggle>
+        <h4><span class="stage-no">1</span>夯实基础<span class="dur">1-3 个月</span></h4>
+        <div class="desc">掌握核心概念，学会独立写小代码。<span class="here">📍 你现在在这里</span></div>
+        <div class="more">
+          <div class="srow"><b>学习重点：</b>掌握编程核心概念（变量、循环、函数、面向对象）和数据结构基础。</div>
+          <div class="srow"><b>AI 角色：</b>解释抽象概念，生成基础练习题，辅助调试简单代码。</div>
+          <div class="srow"><b>目标：</b>独立解决简单算法问题，理解代码逻辑。</div>
+          <div class="hint">👆 点击查看重点 / AI 角色 / 目标</div>
+        </div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="stage-no s2">2</span>项目驱动<span class="dur">3-6 个月</span></h4>
+        <div class="desc">用真实项目练手，把知识连成能力。</div>
+        <div class="more">
+          <div class="srow"><b>学习重点：</b>通过实战项目（爬虫、数据分析、简易网站）学习框架和工具。</div>
+          <div class="srow"><b>AI 角色：</b>结对编程，生成项目框架，实现功能模块，审查代码。</div>
+          <div class="srow"><b>目标：</b>将 AI 作为高效助手，共同完成完整应用开发。</div>
+          <div class="hint">👆 点击查看重点 / AI 角色 / 目标</div>
+        </div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="stage-no s3">3</span>体系化<span class="dur">长期</span></h4>
+        <div class="desc">修炼底层内功，成为驾驭 AI 的工程师。</div>
+        <div class="more">
+          <div class="srow"><b>学习重点：</b>深入学习计算机系统原理、网络、数据库、软件工程等底层知识。</div>
+          <div class="srow"><b>AI 角色：</b>辅助理解复杂原理，生成技术文档，模拟技术面试。</div>
+          <div class="srow"><b>目标：</b>具备系统设计能力，成为驾驭 AI 的「智能工程师」。</div>
+          <div class="hint">👆 点击查看重点 / AI 角色 / 目标</div>
+        </div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🧭 互动：一眼看清三站接力</span>
+    <h2>把三个阶段放到一条时间线上</h2>
+    <div class="timeline">
+      <div class="titem"><span class="tyear">第 1 站 · 夯实基础（1-3 个月）</span><div class="ttext">核心概念 + 数据结构基础 → AI 当<b>讲解员和陪练</b> → 达成：独立解决简单算法问题，理解代码逻辑。<span class="here">📍 当前站点</span></div></div>
+      <div class="titem"><span class="tyear">第 2 站 · 项目驱动（3-6 个月）</span><div class="ttext">爬虫 / 数据分析 / 简易网站等实战 → AI 当<b>结对编程搭档</b> → 达成：与 AI 协作完成完整应用开发。</div></div>
+      <div class="titem"><span class="tyear">第 3 站 · 体系化（长期）</span><div class="ttext">系统原理 / 网络 / 数据库 / 软件工程 → AI 当<b>原理导师和面试官</b> → 达成：系统设计能力，成为驾驭 AI 的「智能工程师」。</div></div>
+    </div>
+    <p class="muted">注意 AI 角色的变化：从“教你”到“陪你做”，再到“帮你深入”——<b>AI 的天花板，取决于你所在阶段的高度。</b></p>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！第一阶段（1-3 个月）的学习重点是掌握编程核心概念（变量、循环、函数、面向对象）和数据结构基础——这正是本课程正在带你走的一段。"
+         data-no="❌ 不对哦。做爬虫和网站项目是第二阶段的事，系统原理是第三阶段的事。第一阶段先打地基：核心概念 + 数据结构基础。">
+      <p style="font-weight:700;margin-bottom:12px"><b>第一阶段「夯实基础」</b>的学习重点是什么？</p>
+      <button class="opt" onclick="quizPick(this)">A. 直接上手做爬虫和数据分析项目</button>
+      <button class="opt" onclick="quizPick(this)">B. 深入学习计算机系统原理与网络</button>
+      <button class="opt" onclick="quizPick(this)">C. 掌握编程核心概念和数据结构基础</button>
+      <button class="opt" onclick="quizPick(this)">D. 研究框架源码，具备系统设计能力</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="项目" data-ok="✅ 正确！第二阶段是项目驱动（3-6 个月）：通过爬虫、数据分析、简易网站等实战项目学习框架和工具。" data-no="❌ 再想想：第二阶段的名字就是它采用的方式——通过做爬虫、网站等真实作品来学习，而不是先啃理论。这个阶段叫＿＿驱动阶段。">
+      <p>第二阶段通过爬虫、数据分析、简易网站等实战项目学习框架和工具，属于<b>＿＿驱动</b>阶段（3-6 个月）。请在框里填写这两个字：</p>
+      <div class="fill-row">
+        <input class="blank" id="blank1" placeholder="填两个字，如：××">
+        <button class="btn btn-main" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">最常见的三种“迷航”姿势</div>
+      <p><b>迷航一：跳站上车。</b>基础没扎牢就直奔“做项目”，结果每行代码都要 AI 保姆式代写，改个报错都无从下手——相当于没考科目一就上高速。</p>
+      <p><b>迷航二：赖在第一站不下车。</b>疯狂囤教程、反复看语法视频，永远“准备中”。基础过关的标志是<b>能独立解决简单算法问题</b>，达到了就该出发去第二站。</p>
+      <p><b>迷航三：让 AI 替你走完全程。</b>每个阶段 AI 只是副驾驶：<b>第一站它帮你懂，第二站它陪你做，第三站它帮你深</b>——方向盘必须一直在你手里。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了「编程学习路径的三阶段」：第一阶段夯实基础（1-3 个月），第二阶段项目驱动（3-6 个月），第三阶段体系化（长期）。我的专业是××，目标是××岗位。请：1）帮我判断自己当前处于哪个阶段、为什么；2）按三阶段给我定制一份本学期的学习计划，每个阶段写明学习重点、AI 可以帮什么、达成什么目标；3）给我出 2 道单选题检验我是否理解了三阶段的划分标准。">
+      我刚学了「编程学习路径的三阶段」：第一阶段夯实基础（1-3 个月），第二阶段项目驱动（3-6 个月），第三阶段体系化（长期）。我的专业是××，目标是××岗位。请：1）帮我判断自己当前处于哪个阶段、为什么；2）按三阶段给我定制一份本学期的学习计划，每个阶段写明学习重点、AI 可以帮什么、达成什么目标；3）给我出 2 道单选题检验我是否理解了三阶段的划分标准。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：写下你的三阶段计划（5 分钟）</span>
+    <ol class="steps">
+      <li>拿一张纸（或打开备忘录），写下你的<b>专业</b>和<b>目标岗位</b>（不确定就写最感兴趣的方向）。</li>
+      <li>照三阶段的框架，<b>一句话写一阶段</b>：第一阶段我学什么、第二阶段我做什么项目、第三阶段我补什么底层知识。</li>
+      <li>结合专业做“定制”：经管方向第二阶段可以做销售数据分析，新闻方向可以做爬虫舆情采集，工科方向可以做简易网站。</li>
+      <li>把你的计划发给 AI，请它按「学习重点 / AI 角色 / 目标」三行帮你点评和补漏——这本身就是一次人机协作演练。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>学习路径三站走：<b>第一阶段夯实基础（1-3 个月）</b>掌握变量、循环、函数、面向对象与数据结构基础，AI 解释概念、陪练调试，目标是独立解决简单算法问题；<b>第二阶段项目驱动（3-6 个月）</b>通过爬虫、数据分析、简易网站学框架工具，与 AI 结对完成完整应用；<b>第三阶段体系化（长期）</b>深入系统原理、网络、数据库、软件工程，成为驾驭 AI 的智能工程师。你现在就在第一站——本课程从这里正式出发，下一节去见 Python 的创造者。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="1.09.html"><span class="nav-label">← 上一节</span><span class="nav-title">1.09 与 AI 高效协作的三技巧</span></a>
+        <a class="next" href="1.11.html"><span class="nav-label">下一节 →</span><span class="nav-title">1.11 Python 的诞生与发展</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

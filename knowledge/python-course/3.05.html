@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.05 实战：身份证号提取信息 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第三章 字符串与列表 · 第 5 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.idbar{display:flex;gap:3px;flex-wrap:wrap;margin:8px 0 6px}
+.idcell{text-align:center;font-family:Consolas,monospace}
+.idcell .ch{display:inline-block;min-width:36px;padding:7px 0;background:#fff;border:1px solid var(--border);
+  border-radius:8px;font-size:15px;font-weight:700}
+.idcell .ix{font-size:11px;color:var(--ink2);margin-top:2px}
+.idcell.pick .ch{background:var(--accent);border-color:var(--accent);color:#fff}
+.idcell.pick .ix{color:var(--accent);font-weight:700}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch03.html">第三章 字符串与列表</a><span class="sep">/</span>
+          <span class="current">3.05</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">05</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第三章 · 字符串与列表</span>
+            <h1>实战：身份证号提取信息</h1>
+            <p class="hero-summary">第 5 / 21 节 · 约 12 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>字符串基础与三种引号</li>
+      <li>转义字符</li>
+      <li>字符串索引</li>
+      <li>字符串切片</li>
+      <li class="cur">实战：身份证号提取信息</li>
+      <li>字符串运算与内置函数</li>
+      <li>大小写转换方法</li>
+      <li>计数、查找与替换</li>
+      <li>分割、联合与剔除</li>
+      <li>判断字符串类别</li>
+      <li>format 格式化输出</li>
+      <li>f-string 格式化输出</li>
+      <li>列表定义与特性</li>
+      <li>列表的创建</li>
+      <li>列表索引与切片</li>
+      <li>列表增加元素</li>
+      <li>列表删除元素</li>
+      <li>列表修改元素</li>
+      <li>列表运算与函数</li>
+      <li>列表常用方法</li>
+      <li>实战：成绩排序和统计</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>前四节的「毕业考试」来了</h2>
+    <p>索引能取一个字符，切片能取一段字符——把这两招合起来，就能从真实的 18 位身份证号里<b>读出地区、生日和性别</b>。这是本章第一个完整实战：一小段代码，解决一个听起来「像回事」的问题。以后你注册账号时填的身份证校验、银行系统的身份识别，背后都是这类字符串操作。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">身份证号是一张「压缩的个人信息表」</div>
+      <p>18 位号码看着是一串数字，其实是<b>一张压缩过的表格</b>：前 6 格写着「住址」，中间 8 格写着「生日」，再 3 格是「当天出生的人排队序号」，最后 1 格是「防伪校验章」。字符串索引和切片就是「按格拆表」的工具。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>18 位身份证号的结构（标准常识）</h2>
+    <ul class="points">
+      <li><b>第 1~6 位（索引 0~5）</b>：地区码——省、市、县（区）的行政区划代码</li>
+      <li><b>第 7~14 位（索引 6~13）</b>：出生日期，格式为年 4 位 + 月 2 位 + 日 2 位</li>
+      <li><b>第 15~17 位（索引 14~16）</b>：顺序码——同一天同地区出生者的编号</li>
+      <li><b>第 18 位（索引 17）</b>：校验码（可能是数字或 X）</li>
+      <li><b>关键规则</b>：第 17 位（<b>索引 16</b>）数字为<b>奇数表示男性，偶数表示女性</b></li>
+    </ul>
+
+    <p style="margin-top:10px">把示例号码 <code>id_c = "110101199003077758"</code> 按格拆开，正好对上：</p>
+    <div class="idbar" id="idbar"></div>
+    <p class="muted" style="font-size:13px">每格下方是它的索引号（正向 0~17）。注意：身份证号要存成<b>字符串</b>而不是数字——按位取字符是它的核心用法，而且存成整数会丢掉前导零、也取不出单个字符。</p>
+
+    <div class="switch" style="margin-top:16px">
+      <button class="on" data-pane="q1">取地区</button>
+      <button data-pane="q2">取生日</button>
+      <button data-pane="q3">判性别</button>
+    </div>
+    <div class="pane on" id="q1">
+      <pre class="codeblock">id_c = "110101199003077758"
+# 输出地区
+print(id_c[:6])</pre>
+      <p>输出：<code>110101</code></p>
+      <p class="muted" style="font-size:14px">一句拆解：<code>[:6]</code> 省略起点，从索引 0 取到索引 6 之前——正好是前 6 位地区码。</p>
+    </div>
+    <div class="pane" id="q2">
+      <pre class="codeblock">id_c = "110101199003077758"
+# 输出生日
+print(id_c[6:10], id_c[10:12], id_c[12:14])</pre>
+      <p>输出：<code>1990 03 07</code></p>
+      <p class="muted" style="font-size:14px">一句拆解：年 <code>[6:10]</code>、月 <code>[10:12]</code>、日 <code>[12:14]</code>，三段切片左闭右开，各取各的，用逗号隔开一次性打印。</p>
+    </div>
+    <div class="pane" id="q3">
+      <pre class="codeblock">id_c = "110101199003077758"
+# 输出性别
+print("男" * (int(id_c[16]) % 2) + "女" * (1 - int(id_c[16]) % 2))</pre>
+      <p>输出：<code>男</code></p>
+      <p class="muted" style="font-size:14px">一句拆解：索引 16 的字符是 <code>5</code>，转成整数后 <code>5 % 2</code> 得 1（奇数），于是 <code>"男" * 1</code> 保留、<code>"女" * 0</code> 变空串——只打印出「男」。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>精讲：判性别那一行的「巧思」</h2>
+    <pre class="codeblock">print("男" * (int(id_c[16]) % 2) + "女" * (1 - int(id_c[16]) % 2))</pre>
+    <ul class="points">
+      <li><b>字符串可以乘数字实现重复</b>：<code>"男" * 1</code> 是 <code>男</code>，<code>"男" * 0</code> 是<b>空串</b>（什么都没有）——这招下一节正式讲，先混个眼熟</li>
+      <li><code>int(id_c[16])</code>：先把索引 16 取出的<b>字符</b>（如 <code>'7'</code>）转成<b>整数</b>，才能做算术</li>
+      <li><code>% 2</code>：对 2 求余——奇数余 1，偶数余 0，正好把「奇偶」变成「1 或 0」</li>
+      <li>整个表达式等于<b>「用乘法代替 if 判断」</b>：条件为真时乘 1（留下），为假时乘 0（清零）。流程控制要到第五章才学，这里看懂套路即可</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！id_c[6:10] 取索引 6~9 共 4 个字符，正是出生年份 1990。"
+         data-no="❌ 回想切片规则：从索引 6 取到索引 10 之前（不含 10），共 4 个字符。它对应身份证结构里的哪一段？">
+      <p style="font-weight:700;margin-bottom:12px">对 <code>id_c = "110101199003077758"</code> 执行 <code>print(id_c[6:10])</code>，输出的是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 地区码 110101</button>
+      <button class="opt" onclick="quizPick(this)">B. 出生年份 1990</button>
+      <button class="opt" onclick="quizPick(this)">C. 月份 03</button>
+      <button class="opt" onclick="quizPick(this)">D. 校验码 8</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="男" data-ok="✅ 正确！第 17 位（索引 16）奇数为男、偶数为女——程序里用 % 2 把奇偶变成 1/0 来判断。" data-no="❌ 提示：想想「男女生分开编号」的规则，奇数一边、偶数一边，奇数对应哪个性别？">
+      <p>身份证第 17 位（索引 16）数字为奇数，则该号码主人的性别为＿＿。</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="填：男 或 女">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">「字符串 7」和「数字 7」是两回事</div>
+      <p><b>①</b> <code>id_c[16]</code> 取出的是<b>字符</b> <code>'7'</code>，不是数字 7——直接拿它做 <code>% 2</code> 会报 TypeError，必须先 <code>int()</code> 转换。<b>②</b> 身份证号务必写成<b>字符串</b>：如果存成整数，前导信息的位置含义就乱了，而且部分环境里 18 位整数还会出精度问题。<b>③</b> 校验码可能是字母 <code>X</code>，所以整串号码不能当纯数字处理。<b>④</b> 别拿真实身份证号做练习发到网上，用编造的 18 位数字串就好。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚用 Python 的索引和切片完成身份证号提取实战：id_c[:6] 取地区、id_c[6:10] 取年份、“男” * (int(id_c[16]) % 2) 判性别。请：1）逐行解释判性别那行为什么能用乘法代替 if；2）给我一个编造的 18 位号码，出 3 道切片/索引题（取月、取日、取顺序码）考我；3）说说为什么身份证号要存成字符串而不是整数。">
+      我刚用 Python 的索引和切片完成身份证号提取实战：id_c[:6] 取地区、id_c[6:10] 取年份、"男" * (int(id_c[16]) % 2) 判性别。请：1）逐行解释判性别那行为什么能用乘法代替 if；2）给我一个编造的 18 位号码，出 3 道切片/索引题（取月、取日、取顺序码）考我；3）说说为什么身份证号要存成字符串而不是整数。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：跑通三段实战代码（6 分钟）</span>
+    <ol class="steps">
+      <li>交互模式输入 <code>id_c = "110101199003077758"</code>。</li>
+      <li>依次运行 <code>print(id_c[:6])</code>、<code>print(id_c[6:10], id_c[10:12], id_c[12:14])</code>、判性别那一长行，核对三段输出。</li>
+      <li>换成<b>自己编造</b>的 18 位数字串（别用真实证件号），再跑一遍三段代码。</li>
+      <li>观察：把第 17 位（索引 16）改成偶数（如 8），性别输出是不是变成「女」了？</li>
+      <li>挑战：只用一行代码，把出生年月日拼成 <code>1990-03-07</code> 的格式打印（提示：<code>"-"</code> 和 <code>+</code> 下一节就讲）。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>身份证号是「压缩的个人信息表」：6 位地区 + 8 位生日 + 3 位顺序码 + 1 位校验码，第 17 位奇男偶女；用切片 <code>[:6]</code> <code>[6:10]</code> <code>[10:12]</code> <code>[12:14]</code> 分段提取，用 <code>int()</code> + <code>% 2</code> 判奇偶，再借「字符串乘数字」<b>用乘法代替 if</b> 输出性别。字符串还有哪些好玩的操作？下一节：运算符与内置函数！</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="3.04.html"><span class="nav-label">← 上一节</span><span class="nav-title">3.04 字符串切片</span></a>
+        <a class="next" href="3.06.html"><span class="nav-label">下一节 →</span><span class="nav-title">3.06 字符串运算与内置函数</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：身份证号按结构高亮（默认高亮地区码，随切换 pane 联动） */
+(function(){
+  const IDC = '110101199003077758';
+  const bar = document.getElementById('idbar');
+  const zones = { q1: [0, 6], q2: [6, 14], q3: [16, 17] };
+  function paint(zone){
+    bar.innerHTML = '';
+    const [a, b] = zones[zone];
+    IDC.split('').forEach((ch, i) => {
+      const d = document.createElement('span');
+      d.className = 'idcell' + (i >= a && i < b ? ' pick' : '');
+      d.innerHTML = '<span class="ch">' + ch + '</span><div class="ix">' + i + '</div>';
+      bar.appendChild(d);
+    });
+  }
+  paint('q1');
+  document.querySelectorAll('.switch button').forEach(function(btn){
+    btn.addEventListener('click', function(){ paint(btn.dataset.pane); });
+  });
+})();
+</script>
+</body>
+</html>

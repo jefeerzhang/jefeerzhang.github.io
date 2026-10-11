@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.04 编程语言的三个层次 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第一章 导论与 Python 环境 · 第 4 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+/* —— 本页专属：三层次切换展示 —— */
+.demo{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+      box-shadow:var(--shadow);padding:22px;margin-top:10px}
+.codewindow{font-family:Consolas,Menlo,monospace;font-size:15.5px;background:#1f2430;color:#dbe2f0;
+      border-radius:12px;padding:18px;line-height:2;overflow-x:auto;margin:12px 0;white-space:nowrap}
+.codewindow .hl{color:#7ce3b0;font-weight:700}
+.codewindow .cm{color:#8b93a7;font-size:12.5px}
+.pane h3{font-size:16px;margin-bottom:4px}
+.pane .sub{font-size:13px;color:var(--ink2);margin-bottom:10px}
+.pane p{font-size:14.5px}
+.lv-bar{display:flex;gap:6px;margin:0 0 12px}
+.lv-seg{flex:1;height:8px;border-radius:99px;background:var(--code-bg)}
+.lv-seg.on1{background:#1a9e6c}.lv-seg.on2{background:#d97706}.lv-seg.on3{background:#e05252}
+button.btn{font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;
+      padding:10px 18px;cursor:pointer;background:var(--accent);color:#fff}
+button.btn:active{transform:scale(.97)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch01.html">第一章 导论与 Python 环境</a><span class="sep">/</span>
+          <span class="current">1.04</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">04</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第一章 · 导论与 Python 环境</span>
+            <h1>编程语言的三个层次</h1>
+            <p class="hero-summary">第 4 / 18 节 · 约 7 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>计算机系统架构</li>
+      <li>操作系统及其分类</li>
+      <li>编程语言：人机沟通的桥梁</li>
+      <li class="cur">编程语言的三个层次</li>
+      <li>编译型 vs 解释型语言</li>
+      <li>TIOBE 排行与语言流行趋势</li>
+      <li>五大语言的诞生与用途</li>
+      <li>AI 时代的编程学习理念</li>
+      <li>与 AI 高效协作的三技巧</li>
+      <li>学习路径的三阶段</li>
+      <li>Python 的诞生与发展</li>
+      <li>PEP 与 PEP 8</li>
+      <li>The Zen of Python</li>
+      <li>Python 2 vs Python 3</li>
+      <li>Python 的六大特点</li>
+      <li>Python 的应用领域</li>
+      <li>Python 环境搭建</li>
+      <li>Anaconda 与 AI IDE</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>同样是写代码，到底差在哪个「层」？</h2>
+    <p>上一节我们知道：机器只认 0 和 1，人类想用更亲切的语言。于是编程语言的世界里形成了<b>三个层次</b>——机器语言、汇编语言、高级语言。这个知识点是第一章的重点名词题：分清三种语言的<strong>代码表示形式</strong>，并理解「越往上层越接近人、越往下层越接近机器」。学完你要能：</p>
+    <ul class="points">
+      <li>看到 <code>a = b + 1</code>、<code>mov 0x804a01c,%eax</code>、<code>a1 1c a0 04 08</code> 三段代码，<b>立刻认出各自属于哪个层次</b>。</li>
+      <li>说清三个层次<b>谁要翻译、翻译成什么</b>才能被执行。</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">普通话、方言、摩斯密码</div>
+      <p><b>高级语言像普通话</b>——全国人民都容易听懂，学起来快、交流方便，你想说「把 b 加 1 存进 a」直接就能说。</p>
+      <p><b>汇编语言像方言</b>——只有本地（特定型号的 CPU）听得懂，句子更贴近机器的动作，外地人听得费劲，要「翻译」成机器的动作才行。</p>
+      <p><b>机器语言像摩斯密码</b>——满纸只有两种符号的组合，人读起来头昏眼花，但收报员（CPU）<b>不用任何翻译、直接就懂</b>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>同一个操作，三种写法</h2>
+    <p>假设我们要完成同一个简单操作：<b>把内存变量 b 的值取出来加 1，再存回变量 a</b>。三个层次分别这样写（点下面的按钮切换）：</p>
+
+    <div class="demo">
+      <div class="lv-bar"><div class="lv-seg on1" id="seg1"></div><div class="lv-seg" id="seg2"></div><div class="lv-seg" id="seg3"></div></div>
+      <div class="switch">
+        <button class="on" data-pane="pane-high">层 3 · 高级语言</button>
+        <button data-pane="pane-asm">层 2 · 汇编语言</button>
+        <button data-pane="pane-mc">层 1 · 机器语言</button>
+      </div>
+      <div class="pane on" id="pane-high">
+        <h3>🟢 层 3 · 高级语言：a = b + 1</h3>
+        <div class="sub">接近自然语言和数学式 · Python、C、Java 都属于这一层</div>
+        <div class="codewindow">a = b + 1    <span class="cm"># 一行搞定，人类一眼读懂</span></div>
+        <p>用变量名、运算符表达意图，完全不用关心寄存器和内存地址。写起来最轻松，但 CPU 看不懂——<b>必须经过翻译（编译或解释）变成下面的层次才能执行</b>。怎么翻译？这正是下一节「编译型 vs 解释型」的主题。</p>
+      </div>
+      <div class="pane" id="pane-asm">
+        <h3>🟡 层 2 · 汇编语言：mov 0x804a01c,%eax</h3>
+        <div class="sub">用助记符代替 0 和 1 · 一条高级语句对应好几条汇编指令</div>
+        <div class="codewindow">mov 0x804a01c,%eax    <span class="cm"># 把内存地址 0x804a01c 处的值（就是 b）搬进寄存器 eax</span><br>inc %eax              <span class="cm"># 寄存器里的值加 1</span></div>
+        <p>汇编语言用 <code>mov</code>、<code>inc</code> 这样的<b>助记符</b>直接指挥寄存器和内存地址，比纯 0 和 1 好读多了，但仍然要盯着地址、寄存器这些底层细节，写起来又慢又容易错。它需要经过<b>汇编器</b>翻译成机器语言才能被 CPU 执行。</p>
+      </div>
+      <div class="pane" id="pane-mc">
+        <h3>🔴 层 1 · 机器语言：a1 1c a0 04 08</h3>
+        <div class="sub">二进制指令的十六进制记法 · CPU 唯一能直接执行</div>
+        <div class="codewindow">a1 1c a0 04 08    <span class="cm"># 即二进制 10100001 00011100 10100000 00000100 00001000</span></div>
+        <p>这就是汇编指令 <code>mov 0x804a01c,%eax</code> 翻译后的真身——一串字节。CPU 读到 <code>a1</code> 就知道「取数」，后面四个字节是内存地址。人读它如同读天书，<b>但机器一步到位、无需任何翻译</b>。</p>
+      </div>
+      <p class="muted" style="margin-top:14px">💡 记住这条规律：<b>越往下越接近机器、越难读；越往上越接近人类、越易用。</b></p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">📌 一表总结</span>
+    <h2>三个层次对照表（名词题高频考点）</h2>
+    <table>
+      <tr><th>语言类型</th><th>代码表示形式</th><th>可读性</th><th>执行方式</th></tr>
+      <tr><td>高级语言</td><td>接近自然语言与数学式，如 <code>a = b + 1</code></td><td>最容易（人写人读）</td><td>需编译 / 解释翻译成机器语言</td></tr>
+      <tr><td>汇编语言</td><td>助记符 + 寄存器 / 地址，如 <code>mov 0x804a01c,%eax</code></td><td>较难（要懂硬件）</td><td>需汇编成机器语言再执行</td></tr>
+      <tr><td>机器语言</td><td>二进制 0 和 1（常记作十六进制），如 <code>a1 1c a0 04 08</code></td><td>最难（天书）</td><td>CPU 直接执行，无需翻译</td></tr>
+    </table>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！Python 属于高级语言——它用接近自然语言和数学式的写法表达逻辑，必须经解释器翻译成机器语言才能执行。"
+         data-no="❌ 不对哦。汇编语言写的是 mov、inc 这类助记符，机器语言是 0 和 1 的字节串。Python 这种易读写法属于最高层的「高级语言」。">
+      <p style="font-weight:700;margin-bottom:12px">程序员日常写的 Python 代码属于哪个层次？</p>
+      <button class="opt" onclick="quizPick(this)">A. 机器语言</button>
+      <button class="opt" onclick="quizPick(this)">B. 汇编语言</button>
+      <button class="opt" onclick="quizPick(this)">C. 高级语言</button>
+      <button class="opt" onclick="quizPick(this)">D. 自然语言</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="机器" data-ok="✅ 正确！汇编语言用助记符写的程序，要经过汇编器翻译成机器语言，CPU 才能直接执行。" data-no="❌ 再想想：CPU 唯一能直接执行的是哪种语言？（提示：由 0 和 1 组成的那个）">
+      <p>汇编语言需要经过「汇编」翻译成<b>＿＿</b>语言，才能被 CPU 直接执行。请在框里填这两个字：</p>
+      <div class="fill-row">
+        <input class="blank" id="blank1" placeholder="填两个字">
+        <button class="btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">两个最容易答混的点</div>
+      <p><b>误区一：「高级语言离机器近所以跑得快」。</b>正好相反：层次越<b>低</b>（机器语言）越贴近硬件、执行越直接；层次越<b>高</b>（Python）越好用，但要多一道翻译步骤、运行开销更大。易用性和执行效率是一对天然的取舍。</p>
+      <p><b>误区二：「汇编语言是给机器看的」。</b>错——机器只认 0 和 1。汇编语言的助记符是<b>写给人看的</b>（替人记住 0 和 1 串的含义），它最终仍要翻译成机器语言才轮得到 CPU。另外，机器语言那串 <code>a1 1c a0 04 08</code> 是二进制的十六进制记法，别把它当成「另一种语言」。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了「编程语言的三个层次」：高级语言（如 a = b + 1）接近自然语言、需编译或解释成机器语言；汇编语言（如 mov 0x804a01c,%eax）用助记符操作寄存器、需汇编成机器语言；机器语言（如 a1 1c a0 04 08）由 0 和 1 组成、CPU 直接执行。规律：越往下越接近机器、越难读，越往上越接近人类、越易用。请：1）用普通话、方言、摩斯密码的类比再讲一遍；2）出 2 道单选题和 1 道判断题考我，等我作答后再公布答案。">
+      我刚学了「编程语言的三个层次」：高级语言（如 a = b + 1）接近自然语言、需编译或解释成机器语言；汇编语言（如 mov 0x804a01c,%eax）用助记符操作寄存器、需汇编成机器语言；机器语言（如 a1 1c a0 04 08）由 0 和 1 组成、CPU 直接执行。规律：越往下越接近机器、越难读，越往上越接近人类、越易用。请：1）用普通话、方言、摩斯密码的类比再讲一遍；2）出 2 道单选题和 1 道判断题考我，等我作答后再公布答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：亲手体验「抽象层次」（5 分钟）</span>
+    <ol class="steps">
+      <li>任务：指挥一个人完成「<b>把 A 杯的水倒进 B 杯</b>」。</li>
+      <li><b>高级层（一句话）</b>：像高级语言那样写——「把 A 杯的水倒进 B 杯」。一行搞定，意图清晰。</li>
+      <li><b>汇编层（拆成动作）</b>：拆细——「左手拿起 A 杯 → 移动到 B 杯上方 → 倾斜 45 度 → 水流尽后回正 → 放回 A 杯原位」。每步都在操作具体「部件」。</li>
+      <li><b>机器层（拆到肌肉）</b>：再拆——「收缩二头肌 3 度 → 手腕外旋 5 度 → 停 0.5 秒……」。全是「寄存器级」指令，你自己都嫌啰嗦。</li>
+      <li>对比三套指令，你就彻底懂了：<b>层次越高越省心，但每一层高层的指令，最终都得靠低层的动作去落实。</b></li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>编程语言分三个层次：<b>高级语言</b>（<code>a = b + 1</code>，接近人，最好用）、<b>汇编语言</b>（<code>mov 0x804a01c,%eax</code>，助记符贴近机器）、<b>机器语言</b>（<code>a1 1c a0 04 08</code>，CPU 直接执行）。规律：越往下越接近机器、越难读；越往上越接近人类、越易用。而高级语言写的程序必须「翻译」成机器语言才能执行——翻译的方式有两种，这正是下一节「编译型 vs 解释型语言」要讲的主角戏。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="1.03.html"><span class="nav-label">← 上一节</span><span class="nav-title">1.03 编程语言：人机沟通的桥梁</span></a>
+        <a class="next" href="1.05.html"><span class="nav-label">下一节 →</span><span class="nav-title">1.05 编译型 vs 解释型语言</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* —— 本页专属：三档切换时点亮对应层次条 —— */
+document.querySelectorAll('.switch button').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var map = { 'pane-high': 'seg1', 'pane-asm': 'seg2', 'pane-mc': 'seg3' };
+    var cls = { 'pane-high': 'on1', 'pane-asm': 'on2', 'pane-mc': 'on3' };
+    ['seg1', 'seg2', 'seg3'].forEach(function (id) { document.getElementById(id).className = 'lv-seg'; });
+    var seg = document.getElementById(map[b.dataset.pane]);
+    if (seg) seg.className = 'lv-seg ' + cls[b.dataset.pane];
+  });
+});
+</script>
+</body>
+</html>

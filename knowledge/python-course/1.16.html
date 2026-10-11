@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.16 Python 的应用领域 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第一章 导论与 Python 环境 · 第 16 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+/* —— 本页专属：领域卡配色 —— */
+.a1 .dot{background:#4f6ef7}.a2 .dot{background:#7c5cf0}.a3 .dot{background:#d97706}
+.a4 .dot{background:#1a9e6c}.a5 .dot{background:#e05252}.a6 .dot{background:#0ea5b7}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch01.html">第一章 导论与 Python 环境</a><span class="sep">/</span>
+          <span class="current">1.16</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">16</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第一章 · 导论与 Python 环境</span>
+            <h1>Python 的应用领域</h1>
+            <p class="hero-summary">第 16 / 18 节 · 约 8 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>计算机系统架构</li>
+      <li>操作系统及其分类</li>
+      <li>编程语言：人机沟通的桥梁</li>
+      <li>编程语言的三个层次</li>
+      <li>编译型 vs 解释型语言</li>
+      <li>TIOBE 排行与语言流行趋势</li>
+      <li>五大语言的诞生与用途</li>
+      <li>AI 时代的编程学习理念</li>
+      <li>与 AI 高效协作的三技巧</li>
+      <li>学习路径的三阶段</li>
+      <li>Python 的诞生与发展</li>
+      <li>PEP 与 PEP 8</li>
+      <li>The Zen of Python</li>
+      <li>Python 2 vs Python 3</li>
+      <li>Python 的六大特点</li>
+      <li class="cur">Python 的应用领域</li>
+      <li>Python 环境搭建</li>
+      <li>Anaconda 与 AI IDE</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>学 Python，到底能拿它做什么？</h2>
+    <p>学了这么多概念，你心里可能一直有个疑问：「说这么热闹，我将来能用它干嘛？」这一节就给你答案。Python 的应用领域横跨<b>数据、AI、网络、办公自动化</b>，无论你是什么专业，几乎都能找到自己的位置。看完这节你会明白：</p>
+    <ul class="points">
+      <li>为什么说数据分析在 Python 的应用里<b>占据半壁江山</b>？</li>
+      <li>TensorFlow、PyTorch 这些 AI 框架为什么<b>首选 Python</b>？</li>
+      <li>对你<b>经济、投资类专业</b>来说，哪两个领域最值得优先关注？</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">六大领域 = 一把瑞士军刀的六个刀刃</div>
+      <p>Python 就像一把<b>瑞士军刀</b>：数据分析、Web 开发、自动化运维、人工智能、网络爬虫、软件测试，是它身上六个磨得锃亮的刀刃。你不需要一次把六个刃全磨锋利——<b>你的专业和你想解决的问题，决定你先磨哪个刃</b>。经济类同学大概率先磨「数据分析」和「网络爬虫」这两个刃，其余的知道在哪、需要时再取用就好。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>六大领域一览</h2>
+    <ul class="points">
+      <li><b>数据分析</b>：在数据分析、可视化及数据处理领域应用广泛，是这一方向的首选工具之一，Excel 遇到的瓶颈它都能突破。</li>
+      <li><b>Web 开发</b>：广泛应用于后端开发，拥有 Django、Flask 等成熟框架生态，众多网站的「幕后发动机」。</li>
+      <li><b>自动化运维</b>：处理系统管理任务、编写自动化脚本，把重复劳动交给程序，极大提升运维效率。</li>
+      <li><b>人工智能</b>：机器学习与深度学习的核心语言，TensorFlow / PyTorch 等主流框架的首选。</li>
+      <li><b>网络爬虫</b>：高效获取互联网数据，构建数据采集与分析系统。</li>
+      <li><b>软件测试</b>：支持自动化测试框架，保障软件交付质量与稳定性。</li>
+      <li>给经济、投资类专业的你划重点：<b>最常用的是数据分析与网络爬虫</b>——一个管分析，一个管采集，正好凑成完整的数据工作流。</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">👆 点击卡片，看代表工具和身边例子</span>
+    <h2>六大领域，逐个点开看看</h2>
+    <div class="grid g3">
+      <div class="icard a1" data-toggle>
+        <h4><span class="dot"></span>数据分析</h4>
+        <div class="desc">数据科学、可视化与处理的首选</div>
+        <div class="more"><b>代表工具</b>：Pandas、NumPy、Matplotlib。<b>身边例子</b>：Excel 处理几万行数据就开始卡死，Pandas 处理几百万行依然从容；课程里把报表做成图，也是几行代码的事。对经管类专业来说，这是性价比最高的第一个领域。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard a2" data-toggle>
+        <h4><span class="dot"></span>人工智能</h4>
+        <div class="desc">机器学习与深度学习的核心语言</div>
+        <div class="more"><b>代表工具</b>：TensorFlow、PyTorch（都是首选）。<b>身边例子</b>：你每天用的 ChatGPT、人脸识别、购物推荐，背后模型的训练与调用大多由 Python 完成。AI 时代学 Python，等于拿到了进入这个行业的门票。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard a3" data-toggle>
+        <h4><span class="dot"></span>网络爬虫</h4>
+        <div class="desc">高效获取互联网数据</div>
+        <div class="more"><b>代表工具</b>：requests、BeautifulSoup。<b>身边例子</b>：想研究某个商品的价格走势？手动刷新一百次太傻，写个爬虫自动采集，几行代码就能构建自己的数据采集与分析系统。注意：爬数据要遵守网站规则与法律底线。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard a4" data-toggle>
+        <h4><span class="dot"></span>Web 开发</h4>
+        <div class="desc">后端开发的成熟生态</div>
+        <div class="more"><b>代表工具</b>：Django（大而全）、Flask（小而美）。<b>身边例子</b>：你在浏览器里填个表单、登录一个网站，背后处理请求、查数据库、返回页面的「后端」，很可能就是 Python 写的。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard a5" data-toggle>
+        <h4><span class="dot"></span>自动化运维</h4>
+        <div class="desc">系统管理与自动化脚本</div>
+        <div class="more"><b>代表工具</b>：os、shutil 等标准库加自写脚本。<b>身边例子</b>：把一个文件夹里 1000 张图片按日期批量重命名、每天定时备份聊天记录——手点要一小时，写个几行的脚本只要几秒，一次编写长期受益。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard a6" data-toggle>
+        <h4><span class="dot"></span>软件测试</h4>
+        <div class="desc">自动化测试保障软件质量</div>
+        <div class="more"><b>代表工具</b>：pytest、unittest。<b>身边例子</b>：一个 App 更新前要测几百个功能，靠人一个个点太慢——自动化测试脚本让电脑替你「点遍所有按钮」，保障软件交付的质量与稳定性。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！人工智能是机器学习与深度学习的核心语言领域，TensorFlow / PyTorch 正是该领域的首选框架。"
+         data-no="❌ 不对哦。Django / Flask 属于 Web 开发，requests 是爬虫工具，Pandas 是数据分析工具。AI 领域的首选框架是 TensorFlow / PyTorch。">
+      <p style="font-weight:700;margin-bottom:12px">在 Python 的<b>人工智能</b>应用领域，机器学习与深度学习的首选框架组合是？</p>
+      <button class="opt" onclick="quizPick(this)">A. Django / Flask</button>
+      <button class="opt" onclick="quizPick(this)">B. TensorFlow / PyTorch</button>
+      <button class="opt" onclick="quizPick(this)">C. requests / BeautifulSoup</button>
+      <button class="opt" onclick="quizPick(this)">D. pytest / unittest</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="Web|web|Web开发|web开发|网络" data-ok="✅ 正确！Web 开发领域拥有 Django、Flask 等成熟框架生态。" data-no="❌ 再想想：Django、Flask 是做网站的框架，对应哪个领域的名字？（两个词，W 开头）">
+      <p>Python 在 <b>＿＿</b> 开发领域拥有 Django、Flask 等成熟框架。请在框里填写：</p>
+      <div class="fill-row">
+        <input class="blank" id="blank1" placeholder="填 3 个字母，如：×××">
+        <button class="btn btn-main" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">「领域多」不等于「样样都要精通」</div>
+      <p>看到六大领域，新手最容易犯的错是<b>贪多</b>：今天想学爬虫，明天想搞 AI，后天又去碰 Web，最后每个都只学到皮毛。正确姿势是：<b>结合专业先锁定 1～2 个领域</b>（比如经管类的数据分析 + 爬虫），把对应工具练熟，其他的需要时再扩展。</p>
+      <p>另外，爬虫虽好用，<b>不是什么数据都能爬</b>：涉及个人隐私、版权内容、需要登录付费才能看的数据，抓取可能违法。技术有边界，使用守规矩。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手（把××换成你的专业），让它给你定制建议：</p>
+    <div class="prompt-box" data-text="我刚学了「Python 的六大应用领域」：数据分析、Web 开发、自动化运维、人工智能、网络爬虫、软件测试。我的专业是××。请：1）结合我的专业，推荐最值得优先学的 1～2 个领域及对应的 Python 库；2）各举一个和我专业相关的真实应用案例；3）给我一条本学期就能上手的入门建议。">
+      我刚学了「Python 的六大应用领域」：数据分析、Web 开发、自动化运维、人工智能、网络爬虫、软件测试。我的专业是××。请：1）结合我的专业，推荐最值得优先学的 1～2 个领域及对应的 Python 库；2）各举一个和我专业相关的真实应用案例；3）给我一条本学期就能上手的入门建议。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：给你的学习定一个「锚点」（3 分钟）</span>
+    <ol class="steps">
+      <li>拿出手机备忘录或笔记本，写下一句话：<b>我的专业 + 我想用 Python 做的一件事</b>。例如「经济学专业，我想用 Python 分析近五年某只股票的收盘价走势」。</li>
+      <li>对照六大领域，看看这件事属于哪个领域，用括号标注在旁边。</li>
+      <li>把这句话设为学期目标，存好。<b>课程结束时回来看它是否实现</b>——你会惊讶于自己的进步。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>Python 的六大应用领域：<b>数据分析（半壁江山）、Web 开发（Django/Flask）、自动化运维、人工智能（TensorFlow/PyTorch 首选）、网络爬虫、软件测试</b>。它们像瑞士军刀的六个刀刃，你只需先磨利自己专业最需要的那一两个——对经济、投资类专业的同学，优先数据分析与网络爬虫。领域知道了，接下来两节就解决「用什么工具跑 Python」的问题。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="1.15.html"><span class="nav-label">← 上一节</span><span class="nav-title">1.15 Python 的六大特点</span></a>
+        <a class="next" href="1.17.html"><span class="nav-label">下一节 →</span><span class="nav-title">1.17 Python 环境搭建</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

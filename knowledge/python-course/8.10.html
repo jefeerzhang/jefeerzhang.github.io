@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8.10 多重继承 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第八章 面向对象编程 · 第 10 / 12 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.play{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.play-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.play-out{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14px;min-height:120px;white-space:pre-wrap;line-height:1.8}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch08.html">第八章 面向对象编程</a><span class="sep">/</span>
+          <span class="current">8.10</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">10</span>
+            <span class="lesson-hero-num-total">/ 12</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第八章 · 面向对象编程</span>
+            <h1>多重继承</h1>
+            <p class="hero-summary">第 10 / 12 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 12 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>编程的两种范式</li>
+      <li>面向对象的三大特性</li>
+      <li>四个核心概念：类·对象·属性·方法</li>
+      <li>创建类：class·__init__·self</li>
+      <li>创建对象与访问成员</li>
+      <li>实例属性与类属性</li>
+      <li>三种方法：实例·类·静态</li>
+      <li>封装与私有属性</li>
+      <li>继承与 super()</li>
+      <li class="cur">多重继承</li>
+      <li>多态与方法重写</li>
+      <li>综合案例：商品库存管理</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>一只鸭子：既会飞，又会游泳，技能从哪来？</h2>
+    <p>上一节我们让 Student 继承了 Person——一个子类、一个父类，这叫<b>单继承</b>。但现实中的分类常常是「多技能叠加」的：鸭子既属于「会飞的动物」又属于「会游泳的动物」。Python 对此非常慷慨，支持<b>多重继承</b>——一个子类可以同时继承多个父类，把所有父类的属性和方法一次收齐。这是 Python 面向对象的一大特色，语法上只是「括号里多写几项」而已。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">多重继承像「唐老鸭拜了两位师父」：一位教飞行，一位教游泳</div>
+      <p>Flyable 是飞行教练，Swimmable 是游泳教练，Duck 同时拜在两人门下——两位师父的技能<b>全部学到手</b>，一只既会飞又会游泳的唐老鸭就诞生了。唯一的规矩是：如果两位师父教了<b>同名</b>的招式，听谁的？按 <b>MRO 顺序</b>（方法解析顺序）查找，简单理解成「按括号里从前到后」即可——真正的规则叫 C3 线性化，本章了解即可、不必深究。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>多重继承的写法与规则</h2>
+    <ul class="points">
+      <li><b>语法</b>：括号里写多个父类，用逗号分隔——<code>class 子类(父类1, 父类2):</code></li>
+      <li><b>全盘接收</b>：子类同时拥有<b>所有</b>父类的属性和方法，如 Duck 既有 <code>fly()</code> 又有 <code>swim()</code></li>
+      <li><b>父类之间互不认识</b>：Flyable 和 Swimmable 各自独立定义，互不干扰，Duck 只是「汇总」它们</li>
+      <li><b>同名方法看顺序</b>：多个父类有同名方法时，按 <b>MRO 顺序</b>（方法解析顺序，简记为「括号内从前到后」）查找，本章了解即可</li>
+      <li><b>初始化方法同理</b>：如果多个父类都有 <code>__init__</code>，通常也只排在前面的那个会被自动执行，其余要手动 <code>super()</code> 或 <code>父类名.__init__()</code> 调用</li>
+    </ul>
+
+    <div class="play">
+      <p style="font-weight:700;margin-bottom:10px">🔬 多重继承实验台：点按钮执行 PPT 测试流程（Duck 同时继承 Flyable、Swimmable）</p>
+      <div class="play-row">
+        <button class="btn-main btn" onclick="mDo('create')">d = Duck('唐老鸭')</button>
+        <button class="btn-main btn" onclick="mDo('fly')">d.fly()</button>
+        <button class="btn-ghost btn" onclick="mDo('swim')">d.swim()</button>
+        <button class="btn-ghost btn" onclick="mDo('mro')">同名方法演示：Duck2(Flyable, Swimmable) 都有 run()</button>
+        <button class="btn-ghost btn" onclick="mDo('reset')">重置</button>
+      </div>
+      <div class="play-out" id="mout">点按钮模拟运行～先创建对象，再调用方法。</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：Duck(Flyable, Swimmable)</h2>
+    <pre class="codeblock">class Flyable:                      # 父类1：会飞
+    def fly(self):
+        print(f'{self.name}会飞！')
+
+class Swimmable:                    # 父类2：会游泳
+    def swim(self):
+        print(f'{self.name}会游泳！')
+
+class Duck(Flyable, Swimmable):     # 多重继承
+    def __init__(self, name):
+        self.name = name
+
+d = Duck('唐老鸭')
+d.fly()
+d.swim()</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">唐老鸭会飞！
+唐老鸭会游泳！</pre>
+    <ul class="points">
+      <li><code>Duck(Flyable, Swimmable)</code>：一个括号装两个父类，逗号分隔——Duck 同时拥有两套技能</li>
+      <li><code>d.fly()</code> 用的是 Flyable 的方法、<code>d.swim()</code> 用的是 Swimmable 的方法——两个父类的方法在同一个对象上都能调</li>
+      <li><code>self.name</code> 是 Duck 自己的 <code>__init__</code> 创建的——父类方法里照样能用它，和上一节的道理相同</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！多个父类有同名方法时按括号内的顺序（从前到后）查找——Flyable 排在前面，所以 d.run() 调用的是 Flyable 的 run，这就是 MRO 顺序。"
+         data-no="❌ 两个父类都有 run() 时不会报错，Python 按括号内的顺序（从前到后）查找：Duck2(Flyable, Swimmable) 中 Flyable 在前，所以调用 Flyable 的 run——这叫 MRO 顺序。">
+      <p style="font-weight:700;margin-bottom:12px"><code>Flyable</code> 和 <code>Swimmable</code> 都定义了 <code>run()</code>，执行 <code>class Duck2(Flyable, Swimmable)</code> 后，<code>Duck2().run()</code> 调用的是谁的 run？</p>
+      <button class="opt" onclick="quizPick(this)">A. 直接报错：方法名冲突</button>
+      <button class="opt" onclick="quizPick(this)">B. Flyable 的 run，因为括号里它排在前面</button>
+      <button class="opt" onclick="quizPick(this)">C. Swimmable 的 run，因为后写的会覆盖先写的</button>
+      <button class="opt" onclick="quizPick(this)">D. 两个 run 都执行一遍</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="逗号 从前到后|逗号 从前到后顺序|， 从前到后" data-ok="✅ 全对！多个父类写在括号里用逗号分隔；出现同名方法时按括号内的顺序从前到后查找（MRO 顺序）。" data-no="❌ 提示：两空分别对应——括号里多个父类之间用什么符号分隔；同名方法按括号内的＿＿顺序查找。两空之间用空格隔开。">
+      <p>多重继承的写法：class 子类(父类1, 父类2):，多个父类之间用<b>＿＿</b>分隔；当多个父类有同名方法时，Python 按括号内的<b>＿＿</b>顺序查找（这叫 MRO 顺序）。（第一空填分隔符，第二空填查找方向，两空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：逗号 从前到后">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>父类方法里用到的属性，子类 __init__ 必须创建</b>：Flyable.fly 里用了 <code>self.name</code>，若 Duck 的 __init__ 忘了写 <code>self.name = name</code>，一调用 fly 就 AttributeError——父类只提供方法，数据还得有人创建；</p>
+      <p>②<b>多个父类都有 __init__ 时只自动执行一个</b>：与上一节同理，需要父类的初始化逻辑时要显式调用，别想当然「每个父类的 __init__ 都会跑」；</p>
+      <p>③<b>滥用多重继承</b>：父类一多、「技能」一冲突，查找顺序就变复杂——零基础阶段建议像本节这样，让每个父类各管一摊互不重名，MRO 了解即可。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 多重继承：class 子类(父类1, 父类2): 可以同时继承多个父类，子类拥有所有父类的属性和方法；多个父类有同名方法时按括号内的顺序（从前到后）查找，即 MRO 顺序。请：1）用「拜两位师父」的类比再解释一遍多重继承；2）出一道两个父类同名方法的读代码题考我，让我预测输出；3）解释为什么说「零基础阶段应避免父类之间方法重名」，并举一个反例；4）布置一个小练习：定义 Runnable 和 Eatable 两个父类，让 Robot(Runnable, Eatable) 继承，我写完帮我 review。">
+      我刚学了 Python 多重继承：class 子类(父类1, 父类2): 可以同时继承多个父类，子类拥有所有父类的属性和方法；多个父类有同名方法时按括号内的顺序（从前到后）查找，即 MRO 顺序。请：1）用「拜两位师父」的类比再解释一遍多重继承；2）出一道两个父类同名方法的读代码题考我，让我预测输出；3）解释为什么说「零基础阶段应避免父类之间方法重名」，并举一个反例；4）布置一个小练习：定义 Runnable 和 Eatable 两个父类，让 Robot(Runnable, Eatable) 继承，我写完帮我 review。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：自拟小练习（10 分钟）</span>
+    <ol class="steps">
+      <li>读代码预测输出：在课堂代码后面加一句 <code>d2 = Duck('黛西')</code>，然后依次 <code>d2.fly()</code>、<code>d2.swim()</code>——先在纸上写出两行输出，再运行验证。</li>
+      <li>新建一个 <code>Swimmable</code> 的第三个子类 <code>Fish(Swimmable)</code>，让它只继承游泳技能——体会「想要哪个技能就继承哪个父类」。</li>
+      <li>动手改代码：给 Flyable 加一个 <code>land(self)</code> 方法打印「{self.name}降落了！」，再试试 <code>d.land()</code>——确认新增方法也会被子类继承。</li>
+      <li>挑战：定义两个都有 <code>show()</code> 的父类 A、B（打印内容不同），写 <code>class C(A, B)</code> 和 <code>class D(B, A)</code>，分别调用 show() 对比输出——亲眼看看 MRO 顺序的作用。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>Python 支持多重继承：一个子类可以同时继承多个父类，括号里逗号分隔——<code>class 子类(父类1, 父类2):</code>，子类同时拥有所有父类的属性和方法；多个父类有同名方法时按括号内的顺序（从前到后）查找，即 MRO 顺序，本章了解即可不必深究。下一节：继承再往前一步——同一个方法在不同子类对象上各显神通，这就是多态。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="8.09.html"><span class="nav-label">← 上一节</span><span class="nav-title">8.09 继承与 super()</span></a>
+        <a class="next" href="8.11.html"><span class="nav-label">下一节 →</span><span class="nav-title">8.11 多态与方法重写</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：多重继承实验台（模拟 Duck(Flyable, Swimmable) 行为） */
+let mCreated, logs;
+function mReset(){
+  mCreated = false;
+  logs = ['# Duck(Flyable, Swimmable)：点按钮开始模拟'];
+  mRender();
+}
+function mRender(){
+  document.getElementById('mout').innerHTML = logs.join('\n');
+}
+function mDo(op){
+  if (op === 'reset'){ mReset(); return; }
+  if (op === 'create'){
+    mCreated = true;
+    logs.push("d = Duck('唐老鸭')  # 创建成功，两套技能全到手");
+    mRender(); return;
+  }
+  if (op === 'fly'){
+    if (!mCreated){ logs.push('# 请先创建对象 d'); return mRender(); }
+    logs.push('d.fly()');
+    logs.push('唐老鸭会飞！');
+    mRender(); return;
+  }
+  if (op === 'swim'){
+    if (!mCreated){ logs.push('# 请先创建对象 d'); return mRender(); }
+    logs.push('d.swim()');
+    logs.push('唐老鸭会游泳！');
+    mRender(); return;
+  }
+  if (op === 'mro'){
+    logs.push('# 同名方法演示：Flyable.run 打印「飞奔」，Swimmable.run 打印「游走」');
+    logs.push('class Duck2(Flyable, Swimmable): ...   # Flyable 在前');
+    logs.push('Duck2().run()  →  飞奔   # 按括号内顺序从前到后查找（MRO）');
+    logs.push('class Duck3(Swimmable, Flyable): ...  # 换个顺序');
+    logs.push('Duck3().run()  →  游走   # 谁排前面用谁的');
+    mRender(); return;
+  }
+}
+window.addEventListener('DOMContentLoaded', mReset);
+</script>
+</body>
+</html>

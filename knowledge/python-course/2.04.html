@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.04 数据类型总览 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第二章 基础概念与数值 · 第 4 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch02.html">第二章 基础概念与数值</a><span class="sep">/</span>
+          <span class="current">2.04</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">04</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第二章 · 基础概念与数值</span>
+            <h1>数据类型总览</h1>
+            <p class="hero-summary">第 4 / 17 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序构成的两大核心</li>
+      <li>变量：概念与赋值</li>
+      <li>变量命名规则</li>
+      <li class="cur">数据类型总览</li>
+      <li>type() 查看类型</li>
+      <li>保留字（关键字）</li>
+      <li>函数：定义与调用</li>
+      <li>常用内置函数</li>
+      <li>输入输出函数</li>
+      <li>缩进与注释规范</li>
+      <li>数值类型总览</li>
+      <li>整数与四种进制</li>
+      <li>浮点数与精度陷阱</li>
+      <li>算术与增强赋值运算符</li>
+      <li>比较与逻辑运算符</li>
+      <li>运算符优先级</li>
+      <li>数值函数与 math 模块</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>数据不分类，程序乱成一锅粥</h2>
+    <p>变量只是「收纳盒」，但你总得知道盒子里装的是什么——是一个数？一段文字？还是「真/假」的判断结果？这就是<b>数据类型</b>的任务。不同类型的运算规则完全不同：<code>3 + 4</code> 得 7，而 <code>'3' + '4'</code> 得 '34'（字符串拼接）。</p>
+    <p>这一节先看<b>全局地图</b>——Python 的数据类型分两大门派：</p>
+    <ul class="points">
+      <li><b>简单数据类型</b>：一个数据就是一类——数值（int / float / complex）、字符串（str）、布尔值（bool）、空值（NoneType）</li>
+      <li><b>组合数据类型</b>：多个数据组合在一起——列表（list）、元组（tuple）、集合（set）、字典（dict）</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">单件快递盒 vs 多格收纳箱</div>
+      <p><b>简单类型像单件快递盒</b>：一盒只装一样东西——一双鞋、一本书、一支笔，清清楚楚。</p>
+      <p><b>组合类型像多格收纳箱</b>：一次装一整个家庭的东西——列表像可以随时增减物品的抽屉柜，元组像上了封条的收纳箱（装好后不许改），集合像不重样的徽章收藏册，字典像贴了标签的格子（按「标签」找东西）。</p>
+      <p style="margin-top:8px">另外，<b>字符串像一串糖葫芦</b>——一个个字符用签子（引号）串起来，'hello' 里 h、e、l、l、o 一颗颗排好队。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>八大类型全家福（点击卡片查看）</h2>
+    <div class="grid g3" style="margin-top:6px">
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent)"></span>整数 int</h4>
+        <div class="desc">数值类型 · 如 10</div>
+        <div class="more">没有小数点的数，可以是正、负、零。<br>示例：<code>10</code>、<code>-5</code>、<code>0</code></div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent)"></span>浮点数 float</h4>
+        <div class="desc">数值类型 · 如 3.14</div>
+        <div class="more">带小数点的数。<br>示例：<code>3.14</code>、<code>-0.5</code>、<code>2.0</code></div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent)"></span>复数 complex</h4>
+        <div class="desc">数值类型 · 如 1+2j</div>
+        <div class="more">实部 + 虚部，虚部用 j 表示，主要用于科学计算。<br>示例：<code>1 + 2j</code></div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--ok)"></span>字符串 str</h4>
+        <div class="desc">引号包裹的字符序列</div>
+        <div class="more">用单引号或双引号包裹的字符序列，像一串糖葫芦。<br>示例：<code>'hello'</code>、<code>"Python"</code></div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--ok)"></span>布尔值 bool</h4>
+        <div class="desc">真 / 假</div>
+        <div class="more">表示真或假，<b>只有 True 和 False 两个值</b>（注意首字母大写）。<br>示例：<code>True</code>、<code>False</code></div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--ok)"></span>空值 NoneType</h4>
+        <div class="desc">表示「空」</div>
+        <div class="more">表示空，使用 <code>None</code> 表示「这里暂时什么都没有」。<br>示例：<code>None</code></div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent2)"></span>列表 list</h4>
+        <div class="desc">组合类型 · [1, 2, 'a']</div>
+        <div class="more"><b>有序、可变</b>序列，用<b>方括号 []</b>。装好后可以增删改。<br>示例：<code>[1, 2, 'a']</code></div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent2)"></span>元组 tuple</h4>
+        <div class="desc">组合类型 · (1, 2, 'a')</div>
+        <div class="more"><b>有序、不可变</b>序列，用<b>圆括号 ()</b>。装好后不许修改。<br>示例：<code>(1, 2, 'a')</code></div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent2)"></span>集合 set</h4>
+        <div class="desc">组合类型 · {1, 2, 3}</div>
+        <div class="more"><b>无序、不重复</b>元素集，用<b>大括号 {}</b>。自动去重。<br>示例：<code>{1, 2, 3}</code></div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent2)"></span>字典 dict</h4>
+        <div class="desc">组合类型 · 键值对</div>
+        <div class="more"><b>键值对</b>的映射集合，用<b>大括号 {}</b>，键与值用冒号相连。<br>示例：<code>{"name": "张三"}</code></div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+    </div>
+    <p class="muted" style="margin-top:12px">💡 上排前 6 张卡是<b>简单数据类型</b>（单一数据），后 4 张（深紫圆点）是<b>组合数据类型</b>（多个数据的组合）。每个类型对应的英文名字，下一节用 type() 就能亲自查到。</p>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！[1, 2, 3] 是列表（list），属于组合数据类型。int、'hello'、True 都是简单数据类型。"
+         data-no="❌ 不对哦。int 是整数类型、'hello' 是字符串、True 是布尔值——它们都是「单一数据」的简单类型。只有 [1, 2, 3]（列表）是多个数据的组合。">
+      <p style="font-weight:700;margin-bottom:12px">下列<b>属于组合数据类型</b>的是？</p>
+      <button class="opt" onclick="quizPick(this)">A. int</button>
+      <button class="opt" onclick="quizPick(this)">B. 'hello'</button>
+      <button class="opt" onclick="quizPick(this)">C. [1, 2, 3]</button>
+      <button class="opt" onclick="quizPick(this)">D. True</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="元组tuple|元组 tuple|元组,tuple" data-ok="✅ 正确！元组（tuple）有序且不可变，用圆括号 () 表示。" data-no="❌ 再想想：有序且「不可变」的序列叫什么？它和「可变」的列表是一对兄弟。（提示：点击上面的元组卡片看看）">
+      <p>有序不可变序列使用圆括号()表示，叫做<b>＿＿</b>（英文类名是 <b>＿＿</b>）。（两空连填，中间用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：×× ××">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">符号混用，一用就报错</div>
+      <p><b>坑一：列表用错括号。</b>列表是方括号 <code>[1, 2]</code>，元组是圆括号 <code>(1, 2)</code>——很多人顺手全写成圆括号，后面想修改元素时才发现装进了元组，报 <code>TypeError</code>。</p>
+      <p><b>坑二：大括号两用易混淆。</b><code>{1, 2, 3}</code> 是<b>集合</b>，<code>{"name": "张三"}</code> 是<b>字典</b>——区别在于有没有「键: 值」结构。光写 <code>{}</code> 创建的空对象是字典，不是集合。</p>
+      <p><b>坑三：布尔值大小写。</b>必须写 <code>True</code> / <code>False</code>，首字母大写；写成 <code>true</code> / <code>false</code> 会被当成变量名，报 <code>NameError</code>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 数据类型总览：简单类型（int 整数、float 浮点数、complex 复数、str 字符串、bool 布尔值、NoneType 空值）和组合类型（list 列表、tuple 元组、set 集合、dict 字典）。请：1）用表格帮我整理这 10 种类型的名称、示例和特点；2）出 5 个数据让我判断属于哪个类型；3）出 2 道单选题考我，等我作答后再公布答案。">
+      我刚学了 Python 数据类型总览：简单类型（int 整数、float 浮点数、complex 复数、str 字符串、bool 布尔值、NoneType 空值）和组合类型（list 列表、tuple 元组、set 集合、dict 字典）。请：1）用表格帮我整理这 10 种类型的名称、示例和特点；2）出 5 个数据让我判断属于哪个类型；3）出 2 道单选题考我，等我作答后再公布答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：亲眼查一查类型（3 分钟）</span>
+    <ol class="steps">
+      <li>打开命令行输入 <code>python</code> 进入交互模式。</li>
+      <li>输入 <code>type([1, 2])</code> 回车——输出 <code>&lt;class 'list'&gt;</code>，方括号果然是列表。</li>
+      <li>输入 <code>type({1: 2})</code> 回车——输出 <code>&lt;class 'dict'&gt;</code>，带冒号键值对的大括号是字典。</li>
+      <li>再对比试试 <code>type({1, 2})</code>——输出 <code>&lt;class 'set'&gt;</code>。同样是花括号，有没有「键: 值」结构，类型完全不同！</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>Python 数据类型分两大门派：<b>简单类型</b>装单一数据——整数 int、浮点数 float、复数 complex、字符串 str、布尔值 bool（只有 True/False）、空值 NoneType（None）；<b>组合类型</b>装多个数据——列表 list（[]有序可变）、元组 tuple（()有序不可变）、集合 set（{}无序不重复）、字典 dict（{}键值对）。下一节：怎么亲眼验证一个数据的类型？认识内置函数 type()。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="2.03.html"><span class="nav-label">← 上一节</span><span class="nav-title">2.03 变量命名规则</span></a>
+        <a class="next" href="2.05.html"><span class="nav-label">下一节 →</span><span class="nav-title">2.05 type() 查看类型</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.15 常见运行异常 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第五章 程序控制 · 第 15 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch05.html">第五章 程序控制</a><span class="sep">/</span>
+          <span class="current">5.15</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">15</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第五章 · 程序控制</span>
+            <h1>常见运行异常</h1>
+            <p class="hero-summary">第 15 / 17 节 · 约 14 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序控制结构概述</li>
+      <li>单分支结构 if</li>
+      <li>双分支结构 if-else</li>
+      <li>IF 表达式</li>
+      <li>多分支结构 if-elif-else</li>
+      <li>嵌套分支结构</li>
+      <li>嵌套与多分支对比</li>
+      <li>无限循环 while</li>
+      <li>range 函数与遍历整数</li>
+      <li>遍历字符串列表元组</li>
+      <li>遍历字典</li>
+      <li>循环控制 break 与 continue</li>
+      <li>循环嵌套</li>
+      <li>常见语法错误</li>
+      <li class="cur">常见运行异常</li>
+      <li>异常处理语句</li>
+      <li>综合实战：古算题与成绩单</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>语法全对，为什么一跑还是炸了？</h2>
+    <p><b>运行异常（Exceptions）</b>是指代码语法正确、但在执行过程中遇到了问题——比如把字符串和整数相加、访问列表不存在的下标、除以 0。这时解释器会「抛出异常」，程序中途崩溃。和语法错误不同，异常是<b>跑到一半才炸</b>的。认识下面十种高频异常，学会「怎么认、怎么防」，下一节的异常处理语句才能学得顺手。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">语法错误是「考前被刷」，运行异常是「上场受伤」</div>
+      <p>语法错误连考场都进不去；运行异常则是顺利进场、比赛开始后才出状况——<b>类型不符（TypeError）</b>像让短跑选手去游泳，<b>查无此人（NameError / KeyError）</b>像点名点到一个没来的人，<b>越界（IndexError）</b>像伸手去拿货架第 4 层的商品而货架只有 3 层，<b>除零（ZeroDivisionError）</b>则是数学上就注定无解的操作。每种伤有每种伤的「伤情报告」，就是报错最后一行。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>十大高频运行异常速查（两张表）</h2>
+    <p style="font-weight:700">表 1　类型与取值类异常</p>
+    <table>
+      <tr><th style="width:19%">异常代码</th><th style="width:24%">异常原因</th><th style="width:29%">示例</th><th>提示</th></tr>
+      <tr><td>TypeError</td><td>操作或函数用错了类型</td><td><code>print('1' + 1)</code>；<code>sum=10</code> 后 <code>print(sum([1,2,3]))</code></td><td>can only concatenate str (not "int") to str<br>'int' object is not callable</td></tr>
+      <tr><td>IndexError</td><td>索引超过了边界</td><td><code>s = '123'</code> 后 <code>print(s[3])</code></td><td>string index out of range</td></tr>
+      <tr><td>KeyError</td><td>字典中的键不存在</td><td><code>dic = {'张三':1}</code> 后 <code>print(dic['李四'])</code></td><td>KeyError: '李四'</td></tr>
+      <tr><td>ValueError</td><td>值不符合要求</td><td><code>int("abc")</code>；<code>a, b, c = 1, 2</code></td><td>invalid literal for int() with base 10<br>not enough values to unpack</td></tr>
+      <tr><td>NameError</td><td>使用了未定义的变量/函数</td><td><code>s = '123'</code> 后 <code>print(ss)</code>；<code>prnt("hello")</code></td><td>name 'ss' is not defined<br>name 'prnt' is not defined</td></tr>
+    </table>
+    <p style="font-weight:700;margin-top:16px">表 2　属性与资源类异常</p>
+    <table>
+      <tr><th style="width:24%">异常代码</th><th style="width:22%">异常原因</th><th style="width:28%">示例</th><th>提示</th></tr>
+      <tr><td>AttributeError</td><td>调用了不存在的属性或方法</td><td><code>s = '123'</code> 后 <code>print(s.get('4'))</code></td><td>'str' object has no attribute 'get'</td></tr>
+      <tr><td>ZeroDivisionError</td><td>除零错误</td><td><code>print(10/0)</code></td><td>division by zero</td></tr>
+      <tr><td>OverflowError</td><td>数值溢出</td><td><code>import math</code> 后 <code>math.exp(1000)</code></td><td>math range error</td></tr>
+      <tr><td>ModuleNotFoundError</td><td>模块或对象不存在</td><td><code>import Math</code> 后 <code>print(Math.pi)</code></td><td>No module named 'Math'（模块名大小写错误）</td></tr>
+      <tr><td>FileNotFoundError</td><td>文件或路径不存在</td><td><code>open("test.txt", "r")</code></td><td>No such file or directory: 'test.txt'</td></tr>
+    </table>
+    <ul class="points" style="margin-top:14px">
+      <li><b>sum=10 再 sum([1,2,3]) 是经典翻车</b>：把内置函数名 sum 当变量赋值后，sum 就不再是求和函数而是整数 10——再用 <code>sum([1,2,3])</code> 等于「调用整数 10」，报 'int' object is not callable（呼应 2.08：不要用内置函数名当变量名）</li>
+      <li><b>import Math 报错</b>：Python 的模块名<b>区分大小写</b>，标准数学模块是小写的 math，写成 Math 就是「查无此模块」</li>
+      <li><b>float('xyz') 会抛 ValueError</b>：int() / float() 只认「长得像数字」的字符串，这就是本章作业第 6 题要防的输入异常</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>翻车现场点名：点卡片看真相</h2>
+    <div class="grid g3">
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--err)"></span>'1' + 1 为什么报 TypeError？</h4>
+        <div class="desc">字符串 + 整数，类型不符</div>
+        <div class="hint">点击揭晓 ↓</div>
+        <div class="more">+ 号对字符串是「拼接」、对整数是「加法」，'1' + 1 两种解释都讲不通，Python 直接拒绝并抛 TypeError: can only concatenate str (not "int") to str。想得到 '11' 就写 '1' + str(1)；想得到 2 就写 int('1') + 1。</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--warn)"></span>s[3] 为什么越界？</h4>
+        <div class="desc">s = '123' 只有 3 个字符</div>
+        <div class="hint">点击揭晓 ↓</div>
+        <div class="more">s = '123' 的合法下标是 0、1、2——最后一个下标永远是 len-1，也就是 2。访问 s[3] 就像伸手去拿不存在的第 4 层货架，抛 IndexError: string index out of range。负下标 -1 是「最后一个」，是合法的。</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent)"></span>import Math 为什么错？</h4>
+        <div class="desc">模块名区分大小写</div>
+        <div class="hint">点击揭晓 ↓</div>
+        <div class="more">标准数学模块叫 math（全小写），import Math 找不到对应模块，抛 ModuleNotFoundError: No module named 'Math'。同理变量名 Age 和 age 也是两个不同的变量——Python 里大小写从来不是「装饰」。</div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！字符串和整数不能直接相加，抛 TypeError: can only concatenate str (not &quot;int&quot;) to str。"
+         data-no="❌ 查一下表 1：「操作或函数用错了类型」对应的是 TypeError——'1' 是字符串、1 是整数，加号不知道该干啥。">
+      <p style="font-weight:700;margin-bottom:12px"><code>print('1' + 1)</code> 抛出的异常类型是？</p>
+      <button class="opt" onclick="quizPick(this)">A. ValueError</button>
+      <button class="opt" onclick="quizPick(this)">B. TypeError</button>
+      <button class="opt" onclick="quizPick(this)">C. NameError</button>
+      <button class="opt" onclick="quizPick(this)">D. IndexError</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="keyerror|keyerror异常" data-ok="✅ 正确！字典中键 '李四' 不存在，抛 KeyError: '李四'——字典只能用已有的键取值。" data-no="❌ 提示：这是「字典中的键不存在」的场景。表 1 第三行写着答案，异常名以 Error 结尾、和「键」对应。">
+      <p>运行 <code>dic = {'张三':1}</code> 后执行 <code>print(dic['李四'])</code>，程序会抛出 <b>＿＿</b> 异常。（填异常名）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：KeyError">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>报错最后一行就是「异常类型 + 说明」</b>：一大段 Traceback 里最先看最后一行，如 <code>TypeError: can only concatenate str (not "int") to str</code>——先认出异常名，再回头看它指向的代码行；</p>
+      <p>②<b>不要用内置函数名当变量名</b>：<code>max=[1,2]</code>、<code>type='A'</code> 之类写法会把内置函数「顶掉」，之后再调用就报 <code>TypeError: 'list' object is not callable</code>（<code>max</code> 已被列表占用）或 <code>TypeError: 'str' object is not callable</code>（<code>type</code> 已被字符串占用）；注意报的是 <b>TypeError</b>，不是 AttributeError；</p>
+      <p>③<b>字符串/列表/元组的最后一个下标是 len-1</b>：长度 3 的序列下标只到 2，遍历时写 <code>range(len(s))</code> 最保险，别手滑写 <code>range(len(s)+1)</code>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的十种常见运行异常：TypeError、IndexError、KeyError、ValueError、NameError、AttributeError、ZeroDivisionError、OverflowError、ModuleNotFoundError、FileNotFoundError。请：1）出 10 段一句话小代码，每段触发其中一种异常，让我先猜异常名再对答案；2）讲讲「看 Traceback 最后一行」定位问题的方法；3）解释为什么不能用 sum、max 等内置函数名当变量名，并给出一个好记的命名建议。">
+      我刚学了 Python 的十种常见运行异常：TypeError、IndexError、KeyError、ValueError、NameError、AttributeError、ZeroDivisionError、OverflowError、ModuleNotFoundError、FileNotFoundError。请：1）出 10 段一句话小代码，每段触发其中一种异常，让我先猜异常名再对答案；2）讲讲「看 Traceback 最后一行」定位问题的方法；3）解释为什么不能用 sum、max 等内置函数名当变量名，并给出一个好记的命名建议。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：亲手制造 5 种异常（8 分钟）</span>
+    <ol class="steps">
+      <li>在 IDLE 里依次运行：① <code>print('1' + 1)</code>　② <code>s='123'</code> 后 <code>print(s[3])</code>　③ <code>print(10/0)</code>　④ <code>int('abc')</code>　⑤ <code>print(ss)</code>。</li>
+      <li>每跑一条，<b>只抄报错的最后一行</b>进笔记，并在旁边写上异常名——建立你自己的「异常图鉴」。</li>
+      <li>挑战：故意写 <code>sum = 10</code>，再试 <code>sum([1,2,3])</code>，验证「内置函数名被变量占用」的效果（记得写完后用 <code>del sum</code> 或重开窗口恢复）。</li>
+      <li>预告：本章作业第 6 题「防摔计数器」要防的就是用户乱输入导致的 ValueError / TypeError——下一节就学怎么接住这些异常。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>运行异常是语法正确、执行时才出现的问题。十大高频异常各有「伤情报告」：TypeError 类型不符、IndexError 越界、KeyError 键不存在、ValueError 值不合格、NameError 查无此人、AttributeError 无此属性、ZeroDivisionError 除零、OverflowError 溢出、ModuleNotFoundError 模块名错（区分大小写）、FileNotFoundError 文件找不到。看报错先看最后一行。下一节：用 try-except 把异常稳稳接住。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="5.14.html"><span class="nav-label">← 上一节</span><span class="nav-title">5.14 常见语法错误</span></a>
+        <a class="next" href="5.16.html"><span class="nav-label">下一节 →</span><span class="nav-title">5.16 异常处理语句</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

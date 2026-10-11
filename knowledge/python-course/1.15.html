@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.15 Python 的六大特点 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第一章 导论与 Python 环境 · 第 15 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+/* —— 本页专属：特点卡配色 —— */
+.f1 .dot{background:#4f6ef7}.f2 .dot{background:#7c5cf0}.f3 .dot{background:#1a9e6c}
+.f4 .dot{background:#d97706}.f5 .dot{background:#e05252}.f6 .dot{background:#0ea5b7}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch01.html">第一章 导论与 Python 环境</a><span class="sep">/</span>
+          <span class="current">1.15</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">15</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第一章 · 导论与 Python 环境</span>
+            <h1>Python 的六大特点</h1>
+            <p class="hero-summary">第 15 / 18 节 · 约 8 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>计算机系统架构</li>
+      <li>操作系统及其分类</li>
+      <li>编程语言：人机沟通的桥梁</li>
+      <li>编程语言的三个层次</li>
+      <li>编译型 vs 解释型语言</li>
+      <li>TIOBE 排行与语言流行趋势</li>
+      <li>五大语言的诞生与用途</li>
+      <li>AI 时代的编程学习理念</li>
+      <li>与 AI 高效协作的三技巧</li>
+      <li>学习路径的三阶段</li>
+      <li>Python 的诞生与发展</li>
+      <li>PEP 与 PEP 8</li>
+      <li>The Zen of Python</li>
+      <li>Python 2 vs Python 3</li>
+      <li class="cur">Python 的六大特点</li>
+      <li>Python 的应用领域</li>
+      <li>Python 环境搭建</li>
+      <li>Anaconda 与 AI IDE</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>为什么全世界都偏爱 Python？</h2>
+    <p>前面几节我们知道了 Python 的出身（Guido 在圣诞假期随手写出的语言）和它的家族纷争（Python 2 vs 3）。但真正让它常年霸榜 TIOBE、连文科生都在学的，是它身上的<b>六个突出特点</b>。搞懂这六点，你就能回答：</p>
+    <ul class="points">
+      <li>为什么零基础的人<b>第一门语言学 Python</b> 最划算？（本章作业常考）</li>
+      <li>为什么说 Python 是「胶水语言」式的<b>全能选手</b>？</li>
+      <li>为什么同一份 Python 代码，同学的 Mac、机房的老电脑都能跑？</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">Python 是一辆「自动挡 + 全配置」的家用车</div>
+      <p><b>好开</b>——自动挡，语法接近自然语言，不用背复杂的「换挡规则」；<b>配件多</b>——原厂和副厂配件（标准库 + 第三方库）应有尽有，想装行车记录仪、想改音响，买来装上就能用；<b>免费保养</b>——开源社区是全球免费的 4S 店；<b>全国都能加油</b>——可移植性强，Windows、Mac、Linux 到哪儿都能跑。一辆车把六大特点占齐了，难怪销量（使用率）第一。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>一句话记住六大特点</h2>
+    <ul class="points">
+      <li><b>语法简单清晰</b>：接近自然语言，易读易写，打印一句话只需 <code>print("你好")</code>，没有繁琐的样板代码。</li>
+      <li><b>功能丰富强大</b>：拥有海量标准库与第三方库，数据处理、画图、做网站、训练 AI，「胶水」一样随取随用。</li>
+      <li><b>免费开源社区</b>：源代码公开、分文不取，全球庞大的开发者社区持续贡献库、教程与答案。</li>
+      <li><b>解释型语言</b>：边解释边执行（还记得 1.05 节的同声传译吗），写一行看一行结果，开发效率高。</li>
+      <li><b>可移植性强</b>：跨平台运行，代码一次编写，Windows / macOS / Linux 通用。</li>
+      <li><b>面向对象编程</b>：支持类与对象，模块化设计，小脚本写得，大项目也撑得住。</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">👆 点击卡片，看大白话解释</span>
+    <h2>六大特点，逐个点开看看</h2>
+    <div class="grid g3">
+      <div class="icard f1" data-toggle>
+        <h4><span class="dot"></span>语法简单清晰</h4>
+        <div class="desc">接近自然语言，易读易写</div>
+        <div class="more">读 Python 代码有点像读英语句子：打印用 <code>print</code>，判断用 <code>if</code>。别的语言要写七八行的「开场白」，Python 一行就开工——这对零基础的你意味着：学得会、看得懂、不容易劝退。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard f2" data-toggle>
+        <h4><span class="dot"></span>功能丰富强大</h4>
+        <div class="desc">海量标准库与第三方库</div>
+        <div class="more">Python 自带 200 多个标准库，官方仓库 PyPI 上还有几十万个第三方包：做表格有 openpyxl，画图有 matplotlib，训练模型有 PyTorch。所以它被称为「胶水语言」——什么领域都能粘上一手，是全能选手。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard f3" data-toggle>
+        <h4><span class="dot"></span>免费开源社区</h4>
+        <div class="desc">庞大的开发者社区支持</div>
+        <div class="more">不花一分钱，谁都能下载、使用、修改它。全世界无数程序员在免费贡献代码和教程——你踩过的坑，别人早就踩过并写成了帖子，搜一搜基本都有答案。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard f4" data-toggle>
+        <h4><span class="dot"></span>解释型语言</h4>
+        <div class="desc">边解释边执行，开发效率高</div>
+        <div class="more">就是 1.05 节说的「同声传译」模式：不用手动执行编译命令（Python 会在后台自动把源码编译成字节码），写一行、跑一行、马上看结果。改个数字刷新一下就行，试验想法特别快——代价是运行速度比 C 语言慢一些。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard f5" data-toggle>
+        <h4><span class="dot"></span>可移植性强</h4>
+        <div class="desc">跨平台运行，代码一次编写</div>
+        <div class="more">你在 Windows 上写的脚本，拷到同学的 Mac 或机房的 Linux 电脑上，只要那台机器装了 Python，几乎不用改就能直接跑。这正是「跨平台」的含义（前提是没用到平台专属的库或路径写法）。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard f6" data-toggle>
+        <h4><span class="dot"></span>面向对象编程</h4>
+        <div class="desc">支持类与对象，模块化设计</div>
+        <div class="more">可以把一类事物打包成「类」：比如一个「学生」类，装着姓名、成绩和计算绩点的方法。代码像乐高一样分块拼装、互不干扰，程序变大也不会乱成一团。现在看不懂没关系，后面章节会专门讲。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！Python 由解释器逐行翻译、边解释边执行，是解释型语言的典型代表——这正是它开发效率高的原因。"
+         data-no="❌ 不对哦。回想 1.05 节：C、C++ 属于编译型，汇编和机器语言更是底层的存在。Python 是「边译边跑」的解释型语言。">
+      <p style="font-weight:700;margin-bottom:12px">Python 属于下列哪一类语言？</p>
+      <button class="opt" onclick="quizPick(this)">A. 编译型语言</button>
+      <button class="opt" onclick="quizPick(this)">B. 机器语言</button>
+      <button class="opt" onclick="quizPick(this)">C. 解释型语言</button>
+      <button class="opt" onclick="quizPick(this)">D. 汇编语言</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="自然|自然语言" data-ok="✅ 正确！Python 语法接近自然语言，易读易写，这是它对新手最友好的一点。" data-no="❌ 再想想：Python 代码读起来很像我们平时说的哪种语言？（提示：不是英语，是更基础的那类）">
+      <p>Python 语法简单清晰，接近<b>＿＿语言</b>，易读易写。请在框里填写：</p>
+      <div class="fill-row">
+        <input class="blank" id="blank1" placeholder="填两个字或四个字">
+        <button class="btn btn-main" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">「特点多」不等于「没有短板」</div>
+      <p>六大特点是优势，但别把它们背成「Python 无所不能」：它的<b>运行速度相对较慢</b>（解释型的代价），也<b>不适合写操作系统、驱动</b>这类贴着硬件跑的程序——那是 C 语言的领地。</p>
+      <p>另外，「语法简单」容易被误解为「随便写都行」。Python 靠<b>缩进</b>组织代码，少空一格、多空一格都会直接报错——简单的是概念，严谨的是格式。别掉以轻心。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了「Python 的六大特点」：语法简单清晰、功能丰富强大、免费开源社区、解释型语言、可移植性强、面向对象编程。请：1）每条特点用一个生活化的例子帮我再解释一遍；2）结合这些特点，说明为什么 Python 适合作为大学生的第一门编程语言；3）出 2 道单选题考我，等我作答后再公布答案。">
+      我刚学了「Python 的六大特点」：语法简单清晰、功能丰富强大、免费开源社区、解释型语言、可移植性强、面向对象编程。请：1）每条特点用一个生活化的例子帮我再解释一遍；2）结合这些特点，说明为什么 Python 适合作为大学生的第一门编程语言；3）出 2 道单选题考我，等我作答后再公布答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：亲眼感受「配件多」有多夸张（5 分钟）</span>
+    <ol class="steps">
+      <li>打开浏览器，访问 Python 官方第三方库仓库 <code>pypi.org</code>（PyPI，Python Package Index）。</li>
+      <li>在搜索框里输入一个你感兴趣的关键词，比如 <code>excel</code>、<code>爬虫</code>、<code>微信</code>、<code>股票</code>。</li>
+      <li>看看搜索结果：与这个关键词相关的库往往成百上千个，每个都附有简介、文档和下载次数。</li>
+      <li>点进其中一个库的页面逛一逛——你会发现「功能丰富强大」不是一句空话。顺便截图，作为你对 Python 特点的第一手观察。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>Python 的六大特点：<b>语法简单清晰、功能丰富强大、免费开源社区、解释型语言、可移植性强、面向对象编程</b>。它们共同解释了 Python 为什么既适合零基础入门，又能撑起 AI 时代的主力开发。记住那辆「自动挡全配置家用车」：好开、配件多、免费保养、全国都能加油。下一节，我们看看这些特点让 Python 在哪些领域大显身手。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="1.14.html"><span class="nav-label">← 上一节</span><span class="nav-title">1.14 Python 2 vs Python 3</span></a>
+        <a class="next" href="1.16.html"><span class="nav-label">下一节 →</span><span class="nav-title">1.16 Python 的应用领域</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

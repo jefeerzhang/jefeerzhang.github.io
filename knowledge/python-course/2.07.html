@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.07 函数：定义与调用 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第二章 基础概念与数值 · 第 7 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch02.html">第二章 基础概念与数值</a><span class="sep">/</span>
+          <span class="current">2.07</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">07</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第二章 · 基础概念与数值</span>
+            <h1>函数：定义与调用</h1>
+            <p class="hero-summary">第 7 / 17 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序构成的两大核心</li>
+      <li>变量：概念与赋值</li>
+      <li>变量命名规则</li>
+      <li>数据类型总览</li>
+      <li>type() 查看类型</li>
+      <li>保留字（关键字）</li>
+      <li class="cur">函数：定义与调用</li>
+      <li>常用内置函数</li>
+      <li>输入输出函数</li>
+      <li>缩进与注释规范</li>
+      <li>数值类型总览</li>
+      <li>整数与四种进制</li>
+      <li>浮点数与精度陷阱</li>
+      <li>算术与增强赋值运算符</li>
+      <li>比较与逻辑运算符</li>
+      <li>运算符优先级</li>
+      <li>数值函数与 math 模块</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>写过的代码，别再抄第二遍</h2>
+    <p>想象你写了一段「计算成绩平均分」的代码，程序里有 5 个地方都要用。难道复制粘贴 5 遍？以后改一个字符就要改 5 处。<b>函数</b>就是解决这个问题的利器。这一节你将收获：</p>
+    <ul class="points">
+      <li><b>模块化设计</b>：把复杂问题拆解成一个个小模块，逻辑更清晰</li>
+      <li><b>代码复用</b>：一次定义，多次调用，避免重复造轮子</li>
+      <li><b>高可读性</b>：给函数起个语义化的名字，别人一眼就看懂这段代码干什么</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">函数 = 自动售货机</div>
+      <p>你投币（<b>输入参数</b>）→ 机器在内部哗啦运作（<b>函数体</b>）→ 掉出一瓶饮料（<b>返回结果</b>）。你完全不需要懂售货机内部构造，<b>会用就行</b>。函数也是一样：调用者只管「给什么、得什么」，内部逻辑封装在里面。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>什么是函数？</h2>
+    <ul class="points">
+      <li><b>定义</b>：函数是<b>组织好的、可重复使用的代码段</b>，用于实现单一或相关联的功能。</li>
+      <li><b>数学类比 y = f(x)</b>：x（输入）= 函数的<b>参数</b>；f（处理）= <b>函数体</b>（代码逻辑）；y（输出）= 函数的<b>返回结果</b>。</li>
+      <li><b>函数定义</b>：指<b>创建</b>一个函数，供自己或他人使用——相当于「造好这台售货机」。</li>
+      <li><b>函数调用</b>：指<b>将具体数据带入函数中得到处理结果</b>的过程。调用时，计算机将自动完成函数执行和函数结果返回——相当于「投币取饮料」。</li>
+    </ul>
+
+    <div class="quiz" style="margin-top:6px">
+      <p style="font-weight:700;margin-bottom:12px">🔍 函数加工流水线：y = f(x) 的三个工位，点击卡片逐一揭晓</p>
+      <div class="grid g3">
+        <div class="icard" data-toggle="1">
+          <h4><span class="dot" style="background:#4f6ef7"></span>工位① 输入参数 x</h4>
+          <div class="desc">函数的「原料入口」</div>
+          <div class="more">调用函数时把<b>具体数据</b>交给它，比如 abs(-5) 中的 <code>-5</code>。原料不同，产出的结果也不同。</div>
+          <div class="hint">👆 点击展开</div>
+        </div>
+        <div class="icard" data-toggle="1">
+          <h4><span class="dot" style="background:#7c5cf0"></span>工位② 函数处理 f</h4>
+          <div class="desc">函数体里的「加工车间」</div>
+          <div class="more">一段封装好的<b>代码逻辑</b>，对参数进行计算处理。写一次，之后每次调用都自动执行，这就是「一次定义，多次调用」。</div>
+          <div class="hint">👆 点击展开</div>
+        </div>
+        <div class="icard" data-toggle="1">
+          <h4><span class="dot" style="background:#1a9e6c"></span>工位③ 输出结果 y</h4>
+          <div class="desc">函数的「成品出口」</div>
+          <div class="more">处理完成后<b>返回结果</b>给调用处。比如 abs(-5) 的返回结果是 <code>5</code>，可以存进变量、继续参与运算。</div>
+          <div class="hint">👆 点击展开</div>
+        </div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">实战演示</span>
+    <h2>定义视角 vs 调用视角</h2>
+    <div class="quiz">
+      <div class="switch">
+        <button class="on" data-pane="pane-f1">🛠 定义视角（造机器）</button>
+        <button data-pane="pane-f2">🎮 调用视角（用机器）</button>
+      </div>
+      <div class="pane on" id="pane-f1">
+        <pre class="codeblock">def greet(name):
+    print('你好，' + name + '！')
+    return 'done'</pre>
+        <p>用 <code>def 函数名(参数):</code> 创建函数，缩进的函数体是「加工逻辑」。此时它只是<b>被定义</b>，还不会执行——机器造好了，但没人投币就不出货。</p>
+      </div>
+      <div class="pane" id="pane-f2">
+        <pre class="codeblock">greet('小明')      <span class="good"># 输出：你好，小明！</span>
+greet('小红')      <span class="good"># 输出：你好，小红！</span></pre>
+        <p>用「函数名(具体数据)」调用，计算机自动完成<b>函数执行</b>和<b>结果返回</b>。注意调用前必须先运行左边的 <code>def greet(name):</code>，否则会报 <code>NameError: name 'greet' is not defined</code>。同一个函数，换不同参数反复调用——<b>代码复用</b>达成。</p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！将具体数据带入函数、得到处理结果的过程，就是「函数调用」。"
+         data-no="❌ 不对哦。把具体数据带入函数中得到处理结果的过程叫「函数调用」；「定义」只是创建函数本身，还没投入使用。">
+      <p style="font-weight:700;margin-bottom:12px">「将具体数据带入到函数中得到处理结果的过程」叫什么？</p>
+      <button class="opt" onclick="quizPick(this)">A. 函数定义</button>
+      <button class="opt" onclick="quizPick(this)">B. 函数调用</button>
+      <button class="opt" onclick="quizPick(this)">C. 函数命名</button>
+      <button class="opt" onclick="quizPick(this)">D. 函数导入</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="参数返回结果|参数返回值|参数 返回结果|参数 返回值" data-ok="✅ 正确！x 是喂给函数的参数，y 是函数处理后的返回结果。" data-no="❌ 再想想：x 是从外面「喂进去」的数据，y 是函数「吐出来」的结果（提示：参考流水线三工位）。">
+      <p>数学类比 y = f(x) 中：x 是函数的<b>＿＿</b>，y 是函数的<b>＿＿</b>。（两空连填，中间用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：×× ××">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">只定义不调用，函数等于白写</div>
+      <p><code>def</code> 只是「造好了机器」，<b>不调用就不会执行</b>。很多初学者定义完函数，发现函数体里的 print 什么都没输出，一脸疑惑——因为没人「投币」，机器不会自己动。记住：定义 ≠ 执行，必须写出 <code>函数名(参数)</code> 这一步。</p>
+      <p>另一个小坑：调用时<b>参数个数要和定义匹配</b>，机器是按「投币口」设计来收原料的，乱塞会报错。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 函数的定义与调用。请：1）用「自动售货机」类比解释参数、函数体、返回结果；2）写一个最简单的自定义函数并演示两次调用，说明每一步发生了什么；3）用 y=f(x) 的数学类比出 2 道单选题考我，等我作答后再公布答案。">
+      我刚学了 Python 函数的定义与调用。请：1）用「自动售货机」类比解释参数、函数体、返回结果；2）写一个最简单的自定义函数并演示两次调用，说明每一步发生了什么；3）用 y=f(x) 的数学类比出 2 道单选题考我，等我作答后再公布答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：体验一次「投币取货」（3 分钟）</span>
+    <ol class="steps">
+      <li>打开命令行输入 <code>python</code> 进入交互模式（第一章学过）。</li>
+      <li>输入 <code>abs(-5)</code> 回车——<code>abs</code> 是 Python 自带的函数，这里你扮演的是<b>调用者</b>。</li>
+      <li>想一想流水线三工位：<b>输入</b>是什么？（<code>-5</code>）<b>处理</b>是什么？（求绝对值的逻辑）<b>输出</b>是什么？（<code>5</code>）。</li>
+      <li>再换个参数调用：<code>abs(3)</code>、<code>abs(-100)</code>——同一台「机器」，不同的「原料」，产出不同结果，这就是<b>一次定义、多次调用</b>。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>函数是组织好的、可重复使用的代码段，带来<b>模块化、代码复用、高可读性</b>三大好处。y = f(x) 里：x 是参数、f 是函数体、y 是返回结果。<b>定义</b>是创建函数，<b>调用</b>是把具体数据带进去得到结果。下一节：Python 自带了哪些开箱即用的函数？</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="2.06.html"><span class="nav-label">← 上一节</span><span class="nav-title">2.06 保留字（关键字）</span></a>
+        <a class="next" href="2.08.html"><span class="nav-label">下一节 →</span><span class="nav-title">2.08 常用内置函数</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

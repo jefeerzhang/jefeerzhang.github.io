@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.20 列表常用方法 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第三章 字符串与列表 · 第 20 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.step-out{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;
+  padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:14px;margin-top:10px}
+.step-out b{color:var(--accent)}
+.step-out .err{color:var(--err);font-weight:700}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch03.html">第三章 字符串与列表</a><span class="sep">/</span>
+          <span class="current">3.20</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">20</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第三章 · 字符串与列表</span>
+            <h1>列表常用方法</h1>
+            <p class="hero-summary">第 20 / 21 节 · 约 12 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>字符串基础与三种引号</li>
+      <li>转义字符</li>
+      <li>字符串索引</li>
+      <li>字符串切片</li>
+      <li>实战：身份证号提取信息</li>
+      <li>字符串运算与内置函数</li>
+      <li>大小写转换方法</li>
+      <li>计数、查找与替换</li>
+      <li>分割、联合与剔除</li>
+      <li>判断字符串类别</li>
+      <li>format 格式化输出</li>
+      <li>f-string 格式化输出</li>
+      <li>列表定义与特性</li>
+      <li>列表的创建</li>
+      <li>列表索引与切片</li>
+      <li>列表增加元素</li>
+      <li>列表删除元素</li>
+      <li>列表修改元素</li>
+      <li>列表运算与函数</li>
+      <li class="cur">列表常用方法</li>
+      <li>实战：成绩排序和统计</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>列表的「自带技能」：查找、排序、复制</h2>
+    <p>上一节的函数要写成 <code>len(ls)</code>，这一节的方法要写成 <code>ls.index(x)</code>——它们长在列表自己身上，用「点」调出来。五个方法覆盖了最高频的操作：<b>查位置、数个数、排序、倒序、复制</b>。其中 sort 的脾气最特别（没有返回值！），是本章考试最爱挖的坑。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">查座位号、点名报数、按身高整队</div>
+      <p><code>index</code> 像「<b>查座位号</b>」——报上名字，告诉你他坐第几位；<code>count</code> 像「<b>点名报数</b>」——数一数这个名字出现了几次；<code>sort</code> 像「<b>按身高整队</b>」——矮的在前高的在后（降序就反过来）；<code>reverse</code> 像「<b>向后转</b>」——整支队伍原地掉头；<code>copy</code> 像「<b>抄一份名单</b>」——在复印件上乱涂乱画，原件毫发无损。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>五个常用方法速查表</h2>
+    <table>
+      <tr><th>方法</th><th>功能</th><th>说明</th></tr>
+      <tr><td>ls.index(x)</td><td>索引</td><td>返回列表中 x <b>第一个</b>匹配项的索引位置</td></tr>
+      <tr><td>ls.count(x)</td><td>计数</td><td>返回列表中元素 x 的数量</td></tr>
+      <tr><td>ls.sort(reverse=False)</td><td>排序</td><td>默认升序 reverse=False；降序 reverse=True；<b>无返回值</b>（返回 None），直接改变原有元素顺序</td></tr>
+      <tr><td>ls.reverse()</td><td>逆序</td><td>反向排列列表中元素</td></tr>
+      <tr><td>ls.copy()</td><td>复制</td><td>复制列表，生成<b>新的列表副本</b></td></tr>
+    </table>
+
+    <p style="margin-top:18px">点击卡片展开用法示例：</p>
+    <div class="grid g3">
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent)"></span>index</h4>
+        <div class="desc">查第一个匹配项的位置</div>
+        <div class="more">L = [70, 95, 88]<br><code>L.index(95)</code> → 1<br>找不到会报 ValueError。</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent2)"></span>count</h4>
+        <div class="desc">统计元素出现次数</div>
+        <div class="more">L = [70, 88, 88]<br><code>L.count(88)</code> → 2<br>没有则返回 0，不报错。</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--ok)"></span>sort</h4>
+        <div class="desc">就地排序，无返回值</div>
+        <div class="more"><code>L.sort()</code> 升序<br><code>L.sort(reverse=True)</code> 降序<br>直接改原列表，返回 None！</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--warn)"></span>reverse</h4>
+        <div class="desc">整队向后转</div>
+        <div class="more">L = [1, 2, 3]<br><code>L.reverse()</code> 后 L 变 [3, 2, 1]<br>注意：是「倒着排」，不是「从大到小」。</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#e05252"></span>copy</h4>
+        <div class="desc">生成新的列表副本</div>
+        <div class="more">b = L.copy()<br>改 b 不影响 L。<br>注意：浅复制，嵌套列表共享内层。</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#7c5cf0"></span>方法 vs 函数</h4>
+        <div class="desc">为什么一个用点、一个不用？</div>
+        <div class="more">函数：len(L)、max(L)——写在外面<br>方法：L.index(95)——用「点」长在 L 身上<br>本质都是对列表的操作。</div>
+      </div>
+    </div>
+
+    <div class="play-out" style="margin-top:18px">
+      <p style="font-weight:700;margin-bottom:10px">🔬 sort 的两个关键点——先猜再切</p>
+      <div class="switch">
+        <button class="on" data-pane="p20-a">关键点① 无返回值</button>
+        <button data-pane="p20-b">关键点② 降序写法</button>
+      </div>
+      <div class="pane on" id="p20-a">
+        <div class="step-out">L = [3, 1, 2]<br>L = L.sort()　<span class="err"># ✗ 错误！sort() 返回 None，L 变成了 None</span><br><br>正确写法：<br>L.sort()　<span class="good"># 先就地排好</span><br>print(L)　<b># [1, 2, 3]　再用 L</b></div>
+      </div>
+      <div class="pane" id="p20-b">
+        <div class="step-out">scores = [70, 95, 88]<br>scores.sort(reverse=True)<br>print(scores)　<b># [95, 88, 70]　降序，从大到小</b><br><span style="color:#5b6472"># reverse=False 是默认值，即升序</span></div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 要点：sort 会「直接改变原有元素顺序」</h2>
+    <pre class="codeblock">L = [3, 1, 2]
+print(L.sort())    <span class="bad"># None　← sort 没有返回值！</span>
+L.sort()
+print(L)           <span class="good"># [1, 2, 3]　原列表已被直接改变</span>
+L.reverse()
+print(L)           <span class="good"># [3, 2, 1]</span></pre>
+    <ul class="points">
+      <li><code>print(L.sort())</code> 打印出的是 sort 的<b>返回值</b>（None），不是排好序的列表</li>
+      <li>想边排序边输出？分两步：先 <code>L.sort()</code>，再 <code>print(L)</code></li>
+      <li>reverse 与 sort(reverse=True) 不同：前者只倒序、不管大小</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！sort() 无返回值（返回 None），L = L.sort() 把 None 赋给了 L，列表虽然排好了，但名字 L 已经不再指向它。"
+         data-no="❌ 再想想：sort() 没有返回值——它会直接改变原列表，但返回的是 None。L = L.sort() 等于把 None 赋给 L，L 的值就是 None。">
+      <p style="font-weight:700;margin-bottom:12px">L = [3, 1, 2]，执行 <code>L = L.sort()</code> 后，L 的值是？</p>
+      <button class="opt" onclick="quizPick(this)">A. [1, 2, 3]</button>
+      <button class="opt" onclick="quizPick(this)">B. None</button>
+      <button class="opt" onclick="quizPick(this)">C. [3, 1, 2]</button>
+      <button class="opt" onclick="quizPick(this)">D. 程序报错</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="升 True|升序 True" data-ok="✅ 正确！sort() 默认升序排列（reverse=False），要降序需设 reverse=True。" data-no="❌ 再想想：默认从小到大是什么序？降序时 reverse 参数设为什么值？（两空连填，中间空格隔开）">
+      <p>sort() 默认＿＿序排列，要降序需设 reverse=＿＿。（两空连填，中间空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：× ×">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">L = L.sort() 会把 L 变成 None！</div>
+      <p>这是本章第一大坑：<b>sort() 没有返回值</b>（返回 None）。错误写法 <code>L = L.sort()</code> 会让 L 直接变成 <code>None</code>，后面再对 L 做任何列表操作都报错。正确姿势：<code>L.sort()</code> 之后<b>继续用 L</b>。</p>
+      <p><b>坑二：index 只找第一个，count 是全部计数。</b>列表里有多个 88 时，<code>index(88)</code> 只返回最靠前那个的位置。</p>
+      <p><b>坑三：copy 是浅复制</b>——列表里若还套着列表，副本与原件共享内层列表（改内层会互相影响，一句带过，知道即可）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 列表的 5 个常用方法：index、count、sort、reverse、copy。请：1）解释 sort() 为什么不能写成 L = L.sort()，并用 append、extend 等其他方法举例说明「有返回值」和「就地修改」两类方法的区别；2）以 L=[5, 2, 8, 2, 9] 为例出 4 道方法调用求值题（含一道降序 sort 和一道 index 陷阱题）；3）等我作答后公布答案和讲解。">
+      我刚学了 Python 列表的 5 个常用方法：index、count、sort、reverse、copy。请：1）解释 sort() 为什么不能写成 L = L.sort()，并用 append、extend 等其他方法举例说明「有返回值」和「就地修改」两类方法的区别；2）以 L=[5, 2, 8, 2, 9] 为例出 4 道方法调用求值题（含一道降序 sort 和一道 index 陷阱题）；3）等我作答后公布答案和讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：五连招（5 分钟）</span>
+    <ol class="steps">
+      <li>交互模式输入 <code>scores = [70, 95, 88]</code>，依次执行 <code>scores.sort()</code> 后 <code>print(scores)</code>——看到 [70, 88, 95]。</li>
+      <li>接着 <code>scores.reverse()</code> 后 <code>print(scores)</code>——看到 [95, 88, 70]。</li>
+      <li>再试 <code>print(scores.count(88))</code> 和 <code>print(scores.index(95))</code>，对照结果理解「计数」与「查位置」。</li>
+      <li>最后踩个坑：<code>L = scores.copy()</code> 后给 L 追加元素，print 两者对比——副本改动不影响原件。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>index 查第一个匹配项位置、count 统计个数、sort 排序（默认升序，reverse=True 降序，<b>无返回值、直接改原列表</b>）、reverse 逆序、copy 生成新副本。记住口诀：<b>sort 完别赋值，直接用</b>。下一节实战：用这套组合拳完成成绩排序和统计！</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="3.19.html"><span class="nav-label">← 上一节</span><span class="nav-title">3.19 列表运算与函数</span></a>
+        <a class="next" href="3.21.html"><span class="nav-label">下一节 →</span><span class="nav-title">3.21 实战：成绩排序和统计</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

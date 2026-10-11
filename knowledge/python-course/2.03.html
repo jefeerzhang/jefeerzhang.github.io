@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.03 变量命名规则 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第二章 基础概念与数值 · 第 3 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch02.html">第二章 基础概念与数值</a><span class="sep">/</span>
+          <span class="current">2.03</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">03</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第二章 · 基础概念与数值</span>
+            <h1>变量命名规则</h1>
+            <p class="hero-summary">第 3 / 17 节 · 约 8 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序构成的两大核心</li>
+      <li>变量：概念与赋值</li>
+      <li class="cur">变量命名规则</li>
+      <li>数据类型总览</li>
+      <li>type() 查看类型</li>
+      <li>保留字（关键字）</li>
+      <li>函数：定义与调用</li>
+      <li>常用内置函数</li>
+      <li>输入输出函数</li>
+      <li>缩进与注释规范</li>
+      <li>数值类型总览</li>
+      <li>整数与四种进制</li>
+      <li>浮点数与精度陷阱</li>
+      <li>算术与增强赋值运算符</li>
+      <li>比较与逻辑运算符</li>
+      <li>运算符优先级</li>
+      <li>数值函数与 math 模块</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>名字起不好，程序直接罢工</h2>
+    <p>上一节你学会了用 <code>=</code> 给变量赋值，但变量名不能随便起——起得不合法，Python 会当场报 <code>SyntaxError</code>（最常见的是 <code>invalid syntax</code> 和 <code>invalid decimal literal</code>）；起得不规范，别人（包括两周后的你自己）根本看不懂。</p>
+    <p>这一节解决两个问题：</p>
+    <ul class="points">
+      <li><b>硬规矩</b>：必须遵循的 4 条命名规则，违反就报错</li>
+      <li><b>好品味</b>：推荐的 2 种命名风格，让变量名一看就懂</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">变量名 = 给宠物取名</div>
+      <p>给宠物猫取名有几条「行规」：① 有些字<b>不能用</b>——像「交通信号灯」这种系统专属词（保留字），你不能拿来做名字；② 名字<b>不能以数字开头</b>，总不能叫「7号猫」吧；③ 叫「豆豆」和叫「doudou」大小写不同，会被当成<b>两只完全不同的猫</b>。</p>
+      <p style="margin-top:8px">变量名也一样：有禁区（保留字）、有格式（字符与首字符限制），而且 Python 眼里 <code>age</code> 和 <code>Age</code> 是两个八竿子打不着的变量。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>必须遵循的 4 条规则</h2>
+    <ul class="points">
+      <li><b>① 字符组成限制</b>：只能包含<b>字母、数字、下划线</b>，以及<b>汉字等 Unicode 文字字符</b>；禁止空格（也不能有 <code>-</code>、<code>.</code> 等其他符号）。</li>
+      <li><b>② 首字符限制</b>：<b>不能以数字开头</b>，必须以字母、下划线或汉字开头（Python 按 Unicode 规则识别标识符，汉字可以当首字符，数字不行）。</li>
+      <li><b>③ 严格区分大小写</b>：<code>age</code> 和 <code>Age</code> 是<b>两个完全不同的变量</b>，互不干扰。</li>
+      <li><b>④ 禁用保留字</b>：不可使用 <code>if</code>、<code>for</code> 等系统内置关键字（2.06 会专门讲）。</li>
+    </ul>
+    <p>命名不合法时，Python 会直接报错：</p>
+    <pre class="codeblock"><span class="bad">2name = 18</span>
+<span style="color:#8b93a7"># SyntaxError: invalid decimal literal</span></pre>
+  </section>
+      <section>
+    <span class="tag">实战演示</span>
+    <h2>合法示范 vs 违规翻车</h2>
+    <div class="quiz">
+      <div class="switch">
+        <button class="on" data-pane="pane-ok">✅ 合法示范</button>
+        <button data-pane="pane-bad">💥 违规翻车</button>
+      </div>
+      <div class="pane on" id="pane-ok">
+        <pre class="codeblock"><span class="good">name2 = '小李'</span>      <span style="color:#8b93a7"># 字母+数字，数字不在开头，合法</span>
+<span class="good">_score = 95</span>        <span style="color:#8b93a7"># 下划线开头，合法</span>
+<span class="good">学生成绩 = 88</span>       <span style="color:#8b93a7"># 汉字可以做变量名，合法</span>
+<span class="good">my_name = '小红'</span>   <span style="color:#8b93a7"># 字母+下划线，合法且可读性好</span></pre>
+        <p class="muted">💡 其中 <code>my_name</code> 这种「下划线命名法」正是最推荐的风格。</p>
+      </div>
+      <div class="pane" id="pane-bad">
+        <pre class="codeblock"><span class="bad">2name = 18</span>     <span style="color:#8b93a7"># ✗ 以数字开头</span>
+<span class="bad">my-name = 'x'</span>  <span style="color:#8b93a7"># ✗ 含连字符 - ，不在允许的字符里</span>
+<span class="bad">my name = 'x'</span>  <span style="color:#8b93a7"># ✗ 含空格</span>
+<span class="bad">if = 10</span>        <span style="color:#8b93a7"># ✗ if 是保留字，被系统征用了</span></pre>
+        <p>以上写法全部会报 <code>SyntaxError</code>——不是「不建议」，是「根本跑不起来」。具体提示语各不相同：<code>2name = 18</code> 报 <code>invalid decimal literal</code>，<code>my-name = 'x'</code> 报 <code>cannot assign to expression here</code>，<code>my name = 'x'</code> 与 <code>if = 10</code> 报 <code>invalid syntax</code>。</p>
+      </div>
+    </div>
+
+    <h2 style="margin-top:22px">推荐的两种命名风格</h2>
+    <ul class="points">
+      <li><b>下划线命名法（推荐）</b>：全小写单词，单词之间用下划线连接。如 <code>my_name</code>、<code>student_id</code>——单词边界一目了然。</li>
+      <li><b>驼峰命名法</b>：首字母小写，后续每个单词首字母大写。如 <code>myName</code>、<code>studentId</code>——这是其他语言（如 Java、JavaScript）的通行写法，在 Python 里虽然合法，但 PEP 8 不推荐。</li>
+    </ul>
+    <p class="muted">💡 两种都对，但<b>同一个项目里保持统一</b>最重要。本课程示例默认使用下划线命名法。</p>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！_score 以下划线开头，完全合法。2name 数字开头、my-name 含连字符、my name 含空格，都不合法。"
+         data-no="❌ 不对哦。2name 以数字开头 ✗；my-name 含连字符 ✗；my name 含空格 ✗。只有 _score 以字母/下划线字符开头且不含违禁字符，是合法的。">
+      <p style="font-weight:700;margin-bottom:12px">下列哪个变量名是<b>合法</b>的？</p>
+      <button class="opt" onclick="quizPick(this)">A. 2name</button>
+      <button class="opt" onclick="quizPick(this)">B. my-name</button>
+      <button class="opt" onclick="quizPick(this)">C. _score</button>
+      <button class="opt" onclick="quizPick(this)">D. my name</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="数字大小写|数字 大小写|数字,大小写" data-ok="✅ 正确！变量名不能以数字开头，且 Python 严格区分大小写。" data-no="❌ 再想想：哪种字符绝不能出现在变量名的第一个位置？age 和 Age 是不是同一个变量？（提示：参考核心概念的规则①②）">
+      <p>① 变量名不能以<b>＿＿</b>开头，必须以字母或下划线开头；② Python 严格区分<b>＿＿</b>，age 和 Age 是两个不同的变量。（两空连填，中间用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：×× ××">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个新手最容易踩的命名坑</div>
+      <p><b>坑一：数字开头。</b>想给变量名加编号，写成 <code>1st_place</code> 直接报错。改成 <code>place1</code> 或 <code>first_place</code> 就好了。</p>
+      <p><b>坑二：以为大小写无所谓。</b>先写了 <code>age = 20</code>，后面不小心写成 <code>print(Age)</code>——报 <code>NameError</code>，因为 <code>Age</code> 根本没被定义过。这不是 bug，是 Python 在严格执行「区分大小写」。</p>
+      <p><b>坑三：拿内置函数当变量名。</b>比如 <code>print = 5</code>，语法上合法但会把内置函数 print 覆盖掉，之后再 <code>print(...)</code> 就会报错。保留字（2.06）不能碰，内置函数名也别占用。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 变量命名规则（字符组成、首字符限制、区分大小写、禁用保留字）和两种命名风格（下划线命名法、驼峰命名法）。请：1）出一组 8 个变量名让我判断合法还是非法，并说明每题理由；2）解释为什么 Python 要区分大小写；3）出 2 道单选题考我，等我作答后再公布答案。">
+      我刚学了 Python 变量命名规则（字符组成、首字符限制、区分大小写、禁用保留字）和两种命名风格（下划线命名法、驼峰命名法）。请：1）出一组 8 个变量名让我判断合法还是非法，并说明每题理由；2）解释为什么 Python 要区分大小写；3）出 2 道单选题考我，等我作答后再公布答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：亲眼见证「两个不同的变量」（3 分钟）</span>
+    <ol class="steps">
+      <li>打开命令行输入 <code>python</code> 进入交互模式。</li>
+      <li>依次输入 <code>age = 20</code> 回车、<code>Age = 30</code> 回车——两个「长得像」的变量都赋值成功了。</li>
+      <li>输入 <code>print(age)</code> 回车，输出 <code>20</code>；再输入 <code>print(Age)</code> 回车，输出 <code>30</code>——果然是两个独立的变量。</li>
+      <li>再试试输入 <code>2name = 1</code> 回车，看看报什么错——把报错截图或抄下来，加深印象。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>变量命名的 4 条硬规矩：<b>只能用字母、数字、下划线和汉字</b>；<b>不能以数字开头</b>；<b>严格区分大小写</b>；<b>禁用保留字</b>。违规会报 <code>SyntaxError</code>（提示语可能是 <code>invalid syntax</code> 或 <code>invalid decimal literal</code>）。推荐的两种风格：<b>下划线命名法</b>（my_name，最常用）和<b>驼峰命名法</b>（myName）。下一节：变量能装哪些「种类」的东西？——认识 Python 的数据类型大家庭。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="2.02.html"><span class="nav-label">← 上一节</span><span class="nav-title">2.02 变量：概念与赋值</span></a>
+        <a class="next" href="2.04.html"><span class="nav-label">下一节 →</span><span class="nav-title">2.04 数据类型总览</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.12 集合函数与判断方法 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第四章 元组、集合和字典 · 第 12 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.pane .tip{font-size:13.5px;color:var(--ink2);margin:8px 0 0}
+.icard:nth-child(1) .dot{background:var(--accent)}
+.icard:nth-child(2) .dot{background:var(--accent2)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch04.html">第四章 元组、集合和字典</a><span class="sep">/</span>
+          <span class="current">4.12</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">12</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第四章 · 元组、集合和字典</span>
+            <h1>集合函数与判断方法</h1>
+            <p class="hero-summary">第 12 / 21 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>元组的定义与特性</li>
+      <li>元组的创建</li>
+      <li>元组索引与切片</li>
+      <li>元组运算</li>
+      <li>元组函数与方法</li>
+      <li>元组的不可变性</li>
+      <li>集合的定义与特性</li>
+      <li>集合的创建</li>
+      <li>集合运算：交差并补</li>
+      <li>集合操作：增删元素</li>
+      <li>集合运算并更新</li>
+      <li class="cur">集合函数与判断方法</li>
+      <li>序列与映射</li>
+      <li>字典的定义与特性</li>
+      <li>字典的创建</li>
+      <li>字典访问与三视图</li>
+      <li>字典添加与修改</li>
+      <li>字典删除</li>
+      <li>字典其他操作</li>
+      <li>组合数据类型总结</li>
+      <li>数据类型转换</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>给集合做「体检」：数一数、比一比、问一问</h2>
+    <p>集合建好了、增删也会了，还差两件事：一是<b>统计</b>——多少个元素、最大最小是多少、总和多少；二是<b>判断集合之间的关系</b>——谁包含谁、有没有共同元素。这节的两张表就是全部内容，也是作业里的常客。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">体检四件套与背包三连问</div>
+      <p><code>len / max / min / sum</code> 是第一章就认识的老朋友，如今给集合「体检」照样好用。三个判断方法则像互相检查背包：<b>issuperset</b> 是「你的背包里装得下我的行李吗」，<b>issubset</b> 是「我的行李全都塞得进你背包吗」，<b>isdisjoint</b> 是「咱俩背包里有没有一模一样的东西」。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>四个统计函数 + 三个判断方法</h2>
+    <p><b>统计函数：</b></p>
+    <table>
+      <tr><th>函数</th><th>作用</th></tr>
+      <tr><td><code>len(st)</code></td><td>求长度，返回集合元素数量</td></tr>
+      <tr><td><code>max(st)</code> / <code>min(st)</code></td><td>求极值，返回集合中的最大值 / 最小值；元素之间必须能互相比较（数字与字符串混放会报 TypeError）</td></tr>
+      <tr><td><code>sum(st)</code></td><td>求和，返回集合中所有元素之和，全为数字才能求和</td></tr>
+    </table>
+    <p style="margin-top:14px"><b>判断方法（都返回 True 或 False）：</b></p>
+    <table>
+      <tr><th>方法</th><th>作用</th></tr>
+      <tr><td><code>st1.issuperset(st2)</code></td><td>判断父集：st1 是否是 st2 的父集</td></tr>
+      <tr><td><code>st1.issubset(st2)</code></td><td>判断子集：st1 是否是 st2 的子集</td></tr>
+      <tr><td><code>st1.isdisjoint(st2)</code></td><td>判断无交集：st1 和 st2 是否无交集</td></tr>
+    </table>
+    <p class="muted" style="margin-top:10px">📢 小提醒：有的 PPT 把 issuperset 误印成了「issupperset」（多一个 p），<b>正确拼写是 issuperset</b>（super + set），上机请以正确拼写为准。</p>
+    <pre class="codeblock" style="margin-top:12px">ST9 = {1, 2, 3, 4, 5}
+print(len(ST9), sum(ST9))   # 5 15
+print(max(ST9), min(ST9))   # 5 1</pre>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>🔬 两张卡 + 一个「谁包含谁」切换台</h2>
+    <div class="grid g2">
+      <div class="icard" data-toggle="1">
+        <h4><span class="dot"></span>📊 四个统计函数</h4>
+        <div class="desc">len / max / min / sum</div>
+        <div class="more">len 数元素个数；max / min 求最大最小值（集合内类型不同、无法比较时会报错）；sum 求和——<b>全为数字才能求和</b>。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle="1">
+        <h4><span class="dot"></span>🔍 三个判断方法</h4>
+        <div class="desc">issuperset / issubset / isdisjoint</div>
+        <div class="more">issuperset 判父集（st1 装得下 st2）；issubset 判子集（st1 被装在 st2 里）；isdisjoint 判无交集（完全不来往）。返回值全是 True / False。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+    </div>
+    <div style="margin-top:16px">
+      <div class="switch">
+        <button class="on" data-pane="pane-sup">issuperset</button>
+        <button data-pane="pane-sub">issubset</button>
+        <button data-pane="pane-dis">isdisjoint</button>
+      </div>
+      <div class="pane on" id="pane-sup">
+        <pre class="codeblock">ST10 = {1, 2, 3, 4, 5}
+ST11 = {2, 4}
+print(ST10.issuperset(ST11))
+<span class="good"># True —— ST10 装得下 ST11（ST10 是父集）</span></pre>
+      </div>
+      <div class="pane" id="pane-sub">
+        <pre class="codeblock">ST10 = {1, 2, 3, 4, 5}
+ST11 = {2, 4}
+print(ST11.issubset(ST10))
+<span class="good"># True —— ST11 被装在 ST10 里（ST11 是子集）</span></pre>
+      </div>
+      <div class="pane" id="pane-dis">
+        <pre class="codeblock">ST10 = {1, 2, 3, 4, 5}
+ST11 = {2, 4}
+print(ST10.isdisjoint(ST11))
+<span class="bad"># False —— 有共同元素 2、4，并非「完全不来往」</span></pre>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="0"
+         data-ok="✅ 答对了！{2, 4} 的每个元素都在 {1, 2, 3, 4, 5} 里，是它的子集，返回 True。"
+         data-no="❌ 子集判断问的是「我的元素是否全在你那里」——2 和 4 都在 {1, 2, 3, 4, 5} 里，答案是 True。">
+      <p style="font-weight:700;margin-bottom:12px"><code>print({2, 4}.issubset({1, 2, 3, 4, 5}))</code> 的输出是？</p>
+      <button class="opt" onclick="quizPick(this)">A. True</button>
+      <button class="opt" onclick="quizPick(this)">B. False</button>
+      <button class="opt" onclick="quizPick(this)">C. {2, 4}</button>
+      <button class="opt" onclick="quizPick(this)">D. 报错</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="isdisjoint"
+         data-ok="✅ 正确！isdisjoint：毫无来往返回 True，有共同元素返回 False。"
+         data-no="❌ 提示：dis 是「不」、joint 是「相交」——两个词根连起来就是方法名。">
+      <p>判断两个集合是否「无交集」（完全没有共同元素）用 ____ 方法。</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="填一个方法名">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">拼写陷阱 issuperset；方向陷阱别搞反</div>
+      <p>坑一：正确拼写是 <b>issuperset</b>（super + set），照着课件上误印的 issupperset（两个 p）敲代码，会直接 AttributeError——Python 不会帮你猜拼写。</p>
+      <p>坑二：方向别搞反——<code>st1.issuperset(st2)</code> 问「st1 装得下 st2 吗」，<code>st1.issubset(st2)</code> 问「st1 被装在 st2 里吗」，<b>判断方向跟着调用者（点号前面那个集合）走</b>。</p>
+      <p>坑三：max / min / sum 只对「可比较」的内容有效——<code>max({1, 'a'})</code> 会报 TypeError，数字和字符串没法比大小。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 集合的函数与判断方法：len/max/min/sum 和 issuperset/issubset/isdisjoint。请：1）用「背包与行李」的类比讲清楚三个判断方法的方向；2）出 5 道「给代码猜 True 还是 False」的题考我；3）提醒我 issuperset 的正确拼写（有的课件误印成 issupperset），并给我 2 道容易拼错的默写题。">
+      我刚学了 Python 集合的函数与判断方法：len/max/min/sum 和 issuperset/issubset/isdisjoint。请：1）用「背包与行李」的类比讲清楚三个判断方法的方向；2）出 5 道「给代码猜 True 还是 False」的题考我；3）提醒我 issuperset 的正确拼写（有的课件误印成 issupperset），并给我 2 道容易拼错的默写题。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：给集合来一次全身体检（5 分钟）</span>
+    <ol class="steps">
+      <li>运行 <code>ST9</code> 的两行：len 配 sum 得 <code>5 15</code>，max 配 min 得 <code>5 1</code>。</li>
+      <li>定义 <code>ST10 = {1, 2, 3, 4, 5}</code>、<code>ST11 = {2, 4}</code>，跑三行判断代码，对照 True、True、False。</li>
+      <li>试 <code>{1, 2}.isdisjoint({3, 4})</code>——两边毫无共同元素，结果应为 True。</li>
+      <li>把方向反过来：<code>ST11.issuperset(ST10)</code>，想想为什么是 False。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>统计四件套：<code>len / max / min / sum</code>（<code>max / min</code> 要求元素之间能比较，<code>sum</code> 要求全是数字）；关系三连问：<code>issuperset</code> 父集、<code>issubset</code> 子集、<code>isdisjoint</code> 无交集，返回值全是布尔值；注意 <b>issuperset 的正确拼写</b>与判断方向。至此集合部分完结，下一节进入「序列与映射」。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="4.11.html"><span class="nav-label">← 上一节</span><span class="nav-title">4.11 集合运算并更新</span></a>
+        <a class="next" href="4.13.html"><span class="nav-label">下一节 →</span><span class="nav-title">4.13 序列与映射</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7.15 删除文件和目录 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第七章 文件及目录操作 · 第 15 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.mtable{width:100%;border-collapse:collapse;margin:16px 0;font-size:14.5px;line-height:1.7}
+.mtable th,.mtable td{border:1px solid var(--border);padding:10px 12px;text-align:left;vertical-align:top}
+.mtable th{background:var(--code-bg);font-weight:700;white-space:nowrap}
+.play{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.play-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.tree{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.9;white-space:pre-wrap;min-height:150px}
+.tdir{color:var(--accent);font-weight:700}
+.tfile{color:var(--ink)}
+.play-out{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14.5px;min-height:52px;white-space:pre-wrap;margin-top:12px}
+.play-out .err{color:var(--err);font-weight:700}
+.play-out .hl{color:var(--accent);font-weight:800}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch07.html">第七章 文件及目录操作</a><span class="sep">/</span>
+          <span class="current">7.15</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">15</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第七章 · 文件及目录操作</span>
+            <h1>删除文件和目录</h1>
+            <p class="hero-summary">第 15 / 18 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>文件与目录的基本概念</li>
+      <li>文件类型：文本与二进制</li>
+      <li>绝对路径与相对路径</li>
+      <li>文件操作三步曲</li>
+      <li>打开文件与打开模式</li>
+      <li>关闭文件与 with 语句</li>
+      <li>写文件：write 与 writelines</li>
+      <li>读文件三方法</li>
+      <li>文件指针：tell 与 seek</li>
+      <li>目录路径两大模块</li>
+      <li>工作目录</li>
+      <li>新建目录</li>
+      <li>展示目录内容</li>
+      <li>重命名与移动</li>
+      <li class="cur">删除文件和目录</li>
+      <li>判断路径</li>
+      <li>获取文件信息</li>
+      <li>路径的合并与分解</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>程序产生的临时文件、过期数据，总得有个「清理」的办法</h2>
+    <p>写文件、建目录、搬东西都会留下痕迹——临时文件、空文件夹越攒越多，程序需要自己动手清理。本节一次讲清 <b>5 个删除方法</b>：删文件的、删空目录的、层层删空目录的，各司其职。删错一个就报错还是删错一个就丢数据，取决于你有没有分清它们。作业第 4 题末尾删文件、第 6 题删空文件夹都用得上。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">remove 像撕一页纸，rmdir 像收一个空纸箱，removedirs 像拆一摞套起来的空纸箱</div>
+      <p>删<b>文件</b>是把一页纸撕掉——<code>remove</code> / <code>unlink</code> 干这个；删<b>目录</b>像收纸箱：箱子必须先腾空才能收走（<code>rmdir</code> 只删<b>空</b>目录）；<code>removedirs</code> 则是拆一摞套娃纸箱——从最里层往外逐层收，能收几层收几层，遇到还装着东西的那一层就停手（不报错，里面那几层已经删掉了）。撕掉的东西<b>不进回收站</b>，收走前先看清楚箱子是不是你要的那个。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>5 个删除方法</h2>
+    <table class="mtable">
+      <tr><th>方法</th><th>作用</th><th>要求与报错</th></tr>
+      <tr><td><code>os.remove(path)</code></td><td>删除指定路径的<b>文件</b></td><td>path 必须为文件路径；文件不存在或路径为目录都会报错</td></tr>
+      <tr><td><code>Path(path).unlink()</code></td><td>删除指定路径的<b>文件</b></td><td>path 为目录将报错；参数 <code>missing_ok=True</code> 可在文件不存在时不报错</td></tr>
+      <tr><td><code>os.rmdir(path)</code></td><td>删除指定路径的<b>空目录</b></td><td>仅当目录为空才可删除；目录不存在、路径为文件、目录非空都报错</td></tr>
+      <tr><td><code>Path(path).rmdir()</code></td><td>删除指定路径的<b>空目录</b></td><td>同上（只能删空目录）</td></tr>
+      <tr><td><code>os.removedirs(path)</code></td><td><b>递归</b>删除指定路径，并连带删除因此变空的各级父目录</td><td>最里层目录必须为空；删完叶子后逐级向上尝试，遇到非空目录就<b>停下、不报错</b></td></tr>
+    </table>
+    <ul class="points">
+      <li>核心分工：<b>删文件用 remove / unlink，删空目录用 rmdir，层层删空目录用 removedirs</b></li>
+      <li>unlink 与 remove 是同义词（pathlib 用 unlink 这个名字），效果完全一样</li>
+      <li><code>rmdir</code> 遇到非空目录报错，这是<b>保护机制</b>——防止一失手连里面所有文件一起陪葬</li>
+      <li><code>removedirs('temp4//subtemp4')</code> 先删最里层的 subtemp4，若 temp4 因此变空也一并删掉</li>
+    </ul>
+
+    <div class="play">
+      <p style="font-weight:700;margin-bottom:10px">🔬 删除实验台：对着这套目录点按钮，注意「删文件」和「删空目录」的分工（试试对目录用 remove）</p>
+      <div class="tree" id="tree"></div>
+      <div class="play-row" style="margin-top:12px">
+        <button class="btn-main btn" onclick="doIt('remove')">os.remove('abc.txt')</button>
+        <button class="btn-main btn" onclick="doIt('unlink')">Path('《悯农》.txt').unlink()</button>
+        <button class="btn-main btn" onclick="doIt('rmdir')">os.rmdir('temp')</button>
+        <button class="btn-main btn" onclick="doIt('removedirs')">os.removedirs('temp4//subtemp4')</button>
+        <button class="btn-main btn" onclick="doIt('prmdir')">Path('temp5//temp6').rmdir()</button>
+        <button class="btn-ghost btn" onclick="doIt('badremove')">os.remove('temp')？</button>
+        <button class="btn-ghost btn" onclick="reset()">重置</button>
+      </div>
+      <div class="play-out" id="out">点按钮删除，报错也是学习的一部分～</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：5 种删除姿势</h2>
+    <pre class="codeblock">import os
+from pathlib import Path
+
+os.remove('abc.txt')
+Path('《悯农》.txt').unlink()
+os.rmdir('temp')
+os.removedirs('temp4//subtemp4')
+Path('temp5//temp6').rmdir()</pre>
+    <p>运行后逐一观察删除结果：</p>
+    <pre class="codeblock">abc.txt        删掉了（文件）
+《悯农》.txt    删掉了（文件）
+temp           删掉了（空目录）
+temp4/subtemp4 两层空目录一起删掉了
+temp5/temp6    只删掉了 temp6，temp5 还在</pre>
+    <ul class="points">
+      <li>第 4、5 行删的是<b>文件</b>——路径必须是文件，换成目录就报错</li>
+      <li>第 6 行删<b>空目录</b> temp；若里面还有东西，报 OSError</li>
+      <li>第 7 行 removedirs 从最里层 subtemp4 删起，temp4 变空后被连带删除</li>
+      <li>第 8 行 Path 版 rmdir 只删 temp6——removedirs 的「层层连删」是 os.removedirs 独有的</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>删空文件夹前先确认：判断 + 删除两步走</h2>
+    <pre class="codeblock">import os
+
+p = 'temp'
+if len(os.listdir(p)) == 0:
+    os.rmdir(p)
+    print(p, '是空文件夹，已删除')
+else:
+    print(p, '不为空，先处理里面的内容')</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">temp 是空文件夹，已删除</pre>
+    <ul class="points">
+      <li>先 <code>len(os.listdir(p)) == 0</code> 判断是否为空——这正是 7.13 与作业第 6 题的判断式</li>
+      <li>确认是空文件夹再 rmdir，程序既不会报错、也不会误删有内容的目录</li>
+      <li>「先判断、再动手」是删除类操作的通用安全习惯，下一节的 exists 判断也是同一思路</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！rmdir 只能删空目录，目录非空直接报错——这是保护机制，防止误删一整个文件夹的内容。"
+         data-no="❌ rmdir 只能删空目录：非空会直接报错，不会连内容一起删——这是 Python 的保护机制。想删整个有内容的目录属于更危险的进阶操作。">
+      <p style="font-weight:700;margin-bottom:12px">用 <code>os.rmdir()</code> 删除一个<b>非空</b>目录，结果是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 连同里面所有内容一起删除</button>
+      <button class="opt" onclick="quizPick(this)">B. 报错，目录保留</button>
+      <button class="opt" onclick="quizPick(this)">C. 只删掉里面的空子目录</button>
+      <button class="opt" onclick="quizPick(this)">D. 静默失败，什么都不发生</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="removeunlinkrmdir|remove unlink rmdir" data-ok="✅ 正确！删文件用 remove 或 unlink，删空目录用 rmdir，层层删空目录用 removedirs。" data-no="❌ 三个空：os 模块删文件的方法、pathlib 删文件的方法、删空目录的方法。层层删空目录的 removedirs 也是 os 模块的。">
+      <p>删除文件用 <b>os.＿＿</b>(path) 或 <b>Path(path).＿＿</b>()；删除<b>空</b>目录用 <b>＿＿</b>。（三空填方法名，用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：remove unlink rmdir">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">删除无小事：三个保命提醒</div>
+      <p>①<b>删除不可恢复</b>：程序删的东西<b>不进回收站</b>，删错路径后果严重——动手前先 print 一遍路径、确认无误再执行，重要数据先备份；</p>
+      <p>②<b>目录非空报错是保护机制</b>：rmdir 对非空目录报错不是 Python 找麻烦，而是在拦住你——别想着绕过去强删，先把里面的文件逐个处理掉；</p>
+      <p>③<b>分工别搞混</b>：remove / unlink 只认文件（删目录报错），rmdir 只认空目录（删文件也报错）——「对象是什么类型、用什么方法」要对上号。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 删除文件和目录的 5 个方法：os.remove、Path.unlink、os.rmdir、Path.rmdir、os.removedirs。请：1）用「撕纸、收空纸箱、拆套娃纸箱」的类比帮我梳理各自分工；2）出 5 道小题考我：哪个删文件、哪个删空目录、removedirs 连删的条件、对目录用 remove 会怎样、missing_ok 参数是干嘛的；3）强调删除操作为什么不可恢复，给出「先判断再删除」的安全代码模板。">
+      我刚学了 Python 删除文件和目录的 5 个方法：os.remove、Path.unlink、os.rmdir、Path.rmdir、os.removedirs。请：1）用「撕纸、收空纸箱、拆套娃纸箱」的类比帮我梳理各自分工；2）出 5 道小题考我：哪个删文件、哪个删空目录、removedirs 连删的条件、对目录用 remove 会怎样、missing_ok 参数是干嘛的；3）强调删除操作为什么不可恢复，给出「先判断再删除」的安全代码模板。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：直接演练作业第 4、6 题（5 分钟）</span>
+    <ol class="steps">
+      <li>作业第 4 题末尾要删文件：建一个临时文件后 <code>os.remove('临时.txt')</code> 删掉，再用 <code>os.path.exists</code>（下一节讲）确认它真的没了。</li>
+      <li>作业第 6 题要删空文件夹：<code>if len(os.listdir(p)) == 0: os.rmdir(p)</code>——先判断后删除，和本页交互示例一模一样。</li>
+      <li>故意对非空文件夹执行 <code>os.rmdir</code>，亲眼看一次报错，把「保护机制」印进脑子。</li>
+      <li>挑战：建 tempA/tempB 两层空目录，用 <code>os.removedirs('tempA//tempB')</code> 一句全删。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>删文件用 os.remove / Path.unlink，删空目录用 os.rmdir / Path.rmdir，层层删空目录用 os.removedirs；删除不进回收站、不可恢复，动手前先确认；目录非空报错是保护机制。配合「先判断再删除」的习惯（作业第 4、6 题）就能安全清理。下一节：判断路径——动手之前先问一句「它在吗」。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="7.14.html"><span class="nav-label">← 上一节</span><span class="nav-title">7.14 重命名与移动</span></a>
+        <a class="next" href="7.16.html"><span class="nav-label">下一节 →</span><span class="nav-title">7.16 判断路径</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：删除实验台（5 个删除方法 + 误用演示） */
+let FS;
+function reset(){
+  FS = { 'abc.txt': null, '《悯农》.txt': null, 'temp': {}, 'temp4': { 'subtemp4': {} }, 'temp5': { 'temp6': {} } };
+  document.getElementById('out').innerHTML = '点按钮删除，报错也是学习的一部分～';
+  render();
+}
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function render(){
+  let html = '当前目录\n';
+  const keys = Object.keys(FS).sort();
+  keys.forEach((k, i) => {
+    const last = i === keys.length - 1;
+    const cls = FS[k] === null ? 'tfile' : 'tdir';
+    html += (last ? '└─ ' : '├─ ') + '<span class="' + cls + '">' + esc(k) + (FS[k] === null ? '' : '/') + '</span>\n';
+    if (FS[k] !== null){
+      const sub = Object.keys(FS[k]).sort();
+      sub.forEach((s, j) => {
+        html += '   ' + (j === sub.length - 1 ? '└─ ' : '├─ ') + '<span class="tdir">' + esc(s) + '/</span>\n';
+      });
+    }
+  });
+  document.getElementById('tree').innerHTML = html;
+}
+function ok(op, msg){
+  render();
+  document.getElementById('out').innerHTML = esc(op) + '　→　<b class="hl">' + esc(msg) + '</b>';
+}
+function err(op, msg){
+  render();
+  document.getElementById('out').innerHTML = esc(op) + '　→　<span class="err">' + esc(msg) + '</span>';
+}
+function doIt(op){
+  if (op === 'reset'){ reset(); return; }
+  if (op === 'remove'){
+    if (!('abc.txt' in FS)){ err('os.remove(\'abc.txt\')', 'FileNotFoundError: abc.txt 不存在（已经删过了）'); return; }
+    delete FS['abc.txt']; ok('os.remove(\'abc.txt\')', '文件 abc.txt 已删除'); return;
+  }
+  if (op === 'unlink'){
+    if (!('《悯农》.txt' in FS)){ err('Path(\'《悯农》.txt\').unlink()', 'FileNotFoundError: 文件不存在（已经删过了）'); return; }
+    delete FS['《悯农》.txt']; ok('Path(\'《悯农》.txt\').unlink()', '文件《悯农》.txt 已删除'); return;
+  }
+  if (op === 'rmdir'){
+    if (!('temp' in FS)){ err('os.rmdir(\'temp\')', 'FileNotFoundError: temp 不存在'); return; }
+    if (Object.keys(FS['temp']).length){ err('os.rmdir(\'temp\')', 'OSError: 目录非空，拒绝删除（保护机制）'); return; }
+    delete FS['temp']; ok('os.rmdir(\'temp\')', '空目录 temp 已删除'); return;
+  }
+  if (op === 'removedirs'){
+    if (!('temp4' in FS)){ err('os.removedirs(\'temp4//subtemp4\')', 'FileNotFoundError: temp4 不存在'); return; }
+    if (Object.keys(FS['temp4']['subtemp4']).length){ err('os.removedirs(\'temp4//subtemp4\')', 'OSError: subtemp4 非空'); return; }
+    delete FS['temp4']; ok('os.removedirs(\'temp4//subtemp4\')', 'subtemp4 删掉后 temp4 变空，也被连带删除——两层全清'); return;
+  }
+  if (op === 'prmdir'){
+    if (!('temp5' in FS) || !('temp6' in FS['temp5'])){ err('Path(\'temp5//temp6\').rmdir()', 'FileNotFoundError: temp5//temp6 不存在'); return; }
+    if (Object.keys(FS['temp5']['temp6']).length){ err('Path(\'temp5//temp6\').rmdir()', 'OSError: temp6 非空'); return; }
+    delete FS['temp5']['temp6']; ok('Path(\'temp5//temp6\').rmdir()', '空目录 temp6 已删除（temp5 保留——rmdir 不层层连删）'); return;
+  }
+  if (op === 'badremove'){
+    if (!('temp' in FS)){ err('os.remove(\'temp\')', 'FileNotFoundError: temp 不存在'); return; }
+    err('os.remove(\'temp\')', 'PermissionError: [WinError 5] 拒绝访问——Windows 上 os.remove() 只能删文件，传目录会报这个错；删目录请用 rmdir');
+    return;
+  }
+}
+reset();
+</script>
+</body>
+</html>

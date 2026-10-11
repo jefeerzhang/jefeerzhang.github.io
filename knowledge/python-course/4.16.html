@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.16 字典访问与三视图 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第四章 元组、集合和字典 · 第 16 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch04.html">第四章 元组、集合和字典</a><span class="sep">/</span>
+          <span class="current">4.16</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">16</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第四章 · 元组、集合和字典</span>
+            <h1>字典访问与三视图</h1>
+            <p class="hero-summary">第 16 / 21 节 · 约 11 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>元组的定义与特性</li>
+      <li>元组的创建</li>
+      <li>元组索引与切片</li>
+      <li>元组运算</li>
+      <li>元组函数与方法</li>
+      <li>元组的不可变性</li>
+      <li>集合的定义与特性</li>
+      <li>集合的创建</li>
+      <li>集合运算：交差并补</li>
+      <li>集合操作：增删元素</li>
+      <li>集合运算并更新</li>
+      <li>集合函数与判断方法</li>
+      <li>序列与映射</li>
+      <li>字典的定义与特性</li>
+      <li>字典的创建</li>
+      <li class="cur">字典访问与三视图</li>
+      <li>字典添加与修改</li>
+      <li>字典删除</li>
+      <li>字典其他操作</li>
+      <li>组合数据类型总结</li>
+      <li>数据类型转换</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>字典建好了，怎么把里面的东西拿出来？</h2>
+    <p>创建字典只是第一步，真正的日常操作是<b>取值</b>：按键拿单个值，或者一眼看清字典里所有的键、所有的值、所有的键值对。这一节的两个表格（访问值、三视图）是本章考试与作业的核心考点——本章作业第 5 题求总成绩，用的就是三视图里的 <code>values()</code>。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">闯门 vs 敲门，和点菜系统的三个页面</div>
+      <p><b>dc[key] 像「直接闯门」</b>：没有这间房就一头撞墙，当场报 KeyError；<b>dc.get() 像「敲门问询」</b>：没人应答也不吵闹，带句话就走——默认带一句 None，或者你指定的兜底值。</p>
+      <p><b>三视图</b>像点菜系统的三个页面：<b>菜品名单</b>（keys，有什么菜）、<b>价格表</b>（values，各多少钱）、<b>整张菜单</b>（items，菜和价一一对应）。三个页面看的是同一份菜单，只是呈现的角度不同。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>两个访问方法 + 三个视图方法</h2>
+    <p><b>访问值</b>——两种方式，区别在「键不存在」时的表现：</p>
+    <table>
+      <tr><th>方法</th><th>说明</th></tr>
+      <tr><td><code>dc[key]</code></td><td>查询键为 key 对应的值 value；key 不存在则<b>报错</b>（KeyError）</td></tr>
+      <tr><td><code>dc.get(key, value)</code></td><td>查询键为 key 对应的值 value；key 不存在则返回 value，value 默认情况下为 <b>None</b></td></tr>
+    </table>
+    <p><b>三视图</b>——keys / values / items，分别拿到字典的键、值、键值对：</p>
+    <table>
+      <tr><th>方法</th><th>说明</th></tr>
+      <tr><td><code>dc.keys()</code></td><td>获取字典的所有键，返回值为 dict_keys 类型，可以转为列表</td></tr>
+      <tr><td><code>dc.values()</code></td><td>获取字典的所有值，返回值为 dict_values 类型，可以转为列表</td></tr>
+      <tr><td><code>dc.items()</code></td><td>获取字典的所有键值对，返回值为 dict_items 类型，可以转为列表</td></tr>
+    </table>
+    <ul class="points">
+      <li>三视图返回的不是列表，是 dict_keys / dict_values / dict_items 类型的「视图」对象</li>
+      <li>想按列表的方式用（下标、len 之外的列表操作），先 <code>list()</code> 转换</li>
+      <li>items() 转成列表后，每个元素是一个 <code>(键, 值)</code> 元组</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>🔬 [] vs get() 大对决</h2>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-bottom:20px">
+      <div class="switch">
+        <button class="on" data-pane="pane-bracket">严格派：dc['d']</button>
+        <button data-pane="pane-get">温和派：dc.get('d')</button>
+      </div>
+      <div class="pane on" id="pane-bracket">
+        <p style="font-weight:700;margin-bottom:6px">用 [] 查一个不存在的键——直接撞墙</p>
+        <pre class="codeblock">DC5 = {'a': 1, 'b': 2, 'c': 3}
+print(DC5['a'])   # 查存在的键，没问题
+print(DC5['d'])   # 查不存在的键……</pre>
+        <p>输出结果：</p>
+        <pre class="codeblock out"><span class="good">1</span>
+<span class="bad">KeyError: 'd'</span></pre>
+        <p style="font-size:14px;color:var(--ink2)">键不存在时立刻报 KeyError，程序中断——严格派眼里没有「差不多」。</p>
+      </div>
+      <div class="pane" id="pane-get">
+        <p style="font-weight:700;margin-bottom:6px">用 get() 查一个不存在的键——带句话走</p>
+        <pre class="codeblock">DC5 = {'a': 1, 'b': 2, 'c': 3}
+print(DC5.get('d'))      # 不给兜底值，默认返回 None
+print(DC5.get('d', 4))   # 给了兜底值 4，就返回 4</pre>
+        <p>输出结果：</p>
+        <pre class="codeblock out"><span class="good">None
+4</span></pre>
+        <p style="font-size:14px;color:var(--ink2)">键不存在也不报错：没指定兜底值返回 None，指定了就返回兜底值——温和派永远有台阶下。</p>
+      </div>
+    </div>
+    <h2>🔬 三视图现场演示</h2>
+    <pre class="codeblock">DC6 = {'a': 1, 'b': 2, 'c': 3}
+print(DC6.keys(), list(DC6.keys()))
+print(DC6.values(), list(DC6.values()))
+print(DC6.items(), list(DC6.items()))</pre>
+    <p>输出结果（视图对象原样 vs 转成列表）：</p>
+    <pre class="codeblock out"><span class="good">dict_keys(['a', 'b', 'c']) ['a', 'b', 'c']
+dict_values([1, 2, 3]) [1, 2, 3]
+dict_items([('a', 1), ('b', 2), ('c', 3)]) [('a', 1), ('b', 2), ('c', 3)]</span></pre>
+    <ul class="points">
+      <li>前半段是视图对象（带着 dict_keys 等「外壳」），后半段是 list() 转换后的普通列表</li>
+      <li>items() 转列表后，每个元素是 (键, 值) 元组，如 ('a', 1)</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！[] 查不存在的键直接报 KeyError: 'd'，这就是新手最常见报错之一。"
+         data-no="❌ [] 是「严格派」：键不存在不会返回 None 也不会返回 0，而是直接抛 KeyError 错误。想温和一点请用 get()。">
+      <p style="font-weight:700;margin-bottom:12px"><code>DC5 = {'a': 1}</code>，执行 <code>print(DC5['d'])</code> 会？</p>
+      <button class="opt" onclick="quizPick(this)">A. 输出 d</button>
+      <button class="opt" onclick="quizPick(this)">B. 输出 None</button>
+      <button class="opt" onclick="quizPick(this)">C. 报 KeyError 错误</button>
+      <button class="opt" onclick="quizPick(this)">D. 输出 0</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="value None|指定值 None|兜底值 None|传入的值 None|value none"
+         data-ok="✅ 正确！key 不存在时返回 value（你指定的兜底值），value 默认为 None。"
+         data-no="❌ 回看访问值表格：dc.get(key, value) 在 key 不存在时返回谁？不写第二个参数时默认又是谁？（两空连填）">
+      <p><code>dc.get(key, value)</code> 在 key 不存在时返回 <code>___</code>，value 默认为 <code>___</code>。（两空连填，中间用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：value None" style="width:220px">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">KeyError 高发区与「先 list 再下标」</div>
+      <p><b>dc['d'] 查不存在的键</b>是新手最常见报错 KeyError——数据来源不确定时，优先用 <code>get()</code>。也别以为键「看起来在」就一定在：键区分类型，<code>'3'</code> 和 <code>3</code> 是两个不同的键（4.18 的 DC8 就埋了 'c': '3' 这样的例子）。</p>
+      <p><b>三视图对象不能直接用下标</b>：<code>DC6.keys()[0]</code> 会报错，要先 <code>list(DC6.keys())[0]</code>。还有 <code>items()</code> 转列表后每个元素是 (键, 值) 元组，想单独拿键要用 <code>item[0]</code>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 字典的访问与三视图：dc[key] 查不存在会报 KeyError，dc.get(key, value) 查不存在返回 value（默认 None）；dc.keys()/values()/items() 分别返回 dict_keys/dict_values/dict_items 类型视图，可用 list() 转列表，items() 转出来是 (键, 值) 元组。请：1）用「闯门 vs 敲门」类比解释 [] 和 get() 的适用场景；2）出 5 道「给出代码写出输出或报错」的题；3）演示用 sum(d.values()) 求字典所有值的和。">
+      我刚学了 Python 字典的访问与三视图：dc[key] 查不存在会报 KeyError，dc.get(key, value) 查不存在返回 value（默认 None）；dc.keys()/values()/items() 分别返回 dict_keys/dict_values/dict_items 类型视图，可用 list() 转列表，items() 转出来是 (键, 值) 元组。请：1）用「闯门 vs 敲门」类比解释 [] 和 get() 的适用场景；2）出 5 道「给出代码写出输出或报错」的题；3）演示用 sum(d.values()) 求字典所有值的和。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：把三视图各 list 一次（5 分钟）</span>
+    <ol class="steps">
+      <li>跑 DC5 三行：确认 <code>DC5['a']</code> → 1、<code>DC5.get('d')</code> → None、<code>DC5.get('d', 4)</code> → 4。</li>
+      <li>故意跑一次 <code>DC5['d']</code>，亲眼看 KeyError 长什么样（以后见到就不慌了）。</li>
+      <li>跑 DC6 三行，把 keys / values / items 各 <code>list()</code> 一次，对比视图对象与列表的区别。</li>
+      <li>连做本章作业第 5 题：求总成绩正是对成绩字典 <code>sum(d.values())</code>——values() 的直接应用。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>访问值两种方式：[] 严格（键不存在报 KeyError），get() 温和（返回兜底值，默认 None）。三视图：<code>keys()</code> 拿所有键、<code>values()</code> 拿所有值、<code>items()</code> 拿所有键值对，返回视图对象，list() 后可按列表用。下一节：往字典里添加和修改键值对。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="4.15.html"><span class="nav-label">← 上一节</span><span class="nav-title">4.15 字典的创建</span></a>
+        <a class="next" href="4.17.html"><span class="nav-label">下一节 →</span><span class="nav-title">4.17 字典添加与修改</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

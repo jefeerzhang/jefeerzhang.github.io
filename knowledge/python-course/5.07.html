@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.07 嵌套与多分支对比 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第五章 程序控制 · 第 7 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.thresh{display:flex;align-items:center;gap:0;margin:14px 0;font-family:Consolas,monospace;font-size:13px;text-align:center}
+.thresh div{padding:10px 6px;font-weight:700}
+.thresh .t1{flex:2.2;background:#e6f7f0;color:#1a9e6c;border-radius:10px 0 0 10px;border:1px solid #c8ecdb}
+.thresh .t2{flex:2.2;background:#fef6e8;color:#d97706;border-top:1px solid #f3e3c0;border-bottom:1px solid #f3e3c0}
+.thresh .t3{flex:2.2;background:#fdeeee;color:#e05252;border-radius:0 10px 10px 0;border:1px solid #f6d5d5}
+.hidden-cond{background:var(--warn-soft);border:1px dashed #f3e3c0;border-radius:10px;padding:10px 14px;font-size:14px;margin-top:10px}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch05.html">第五章 程序控制</a><span class="sep">/</span>
+          <span class="current">5.07</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">07</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第五章 · 程序控制</span>
+            <h1>嵌套与多分支对比</h1>
+            <p class="hero-summary">第 7 / 17 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序控制结构概述</li>
+      <li>单分支结构 if</li>
+      <li>双分支结构 if-else</li>
+      <li>IF 表达式</li>
+      <li>多分支结构 if-elif-else</li>
+      <li>嵌套分支结构</li>
+      <li class="cur">嵌套与多分支对比</li>
+      <li>无限循环 while</li>
+      <li>range 函数与遍历整数</li>
+      <li>遍历字符串列表元组</li>
+      <li>遍历字典</li>
+      <li>循环控制 break 与 continue</li>
+      <li>循环嵌套</li>
+      <li>常见语法错误</li>
+      <li>常见运行异常</li>
+      <li>异常处理语句</li>
+      <li>综合实战：古算题与成绩单</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>同一件事两种写法——凭什么多分支更受推荐？</h2>
+    <p>上一节说「嵌套不宜超过 2 层，建议转成多分支」，但光说不练不算懂。这一节把 PPT 里的经典例题——<b>酒驾判定</b>——的两种写法摆在一起：先看国家标准的三个档位，再看嵌套版和多分支版怎么各自实现它，你会发现两段代码<b>完全等价</b>，但读起来的轻松程度差很多。</p>
+    <div class="thresh">
+      <div class="t1">&lt; 20<br>不构成酒驾</div>
+      <div class="t2">≥ 20 且 &lt; 80<br>饮酒驾车</div>
+      <div class="t3">≥ 80<br>醉酒驾车</div>
+    </div>
+    <p class="muted" style="font-size:13px">依据：国家《车辆驾驶人员血液、呼气酒精含量阈值与检验》——血液酒精含量小于 20mg/100ml 不构成饮酒驾驶；大于等于 20mg/100ml、小于 80mg/100ml 为饮酒驾车；大于等于 80mg/100ml 为醉酒驾车。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">嵌套版像「进了大门再分小门」，多分支版像「大门口直接挂三块指示牌」</div>
+      <p>嵌套版要先推开大门（外层 if），进去之后才看到小门上的分流指示；多分支版则是<b>站在大门口就把三块牌子看完</b>——第一块不符看第二块，第二块不符看第三块，一进一出直达目的地。目的地一样，但后者<b>少绕一层</b>：不用记「我现在站在大门里还是大门外」，眼睛从上到下扫一遍就够了。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>酒驾判定：嵌套版 vs 多分支版（完全等价）</h2>
+    <div class="switch">
+      <button class="on" data-pane="p-nest" onclick="switchPane(this, 'p-nest')">嵌套版</button>
+      <button data-pane="p-multi" onclick="switchPane(this, 'p-multi')">多分支版（推荐）</button>
+    </div>
+    <div class="pane on" id="p-nest">
+      <pre class="codeblock">res = eval(input('请输入每百毫升血液酒精含量！'))
+if res &lt; 20:
+    print('不构成酒驾，可以开车')
+else:
+    if res &lt; 80:
+        print('达到酒驾标准，不能开车！')
+    else:
+        print('达到醉酒标准，千万不能开车！')</pre>
+      <ul class="points">
+        <li>外层 <code>res &lt; 20</code>：真 → 不构成酒驾；假 → 才进 else 里的小门</li>
+        <li>内层 <code>res &lt; 80</code>：真 → 酒驾标准；假 → 醉酒标准</li>
+      </ul>
+      <div class="hidden-cond">🔍 <b>读嵌套要把隐含条件补全</b>：内层的 <code>res &lt; 80</code> 能被判断到，说明外层 <code>res &lt; 20</code> 已经为假，即隐含 <b>res ≥ 20</b>。所以它的真实含义是「20 ≤ res &lt; 80」——不补全这一步，很容易读错。</div>
+    </div>
+    <div class="pane" id="p-multi">
+      <pre class="codeblock">res = eval(input('请输入每百毫升血液酒精含量！'))
+if res &lt; 20:
+    print('不构成酒驾，可以开车')
+<span class="good">elif res &lt; 80:</span>
+    print('达到酒驾标准，不能开车！')
+else:
+    print('达到醉酒标准，千万不能开车！')</pre>
+      <ul class="points">
+        <li>三个档位<b>平铺在同一层</b>，从上到下命中即停，没有里外两层的嵌套关系</li>
+        <li><code>elif res &lt; 80</code> 同样隐含 <b>res ≥ 20</b>（能走到这行说明上面为假）——但「命中即停」的规则大家都熟，读起来更不容易绕</li>
+        <li>两段代码对任何输入的输出<b>一模一样</b>——这就叫「等价」</li>
+      </ul>
+    </div>
+  </section>
+      <section>
+    <span class="tag">判定演示</span>
+    <h2>三个数字，看看各自走哪一行</h2>
+    <p class="muted" style="font-size:14px">点击卡片，揭晓对应输入在两个版本里各走哪条路：</p>
+    <div class="grid g3">
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--ok)"></span>输入 15</h4>
+        <div class="desc">15 &lt; 20：酒精含量很低</div>
+        <div class="more">嵌套版：外层 <code>15 &lt; 20</code> 真 → 直接输出「不构成酒驾，可以开车」，<b>内层根本不执行</b>。<br>多分支版：第 1 块牌子命中 → 同样输出「不构成酒驾，可以开车」。</div>
+        <div class="hint">👆 点击揭晓</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--warn)"></span>输入 50</h4>
+        <div class="desc">20 ≤ 50 &lt; 80：饮酒驾车区间</div>
+        <div class="more">嵌套版：外层 <code>50 &lt; 20</code> 假 → 进 else，内层 <code>50 &lt; 80</code> 真 → 输出「达到酒驾标准，不能开车！」。<br>多分支版：第 1 块不中、第 2 块 <code>50 &lt; 80</code> 命中 → 同样输出「达到酒驾标准，不能开车！」。</div>
+        <div class="hint">👆 点击揭晓</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--err)"></span>输入 120</h4>
+        <div class="desc">120 ≥ 80：醉酒驾车区间</div>
+        <div class="more">嵌套版：外层假 → 进 else，内层 <code>120 &lt; 80</code> 假 → 内层 else → 输出「达到醉酒标准，千万不能开车！」。<br>多分支版：前两块都不中，落到 else → 同样输出「达到醉酒标准，千万不能开车！」。</div>
+        <div class="hint">👆 点击揭晓</div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！80 不满足 &lt;20、也不满足 &lt;80，落到 else——&lt;80 隐含了 ≥20，而 80 ≥ 80 归入醉酒档。开车千万不能沾酒！"
+         data-no="❌ 注意标准里的边界：&lt;20 不构成酒驾，≥20 且 &lt;80 是饮酒驾车，而 <b>≥80 就是醉酒驾车</b>——80 恰好踩在醉酒档的门槛上。">
+      <p style="font-weight:700;margin-bottom:12px">运行上面的判定程序，输入 <code>80</code> 时输出什么？</p>
+      <button class="opt" onclick="quizPick(this)">A. 不构成酒驾，可以开车</button>
+      <button class="opt" onclick="quizPick(this)">B. 达到酒驾标准，不能开车！</button>
+      <button class="opt" onclick="quizPick(this)">C. 达到醉酒标准，千万不能开车！</button>
+      <button class="opt" onclick="quizPick(this)">D. 程序报错</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="饮酒" data-ok="✅ 正确！小于 20 不构成酒驾，≥20 且 &lt;80 为饮酒驾车，≥80 为醉酒驾车——三档边界要记牢。" data-no="❌ 回忆国家标准的中间档：大于等于 20mg/100ml、小于 80mg/100ml 属于＿＿驾车（不是醉酒哦）。">
+      <p>依据国家《车辆驾驶人员血液、呼气酒精含量阈值与检验》：血液酒精含量大于或等于 20mg/100ml、小于 80mg/100ml 为＿＿驾车。</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="两个字的答案">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">读嵌套代码的头号陷阱：隐含条件</div>
+      <p>嵌套版里内层的 <code>res &lt; 80</code> <b>隐含了「res ≥ 20」这个前提</b>——因为能走到 else 里，说明外层 <code>res &lt; 20</code> 已经不成立。<b>读嵌套代码要把隐含条件补全才不出错</b>：内层条件的真实含义永远是「前面全部为假 且 本条件为真」。养成「逐层补前置条件」的习惯，读任何嵌套代码都不会晕；反过来写代码时，能写成多分支的平铺条件，就别套两层门。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 嵌套分支与多分支（if-elif-else）的等价转换，用酒驾判定这道题做的对比。请：1）讲讲为什么嵌套版里内层 res &lt; 80 隐含了 res ≥ 20 这个前提，怎么把隐含条件补全；2）出一道把三层嵌套改成多分支的改写题让我练手并核对答案；3）帮我总结「什么时候适合用嵌套、什么时候必须平铺成多分支」的判断口诀；4）出 5 道给酒精含量数值判断输出结果的求值题考我（含 20 和 80 两个边界值）。">
+      我刚学了 Python 嵌套分支与多分支（if-elif-else）的等价转换，用酒驾判定这道题做的对比。请：1）讲讲为什么嵌套版里内层 res &lt; 80 隐含了 res ≥ 20 这个前提，怎么把隐含条件补全；2）出一道把三层嵌套改成多分支的改写题让我练手并核对答案；3）帮我总结「什么时候适合用嵌套、什么时候必须平铺成多分支」的判断口诀；4）出 5 道给酒精含量数值判断输出结果的求值题考我（含 20 和 80 两个边界值）。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：两版都跑一遍（5 分钟）</span>
+    <ol class="steps">
+      <li>把嵌套版和多分支版都敲进编辑器，分别输入 <code>15</code>、<code>50</code>、<code>80</code>、<code>120</code>，对照两版的输出——四个输入的结果应完全相同。</li>
+      <li>重点盯 <code>80</code>：它在两版里都落到 else（或内层 else），输出「达到醉酒标准」——体会边界值 <b>≥80</b> 的含义。</li>
+      <li>动手改：把嵌套版的内层 <code>if res &lt; 80</code> 改成 <code>if res &gt;= 20 and res &lt; 80</code>，再跑一遍——输出不变，但隐含条件被写明白了（显式 > 隐含，多分支更直接）。</li>
+      <li>本章作业第 2 题（月份天数）：先用嵌套写一版，再用多分支改写一版，跑完后告诉我——哪一版你更愿意读第二遍？</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>同一逻辑，嵌套和多分支写出来<b>完全等价</b>：嵌套版「进了大门再分小门」，多分支版「大门口直接挂三块指示牌」。多分支平铺、易读，是 PPT 推荐的写法——<b>嵌套不宜超过 2 层，能转多分支就转</b>。读嵌套代码时记得补全隐含条件（内层条件 = 前面全假 且 本条件为真）。下一节：进入循环的世界——循环次数不确定的无限循环 while。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="5.06.html"><span class="nav-label">← 上一节</span><span class="nav-title">5.06 嵌套分支结构</span></a>
+        <a class="next" href="5.08.html"><span class="nav-label">下一节 →</span><span class="nav-title">5.08 无限循环 while</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：切换「嵌套版 / 多分支版」两个 pane */
+function switchPane(btn, id){
+  btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  const panes = btn.closest('section').querySelectorAll('.pane');
+  panes.forEach(p => p.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.13 列表定义与特性 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第三章 字符串与列表 · 第 13 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.cm{color:#8a93a6}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch03.html">第三章 字符串与列表</a><span class="sep">/</span>
+          <span class="current">3.13</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">13</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第三章 · 字符串与列表</span>
+            <h1>列表定义与特性</h1>
+            <p class="hero-summary">第 13 / 21 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>字符串基础与三种引号</li>
+      <li>转义字符</li>
+      <li>字符串索引</li>
+      <li>字符串切片</li>
+      <li>实战：身份证号提取信息</li>
+      <li>字符串运算与内置函数</li>
+      <li>大小写转换方法</li>
+      <li>计数、查找与替换</li>
+      <li>分割、联合与剔除</li>
+      <li>判断字符串类别</li>
+      <li>format 格式化输出</li>
+      <li>f-string 格式化输出</li>
+      <li class="cur">列表定义与特性</li>
+      <li>列表的创建</li>
+      <li>列表索引与切片</li>
+      <li>列表增加元素</li>
+      <li>列表删除元素</li>
+      <li>列表修改元素</li>
+      <li>列表运算与函数</li>
+      <li>列表常用方法</li>
+      <li>实战：成绩排序和统计</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>一个变量装不下「一整组」数据？</h2>
+    <p>前面学的字符串只能装「一串字符」，可现实中的数据往往是成批出现的：全班 40 个成绩、一周 7 天的天气、购物车里的 10 件商品。难道要写成 score1、score2、score3……？<b>列表（List）</b>就是为此而生：一个变量，装下一整组数据。Python 列表以其灵活性和强大功能，成为<b>数据处理的首选工具</b>，本章后半段的主线全部围绕它展开。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">石碑 vs 白板：字符串不可变，列表可变</div>
+      <p>字符串像<b>刻在石碑上的字</b>——刻完就改不了，想改只能重新刻一块（生成一个新字符串）；列表像<b>白板上的购物清单</b>——随时可以添一项、改一项、擦掉一项。</p>
+      <p>而且白板上什么都能写：数字、文字混着来，甚至还能再贴一张<b>小清单</b>上去——这就是列表里可以装列表（嵌套列表）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>列表是什么</h2>
+    <p><b>列表（List）是包含 0 个或多个元素组成的有序序列</b>，用于存储一组有序的元素数据。书写时<b>使用中括号 <code>[]</code> 包裹元素，元素之间用逗号 <code>,</code> 分隔</b>：</p>
+    <pre class="codeblock">ls = [1, 'a', True, [2, 3]]   <span class="cm"># 数字、字符串、布尔值、列表混装</span>
+print(ls)        <span class="cm"># [1, 'a', True, [2, 3]]</span>
+print(type(ls))  <span class="cm"># &lt;class 'list'&gt;</span>
+print(len(ls))   <span class="cm"># 4 —— 内层列表只算「一个」元素</span></pre>
+    <p>列表有三大特性，点下面的卡片逐个揭开：</p>
+    <div class="grid g3">
+      <div class="icard" data-toggle="1">
+        <h4><span class="dot" style="background:var(--accent)"></span>有序性</h4>
+        <div class="desc">元素按照插入顺序排列，可以通过索引直接访问</div>
+        <div class="more">写在前面的索引小、写在后面的索引大；<code>ls[0]</code> 取第 1 个、<code>ls[-1]</code> 取最后 1 个——和字符串的规矩一模一样。</div>
+        <div class="hint">点击展开 ▾</div>
+      </div>
+      <div class="icard" data-toggle="1">
+        <h4><span class="dot" style="background:var(--accent2)"></span>可变性</h4>
+        <div class="desc">创建后可随时修改、添加或删除其中的元素</div>
+        <div class="more">这是列表与字符串<b>最大的区别</b>：<code>ls[0] = 99</code> 完全合法，而字符串 <code>s[0] = 'x'</code> 会直接报错。后面几节的增删改方法全都建立在「可变」之上。</div>
+        <div class="hint">点击展开 ▾</div>
+      </div>
+      <div class="icard" data-toggle="1">
+        <h4><span class="dot" style="background:var(--ok)"></span>任意类型</h4>
+        <div class="desc">可包含数字、字符串、列表、对象等不同数据类型</div>
+        <div class="more">一个列表里可以同时装整数、小数、字符串、布尔值，甚至再装一个列表（嵌套）。混装是列表的常态，不需要「同一类型」。</div>
+        <div class="hint">点击展开 ▾</div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！列表元素可以是不同类型，创建后还能随时增删改，B 的说法正好说反了。"
+         data-no="❌ 再想想：列表的三大特性是「有序、可变、元素类型任意」，B 说元素必须同一类型且不能再修改，与「可变」「任意类型」都矛盾。">
+      <p style="font-weight:700;margin-bottom:12px">下列哪种说法是<b>错误</b>的？</p>
+      <button class="opt" onclick="quizPick(this)">A. 列表是有序序列，元素按插入顺序排列</button>
+      <button class="opt" onclick="quizPick(this)">B. 列表创建之后元素不能修改，且必须保持同一类型</button>
+      <button class="opt" onclick="quizPick(this)">C. 列表中的元素可以是不同类型，甚至可以是另一个列表</button>
+      <button class="opt" onclick="quizPick(this)">D. 列表使用中括号 [] 包裹，元素之间用逗号分隔</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="逗号|," data-ok="✅ 正确！列表用中括号 [] 包裹，元素之间用逗号分隔。" data-no="❌ 再想想：把一个个元素隔开的符号是什么？提示：必须是英文符号。">
+      <p>列表使用中括号 [] 包裹，元素之间用＿＿分隔。</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：逗号">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">「可变」是列表的身份证，字符串只能羡慕</div>
+      <p><code>s = 'abc'</code> 之后执行 <code>s[0] = 'A'</code>，会报 <code>TypeError: 'str' object does not support item assignment</code>；而 <code>ls[0] = 99</code> 完全没问题——这就是「<b>字符串不可变、列表可变</b>」。以后凡是看到「直接改变原列表」的方法，都在享受这份可变性。</p>
+      <p>另外两个小坑：① 分隔符必须是<b>英文逗号</b>，写成中文逗号 <code>[1，2]</code> 会直接报错；② 别把变量命名为 <code>list</code>——它覆盖了内置的列表类型名，之后 <code>list('123')</code> 就会报错。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 列表的定义与三大特性（有序、可变、元素类型任意）。请：1）用「石碑刻字 vs 白板清单」的类比解释字符串不可变、列表可变；2）举一个混装多种类型（含嵌套列表）的列表例子，并说明 len() 怎么数元素；3）出 3 道判断/选择题考我，等我作答后公布答案和讲解。">
+      我刚学了 Python 列表的定义与三大特性（有序、可变、元素类型任意）。请：1）用「石碑刻字 vs 白板清单」的类比解释字符串不可变、列表可变；2）举一个混装多种类型（含嵌套列表）的列表例子，并说明 len() 怎么数元素；3）出 3 道判断/选择题考我，等我作答后公布答案和讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试（3 分钟）</span>
+    <ol class="steps">
+      <li>交互模式输入 <code>ls = [1, 'a', True, [2, 3]]</code>。</li>
+      <li>执行 <code>type(ls)</code>，确认结果是 <code>&lt;class 'list'&gt;</code>——混装的容器就是列表。</li>
+      <li>再试 <code>len(ls)</code>：结果是 4 还是 5？想一想为什么内层列表 [2, 3] 只算「一个」元素。</li>
+      <li>挑战：输入 <code>ls[3]</code>，看看取出的是什么——下一节就讲这种「套娃访问」。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>列表是包含 0 个或多个元素的<b>有序序列</b>，用中括号 <code>[]</code> 包裹、逗号分隔；三大特性——<b>有序</b>（可索引访问）、<b>可变</b>（可增删改）、<b>元素类型任意</b>（可混装、可嵌套）。与字符串最大的不同：字符串不可变，列表可变。下一节：把数据装进列表的两种创建方式。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="3.12.html"><span class="nav-label">← 上一节</span><span class="nav-title">3.12 f-string 格式化输出</span></a>
+        <a class="next" href="3.14.html"><span class="nav-label">下一节 →</span><span class="nav-title">3.14 列表的创建</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7.14 重命名与移动 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第七章 文件及目录操作 · 第 14 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.mtable{width:100%;border-collapse:collapse;margin:16px 0;font-size:14.5px;line-height:1.7}
+.mtable th,.mtable td{border:1px solid var(--border);padding:10px 12px;text-align:left;vertical-align:top}
+.mtable th{background:var(--code-bg);font-weight:700;white-space:nowrap}
+.play{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.play-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.tree{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14px;line-height:1.9;white-space:pre-wrap;min-height:120px}
+.tdir{color:var(--accent);font-weight:700}
+.tfile{color:var(--ink)}
+.tnew{background:var(--accent-soft);border-radius:4px;padding:0 4px}
+.play-out{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14.5px;min-height:52px;white-space:pre-wrap;margin-top:12px}
+.play-out .err{color:var(--err);font-weight:700}
+.play-out .hl{color:var(--accent);font-weight:800}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch07.html">第七章 文件及目录操作</a><span class="sep">/</span>
+          <span class="current">7.14</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">14</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第七章 · 文件及目录操作</span>
+            <h1>重命名与移动</h1>
+            <p class="hero-summary">第 14 / 18 节 · 约 8 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>文件与目录的基本概念</li>
+      <li>文件类型：文本与二进制</li>
+      <li>绝对路径与相对路径</li>
+      <li>文件操作三步曲</li>
+      <li>打开文件与打开模式</li>
+      <li>关闭文件与 with 语句</li>
+      <li>写文件：write 与 writelines</li>
+      <li>读文件三方法</li>
+      <li>文件指针：tell 与 seek</li>
+      <li>目录路径两大模块</li>
+      <li>工作目录</li>
+      <li>新建目录</li>
+      <li>展示目录内容</li>
+      <li class="cur">重命名与移动</li>
+      <li>删除文件和目录</li>
+      <li>判断路径</li>
+      <li>获取文件信息</li>
+      <li>路径的合并与分解</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>文件建错了名、放错了地方，难道只能手动去资源管理器改？</h2>
+    <p>批量整理下载文件夹、把作业统一改名归档——这些活儿用代码干又快又稳。本节的 <b>os.rename()</b> 和 <b>Path().rename()</b> 看名字只管「改名」，实际上还兼职「<b>搬家</b>」：newpath 换个上级目录，文件或目录就被移动过去了。一个方法两种用途，作业第 5 题后半（把 Python 改名为 Python123）就是它的直接应用。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">rename 像「改快递面单」：包裹不动，改地址就是改名，换城市就是搬家</div>
+      <p>包裹（文件内容）本身原封不动，你改的只是<b>面单上的地址</b>（路径）。<code>rename('temp2', 'temp5')</code> 是同一栋楼里换门牌——<b>重命名</b>；<code>rename('temp3', 'temp5//temp6')</code> 是把地址直接写到另一个城市——<b>搬家（移动）+ 改名</b>一步到位。快递员只认面单：oldpath 这个地址必须真实存在，newpath 的「城市」（上级目录）也必须存在，否则包裹送不到、直接报错。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>两个 rename</h2>
+    <table class="mtable">
+      <tr><th>方法</th><th>作用</th><th>要求与返回</th></tr>
+      <tr><td><code>os.rename(oldpath, newpath)</code></td><td>文件或目录重命名</td><td>oldpath 必须存在，newpath 上级目录必须存在，<b>无返回值</b></td></tr>
+      <tr><td><code>Path(oldpath).rename(newpath)</code></td><td>文件或目录重命名</td><td>规则相同，返回<b>新的 Path 对象</b></td></tr>
+    </table>
+    <ul class="points">
+      <li>对文件或目录进行重命名，<b>还能实现文件或目录的移动</b>——newpath 换个上级目录就是「搬家」</li>
+      <li>newpath 只换名字不换目录 → <b>重命名</b>；只换目录不换名字 → <b>移动</b>；两者都换 → <b>移动 + 改名一步到位</b></li>
+      <li>文件和目录用同一个方法，Python 会自动识别 oldpath 是文件还是目录</li>
+      <li>newpath 的<b>上级目录</b>必须已存在——想搬进还没建的文件夹，得先用 7.12 的 mkdir 建好</li>
+    </ul>
+
+    <div class="play">
+      <p style="font-weight:700;margin-bottom:10px">🔬 搬家实验台：按顺序点两个按钮，看当前目录怎么变（先点第 2 个会怎样？也试试）</p>
+      <div class="tree" id="tree"></div>
+      <div class="play-row" style="margin-top:12px">
+        <button class="btn-main btn" onclick="rn1()">os.rename('temp2', 'temp5')</button>
+        <button class="btn-main btn" onclick="rn2()">Path('temp3').rename('temp5//temp6')</button>
+        <button class="btn-ghost btn" onclick="reset()">重置</button>
+      </div>
+      <div class="play-out" id="out">这是当前目录的样子。点按钮执行 rename～</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：一招改名，一招搬家</h2>
+    <pre class="codeblock">import os
+from pathlib import Path
+
+os.rename('temp2', 'temp5')
+
+p = Path('temp3')
+p.rename('temp5//temp6')</pre>
+    <p>运行后当前目录的变化：</p>
+    <pre class="codeblock">temp2   →  改名为 temp5
+temp3   →  移进 temp5 里面，并改名为 temp6</pre>
+    <ul class="points">
+      <li>第 4 行：temp2 与 temp5 在同一层——只是<b>重命名</b></li>
+      <li>第 7 行：newpath 是 <code>temp5//temp6</code>，上级目录变成了 temp5——<b>移动 + 改名</b></li>
+      <li>运行后 temp3 消失了：它是「搬家」，不是「复制」——原位置不再保留</li>
+      <li>两种写法效果一致，Path 版会返回新的 Path 对象，方便继续链式操作</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>批量改名：给目录里所有 .txt 加前缀</h2>
+    <pre class="codeblock">import os
+
+for name in os.listdir('temp'):
+    if name.endswith('.txt'):
+        os.rename(os.path.join('temp', name), os.path.join('temp', '备份_' + name))
+
+print(os.listdir('temp'))</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">['备份_《悯农》.txt', '备份_校训.txt']</pre>
+    <ul class="points">
+      <li>listdir 给出名字列表，配合 7.13 的知识逐个处理</li>
+      <li>oldpath 和 newpath 都在 <code>temp</code> 目录下——目录没变，只改名字，所以是纯重命名（用 <code>os.path.join()</code> 拼路径，比手写 <code>//</code> 更稳）</li>
+      <li>rename 一次只改一个，批量任务靠 <b>for 循环</b>驱动——第五章的循环在这里派上用场</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！newpath 的上级目录从 a 变成了 c，这就是「搬家 + 改名」一步到位——前提是 c 目录必须已存在。"
+         data-no="❌ rename 不只是改名：newpath 换了上级目录（从 a 到 c），文件就被移动过去并改名为 d.txt——前提 c 已存在。">
+      <p style="font-weight:700;margin-bottom:12px"><code>os.rename('a//b.txt', 'c//d.txt')</code>（目录 c 已存在）执行后会发生什么？</p>
+      <button class="opt" onclick="quizPick(this)">A. 只能改名，不能移动，报错</button>
+      <button class="opt" onclick="quizPick(this)">B. b.txt 被移动到 c 目录下并改名为 d.txt</button>
+      <button class="opt" onclick="quizPick(this)">C. b.txt 被复制一份到 c 目录</button>
+      <button class="opt" onclick="quizPick(this)">D. a 目录整个被移动到 c 里</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="rename移动|rename 移动" data-ok="✅ 正确！rename 一招两用：newpath 只换名字是重命名，换了上级目录还能实现移动。" data-no="❌ 两个空：对文件或目录调用＿＿方法；当 newpath 换了上级目录时，它还能实现＿＿（原位置不再保留）。">
+      <p>对文件或目录调用 <b>＿＿</b>(oldpath, newpath) 方法可完成重命名；当 newpath 换了上级目录时，它还能实现「<b>＿＿</b>」。（两空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：rename 移动">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>newpath 的上级目录必须存在</b>：<code>os.rename('a.txt', 'backup//a.txt')</code> 里 backup 若不存在，直接 FileNotFoundError——先 mkdir 再搬家；</p>
+      <p>②<b>oldpath 必须存在</b>：名字写错一个字就报错，动手前先用 listdir 核对一遍真实名字；</p>
+      <p>③<b>rename 是「搬」不是「复制」</b>：执行后原位置的东西就没了，别指望两处同时保留——需要副本得用读写文件的方式另存。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的 os.rename(oldpath, newpath) 和 Path(oldpath).rename(newpath)。请：1）用「改快递面单」的类比解释为什么重命名和移动是同一个方法；2）出 3 道判断题考我：newpath 上级目录不存在会怎样？rename 后原文件还在吗？文件和目录是不是用同一个方法改名？3）给一段「批量把目录里所有 .jpg 前面加日期前缀」的代码，让我逐行预测执行结果。">
+      我刚学了 Python 的 os.rename(oldpath, newpath) 和 Path(oldpath).rename(newpath)。请：1）用「改快递面单」的类比解释为什么重命名和移动是同一个方法；2）出 3 道判断题考我：newpath 上级目录不存在会怎样？rename 后原文件还在吗？文件和目录是不是用同一个方法改名？3）给一段「批量把目录里所有 .jpg 前面加日期前缀」的代码，让我逐行预测执行结果。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：直接演练作业第 5 题后半（5 分钟）</span>
+    <ol class="steps">
+      <li>作业第 5 题先用 7.12 的 mkdir 新建「Python」文件夹（如果还没建）。</li>
+      <li>用 <code>os.rename('Python', 'Python123')</code> 一行完成改名——先 <code>print(os.listdir())</code> 核对名字存在，再执行。</li>
+      <li>再 <code>print(os.listdir())</code> 验证：Python 没了，Python123 出现。</li>
+      <li>挑战：用 Path 版 <code>Path('Python123').rename('Python')</code> 改回去，观察返回值是一个 Path 对象。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>os.rename(oldpath, newpath) 与 Path(oldpath).rename(newpath) 一招两用：newpath 只换名字是重命名，换了上级目录就是移动（可移动 + 改名一步到位）；oldpath 和 newpath 的上级目录都必须存在；rename 是搬不是复制。下一节是删库跑路级的操作——删除文件和目录，务必系好安全带。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="7.13.html"><span class="nav-label">← 上一节</span><span class="nav-title">7.13 展示目录内容</span></a>
+        <a class="next" href="7.15.html"><span class="nav-label">下一节 →</span><span class="nav-title">7.15 删除文件和目录</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：搬家实验台（rename 一招两用演示） */
+let FS, moved;
+function reset(){
+  FS = { 'temp2': {}, 'temp3': {}, 'abc.txt': null };
+  moved = false;
+  document.getElementById('out').innerHTML = '这是当前目录的样子。点按钮执行 rename～';
+  render();
+}
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function render(hl){
+  let html = '当前目录\n';
+  const keys = Object.keys(FS).sort();
+  keys.forEach((k, i) => {
+    const last = i === keys.length - 1;
+    const cls = FS[k] === null ? 'tfile' : 'tdir';
+    const mark = (k === hl) ? ' tnew' : '';
+    html += (last ? '└─ ' : '├─ ') + '<span class="' + cls + mark + '">' + esc(k) + (FS[k] === null ? '' : '/') + '</span>\n';
+    if (FS[k] !== null){
+      const sub = Object.keys(FS[k]).sort();
+      sub.forEach((s, j) => {
+        const slast = j === sub.length - 1;
+        html += '   ' + (slast ? '└─ ' : '├─ ') + '<span class="tdir' + (s === hl ? ' tnew' : '') + '">' + esc(s) + '/</span>\n';
+      });
+    }
+  });
+  document.getElementById('tree').innerHTML = html;
+}
+function rn1(){
+  if (!('temp2' in FS)){ err('os.rename(\'temp2\', \'temp5\')', 'FileNotFoundError: temp2 不存在（刚才已经被改名成 temp5 了）'); return; }
+  FS['temp5'] = FS['temp2'];
+  delete FS['temp2'];
+  render('temp5');
+  document.getElementById('out').innerHTML = 'os.rename(\'temp2\', \'temp5\')　→　<b class="hl">改名成功</b>：同层换名字，temp2 变成 temp5（无返回值）';
+}
+function rn2(){
+  if (!('temp3' in FS)){ err('Path(\'temp3\').rename(\'temp5//temp6\')', 'FileNotFoundError: temp3 不存在'); return; }
+  if (!('temp5' in FS)){ err('Path(\'temp3\').rename(\'temp5//temp6\')', 'FileNotFoundError: 上级目录 temp5 不存在——newpath 的上级目录必须先建好！'); return; }
+  FS['temp5']['temp6'] = {};
+  delete FS['temp3'];
+  render('temp6');
+  document.getElementById('out').innerHTML = 'Path(\'temp3\').rename(\'temp5//temp6\')　→　<b class="hl">移动 + 改名成功</b>：temp3 搬进 temp5 并改名为 temp6，原位置不再保留';
+}
+function err(op, msg){
+  render();
+  document.getElementById('out').innerHTML = esc(op) + '　→　<span class="err">' + esc(msg) + '</span>';
+}
+reset();
+</script>
+</body>
+</html>

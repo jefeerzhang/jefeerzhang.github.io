@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8.04 创建类：class·__init__·self · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第八章 面向对象编程 · 第 4 / 12 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.clsmap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;margin-top:14px}
+.clsmap h4{font-size:15px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.chiprow{display:flex;gap:10px;flex-wrap:wrap}
+.chip{border-radius:10px;padding:8px 14px;font-size:13.5px;line-height:1.6;border:1px solid var(--border);background:var(--code-bg)}
+.chip b{font-family:Consolas,Menlo,monospace;color:#c2452d}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch08.html">第八章 面向对象编程</a><span class="sep">/</span>
+          <span class="current">8.04</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">04</span>
+            <span class="lesson-hero-num-total">/ 12</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第八章 · 面向对象编程</span>
+            <h1>创建类：class·__init__·self</h1>
+            <p class="hero-summary">第 4 / 12 节 · 约 12 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 12 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>编程的两种范式</li>
+      <li>面向对象的三大特性</li>
+      <li>四个核心概念：类·对象·属性·方法</li>
+      <li class="cur">创建类：class·__init__·self</li>
+      <li>创建对象与访问成员</li>
+      <li>实例属性与类属性</li>
+      <li>三种方法：实例·类·静态</li>
+      <li>封装与私有属性</li>
+      <li>继承与 super()</li>
+      <li>多重继承</li>
+      <li>多态与方法重写</li>
+      <li>综合案例：商品库存管理</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>上一节认识了图纸，这一节学会画图纸</h2>
+    <p>上一节我们说：类是设计图纸，对象是真车。这一节就学<b>怎么画这张图纸</b>——也就是创建类。只需要记住一个语法骨架和三个关键词：<code>class</code>（唯一的保留字）、<code>__init__</code>、<code>self</code>。它们是整章的「地基」，后面私有属性、继承、多态全都建立在今天的 Student 类之上，务必逐行看懂。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">创建一个类，像开一间「新员工入职接待处」</div>
+      <p><code>class</code> 是<b>挂牌成立</b>——宣布「学生处成立了」；<code>__init__</code> 是<b>入职接待流程</b>——每个新学生来报到时<b>自动</b>被接待，登记姓名、发成绩单，一人一套；<code>self</code> 是<b>「当前这位学生」本人</b>——接待员嘴里说「给你登记」时，「你」指的就是眼前报到的那一位。每来一个学生（对象），接待流程就跑一遍，但登记的资料各归各的。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>语法骨架 + 三个关键词</h2>
+    <pre class="codeblock">class 类名:                        # 类名：首字母大写（驼峰命名法），如 Student、BankAccount
+    """类的文档说明（可选）"""       # 三引号字符串，说明这个类是干嘛的
+
+    def __init__(self, 参数1, 参数2, ...):    # 初始化方法：创建对象时自动调用
+        self.属性1 = 参数1            # 初始化属性：把参数装进对象
+        self.属性2 = 参数2
+        ...
+
+    def 方法名(self, ...):            # 实例方法：第一个参数惯例写 self
+        方法体</pre>
+    <ul class="points">
+      <li><b>class</b>——定义类的关键字；类名<b>默认要求首字母大写</b>（驼峰命名法），如 <code>Student</code>、<code>BankAccount</code>；类体靠<b>缩进</b>表示从属关系，和函数一样</li>
+      <li><b>__init__</b>——<b>初始化方法</b>（注意是前后各<b>两个</b>下划线）：创建对象时<b>自动调用</b>，专门用来初始化属性，不需要（也不应该）手动去调用它</li>
+      <li><b>self</b>——代表<b>当前对象本身</b>：调用方法时 Python 会自动把对象传给 self，<b>不需要手动传</b>；方法内通过 <code>self.属性</code> 访问对象自己的数据</li>
+      <li>文档字符串 <code>"""..."""</code> 可选，但写上是个好习惯——相当于给类贴说明书</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：Student 类完整代码</h2>
+    <pre class="codeblock">class Student:                              # 类名首字母大写
+    """学生类"""                             # 文档说明（可选）
+
+    def __init__(self, name, score):        # 初始化方法：创建对象时自动调用
+        self.name = name                    # 属性：姓名
+        self.score = score                  # 属性：成绩
+
+    def introduce(self):                    # 方法：自我介绍
+        print(f"我是{self.name}，我的成绩是{self.score}分")
+
+    def is_pass(self):                      # 方法：判断是否及格
+        return self.score &gt;= 60</pre>
+    <p>用最简单的方式用它一把（<b>创建对象的完整语法下一节细讲</b>）：</p>
+    <pre class="codeblock">stu = Student('小明', 92)   # 创建对象的一瞬间，__init__ 被自动调用
+stu.introduce()             # 我是小明，我的成绩是92分
+print(stu.is_pass())        # True（92 分 &gt;= 60 分）</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">我是小明，我的成绩是92分
+True</pre>
+
+    <div class="clsmap">
+      <h4>🧩 Student 类结构一览</h4>
+      <div class="chiprow" style="margin-bottom:10px">
+        <span class="chip">📦 属性（2 个）：<b>name</b> 姓名 · <b>score</b> 成绩</span>
+      </div>
+      <div class="chiprow">
+        <span class="chip">⚙️ 方法（3 个）：<b>__init__</b> 初始化方法 · <b>introduce</b> 自我介绍 · <b>is_pass</b> 判断及格</span>
+      </div>
+    </div>
+
+    <ul class="points" style="margin-top:14px">
+      <li><code>def __init__(self, name, score)</code> 的 name、score 是<b>参数</b>；<code>self.name = name</code> 里的 self.name 是<b>属性</b>——同名但身份不同，左边才是「装进对象里的」</li>
+      <li><code>introduce</code>、<code>is_pass</code> 的第一个参数都是 self——不需要传值，Python 自动搞定</li>
+      <li><code>is_pass</code> 里有 return，会返回 True/False；<code>introduce</code> 只打印不返回——方法和其他函数一样</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！__init__ 是初始化方法（习惯上也叫构造方法），在创建对象（如 Student('小明', 92)）时自动调用，专门负责初始化属性。"
+         data-no="❌ introduce 是普通方法要手动调用；self 是代表当前对象本身的参数；「类名」是给类起名字——创建对象时自动调用的只有 __init__。">
+      <p style="font-weight:700;margin-bottom:12px">执行 <code>stu = Student('小明', 92)</code> 时，下列哪个方法被<b>自动调用</b>？</p>
+      <button class="opt" onclick="quizPick(this)">A. introduce</button>
+      <button class="opt" onclick="quizPick(this)">B. __init__</button>
+      <button class="opt" onclick="quizPick(this)">C. self</button>
+      <button class="opt" onclick="quizPick(this)">D. 类名</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="class __init__ self" data-ok="✅ 三大关键词全对！class 定义类、__init__ 自动初始化、self 代表当前对象——创建类的骨架你已经拿下了。" data-no="❌ 提示：三个空分别对应——定义类的关键字是＿＿；创建对象时自动调用的初始化方法是＿＿；代表当前对象本身的方法第一个参数是＿＿。（三空用空格隔开）">
+      <p>定义类用关键字<b>＿＿</b>；创建对象时被自动调用、用于初始化属性的是<b>＿＿</b>方法；代表当前对象本身、由 Python 自动传入的参数是<b>＿＿</b>。（三空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：class __init__ self">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>方法忘写 self</b>：<code>def introduce():</code> 调用时会报 <code>TypeError: Student.introduce() takes 0 positional arguments but 1 was given</code>——实例方法的第一个参数必须有（惯例叫 self），哪怕方法里用不到它；</p>
+      <p>②<b>__init__ 下划线数量不对</b>：写成 <code>_init_</code> 或 <code>init</code> 就只是普通方法，创建对象时<b>根本不会被调用</b>——<code>Student('小明', 92)</code> 会直接报 <code>TypeError: Student() takes no arguments</code>；前后各两个下划线一个都不能少；</p>
+      <p>③<b>类名不大写、缩进混乱</b>：类名按惯例首字母大写（Student 而不是 student）；类体必须整体缩进，方法与属性对齐在类体内。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 创建类的语法（class、__init__、self），课上写了 Student 类（属性 name/score，方法 __init__/introduce/is_pass）。请：1）逐行解释 def __init__(self, name, score) 每个部分的作用；2）出 3 道「找错题」，代码里故意漏写 self、少打双下划线或忘加冒号，让我当侦探找出来；3）让我自己写一个 Book 类（属性：书名、价格；方法：介绍），写完帮我 review。">
+      我刚学了 Python 创建类的语法（class、__init__、self），课上写了 Student 类（属性 name/score，方法 __init__/introduce/is_pass）。请：1）逐行解释 def __init__(self, name, score) 每个部分的作用；2）出 3 道「找错题」，代码里故意漏写 self、少打双下划线或忘加冒号，让我当侦探找出来；3）让我自己写一个 Book 类（属性：书名、价格；方法：介绍），写完帮我 review。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：亲手画出第二张图纸（10 分钟）</span>
+    <ol class="steps">
+      <li>读 Student 类：把 <code>stu = Student('小明', 92)</code> 的 92 改成 58，<code>stu.is_pass()</code> 会返回什么？先预测再运行验证。</li>
+      <li>故意把 <code>def introduce(self)</code> 的 self 删掉，运行看报什么错——记住：实例方法的第一个参数必须有（惯例叫 <code>self</code>，名字其实可以改，但没人会这么干）。</li>
+      <li>再做个小实验：把 <code>__init__</code> 改名成 <code>init</code>（去掉双下划线），再运行 <code>Student('小明', 92)</code>——观察 Python 报的 <code>TypeError: Student() takes no arguments</code>，理解属性是怎么来的。</li>
+      <li>挑战：仿写一个 <code>Book</code> 类——属性 bookname 和 price，方法 <code>introduce()</code> 打印「这本书叫xxx，卖xx元」，再创建两个对象各介绍一遍。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>创建类的骨架：<code>class 类名:</code> + 缩进的类体；<code>__init__</code> 是初始化方法（习惯上也叫构造方法），创建对象时自动调用、负责初始化属性；<code>self</code> 代表当前对象本身，由 Python 自动传入。Student 类两张卡片：属性 name/score，方法 __init__/introduce/is_pass。本章是扩展章、不安排作业，把「试一试」当练手即可。下一节：正式学习创建对象与访问成员。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="8.03.html"><span class="nav-label">← 上一节</span><span class="nav-title">8.03 四个核心概念：类·对象·属性·方法</span></a>
+        <a class="next" href="8.05.html"><span class="nav-label">下一节 →</span><span class="nav-title">8.05 创建对象与访问成员</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

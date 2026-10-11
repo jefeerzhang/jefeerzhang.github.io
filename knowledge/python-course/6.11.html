@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6.11 global 修改全局变量 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第六章 函数 · 第 11 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.vs .card{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px}
+.vs .card h4{margin:0 0 6px;font-size:14.5px}
+.vs .card.win{border-color:var(--ok)}
+.vs .card.win h4{color:var(--ok)}
+@media (max-width:720px){.vs{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch06.html">第六章 函数</a><span class="sep">/</span>
+          <span class="current">6.11</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">11</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第六章 · 函数</span>
+            <h1>global 修改全局变量</h1>
+            <p class="hero-summary">第 11 / 18 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>函数的定义与优点</li>
+      <li>函数的分类</li>
+      <li>函数的定义</li>
+      <li>函数的调用</li>
+      <li>形参与实参</li>
+      <li>参数传递的两种方式</li>
+      <li>必须参数与可选参数</li>
+      <li>不定长参数</li>
+      <li>参数值的数据类型</li>
+      <li>变量作用域：局部与全局</li>
+      <li class="cur">global 修改全局变量</li>
+      <li>匿名函数 lambda</li>
+      <li>高阶函数：map 与 filter</li>
+      <li>高阶函数：sorted 与 key</li>
+      <li>递归函数：概念与两要素</li>
+      <li>递归执行逻辑：递推与回溯</li>
+      <li>递归实战：阶乘</li>
+      <li>递归实战：字符串逆序</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>上一节说函数内改不了全局——那真要改呢？</h2>
+    <p>6.10 的 temp1 告诉我们：函数内赋值只是造局部变量，全局的 g 纹丝不动。但实际开发中偶尔<b>就是要在函数里修改全局变量</b>（比如全局计数器）。Python 的答案是 <b>global 关键字</b>——在函数内先声明「这个变量我要用的是全局那个」，之后的赋值才会真正落到全局变量头上。这一节代码很短，但对照题极爱考，务必看清每个变量有没有 global。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">想改全校公告栏，必须先到教务处登记</div>
+      <p>公告栏（全局变量）不是谁都能上去改的。你直接往上贴纸条？不行——你的纸条只会贴在<b>自己宿舍的门上</b>（局部变量），出了宿舍没人看见。想真改公告栏，得先去教务处<b>登记</b>——写一句 <code>global</code> 声明。登记之后，你再写的内容就真的挂上公告栏了，全校都看得见。<b>没登记的赋值 = 宿舍门上的便签；登记过的赋值 = 公告栏上的正式通知。</b></p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>global 的规则</h2>
+    <ul class="points">
+      <li><b>默认规则</b>：函数内部<b>无法直接修改</b>全局变量——函数内的赋值一律创建局部变量</li>
+      <li><b>global 声明</b>：函数内写 <code>global g</code>，声明「接下来对 g 的操作针对全局变量」——之后再赋值，改的才是全局的 g</li>
+      <li><b>global 要写在赋值之前</b>：先声明、后使用，顺序反了直接语法错误</li>
+      <li><b>global 只管一个名字</b>：<code>global m</code> 只声明 m，别的变量（如 n）没声明，照样是局部</li>
+      <li><b>少用为宜</b>：global 会让函数的行为依赖外部状态、难以维护——能用参数传入、用 return 带回，就别动全局</li>
+    </ul>
+
+    <div class="vs">
+      <div class="card">
+        <h4>❌ 没有 global（6.10 的 temp1）</h4>
+        <p style="margin:0;font-size:14px">函数内 g = 102 → 函数内打印 <b>102</b>，函数外打印 <b>100</b><br>赋值只造了局部变量，全局没被碰</p>
+      </div>
+      <div class="card win">
+        <h4>✅ 有 global（本节 temp2）</h4>
+        <p style="margin:0;font-size:14px">函数内 global g; g = 102 → 函数内打印 <b>102</b>，函数外打印 <b>102</b><br>全局真的被改了</p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例 1：temp2 声明 global 后真改了全局</h2>
+    <pre class="codeblock">def temp2():
+    global g
+    g = 102
+    print(f"函数内打印全局变量g= {g}")
+
+g = 100
+temp2()
+print(f"函数外打印全局变量g= {g}")</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">函数内打印全局变量g= 102
+函数外打印全局变量g= 102</pre>
+    <ul class="points">
+      <li>和 6.10 的 temp1 对照：<b>102 / 102</b>，而不是 102 / 100——差别就在那一行 <code>global g</code></li>
+      <li><code>g = 102</code> 这次真的把全局 g 从 100 改成了 102</li>
+      <li>函数外再打印，看到的是被改过的公告栏</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>PPT 原例 2（进阶对照）：m 有 global，n 没有</h2>
+    <pre class="codeblock">m, n = 10, 20
+print(m, n)
+
+def temp3():
+    global m
+    m = 30
+    n = 60
+    print(m, n)
+
+temp3()
+print(m, n)</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">10 20
+30 60
+30 20</pre>
+    <ul class="points">
+      <li>第 1 行输出 <b>10 20</b>：调用前，全局 m=10、n=20</li>
+      <li>第 2 行输出 <b>30 60</b>：函数内，m 有 global——改的是全局，打印 30；n 没有 global——<code>n = 60</code> 是局部变量，打印 60</li>
+      <li>第 3 行输出 <b>30 20</b>：函数外，全局 m 已被改成 30；n 的 60 只活在函数里，全局 n 仍是 20</li>
+      <li>一句话：<b>global 只登记了 m，n 的赋值依旧是宿舍门上的便签</b></li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！global 只声明了 m——m 全局被改成 30；n 没声明，函数内的 n=60 是局部变量，函数外 n 仍是 20，所以输出 30 20。"
+         data-no="❌ 再看 temp3：global m 只登记了 m 一个名字。n = 60 没有声明，是宿舍门上的便签（局部变量），函数结束就没了——函数外 n 还是 20。">
+      <p style="font-weight:700;margin-bottom:12px">temp3 执行结束后（如交互示例代码），最后 <code>print(m, n)</code> 输出？</p>
+      <button class="opt" onclick="quizPick(this)">A. 30 60</button>
+      <button class="opt" onclick="quizPick(this)">B. 30 20</button>
+      <button class="opt" onclick="quizPick(this)">C. 10 20</button>
+      <button class="opt" onclick="quizPick(this)">D. 60 30</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="无法 global 局部" data-ok="✅ 全对！默认改不了全局；global 声明后才能真改；没声明的赋值只会创建局部变量。" data-no="❌ 提示：三个空依次是——函数内部默认（能/无法）直接修改全局变量、需要使用的关键字、没写该关键字时函数内赋值创建的变量类别。">
+      <p>函数内部默认<b>＿＿</b>直接修改全局变量，需要先在函数内用<b>＿＿</b>关键字声明；没有该声明时，函数内的赋值创建的是<b>＿＿</b>变量。（三空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：无法 global 局部">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>global 写在赋值后面</b>：必须先 <code>global m</code> 再 <code>m = 30</code>——先赋值再声明会直接 SyntaxError（name 'm' is assigned to before global declaration）；</p>
+      <p>②<b>以为 global 一劳永逸</b>：它只声明一个名字——temp3 里 <code>global m</code> 管不了 n，n 的赋值照样是局部的（30 20 就是这么来的）；</p>
+      <p>③<b>到处用 global</b>：函数改全局，程序状态谁也说不清、 bug 难查——优先用参数传入、return 返回，global 只在确实需要全局状态时偶尔用。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的 global 关键字。请：1）用「教务处登记才能改公告栏」的类比解释 global 的作用；2）逐行分析 temp3（global m 后 m=30、n=60）为什么函数外输出 30 20；3）出 4 道「给定含 global 的函数代码求输出」的题考我，其中至少 1 道是 global 缺失的对照题，等我答完再讲解。">
+      我刚学了 Python 的 global 关键字。请：1）用「教务处登记才能改公告栏」的类比解释 global 的作用；2）逐行分析 temp3（global m 后 m=30、n=60）为什么函数外输出 30 20；3）出 4 道「给定含 global 的函数代码求输出」的题考我，其中至少 1 道是 global 缺失的对照题，等我答完再讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试（5 分钟）</span>
+    <ol class="steps">
+      <li>把 temp2 敲进 IDLE，和 6.10 的 temp1 放在一起运行——盯住 102/100 与 102/102 的差别，就差一行 global。</li>
+      <li>把 temp3 完整敲一遍，先在纸上写出 3 行输出，再运行验证（这是本节最重要的一道对照题）。</li>
+      <li>把 temp3 里的 <code>global m</code> 删掉再运行——看看函数外变成 10 20，体会没有登记谁都改不了公告栏。</li>
+      <li>挑战：写一个计数器 <code>def counter(): global count; count += 1</code>，全局 count 从 0 开始，连续调用 3 次后在外面 print(count)——看看是不是 3。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>函数内默认无法直接修改全局变量；在函数内用 global 声明后（声明要在赋值之前），赋值才会真正改到全局变量；没声明的赋值依旧创建局部变量；global 只声明一个名字，且尽量少用。下一节：不用起名字也能定义函数——匿名函数 lambda。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="6.10.html"><span class="nav-label">← 上一节</span><span class="nav-title">6.10 变量作用域：局部与全局</span></a>
+        <a class="next" href="6.12.html"><span class="nav-label">下一节 →</span><span class="nav-title">6.12 匿名函数 lambda</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

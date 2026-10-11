@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.09 输入输出函数 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第二章 基础概念与数值 · 第 9 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch02.html">第二章 基础概念与数值</a><span class="sep">/</span>
+          <span class="current">2.09</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">09</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第二章 · 基础概念与数值</span>
+            <h1>输入输出函数</h1>
+            <p class="hero-summary">第 9 / 17 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序构成的两大核心</li>
+      <li>变量：概念与赋值</li>
+      <li>变量命名规则</li>
+      <li>数据类型总览</li>
+      <li>type() 查看类型</li>
+      <li>保留字（关键字）</li>
+      <li>函数：定义与调用</li>
+      <li>常用内置函数</li>
+      <li class="cur">输入输出函数</li>
+      <li>缩进与注释规范</li>
+      <li>数值类型总览</li>
+      <li>整数与四种进制</li>
+      <li>浮点数与精度陷阱</li>
+      <li>算术与增强赋值运算符</li>
+      <li>比较与逻辑运算符</li>
+      <li>运算符优先级</li>
+      <li>数值函数与 math 模块</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>程序与用户对话的两扇门</h2>
+    <p>之前写的程序都是「自说自话」，数据写死在代码里。想让程序<b>听用户说话</b>（输入）、再<b>把结果告诉用户</b>（输出），就要用这一节的三个内置函数：</p>
+    <ul class="points">
+      <li><b>input()</b>：从键盘读取一行，让用户「说话」</li>
+      <li><b>print()</b>：把对象输出到屏幕，让程序「回话」</li>
+      <li><b>eval()</b>：把字符串当成表达式真的执行，常用于把输入转成数值</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">快递柜、广播喇叭和纸条算式</div>
+      <p><b>input()</b> 像快递柜取件——程序<b>停下来等你</b>把东西放进去，你不放它就一直等；<b>print()</b> 像广播喇叭——把结果<b>喊出来</b>给大家听；<b>eval()</b> 像收到一张<b>写着算式的纸条</b>，你不仅读它，还真的把它拿去算出结果。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>三个函数怎么用？</h2>
+    <ul class="points">
+      <li><b>input()</b>：从键盘读取一行文本，用法为 <code>变量名 = input('提示语')</code>。<b>返回值永远是字符串类型</b>。</li>
+      <li><b>print()</b>：将对象输出到屏幕，可指定<b>分隔符</b>和<b>结束符</b>——默认分隔符为空格 <code>' '</code>，默认结束符为<b>换行符</b>。</li>
+      <li><b>eval()</b>：将字符串作为 Python <b>表达式执行</b>，常用于把输入的字符串转为数值。</li>
+    </ul>
+
+    <div class="quiz" style="margin-top:6px">
+      <p style="font-weight:700;margin-bottom:12px">🔍 三合一演示台：切换查看每个函数的代码、输出与要点</p>
+      <div class="switch">
+        <button class="on" data-pane="pane-c1">input()</button>
+        <button data-pane="pane-c2">print()</button>
+        <button data-pane="pane-c3">eval()</button>
+      </div>
+      <div class="pane on" id="pane-c1">
+        <pre class="codeblock">age = input('请输入年龄：')   <span class="good"># 输入：21</span>
+print(age)                    <span class="good"># 输出：21</span>
+print(type(age))              <span class="good"># 输出：&lt;class 'str'&gt;</span></pre>
+        <p>要点：屏幕上显示的是 21，但 <code>type()</code> 告诉你它的真身是 <b>str（字符串）</b>——input() 返回的<b>永远是字符串</b>。</p>
+      </div>
+      <div class="pane" id="pane-c2">
+        <pre class="codeblock">print(1, 2, 3)              <span class="good"># 输出：1 2 3（默认空格分隔）</span>
+print(1, 2, 3, sep='-')     <span class="good"># 输出：1-2-3（自定义分隔符）</span>
+print(1, 2, 3, sep='*', end=' ')   <span class="good"># 输出：1*2*3 然后不换行</span>
+print(4, 5, 6)              <span class="good"># 接在上面 → 1*2*3 4 5 6</span></pre>
+        <p>要点：<code>sep</code> 管<b>中间</b>用什么隔开，<code>end</code> 管<b>结尾</b>接什么——把 end 改成空格，下一条 print 就接在同一行了。</p>
+      </div>
+      <div class="pane" id="pane-c3">
+        <pre class="codeblock">result = eval(input('请输入计算表达式：'))   <span class="good"># 输入：2+3</span>
+print(result)                <span class="good"># 输出：5</span>
+print(type(result))          <span class="good"># 输出：&lt;class 'int'&gt;</span></pre>
+        <p>要点：eval() 把字符串 <code>'2+3'</code> 当成真正的表达式去算，得到整数 <code>5</code>——它是「字符串 → 数值」的常用捷径。</p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！input() 从键盘读到的永远是字符串，哪怕你输入的是数字 21，拿到的也是 '21'。"
+         data-no="❌ 不对哦。input() 的返回值永远是字符串类型——输入 21 得到的是 '21'（str），想参与算术运算必须先转换。">
+      <p style="font-weight:700;margin-bottom:12px">input() 函数的返回值类型永远是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 整数（int）</button>
+      <button class="opt" onclick="quizPick(this)">B. 字符串（str）</button>
+      <button class="opt" onclick="quizPick(this)">C. 浮点数（float）</button>
+      <button class="opt" onclick="quizPick(this)">D. 取决于用户输入的内容</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="空格换行|空格 换行|空格,换行" data-ok="✅ 正确！print() 默认用空格分隔多个对象，输出完默认换行。" data-no="❌ 再想想：print(1, 2, 3) 中间的 1 2 3 是被什么隔开的？每条 print 输出后为什么下一次打印到了新的一行？（提示：分别对应 sep 和 end 的默认值）">
+      <p>print() 的默认分隔符是<b>＿＿</b>，默认结束符是<b>＿＿</b>。（两空连填，中间用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：×× ××">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">input() 给你的「数字」其实是字符串！</div>
+      <p>你输入 <code>21</code>，input() 返回的是字符串 <code>'21'</code>，<b>不是</b>整数 21。直接拿去做算术运算，会出错或行为完全不符合预期：</p>
+      <pre class="codeblock">age = input('请输入年龄：')   <span class="bad"># 输入 21，age 是 '21'（str）</span>
+print(age * 2)                <span class="bad"># 输出 2121，而不是 42！字符串乘 2 是重复两遍</span></pre>
+      <p>正确做法：先转换再运算——用 <code>int(age)</code>、<code>float(age)</code>，（<code>eval(input())</code> 能一步到位，但它会把输入当代码执行，有安全风险，不建议使用）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的 input、print、eval 三个函数。请：1）用生活类比解释这三个函数的作用；2）演示 print 的 sep 和 end 参数分别怎么用；3）重点讲讲 input 返回字符串这个坑，演示 age=input() 后 age*2 的奇怪结果和正确转换方法；4）出 2 道单选题考我，等我作答后再公布答案。">
+      我刚学了 Python 的 input、print、eval 三个函数。请：1）用生活类比解释这三个函数的作用；2）演示 print 的 sep 和 end 参数分别怎么用；3）重点讲讲 input 返回字符串这个坑，演示 age=input() 后 age*2 的奇怪结果和正确转换方法；4）出 2 道单选题考我，等我作答后再公布答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：亲眼见证 str 的出现（4 分钟）</span>
+    <ol class="steps">
+      <li>打开命令行输入 <code>python</code> 进入交互模式。</li>
+      <li>运行 <code>age = input('请输入年龄：')</code>，输入 <code>21</code> 回车。</li>
+      <li>运行 <code>print(type(age))</code>——亲眼看到 <code>&lt;class 'str'&gt;</code>，确认输入 21 拿到的是字符串。</li>
+      <li>再运行 <code>print(age * 2)</code>，看看是不是输出了 <code>2121</code> 而不是 42。</li>
+      <li>对照实验：运行 <code>result = eval(input('请输入计算表达式：'))</code>，输入 <code>2+3</code>，然后 <code>print(result)</code> 和 <code>print(type(result))</code>——这次是货真价实的 int。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p><b>input()</b> 从键盘读一行文本，返回值永远是字符串；<b>print()</b> 把对象输出到屏幕，默认空格分隔（sep）、换行结束（end）；<b>eval()</b> 把字符串当表达式执行，常用于把输入转成数值。最大的坑：输入 21 得到的是 '21'，算术运算前必须转换。下一节：让代码更整齐的缩进与注释规范。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="2.08.html"><span class="nav-label">← 上一节</span><span class="nav-title">2.08 常用内置函数</span></a>
+        <a class="next" href="2.10.html"><span class="nav-label">下一节 →</span><span class="nav-title">2.10 缩进与注释规范</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

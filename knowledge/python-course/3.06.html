@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.06 字符串运算与内置函数 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第三章 字符串与列表 · 第 6 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch03.html">第三章 字符串与列表</a><span class="sep">/</span>
+          <span class="current">3.06</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">06</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第三章 · 字符串与列表</span>
+            <h1>字符串运算与内置函数</h1>
+            <p class="hero-summary">第 6 / 21 节 · 约 12 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>字符串基础与三种引号</li>
+      <li>转义字符</li>
+      <li>字符串索引</li>
+      <li>字符串切片</li>
+      <li>实战：身份证号提取信息</li>
+      <li class="cur">字符串运算与内置函数</li>
+      <li>大小写转换方法</li>
+      <li>计数、查找与替换</li>
+      <li>分割、联合与剔除</li>
+      <li>判断字符串类别</li>
+      <li>format 格式化输出</li>
+      <li>f-string 格式化输出</li>
+      <li>列表定义与特性</li>
+      <li>列表的创建</li>
+      <li>列表索引与切片</li>
+      <li>列表增加元素</li>
+      <li>列表删除元素</li>
+      <li>列表修改元素</li>
+      <li>列表运算与函数</li>
+      <li>列表常用方法</li>
+      <li>实战：成绩排序和统计</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>给字符串装上「四则运算」和「百宝工具箱」</h2>
+    <p>字符串不光能装文字、能按位取字符，还能<b>做运算</b>：拼接、重复、包含判断；还能调用一批<b>内置函数</b>：量长度、转类型、查编码。上一节实战里那句 <code>"男" * (int(id_c[16]) % 2)</code>，其实就是字符串乘法——本节把它正式讲透，再送你 ord / chr 这对「编码翻译官」。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">串糖葫芦、复印机和查字典</div>
+      <p><code>+</code> 像<b>串糖葫芦</b>——几颗果子一根签，首尾相连成一串；<code>*</code> 像<b>复印机按 N 份</b>——原件一份，复几分就重复几遍；<code>in</code> 像<b>查名单</b>——翻翻名单里有没有你（而且是整名连续匹配，不能拆开）。<code>ord</code> 和 <code>chr</code> 像<b>查字典的两面</b>：一面按字查页码（字符 → 编码），一面按页码查字（编码 → 字符）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>四个运算符，四个函数</h2>
+    <div class="grid g2" style="margin-top:8px">
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent)"></span>运算符表</h4>
+        <div class="desc">+ · * · in · not in —— 点击展开</div>
+        <div class="more">
+          <table>
+            <tr><th>运算符</th><th>作用</th></tr>
+            <tr><td>+</td><td>将多个字符串<b>拼接</b>形成一个字符串</td></tr>
+            <tr><td>*</td><td>生成<b>重复</b>字符串</td></tr>
+            <tr><td>in</td><td>判断目标字符串<b>是否包含</b>给定的内容</td></tr>
+            <tr><td>not in</td><td>判断目标字符串<b>是否不包含</b>给定的内容</td></tr>
+          </table>
+        </div>
+        <div class="hint">点击展开 ▾</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent2)"></span>内置函数表</h4>
+        <div class="desc">len · str · ord · chr —— 点击展开</div>
+        <div class="more">
+          <table>
+            <tr><th>函数</th><th>作用</th></tr>
+            <tr><td>len(s)</td><td>返回字符串<b>长度</b>。注意中文、英文、标点都是 1 个字符</td></tr>
+            <tr><td>str(s)</td><td>将任意类型的参数对象<b>转换成字符串</b>形式</td></tr>
+            <tr><td>ord(s)</td><td>返回参数 s 对应的 <b>Unicode 编码</b>，参数必须为<b>单个字符</b></td></tr>
+            <tr><td>chr(i)</td><td>返回整数 i 对应的<b>字符符号</b>，参数必须为<b>整数</b></td></tr>
+          </table>
+        </div>
+        <div class="hint">点击展开 ▾</div>
+      </div>
+    </div>
+
+    <p style="margin-top:16px">课堂代码逐行验证（含输出）：</p>
+    <pre class="codeblock out">print("ABC"+"DEF"+"XYZ")        # ABCDEFXYZ
+print("ABC"*3)                  # ABCABCABC
+print('AB' in  "ABC")           # True
+print('ab' not in  "ABC")       # True</pre>
+    <pre class="codeblock">print(len(""), len("英文字母包括：ABC"))        # 0 10
+print(str(510100200001010001))                  # 510100200001010001
+print(ord('+'), ord('A'), ord('a'), ord('四'), ord('川'))
+                                                # 43 65 97 22235 24029
+print(chr(42), chr(66), chr(98), chr(22234), chr(24030))
+                                                # * B b 囚 州</pre>
+    <ul class="points">
+      <li><code>len("英文字母包括：ABC")</code> 得 10：英文字母包括 6 个 + 中文冒号 1 个 + ABC 3 个——<b>每个字符都算 1</b></li>
+      <li><code>ord('ab')</code> 这类多字符参数会报错——ord 只收<b>单个字符</b></li>
+      <li>ord 和 chr 互为<b>逆运算</b>：<code>chr(ord('A'))</code> 还是 <code>'A'</code></li>
+    </ul>
+
+    <div class="switch" style="margin-top:16px">
+      <button class="on" data-pane="m1">ord：字 → 页码</button>
+      <button data-pane="m2">chr：页码 → 字</button>
+    </div>
+    <div class="pane on" id="m1">
+      <pre class="codeblock">print(ord('A'))    # 65
+print(ord('a'))    # 97
+print(ord('川'))   # 24029</pre>
+      <p class="muted" style="font-size:14px">查字典第一面：把字符翻译成它的 Unicode 编码（相当于页码）。大写 A 是 65，小写 a 是 97——正好差 32，这就是大小写转换方法的底层原理。</p>
+    </div>
+    <div class="pane" id="m2">
+      <pre class="codeblock">print(chr(65))     # A
+print(chr(22235))  # 囚
+print(chr(ord('A')))   # A —— 互逆：翻过去再翻回来</pre>
+      <p class="muted" style="font-size:14px">查字典第二面：报出页码，字典还你那个字。ord 进 chr 出，正好互相抵消——「互变魔术」成立。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="0"
+         data-ok="✅ 答对了！in 判断的是整体连续包含：ABC 里确实包含 AB，所以是 True。"
+         data-no="❌ 回想 in 的规则：判断目标字符串是否包含给定的内容，且必须连续匹配、区分大小写。ABC 里有 AB 吗？">
+      <p style="font-weight:700;margin-bottom:12px"><code>print('AB' in "ABC")</code> 的输出是？</p>
+      <button class="opt" onclick="quizPick(this)">A. True</button>
+      <button class="opt" onclick="quizPick(this)">B. False</button>
+      <button class="opt" onclick="quizPick(this)">C. 报错</button>
+      <button class="opt" onclick="quizPick(this)">D. AB</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="Unicode|unicode" data-ok="✅ 正确！ord() 返回字符的 Unicode 编码，chr() 则由编码还出字符——一对逆运算。" data-no="❌ 提示：这是国际通用的字符编码标准，A 的编码是 65，川 的编码是 24029。想想它叫什么？">
+      <p>ord() 返回字符对应的＿＿编码，chr() 是它的逆运算。（填一个英文单词）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：ASCII">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p><b>①</b> <code>ord()</code> 的参数<b>必须是单个字符</b>——<code>ord('AB')</code> 直接报 TypeError；<b>②</b> <code>len()</code> 把<b>中文、英文、标点都算 1 个字符</b>，别以为中文占几个「格」就多算；<b>③</b> <code>in</code> 是<b>整体连续匹配且区分大小写</b>：<code>'ab' in "ABC"</code> 是 False（小写的 ab 不是 ABC 的连续子串），而 <code>'ab' not in "ABC"</code> 才是 True。另外 <code>+</code> 只能字符串拼字符串，<code>"123" + 1</code> 会报错，想拼接数字得先 <code>str()</code>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 字符串运算符（+ * in not in）和内置函数（len str ord chr）。请：1）各举一个新例子说明四个运算符；2）解释 ord 和 chr 为什么互为逆运算，并用 ord 说明 A 和 a 编码相差 32；3）出 5 道「看代码猜输出」题考我（含 len 数中英文、in 的大小写陷阱），等我作答后公布答案和讲解。">
+      我刚学了 Python 字符串运算符（+ * in not in）和内置函数（len str ord chr）。请：1）各举一个新例子说明四个运算符；2）解释 ord 和 chr 为什么互为逆运算，并用 ord 说明 A 和 a 编码相差 32；3）出 5 道「看代码猜输出」题考我（含 len 数中英文、in 的大小写陷阱），等我作答后公布答案和讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：编码翻译官上岗（5 分钟）</span>
+    <ol class="steps">
+      <li>交互模式输入 <code>ord('川')</code>，看看四川的「川」编码是多少（应与课堂代码一致）。</li>
+      <li>输入 <code>chr(22235)</code>，看看这个页码对应的字。</li>
+      <li>先猜再验证：<code>chr(22234)</code> 会是什么字？（提示：22235 是川，22234 是它前一个编码）</li>
+      <li>试试 <code>ord('A') - ord('a')</code>，算出大小写之间的「距离」。</li>
+      <li>挑战：用一行 <code>chr(ord('A') + 1)</code> 得到 B，再自己造一个「编码偏移」玩法。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>四个运算符：<code>+</code> 拼接、<code>*</code> 重复、<code>in</code> / <code>not in</code> 判断包含（连续匹配、区分大小写）；四个函数：<code>len()</code> 数长度（中英文标点都算 1）、<code>str()</code> 转字符串、<code>ord()</code> 字符变 Unicode 编码（只收单字符）、<code>chr()</code> 编码变字符——两者互为逆运算。下一节：用这对编码差 32 的规律，揭秘大小写转换方法！</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="3.05.html"><span class="nav-label">← 上一节</span><span class="nav-title">3.05 实战：身份证号提取信息</span></a>
+        <a class="next" href="3.07.html"><span class="nav-label">下一节 →</span><span class="nav-title">3.07 大小写转换方法</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

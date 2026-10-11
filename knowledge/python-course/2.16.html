@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.16 运算符优先级 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第二章 基础概念与数值 · 第 16 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+/* 页面专属：优先级阶梯卡片 */
+.pri-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px}
+.pri-card .lv{display:inline-block;font-weight:800;color:var(--accent);background:var(--accent-soft);border-radius:8px;padding:2px 12px;margin-right:10px}
+.pri-card .ops{font-family:Consolas,Menlo,monospace;font-size:14px;color:#c2452d}
+.pri-card .note{font-size:13px;color:var(--ink2);margin-top:4px}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch02.html">第二章 基础概念与数值</a><span class="sep">/</span>
+          <span class="current">2.16</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">16</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第二章 · 基础概念与数值</span>
+            <h1>运算符优先级</h1>
+            <p class="hero-summary">第 16 / 17 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序构成的两大核心</li>
+      <li>变量：概念与赋值</li>
+      <li>变量命名规则</li>
+      <li>数据类型总览</li>
+      <li>type() 查看类型</li>
+      <li>保留字（关键字）</li>
+      <li>函数：定义与调用</li>
+      <li>常用内置函数</li>
+      <li>输入输出函数</li>
+      <li>缩进与注释规范</li>
+      <li>数值类型总览</li>
+      <li>整数与四种进制</li>
+      <li>浮点数与精度陷阱</li>
+      <li>算术与增强赋值运算符</li>
+      <li>比较与逻辑运算符</li>
+      <li class="cur">运算符优先级</li>
+      <li>数值函数与 math 模块</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>一个表达式里挤满运算符，谁先动手？</h2>
+    <p>在 Python 代码中，<b>不同运算符的优先程度并不相同</b>。在复杂运算表达式中，<b>优先级高的运算符先运算</b>，相同运算级别一般<b>从左向右</b>运算（幂运算 <code>**</code> 是唯一的例外，它<b>从右向左</b>结合）。搞不清这个，表达式一复杂就会算错——而且是不报错的那种错。这一节你将掌握：</p>
+    <ul class="points">
+      <li>Python 的 6 级优先级阶梯，从幂运算到赋值</li>
+      <li>怎么用小括号改变运算顺序</li>
+      <li>遇到复杂表达式，如何一步步拆解出正确结果</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">排队坐 bus：VIP 先上，括号是贵宾通道</div>
+      <p>表达式里的运算符像在排队上车：<code>**</code> 是 <b>VIP</b>，永远第一个上；<b>乘除一伙</b>（*、/、//、%）排第二；<b>加减</b>排第三；<b>比较</b>和<b>逻辑</b>运算符殿后，最后上车的是<b>赋值</b>——活都是先干完才交货的。<br>
+      而<b>小括号就像贵宾通道</b>：不管排到哪，包在括号里的运算直接插队到最前；多层括号时，<b>里层括号的内容优先计算</b>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>6 级优先级阶梯（1 最高，6 最低）</h2>
+    <div class="pri-card"><span class="lv">第 1 级</span><span class="ops">**</span><div class="note">幂运算——最优先；注意它<b>从右向左</b>结合，<code>2**3**2</code> 等于 <code>2**9</code> 等于 512</div></div>
+    <div class="pri-card"><span class="lv">第 2 级</span><span class="ops">*　/　//　%</span><div class="note">乘、除、取整、取余——同一级从左向右</div></div>
+    <div class="pri-card"><span class="lv">第 3 级</span><span class="ops">+　-</span><div class="note">加、减——比乘除低一级</div></div>
+    <div class="pri-card"><span class="lv">第 4 级</span><span class="ops">&lt;　&lt;=　&gt;　&gt;=　!=　==</span><div class="note">比较运算符——先算数，再比大小</div></div>
+    <div class="pri-card"><span class="lv">第 5 级</span><span class="ops">not　&gt;　and　&gt;　or</span><div class="note">逻辑运算符——not 最高，and 次之，or 最低</div></div>
+    <div class="pri-card"><span class="lv">第 6 级</span><span class="ops">=　+=　-=　*=　/= …</span><div class="note">赋值运算符——最后执行</div></div>
+    <p class="muted">💡 规则总结：<b>优先级高的先运算</b>；同级一般从左向右（<code>**</code> 从右向左）；<b>括号里的优先运算，多层括号先算里层</b>。本表只列最常用的六级，完整表还含一元运算符（<code>-x</code>、<code>~x</code>）、位运算符（<code>&amp;</code>、<code>|</code>、<code>^</code>、<code>&lt;&lt;</code>、<code>&gt;&gt;</code>）、成员与身份运算（<code>in</code>、<code>not in</code>、<code>is</code>、<code>is not</code>）等，用不到的级别不必背——拿不准就加括号。</p>
+  </section>
+      <section>
+    <span class="tag">实战演示</span>
+    <h2>括号怎么改写运算顺序</h2>
+    <pre class="codeblock">a, b, c, d = 10, 5, 3, 2
+print(a*b + c*d, a*(b + c)*d, a*(b + c*d))  # 输出：56 160 110</pre>
+    <ul class="points">
+      <li><code>a*b + c*d</code>：先算两个乘法 50 和 6，再相加 → <b>56</b></li>
+      <li><code>a*(b + c)*d</code>：括号强制先算 5+3=8，再 10*8*2 → <b>160</b></li>
+      <li><code>a*(b + c*d)</code>：里层括号中先算 c*d=6，再 5+6=11，再 10*11 → <b>110</b></li>
+    </ul>
+    <div class="quiz" style="margin-top:6px">
+      <p style="font-weight:700;margin-bottom:12px">🔍 推理挑战：点击切换，看看一个逻辑表达式如何被优先级「拆解」</p>
+      <div class="switch">
+        <button class="on" data-pane="pane-r1">逐步拆解 not a&gt;b or b&gt;c and d&gt;c</button>
+        <button data-pane="pane-r2">加上括号再对照</button>
+      </div>
+      <div class="pane on" id="pane-r1">
+        <pre class="codeblock">a, b, c, d = 10, 5, 3, 2
+print(not a&gt;b or b&gt;c and d&gt;c)  # 输出：False</pre>
+        <p>第一步：比较先算——<code>a&gt;b → True</code>（10&gt;5）、<code>b&gt;c → True</code>（5&gt;3）、<code>d&gt;c → False</code>（2&gt;3），式子变成 <code>not True or True and False</code>。<br>
+        第二步：not 最高——<code>not True → False</code>；然后 and——<code>True and False → False</code>，式子变成 <code>False or False</code>。<br>
+        第三步：or 最后——<code>False or False → False</code>。</p>
+      </div>
+      <div class="pane" id="pane-r2">
+        <pre class="codeblock">a, b, c, d = 10, 5, 3, 2
+print(not ((a&gt;b or b&gt;c) and d&gt;c))  # 输出：True</pre>
+        <p>加了两层括号，运算顺序被彻底重排：里层括号先算 <code>a&gt;b → True</code>、<code>b&gt;c → True</code>，or 连接得 <code>True or True → True</code>；外层括号里 <code>True and False → False</code>（d&gt;c 是 False）；最后 <code>not False → True</code>。对比左边的版本：同样的四个比较，括号一换，结果从 False 翻转为 <b>True</b>——这就是括号的力量。</p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！乘法优先于加法：2 + 3 * 2 = 2 + 6 = 8。"
+         data-no="❌ 不对哦。乘法的优先级高于加法，要先算 3 * 2 = 6，再算 2 + 6 = 8。">
+      <p style="font-weight:700;margin-bottom:12px"><code>print(2 + 3 * 2)</code> 的输出是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 10</button>
+      <button class="opt" onclick="quizPick(this)">B. 8</button>
+      <button class="opt" onclick="quizPick(this)">C. 12</button>
+      <button class="opt" onclick="quizPick(this)">D. 报错</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="括号|小括号|（）|()" data-ok="✅ 正确！括号里的优先运算，多层括号先算里层——这是改变运算顺序的法宝。" data-no="❌ 再想想：想让某个运算先算，把它包在什么符号里？（提示：数学里你也用过）">
+      <p>想改变运算顺序，可以使用<b>＿＿</b>——包在里面的运算会优先执行，多层括号则优先计算里层。</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：××">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">优先级写错不报错，只会悄悄算错</div>
+      <p>① <b>拿不准就加括号</b>——代码是写给人看的，括号不丢人。<code>a*(b + c)</code> 比 <code>a*b + a*c</code> 更容易看出「先加再乘」的意图，哪怕结果一样。</p>
+      <p>② 优先级写错<b>通常不会报错</b>，表达式照样运行，只是结果悄悄错了——这种 bug 比崩溃更危险。尤其逻辑表达式里 not、and、or 混用时，建议一律加括号标明意图。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的运算符优先级。请：1）列出从幂运算到赋值的 6 级优先级阶梯；2）演示小括号如何改变运算顺序，例如 a*b + c*d 与 a*(b + c)*d 的区别；3）逐步推导 print(not a>b or b>c and d>c)（a,b,c,d = 10,5,3,2）的每一步计算过程；4）出 2 道单选题考我，等我作答后再公布答案。">
+      我刚学了 Python 的运算符优先级。请：1）列出从幂运算到赋值的 6 级优先级阶梯；2）演示小括号如何改变运算顺序，例如 a*b + c*d 与 a*(b + c)*d 的区别；3）逐步推导 print(not a&gt;b or b&gt;c and d&gt;c)（a,b,c,d = 10,5,3,2）的每一步计算过程；4）出 2 道单选题考我，等我作答后再公布答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：亲手验证括号的力量（3 分钟）</span>
+    <ol class="steps">
+      <li>进入交互模式，先输入 <code>a, b, c, d = 10, 5, 3, 2</code> 回车。</li>
+      <li>输入 <code>print(a*b + c*d, a*(b + c)*d, a*(b + c*d))</code> 回车，对照预期输出 <code>56 160 110</code>——同一个式子，加个括号结果差这么多。</li>
+      <li>输入 <code>print(2 + 3 * 2)</code> 和 <code>print((2 + 3) * 2)</code>，对比 8 和 10。</li>
+      <li>再跑一遍 <code>print(not a&gt;b or b&gt;c and d&gt;c)</code> 和 <code>print(not ((a&gt;b or b&gt;c) and d&gt;c))</code>，看看括号如何让逻辑结果翻转。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>运算符有 6 级优先级：** 最高，乘除其次，加减再次，然后是比较、逻辑（not &gt; and &gt; or），赋值最低；同级从左向右算；<b>小括号可以改变优先级</b>，多层括号先算里层。拿不准就加括号——优先级错了不报错，只会悄悄算错。下一节（本章最后一节）：Python 自带的数学工具箱——数值函数与 math 模块。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="2.15.html"><span class="nav-label">← 上一节</span><span class="nav-title">2.15 比较与逻辑运算符</span></a>
+        <a class="next" href="2.17.html"><span class="nav-label">下一节 →</span><span class="nav-title">2.17 数值函数与 math 模块</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

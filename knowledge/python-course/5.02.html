@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.02 单分支结构 if · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第五章 程序控制 · 第 2 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.path{list-style:none;margin:8px 0;padding:0}
+.path li{padding:6px 0 6px 26px;position:relative;font-size:14px}
+.path li::before{content:"";position:absolute;left:6px;top:14px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.path li.skip::before{background:var(--border)}
+.path li.skip{color:var(--ink2);text-decoration:line-through}
+.path li.go{font-weight:700}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch05.html">第五章 程序控制</a><span class="sep">/</span>
+          <span class="current">5.02</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">02</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第五章 · 程序控制</span>
+            <h1>单分支结构 if</h1>
+            <p class="hero-summary">第 2 / 17 节 · 约 12 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序控制结构概述</li>
+      <li class="cur">单分支结构 if</li>
+      <li>双分支结构 if-else</li>
+      <li>IF 表达式</li>
+      <li>多分支结构 if-elif-else</li>
+      <li>嵌套分支结构</li>
+      <li>嵌套与多分支对比</li>
+      <li>无限循环 while</li>
+      <li>range 函数与遍历整数</li>
+      <li>遍历字符串列表元组</li>
+      <li>遍历字典</li>
+      <li>循环控制 break 与 continue</li>
+      <li>循环嵌套</li>
+      <li>常见语法错误</li>
+      <li>常见运行异常</li>
+      <li>异常处理语句</li>
+      <li>综合实战：古算题与成绩单</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>让程序「看情况办事」——选择结构的第一步</h2>
+    <p>到目前为止，我们的程序都是「一条道走到黑」。但现实问题常常要<b>看情况</b>：成绩大于 90 才夸你，输入的数对了才说恭喜。<b>单分支 if</b> 是最基本的选择结构——根据条件判断<b>是否执行</b>某段代码：条件为真就做，为假就跳过。它靠的是第二章 2.15 讲的比较与逻辑运算符产生的<b>布尔值</b>。本章作业第 1、2 题就从这里开始。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">单分支 if 像「安检门」</div>
+      <p>你推着行李过安检：有违禁品（<b>条件为真</b>）才被拦下来说话，没违禁品（<b>条件为假</b>）直接通过，什么都不发生。连续写两个 if，就是<b>连过好几道安检门</b>——每道门<b>独立判断</b>，这道门拦不拦你，跟下一道门毫无关系。门后的话（代码块）只有被拦下才执行；走完了门（if 语句结束），后面的路照常走。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>if 语法与四条注意事项</h2>
+    <pre class="codeblock">if &lt;条件&gt;:
+    &lt;代码块_真&gt;    # 缩进（惯例是 4 个空格）</pre>
+    <ul class="points">
+      <li><b>if 是表示分支结构的关键字</b>（2.06 讲过的保留字之一）</li>
+      <li><b>条件</b>是用于产生一个为 True 或者 False（<b>布尔值</b>）的表达式——正是 2.15 的比较与逻辑运算符干的活；结果为真则执行代码块，为假则跳过；表达式支持<b>多个条件并列</b>（用 and、or 连接）</li>
+      <li><b>: 冒号是语法格式的要求，必须要有</b>——漏了直接 SyntaxError</li>
+      <li><b>冒号下一行的缩进也是语法格式的要求</b>；<b>缩进取消，代表 if 语句结束</b></li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>示例 01：两个独立的 if 判断成绩</h2>
+    <pre class="codeblock">score = float(input("请您输入一个成绩："))
+if score &gt; 90:
+    print("成绩不错！")
+if score &lt; 80:
+    print("还需继续努力！")
+print("欢迎下次查询")</pre>
+    <ul class="points">
+      <li>输入 <b>90</b>：90 &gt; 90 为假、90 &lt; 80 为假——两个 if 都跳过，只输出「欢迎下次查询」</li>
+      <li>输入 <b>70</b>：70 &lt; 80 为真——输出「还需继续努力！」，然后照常输出「欢迎下次查询」</li>
+      <li>两个 if 是<b>独立的两道门</b>：条件可以同时不满足，也可以恰好一个满足，互不影响</li>
+      <li>最后一行 print 没有缩进——它不在任何 if 里，所以<b>永远执行</b></li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>切换输入，看清哪些 print 被跳过</h2>
+    <div class="switch">
+      <button class="on" data-pane="p90">输入 90</button>
+      <button data-pane="p70">输入 70</button>
+    </div>
+    <div class="pane on" id="p90">
+      <ul class="path">
+        <li class="skip">if score &gt; 90:　→　90 &gt; 90 是 <b>False</b>　→　跳过「成绩不错！」</li>
+        <li class="skip">if score &lt; 80:　→　90 &lt; 80 是 <b>False</b>　→　跳过「还需继续努力！」</li>
+        <li class="go">print("欢迎下次查询")　→　不在任何 if 里，照常执行</li>
+      </ul>
+      <pre class="codeblock">运行输出：
+欢迎下次查询</pre>
+    </div>
+    <div class="pane" id="p70">
+      <ul class="path">
+        <li class="skip">if score &gt; 90:　→　70 &gt; 90 是 <b>False</b>　→　跳过「成绩不错！」</li>
+        <li class="go">if score &lt; 80:　→　70 &lt; 80 是 <b>True</b>　→　执行「还需继续努力！」</li>
+        <li class="go">print("欢迎下次查询")　→　照常执行</li>
+      </ul>
+      <pre class="codeblock">运行输出：
+还需继续努力！
+欢迎下次查询</pre>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>示例 02：物不知数——三个条件 and 并列</h2>
+    <p>《孙子算经》里有道名题：「今有物不知其数，<b>三三数之剩二，五五数之剩三，七七数之剩二</b>，问几何？」——一个数除以 3 余 2、除以 5 余 3、除以 7 余 2，它是多少？用取余运算（2.14）加逻辑运算符 and（2.15）就能让计算机帮我们验证：</p>
+    <pre class="codeblock">num = eval(input("请您猜一个数吧！"))
+if num % 3 == 2 and num % 5 == 3 and num % 7 == 2:
+    print(f"您输入的数字是{num}，恭喜你答对了！")
+print("欢迎再猜一次")</pre>
+    <ul class="points">
+      <li>三个条件用 <b>and 并列</b>：必须<b>全部为真</b>，整个条件才是 True</li>
+      <li>验证 <b>23</b>：23 % 3 == 2 ✓、23 % 5 == 3 ✓、23 % 7 == 2 ✓——答对！输出「您输入的数字是23，恭喜你答对了！」</li>
+      <li>换成其他数，只要有一个余数不满足，and 结果就是 False，if 里的 print 被跳过，只输出「欢迎再猜一次」</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！if 的条件表达式结果必须是布尔值 True 或 False——为真执行、为假跳过。"
+         data-no="❌ 注意：if 后面的条件是一个表达式，它的运算结果类型是布尔值（True / False），这正是 2.15 比较与逻辑运算的产物。">
+      <p style="font-weight:700;margin-bottom:12px">if 语句中，条件表达式的结果是什么类型？</p>
+      <button class="opt" onclick="quizPick(this)">A. 只能是比较两个数的大小</button>
+      <button class="opt" onclick="quizPick(this)">B. 布尔值（True 或 False）</button>
+      <button class="opt" onclick="quizPick(this)">C. 必须是整数</button>
+      <button class="opt" onclick="quizPick(this)">D. 必须是字符串</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="缩进结束" data-ok="✅ 正确！冒号下一行的缩进是语法格式的要求；缩进取消，代表 if 语句结束。" data-no="❌ 回忆语法注意事项：冒号下一行靠什么来表示「这几行属于 if」？反过来，if 语句到什么时候算结束？（两空连填）">
+      <p>冒号下一行的<b>＿＿</b>是语法格式的要求，缩进取消代表 if 语句<b>＿＿</b>。（两空连填）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：甲乙">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">四个高频翻车点</div>
+      <p>①<b>漏冒号、漏缩进都是语法错误</b>——<code>if score &gt; 90</code> 后面少了 <code>:</code>，或者冒号下一行顶格写，都会报 SyntaxError（详见 5.14）；</p>
+      <p>②<b>边界差异</b>——<code>score &gt; 90</code> 在输入 90 时不成立，<code>score &gt;= 90</code> 在输入 90 时成立。一字之差，结果完全不同，写条件前先想清楚边界算不算；</p>
+      <p>③<b>= 与 == 写混</b>——条件里要判断相等必须用 <code>==</code>（比较运算），写成一个 <code>=</code> 就成了赋值，直接语法错误；</p>
+      <p>④<b>别把 if 里的缩进当可选</b>——缩进多少行，哪些行就属于这个 if；缩进一取消，if 就结束了。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的单分支结构 if。请：1）用「安检门」类比解释 if 的执行流程，并强调缩进与冒号的语法地位；2）出 5 道「给出变量值和 if 条件，判断哪些 print 会被执行」的小题考我；3）讲讲《孙子算经》物不知数问题：为什么用 num % 3 == 2 and num % 5 == 3 and num % 7 == 2 能验证答案，并列举 23 之后的下一个解。">
+      我刚学了 Python 的单分支结构 if。请：1）用「安检门」类比解释 if 的执行流程，并强调缩进与冒号的语法地位；2）出 5 道「给出变量值和 if 条件，判断哪些 print 会被执行」的小题考我；3）讲讲《孙子算经》物不知数问题：为什么用 num % 3 == 2 and num % 5 == 3 and num % 7 == 2 能验证答案，并列举 23 之后的下一个解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：亲手解开千年古算题（5 分钟）</span>
+    <ol class="steps">
+      <li>把示例 02 敲进 IDLE 跑一遍，输入 <b>23</b>——看看程序怎么对你说「恭喜你答对了！」。</li>
+      <li>再试试 <b>128</b>、<b>233</b>——它们也满足三个余数条件！符合条件的数还有无穷多个：23、128、233……每隔 105 出现一个。这类题在民间叫「<b>韩信点兵</b>」。</li>
+      <li>把示例 01 跑三遍，分别输入 95、90、70，对照输出，体会两个 if 各自独立判断。</li>
+      <li>挑战：把示例 01 里的 <code>&gt; 90</code> 改成 <code>&gt;= 90</code>，再输入 90，看看输出有什么不同。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>单分支 if 是最基本的选择结构：条件表达式产生<b>布尔值</b>（呼应 2.15），为真执行代码块、为假跳过；if 后必须有<b>冒号</b>，冒号下一行必须有<b>缩进</b>，缩进取消即 if 结束；多个条件可以用 and、or 并列。条件为假时「什么都不做」——想让程序「走另一条路」，就要用下一节的双分支结构 if-else。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="5.01.html"><span class="nav-label">← 上一节</span><span class="nav-title">5.01 程序控制结构概述</span></a>
+        <a class="next" href="5.03.html"><span class="nav-label">下一节 →</span><span class="nav-title">5.03 双分支结构 if-else</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

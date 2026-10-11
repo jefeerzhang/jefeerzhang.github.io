@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.03 元组索引与切片 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第四章 元组、集合和字典 · 第 3 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.play{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.pane p{font-size:14px;color:var(--ink2)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch04.html">第四章 元组、集合和字典</a><span class="sep">/</span>
+          <span class="current">4.03</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">03</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第四章 · 元组、集合和字典</span>
+            <h1>元组索引与切片</h1>
+            <p class="hero-summary">第 3 / 21 节 · 约 8 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>元组的定义与特性</li>
+      <li>元组的创建</li>
+      <li class="cur">元组索引与切片</li>
+      <li>元组运算</li>
+      <li>元组函数与方法</li>
+      <li>元组的不可变性</li>
+      <li>集合的定义与特性</li>
+      <li>集合的创建</li>
+      <li>集合运算：交差并补</li>
+      <li>集合操作：增删元素</li>
+      <li>集合运算并更新</li>
+      <li>集合函数与判断方法</li>
+      <li>序列与映射</li>
+      <li>字典的定义与特性</li>
+      <li>字典的创建</li>
+      <li>字典访问与三视图</li>
+      <li>字典添加与修改</li>
+      <li>字典删除</li>
+      <li>字典其他操作</li>
+      <li>组合数据类型总结</li>
+      <li>数据类型转换</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>学过列表？那这节你等于已经会了</h2>
+    <p>元组也属于<b>有序序列</b>，因此可以通过序号进行索引和切片，<b>索引和切片各参数的含义与列表完全一致</b>：正向从 0 起、反向从 -1 起、切片左闭右开、负步长反向跳。这一节是「复习课 + 一个新坑」——新坑只有一个：切片取出来的东西类型仍是元组，而且取出来之后不许改。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">一套座位表规则，三种序列通吃</div>
+      <p>把元组、列表、字符串想成三个剧场：舞台材质不同（一个不可改、一个随便改、一个只能放字符），但<b>座位编号规则完全一样</b>——第一排是 0 号（正向），最后一排是 -1 号（反向），切票永远是「含起点、不含终点」（左闭右开）。你学过一次，三种序列通吃。这就是序列类型统一设计的妙处：规则不增加，只换数据。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>索引取单个，切片取一段</h2>
+    <ul class="points">
+      <li><b>索引取单个元素</b>：<code>TP5[0]</code> 取第一个、<code>TP5[-1]</code> 取最后一个，返回值就是那个元素本身</li>
+      <li><b>切片取一段，结果仍是元组</b>：<code>TP5[1:3]</code> 得到 (1, 5)——哪怕只切出 1 个元素，类型也是元组</li>
+      <li><b>步长可正可负</b>：<code>TP5[::-2]</code> 表示从尾部反向、每隔 1 个取一个；<code>TP5[::-1]</code> 是经典的整体逆序写法</li>
+      <li>语法都是 <code>[start:stop:step]</code>，左闭右开——与字符串、列表一字不差</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>🔬 先猜再看：索引 / 切片双档位</h2>
+    <div class="play">
+      <p style="font-weight:700;margin-bottom:8px">TP5 = (2, 1, 5, 3, 4)</p>
+      <div class="switch">
+        <button class="on" data-pane="p-idx">索引档</button>
+        <button data-pane="p-slice">切片档</button>
+      </div>
+      <div class="pane on" id="p-idx">
+        <p>先猜 <code>TP5[0]</code> 和 <code>TP5[-1]</code> 的结果，再点击这里对照——</p>
+        <pre class="codeblock">print(TP5[0], TP5[-1])</pre>
+        <p>输出：</p>
+        <pre class="codeblock out">2 4</pre>
+        <p>解读：正向 0 起、反向 -1 起，索引取到的是<b>单个元素</b>：2 和 4。</p>
+      </div>
+      <div class="pane" id="p-slice">
+        <p>先猜 <code>TP5[-3:-1]</code> 和 <code>TP5[::-2]</code> 的结果，再点击这里对照——</p>
+        <pre class="codeblock">print(TP5[-3:-1], TP5[::-2])</pre>
+        <p>输出：</p>
+        <pre class="codeblock out">(5, 3) (4, 5, 2)</pre>
+        <p>解读：-3:-1 取倒数第 3、第 2 个元素（左闭右开，不含 -1 位的 4）；[::-2] 从末尾倒着每 2 步取 1 个。结果都是<b>元组</b>。</p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：三行代码覆盖全部考点</h2>
+    <pre class="codeblock">TP5 = (2, 1, 5, 3, 4)
+print(TP5[0], TP5[-1])
+print(TP5[-3:-1], TP5[::-2])</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">2 4
+(5, 3) (4, 5, 2)</pre>
+    <ul class="points">
+      <li>第一行考索引：正向 0 与反向 -1</li>
+      <li>第二行考切片：负区间 -3:-1 与负步长 ::-2，两个结果 (5, 3) 和 (4, 5, 2) 都是元组</li>
+      <li>[::-2] 逐步拆解：从下标 4 取 4 → 下标 2 取 5 → 下标 0 取 2，得 (4, 5, 2)</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！负步长从末尾往前跳：依次取下标 4、2、0 上的元素 4、5、2，结果是 (4, 5, 2)。"
+         data-no="❌ 注意负步长是「从末尾往前」跳：先取最后的 4，再隔位取 5、2——即 (4, 5, 2)，方向别搞反。">
+      <p style="font-weight:700;margin-bottom:12px">TP5 = (2, 1, 5, 3, 4)，<code>TP5[::-2]</code> 的结果是？</p>
+      <button class="opt" onclick="quizPick(this)">A. (2, 5, 4)</button>
+      <button class="opt" onclick="quizPick(this)">B. (4, 5, 2)</button>
+      <button class="opt" onclick="quizPick(this)">C. (4, 3, 1)</button>
+      <button class="opt" onclick="quizPick(this)">D. (2, 1, 5)</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="元组|tuple"
+         data-ok="✅ 正确！切片切出的永远是一段元组，哪怕只有一个元素也是元组。"
+         data-no="❌ 再想想：TP5[1:3] 得到 (1, 5)——带括号的一小段，它的类型是什么？">
+      <p>元组切片取出的结果类型仍是____。</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：元组或tuple">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">切片≠单个元素；修改元组会当场翻车</div>
+      <p>第一坑：切片结果的<b>类型是元组</b>，不是单个元素。<code>TP5[1:3]</code> 得到 <code>(1, 5)</code>，而 <code>TP5[1]</code> 才是单个的 1。考试问「TP5[1:3] 的类型」，答案永远是元组。</p>
+      <p>第二坑：对元组做「修改式」操作会直接报错——<code>tp[0] = 9</code> 报 <code>TypeError: 'tuple' object does not support item assignment</code>。这是元组与列表的本质区别：列表随便改，元组碰都不能碰（真正的原理 4.06 揭晓）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 元组的索引与切片：规则与列表一致（正向 0 起、反向 -1 起、切片左闭右开、负步长反向），切片结果仍是元组，且元组元素不可修改。请：1）以 tp=(10,20,30,40,50) 为例出 6 道「写结果」题，要包含负索引、负步长和普通切片；2）解释 tp[1:3] 和 tp[1] 的区别；3）告诉我对元组执行 tp[0]=9 会发生什么、为什么。">
+      我刚学了 Python 元组的索引与切片：规则与列表一致（正向 0 起、反向 -1 起、切片左闭右开、负步长反向），切片结果仍是元组，且元组元素不可修改。请：1）以 tp=(10,20,30,40,50) 为例出 6 道「写结果」题，要包含负索引、负步长和普通切片；2）解释 tp[1:3] 和 tp[1] 的区别；3）告诉我对元组执行 tp[0]=9 会发生什么、为什么。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：跑代码 + 主动踩坑（5 分钟）</span>
+    <ol class="steps">
+      <li>把 <code>TP5 = (2, 1, 5, 3, 4)</code> 和课堂代码两行 print 抄进交互模式运行，核对输出。</li>
+      <li>试 <code>TP5[0] = 9</code>——看报的是不是 TypeError，把错误信息读一遍。</li>
+      <li>试 <code>TP5[::-1]</code>——经典整体逆序，结果应为 (4, 3, 5, 1, 2)。</li>
+      <li>试 <code>TP5[1:2]</code>——只有一个元素，但类型仍是元组 (1,)，正好呼应上一节的逗号身份证。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>元组与列表共用同一套索引切片规则（正向 0 起、反向 -1 起、左闭右开、负步长反向）；<b>索引取单个元素，切片取出的仍是元组</b>；元组元素不可修改，赋值会报 TypeError。下一节：元组的运算——拼接、重复与点名。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="4.02.html"><span class="nav-label">← 上一节</span><span class="nav-title">4.02 元组的创建</span></a>
+        <a class="next" href="4.04.html"><span class="nav-label">下一节 →</span><span class="nav-title">4.04 元组运算</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

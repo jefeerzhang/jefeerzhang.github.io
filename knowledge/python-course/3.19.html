@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.19 列表运算与函数 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第三章 字符串与列表 · 第 19 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.step-out{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;
+  padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:14px;margin-top:10px}
+.step-out b{color:var(--accent)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch03.html">第三章 字符串与列表</a><span class="sep">/</span>
+          <span class="current">3.19</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">19</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第三章 · 字符串与列表</span>
+            <h1>列表运算与函数</h1>
+            <p class="hero-summary">第 19 / 21 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>字符串基础与三种引号</li>
+      <li>转义字符</li>
+      <li>字符串索引</li>
+      <li>字符串切片</li>
+      <li>实战：身份证号提取信息</li>
+      <li>字符串运算与内置函数</li>
+      <li>大小写转换方法</li>
+      <li>计数、查找与替换</li>
+      <li>分割、联合与剔除</li>
+      <li>判断字符串类别</li>
+      <li>format 格式化输出</li>
+      <li>f-string 格式化输出</li>
+      <li>列表定义与特性</li>
+      <li>列表的创建</li>
+      <li>列表索引与切片</li>
+      <li>列表增加元素</li>
+      <li>列表删除元素</li>
+      <li>列表修改元素</li>
+      <li class="cur">列表运算与函数</li>
+      <li>列表常用方法</li>
+      <li>实战：成绩排序和统计</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>不循环，也能对整个列表「算总账」</h2>
+    <p>想知道两个班级合并的名单？想把一份模板重复三遍？想知道全班最高分、总分、有没有人缺考？这些需求都不用写循环——Python 给列表准备了 <b>4 个运算符</b>和 <b>4 个内置函数</b>，一行搞定。它们也是下一节实战「成绩排序和统计」的主角，务必练熟。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">合并班级、复印名单、点名查人</div>
+      <p><code>+</code> 像「<b>两个班合并成大班</b>」——产生一个新班级，原来两个班原封不动；<code>*</code> 像「<b>把名单复印 N 份</b>」；<code>in</code> 像「<b>点名</b>」——喊到名字答「到」（True），没喊到就没声（False）。而 len/max/min/sum 像体检四件套：<b>数人数、量最高、量最矮、称总重</b>，一次体检全知道。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>4 个运算符 + 4 个内置函数</h2>
+    <p>点击下面的卡片，展开每张「速查表」：</p>
+    <div class="grid g2">
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent)"></span>运算符篇（+　*　in　not in）</h4>
+        <div class="desc">拼接、重复、判断成员是否存在</div>
+        <div class="more">
+          <table>
+            <tr><th>写法</th><th>作用</th></tr>
+            <tr><td>ls1 + ls2</td><td>将两个列表相加形成<b>新列表</b></td></tr>
+            <tr><td>ls * N</td><td>列表重复 N 遍形成<b>新列表</b></td></tr>
+            <tr><td>x in ls</td><td>判断元素 x 是否在列表内，返回 True/False</td></tr>
+            <tr><td>x not in ls</td><td>判断元素 x 是否<b>不在</b>列表内，返回 True/False</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent2)"></span>函数篇（len　max　min　sum）</h4>
+        <div class="desc">长度、最大、最小、求和</div>
+        <div class="more">
+          <table>
+            <tr><th>写法</th><th>作用</th></tr>
+            <tr><td>len(ls)</td><td>求长度，返回元素数量</td></tr>
+            <tr><td>max(ls)</td><td>求最大值（元素之间必须能互相比较，数字与字符串混放会报 TypeError）</td></tr>
+            <tr><td>min(ls)</td><td>求最小值（元素之间必须能互相比较，数字与字符串混放会报 TypeError）</td></tr>
+            <tr><td>sum(ls)</td><td>求和（<b>全为数字</b>才能求和）</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="play-out" style="margin-top:16px">
+      <p style="font-weight:700;margin-bottom:10px">🔬 试试看：in 的细节——先猜再切</p>
+      <div class="switch">
+        <button class="on" data-pane="p19-a">1 in [1, 2]？</button>
+        <button data-pane="p19-b">「2」in [1, 2]？</button>
+      </div>
+      <div class="pane on" id="p19-a">
+        <div class="step-out">print(1 in [1, 2])　→　<b>True</b><br><span style="color:#5b6472"># 数字 1 确实在列表里</span></div>
+      </div>
+      <div class="pane" id="p19-b">
+        <div class="step-out">print('2' in [1, 2])　→　<b>False</b><br><span style="color:#5b6472"># 类型也要匹配！字符串 '2' 不等于数字 2</span></div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：八行全跑一遍</h2>
+    <pre class="codeblock">print([1, 2]*3)              <span class="good"># [1, 2, 1, 2, 1, 2]</span>
+print([1, 2] + ['5', '6'])   <span class="good"># [1, 2, '5', '6']</span>
+print(1 in [1, 2])           <span class="good"># True</span>
+print('2' not in [1, 2])     <span class="good"># True（'2' 确实不在）</span>
+print(len([4, 5, 1, 3, 2]))  <span class="good"># 5</span>
+print(max([4, 5, 1, 3, 2]))  <span class="good"># 5</span>
+print(min([4, 5, 1, 3, 2]))  <span class="good"># 1</span>
+print(sum([4, 5, 1, 3, 2]))  <span class="good"># 15</span></pre>
+    <ul class="points">
+      <li>注意第 2 行：数字和字符串可以<b>共存</b>于一个列表，+ 只是照单全收</li>
+      <li>第 4 行：<code>not in</code> 是 in 的反面——'2' 不在 [1, 2] 里，所以返回 True</li>
+      <li>四个函数都不改变原列表，只「看」不「动」</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！in 不只看「长得像」，还要类型匹配——字符串 '2' 与数字 2 是两个不同的值，所以返回 False。"
+         data-no="❌ 再想想：列表里装的是数字 1 和 2，而 '2' 是带引号的字符串——类型不同就不算「在」，结果为 False。">
+      <p style="font-weight:700;margin-bottom:12px"><code>print('2' in [1, 2])</code> 的输出是？</p>
+      <button class="opt" onclick="quizPick(this)">A. True</button>
+      <button class="opt" onclick="quizPick(this)">B. False</button>
+      <button class="opt" onclick="quizPick(this)">C. '2'</button>
+      <button class="opt" onclick="quizPick(this)">D. 程序报错</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="全为数字|都是数字|全是数字" data-ok="✅ 正确！sum() 要求列表中的元素全为数字才能求和，混入字符串就会报 TypeError。" data-no="❌ 再想想：sum 是「称总重」，如果队列里混进了不能称重的东西会怎样？回想避坑部分。（如：全为数字）">
+      <p>sum() 要求列表中的元素＿＿才能求和。</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：都是……">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个最常见的 TypeError 现场</div>
+      <p><b>坑一：max/min 要求元素类型可比较。</b><code>max([1, 'a'])</code> 直接报 <code>TypeError</code>——数字和字符串没法比大小，混合类型列表先想清楚再求极值。</p>
+      <p><b>坑二：sum 要求全为数字。</b><code>sum([1, 2, '3'])</code> 报错——'3' 是字符串，加不动。</p>
+      <p><b>坑三：+ 两边都必须是列表。</b><code>[1, 2] + 3</code> 报错！想追加元素要写成 <code>[1, 2] + [3]</code>，或者用下一节之前学过的 append。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 列表的运算符（+ * in not in）和内置函数（len max min sum）。请：1）出 5 道求值题，包含列表拼接、重复、in 判断（含一道类型不匹配的陷阱题）；2）出 2 道「为什么会报 TypeError」的纠错题（如 max 混类型、sum 混字符串）；3）等我作答后公布答案并逐题讲解。">
+      我刚学了 Python 列表的运算符（+ * in not in）和内置函数（len max min sum）。请：1）出 5 道求值题，包含列表拼接、重复、in 判断（含一道类型不匹配的陷阱题）；2）出 2 道「为什么会报 TypeError」的纠错题（如 max 混类型、sum 混字符串）；3）等我作答后公布答案并逐题讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：跑一跑，再踩个坑（4 分钟）</span>
+    <ol class="steps">
+      <li>运行 <code>print([1, 2]*3)</code> 和 <code>print([1, 2] + ['5', '6'])</code>，对照 PPT 输出确认理解。</li>
+      <li>故意踩坑：输入 <code>max([1, 'a'])</code>——看看报的是什么错？把错误类型记在笔记里。</li>
+      <li>再试试 <code>[1, 2] + 3</code> 会怎样？怎么改才能不报错？</li>
+      <li>挑战：用一行代码求 <code>[4, 5, 1, 3, 2]</code> 的平均值（提示：sum ÷ len）。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p><code>+</code> 拼接、<code>*</code> 重复都生成<b>新列表</b>，原列表不动；<code>in / not in</code> 判断成员且<b>类型要匹配</b>。len 求长度、max/min 求极值（类型须可比较）、sum 求和（须全为数字）。下一节：列表的五个常用方法，其中 sort 是重中之重。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="3.18.html"><span class="nav-label">← 上一节</span><span class="nav-title">3.18 列表修改元素</span></a>
+        <a class="next" href="3.20.html"><span class="nav-label">下一节 →</span><span class="nav-title">3.20 列表常用方法</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

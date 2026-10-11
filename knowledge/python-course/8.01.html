@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8.01 编程的两种范式 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第八章 面向对象编程 · 第 1 / 12 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch08.html">第八章 面向对象编程</a><span class="sep">/</span>
+          <span class="current">8.01</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">01</span>
+            <span class="lesson-hero-num-total">/ 12</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第八章 · 面向对象编程</span>
+            <h1>编程的两种范式</h1>
+            <p class="hero-summary">第 1 / 12 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 12 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li class="cur">编程的两种范式</li>
+      <li>面向对象的三大特性</li>
+      <li>四个核心概念：类·对象·属性·方法</li>
+      <li>创建类：class·__init__·self</li>
+      <li>创建对象与访问成员</li>
+      <li>实例属性与类属性</li>
+      <li>三种方法：实例·类·静态</li>
+      <li>封装与私有属性</li>
+      <li>继承与 super()</li>
+      <li>多重继承</li>
+      <li>多态与方法重写</li>
+      <li>综合案例：商品库存管理</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>前面七章我们一直在用一种「老方法」写程序</h2>
+    <p>回想一下：从第一章到第七章，我们写的所有程序——先输入、再判断、再循环、最后输出——都是<b>把任务拆成一步一步的函数依次执行</b>。这种方式叫<b>面向过程编程</b>。它很直观，小问题随手就能写；但当程序变大、数据越来越多时，「一堆函数 + 一堆散装变量」就会越来越难管理。</p>
+    <p>本章要学的<b>面向对象编程</b>是另一种组织代码的思路：先把「数据」和「操作数据的函数」打包成一个<b>对象</b>，再让对象之间协作完成任务。它是现代软件的主流写法，也是读懂别人代码、继续深入 Python 的必修课。本章是<b>扩展章</b>，重在理解思路，跟着「试一试」练手即可。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">同一道番茄炒蛋，两种做饭哲学</div>
+      <p><b>面向过程</b>像照着菜谱自己掌勺：洗番茄 → 打鸡蛋 → 热锅倒油 → 炒蛋盛出 → 炒番茄 → 混合调味 → 装盘——一步接一步，步骤清晰，全程靠你自己执行。</p>
+      <p><b>面向对象</b>像当一回「指挥家」：厨师对象有<b>会炒菜的方法</b>，番茄、鸡蛋是食材对象各有自己的<b>属性</b>（新鲜度、数量），锅和铲子是厨具对象负责受热和翻炒——你只需要让这些对象<b>各司其职、相互配合</b>，菜就做出来了。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>两种范式到底差在哪</h2>
+    <ul class="points">
+      <li><b>面向过程编程（POP，Procedure Oriented Programming）</b>：以<b>解决问题的步骤</b>为核心，将程序分解为一组有序的函数（或过程）依次执行</li>
+      <li><b>面向对象编程（OOP，Object Oriented Programming）</b>：以<b>现实世界中的对象</b>为核心，将数据和操作封装在一起，通过对象之间的交互完成任务</li>
+      <li><b>没有优劣之分</b>：简单脚本用面向过程更快，大型系统用面向对象更好维护——工程师根据场景选择</li>
+      <li><b>面向对象不是抛弃函数</b>：方法本质还是函数，只是被装进了对象里</li>
+    </ul>
+    <table>
+      <tr><th>对比维度</th><th>面向过程 POP</th><th>面向对象 OOP</th></tr>
+      <tr><td>核心</td><td>解决问题的步骤</td><td>现实世界中的对象</td></tr>
+      <tr><td>组织方式</td><td>函数按顺序依次执行</td><td>数据 + 操作封装进对象，对象协作</td></tr>
+      <tr><td>思维习惯</td><td>「怎么做」——一步步来</td><td>「谁来做」——找对对象</td></tr>
+      <tr><td>本课程进度</td><td>前七章的全部内容</td><td>本章开始学习</td></tr>
+    </table>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>同一件事：「判断成绩并输出结果」的两种写法</h2>
+    <p class="muted">点下面的按钮切换对比——任务完全相同，组织代码的方式完全不同。</p>
+    <div>
+      <div class="switch">
+        <button class="on" data-pane="pane-pop">面向过程版</button>
+        <button data-pane="pane-oop">面向对象版</button>
+      </div>
+      <div class="pane on" id="pane-pop">
+        <pre class="codeblock"># 面向过程：把任务拆成一步接一步的函数
+def input_score():                     # 第 1 步：输入
+    return int(input('请输入成绩：'))
+
+def check(score):                      # 第 2 步：判断
+    return score &gt;= 60
+
+def show(score, ok):                   # 第 3 步：输出
+    if ok:
+        print(f'{score}分，及格！')
+    else:
+        print(f'{score}分，不及格。')
+
+score = input_score()    # 主线：函数按顺序排队执行
+result = check(score)
+show(score, result)</pre>
+        <ul class="points">
+          <li>数据和函数是<b>分开</b>的：score 是散装变量，check、show 是散装函数</li>
+          <li>执行主线清清楚楚：第 1 步输入 → 第 2 步判断 → 第 3 步输出</li>
+        </ul>
+      </div>
+      <div class="pane" id="pane-oop">
+        <pre class="codeblock"># 面向对象：把数据和操作装进一个「学生」对象
+class Student:
+    def __init__(self, name, score):   # 初始化：把数据装进对象
+        self.name = name
+        self.score = score
+
+    def show(self):                    # 判断 + 输出都是对象自己的行为
+        if self.score &gt;= 60:
+            print(f'{self.name}：{self.score}分，及格！')
+        else:
+            print(f'{self.name}：{self.score}分，不及格。')
+
+s = Student('小明', 87)   # 造一个学生对象（下一节起细讲）
+s.show()                  # 让对象自己干活，主程序只剩两行</pre>
+        <ul class="points">
+          <li>数据（name、score）和操作（show）被<b>封装</b>在同一个类里</li>
+          <li>主程序不再「一步步指挥」，而是「找对对象、让它干活」——s.show() 一行搞定</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！OOP 的核心就是把数据和操作封装在一起，让对象之间交互完成任务——这正是它与 POP「步骤驱动」的本质区别。"
+         data-no="❌ 回顾一下对比表：A 错在两种范式没有优劣；B 错在那是面向过程；D 错在前七章写的全是面向过程。C 才是面向对象的准确描述。">
+      <p style="font-weight:700;margin-bottom:12px">关于两种编程范式，下列说法<b>正确</b>的是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 面向对象比面向过程先进，以后应完全淘汰面向过程</button>
+      <button class="opt" onclick="quizPick(this)">B. 面向过程以现实世界中的对象为核心组织代码</button>
+      <button class="opt" onclick="quizPick(this)">C. 面向对象把数据和操作封装在一起，通过对象之间的交互完成任务</button>
+      <button class="opt" onclick="quizPick(this)">D. 前面七章我们写的程序其实就是面向对象</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="步骤 对象" data-ok="✅ 全对！面向过程以解决问题的步骤为核心，面向对象以现实世界中的对象为核心。" data-no="❌ 提示：第一空——面向过程把程序分解为一组有序的函数，它以解决问题的＿＿为核心；第二空——面向对象以现实世界中的＿＿为核心。（两空用空格隔开）">
+      <p>面向过程编程（POP）以解决问题的<b>＿＿</b>为核心；面向对象编程（OOP）以现实世界中的<b>＿＿</b>为核心。（两空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：步骤 对象">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个初学误区</div>
+      <p>①<b>以为面向对象「更高级」就全盘取代面向过程</b>：写个小脚本算个平均分，面向过程三行搞定，硬套类反而累赘——工具要看场合；</p>
+      <p>②<b>以为学了面向对象函数就没用了</b>：方法（method）本质就是定义在类里的函数，前七章的函数功底恰恰是本章的地基；</p>
+      <p>③<b>把「范式」和「语法」混为一谈</b>：范式是组织代码的<b>思路</b>，不是新语法——本章学的 class 只是把这个思路落地的工具。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的面向过程（POP）和面向对象（OOP）两种编程范式。请：1）参考「做番茄炒蛋」的类比，换一个生活场景（如组织一次班级活动）分别展示两种范式怎么拆解它；2）出 3 道判断题考我两种范式的核心区别；3）解释一下为什么说两种范式没有优劣、只有适用场景。">
+      我刚学了 Python 的面向过程（POP）和面向对象（OOP）两种编程范式。请：1）参考「做番茄炒蛋」的类比，换一个生活场景（如组织一次班级活动）分别展示两种范式怎么拆解它；2）出 3 道判断题考我两种范式的核心区别；3）解释一下为什么说两种范式没有优劣、只有适用场景。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：把范式装进脑子（10 分钟）</span>
+    <ol class="steps">
+      <li>回到上面的切换按钮：先看面向过程版，找出「程序主线」在哪几行；再看面向对象版，找出「干活主力」是哪个对象。</li>
+      <li>把面向对象版里的 <code>Student('小明', 87)</code> 改成 <code>Student('小红', 50)</code>，先预测输出，再运行验证。</li>
+      <li>生活练习：用「泡一杯奶茶」做素材，面向过程版口述「第一步…第二步…」，面向对象版口述「哪个对象有什么、谁和谁配合」。</li>
+      <li>挑战：想一想第七章的 <code>list.sort()</code>——为什么说「让列表自己排序」已经有了面向对象的味道？</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>面向过程以<b>步骤</b>为核心，程序是一组有序函数依次执行；面向对象以<b>对象</b>为核心，数据和操作封装在一起、对象协作完成任务。两种范式没有优劣——前七章是面向过程，本章开始学面向对象。下一节：先认识面向对象的三大特性。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="ch08.html"><span class="nav-label">← 上一节</span><span class="nav-title">返回课程目录</span></a>
+        <a class="next" href="8.02.html"><span class="nav-label">下一节 →</span><span class="nav-title">8.02 面向对象的三大特性</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

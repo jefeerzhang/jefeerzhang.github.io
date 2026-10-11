@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.15 字典的创建 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第四章 元组、集合和字典 · 第 15 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch04.html">第四章 元组、集合和字典</a><span class="sep">/</span>
+          <span class="current">4.15</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">15</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第四章 · 元组、集合和字典</span>
+            <h1>字典的创建</h1>
+            <p class="hero-summary">第 15 / 21 节 · 约 8 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>元组的定义与特性</li>
+      <li>元组的创建</li>
+      <li>元组索引与切片</li>
+      <li>元组运算</li>
+      <li>元组函数与方法</li>
+      <li>元组的不可变性</li>
+      <li>集合的定义与特性</li>
+      <li>集合的创建</li>
+      <li>集合运算：交差并补</li>
+      <li>集合操作：增删元素</li>
+      <li>集合运算并更新</li>
+      <li>集合函数与判断方法</li>
+      <li>序列与映射</li>
+      <li>字典的定义与特性</li>
+      <li class="cur">字典的创建</li>
+      <li>字典访问与三视图</li>
+      <li>字典添加与修改</li>
+      <li>字典删除</li>
+      <li>字典其他操作</li>
+      <li>组合数据类型总结</li>
+      <li>数据类型转换</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>建字典的两条路：手写一对对，还是让 dict() 帮你配对</h2>
+    <p>认识了字典的四大特性，接下来就是把它造出来。创建字典主要有两种方式：<b>直接创建</b>——用大括号 {} 把键值对一对对写进去；<b>dict() 函数</b>——把参数名和参数值自动配成键值对。两种都要会，作业里手写数据用第一种，函数转字典、建空字典会用到第二种。还记得 4.08 里提到过的 {} 吗？它其实是<b>空字典</b>、不是空集合——<b>空字典</b>的专属写法这一节一并搞定。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">手写花名册 vs 填表生成花名册</div>
+      <p><b>直接创建</b>像「手写花名册」：翻开本子，自己一笔一笔写下「姓名 → 张三」「年龄 → 20」，想写几对写几对。<b>dict(a=1, b=2)</b> 像「填表生成花名册」：你在表格的抬头处报名字（a、b、c），系统自动把它们登记成键——注意，<b>报名字时不用带引号，登记进册子后自动变成字符串键</b>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>两种创建方式，四种常见写法</h2>
+    <ul class="points">
+      <li><b>直接创建</b>：用大括号 {} 直接包含键值对，键冒号值、对间逗号，是最直观的方式</li>
+      <li><b>dict() 函数</b>：通过给定参数和参数值，将其配对形成键值对——参数名自动变成<b>字符串键</b></li>
+      <li>{} 与 <code>dict()</code> 都能创建<b>空字典</b>（呼应 4.08：单独一个 {} 是空字典，不是空集合）</li>
+      <li>键只要求<b>不可变</b>，不要求是字符串——数字 <code>{1:2}</code> 完全合法，还能和字符串键混用</li>
+    </ul>
+    <p>下面这个切换台，把两种方式各跑一遍 PPT 原例：</p>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>🔬 两种创建方式现场演示</h2>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px">
+      <div class="switch">
+        <button class="on" data-pane="pane-direct">方式一：直接创建</button>
+        <button data-pane="pane-dict">方式二：dict() 函数</button>
+      </div>
+      <div class="pane on" id="pane-direct">
+        <p style="font-weight:700;margin-bottom:6px">大括号手写键值对（含空字典两种写法）</p>
+        <pre class="codeblock">DC1 = {}
+DC2 = dict()
+print(DC1, DC2)          # 空字典：两种写法等价
+
+DC3 = {1:2, '姓名':'张三', '年龄':15, '语文':80}
+print(DC3)</pre>
+        <p>输出结果：</p>
+        <pre class="codeblock out"><span class="good">{} {}
+{1: 2, '姓名': '张三', '年龄': 15, '语文': 80}</span></pre>
+        <p style="font-size:14px;color:var(--ink2)">注意 DC3：数字键 1 和字符串键 '姓名' 混用也没问题——键只要求不可变。</p>
+      </div>
+      <div class="pane" id="pane-dict">
+        <p style="font-weight:700;margin-bottom:6px">dict(参数名=参数值)，自动配对成键值对</p>
+        <pre class="codeblock">DC4 = dict(a=1, b=2, c=3)
+print(DC4)</pre>
+        <p>输出结果：</p>
+        <pre class="codeblock out"><span class="good">{'a': 1, 'b': 2, 'c': 3}</span></pre>
+        <p style="font-size:14px;color:var(--ink2)">看清楚：写的是 <code>a=1</code>，输出的是 <code>'a': 1</code>——参数名 a 被自动转成了字符串键 'a'。</p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！dict(a=1, b=2, c=3) 的参数名会自动变成字符串键 'a' 'b' 'c'。"
+         data-no="❌ 注意输出 {'a': 1, 'b': 2, 'c': 3}：写的时候不带引号的 a b c，进字典后都被加上了引号，成了字符串键。">
+      <p style="font-weight:700;margin-bottom:12px"><code>dict(a=1, b=2, c=3)</code> 生成的键是什么？</p>
+      <button class="opt" onclick="quizPick(this)">A. 数字 1、2、3</button>
+      <button class="opt" onclick="quizPick(this)">B. 字符串 'a'、'b'、'c'</button>
+      <button class="opt" onclick="quizPick(this)">C. 变量 a、b、c</button>
+      <button class="opt" onclick="quizPick(this)">D. 元组 ('a',1) 等</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="dict()|dict"
+         data-ok="✅ 正确！{} 和 dict() 都能创建空字典。"
+         data-no="❌ 提示：另一种写法是一个函数名加一对小括号，4.08 里提到过 {} 其实是空字典而不是空集合。">
+      <p>创建空字典可以用 <code>{}</code> 或 <code>___</code>。（填一种写法）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：dict()">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">dict() 的参数名有「标识符」规矩</div>
+      <p><code>dict(a=1)</code> 里的 a 本质是一个参数名，要遵守标识符规则：<b>不能以数字开头、不能带空格和连字符</b>。<code>dict(2a=1)</code>、<code>dict(my key=1)</code> 都会报语法错。键里有特殊字符的需求，请老老实实用直接创建 <code>{'2a':1, 'my key':1}</code>。</p>
+      <p>另一个常见误解：以为字典的键必须是字符串——错，<code>{1:2}</code> 用数字当键完全合法。<b>键只要求不可变，不要求是字符串</b>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 字典的两种创建方式：1）直接创建，用大括号 {} 写键值对，键冒号值、对间逗号；2）dict() 函数，用关键字参数 dict(a=1, b=2) 自动配对，参数名会变成字符串键；另外 {} 和 dict() 都能建空字典。请：1）出 4 道「给出代码写出输出」的创建题；2）解释为什么 dict(2a=1) 会报错而 {'2a':1} 不会；3）对比 {} 与 set() 在空集合和空字典上的区别。">
+      我刚学了 Python 字典的两种创建方式：1）直接创建，用大括号 {} 写键值对，键冒号值、对间逗号；2）dict() 函数，用关键字参数 dict(a=1, b=2) 自动配对，参数名会变成字符串键；另外 {} 和 dict() 都能建空字典。请：1）出 4 道「给出代码写出输出」的创建题；2）解释为什么 dict(2a=1) 会报错而 {'2a':1} 不会；3）对比 {} 与 set() 在空集合和空字典上的区别。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：跑完 DC1~DC4（5 分钟）</span>
+    <ol class="steps">
+      <li>把 PPT 四段代码依次敲进 IDLE：<code>DC1 = {}</code>、<code>DC2 = dict()</code>，<code>print(DC1, DC2)</code> 确认都是 <code>{} {}</code>。</li>
+      <li>创建 <code>DC3 = {1:2, '姓名':'张三', '年龄':15, '语文':80}</code> 并 print——注意它<b>混用了数字键和字符串键</b>，照样合法。</li>
+      <li>创建 <code>DC4 = dict(a=1, b=2, c=3)</code> 并 print，对照输出 <code>{'a': 1, 'b': 2, 'c': 3}</code>，确认参数名变成了字符串键。</li>
+      <li>加餐：试试 <code>dict(姓名='李四')</code>——中文参数名也能用，但键会是 '姓名' 字符串。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>创建字典两条路：<b>直接创建</b>（{} 手写键值对）和 <code>dict()</code> 函数（关键字参数自动配对，参数名转成字符串键）；空字典用 <code>{}</code> 或 <code>dict()</code>。键只要求不可变，数字、字符串、元组都行。下一节：建好的字典怎么取值——[] 与 get()，以及 keys / values / items 三视图。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="4.14.html"><span class="nav-label">← 上一节</span><span class="nav-title">4.14 字典的定义与特性</span></a>
+        <a class="next" href="4.16.html"><span class="nav-label">下一节 →</span><span class="nav-title">4.16 字典访问与三视图</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

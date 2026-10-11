@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.12 整数与四种进制 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第二章 基础概念与数值 · 第 12 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch02.html">第二章 基础概念与数值</a><span class="sep">/</span>
+          <span class="current">2.12</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">12</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第二章 · 基础概念与数值</span>
+            <h1>整数与四种进制</h1>
+            <p class="hero-summary">第 12 / 17 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序构成的两大核心</li>
+      <li>变量：概念与赋值</li>
+      <li>变量命名规则</li>
+      <li>数据类型总览</li>
+      <li>type() 查看类型</li>
+      <li>保留字（关键字）</li>
+      <li>函数：定义与调用</li>
+      <li>常用内置函数</li>
+      <li>输入输出函数</li>
+      <li>缩进与注释规范</li>
+      <li>数值类型总览</li>
+      <li class="cur">整数与四种进制</li>
+      <li>浮点数与精度陷阱</li>
+      <li>算术与增强赋值运算符</li>
+      <li>比较与逻辑运算符</li>
+      <li>运算符优先级</li>
+      <li>数值函数与 math 模块</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>同一个数，竟然有四副"面孔"</h2>
+    <p>Python 的整数类型 int 有 <b>4 种进制表示</b>：十进制、二进制、八进制和十六进制。默认采用<b>十进制</b>，其他进制需要使用<b>引导符号</b>。还有一条关键规则：<b>其他进制输出时会自动转为十进制</b>。这一节解决三个问题：</p>
+    <ul class="points">
+      <li>四种进制分别用什么<b>引导符号</b>？由哪些数字组成？</li>
+      <li>为什么 <code>0b1010</code>、<code>0o12</code>、<code>0xA</code> 打印出来全是 <code>10</code>？</li>
+      <li>不同进制的数，在内存里到底以什么形式存储？</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">钱没变，只是写法不同</div>
+      <p>口袋里装着<b>一张十元</b>。记在账本上写「10」，用二进制记账就是「1010」，八进制记账是「12」，十六进制记账是「A」——<b>钱一直没变，变的只是记账的写法</b>。四种进制也一样：写法不同，数值相同，计算机内心认的始终是同一个数。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>四种进制的"身份证"</h2>
+    <p>先看"同一个数，四副面孔"——点击卡片展开每种写法：</p>
+    <div class="grid g3">
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#4f6ef7"></span>十进制写法</h4>
+        <div class="desc">10 —— 日常写法，默认进制</div>
+        <div class="more">无引导符号，由 0-9 组成，如 <code>10</code>、<code>-100</code>。这是我们从小用到大的写法，也是 Python 的默认进制。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#7c5cf0"></span>二进制写法</h4>
+        <div class="desc">0b1010 —— 引导符号 0b / 0B</div>
+        <div class="more">由 0 和 1 组成，如 <code>0b1010</code>（等于十进制 10）、<code>-0B11</code>（等于十进制 -3）。计算机内部最爱二进制。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#1a9e6c"></span>八进制写法</h4>
+        <div class="desc">0o12 —— 引导符号 0o / 0O</div>
+        <div class="more">由 0-7 组成，如 <code>0o12</code>（等于十进制 10）、<code>-0O77</code>（等于十进制 -63）。注意 0 后面跟的是字母 o（octal），不是数字 0。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#d97706"></span>十六进制写法</h4>
+        <div class="desc">0xA —— 引导符号 0x / 0X</div>
+        <div class="more">由 0-9 和 a-f（或 A-F）组成，a=10、f=15。如 <code>0xA</code>（等于十进制 10）、<code>-0XFF</code>（等于十进制 -255）。常见于颜色值、内存地址。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+    </div>
+    <table style="margin-top:16px">
+      <tr><th>进制</th><th>引导符号</th><th>数字组成</th><th>示例</th></tr>
+      <tr><td>十进制</td><td>无（默认）</td><td>0-9</td><td>10、-100</td></tr>
+      <tr><td>二进制</td><td>0b 或 0B</td><td>0 和 1</td><td>0b1010（10）、-0B11（-3）</td></tr>
+      <tr><td>八进制</td><td>0o 或 0O</td><td>0-7</td><td>0o12（10）、-0O77（-63）</td></tr>
+      <tr><td>十六进制</td><td>0x 或 0X</td><td>0-9，a-f / A-F</td><td>0xA（10）、-0XFF（-255）</td></tr>
+    </table>
+  </section>
+      <section>
+    <span class="tag">实战演示</span>
+    <h2>写法不同，值相同，类型也相同</h2>
+    <pre class="codeblock">decimal_num = 10     # 十进制
+binary_num  = 0b1010 # 二进制
+octal_num   = 0o12   # 八进制
+hex_num     = 0xA    # 十六进制
+
+print(binary_num, octal_num, hex_num)   # 输出：<span class="good">10 10 10</span>
+print(type(decimal_num))                # 输出：<span class="good">&lt;class 'int'&gt;</span>
+print(type(binary_num))                 # 输出：<span class="good">&lt;class 'int'&gt;</span></pre>
+    <p class="muted">💡 关键结论：四种写法的值完全相等——<b>它们存的是同一个整数，只是「写出来的样子」不同</b>（计算机内部按二进制存储，十进制、十六进制都只是给人看的写法）；打印时其他进制会自动转为十进制输出，类型也全部是 int。</p>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！0b1010 = 1×8 + 0×4 + 1×2 + 0×1 = 10。"
+         data-no="❌ 不对哦。二进制 1010 从右往左按 1、2、4、8 位权相加：0+2+0+8 = 10。">
+      <p style="font-weight:700;margin-bottom:12px">二进制数 <code>0b1010</code> 对应的十进制值是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 8</button>
+      <button class="opt" onclick="quizPick(this)">B. 10</button>
+      <button class="opt" onclick="quizPick(this)">C. 12</button>
+      <button class="opt" onclick="quizPick(this)">D. 1010</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="0x|0X" data-ok="✅ 正确！十六进制的引导符号是 0x 或 0X，后面跟 0-9 和 a-f/A-F。" data-no="❌ 再想想：四种进制里，哪个的引导符号带字母 x？（提示：参考上面的进制表格）">
+      <p>十六进制的引导符号是<b>＿＿</b>（大写或小写都可以）。</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：0x1F">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">引导符号写错，Python 直接不认</div>
+      <p>① 引导符号里混入非法数字会报错：二进制只能有 0 和 1，写 <code>0b102</code> 会报 <code>SyntaxError</code>；八进制不能出现 8、9，写 <code>0o89</code> 同样报错。</p>
+      <p>② 别把八进制的 o 写成数字 0：<code>0012</code> 不是八进制写法（会报 <code>SyntaxError: leading zeros in decimal integer literals are not permitted</code>），<code>0o12</code> 才是。0 后面紧跟的是<b>字母 o 或 x 或 b</b>。</p>
+      <p>③ 输出永远是十进制：哪怕你用 <code>0b1010</code> 赋值，<code>print</code> 出来也是 <code>10</code>——别惊讶"我的二进制去哪了"，它一直都在，只是换回了十进制的"脸"。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 整数的四种进制：十进制、二进制（0b）、八进制（0o）、十六进制（0x）。请：1）分别举例说明引导符号和数字组成规则；2）演示 0b1010、0o12、0xA 都等于 10 并解释为什么打印出来都是十进制；3）出 2 道进制换算题考我，等我作答后再公布答案。">
+      我刚学了 Python 整数的四种进制：十进制、二进制（0b）、八进制（0o）、十六进制（0x）。请：1）分别举例说明引导符号和数字组成规则；2）演示 0b1010、0o12、0xA 都等于 10 并解释为什么打印出来都是十进制；3）出 2 道进制换算题考我，等我作答后再公布答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：四副面孔验一验（3 分钟）</span>
+    <ol class="steps">
+      <li>打开命令行输入 <code>python</code> 进入交互模式。</li>
+      <li>依次输入 <code>0b1010</code> 回车、<code>0o12</code> 回车、<code>0xA</code> 回车——看看是不是都输出 <code>10</code>。</li>
+      <li>再用 <code>type(0b1010)</code>、<code>type(0o12)</code>、<code>type(0xA)</code> 确认它们全部是 <code>&lt;class 'int'&gt;</code>。</li>
+      <li>挑战题：输入 <code>0b102</code> 或 <code>0o89</code>，看看 Python 给出什么反应？想一想为什么（参考上面的避坑）。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>Python 整数有 4 种进制写法：十进制（默认，无引导符号）、二进制（<code>0b</code>）、八进制（<code>0o</code>）、十六进制（<code>0x</code>）。写法不同但值相同——<b>进制写法只是给人看的「外观」，值本身完全一样</b>（计算机内部一律按二进制存储），输出时自动转回十进制，类型都是 int。下一节：小数的"惊喜"——浮点数与精度陷阱。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="2.11.html"><span class="nav-label">← 上一节</span><span class="nav-title">2.11 数值类型总览</span></a>
+        <a class="next" href="2.13.html"><span class="nav-label">下一节 →</span><span class="nav-title">2.13 浮点数与精度陷阱</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

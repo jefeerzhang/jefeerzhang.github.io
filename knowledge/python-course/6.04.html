@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6.04 函数的调用 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第六章 函数 · 第 4 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch06.html">第六章 函数</a><span class="sep">/</span>
+          <span class="current">6.04</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">04</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第六章 · 函数</span>
+            <h1>函数的调用</h1>
+            <p class="hero-summary">第 4 / 18 节 · 约 11 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>函数的定义与优点</li>
+      <li>函数的分类</li>
+      <li>函数的定义</li>
+      <li class="cur">函数的调用</li>
+      <li>形参与实参</li>
+      <li>参数传递的两种方式</li>
+      <li>必须参数与可选参数</li>
+      <li>不定长参数</li>
+      <li>参数值的数据类型</li>
+      <li>变量作用域：局部与全局</li>
+      <li>global 修改全局变量</li>
+      <li>匿名函数 lambda</li>
+      <li>高阶函数：map 与 filter</li>
+      <li>高阶函数：sorted 与 key</li>
+      <li>递归函数：概念与两要素</li>
+      <li>递归执行逻辑：递推与回溯</li>
+      <li>递归实战：阶乘</li>
+      <li>递归实战：字符串逆序</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>定义好的函数是「睡着的」——不喊它，它永远不会动</h2>
+    <p>上一节我们定义了 hello、getsum、circular 三个函数，但它们一行都没执行过。让函数「醒过来干活」的唯一方式是<b>调用</b>。这一节要解决三件事：调用怎么写？参数值从哪来？有返回值和没返回值的函数，调用方式有什么讲究？最后还有一个经典谜题：<code>print(hello())</code> 为什么会打出两个东西——其中一个是莫名其妙的 <code>None</code>？</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">调用函数像「点菜」：菜谱是定义，点菜是调用，端上桌的菜是返回值</div>
+      <p>菜谱写进菜谱本（<b>定义</b>），厨房并不会自动开火；顾客喊一声「来一份宫保鸡丁」（<b>调用</b>），厨房才照着步骤做（执行<b>函数体</b>），最后<b>端上桌</b>（<b>返回值</b>）。有的菜品重点是「过程」（比如现场表演拉面，不上桌）——对应无返回值的函数；有的重点是「端上桌那份成品」——对应有返回值的函数，你要用盘子接住它（用变量保存返回值）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>调用的两种语法，各配一种用途</h2>
+    <ul class="points">
+      <li><b>语法一：<code>&lt;函数名&gt;(&lt;参数值&gt;)</code></b>——直接调用。无返回值的函数通常这样用，目的就是<b>执行函数体</b>（如 <code>hello()</code>）</li>
+      <li><b>语法二：<code>&lt;变量名&gt; = &lt;函数名&gt;(&lt;参数值&gt;)</code></b>——接住返回值。有返回值的函数通常这样用，目的是<b>获取返回值</b>（如 <code>result = getsum(3, 5)</code>）</li>
+      <li><b>参数传递</b>：调用时对参数赋予实际值，这一动作称为参数传递；参数值可以是<b>具体的数据值</b>（如 3），也可以是<b>已赋值的变量</b>（如 x = 3 后传 x）</li>
+      <li><b>铁律</b>：定义好的函数必须调用才会执行——只定义不调用，函数体永远不会跑，也不报错</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：调用上一节定义的三个函数</h2>
+    <pre class="codeblock">def hello():
+    print("Hello World!")
+
+def getsum(a, b):
+    c = a + b
+    return c
+
+def circular(r):
+    area = 3.14 * r**2
+    perimeter = 2 * 3.14 * r
+    return area, perimeter
+
+print(hello())
+result = getsum(3, 5)
+print(result)
+S, L = circular(30)
+print(S, L)</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">Hello World!
+None
+8
+2826.0 188.4</pre>
+    <ul class="points">
+      <li><b>重点看第一、二行</b>：hello() 没写 return，它没有返回值吗？不——「没写 return」的函数返回 <code>None</code>。<code>print(hello())</code> 先执行 hello()（打印出 Hello World!），再把它的返回值 None 交给 print 打印，于是多出一行 None</li>
+      <li><code>result = getsum(3, 5)</code>：把 3、5 传递给 a、b，函数算出 8 经 return 交回来，变量 result 接住 → 打印 8</li>
+      <li><code>S, L = circular(30)</code>：circular 返回一个元组 (2826.0, 188.4)，用两个变量<b>解包</b>接收——S 得面积、L 得周长（第四章元组解包在此实战）</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>参数值可以是「字面值」也可以是「变量」</h2>
+    <pre class="codeblock">def getsum(a, b):
+    c = a + b
+    return c
+
+# 参数值 = 具体数据值
+print(getsum(3, 5))
+
+# 参数值 = 已赋值的变量
+x, y = 10, 20
+print(getsum(x, y))</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">8
+30</pre>
+    <ul class="points">
+      <li>第一次调用把字面值 3、5 传给 a、b；第二次把变量 x、y 里存的 10、20 传过去</li>
+      <li>传的永远是「变量里的值」，不是变量本身——准确说，传进去的是<b>变量指向的那个对象</b>：Python 传的是对象引用，不会把对象复制一份（6.09 会展开）</li>
+      <li>无论哪种，动作都叫<b>参数传递</b>：调用时对参数赋予实际值</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！hello() 没有 return 语句，函数照样有返回值——None。print(hello()) 打印 Hello World! 是执行函数体的副作用，打印 None 才是打印 hello() 的返回值。"
+         data-no="❌ 关键点：没有 return 的函数，返回值是 None 而不是「没有返回值」。print(hello()) 中 print 打印的正是 hello() 的返回值 None。">
+      <p style="font-weight:700;margin-bottom:12px">已知 <code>def hello(): print("Hello World!")</code>（函数体内无 return），执行 <code>print(hello())</code> 会输出第二行 <code>None</code>，原因是？</p>
+      <button class="opt" onclick="quizPick(this)">A. print 函数每打完一行内容都会自动补一行 None</button>
+      <button class="opt" onclick="quizPick(this)">B. hello() 没有写 return，其返回值是 None，print 打印的是这个返回值</button>
+      <button class="opt" onclick="quizPick(this)">C. hello 函数定义有错误，Python 自动输出了错误提示</button>
+      <button class="opt" onclick="quizPick(this)">D. None 是 Hello World! 的换行转义结果</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="调用None变量返回值|调用 None 变量 返回值" data-ok="✅ 全对！必须调用才执行；无 return 返回 None；有返回值时通常用变量接住。" data-no="❌ 提示：四个空分别是——函数必须被＿＿才执行（两个字）、无 return 时的返回值、有返回值的函数通常用＿＿（两个字）接住结果的那类东西的统称（填 变量）。">
+      <p>定义好的函数必须<b>＿＿</b>才会执行；没有 return 语句的函数返回值为<b>＿＿</b>；有返回值的函数通常用<b>＿＿</b>名 = 函数名(参数值) 来获取<b>＿＿</b>。（四空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：调用 None 变量 返回值">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>print(无返回值函数) 多出 None</b>：函数没有 return，<code>print(hello())</code> 就会打印 None——想「只要执行」就直接写 <code>hello()</code>，别在外面套 print；</p>
+      <p>②<b>定义顺序没搞清</b>：必须<b>先定义、后调用</b>——Python 从上往下执行，调用时函数还没登记过，就报 NameError；</p>
+      <p>③<b>调用时忘写括号</b>：写 <code>hello</code> 只是「提到这个函数的名字」（函数对象本身），不会执行；必须写 <code>hello()</code> 才是「喊它干活」。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 函数的调用：两种调用语法、参数传递、无 return 的函数返回 None。请：1）用「点菜」类比解释定义与调用的区别；2）给我 4 段「有 return / 无 return × 直接调用 / 赋值调用」的组合代码，让我预测每段输出什么（特别考察什么时候会打印出 None）；3）等我答完逐段批改讲解。">
+      我刚学了 Python 函数的调用：两种调用语法、参数传递、无 return 的函数返回 None。请：1）用「点菜」类比解释定义与调用的区别；2）给我 4 段「有 return / 无 return × 直接调用 / 赋值调用」的组合代码，让我预测每段输出什么（特别考察什么时候会打印出 None）；3）等我答完逐段批改讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试</span>
+    <ol class="steps">
+      <li>把本页课堂代码完整敲一遍，先预测输出再运行，重点验证 Hello World! 之后那行 None。</li>
+      <li>把 <code>print(hello())</code> 改成 <code>hello()</code>，观察 None 消失——两种写法你都见过报错现场了。</li>
+      <li>写 <code>x = hello()</code> 再 <code>print(x)</code>，确认 x 的值是 None；再写 <code>x = getsum(3, 5)</code> 对比。</li>
+      <li>挑战：本章作业里凡是「求和 / 求面积」类题目，都用「定义函数 + 变量接返回值 + print 变量」的三段式来写，这就是标准答题模板。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>调用语法：直接调用 <code>函数名(参数值)</code>（无返回值时常用，目的是执行函数体）、赋值调用 <code>变量名 = 函数名(参数值)</code>（有返回值时常用，目的是获取返回值）；调用时对参数赋予实际值叫参数传递，参数值可以是字面值或已赋值变量；函数必须先定义后调用、必须调用才执行；无 return 的函数返回 None。下一节：形参与实参到底谁是谁。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="6.03.html"><span class="nav-label">← 上一节</span><span class="nav-title">6.03 函数的定义</span></a>
+        <a class="next" href="6.05.html"><span class="nav-label">下一节 →</span><span class="nav-title">6.05 形参与实参</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.10 遍历字符串、列表、元组 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第五章 程序控制 · 第 10 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.pane-code{margin:8px 0}
+.scenario{font-size:14px;color:var(--ink2);background:var(--accent-soft);border-radius:10px;padding:10px 14px;margin:8px 0}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch05.html">第五章 程序控制</a><span class="sep">/</span>
+          <span class="current">5.10</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">10</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第五章 · 程序控制</span>
+            <h1>遍历字符串、列表、元组</h1>
+            <p class="hero-summary">第 10 / 17 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序控制结构概述</li>
+      <li>单分支结构 if</li>
+      <li>双分支结构 if-else</li>
+      <li>IF 表达式</li>
+      <li>多分支结构 if-elif-else</li>
+      <li>嵌套分支结构</li>
+      <li>嵌套与多分支对比</li>
+      <li>无限循环 while</li>
+      <li>range 函数与遍历整数</li>
+      <li class="cur">遍历字符串列表元组</li>
+      <li>遍历字典</li>
+      <li>循环控制 break 与 continue</li>
+      <li>循环嵌套</li>
+      <li>常见语法错误</li>
+      <li>常见运行异常</li>
+      <li>异常处理语句</li>
+      <li>综合实战：古算题与成绩单</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>「逐个处理」是程序最常见的活儿</h2>
+    <p><b>遍历循环</b>是指逐一遍历某个迭代对象的循环方式：每次提取<b>一个</b>元素并执行一次循环语句块，因此<b>循环执行次数由迭代对象中元素的个数确定</b>。想把名字列表挨个打印、想把一段话逐字检查、想把成绩单挨个判断及格——都要靠它。上一节的 range() 已经让你见过 for 了，这一节正式认识它的本职工作。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">遍历元素像「点名时直接叫名字」，遍历索引像「按学号点名再查名字」</div>
+      <p>只关心「每个人是谁」，就<b>直接叫名字</b>（遍历元素，直接拿到值）；还要记录「这是第几个人」，就得<b>先按学号 1、2、3 点下去，再对照花名册查名字</b>（遍历索引，range(len(s)) 先拿下标，再用 s[i] 查值）。只看内容用前者，要记「第几个」用后者。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>for 循环：自动取值、自动前进</h2>
+    <ul class="points">
+      <li><b>语法</b>：<code>for &lt;循环变量&gt; in &lt;迭代对象&gt;:</code> 换行缩进后写 <code>&lt;循环语句块&gt;</code></li>
+      <li><b>for 把 while 三要素里的两件自动化了</b>：循环变量的「初始化」和「更新」都由 for 自动完成，你只负责写循环体——对照 5.07 的 while「初始化、条件、更新」三件套，for 省心得多</li>
+      <li><b>迭代对象无元素时，循环语句一次也不会执行</b>（不报错，直接跳过）</li>
+      <li><b>迭代对象通常包括</b>：range() 函数、字符串、列表、元组、集合、字典等</li>
+      <li><b>字符串、列表、元组都属于有序序列</b>，遍历方式基本相似，主要有「遍历元素」和「遍历索引」两种</li>
+      <li>遍历索引时，由于<b>索引是整数</b>，需要借助 <code>range()</code> 和 <code>len()</code> 函数——<code>range(len(s))</code> 是「长度变下标」的经典组合</li>
+    </ul>
+
+    <div class="switch">
+      <button class="on" data-pane="pane-elem">遍历元素（直接拿值）</button>
+      <button data-pane="pane-idx">遍历索引（拿下标再查值）</button>
+    </div>
+
+    <div class="pane on" id="pane-elem">
+      <div class="scenario">适用场景：只关心内容本身，不关心位置——最常用的方式。</div>
+      <pre class="codeblock pane-code"># 字符串版：逐个取出字符
+s = 'PYTHON'
+for c in s:
+    print(c, end=" ")</pre>
+      <pre class="codeblock pane-code">P Y T H O N</pre>
+      <pre class="codeblock pane-code"># 列表版：逐个取出元素
+ls = ['张三', '李四', '王五']
+for item in ls:
+    print(item)</pre>
+      <pre class="codeblock pane-code">张三
+李四
+王五</pre>
+      <p class="muted">循环变量 c、item 每次「自动领取」下一个元素，领取到没有就停——不用你写 i += 1。</p>
+    </div>
+
+    <div class="pane" id="pane-idx">
+      <div class="scenario">适用场景：需要「边遍历边知道位置」，比如要打印第几个、或按下标修改元素。</div>
+      <pre class="codeblock pane-code"># 字符串版：用索引遍历
+s = 'PYTHON'
+for i in range(len(s)):
+    print(f'元素索引为{i},值为{s[i]}')</pre>
+      <pre class="codeblock pane-code">元素索引为0,值为P
+元素索引为1,值为Y
+元素索引为2,值为T
+元素索引为3,值为H
+元素索引为4,值为O
+元素索引为5,值为N</pre>
+      <pre class="codeblock pane-code"># 列表版：用索引遍历
+ls = ['张三', '李四', '王五']
+for i in range(len(ls)):
+    print(f'元素索引为{i},值为{ls[i]}')</pre>
+      <pre class="codeblock pane-code">元素索引为0,值为张三
+元素索引为1,值为李四
+元素索引为2,值为王五</pre>
+      <p class="muted">拆开看：<code>len(s)</code> 得到 6，<code>range(6)</code> 生成 0~5 的下标，<code>s[i]</code> 再按下标取值——三步合成一句话。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！'ABC' 有 3 个字符，循环次数由元素个数决定，for 会把 A、B、C 各取一次。"
+         data-no="❌ 记住：遍历循环的执行次数由迭代对象中元素个数确定。'ABC' 有 3 个字符，所以跑 3 次。">
+      <p style="font-weight:700;margin-bottom:12px"><code>for c in 'ABC':</code> 循环体一共执行几次？</p>
+      <button class="opt" onclick="quizPick(this)">A. 1 次</button>
+      <button class="opt" onclick="quizPick(this)">B. 3 次</button>
+      <button class="opt" onclick="quizPick(this)">C. 4 次</button>
+      <button class="opt" onclick="quizPick(this)">D. 0 次（字符串不能遍历）</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="range()|range" data-ok="✅ 正确！索引是整数，用 range(len(s)) 生成 0~长度-1 的下标。" data-no="❌ 提示：它就是上一节的主角——配合 len() 把长度变成一串下标，两种写法带不带括号都算对。">
+      <p>遍历索引时，由于索引是整数，需要借助 <b>＿＿</b> 和 <code>len()</code> 函数。（一个空，函数名或调用形式均可）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：range()">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>循环变量名别与迭代对象重名</b>：<code>for ls in ls:</code> 语法上不报错，但循环一遍后 ls 被改成单个元素，后续代码再用 ls 就乱了套——起个不一样的名字；</p>
+      <p>②<b>range(len(s)) 是「长度变下标」的经典组合</b>：len 得到元素个数，range 左闭右开正好生成 0 ~ 个数-1 的全部下标，两者天生一对；</p>
+      <p>③<b>空序列一次都不执行</b>：对空列表 <code>[]</code> 或空字符串 <code>''</code> 遍历，循环体直接被跳过、不报错——别以为没输出就是程序坏了。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 用 for 遍历字符串、列表、元组。请：1）用「点名直接叫名字 vs 按学号点名再查名字」的类比，讲清遍历元素和遍历索引两种方式的区别与适用场景；2）出 5 道遍历输出题考我（含一道遍历字符串、一道 range(len(…)) 遍历索引、一道空列表）；3）对比 for 和 while 三要素（初始化、条件、更新），说明 for 自动化了哪两件。">
+      我刚学了 Python 用 for 遍历字符串、列表、元组。请：1）用「点名直接叫名字 vs 按学号点名再查名字」的类比，讲清遍历元素和遍历索引两种方式的区别与适用场景；2）出 5 道遍历输出题考我（含一道遍历字符串、一道 range(len(…)) 遍历索引、一道空列表）；3）对比 for 和 while 三要素（初始化、条件、更新），说明 for 自动化了哪两件。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：两种遍历都上手（5 分钟）</span>
+    <ol class="steps">
+      <li>分别用「遍历元素」和「遍历索引」两种方式遍历字符串 <code>'PYTHON'</code>，对照输出：前者得到 P Y T H O N，后者得到 6 行「元素索引为i,值为…」。</li>
+      <li>再把列表 <code>['张三', '李四', '王五']</code> 用两种方式各遍历一遍，体会有序序列遍历方式的相通之处。</li>
+      <li>练本章作业第 3 题「选出 5 的倍数」：遍历元素的骨架 + <code>if</code> 筛选——<code>for x in ls: if x % 5 == 0:</code> 就能挑出来。</li>
+      <li>挑战：用遍历索引的方式，只打印 <code>'PYTHON'</code> 中下标为偶数的字符（提示：<code>range(0, len(s), 2)</code>）。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>for &lt;循环变量&gt; in &lt;迭代对象&gt;：每次取一个元素执行一次循环体，次数由元素个数决定，空序列一次不执行；字符串、列表、元组是有序序列，遍历分「遍历元素」和「遍历索引」两种——只看内容用前者，要记位置用 range(len(s)) 拿下标。下一节：遍历字典，走「键值对」路线。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="5.09.html"><span class="nav-label">← 上一节</span><span class="nav-title">5.09 range 函数与遍历整数</span></a>
+        <a class="next" href="5.11.html"><span class="nav-label">下一节 →</span><span class="nav-title">5.11 遍历字典</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

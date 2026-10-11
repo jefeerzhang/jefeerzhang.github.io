@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7.06 关闭文件与 with 语句 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第七章 文件及目录操作 · 第 6 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+@media (max-width:640px){.cmp{grid-template-columns:1fr}}
+.ccard{border-radius:12px;padding:16px;box-shadow:var(--shadow);font-size:14px;line-height:1.9}
+.ccard h4{margin:0 0 8px;font-size:15.5px}
+.ccard.good{border:1.5px solid #86efac;background:#f0fdf4}
+.ccard.bad{border:1.5px solid #fcd34d;background:#fffbeb}
+.ccard pre{margin:0;font-family:Consolas,monospace;font-size:13.5px;white-space:pre-wrap;color:var(--ink)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch07.html">第七章 文件及目录操作</a><span class="sep">/</span>
+          <span class="current">7.06</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">06</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第七章 · 文件及目录操作</span>
+            <h1>关闭文件与 with 语句</h1>
+            <p class="hero-summary">第 6 / 18 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>文件与目录的基本概念</li>
+      <li>文件类型：文本与二进制</li>
+      <li>绝对路径与相对路径</li>
+      <li>文件操作三步曲</li>
+      <li>打开文件与打开模式</li>
+      <li class="cur">关闭文件与 with 语句</li>
+      <li>写文件：write 与 writelines</li>
+      <li>读文件三方法</li>
+      <li>文件指针：tell 与 seek</li>
+      <li>目录路径两大模块</li>
+      <li>工作目录</li>
+      <li>新建目录</li>
+      <li>展示目录内容</li>
+      <li>重命名与移动</li>
+      <li>删除文件和目录</li>
+      <li>判断路径</li>
+      <li>获取文件信息</li>
+      <li>路径的合并与分解</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>写完的数据「不见了」？多半是文件没关</h2>
+    <p>三步曲的第三步最容易被新手省略——「我东西都写进去了，关不关有什么区别？」区别大了：忘关文件，数据可能<b>还堵在缓冲区里没落到磁盘</b>，程序一崩全白写；文件还一直被你的程序<b>占着</b>，别的程序想用都打不开。这一节教你两件事：为什么必须关，以及怎么用 <code>with</code> 语句让 Python <b>替你自动关</b>，从此告别「忘了 close」。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">with 像「自动感应门」，手动 close 像「随手关门」</div>
+      <p>商场的<b>自动感应门</b>（with 语句）：你走进去办完事，人一出来，门<b>自动</b>关上，想忘都忘不了。<code>close()</code> 则像家里那扇<b>随手关的门</b>：理论上你该记得带上，可一旦哪天忘了——冷风（数据丢失、资源占用）就一直往屋里灌。以后的代码，请尽量走「感应门」。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>为什么要关闭 + with 语句怎么写</h2>
+    <ul class="points">
+      <li><b>关闭原因①——保数据</b>：把<b>缓冲区</b>中还没落盘的数据写入磁盘，确保数据完整性</li>
+      <li><b>关闭原因②——还资源</b>：释放操作系统资源，避免文件被长期占用，导致其他程序无法访问</li>
+      <li><b>关闭原因③——划界线</b>：关闭后的文件<b>不能再读写</b>，否则触发 <code>ValueError: I/O operation on closed file</code></li>
+      <li><b>语法</b>：<code>文件对象名.close()</code></li>
+      <li><b>with 语句</b>：为防止忘记关闭或程序异常导致文件不能正常关闭，建议用 <code>with</code> 保留字打开文件——它通过<b>缩进</b>控制文件状态，<b>缩进结束系统自动调用 close()</b></li>
+      <li><b>with 语法</b>：<code>with open(filename, mode, encoding) as 文件对象名:</code> 换行缩进，写文件处理操作</li>
+    </ul>
+
+    <div class="cmp">
+      <div class="ccard bad">
+        <h4>🚪 手动版：忘了就漏风</h4>
+        <pre>file = open('abc.txt', 'w',
+            encoding='utf-8')
+pass
+pass
+file.close()   # 中间隔很远，
+               # 一忙起来就忘了</pre>
+      </div>
+      <div class="ccard good">
+        <h4>🚀 自动版：with 语句（推荐）</h4>
+        <pre>with open('abc.txt', 'w',
+          encoding='utf-8') as file:
+    pass
+# 缩进一结束，
+# 系统自动调用 file.close()</pre>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>同一个任务，两种写法</h2>
+    <pre class="codeblock"># 写法一：手动关闭（三步曲标准写法）
+file = open('abc.txt', 'w', encoding='utf-8')
+file.write('Hello Python')
+file.close()
+
+# 写法二：with 语句（推荐）
+with open('abc.txt', 'w', encoding='utf-8') as file:
+    file.write('Hello Python')
+# 走出缩进块，close 自动完成，想忘都忘不了</pre>
+    <ul class="points">
+      <li>写法二的 <code>as file</code>：把 open 返回的文件对象起名叫 <code>file</code>，缩进块内随便用</li>
+      <li><code>with</code> 块内的代码<b>必须缩进</b>——缩进就是「感应门内的区域」</li>
+      <li>出了 <code>with</code> 块再访问 <code>file</code> 读写，同样会触发 ValueError（门已经关了）</li>
+      <li>作业第 1、2 题都建议用 with 写法，交上去的代码更稳、更专业</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！close() 之后再调用 read() 会抛出 ValueError: I/O operation on closed file——关闭原因之三就是「划清界线」，关了就不能再读写。"
+         data-no="❌ 关闭后的文件对象不能再读写，硬要 read() 会触发 ValueError，而不是返回空内容或自动重开。想再读，必须重新 open。">
+      <p style="font-weight:700;margin-bottom:12px">对已调用 <code>close()</code> 的文件对象再调用 <code>file.read()</code>，结果是什么？</p>
+      <button class="opt" onclick="quizPick(this)">A. 返回空字符串</button>
+      <button class="opt" onclick="quizPick(this)">B. 系统自动重新打开文件并读取</button>
+      <button class="opt" onclick="quizPick(this)">C. 抛出 ValueError 异常</button>
+      <button class="opt" onclick="quizPick(this)">D. 返回 None</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="缩进close|缩进 close" data-ok="✅ 正确！with 通过缩进控制文件状态，缩进块里的代码是「门内的区域」，缩进一结束系统自动调用 close() 关闭文件。" data-no="❌ 提示：第一空是 Python 用什么「范围」控制文件状态（和 if、for 一样的东西）；第二空是缩进结束时系统自动调用的方法名。">
+      <p>with 语句通过<b>＿＿</b>控制文件状态，缩进结束系统自动调用<b>＿＿</b>() 方法关闭文件。（两空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：缩进 close">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>不 close 就以为写好了</b>：write 的数据先进缓冲区，close 才确保落盘——程序异常退出时缓冲区数据直接丢失，白写；</p>
+      <p>②<b>关了还想读</b>：close 之后再 read/write 必报 ValueError——「感应门」关了就别伸手，要再操作就重新 open；</p>
+      <p>③<b>with 块内忘缩进</b>：<code>with … as file:</code> 下一行必须缩进，不缩进直接 IndentationError——缩进块就是文件「开着」的范围。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的 close() 方法和 with open(...) as file 语句。请：1）用「自动感应门 vs 随手关门」的类比解释 with 的好处；2）讲清楚关闭文件的三个理由（缓冲区落盘、释放资源、关闭后不可读写）；3）给我一段忘记 close 的代码让我改写成 with 写法，再出 3 道关于 ValueError 的小题考我。">
+      我刚学了 Python 的 close() 方法和 with open(...) as file 语句。请：1）用「自动感应门 vs 随手关门」的类比解释 with 的好处；2）讲清楚关闭文件的三个理由（缓冲区落盘、释放资源、关闭后不可读写）；3）给我一段忘记 close 的代码让我改写成 with 写法，再出 3 道关于 ValueError 的小题考我。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：直接演练作业第 1 题（5 分钟）</span>
+    <ol class="steps">
+      <li>把上一节作业第 1 题的写文件代码改成 <code>with</code> 写法：<code>with open('scores.txt', 'w', encoding='utf-8') as file:</code> 缩进写内容。</li>
+      <li>故意在 close 之后补一行 <code>file.read()</code>，亲眼看一次 ValueError 长什么样（看过就不会慌）。</li>
+      <li>在 with 块内外各加一句 <code>print(file.closed)</code>——块内 False、块外 True，验证「感应门」确实自动关了。</li>
+      <li>挑战：往 with 块里加一句 <code>1/0</code> 制造异常，运行后打开 abc.txt——数据居然还在？想想为什么（缩进结束自动关，异常也挡不住它关门）。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>关闭文件有三个理由：缓冲区数据落盘保完整、释放系统资源不被占用、关闭后不可再读写（否则 ValueError）。with open(...) as 文件对象: 通过缩进控制文件状态，缩进结束自动 close，是最推荐的写法。至此三步曲的「打开」「关闭」都齐了——下一节讲第二步的写：<code>write</code> 与 <code>writelines</code>。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="7.05.html"><span class="nav-label">← 上一节</span><span class="nav-title">7.05 打开文件与打开模式</span></a>
+        <a class="next" href="7.07.html"><span class="nav-label">下一节 →</span><span class="nav-title">7.07 写文件：write 与 writelines</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.02 转义字符 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第三章 字符串与列表 · 第 2 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch03.html">第三章 字符串与列表</a><span class="sep">/</span>
+          <span class="current">3.02</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">02</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第三章 · 字符串与列表</span>
+            <h1>转义字符</h1>
+            <p class="hero-summary">第 2 / 21 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>字符串基础与三种引号</li>
+      <li class="cur">转义字符</li>
+      <li>字符串索引</li>
+      <li>字符串切片</li>
+      <li>实战：身份证号提取信息</li>
+      <li>字符串运算与内置函数</li>
+      <li>大小写转换方法</li>
+      <li>计数、查找与替换</li>
+      <li>分割、联合与剔除</li>
+      <li>判断字符串类别</li>
+      <li>format 格式化输出</li>
+      <li>f-string 格式化输出</li>
+      <li>列表定义与特性</li>
+      <li>列表的创建</li>
+      <li>列表索引与切片</li>
+      <li>列表增加元素</li>
+      <li>列表删除元素</li>
+      <li>列表修改元素</li>
+      <li>列表运算与函数</li>
+      <li>列表常用方法</li>
+      <li>实战：成绩排序和统计</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>想在字符串里打「打不出来的字符」？</h2>
+    <p>想打印一句带双引号的话，可字符串本身就是用双引号包的——Python 一半就把字符串「关上」了；想换行、想留出一段横向空格，又没法直接在代码里按回车。这些「有特殊使命」的字符，都要请出<b>转义字符</b>来解决。它只由一个反斜杠 <code>\</code> 带队，却是写几乎所有真实程序时都躲不开的细节。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">反斜杠 \ 是「变身开关」</div>
+      <p>本来有特殊含义的字符（引号、字母 n、字母 t），前面加上 <code>\</code> 这个开关，就「变身」了：引号变成<b>普通字符</b>乖乖显示出来，n 变成<b>换行动作</b>，t 变成<b>横跳几格的动作</b>。一个开关，两种方向：要么把「特殊」变「普通」，要么把「普通」变「特殊动作」。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>五个必会的转义字符</h2>
+    <ul class="points">
+      <li><code>\'</code> 表示单引号 <code>'</code>；<code>\"</code> 表示双引号 <code>"</code></li>
+      <li><code>\\</code> 表示反斜杠 <code>\</code> 本身</li>
+      <li><code>\n</code> 表示换行符——光标移动至<b>下一行的行首</b></li>
+      <li><code>\t</code> 表示横向制表符——光标向右移动若干空格</li>
+    </ul>
+
+    <div class="grid g3" style="margin-top:14px">
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent)"></span>\'</h4>
+        <div class="desc">单引号</div>
+        <div class="more">在单引号字符串里嵌套单引号时必须用它，例如 <code>'It\'s OK'</code>。</div>
+        <div class="hint">点击展开 ▾</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent2)"></span>\"</h4>
+        <div class="desc">双引号</div>
+        <div class="more">在双引号字符串里嵌套双引号时用它，让引号变回普通字符。</div>
+        <div class="hint">点击展开 ▾</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--ok)"></span>\\</h4>
+        <div class="desc">反斜杠</div>
+        <div class="more">想打印 \ 本身就得写两个：因为单个 \ 已经是「变身开关」，再用它转义自己。</div>
+        <div class="hint">点击展开 ▾</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--warn)"></span>\n</h4>
+        <div class="desc">换行符</div>
+        <div class="more">光标移动至下一行的行首。一段文字里写 n 个 \n，输出就分成 n+1 行。</div>
+        <div class="hint">点击展开 ▾</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--err)"></span>\t</h4>
+        <div class="desc">横向制表符</div>
+        <div class="more">光标向右移动若干空格，常用来做简单的纵向对齐。</div>
+        <div class="hint">点击展开 ▾</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#8b93a7"></span>组合技</h4>
+        <div class="desc">\t 和 \n 可以连用</div>
+        <div class="more">如 <code>a\tb\nc\td</code>：先横跳再换行，排版两不误。看下面的课堂代码。</div>
+        <div class="hint">点击展开 ▾</div>
+      </div>
+    </div>
+
+    <div class="switch" style="margin-top:18px">
+      <button class="on" data-pane="code">课堂代码</button>
+      <button data-pane="out">猜输出</button>
+    </div>
+    <div class="pane on" id="code">
+      <p class="muted" style="margin-bottom:6px">先自己心里默念一遍输出，再切到右边「猜输出」对照 👉</p>
+      <pre class="codeblock out">print("\"兴中华之农事\"")
+print("爱国敬业\t艰苦奋斗\n团结拼搏\t求实创新")</pre>
+    </div>
+    <div class="pane" id="out">
+      <p>输出结果：</p>
+      <pre class="codeblock out">"兴中华之农事"
+爱国敬业	艰苦奋斗
+团结拼搏	求实创新</pre>
+      <ul class="points">
+        <li>第 1 行：<code>\"</code> 让双引号在双引号字符串里「活」了下来</li>
+        <li>第 2 行：两个 <code>\t</code> 撑开横向空格，一个 <code>\n</code> 分成两行，正好是四词两两成行</li>
+      </ul>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！a 和 b 中间隔着一个 \n，输出就是两行：第一行 a，第二行 b。"
+         data-no="❌ 再想想：\n 是换行符，会把后面的内容推到下一行的行首。数一数 print 里出现了几次换行动作？">
+      <p style="font-weight:700;margin-bottom:12px"><code>print("a\nb")</code> 的输出有？</p>
+      <button class="opt" onclick="quizPick(this)">A. 1 行：a\nb 原样打印</button>
+      <button class="opt" onclick="quizPick(this)">B. 2 行：a 和 b 各占一行</button>
+      <button class="opt" onclick="quizPick(this)">C. 3 行</button>
+      <button class="opt" onclick="quizPick(this)">D. 直接报错</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="\t \n" data-ok="✅ 正确！\t 横向制表符，\n 换行符——这俩是转义字符里出场率最高的组合。" data-no="❌ 两个空连填（中间空格隔开）：横向制表符是「\ 加字母 t」，换行符是「\ 加字母 n」。">
+      <p>横向制表符的转义符号是＿＿，换行符的转义符号是＿＿。（两空连填，中间空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：\a \b">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">\t 不是排版神器，嵌套引号才用 \' \"</div>
+      <p><b>①</b> <code>\'</code> 和 <code>\"</code> 主要用在<b>同类引号嵌套</b>的场景：单引号字符串里要放单引号才必须写 <code>\'</code>；如果字符串用双引号包着，里面的单引号根本不用转义。<b>②</b> 别拿 <code>\t</code> 做精细排版——它跳几格<b>取决于终端的制表位设置</b>，不同环境下对齐效果可能不一样，要求精确对齐时应学习后面的 format / f-string 格式化。<b>③</b> 转义符写成了斜杠 <code>/</code>（正斜杠）不会生效，反斜杠 <code>\</code> 才是开关。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的转义字符：\'（单引号）、\\（反斜杠）、\n（换行）、\t（横向制表符），以及反斜杠加双引号的用法。请：1）各举一个这五个转义符的使用例子并给出输出；2）解释为什么 print(“a\nb”) 是两行而 print(“a\tb”) 是一行；3）出 3 道「看代码猜输出」题考我（至少一道同时含 \t 和 \n），等我作答后公布答案和讲解。">
+      我刚学了 Python 的转义字符（\' \" \\ \n \t）。请：1）各举一个这五个转义符的使用例子并给出输出；2）解释为什么 print("a\nb") 是两行而 print("a\tb") 是一行；3）出 3 道「看代码猜输出」题考我（至少一道同时含 \t 和 \n），等我作答后公布答案和讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：把课堂代码跑一遍（5 分钟）</span>
+    <ol class="steps">
+      <li>交互模式输入 <code>print("爱国敬业\t艰苦奋斗\n团结拼搏\t求实创新")</code>，对照输出：两行、四个词两两成对。</li>
+      <li>输入 <code>print("\"兴中华之农事\"")</code>，确认双引号被完整打印出来了。</li>
+      <li>试试 <code>print('It\'s OK')</code>——把 \' 去掉再跑一次，看看报什么错。</li>
+      <li>挑战：用 <code>print()</code> 打印出 <code>C:\Program Files\Python</code> 这个 Windows 路径（提示：每个 \ 都得写成 \\）。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>转义字符以 <code>\</code> 开头：<code>\'</code> <code>\"</code> 让引号变普通字符、<code>\\</code> 打印反斜杠本身、<code>\n</code> 换行（光标移到下行行首）、<code>\t</code> 横向跳格。嵌套同类引号、对齐排版、控制换行，全靠它们。下一节：字符串里的每个字符都有「门牌号」——索引！</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="3.01.html"><span class="nav-label">← 上一节</span><span class="nav-title">3.01 字符串基础与三种引号</span></a>
+        <a class="next" href="3.03.html"><span class="nav-label">下一节 →</span><span class="nav-title">3.03 字符串索引</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

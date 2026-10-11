@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.15 比较与逻辑运算符 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第二章 基础概念与数值 · 第 15 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+/* 页面专属：让两个表格并排（窄屏自动堆叠） */
+.tbl-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:12px 0}
+@media(max-width:680px){.tbl-grid{grid-template-columns:1fr}}
+.tbl-grid table{margin:0}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch02.html">第二章 基础概念与数值</a><span class="sep">/</span>
+          <span class="current">2.15</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">15</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第二章 · 基础概念与数值</span>
+            <h1>比较与逻辑运算符</h1>
+            <p class="hero-summary">第 15 / 17 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序构成的两大核心</li>
+      <li>变量：概念与赋值</li>
+      <li>变量命名规则</li>
+      <li>数据类型总览</li>
+      <li>type() 查看类型</li>
+      <li>保留字（关键字）</li>
+      <li>函数：定义与调用</li>
+      <li>常用内置函数</li>
+      <li>输入输出函数</li>
+      <li>缩进与注释规范</li>
+      <li>数值类型总览</li>
+      <li>整数与四种进制</li>
+      <li>浮点数与精度陷阱</li>
+      <li>算术与增强赋值运算符</li>
+      <li class="cur">比较与逻辑运算符</li>
+      <li>运算符优先级</li>
+      <li>数值函数与 math 模块</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>程序会「做判断」，全靠这两个运算符</h2>
+    <p>前面的算术运算符负责「算数」，但真实的程序还需要<b>做判断</b>：分数够不够 60？密码对不对？两个条件是不是同时成立？这就要靠<b>比较运算符</b>和<b>逻辑运算符</b>。这一节你将搞懂三件事：</p>
+    <ul class="points">
+      <li>比较运算符怎么用？它们的返回值只有两种</li>
+      <li>and、or、not 三个逻辑运算符各自什么脾气？</li>
+      <li>布尔值竟然还能当数字 1 和 0 参与算术？</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">裁判只回答「是」或「否」</div>
+      <p><b>比较运算符像一位铁面裁判</b>：你递给它两个数，它只回答「是（True）」或「否（False）」，绝不多说一个字。<br>
+      <b>逻辑运算符像三个性格不同的班主任</b>：<code>and</code> 是严师——<b>两门课都及格才算过关</b>，挂一门都不行；<code>or</code> 是仁师——<b>一门及格就行</b>，要求宽松；<code>not</code> 爱唱反调——你说真它偏说假，你说假它偏说真。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>两张表记住全部运算符</h2>
+    <ul class="points">
+      <li><b>比较运算符</b>：比较两个值的关系，结果<b>只能是布尔值</b>——<code>True</code>（对）或 <code>False</code>（错）。比较还能连着写，如 <code>0 &lt; x &lt; 10</code>，等价于 <code>0 &lt; x and x &lt; 10</code>。</li>
+      <li><b>逻辑运算符</b>：把多个 True / False 组合起来做综合判断。<code>and</code> / <code>or</code> 有<b>短路求值</b>特性（<code>and</code> 左侧为假就不再算右侧，<code>or</code> 左侧为真就不再算右侧），返回值也不一定是布尔值，而是<b>决定结果的那个操作数</b>——如 <code>0 or 'abc'</code> 得到 <code>'abc'</code>。</li>
+      <li><b>冷知识</b>：布尔值其实可以当数字用——<code>True</code> 相当于 1，<code>False</code> 相当于 0，能直接参与算术运算。</li>
+    </ul>
+    <div class="tbl-grid">
+      <table>
+        <tr><th>比较运算符</th><th>含义</th><th>示例</th></tr>
+        <tr><td>&gt;</td><td>大于</td><td>5 &gt; 3 → True</td></tr>
+        <tr><td>&lt;</td><td>小于</td><td>5 &lt; 3 → False</td></tr>
+        <tr><td>==</td><td>等于</td><td>5 == 5 → True</td></tr>
+        <tr><td>!=</td><td>不等于</td><td>5 != 3 → True</td></tr>
+        <tr><td>&gt;=</td><td>大于或等于</td><td>5 &gt;= 5 → True</td></tr>
+        <tr><td>&lt;=</td><td>小于或等于</td><td>5 &lt;= 3 → False</td></tr>
+      </table>
+      <table>
+        <tr><th>逻辑运算符</th><th>口诀</th><th>示例</th></tr>
+        <tr><td>and（与）</td><td>全真为真，有假为假</td><td>True and False → False</td></tr>
+        <tr><td>or（或）</td><td>全假为假，有真为真</td><td>True or False → True</td></tr>
+        <tr><td>not（非）</td><td>非真即假，非假即真</td><td>not True → False</td></tr>
+      </table>
+    </div>
+    <pre class="codeblock">a, b = 10, 2
+print(a &gt; b, a &lt; b, a == b)    # 输出：True False False
+print(a &gt;= b, a &lt;= b, a != b)  # 输出：True False True</pre>
+  </section>
+      <section>
+    <span class="tag">实战演示</span>
+    <h2>两个进阶玩法</h2>
+    <div class="quiz" style="margin-bottom:14px">
+      <p style="font-weight:700;margin-bottom:12px">🔍 点击切换，看看布尔值的两副面孔：</p>
+      <div class="switch">
+        <button class="on" data-pane="pane-b1">布尔值当数字用</button>
+        <button data-pane="pane-b2">and 与 or 的优先级</button>
+      </div>
+      <div class="pane on" id="pane-b1">
+        <pre class="codeblock">print(True + True, True + False, False + False)  # 输出：2 1 0</pre>
+        <p>True 相当于 <b>1</b>、False 相当于 <b>0</b>，可以直接参与算术。统计「满足条件的个数」时，这个技巧特别好用。</p>
+      </div>
+      <div class="pane" id="pane-b2">
+        <pre class="codeblock">print(True and True and False and False)  # 输出：False
+print(True or True or False or False)     # 输出：True
+print(True or True and False)             # 输出：True
+print(not True or True and False)         # 输出：False</pre>
+        <p><b>and 的优先级高于 or</b>：先算 <code>True and False → False</code>，再算 <code>True or False → True</code>。第三行因此输出 True。最后一行则是先 <code>not True → False</code>、再 <code>True and False → False</code>，最后 <code>False or False → False</code>。</p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！and 的优先级高于 or，先算 True and False → False，再算 True or False → True。"
+         data-no="❌ 不对哦。and 的优先级高于 or：先算 True and False 得 False，再算 True or False 得 True。">
+      <p style="font-weight:700;margin-bottom:12px"><code>print(True or True and False)</code> 的输出是？</p>
+      <button class="opt" onclick="quizPick(this)">A. False</button>
+      <button class="opt" onclick="quizPick(this)">B. 报错</button>
+      <button class="opt" onclick="quizPick(this)">C. True</button>
+      <button class="opt" onclick="quizPick(this)">D. 1.0</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="True" data-ok="✅ 正确！比较运算的结果只有两种：True（真）或 False（假）。" data-no="❌ 再想想：比较运算符的返回值只能是布尔值，另一个是 False 的话，这一个是什么？（提示：首字母要大写）">
+      <p>比较运算符的返回值只能是布尔值 <b>＿＿</b> 或 False。（注意 Python 中的大小写）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：False">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">「==」和「=」，一个字符之差，天壤之别</div>
+      <p>① <code>==</code> 是<b>判断相等</b>（返回 True/False），<code>=</code> 是<b>赋值</b>。写混了轻则逻辑出错（该判断的地方赋了值），重则直接语法报错（比如 <code>if x = 5:</code> 会报 SyntaxError）。判断相等，永远用两个等号。</p>
+      <p>② 布尔值可参与算术（<code>True + True</code> 的结果是 2），这不是 bug 而是特性——统计列表里有多少个成绩及格时，把每个 <code>score &gt;= 60</code> 的结果直接加起来就行，非常方便。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的比较运算符和逻辑运算符。请：1）解释 6 个比较运算符和 and、or、not 的规则，说明返回值是什么类型；2）演示布尔值当数字用的例子，比如 True + True 的结果；3）逐步推导 print(True or True and False) 为什么输出 True；4）出 2 道单选题考我，等我作答后再公布答案。">
+      我刚学了 Python 的比较运算符和逻辑运算符。请：1）解释 6 个比较运算符和 and、or、not 的规则，说明返回值是什么类型；2）演示布尔值当数字用的例子，比如 True + True 的结果；3）逐步推导 print(True or True and False) 为什么输出 True；4）出 2 道单选题考我，等我作答后再公布答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：亲手按下裁判的哨子（3 分钟）</span>
+    <ol class="steps">
+      <li>进入交互模式，输入 <code>print(True + True + False)</code> 回车——看看结果是不是 <code>2</code>？想一想为什么。</li>
+      <li>再输入 <code>print(not True or True and False)</code> 回车，先自己推一遍答案，再看输出是不是 <code>False</code>。</li>
+      <li>推不出来的话，按顺序拆：<code>not True</code> 是什么？<code>True and False</code> 是什么？最后把两个结果用 <code>or</code> 连起来。</li>
+      <li>试试 <code>10 &gt; 2</code> 和 <code>10 = 2</code>——第二个会怎样？体会 == 和 = 的区别。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>比较运算符（&gt;、&lt;、==、!=、&gt;=、&lt;=）的结果只能是布尔值 True 或 False；逻辑运算符 and「全真才真」、or「有真就真」、not「唱反调」；布尔值可当 1/0 参与算术，适合统计个数；判断相等要用 <code>==</code>，<code>=</code> 是赋值。下一节：这么多运算符混在一起，谁先算谁后算？——运算符优先级。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="2.14.html"><span class="nav-label">← 上一节</span><span class="nav-title">2.14 算术与增强赋值运算符</span></a>
+        <a class="next" href="2.16.html"><span class="nav-label">下一节 →</span><span class="nav-title">2.16 运算符优先级</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6.13 高阶函数：map 与 filter · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第六章 函数 · 第 13 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.pplay{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.prow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.pipe{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.pcol{min-width:190px}
+.pcol h4{margin:0 0 6px;font-size:13px;color:var(--ink2)}
+.cellbar{display:flex;gap:5px;flex-wrap:wrap;min-height:40px;padding:8px;
+  background:var(--code-bg);border:1.5px dashed var(--border);border-radius:10px}
+.pcell{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:34px;
+  padding:0 6px;text-align:center;background:#fff;border:1px solid var(--border);border-radius:8px;
+  font-family:Consolas,monospace;font-size:15px;transition:all .25s}
+.pcell.working{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:800;transform:scale(1.12)}
+.pcell.keep{background:#ecfdf5;border-color:#10b981;color:#059669;font-weight:800}
+.pcell.drop{opacity:0.3}
+.pcell.out{background:#fff7ed;border-color:#f59e0b;color:#b45309;font-weight:800}
+.plog{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14px;min-height:110px;white-space:pre-wrap;line-height:1.8}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch06.html">第六章 函数</a><span class="sep">/</span>
+          <span class="current">6.13</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">13</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第六章 · 函数</span>
+            <h1>高阶函数：map 与 filter</h1>
+            <p class="hero-summary">第 13 / 18 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>函数的定义与优点</li>
+      <li>函数的分类</li>
+      <li>函数的定义</li>
+      <li>函数的调用</li>
+      <li>形参与实参</li>
+      <li>参数传递的两种方式</li>
+      <li>必须参数与可选参数</li>
+      <li>不定长参数</li>
+      <li>参数值的数据类型</li>
+      <li>变量作用域：局部与全局</li>
+      <li>global 修改全局变量</li>
+      <li>匿名函数 lambda</li>
+      <li class="cur">高阶函数：map 与 filter</li>
+      <li>高阶函数：sorted 与 key</li>
+      <li>递归函数：概念与两要素</li>
+      <li>递归执行逻辑：递推与回溯</li>
+      <li>递归实战：阶乘</li>
+      <li>递归实战：字符串逆序</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>「对每个元素都做同一件事」，别再手写循环了</h2>
+    <p>想把列表里每个数都平方？想筛出所有偶数？用 for 循环写要四五行，而这两件事恰恰是「<b>一个函数 + 一批数据</b>」的组合。Python 的<b>函数式编程</b>提供了 map 和 filter：把一个函数（经常就是上一节的 lambda）当作<b>参数</b>传进去，让它替你跑循环。这种「能接收函数作为参数」的函数，就叫<b>高阶函数</b>——理解了这一点，函数就从「被调用的东西」升级成了「可以传递的素材」。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">map 是「加工流水线」，filter 是「质检传送带」</div>
+      <p><b>map 像苹果削皮机流水线</b>：每个苹果挨个进机器，出来时都变了样（每个元素都做同样变换，<b>一个不少</b>）。<b>filter 像质检传送带</b>：每个苹果挨个过质检员，合格的留下、不合格的踢出去（每个元素都做同样判断，<b>只留合格的</b>）。两条传送带的共同点：你都得先把「加工规则 / 质检标准」交给它们——那个规则，就是传进去的 lambda 函数。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>map 与 filter：两个高阶函数</h2>
+    <ul class="points">
+      <li><b>高阶函数</b>：函数式编程的重要概念——可以<b>接收函数作为参数</b>、或者<b>返回一个函数</b>的函数。map 和 filter 的第一个参数就是函数</li>
+      <li><b>map(匿名函数, 映射对象)</b>：把函数<b>应用</b>于可迭代对象的<b>每个元素</b>，返回一个新迭代器——像「每个都加工」，结果个数不变</li>
+      <li><b>filter(匿名函数, 过滤对象)</b>：用函数<b>判断</b>每个元素（真 / 假），<b>保留满足条件的项</b>——像「挑出合格的」，结果个数只减不增</li>
+      <li><b>返回的都是迭代器</b>：不能直接 print 出内容，要 <code>list()</code> 转换后才能查看——和 5.09 的 range 是「菜谱不是菜」一个道理</li>
+      <li><b>判断函数返回真值才保留</b>：filter 的 lambda 通常返回 True / False（如 <code>n%2==0</code>），为真才让元素通过</li>
+    </ul>
+
+    <div class="pplay">
+      <p style="font-weight:700;margin-bottom:10px">🔬 map / filter 流水线实验台：固定序列 [1, 2, 3, 4, 5]，看每个元素「进 → 变换 → 出」</p>
+      <div class="prow">
+        <button class="btn-main btn" onclick="runPipe('map')">▶ 演示 map(lambda n: n**2)</button>
+        <button class="btn-ghost btn" onclick="runPipe('filter')">▶ 演示 filter(lambda n: n%2==0)</button>
+        <button class="btn-ghost btn" onclick="resetPipe()">重置</button>
+      </div>
+      <div class="pipe">
+        <div class="pcol"><h4>📥 输入（当前处理的元素高亮）</h4><div class="cellbar" id="pin"></div></div>
+        <div class="pcol"><h4>⚙️ 加工 / 质检（传进去的 lambda）</h4><div class="cellbar" id="pmid">　</div></div>
+        <div class="pcol"><h4>📤 输出（逐个产出）</h4><div class="cellbar" id="pout"></div></div>
+      </div>
+      <div class="plog" id="plog">点上方按钮开始演示……</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：filter 筛偶数，map 全平方</h2>
+    <pre class="codeblock">ls = [1, 2, 3, 4, 5]
+
+ft = list(filter(lambda n: n%2==0, ls))
+print(ft)
+
+sq = list(map(lambda n: n**2, ls))
+print(sq)</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">[2, 4]
+[1, 4, 9, 16, 25]</pre>
+    <ul class="points">
+      <li>filter 那行：lambda <code>n%2==0</code> 是「质检标准」——1 不合格丢弃、2 合格保留……最终 [2, 4]，<b>个数变少了</b></li>
+      <li>map 那行：lambda <code>n**2</code> 是「加工工序」——每个数都平方，1→1、2→4……最终 [1, 4, 9, 16, 25]，<b>个数不变</b></li>
+      <li>两行都要 <code>list(...)</code> 包一下：map / filter 返回的是迭代器，直接 print 看不到内容</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>不用高阶函数 vs 用高阶函数：同两件事</h2>
+    <pre class="codeblock">ls = [1, 2, 3, 4, 5]
+
+# 手写 for 循环版：筛偶数 + 平方，各要 4 行
+ft = []
+for n in ls:
+    if n % 2 == 0:
+        ft.append(n)
+sq = []
+for n in ls:
+    sq.append(n ** 2)
+
+# 高阶函数版：各 1 行，规则一目了然
+ft2 = list(filter(lambda n: n%2==0, ls))
+sq2 = list(map(lambda n: n**2, ls))
+print(ft2, sq2)</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">[2, 4] [1, 4, 9, 16, 25]</pre>
+    <ul class="points">
+      <li>结果完全相同，但高阶函数版把「怎么筛、怎么变」<b>浓缩成一条规则</b>直接写在调用里</li>
+      <li>map 和 filter 也能串起来用（流水线接流水线）：<code>list(map(lambda n: n**2, filter(lambda n: n%2==0, ls)))</code> → 先筛偶数再平方，得 [4, 16]</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！filter 是质检传送带：1、3、5 都是奇数（n%2==0 为 False）被踢掉，只有 2、4 通过——结果 [2, 4]。"
+         data-no="❌ 注意 filter 只「筛」不「变」：它按 lambda 的判断结果决定每个元素去留，判断为 False 的直接丢弃。[1, 3, 9, 25] 那种是把剩下的平方了，filter 不干这事。">
+      <p style="font-weight:700;margin-bottom:12px"><code>list(filter(lambda n: n%2==0, [1, 2, 3, 4, 5]))</code> 的输出是？</p>
+      <button class="opt" onclick="quizPick(this)">A. [1, 4, 9, 16, 25]</button>
+      <button class="opt" onclick="quizPick(this)">B. [1, 3, 5]</button>
+      <button class="opt" onclick="quizPick(this)">C. [2, 4]</button>
+      <button class="opt" onclick="quizPick(this)">D. [False, True, False, True, False]</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="高阶mapfilterlist|高阶 map filter list" data-ok="✅ 全对！接收函数作参数的叫高阶函数；map 逐个映射加工，filter 按条件过滤；返回的是迭代器，要 list() 才能查看。" data-no="❌ 提示：四个空分别是——能接收函数作为参数的函数叫什么？逐个加工的是哪个？按条件筛选的是哪个？返回的迭代器要用什么函数转换？">
+      <p>可以接收函数作为参数的函数称为<b>＿＿</b>函数；其中对每个元素逐个「加工」的是 <b>＿＿</b>，按条件筛选「保留合格项」的是 <b>＿＿</b>；它们都返回迭代器，需用 <b>＿＿</b>() 转换后才能查看内容。（四空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：高阶 map filter list">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>忘了 list() 转换</b>：直接 <code>print(map(lambda n: n**2, ls))</code> 看到的是 <code>&lt;map object at 0x…&gt;</code> 这类对象地址，不是数据——迭代器是「菜谱」，要 <code>list()</code> 才是「菜」；</p>
+      <p>②<b>filter 的 lambda 判断写错方向</b>：<code>lambda n: n%2</code> 筛出的是<b>奇数</b>（1、3、5 非零为真），想要偶数得写 <code>n%2==0</code>——「结果为真才保留」；</p>
+      <p>③<b>map 和 filter 记反</b>：map 是「每个都变、个数不变」，filter 是「每个都判、个数只减不增」——想要平方结果却写了 filter，得到的还是原数字。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 高阶函数 map 和 filter。请：1）用「加工流水线 vs 质检传送带」的类比解释两者的区别；2）分别手写 for 循环版和 map/filter 版实现「把 [3, 8, 12, 7] 里的数全部加 1」，对比行数；3）出 3 道「给出 map/filter + lambda 代码求输出」的题考我（含一道 map 套 filter 的），等我答完再讲解。">
+      我刚学了 Python 高阶函数 map 和 filter。请：1）用「加工流水线 vs 质检传送带」的类比解释两者的区别；2）分别手写 for 循环版和 map/filter 版实现「把 [3, 8, 12, 7] 里的数全部加 1」，对比行数；3）出 3 道「给出 map/filter + lambda 代码求输出」的题考我（含一道 map 套 filter 的），等我答完再讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：手写流水线（5 分钟）</span>
+    <ol class="steps">
+      <li>把课堂代码抄进交互模式跑一遍，再故意删掉外层 <code>list()</code>，看看直接 print 迭代器输出的样子。</li>
+      <li>用 <code>map(lambda n: n+10, [1, 2, 3, 4, 5])</code> 造一条「每人加 10 分」的流水线，体会 lambda 规则一换、流水线功能就变。</li>
+      <li>把两条流水线串起来：<code>list(map(lambda n: n**2, filter(lambda n: n%2==0, [1, 2, 3, 4, 5])))</code>，先心算再验证——应该是 [4, 16]。</li>
+      <li>预告：下一节 sorted 排序同样靠 lambda 传「排序规则」，作业第 5 题就会用到——试着想想「按什么排」该怎么写成 lambda。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>高阶函数 = 能接收函数作为参数（或返回函数）的函数；map(函数, 对象) 对每个元素加工、个数不变；filter(函数, 对象) 按真假筛选、只留满足条件的项；两者都返回迭代器，需 list() 转换查看。lambda 在这里如鱼得水——下一节的 sorted 用同样的思路传「排序规则」。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="6.12.html"><span class="nav-label">← 上一节</span><span class="nav-title">6.12 匿名函数 lambda</span></a>
+        <a class="next" href="6.14.html"><span class="nav-label">下一节 →</span><span class="nav-title">6.14 高阶函数：sorted 与 key</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：map / filter 流水线实验台（固定序列 [1,2,3,4,5]） */
+const SEQ = [1, 2, 3, 4, 5];
+let pTimer = null;
+function cells(barId, arr, cls){
+  const bar = document.getElementById(barId);
+  bar.innerHTML = '';
+  arr.forEach(v => {
+    const d = document.createElement('span');
+    d.className = 'pcell' + (cls ? ' ' + cls : '');
+    d.textContent = v;
+    bar.appendChild(d);
+  });
+}
+function highlight(barId, idx, cls){
+  const cellsEl = document.getElementById(barId).children;
+  for (let i = 0; i < cellsEl.length; i++) cellsEl[i].className = 'pcell' + (i === idx ? ' ' + cls : '');
+}
+function resetPipe(){
+  if (pTimer){ clearInterval(pTimer); pTimer = null; }
+  cells('pin', SEQ);
+  document.getElementById('pmid').innerHTML = '　';
+  cells('pout', []);
+  document.getElementById('plog').textContent = '点上方按钮开始演示……';
+}
+function runPipe(mode){
+  resetPipe();
+  const log = document.getElementById('plog');
+  const out = [];
+  let i = 0;
+  document.getElementById('pmid').innerHTML = '<span class="pcell" style="background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:800">' +
+    (mode === 'map' ? 'lambda n: n**2' : 'lambda n: n%2==0') + '</span>';
+  pTimer = setInterval(() => {
+    if (i >= SEQ.length){
+      clearInterval(pTimer); pTimer = null;
+      log.textContent += '\n—— 流水线跑完，print 输出：[' + out.join(', ') + '] ——';
+      log.textContent += '\n（实际代码里要写 list(...) 才能看到这个列表）';
+      highlight('pin', -1);
+      return;
+    }
+    const n = SEQ[i];
+    highlight('pin', i, 'working');
+    let keep, result, line;
+    if (mode === 'map'){
+      result = n * n;
+      keep = true;
+      line = (i + 1) + '. ' + n + ' 进流水线 → lambda n: n**2 加工 → 出 ' + result;
+    } else {
+      keep = n % 2 === 0;
+      result = n;
+      line = (i + 1) + '. ' + n + ' 过质检 → n%2==0 判断 ' + (keep ? 'True → 留下' : 'False → 踢掉');
+    }
+    if (keep){
+      out.push(result);
+      cells('pout', out, 'out');
+    } else {
+      const inCells = document.getElementById('pin').children;
+      inCells[i].className = 'pcell drop';
+    }
+    log.textContent = log.textContent === '点上方按钮开始演示……' || log.textContent.indexOf('—— 流水线跑完') === 0 ? line : log.textContent + '\n' + line;
+    i++;
+  }, 900);
+}
+window.addEventListener('DOMContentLoaded', resetPipe);
+</script>
+</body>
+</html>

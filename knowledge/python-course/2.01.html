@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.01 程序构成的两大核心 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第二章 基础概念与数值 · 第 1 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch02.html">第二章 基础概念与数值</a><span class="sep">/</span>
+          <span class="current">2.01</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">01</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第二章 · 基础概念与数值</span>
+            <h1>程序构成的两大核心</h1>
+            <p class="hero-summary">第 1 / 17 节 · 约 6 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li class="cur">程序构成的两大核心</li>
+      <li>变量：概念与赋值</li>
+      <li>变量命名规则</li>
+      <li>数据类型总览</li>
+      <li>type() 查看类型</li>
+      <li>保留字（关键字）</li>
+      <li>函数：定义与调用</li>
+      <li>常用内置函数</li>
+      <li>输入输出函数</li>
+      <li>缩进与注释规范</li>
+      <li>数值类型总览</li>
+      <li>整数与四种进制</li>
+      <li>浮点数与精度陷阱</li>
+      <li>算术与增强赋值运算符</li>
+      <li>比较与逻辑运算符</li>
+      <li>运算符优先级</li>
+      <li>数值函数与 math 模块</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>先看全局，再学细节</h2>
+    <p>从这一节开始，我们进入第二章「基础概念与数值」。在正式学变量、类型之前，先回答一个最顶层的问题：<b>一个程序到底是由什么构成的？</b></p>
+    <p>答案只有两个词——<b>「数据」</b>和<b>「处理」</b>。程序要处理信息，信息就是数据；数据不能自己动，必须有人按照章法去加工它，这个「章法」就是处理。本章的 17 个小节，全部都是围绕这两大核心展开的，学之前先看清地图，后面每一节你都会知道自己走到哪儿了。</p>
+    <ul class="points">
+      <li><b>数据</b>要有人管——靠<b>变量</b>来存放，靠<b>数据类型</b>来区分种类</li>
+      <li><b>处理</b>要有章法——靠<b>运算符</b>做计算，靠<b>函数</b>封装可复用的步骤</li>
+      <li>本章分两大部分：<b>第一部分·基础概念</b>（变量 / 数据类型 / 保留字 / 函数 / 输入输出 / 格式规范），<b>第二部分·数值与运算</b>（数值类型 / 运算符 / 数值函数）</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">做菜 = 食材（数据）+ 菜谱步骤（处理）</div>
+      <p>做一桌菜，你得先有<b>食材</b>——米、肉、菜、调料，它们就是程序的<b>数据</b>；光有食材不够，还得有<b>菜谱步骤</b>——先切、再炒、后焖，这就是程序的<b>处理</b>。缺了食材，菜谱写得再好也没用；缺了步骤，一堆食材永远变不成菜。<b>数据和处理，缺一样都做不成一桌菜，也写不成一个程序。</b></p>
+      <p style="margin-top:8px">而本章学的变量、类型，就是给食材分类、贴标签、放进收纳盒；运算符、函数，就是把菜谱步骤写清楚、写得能复用。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>两大核心，两条学习主线</h2>
+    <ul class="points">
+      <li><b>核心一：数据</b>——程序里所有要被处理的信息。谁来看管它们？<b>变量</b>负责「存放」，<b>数据类型</b>负责「分类」，<b>保留字</b>则是命名时不能碰的「系统专属词」。</li>
+      <li><b>核心二：处理</b>——对数据做的动作。<b>运算符</b>（算术、比较、逻辑）负责具体计算，<b>函数</b>负责把一批动作打包成可反复调用的整体，<b>输入输出函数</b>则负责程序与你的对话。</li>
+      <li>两大核心各自都对应本章的一半内容：前半打「地基」，后半学「计算」。学数值运算之前，必须先掌握变量与类型，否则算出来的结果连「放的地方」都没有。</li>
+    </ul>
+
+    <div class="grid g2" style="margin-top:14px">
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent)"></span>📦 数据——本章前半讲什么</h4>
+        <div class="desc">2.02 ～ 2.10 · 基础概念部分</div>
+        <div class="more">这一部分解决「数据从哪来、放哪里、叫什么」：<br>① <b>变量</b>的概念、赋值与命名规则（2.02 / 2.03）<br>② <b>数据类型</b>总览与 type() 查看类型（2.04 / 2.05）<br>③ <b>保留字</b>——起名字的禁区（2.06）<br>④ <b>函数</b>的定义调用与常用内置函数（2.07 / 2.08）<br>⑤ <b>输入输出函数</b>与<b>缩进、注释</b>规范（2.09 / 2.10）</div>
+        <div class="hint">👆 点击展开本章前半的路线图</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent2)"></span>⚙️ 处理——本章后半讲什么</h4>
+        <div class="desc">2.11 ～ 2.17 · 数值与运算部分</div>
+        <div class="more">这一部分解决「数据怎么算」：<br>① <b>数值类型</b>总览：整数、浮点数（2.11）<br>② <b>整数</b>的四种进制表示（2.12）<br>③ <b>浮点数</b>与精度陷阱（2.13）<br>④ <b>算术、增强赋值、比较、逻辑运算符</b>（2.14 / 2.15）<br>⑤ <b>运算符优先级</b>（2.16）<br>⑥ <b>数值函数与 math 模块</b>（2.17）</div>
+        <div class="hint">👆 点击展开本章后半的路线图</div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！程序 = 数据 + 处理，两大核心缺一不可。"
+         data-no="❌ 不对哦。一个程序由「数据」和「处理」两大核心构成：数据要靠变量和类型来管，处理要靠运算符和函数来实现。">
+      <p style="font-weight:700;margin-bottom:12px">程序构成的两大核心是什么？</p>
+      <button class="opt" onclick="quizPick(this)">A. 输入 和 输出</button>
+      <button class="opt" onclick="quizPick(this)">B. 变量 和 常量</button>
+      <button class="opt" onclick="quizPick(this)">C. 数据 和 处理</button>
+      <button class="opt" onclick="quizPick(this)">D. 代码 和 注释</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="处理" data-ok="✅ 正确！程序 = 数据 + 处理，这正是本章的两条主线。" data-no="❌ 再想想：光有食材不行，还需要菜谱步骤。这个「章法」叫什么？（提示：本章第二部分讲的就是它）">
+      <p>一个程序由「数据」和「＿＿」两大核心构成；数据由变量与数据类型来管理。</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：××">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">只背术语、不动手，是最大误区</div>
+      <p>「数据 + 处理」听起来很抽象，很多同学把这页当成需要背诵的名词。其实它是一张<b>导航图</b>：后面学到任何小节（比如「浮点数与精度陷阱」），都应该能回答「它属于数据还是处理？」——答不出来的地方，就是你对全局还不熟的地方。</p>
+      <p>另一个坑：以为「处理 = 运算符」就够了。本章后半会看到，处理还包括<b>函数</b>——运算符像单个动作，函数像整套动作的打包，二者共同构成章法。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了「Python 程序由数据和处理两大核心构成」这个概念。请：1）用做菜或其他生活类比再解释一遍数据和处理的关系；2）举一个具体的小程序例子，指出其中哪些是数据、哪些是处理；3）给我列出 Python 学习中分别属于「数据」和「处理」的知识点各 5 个，并出 1 道单选题考我。">
+      我刚学了「Python 程序由数据和处理两大核心构成」这个概念。请：1）用做菜或其他生活类比再解释一遍数据和处理的关系；2）举一个具体的小程序例子，指出其中哪些是数据、哪些是处理；3）给我列出 Python 学习中分别属于「数据」和「处理」的知识点各 5 个，并出 1 道单选题考我。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：看清本章地图（3 分钟）</span>
+    <ol class="steps">
+      <li>回到本章目录页 <a href="index.html">index.html</a>，浏览全部 17 个小节的标题。</li>
+      <li>对照本页两张卡片：试着把 17 个小节<b>口头归类</b>——哪些属于「数据」？哪些属于「处理」？</li>
+      <li>拿不准的，点击上面的两张卡片对照答案，重点看序号分界：2.02 ～ 2.10 是基础概念，2.11 ～ 2.17 是数值与运算。</li>
+      <li>最后想一个问题：为什么数值运算（后半部分）要放在变量与类型（前半部分）之后学？带着这个答案进入 2.02。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>一个程序 = <b>「数据」+「处理」</b>两大核心。数据要有人管——<b>变量</b>与<b>数据类型</b>；处理要有章法——<b>运算符</b>与<b>函数</b>。本章前半（2.02 ～ 2.10）学基础概念，后半（2.11 ～ 2.17）学数值与运算。下一节：进入第一大核心，认识程序里最基本的数据管家——变量。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="ch02.html"><span class="nav-label">← 上一节</span><span class="nav-title">第二章课程目录</span></a>
+        <a class="next" href="2.02.html"><span class="nav-label">下一节 →</span><span class="nav-title">2.02 变量：概念与赋值</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

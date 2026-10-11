@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.03 字符串索引 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第三章 字符串与列表 · 第 3 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.idxgrid{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 6px}
+.idxcol{text-align:center}
+.idxcol .top{font-size:13px;font-weight:800;color:var(--accent);
+  background:var(--accent-soft);border:1px solid #d8e0fc;border-radius:8px 8px 0 0;
+  padding:4px 0;min-width:52px}
+.idxcol .ch{display:block;font-family:Consolas,monospace;font-size:20px;font-weight:700;
+  background:#fff;border:1px solid var(--border);border-top:none;padding:10px 0;min-width:52px;cursor:pointer;transition:all .15s}
+.idxcol .ch:hover{background:var(--accent-soft)}
+.idxcol.pick .ch{background:var(--accent);color:#fff}
+.idxcol .bot{font-size:13px;font-weight:800;color:var(--accent2);
+  background:var(--accent2-soft);border:1px solid #e2d9fa;border-top:none;border-radius:0 0 8px 8px;
+  padding:4px 0;min-width:52px}
+.idxlegend{display:flex;gap:16px;font-size:13px;color:var(--ink2);margin-bottom:10px}
+.idxlegend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.idxread{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:15px;min-height:24px;word-break:break-all}
+.idxread b{color:var(--accent)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch03.html">第三章 字符串与列表</a><span class="sep">/</span>
+          <span class="current">3.03</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">03</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第三章 · 字符串与列表</span>
+            <h1>字符串索引</h1>
+            <p class="hero-summary">第 3 / 21 节 · 约 11 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>字符串基础与三种引号</li>
+      <li>转义字符</li>
+      <li class="cur">字符串索引</li>
+      <li>字符串切片</li>
+      <li>实战：身份证号提取信息</li>
+      <li>字符串运算与内置函数</li>
+      <li>大小写转换方法</li>
+      <li>计数、查找与替换</li>
+      <li>分割、联合与剔除</li>
+      <li>判断字符串类别</li>
+      <li>format 格式化输出</li>
+      <li>f-string 格式化输出</li>
+      <li>列表定义与特性</li>
+      <li>列表的创建</li>
+      <li>列表索引与切片</li>
+      <li>列表增加元素</li>
+      <li>列表删除元素</li>
+      <li>列表修改元素</li>
+      <li>列表运算与函数</li>
+      <li>列表常用方法</li>
+      <li>实战：成绩排序和统计</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>想精确取出某一个字符？靠索引</h2>
+    <p>上一节我们能把一整段文字装进 Python 了，但真实任务往往是「取出身份证的第 17 位」「取出名字的第一个字」。由于字符串是一个<b>有序字符序列</b>，每个字符都站在自己的位置上——只要报出位置，就能精确定位。这个反映字符所处位置的<b>序号，就叫索引（Index）</b>。本节是下一节切片、以及 3.05 身份证实战的直接地基。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">电影院的一排座位，两种数法</div>
+      <p>字符串像电影院的座位排：从<b>入口</b>顺着数是第 0、1、2…座（正向递增）；从<b>出口</b>倒着数是倒数第 1、2…座（反向递减）。同一个座位有两种叫法——比如最后一排的位子，正向叫 5 号，反向叫 −1 号。数法不同，指的都是同一把椅子。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>正向递增从 0 起，反向递减从 -1 起</h2>
+    <ul class="points">
+      <li><b>正向递增</b>：以字符串<b>最左端</b>字符标记为 <b>0</b>，依次向右加 1</li>
+      <li><b>反向递减</b>：以<b>最右侧</b>字符标记为 <b>-1</b>，依次向左减 1</li>
+      <li>取单个字符的写法：<code>字符串名[索引]</code>，如 <code>s[0]</code>、<code>s[-1]</code></li>
+      <li>两种索引可以换算：对长度为 L 的字符串，正向 i 对应反向 i − L</li>
+    </ul>
+
+    <p style="margin-top:12px">以 <code>s = 'Python'</code> 为例，点击任意字符，看看它的两种索引取值：</p>
+    <div class="idxgrid" id="idxgrid"></div>
+    <div class="idxlegend">
+      <span><i style="background:var(--accent)"></i>上排：正向索引 0 → 5</span>
+      <span><i style="background:var(--accent2)"></i>下排：反向索引 -6 → -1</span>
+    </div>
+    <div class="idxread" id="idxread">👆 点击上面的任意字符试试</div>
+
+    <pre class="codeblock">s = 'Python'
+print(s[0])    # P   正向第 0 个
+print(s[5])    # n   正向最后一个
+print(s[-1])   # n   反向第 1 个，也是最后一个
+print(s[-6])   # P   反向数到最后，正是第 0 个字符</pre>
+    <p>同一个字符能被两种索引取到：<code>s[0]</code> 和 <code>s[-6]</code> 都是 <code>P</code>，就像同一把椅子从两头数有两个编号。</p>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！P y t h o n 反着数：n 是 -1，o 是 -2，所以 s[-2] 是 o。"
+         data-no="❌ 从最右侧开始倒数：-1 是 n，-2 是它左边的 o。再数一遍？">
+      <p style="font-weight:700;margin-bottom:12px"><code>s = 'Python'</code>，<code>s[-2]</code> 的值是？</p>
+      <button class="opt" onclick="quizPick(this)">A. n</button>
+      <button class="opt" onclick="quizPick(this)">B. o</button>
+      <button class="opt" onclick="quizPick(this)">C. h</button>
+      <button class="opt" onclick="quizPick(this)">D. 报错 IndexError</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="0|零" data-ok="✅ 正确！正向索引从 0 开始——程序员的世界里，「第一个」的编号是 0。" data-no="❌ 提示：不是 1，也不是 -1。程序员从哪个数字开始数数？">
+      <p>正向索引以最左端字符标记为＿＿开始。（填数字）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：1">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个最容易踩的坑</div>
+      <p><b>① 正向从 0 开始，不是从 1 开始</b>——「第 1 个字符」的索引是 0，写 <code>s[1]</code> 拿到的是第二个字符。<b>② -1 是最后一个字符本身</b>，不是「不存在的第 -1 个位置」；倒数第几个就从 -1 往左数。<b>③ 单字符索引越界会报错</b>：长度为 6 的 <code>'Python'</code>，<code>s[6]</code> 或 <code>s[-7]</code> 都直接抛 <code>IndexError</code>。顺带预告：切片越界反而不报错（有多少取多少），下一节讲。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 字符串索引（正向从 0 递增、反向从 -1 递减）。请：1）以字符串 'python' 为例画一张双排索引对照说明（文字版即可）；2）出 5 道 s[?] 求值题考我（正负索引混着出，含一道故意越界的），等我作答后公布答案和讲解；3）解释 s[0] 和 s[-len(s)] 为什么取到同一个字符。">
+      我刚学了 Python 字符串索引（正向从 0 递增、反向从 -1 递减）。请：1）以字符串 'python' 为例画一张双排索引对照说明（文字版即可）；2）出 5 道 s[?] 求值题考我（正负索引混着出，含一道故意越界的），等我作答后公布答案和讲解；3）解释 s[0] 和 s[-len(s)] 为什么取到同一个字符。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：先猜后验，索引速练（5 分钟）</span>
+    <ol class="steps">
+      <li>交互模式输入 <code>s = 'Python'</code>。</li>
+      <li>输入 <code>s[0]</code> 之前先<b>心里猜答案</b>，再回车验证。</li>
+      <li>依次试 <code>s[-1]</code>、<code>s[-6]</code>、<code>s[5]</code>，每次都先猜后验。</li>
+      <li>最后输入 <code>s[6]</code>，亲眼看一次 IndexError 长什么样——以后遇到就不会慌了。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>索引是字符在有序序列中的位置号：<b>正向从 0 递增、反向从 -1 递减</b>，用 <code>s[索引]</code> 取单个字符；两种索引殊途同归；单字符越界报 IndexError。下一节：一次取一段——更强大的字符串切片！</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="3.02.html"><span class="nav-label">← 上一节</span><span class="nav-title">3.02 转义字符</span></a>
+        <a class="next" href="3.04.html"><span class="nav-label">下一节 →</span><span class="nav-title">3.04 字符串切片</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：点击字符显示两种索引取值 */
+(function(){
+  const S = 'Python';
+  const grid = document.getElementById('idxgrid');
+  const read = document.getElementById('idxread');
+  const L = S.length;
+  S.split('').forEach((ch, i) => {
+    const col = document.createElement('div');
+    col.className = 'idxcol';
+    col.innerHTML = '<div class="top">' + i + '</div><span class="ch">' + ch + '</span><div class="bot">-' + (L - i) + '</div>';
+    col.querySelector('.ch').addEventListener('click', function(){
+      grid.querySelectorAll('.idxcol').forEach(function(c){ c.classList.remove('pick'); });
+      col.classList.add('pick');
+      read.innerHTML = 's[' + i + '] → <b>' + ch + '</b>　·　s[-' + (L - i) + '] → <b>' + ch + '</b>　（两种叫法，同一个字符）';
+    });
+    grid.appendChild(col);
+  });
+})();
+</script>
+</body>
+</html>

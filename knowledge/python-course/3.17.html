@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.17 列表删除元素 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第三章 字符串与列表 · 第 17 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.cm{color:#8a93a6}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch03.html">第三章 字符串与列表</a><span class="sep">/</span>
+          <span class="current">3.17</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">17</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第三章 · 字符串与列表</span>
+            <h1>列表删除元素</h1>
+            <p class="hero-summary">第 17 / 21 节 · 约 12 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>字符串基础与三种引号</li>
+      <li>转义字符</li>
+      <li>字符串索引</li>
+      <li>字符串切片</li>
+      <li>实战：身份证号提取信息</li>
+      <li>字符串运算与内置函数</li>
+      <li>大小写转换方法</li>
+      <li>计数、查找与替换</li>
+      <li>分割、联合与剔除</li>
+      <li>判断字符串类别</li>
+      <li>format 格式化输出</li>
+      <li>f-string 格式化输出</li>
+      <li>列表定义与特性</li>
+      <li>列表的创建</li>
+      <li>列表索引与切片</li>
+      <li>列表增加元素</li>
+      <li class="cur">列表删除元素</li>
+      <li>列表修改元素</li>
+      <li>列表运算与函数</li>
+      <li>列表常用方法</li>
+      <li>实战：成绩排序和统计</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>加得进，也要删得掉</h2>
+    <p>白板清单写错了一项怎么办？擦掉就行。删除列表元素有一整族工具：<code>remove</code>、<code>pop</code>、<code>clear</code> 和 <code>del</code> 语句。它们各有分工——按值删还是按位置删？删完给不还你？这一节一次分清。所有操作同样<b>直接改变原列表</b>。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">点名出列、弹夹退弹、撕掉一行、扔掉白板</div>
+      <p><b>remove</b> 像「点名让它出列」——按<b>内容</b>找人，叫到谁谁走；<b>pop</b> 像「弹夹退弹」——按<b>位置</b>取走，还把子弹递给你看一眼；<b>del</b> 像「直接撕掉清单的某一行」——不吭声就删了；而 <code>del 整个列表</code>则是「把白板扔了」——再问白板上有什么，Python 只能告诉你：查无此物（NameError）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>删除元素全家福</h2>
+    <table>
+      <tr><th>写法</th><th>作用</th></tr>
+      <tr><td>ls.remove(V)</td><td>删除列表 ls 中指定的元素 V（<b>第一个</b>），没有匹配将报错</td></tr>
+      <tr><td>ls.pop()</td><td>删除列表 ls 中<b>最后一个</b>元素，并<b>返回</b>该元素</td></tr>
+      <tr><td>ls.pop(M)</td><td>删除列表 ls 中<b>索引（位置）为 M</b> 的元素，并<b>返回</b>该元素</td></tr>
+      <tr><td>ls.clear()</td><td>删除列表 ls 中的<b>所有元素</b>，列表仍然存在</td></tr>
+      <tr><td>del ls[M]</td><td>删除索引为 M 的元素</td></tr>
+      <tr><td>del ls[M:N:K]</td><td>删除位于 [M, N) 区间内步长为 K 的元素</td></tr>
+      <tr><td>del ls</td><td>删除<b>整个列表</b>，列表将被销毁</td></tr>
+    </table>
+    <pre class="codeblock">L6 = [1, 2, 3, 4, 5, 6, 6, 8, 9, 10]
+print(L6.pop(), L6)     <span class="cm"># 10 [1, 2, 3, 4, 5, 6, 6, 8, 9]</span>
+print(L6.pop(2), L6)    <span class="cm"># 3 [1, 2, 4, 5, 6, 6, 8, 9]</span>
+print(L6.remove(6), L6) <span class="cm"># None [1, 2, 4, 5, 6, 8, 9]</span>
+del L6[2]               <span class="cm"># [1, 2, 5, 6, 8, 9]</span>
+del L6[3:]              <span class="cm"># [1, 2, 5]</span>
+L6.clear()              <span class="cm"># []</span>
+del L6                  <span class="cm"># 之后 print(L6) → NameError</span></pre>
+    <ul class="points">
+      <li><code>pop()</code> 弹出末尾的 10 并返回它；<code>pop(2)</code> 弹出索引 2 上的 3 并返回它</li>
+      <li><code>remove(6)</code> 只删<b>第一个</b> 6，第二个 6 还在；它返回 None</li>
+      <li><code>del L6[2]</code> 删掉索引 2 上的 4；<code>del L6[3:]</code> 按切片删掉索引 3 之后的全部</li>
+      <li><code>clear()</code> 清空后 L6 还是 <code>[]</code>；<code>del L6</code> 连名字一起销毁，再用就 NameError</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">🔬 交互示例</span>
+    <h2>按值删 vs 按位置删</h2>
+    <div>
+      <div class="switch">
+        <button class="on" data-pane="pane-value">按值删：remove / clear</button>
+        <button data-pane="pane-pos">按位置删：pop / del</button>
+      </div>
+      <div class="pane on" id="pane-value">
+        <pre class="codeblock">L = ['a', 'b', 'a', 'c']
+L.remove('a')    <span class="cm"># 删掉第一个 'a'，返回 None</span>
+print(L)         <span class="cm"># ['b', 'a', 'c']</span>
+L.clear()        <span class="cm"># 清空所有元素，L 仍然存在</span>
+print(L)         <span class="cm"># []</span></pre>
+        <p>按<b>内容</b>办事：不用知道位置，点名谁就删谁（第一个匹配）；clear 一键清空但名单还在。</p>
+      </div>
+      <div class="pane" id="pane-pos">
+        <pre class="codeblock">L = ['a', 'b', 'c', 'd']
+print(L.pop())    <span class="cm"># d（返回被删元素）</span>
+print(L.pop(1))   <span class="cm"># b（返回被删元素）</span>
+del L[0]          <span class="cm"># 直接删，不返回</span>
+print(L)          <span class="cm"># ['c']</span></pre>
+        <p>按<b>位置</b>办事：pop 删完还把元素<b>返回</b>给你；del 是语句，删完什么都不给。</p>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="0"
+         data-ok="✅ 答对了！pop() 删除最后一个元素 3 并返回它，之后 L 变成 [1, 2]。"
+         data-no="❌ 再想想：pop() 有返回值，返回的是被删掉的最后一个元素 3；删除后 L 里只剩 [1, 2]。">
+      <p style="font-weight:700;margin-bottom:12px">L = [1, 2, 3]，执行 <code>L.pop()</code> 的返回值和之后 L 的值分别是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 3 与 [1, 2]</button>
+      <button class="opt" onclick="quizPick(this)">B. None 与 [1, 2]</button>
+      <button class="opt" onclick="quizPick(this)">C. 1 与 [2, 3]</button>
+      <button class="opt" onclick="quizPick(this)">D. 3 与 [1, 2, 3]</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="remove报错" data-ok="✅ 正确！remove(V) 删除第一个匹配的元素，一个都找不到就报错。" data-no="❌ 两空连填：先写方法名，再写「没有匹配」时的后果（提示：会报错），中间用空格隔开。">
+      <p>删除列表中指定值的第一个匹配元素用＿＿方法，没有匹配将＿＿。（两空连填，中间空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：方法名 结果">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">remove 只删第一个；del 之后名字都没了</div>
+      <p>列表里有两个 6 时，<code>remove(6)</code> 只删<b>第一个</b> 6，第二个还在——想删干净得再执行一次；如果列表里根本没有这个值，会直接报 <code>ValueError</code>。</p>
+      <p>返回值也要分清：<b>pop 有返回值可以接住</b>（<code>x = L.pop()</code>），<b>remove 返回 None</b>，接不住东西。最狠的是 <code>del L6</code>——之后 <code>L6</code> 这个<b>名字</b>都不存在了，再 <code>print(L6)</code> 报 <code>NameError</code>；而 <code>clear()</code> 只是清空内容，L6 还是一个空列表，还能继续用。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 列表删除元素的方法 remove、pop、clear 和 del 语句。请：1）用表格帮我总结「按值删 vs 按位置删」「有无返回值」「删后列表是否还存在」；2）解释为什么 remove 只删第一个匹配、del 列表名后再用会 NameError；3）以 L6 = [1, 2, 3, 4, 5, 6, 6, 8, 9, 10] 为例出一道多步删除的追踪题考我，等我作答后公布答案和每步的列表状态。">
+      我刚学了 Python 列表删除元素的方法 remove、pop、clear 和 del 语句。请：1）用表格帮我总结「按值删 vs 按位置删」「有无返回值」「删后列表是否还存在」；2）解释为什么 remove 只删第一个匹配、del 列表名后再用会 NameError；3）以 L6 = [1, 2, 3, 4, 5, 6, 6, 8, 9, 10] 为例出一道多步删除的追踪题考我，等我作答后公布答案和每步的列表状态。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试（5 分钟）</span>
+    <ol class="steps">
+      <li>交互模式输入 <code>L6 = [1, 2, 3, 4, 5, 6, 6, 8, 9, 10]</code>。</li>
+      <li>按本节代码顺序逐行执行 <code>pop()</code>、<code>pop(2)</code>、<code>remove(6)</code>、<code>del L6[2]</code>、<code>del L6[3:]</code>，每步 <code>print(L6)</code> 对照输出——这是最经典的一题，务必每步全对。</li>
+      <li>执行 <code>L6.clear()</code> 后 <code>print(L6)</code>，确认得到 <code>[]</code>——列表还在。</li>
+      <li>挑战：执行 <code>del L6</code> 再 <code>print(L6)</code>，亲眼看看 NameError 长什么样，再重新赋值救回来。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p><code>remove(V)</code> 按值删第一个匹配（没有匹配报错）；<code>pop()</code> / <code>pop(M)</code> 按位置删并<b>返回</b>该元素；<code>clear()</code> 清空所有元素但列表还在；<code>del</code> 可按索引删、按切片删，<code>del 列表名</code>则整个销毁（再用报 NameError）。记住主线：所有删除操作都在<b>直接改变原列表</b>——列表可变！下一节：原地修改列表元素。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="3.16.html"><span class="nav-label">← 上一节</span><span class="nav-title">3.16 列表增加元素</span></a>
+        <a class="next" href="3.18.html"><span class="nav-label">下一节 →</span><span class="nav-title">3.18 列表修改元素</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.11 数值类型总览 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第二章 基础概念与数值 · 第 11 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch02.html">第二章 基础概念与数值</a><span class="sep">/</span>
+          <span class="current">2.11</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">11</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第二章 · 基础概念与数值</span>
+            <h1>数值类型总览</h1>
+            <p class="hero-summary">第 11 / 17 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序构成的两大核心</li>
+      <li>变量：概念与赋值</li>
+      <li>变量命名规则</li>
+      <li>数据类型总览</li>
+      <li>type() 查看类型</li>
+      <li>保留字（关键字）</li>
+      <li>函数：定义与调用</li>
+      <li>常用内置函数</li>
+      <li>输入输出函数</li>
+      <li>缩进与注释规范</li>
+      <li class="cur">数值类型总览</li>
+      <li>整数与四种进制</li>
+      <li>浮点数与精度陷阱</li>
+      <li>算术与增强赋值运算符</li>
+      <li>比较与逻辑运算符</li>
+      <li>运算符优先级</li>
+      <li>数值函数与 math 模块</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>程序要处理数字，先认清数字的"型号"</h2>
+    <p>前面你已经会用变量装数据了，但同样是数字，<code>10</code> 和 <code>3.14</code> 在 Python 眼里是<b>两种不同的类型</b>。类型不同，能做的运算、占用的内存、甚至算出来的结果都可能不一样。这一节带你看清 Python 的三大<b>数值类型</b>：</p>
+    <ul class="points">
+      <li><b>整数 int</b>：数学意义上的整数，无小数部分，支持正负零及多种进制（二进制、八进制、十六进制），如 <code>10</code>、<code>-5</code>、<code>0b1010</code>、<code>0xA</code></li>
+      <li><b>浮点数 float</b>：带小数部分的实数，支持科学计数法；用二进制存储，可能带来精度问题，如 <code>3.14</code>、<code>-0.5</code>、<code>1.23e-4</code></li>
+      <li><b>复数 complex</b>：由实部 a 和虚部 bj 组成，j 为虚数单位，常用于科学计算与工程领域，如 <code>1+2j</code>、<code>-3j</code>、<code>0.5-1.2j</code></li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">三种数值 = 三张不同的"票"</div>
+      <p><b>int 是整数票</b>——就像电影院的座位号，必须是整数，没有"第 7.5 排"；<b>float 是体重秤读数</b>——带着小数点才真实，62.5 公斤；<b>complex 是理科生专属的「双拼套餐」</b>——实部和虚部拼成一盘（1+2j），日常点餐基本用不上。</p>
+      <p>对经管、文科同学来说，<b>99% 的场景只用 int 和 float</b> 两种；complex 记个名字、见了认识就行。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>三大数值类型一览</h2>
+    <p>点击下面的卡片，展开每种类型的说明与示例：</p>
+    <div class="grid g3">
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#4f6ef7"></span>int 整数</h4>
+        <div class="desc">无小数部分的数，正、负、零都行</div>
+        <div class="more">示例：<code>10</code>、<code>-5</code>、<code>0</code>。还支持多种进制写法：二进制 <code>0b1010</code>、十六进制 <code>0xA</code>（下一节细讲）。整数没有大小限制，写多大都行。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#7c5cf0"></span>float 浮点数</h4>
+        <div class="desc">带小数部分的实数</div>
+        <div class="more">示例：<code>3.14</code>、<code>-0.5</code>，还支持科学计数法 <code>1.23e-4</code>（即 0.000123）。小数在计算机里用二进制存储，可能导致精度问题——这是下一节的"重头戏"。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:#1a9e6c"></span>complex 复数</h4>
+        <div class="desc">实部 + 虚部，j 是虚数单位</div>
+        <div class="more">示例：<code>1+2j</code>、<code>-3j</code>、<code>0.5-1.2j</code>。实部是 a、虚部是 bj，主要用于科学计算与工程领域（如信号处理、电路分析），日常编程很少直接用。</div>
+        <div class="hint">👆 点击展开</div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">实战演示</span>
+    <h2>用 type() 给数字"验明正身"</h2>
+    <p>光说不练假把式，用上一章学的 <code>type()</code> 函数亲自确认每个数的类型：</p>
+    <pre class="codeblock">print(type(10))      # <span class="good">&lt;class 'int'&gt;</span>      整数
+print(type(-5))      # <span class="good">&lt;class 'int'&gt;</span>      负数也是整数
+print(type(3.14))    # <span class="good">&lt;class 'float'&gt;</span>    带小数点就是浮点数
+print(type(1.23e-4)) # <span class="good">&lt;class 'float'&gt;</span>    科学计数法也是浮点数
+print(type(1+2j))    # <span class="good">&lt;class 'complex'&gt;</span> 有 j 就是复数</pre>
+    <table>
+      <tr><th>类型</th><th>英文全称</th><th>判断口诀</th><th>典型示例</th></tr>
+      <tr><td>int</td><td>integer（整数）</td><td>没有小数点</td><td>10、-5、0b1010、0xA</td></tr>
+      <tr><td>float</td><td>floating point（浮点）</td><td>有小数点或 e</td><td>3.14、-0.5、1.23e-4</td></tr>
+      <tr><td>complex</td><td>complex（复数）</td><td>带虚数单位 j</td><td>1+2j、-3j、0.5-1.2j</td></tr>
+    </table>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！只要带有虚数单位 j，就是复数类型 complex。"
+         data-no="❌ 不对哦。1+2j 里有虚数单位 j，实部 1、虚部 2j，所以它是复数类型 complex。">
+      <p style="font-weight:700;margin-bottom:12px"><code>1 + 2j</code> 属于哪种数值类型？</p>
+      <button class="opt" onclick="quizPick(this)">A. int（整数）</button>
+      <button class="opt" onclick="quizPick(this)">B. float（浮点数）</button>
+      <button class="opt" onclick="quizPick(this)">C. complex（复数）</button>
+      <button class="opt" onclick="quizPick(this)">D. str（字符串）</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="科学" data-ok="✅ 正确！1.23e-4 就是 1.23×10⁻⁴，浮点数支持科学计数法。" data-no="❌ 再想想：1.23e-4 里的 e 表示 10 的多少次方？这种写法叫什么计数法？（提示：参考核心概念第二条）">
+      <p>浮点数支持<b>＿＿</b>计数法，例如 <code>1.23e-4</code> 就表示 1.23×10⁻⁴。</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：××">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">别被"看起来是整数"骗了</div>
+      <p>① <code>10</code> 和 <code>10.0</code> 是<b>两种类型</b>：<code>type(10)</code> 是 int，<code>type(10.0)</code> 是 float——只要带小数点，哪怕是 <code>10.</code> 这种写法，也是浮点数。</p>
+      <p>② <code>1.23e-4</code> 不是"1.23 减 4"，也不是字符串，它是<b>合法的浮点数</b>，值为 0.000123。初见容易懵，见多了就亲切了。</p>
+      <p>③ 复数里的 j 不能换成别的字母，也不能写成 <code>2j + 1</code> 之外的花样——虚数单位在 Python 里<b>惯例写小写 j</b>（大写 J 也能用，但同一份代码里别混用）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的三大数值类型：int、float、complex。请：1）各举 3 个例子并说明判断口诀；2）解释为什么 1.23e-4 是浮点数、它等于多少；3）出 2 道单选题考我 type() 的输出结果，等我作答后再公布答案。">
+      我刚学了 Python 的三大数值类型：int、float、complex。请：1）各举 3 个例子并说明判断口诀；2）解释为什么 1.23e-4 是浮点数、它等于多少；3）出 2 道单选题考我 type() 的输出结果，等我作答后再公布答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：给数字验明正身（3 分钟）</span>
+    <ol class="steps">
+      <li>打开命令行输入 <code>python</code> 进入交互模式（第一章学过）。</li>
+      <li>依次输入 <code>type(10)</code> 回车、<code>type(3.14)</code> 回车、<code>type(1+2j)</code> 回车。</li>
+      <li>对照本页预期结果，三个输出应分别是 <code>&lt;class 'int'&gt;</code>、<code>&lt;class 'float'&gt;</code>、<code>&lt;class 'complex'&gt;</code>。</li>
+      <li>再试试 <code>type(0b1010)</code> 和 <code>type(1.23e-4)</code>——猜猜看，它们分别是什么类型？答案就在下一节和本页示例里。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>Python 有三大数值类型：<b>int</b>（整数，无小数部分，支持多种进制）、<b>float</b>（浮点数，带小数部分，支持科学计数法，二进制存储可能有精度问题）、<b>complex</b>（复数，实部+虚部 bj，常用于科学计算与工程领域）。日常学习 99% 只用 int 和 float。用 <code>type()</code> 可以随时查看任意值的类型。下一节：整数还有 4 种"脸谱"——四种进制。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="2.10.html"><span class="nav-label">← 上一节</span><span class="nav-title">2.10 缩进与注释规范</span></a>
+        <a class="next" href="2.12.html"><span class="nav-label">下一节 →</span><span class="nav-title">2.12 整数与四种进制</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

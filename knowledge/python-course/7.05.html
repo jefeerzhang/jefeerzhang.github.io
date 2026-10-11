@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7.05 打开文件与打开模式 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第七章 文件及目录操作 · 第 5 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.mtable{width:100%;border-collapse:collapse;margin-top:14px;background:var(--card);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);font-size:14px}
+.mtable th,.mtable td{border:1px solid var(--border);padding:9px 10px;text-align:center}
+.mtable th{background:var(--accent-soft);color:var(--accent);font-weight:700}
+.mtable td:first-child,.mtable th:first-child{text-align:left;font-weight:700}
+.yes{color:#16a34a;font-weight:800}
+.no{color:#dc2626;font-weight:800}
+.trio{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:14px}
+@media (max-width:640px){.trio{grid-template-columns:1fr}}
+.tcard{border:1.5px solid var(--border);border-radius:12px;padding:14px;background:#fff;box-shadow:var(--shadow);text-align:center}
+.tcard h4{margin:0 0 6px;font-family:Consolas,monospace;font-size:17px;color:var(--accent)}
+.tcard p{margin:0;font-size:13px;color:var(--ink2);line-height:1.8}
+.mplay{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-top:16px}
+.mbtns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.mbtn{padding:9px 16px;border:1.5px solid var(--border);border-radius:10px;background:#fff;
+  font-family:Consolas,monospace;font-size:15px;font-weight:700;cursor:pointer;color:var(--ink)}
+.mbtn.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.minfo{font-size:14.5px;line-height:2;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:14px 16px;min-height:120px}
+.minfo .mname{font-family:Consolas,monospace;font-weight:800;color:var(--accent);font-size:17px}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch07.html">第七章 文件及目录操作</a><span class="sep">/</span>
+          <span class="current">7.05</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">05</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第七章 · 文件及目录操作</span>
+            <h1>打开文件与打开模式</h1>
+            <p class="hero-summary">第 5 / 18 节 · 约 12 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>文件与目录的基本概念</li>
+      <li>文件类型：文本与二进制</li>
+      <li>绝对路径与相对路径</li>
+      <li>文件操作三步曲</li>
+      <li class="cur">打开文件与打开模式</li>
+      <li>关闭文件与 with 语句</li>
+      <li>写文件：write 与 writelines</li>
+      <li>读文件三方法</li>
+      <li>文件指针：tell 与 seek</li>
+      <li>目录路径两大模块</li>
+      <li>工作目录</li>
+      <li>新建目录</li>
+      <li>展示目录内容</li>
+      <li>重命名与移动</li>
+      <li>删除文件和目录</li>
+      <li>判断路径</li>
+      <li>获取文件信息</li>
+      <li>路径的合并与分解</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>同样是 open()，选错模式轻则报错、重则清空文件</h2>
+    <p><code>open()</code> 是三步曲的第一步，但「打开」绝不是按一下门那么简单：用 <code>'r'</code> 打开一个不存在的文件会<b>当场报错</b>；用 <code>'w'</code> 打开一个有内容的文件会<b>把它清空</b>。打开模式（mode）决定了你打开这扇门之后<b>能读还是能写、文件不在怎么办、指针停在哪</b>。作业第 1 题创建 scores.txt 要用哪个模式？学完这页自然有答案。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">打开模式像「进图书馆阅览区的规矩」：有的区只许看，有的区只许写</div>
+      <p><code>'r'</code> 是「阅览区」——只能看，不能动笔，而且这个区必须<b>已经存在</b>；<code>'w'</code> 是「誊抄区」——进去先把旧纸清空，只管写新的；<code>'a'</code> 是「留言墙」——不许撕旧留言，只能往<b>末尾</b>继续贴。带 <code>+</code> 的模式（如 r+、w+）则是「VIP 区」，看和写的权限都给你。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>open() 的语法与三兄弟</h2>
+    <pre class="codeblock">文件对象名 = open(filename, mode='r', encoding=None)</pre>
+    <ul class="points">
+      <li><b>filename</b>：被打开文件的名字，可以用相对路径也可以用绝对路径（上一节讲的都用得上）</li>
+      <li><b>mode</b>：打开后的处理方式。常用文本模式 6 种：<code>r、r+、w、w+、a、a+</code>；对应二进制模式在末尾加 <code>b</code>（<code>rb</code> 等 6 种）。此外还有「独占创建」模式 <code>x、x+、xb、xb+</code>——文件已存在就直接报错、绝不覆盖。b 表示字节模式</li>
+      <li><b>encoding</b>：编码方式。遇到<b>中文乱码</b>，把它改成 <code>utf-8</code> 一般就好；<b>二进制文件严禁指定 encoding 参数</b>——字节就是字节，不需要翻译</li>
+      <li>最常用的三兄弟：<code>r</code> 只读（文件不存在直接报错）、<code>w</code> 只写（不存在则创建，存在则<b>清空覆盖</b>）、<code>a</code> 追加（指针在结尾，旧内容安然无恙）</li>
+    </ul>
+
+    <div class="trio">
+      <div class="tcard">
+        <h4>'r' 只读</h4>
+        <p>阅览区：只能读不能写。<br>文件不存在 → FileNotFoundError。<br>指针停在开头。</p>
+      </div>
+      <div class="tcard">
+        <h4>'w' 只写</h4>
+        <p>誊抄区：只能写不能读。<br>不存在 → 创建新文件；<br>存在 → <b>清空再写</b>！指针在开头。</p>
+      </div>
+      <div class="tcard">
+        <h4>'a' 追加</h4>
+        <p>留言墙：只能写不能读。<br>不存在 → 创建新文件；<br>存在 → 从<b>结尾</b>接着写，旧内容保留。</p>
+      </div>
+    </div>
+
+    <div class="mplay">
+      <p style="font-weight:700;margin-bottom:10px">🔬 模式选择器：点一个模式，看它的「权限卡」</p>
+      <div class="mbtns">
+        <button class="mbtn on" data-mode="r" onclick="pickMode(this)">r</button>
+        <button class="mbtn" data-mode="r+" onclick="pickMode(this)">r+</button>
+        <button class="mbtn" data-mode="w" onclick="pickMode(this)">w</button>
+        <button class="mbtn" data-mode="w+" onclick="pickMode(this)">w+</button>
+        <button class="mbtn" data-mode="a" onclick="pickMode(this)">a</button>
+        <button class="mbtn" data-mode="a+" onclick="pickMode(this)">a+</button>
+      </div>
+      <div class="minfo" id="minfo"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 六种文本模式对照表</h2>
+    <table class="mtable">
+      <tr><th>能力 / 模式</th><th>r</th><th>r+</th><th>w</th><th>w+</th><th>a</th><th>a+</th></tr>
+      <tr><td>读</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td><td class="yes">✓</td><td class="no">✗</td><td class="yes">✓</td></tr>
+      <tr><td>写</td><td class="no">✗</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+      <tr><td>创建（文件不存在时）</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+      <tr><td>覆盖（打开即清空）</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓</td><td class="yes">✓</td><td class="no">✗</td><td class="no">✗</td></tr>
+      <tr><td>指针位置</td><td>开头</td><td>开头</td><td>开头</td><td>开头</td><td>结尾</td><td>结尾</td></tr>
+    </table>
+    <ul class="points">
+      <li>记法：<b>w 系凶狠</b>（打开就清空）、<b>a 系温和</b>（只在结尾添）、<b>r 系挑剔</b>（文件必须已存在）</li>
+      <li>带 <code>+</code> 就「读写的门都开」，但文件在不在、清不清空仍由首字母决定</li>
+      <li>二进制模式（rb、wb、ab…）规律完全相同，只是多了个 <code>b</code>，且<b>严禁 encoding</b></li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>r 报错、w 清空：两个最经典的现场</h2>
+    <pre class="codeblock"># 现场 1：r 模式打开不存在的文件 → 直接报错
+file = open('成绩单.txt', 'r', encoding='utf-8')
+# FileNotFoundError: [Errno 2] No such file or directory: '成绩单.txt'
+
+# 现场 2：w 模式打开已存在的文件 → 内容瞬间被清空
+file = open('scores.txt', 'w', encoding='utf-8')   # 此刻旧内容已经没了！
+file.write('新学期的成绩')
+
+# 现场 3：作业第 1 题的标准写法——创建 scores.txt 就用 w
+with open('scores.txt', 'w', encoding='utf-8') as file:
+    file.write('张三 90\n李四 85')</pre>
+    <ul class="points">
+      <li><code>'w'</code> 是「先清空、再动笔」——那句话写进代码前，先想想里面还有没有要保留的数据</li>
+      <li>「打开即清空」是 <code>w</code>/<code>w+</code> 打开那一刻发生的，跟之后写没写、写多少都无关</li>
+      <li>第 10~11 行的 <code>with</code> 写法下一节详细讲，先学会抄</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！w 模式打开已存在文件的那一刻，旧内容就被清空了，然后从头写新内容——这就是「覆盖」。想保留旧内容应该用 a 模式。"
+         data-no="❌ w 模式不会报错也不会追加：打开的那一刻文件就被清空，之后写的内容从头开始。想保留旧内容、在末尾接着写，要用 a（追加）模式。">
+      <p style="font-weight:700;margin-bottom:12px">用 <code>'w'</code> 模式打开一个<b>已存在且有内容</b>的文件，会发生什么？</p>
+      <button class="opt" onclick="quizPick(this)">A. 报错 FileExistsError，拒绝打开</button>
+      <button class="opt" onclick="quizPick(this)">B. 新写入的内容追加到旧内容末尾</button>
+      <button class="opt" onclick="quizPick(this)">C. 文件被清空，新内容从头开始写</button>
+      <button class="opt" onclick="quizPick(this)">D. 文件自动变成只读模式</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="utf-8encoding|utf-8 encoding" data-ok="✅ 正确！文本文件遇到中文乱码，把 encoding 参数改成 utf-8 通常能解决；二进制模式（如 rb）处理的是原始字节，严禁指定 encoding 参数。" data-no="❌ 提示：第一空是一种常见编码的名字（w 开头，写作 utf-8）；第二空是 open() 里指定编码方式的那个参数名，二进制模式下严禁使用它。">
+      <p>文本文件遇到中文乱码，可把 <b>encoding</b> 参数改为<b>＿＿</b>；二进制模式（如 rb、wb）严禁指定<b>＿＿</b>参数。（两空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：utf-8 encoding">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>w 模式手滑毁数据</b>：本想追加一条记录却写成 <code>'w'</code>，整个文件瞬间清空——想「接着写」永远用 <code>'a'</code>；</p>
+      <p>②<b>r 模式开不存在的文件</b>：<code>'r'</code> 不会替你建文件，想「边建边写」用 <code>'w'</code> 或 <code>'a'</code>；</p>
+      <p>③<b>二进制模式带 encoding 直接报错</b>：<code>open('照片.jpg', 'rb', encoding='utf-8')</code> 会抛 ValueError——字节模式没有「翻译」这一说。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的 open() 函数与打开模式（r、r+、w、w+、a、a+，以及二进制的 rb 系）。请：1）用「阅览区、誊抄区、留言墙」的类比讲三大常用模式；2）出 5 道情景题（如「想保留旧日志继续记录该用哪个模式」）让我选模式并说明理由；3）解释为什么二进制模式严禁指定 encoding 参数。">
+      我刚学了 Python 的 open() 函数与打开模式（r、r+、w、w+、a、a+，以及二进制的 rb 系）。请：1）用「阅览区、誊抄区、留言墙」的类比讲三大常用模式；2）出 5 道情景题（如「想保留旧日志继续记录该用哪个模式」）让我选模式并说明理由；3）解释为什么二进制模式严禁指定 encoding 参数。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：直接演练作业第 1 题（5 分钟）</span>
+    <ol class="steps">
+      <li>作业第 1 题要创建 scores.txt：用 <code>open('scores.txt', 'w', encoding='utf-8')</code>——文件不存在，<code>'w'</code> 会替你创建。</li>
+      <li>连跑两次第 1 题的写文件代码，再打开文件看看——内容会不会翻倍？（不会，因为 <code>'w'</code> 每次都先清空）</li>
+      <li>把 <code>'w'</code> 改成 <code>'a'</code> 再连跑两次——观察内容「越叠越多」，体会追加与覆盖的区别。</li>
+      <li>挑战：故意用 <code>'r'</code> 打开一个不存在的文件，把报错信息截图记下来——以后见到它 3 秒内知道错在哪。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>open(filename, mode, encoding) 三参数：路径可相对可绝对；常用模式文本、二进制各 6 种（另有独占创建的 x 系列 4 种）；乱码改 utf-8，二进制严禁 encoding。三兄弟：r 只读（不存在报错）、w 只写（不存在创建、存在清空）、a 追加（指针在结尾）。作业第 1 题创建 scores.txt 用 w。下一节：怎么关闭文件才优雅——with 语句。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="7.04.html"><span class="nav-label">← 上一节</span><span class="nav-title">7.04 文件操作三步曲</span></a>
+        <a class="next" href="7.06.html"><span class="nav-label">下一节 →</span><span class="nav-title">7.06 关闭文件与 with 语句</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：模式选择器 */
+const MODES = {
+  'r':  {n:'r（只读）',   read:'✓ 能读', write:'✗ 不能写', create:'✗ 不创建', over:'✗ 不清空', ptr:'文件开头',
+         tip:'「阅览区」：文件必须已存在，否则直接 FileNotFoundError。只想看内容就用它。'},
+  'r+': {n:'r+（读写）',  read:'✓ 能读', write:'✓ 能写', create:'✗ 不创建', over:'✗ 不清空', ptr:'文件开头',
+         tip:'「VIP 阅览区」：又能读又能写，但文件必须已存在；写的内容从指针处向后覆盖。'},
+  'w':  {n:'w（只写）',   read:'✗ 不能读', write:'✓ 能写', create:'✓ 会创建', over:'✓ 打开即清空', ptr:'文件开头',
+         tip:'「誊抄区」：文件不存在就新建；已存在则在打开那一刻被清空。作业第 1 题创建 scores.txt 就用它。'},
+  'w+': {n:'w+（写读）',  read:'✓ 能读', write:'✓ 能写', create:'✓ 会创建', over:'✓ 打开即清空', ptr:'文件开头',
+         tip:'「VIP 誊抄区」：读写都行，但同样先清空——想读刚写的内容要先 seek(0)。'},
+  'a':  {n:'a（追加）',   read:'✗ 不能读', write:'✓ 能写', create:'✓ 会创建', over:'✗ 不清空', ptr:'文件结尾',
+         tip:'「留言墙」：不清空旧内容，写什么都贴在末尾。记日志、逐条追加成绩的首选。'},
+  'a+': {n:'a+（追加读）',read:'✓ 能读', write:'✓ 能写', create:'✓ 会创建', over:'✗ 不清空', ptr:'文件结尾',
+         tip:'「VIP 留言墙」：追加 + 可读；注意指针在结尾，想从头读要先 seek(0)。'}
+};
+function pickMode(btn){
+  document.querySelectorAll('.mbtn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  const m = MODES[btn.dataset.mode];
+  document.getElementById('minfo').innerHTML =
+    '<span class="mname">' + m.n + '</span><br>' +
+    '读：' + m.read + '　·　写：' + m.write + '　·　文件不存在：' + m.create + '<br>' +
+    '清空旧内容：' + m.over + '　·　指针初始位置：' + m.ptr + '<br>' +
+    '<span style="color:var(--ink2)">💬 ' + m.tip + '</span>';
+}
+window.addEventListener('DOMContentLoaded', () => { pickMode(document.querySelector('.mbtn.on')); });
+</script>
+</body>
+</html>

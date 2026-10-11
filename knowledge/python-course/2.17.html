@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.17 数值函数与 math 模块 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第二章 基础概念与数值 · 第 17 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+/* 页面专属：icard 展开区内的表格紧凑一些 */
+.icard table{font-size:13px;box-shadow:none;margin-top:8px}
+.icard th,.icard td{padding:7px 10px}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch02.html">第二章 基础概念与数值</a><span class="sep">/</span>
+          <span class="current">2.17</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">17</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第二章 · 基础概念与数值</span>
+            <h1>数值函数与 math 模块</h1>
+            <p class="hero-summary">第 17 / 17 节 · 约 12 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序构成的两大核心</li>
+      <li>变量：概念与赋值</li>
+      <li>变量命名规则</li>
+      <li>数据类型总览</li>
+      <li>type() 查看类型</li>
+      <li>保留字（关键字）</li>
+      <li>函数：定义与调用</li>
+      <li>常用内置函数</li>
+      <li>输入输出函数</li>
+      <li>缩进与注释规范</li>
+      <li>数值类型总览</li>
+      <li>整数与四种进制</li>
+      <li>浮点数与精度陷阱</li>
+      <li>算术与增强赋值运算符</li>
+      <li>比较与逻辑运算符</li>
+      <li>运算符优先级</li>
+      <li class="cur">数值函数与 math 模块</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>本章最后一站：Python 的数学工具箱</h2>
+    <p>算绝对值、开平方、四舍五入、取最大值……这些常用的数学操作不需要你手写公式——Python 已经把工具准备好了。这一节认识两组工具：</p>
+    <ul class="points">
+      <li><b>内置函数</b>：开箱即用，abs、sum、max、min、round、pow 随叫随到</li>
+      <li><b>类型转换函数</b>：int、float、bin、oct、hex、complex，在类型之间搭桥</li>
+      <li><b>math 模块</b>：开方、对数、指数、三角函数的专业工具箱，用前要先 import</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">随身瑞士军刀 vs 专业工具箱</div>
+      <p><b>内置函数像你口袋里的瑞士军刀</b>——abs、sum、max 这些小工具掏出来就能用，不需要任何准备。<b>math 模块像墙角的专业工具箱</b>——里面有开方机、对数仪、三角函数量角器，家伙更专业，但<b>用之前得先 <code>import math</code> 把箱子打开</b>，工具才拿得到。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>三张工具清单，点击卡片展开</h2>
+    <ul class="points">
+      <li><b>int() 转换是直接截断小数部分</b>，不是四舍五入：<code>int(1.99) → 1</code>、<code>int(-1.99) → -1</code>。</li>
+      <li><code>math.ceil()</code> 向上取整、<code>math.floor()</code> 向下取整——取整方向和 <code>//</code> 一致（都朝负无穷方向取），区别是它们一律返回<b>整数</b>（<code>7.0 // 2</code> 得到的是 <code>3.0</code>），意图也更直白。</li>
+      <li><code>math.pi</code> 就是 π（3.1415926…），<b>本章作业第 5 题计算圆柱体积要用它</b>，别忘了先 import math。</li>
+    </ul>
+    <div class="grid g3">
+      <div class="icard" data-toggle="1">
+        <h4><span class="dot" style="background:var(--accent)"></span>内置数学函数</h4>
+        <div class="desc">开箱即用，无需 import</div>
+        <div class="hint">点击展开清单 ▾</div>
+        <div class="more">
+          <table>
+            <tr><th>函数</th><th>用途</th><th>示例</th></tr>
+            <tr><td>abs(x)</td><td>求绝对值</td><td>abs(-10) → 10</td></tr>
+            <tr><td>sum()</td><td>求可迭代对象的和</td><td>sum([1,2,3]) → 6</td></tr>
+            <tr><td>max() / min()</td><td>求最大 / 最小值</td><td>max(1,2,3) → 3<br>min(1,2,3) → 1</td></tr>
+            <tr><td>round(x, n)</td><td>四舍五入保留 n 位（遇 .5 向偶数舍入，见下方避坑）</td><td>round(3.14159, 2) → 3.14</td></tr>
+            <tr><td>pow(x, y)</td><td>求 x 的 y 次幂</td><td>pow(2,3) → 8</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="icard" data-toggle="1">
+        <h4><span class="dot" style="background:var(--accent2)"></span>类型转换函数</h4>
+        <div class="desc">在类型之间搭一座桥</div>
+        <div class="hint">点击展开清单 ▾</div>
+        <div class="more">
+          <table>
+            <tr><th>函数</th><th>用途</th><th>示例</th></tr>
+            <tr><td>int(i)</td><td>取整（直接去小数）</td><td>int(1.99) → 1<br>int(-1.99) → -1</td></tr>
+            <tr><td>float(i)</td><td>转浮点数</td><td>float(5) → 5.0</td></tr>
+            <tr><td>bin(i)</td><td>转二进制</td><td>bin(123) → 0b1111011</td></tr>
+            <tr><td>oct(i)</td><td>转八进制</td><td>oct(123) → 0o173</td></tr>
+            <tr><td>hex(i)</td><td>转十六进制</td><td>hex(123) → 0x7b</td></tr>
+            <tr><td>complex(a, b)</td><td>构造复数</td><td>complex(1,2) → (1+2j)</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="icard" data-toggle="1">
+        <h4><span class="dot" style="background:var(--ok)"></span>math 模块</h4>
+        <div class="desc">需先 import math</div>
+        <div class="hint">点击展开清单 ▾</div>
+        <div class="more">
+          <table>
+            <tr><th>调用</th><th>用途</th><th>返回类型</th><th>示例</th></tr>
+            <tr><td>math.sqrt(x)</td><td>平方根</td><td>float</td><td>math.sqrt(2) → 1.4142135623730951</td></tr>
+            <tr><td>math.log(x)</td><td>自然对数</td><td>float</td><td>math.log(math.e) → 1.0</td></tr>
+            <tr><td>math.log10(x)</td><td>底 10 对数</td><td>float</td><td>math.log10(100) → 2.0</td></tr>
+            <tr><td>math.exp(x)</td><td>e 的 x 次幂</td><td>float</td><td>math.exp(1) → 2.718281828459045</td></tr>
+            <tr><td>math.sin/cos/tan(x)</td><td>正弦 / 余弦 / 正切</td><td>float</td><td>math.sin(0.5*math.pi) → 1.0<br>math.cos(math.pi) → -1.0<br>math.tan(0) → 0.0</td></tr>
+            <tr><td>math.ceil(x)</td><td>向上取整</td><td>int</td><td>math.ceil(-1.5) → -1</td></tr>
+            <tr><td>math.floor(x)</td><td>向下取整</td><td>int</td><td>math.floor(-1.5) → -2</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top:12px" class="muted">💡 提示：三个卡片都可以点击展开 / 收起，建议先自己猜猜示例结果，再核对。</p>
+  </section>
+      <section>
+    <span class="tag">实战演示</span>
+    <h2>打开工具箱，跑一段完整代码</h2>
+    <pre class="codeblock">import math                      # 先把工具箱打开
+
+print(math.sqrt(2))              # 1.4142135623730951  ← 2 的平方根
+print(math.log10(100))           # 2.0                 ← 100 是 10 的几次方？
+print(math.sin(0.5 * math.pi))   # 1.0                 ← sin(90°)
+print(math.ceil(-1.5))           # -1                  ← 向上取整（往大的方向）
+print(math.floor(-1.5))          # -2                  ← 向下取整（往小的方向）
+print(math.pi)                   # 3.141592653589793   ← 圆周率 π
+
+# 顺手试试内置函数
+print(abs(-10), sum([1,2,3]), max(1,2,3), min(1,2,3))  # 10 6 3 1
+print(round(3.14159, 2), pow(2, 3))                     # 3.14 8</pre>
+    <ul class="points">
+      <li>对比 <code>math.ceil(-1.5) → -1</code> 和 <code>math.floor(-1.5) → -2</code>：ceil 是「往大的方向」取整，floor 是「往小的方向」取整——<b>负数时方向感最明显</b>。</li>
+      <li>圆柱体积 = <code>math.pi * r * r * h</code>，作业第 5 题的公式已经送上门了。</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！int() 是直接截断小数部分，1.99 去掉小数得 1——不是四舍五入。"
+         data-no="❌ 不对哦。int() 转换是直接去掉小数部分（截断），不是四舍五入，所以 int(1.99) = 1。">
+      <p style="font-weight:700;margin-bottom:12px"><code>int(1.99)</code> 的结果是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 2</button>
+      <button class="opt" onclick="quizPick(this)">B. 1.9</button>
+      <button class="opt" onclick="quizPick(this)">C. 1</button>
+      <button class="opt" onclick="quizPick(this)">D. 报错</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="import|导入" data-ok="✅ 正确！math 是专业工具箱，用前要先 import（导入）才能调用里面的函数。" data-no="❌ 再想想：math 模块不是内置的，使用前需要先用哪个关键字把模块导入？（提示：只有 6 个字母）">
+      <p>使用 math 模块前需要先 <b>＿＿</b> math，之后才能调用 <code>math.sqrt()</code> 等函数。（填英文关键字或中文）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：××××××">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">int() 截断 ≠ 四舍五入；负数取整看方向</div>
+      <p>① <code>int()</code> 转换浮点数时<b>直接砍掉小数部分</b>，不管小数多大：<code>int(1.99) → 1</code>、<code>int(-1.99) → -1</code>。想四舍五入要用 <code>round()</code>，别把两者混为一谈。</p>
+      <p>② <code>round()</code> 遇到「正好 .5」时是<b>向偶数舍入</b>（银行家舍入），不是「逢五进一」：<code>round(0.5) → 0</code>、<code>round(1.5) → 2</code>、<code>round(2.5) → 2</code>；受二进制浮点表示影响，<code>round(2.675, 2) → 2.67</code> 也不是 2.68。需要严格「四舍五入」时请用 <code>decimal</code> 模块的 <code>ROUND_HALF_UP</code>，别指望 <code>round()</code>。</p>
+      <p>③ 忘了 <code>import math</code> 就直接写 <code>math.sqrt(2)</code>，会报 <code>NameError: name 'math' is not defined</code>——工具箱还没打开就想拿工具。另外注意 <code>math.ceil(-1.5) → -1</code> 而 <code>math.floor(-1.5) → -2</code>，负数取整时别想当然。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的数值函数与 math 模块。请：1）用表格梳理内置函数 abs/sum/max/min/round/pow 的用途和示例；2）说明 int() 截断和 round() 四舍五入的区别，举例 int(1.99) 与 int(-1.99)；3）演示 import math 后 math.sqrt、math.ceil、math.floor、math.pi 的用法，解释 ceil 和 floor 在负数上的区别；4）出 2 道单选题考我，等我作答后再公布答案。">
+      我刚学了 Python 的数值函数与 math 模块。请：1）用表格梳理内置函数 abs/sum/max/min/round/pow 的用途和示例；2）说明 int() 截断和 round() 四舍五入的区别，举例 int(1.99) 与 int(-1.99)；3）演示 import math 后 math.sqrt、math.ceil、math.floor、math.pi 的用法，解释 ceil 和 floor 在负数上的区别；4）出 2 道单选题考我，等我作答后再公布答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：作业第 5 题的预备动作（5 分钟）</span>
+    <ol class="steps">
+      <li>进入交互模式，输入 <code>import math</code> 回车——把工具箱打开。</li>
+      <li>依次运行 <code>math.sqrt(2)</code>、<code>math.ceil(-1.5)</code>、<code>math.floor(-1.5)</code>、<code>math.pi</code>，对照本页的输出检查你猜对了吗。</li>
+      <li>试试 <code>int(1.99)</code> 和 <code>int(-1.99)</code>，验证「截断不是四舍五入」。</li>
+      <li>挑战：设半径 r = 2、高 h = 5，用 <code>math.pi * r * r * h</code> 算出圆柱体积——这正是本章作业第 5 题的思路。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了，本章也毕业了</div>
+      <p>内置函数（abs、sum、max/min、round、pow）开箱即用；类型转换函数里 <b>int() 是截断不是四舍五入</b>，bin/oct/hex 负责进制转换；math 模块要先 <code>import</code>，提供 sqrt、log、exp、三角函数、ceil/floor 和 <code>math.pi</code>。至此本章 17 个知识点全部学完——从两大核心到数学工具箱，去目录页回顾一遍吧！</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="2.16.html"><span class="nav-label">← 上一节</span><span class="nav-title">2.16 运算符优先级</span></a>
+        <a class="next" href="ch02.html"><span class="nav-label">下一节 →</span><span class="nav-title">本章课程目录（17 节已完成）</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

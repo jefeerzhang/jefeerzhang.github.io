@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.04 IF 表达式 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第五章 程序控制 · 第 4 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch05.html">第五章 程序控制</a><span class="sep">/</span>
+          <span class="current">5.04</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">04</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第五章 · 程序控制</span>
+            <h1>IF 表达式</h1>
+            <p class="hero-summary">第 4 / 17 节 · 约 8 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序控制结构概述</li>
+      <li>单分支结构 if</li>
+      <li>双分支结构 if-else</li>
+      <li class="cur">IF 表达式</li>
+      <li>多分支结构 if-elif-else</li>
+      <li>嵌套分支结构</li>
+      <li>嵌套与多分支对比</li>
+      <li>无限循环 while</li>
+      <li>range 函数与遍历整数</li>
+      <li>遍历字符串列表元组</li>
+      <li>遍历字典</li>
+      <li>循环控制 break 与 continue</li>
+      <li>循环嵌套</li>
+      <li>常见语法错误</li>
+      <li>常见运行异常</li>
+      <li>异常处理语句</li>
+      <li>综合实战：古算题与成绩单</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>六行变三行：把「二选一赋值」压进一行</h2>
+    <p>上一节求最大值的 if-else 写了六行，但它的逻辑其实很简单：条件真就把 a 赋给结果，假就把 b 赋给结果。凡是「<b>根据条件给变量赋两个值之一</b>」的场景，Python 提供了更简洁的写法——<b>IF 表达式</b>（也叫三元表达式、条件表达式）。它是 5.03 示例 02 的「一行版」，在本章作业里会经常见到。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">普通 if-else 像「先开会决定再行动」，IF 表达式像「一句话拍板」</div>
+      <p>普通的 if-else 是开个小会：先判断，再执行对应分支里的语句，郑重其事。IF 表达式是<b>一句话拍板</b>：「最大值嘛，a 大就取 a，否则取 b」——判断和取值一口气说完。但只有<b>简单的二选一赋值</b>才适合拍板；决策一复杂（分支里要干好几件事），还是老老实实「开会」写普通 if-else。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>语法格式与三个要点</h2>
+    <pre class="codeblock">变量 = 值1 if &lt;条件&gt; else 值2</pre>
+    <ul class="points">
+      <li><b>用途：用于变量赋值</b>——条件为真把<b>值1</b>赋给变量，条件为假把<b>值2</b>赋给变量</li>
+      <li><b>表达式形式不需要冒号，也不需要换行缩进</b>——整句写在一行里</li>
+      <li>读法：「变量 = （真时取）值1，前提是条件成立，（否则取）值2」——<b>条件紧跟在「想要的那个值」后面</b></li>
+      <li>Python 里它也叫<b>三元表达式</b>或<b>条件表达式</b>，本质是一个「会算出值」的表达式，而不是一条控制语句</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>同一个最大值问题：普通双分支版 vs IF 表达式版</h2>
+    <div class="switch">
+      <button class="on" data-pane="pnormal">普通双分支版（6 行）</button>
+      <button data-pane="pexpr">IF 表达式版（3 行）</button>
+    </div>
+    <div class="pane on" id="pnormal">
+      <pre class="codeblock">a = eval(input('请输入第一个数字：'))
+b = eval(input('请输入第二个数字：'))
+if a &gt;= b:
+    print(f'最大值是{a}')
+else:
+    print(f'最大值是{b}')</pre>
+      <p style="font-size:14px">普通版把「判断」和「输出」写在两条分支里：输出语句要写两遍，共六行。它能干的事不止赋值——分支里可以放任意多条语句。</p>
+    </div>
+    <div class="pane" id="pexpr">
+      <pre class="codeblock">a = eval(input('请输入第一个数字：'))
+b = eval(input('请输入第二个数字：'))
+c = a if a &gt;= b else b
+print(f'最大值是{c}')</pre>
+      <p style="font-size:14px">IF 表达式版把「赋值给谁」的判断压进了一个表达式：先算出 <code>c</code>，再统一输出——先算后用，逻辑清爽。输入 5 和 3 时，5 &gt;= 3 为真，c 取到 a（即 5），输出「最大值是5」。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：IF 表达式求最大值</h2>
+    <pre class="codeblock">a = eval(input('请输入第一个数字：'))
+b = eval(input('请输入第二个数字：'))
+c = a if a &gt;= b else b
+print(f'最大值是{c}')</pre>
+    <p>输入 5 和 3 的执行过程：</p>
+    <ul class="points">
+      <li>读入 a=5、b=3</li>
+      <li>计算 <code>c = a if a &gt;= b else b</code>：条件 5 &gt;= 3 为 <b>True</b> → 取 if 前面的<b>值1</b>（也就是 a）→ c = 5</li>
+      <li>若条件为假（比如 a=3、b=5），则取 else 后面的<b>值2</b>（也就是 b）→ c = 5</li>
+      <li>输出「最大值是5」——与 5.03 六行版结果完全一致</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！3 &gt;= 5 为假，取 else 后面的值2（即 b=5），所以 c = 5。"
+         data-no="❌ 再读一遍结构「值1 if 条件 else 值2」：a=3、b=5 时条件 3 &gt;= 5 为假，取的是 else 后面的值——也就是 b。">
+      <p style="font-weight:700;margin-bottom:12px">执行 <code>c = a if a &gt;= b else b</code>，当 a=3、b=5 时，c 的值是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 3</button>
+      <button class="opt" onclick="quizPick(this)">B. 5</button>
+      <button class="opt" onclick="quizPick(this)">C. 程序报错</button>
+      <button class="opt" onclick="quizPick(this)">D. None</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="赋值冒号" data-ok="✅ 正确！IF 表达式用于变量赋值，表达式形式不需要冒号，也不需要换行缩进。" data-no="❌ 回忆两个要点：IF 表达式的用途是给变量做什么？它在书写上省掉了普通 if-else 的哪两个语法要素？（两空连填）">
+      <p>IF 表达式用于变量<b>＿＿</b>，表达式形式不需要<b>＿＿</b>，也不需要换行缩进。（两空连填）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：甲乙">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>它是「取值」不是「执行语句」</b>——IF 表达式算出来一个值交给变量。把 <code>print(...)</code> 塞进值1/值2 的位置虽然语法上可行，但可读性很差，<b>初学阶段只把它用于赋值</b>；</p>
+      <p>②<b>顺序别记反</b>——是「<b>值1 if 条件 else 值2</b>」，先写值再写 if，条件紧跟在你想要的那个值后面。写成 <code>c = if a &gt;= b: a else b</code> 是普通语句的写法，直接语法错误；</p>
+      <p>③<b>三样一个都不能少</b>——值1、条件、值2 缺一不可，漏写 <code>else 值2</code> 部分会直接 SyntaxError。分支逻辑一复杂，就退回普通 if-else。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的 IF 表达式（三元表达式 / 条件表达式）：变量 = 值1 if 条件 else 值2。请：1）用「一句话拍板」类比解释它和普通 if-else 的适用场景差异；2）出 5 道「读 IF 表达式写运行结果」的题考我（含字符串值和负数）；3）演示把一段普通 if-else 赋值代码改写成 IF 表达式、再判断哪段可读性更好。">
+      我刚学了 Python 的 IF 表达式（三元表达式 / 条件表达式）：变量 = 值1 if 条件 else 值2。请：1）用「一句话拍板」类比解释它和普通 if-else 的适用场景差异；2）出 5 道「读 IF 表达式写运行结果」的题考我（含字符串值和负数）；3）演示把一段普通 if-else 赋值代码改写成 IF 表达式、再判断哪段可读性更好。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：一行拍板练习（5 分钟）</span>
+    <ol class="steps">
+      <li>把 5.03 示例 02 的最大值程序改写成 IF 表达式版（三行搞定），输入 5 和 3、再输入 3 和 5 各跑一遍，结果应与六行版完全一致。</li>
+      <li>再用 IF 表达式判断成绩及格：<code>result = '及格' if score &gt;= 60 else '不及格'</code>，输入几个分数试试（别忘了先给 score 赋值或用 input 读入）。</li>
+      <li>把 <code>c = a if a &gt;= b else b</code> 中的 <code>&gt;=</code> 改成 <code>&gt;</code>，输入 4 和 4——想想为什么这次 c 变成了 b（4），和 5.03 课堂代码里的分析对照。</li>
+      <li>挑战：用 IF 表达式求两个数中的<b>最小值</b>，一行写出 <code>c</code> 的赋值。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>IF 表达式的语法是<b>变量 = 值1 if 条件 else 值2</b>：条件真取值1、假取值2，专门用于变量赋值；它不需要冒号、不需要换行缩进，是普通双分支在「二选一赋值」场景下的一行版，Python 里也叫三元表达式 / 条件表达式。决策简单就一句话拍板，决策复杂就老老实实写 if-else。下一节：分支再多也不怕——多分支结构 if-elif-else。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="5.03.html"><span class="nav-label">← 上一节</span><span class="nav-title">5.03 双分支结构 if-else</span></a>
+        <a class="next" href="5.05.html"><span class="nav-label">下一节 →</span><span class="nav-title">5.05 多分支结构 if-elif-else</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

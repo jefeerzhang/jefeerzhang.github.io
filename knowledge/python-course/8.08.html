@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8.08 封装与私有属性 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第八章 面向对象编程 · 第 8 / 12 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.play{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.crow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.ccard{border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;background:#fff;margin-bottom:14px}
+.ccard .nm{font-weight:800;font-size:15px;color:var(--ink)}
+.ccard .info{font-size:13px;color:var(--ink2);margin-top:4px;line-height:1.7}
+.ccard .info b{color:var(--accent)}
+.ccard .info .lock{color:var(--err);font-weight:700}
+.clog{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14px;min-height:150px;white-space:pre-wrap;line-height:1.8}
+.clog .warn{color:var(--err);font-weight:700}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch08.html">第八章 面向对象编程</a><span class="sep">/</span>
+          <span class="current">8.08</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">08</span>
+            <span class="lesson-hero-num-total">/ 12</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第八章 · 面向对象编程</span>
+            <h1>封装与私有属性</h1>
+            <p class="hero-summary">第 8 / 12 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 12 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>编程的两种范式</li>
+      <li>面向对象的三大特性</li>
+      <li>四个核心概念：类·对象·属性·方法</li>
+      <li>创建类：class·__init__·self</li>
+      <li>创建对象与访问成员</li>
+      <li>实例属性与类属性</li>
+      <li>三种方法：实例·类·静态</li>
+      <li class="cur">封装与私有属性</li>
+      <li>继承与 super()</li>
+      <li>多重继承</li>
+      <li>多态与方法重写</li>
+      <li>综合案例：商品库存管理</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>余额要是谁都能改，银行早关门了</h2>
+    <p>上一节的 <code>stu1.score = 92</code> 说明：默认情况下，任何人拿到对象就能改它的属性。对成绩单无所谓，对银行账户就是灾难——<code>acc.balance = -99999</code> 一行代码把余额改成负数？封装就是来解决这个问题的：<b>把重要的数据藏起来，只留规范的窗口供人办事</b>。这也是面向对象三大特性（封装、继承、多态）中的第一个，是本章承上启下的一节。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">银行：金库藏起来，柜台开出来</div>
+      <p>银行把重要的东西——<b>金库、现金、账本</b>——全部藏进不能随意进出的内部区域；对外只开放<b>标准化的安全窗口</b>：柜台和 ATM。你想取钱？在窗口办手续，柜员（公开方法）先核对金额够不够（内部检查逻辑），通过了才动账本（私有属性）。这样<b>既保护了资金安全，又让办事简单</b>——你不需要知道账本记在哪一页，只需要会排队按密码。类的封装一模一样。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>封装：藏细节，留接口</h2>
+    <ul class="points">
+      <li><b>封装</b>是 OOP 的核心思想：将数据（属性）与操作数据的方法（函数）<b>捆绑在一起</b>，对外<b>隐藏内部具体实现细节</b>，只保留对外的<b>交互接口</b></li>
+      <li><b>具体实现</b>：在属性或方法名前加<b>双下划线 <code>__</code></b>，将其标记为<b>私有属性 / 私有方法</b>——外部将无法直接访问，从而有效保护数据不被随意篡改</li>
+      <li><b>公开属性 / 公开方法</b>：名字不带双下划线前缀，外部随便读、随便调——它们就是「对外的窗口」</li>
+      <li><b>访问私有的正确姿势</b>：不是直接碰 <code>__balance</code>，而是调用公开方法（如 <code>withdraw()</code>），让方法在<b>类内部</b>替你检查、修改</li>
+      <li>硬闯的下场：外部执行 <code>print(acc.__balance)</code> 会抛 <code>AttributeError</code>——藏起来但留着窗口</li>
+    </ul>
+
+    <div class="play">
+      <p style="font-weight:700;margin-bottom:10px">🔬 银行柜台实验台：点按钮体验「藏起来但留着窗口」</p>
+      <div class="crow">
+        <button class="btn-main btn" onclick="bDo('create')">acc = BankAccount('张三', 1000)</button>
+        <button class="btn-ghost btn" onclick="bDo('owner')">print(acc.owner)</button>
+        <button class="btn-ghost btn" onclick="bDo('peek')">print(acc.__balance)</button>
+        <button class="btn-main btn" onclick="bDo('wd500')">acc.withdraw(500)</button>
+        <button class="btn-ghost btn" onclick="bDo('wd2000')">acc.withdraw(2000)</button>
+        <button class="btn-ghost btn" onclick="bDo('reset')">重置</button>
+      </div>
+      <div class="ccard" id="ccard"></div>
+      <div class="clog" id="clog">先开户，再试试从「窗口」取款、以及硬闯私有属性（会有意外发生哦）。</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：BankAccount 的私有余额</h2>
+    <pre class="codeblock">class BankAccount:
+    def __init__(self, owner, balance):
+        self.owner = owner            # 公开属性：户主
+        self.__balance = balance      # 私有属性：余额（双下划线开头）
+
+    def withdraw(self, amount):       # 公开方法：取款的「安全窗口」
+        if amount &gt;= 0 and self.__checkbalance(amount):
+            self.__balance -= amount
+            print(f"取款 {amount} 元，余额：{self.__balance}")
+        else:
+            print("取款失败：金额无效或余额不足")
+
+    def __checkbalance(self, amount): # 私有方法：内部核账
+        return amount &lt;= self.__balance
+
+acc = BankAccount('张三', 1000)
+acc.withdraw(500)</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">取款 500 元，余额：500</pre>
+    <p>而外部硬闯私有属性：</p>
+    <pre class="codeblock">print(acc.__balance)
+print(acc.__checkbalance(500))</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">AttributeError: 'BankAccount' object has no attribute '__balance'
+AttributeError: 'BankAccount' object has no attribute '__checkbalance'</pre>
+    <ul class="points">
+      <li><code>self.owner</code> 是公开属性——窗口里挂着「户主」的牌子，谁都能看</li>
+      <li><code>self.__balance</code> 双下划线开头——私有属性，外部访问直接 AttributeError</li>
+      <li><code>withdraw()</code> 是公开方法（窗口）：先确认金额合法（<code>amount &gt;= 0</code>）、再调私有方法核账（余额够不够），都通过才扣款</li>
+      <li><code>__checkbalance()</code> 是私有方法——只在类内部被 <code>withdraw</code> 调用，外部也调不到，内部核账流程不外传</li>
+      <li>数据的每一次变动都必须走 withdraw 这个窗口，且窗口里自带校验——这就是「保护数据不被随意篡改」</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！__balance 双下划线开头是私有属性，外部直接访问会抛 AttributeError——想动余额只能走 withdraw 这样的公开方法。"
+         data-no="❌ 双下划线开头 __balance 是私有属性，外部无法直接访问，Python 会抛 AttributeError——必须通过公开方法 withdraw() 间接操作。">
+      <p style="font-weight:700;margin-bottom:12px">接 PPT 原例，在外部直接执行 <code>print(acc.__balance)</code>，结果是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 输出 1000</button>
+      <button class="opt" onclick="quizPick(this)">B. 输出 None</button>
+      <button class="opt" onclick="quizPick(this)">C. 抛出 AttributeError</button>
+      <button class="opt" onclick="quizPick(this)">D. 输出 0</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="实现交互双下划线|实现 交互 双下划线" data-ok="✅ 全对！封装 = 捆绑数据与方法 + 隐藏内部实现细节 + 只留交互接口；双下划线前缀就是「藏」的开关。" data-no="❌ 提示：三个空分别是——封装对外隐藏内部具体＿＿细节，只保留对外的＿＿接口；在属性名前加＿＿可将属性标记为私有属性。">
+      <p>封装将数据与操作数据的方法捆绑在一起，对外隐藏内部<b>＿＿</b>细节，只保留对外的<b>＿＿</b>接口；在属性或方法名前加<b>＿＿</b>，可将其标记为私有属性或私有方法。（三空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：实现 交互 双下划线">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>双下划线必须是「前缀」</b>：<code>__balance</code> 才是私有；写成 <code>_balance</code>（单下划线）只是「约定俗成的受保护」，Python 并不真正拦截它；</p>
+      <p>②<b>私有方法同样访问不到</b>：<code>acc.__checkbalance(500)</code> 也抛 AttributeError——私有不只管属性，方法也能藏；</p>
+      <p>③<b>私有 ≠ 绝对保险箱</b>：Python 的「私有」是通过改名实现的（内部记成 <code>_BankAccount__balance</code>），高手仍有办法绕过——课堂上记住规则「外部不能直接访问」即可，重点是养成走公开方法的习惯。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 封装与私有属性：在属性或方法名前加双下划线 __ 即为私有，外部直接访问抛 AttributeError；正确做法是公开方法在类内部访问和校验私有数据（如 BankAccount 的 __balance 只能通过 withdraw 操作）。请：1）用「银行金库与柜台」的类比帮我复述封装思想；2）出 5 道读代码题考我（含外部访问私有属性报错、通过公开方法间接改私有数据）；3）让我自己设计一个私有化的 Student 类（score 私有 + set_score 校验 0~100），并帮我 review。">
+      我刚学了 Python 封装与私有属性：在属性或方法名前加双下划线 __ 即为私有，外部直接访问抛 AttributeError；正确做法是公开方法在类内部访问和校验私有数据（如 BankAccount 的 __balance 只能通过 withdraw 操作）。请：1）用「银行金库与柜台」的类比帮我复述封装思想；2）出 5 道读代码题考我（含外部访问私有属性报错、通过公开方法间接改私有数据）；3）让我自己设计一个私有化的 Student 类（score 私有 + set_score 校验 0~100），并帮我 review。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：开一家「私人小银行」（10 分钟）</span>
+    <ol class="steps">
+      <li>读代码预测：开户 1000 元后连续调用 <code>acc.withdraw(500)</code> 三次，先猜第三次会打印什么，再到实验台验证（第二次之后就取不出来了）。</li>
+      <li>改代码试效果：把 withdraw 的校验条件 <code>amount &gt;= 0</code> 删掉，再试试 <code>acc.withdraw(-100)</code>——观察余额不减反增，体会「窗口校验」为什么不能省。</li>
+      <li>给 BankAccount 增加一个公开方法 <code>deposit(amount)</code>（存款），同样先校验金额为正，再增加 <code>__balance</code>。</li>
+      <li>挑战：把 <code>owner</code> 也改成私有属性 <code>__owner</code>，然后写一个公开方法 <code>get_owner()</code> 返回户主——体验「藏起来、开查询窗口」。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>封装是 OOP 的核心思想：把数据（属性）与操作数据的方法捆绑在一起，对外隐藏内部实现细节，只保留交互接口。实现方式：属性或方法名前加双下划线 <code>__</code> 即为私有，外部直接访问抛 AttributeError；外部想动私有数据，必须走公开方法（如 withdraw），而公开方法内部自带校验。下一节：封装之外的第二大特性——继承与 super()。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="8.07.html"><span class="nav-label">← 上一节</span><span class="nav-title">8.07 三种方法：实例·类·静态</span></a>
+        <a class="next" href="8.09.html"><span class="nav-label">下一节 →</span><span class="nav-title">8.09 继承与 super()</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：银行柜台实验台（模拟 BankAccount 类行为） */
+let opened, accOwner, accBalance, logs;
+function bReset(){
+  opened = false; accOwner = ''; accBalance = 0;
+  logs = ['# 还没有账户。先点 acc = BankAccount(\'张三\', 1000) 开户'];
+  bRender();
+}
+function bCard(){
+  if (!opened) return '<div class="ccard"><div class="nm">尚未开户</div><div class="info">等一句 acc = BankAccount(...) 来开户</div></div>';
+  return '<div class="ccard"><div class="nm">🏦 账户 acc</div><div class="info">owner = <b>' + accOwner + '</b>（公开，窗口可见） · __balance = <span class="lock">🔒 ' + accBalance + '</span>（私有，藏在金库）</div></div>';
+}
+function bRender(){
+  document.getElementById('ccard').innerHTML = bCard();
+  document.getElementById('clog').textContent = logs.join('\n');
+}
+function bDo(op){
+  if (op === 'reset'){ bReset(); return; }
+  if (op === 'create'){
+    opened = true; accOwner = '张三'; accBalance = 1000;
+    logs.push("acc = BankAccount('张三', 1000)");
+    logs.push('# __init__ 执行：owner=张三（公开），__balance=1000（私有）');
+    bRender(); return;
+  }
+  if (!opened){ logs.push('# 还没有账户，请先开户！'); bRender(); return; }
+  if (op === 'owner'){
+    logs.push('print(acc.owner)', '→ ' + accOwner, '# 公开属性：窗口直接可见');
+  }
+  if (op === 'peek'){
+    logs.push('print(acc.__balance)');
+    logs.push('→ AttributeError: \'BankAccount\' object has no attribute \'__balance\'');
+    logs.push('# 私有属性硬闯被拒——想看余额？银行没开查询窗口（本例只留了取款窗口）');
+  }
+  if (op === 'wd500'){
+    if (500 >= 0 && 500 <= accBalance){
+      accBalance -= 500;
+      logs.push('acc.withdraw(500)', '→ 取款 500 元，余额：' + accBalance);
+      logs.push('# 公开方法内部核账通过，才动了私有属性');
+    } else {
+      logs.push('acc.withdraw(500)', '→ 取款失败：金额无效或余额不足');
+    }
+  }
+  if (op === 'wd2000'){
+    logs.push('acc.withdraw(2000)', '→ 取款失败：金额无效或余额不足');
+    logs.push('# 2000 > 余额，__checkbalance 核账没通过——窗口替你挡住了乱账');
+  }
+  bRender();
+}
+window.addEventListener('DOMContentLoaded', bReset);
+</script>
+</body>
+</html>

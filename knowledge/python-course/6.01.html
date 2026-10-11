@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6.01 函数的定义与优点 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第六章 函数 · 第 1 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch06.html">第六章 函数</a><span class="sep">/</span>
+          <span class="current">6.01</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">01</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第六章 · 函数</span>
+            <h1>函数的定义与优点</h1>
+            <p class="hero-summary">第 1 / 18 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li class="cur">函数的定义与优点</li>
+      <li>函数的分类</li>
+      <li>函数的定义</li>
+      <li>函数的调用</li>
+      <li>形参与实参</li>
+      <li>参数传递的两种方式</li>
+      <li>必须参数与可选参数</li>
+      <li>不定长参数</li>
+      <li>参数值的数据类型</li>
+      <li>变量作用域：局部与全局</li>
+      <li>global 修改全局变量</li>
+      <li>匿名函数 lambda</li>
+      <li>高阶函数：map 与 filter</li>
+      <li>高阶函数：sorted 与 key</li>
+      <li>递归函数：概念与两要素</li>
+      <li>递归执行逻辑：递推与回溯</li>
+      <li>递归实战：阶乘</li>
+      <li>递归实战：字符串逆序</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>同一段代码要写三遍？复制粘贴迟早出事</h2>
+    <p>想象你要给三位同学各打印一行欢迎语，再算三个圆的面积——最直接的做法是<b>把相似的代码复制三遍</b>。但复制粘贴有三个隐患：代码越写越长、改一处要记得改另外两处（漏一处就是 bug）、读代码的人抓不住重点。从这一章开始，Python 给你提供了一个终极武器——<b>函数（function）</b>：把一段代码打包起来、起个名字，哪里需要就在哪里「喊一声」它的名字。本章 18 个知识点，全部围绕它展开。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">函数像一台「榨汁机」：放水果进去，出果汁来，机器反复用</div>
+      <p>榨汁机买回来之后不会自己转（<b>定义</b>好但不工作），把水果<b>放进去</b>（传入<b>参数</b>）、按下开关（<b>调用</b>），它才吐出果汁（<b>返回值</b>）。最妙的是：一台机器今天榨橙子、明天榨苹果，<b>机器本身不用重买</b>——函数也一样，定义一次，参数换一换，就能反复调用。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>什么是函数？它好在哪？</h2>
+    <ul class="points">
+      <li><b>定义</b>：函数是一段具有特定功能、可重用的代码块；经过定义，一个函数等价于一组代码，需要时直接调用即可实现该组代码的功能</li>
+      <li><b>优点一：提高效率</b>——实现模块化开发和测试，把大程序拆成一个个小函数，各管一摊，编程效率大幅提高</li>
+      <li><b>优点二：重复使用</b>——一次定义、多次使用，避免重复造轮子；写好的函数还能搬到下一个程序里接着用</li>
+      <li><b>优点三：可阅读性强</b>——函数名就是「这段代码在干什么」的说明标签，显著提高代码的可阅读性和可维护性</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>同一件事的两种写法：复制三遍 vs 定义一次调用三次</h2>
+    <p>任务：给 lihua、xiaoming、tom 各打印一行欢迎语。先看「不用函数」的写法：</p>
+    <pre class="codeblock"># 写法一：不用函数，复制粘贴三遍
+print("欢迎 lihua 来到 Python 课堂！")
+print("欢迎 xiaoming 来到 Python 课堂！")
+print("欢迎 tom 来到 Python 课堂！")</pre>
+    <p>现在换「用函数」的写法——把「打印欢迎语」这件事打包成 <code>welcome()</code>，定义一次、调用三次：</p>
+    <pre class="codeblock"># 写法二：用函数，定义一次，调用三次
+def welcome(name):
+    print(f"欢迎 {name} 来到 Python 课堂！")
+
+welcome("lihua")
+welcome("xiaoming")
+welcome("tom")</pre>
+    <p>两种写法的输出结果完全相同：</p>
+    <pre class="codeblock out">欢迎 lihua 来到 Python 课堂！
+欢迎 xiaoming 来到 Python 课堂！
+欢迎 tom 来到 Python 课堂！</pre>
+    <ul class="points">
+      <li>写法二的 <code>def welcome(name):</code> 就是「定义榨汁机」，三行 <code>welcome(…)</code> 就是「按下三次开关」</li>
+      <li>如果哪天欢迎语要改成英文，写法一要改三处，写法二<b>只改函数体里的一行</b>——这就是可维护性</li>
+      <li>现在看不懂 <code>def</code> 的语法没关系，6.03 会逐块拆解；本节先建立「函数 = 可复用的代码块」这个直觉</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！函数定义好之后必须被「调用」才会执行——定义只是把代码打包放好，不会自动运行，这一点下一节马上展开。"
+         data-no="❌ 提示：A、B、D 都是函数的真实优点。剩下那个选项把「定义」和「执行」混为一谈了——定义好 ≠ 会跑。">
+      <p style="font-weight:700;margin-bottom:12px">下面哪个说法<b>不是</b>函数的优点？</p>
+      <button class="opt" onclick="quizPick(this)">A. 一次定义、多次使用，避免重复造轮子</button>
+      <button class="opt" onclick="quizPick(this)">B. 实现模块化开发和测试，提高编程效率</button>
+      <button class="opt" onclick="quizPick(this)">C. 函数定义好之后，不调用也会自动执行</button>
+      <button class="opt" onclick="quizPick(this)">D. 提高代码的可阅读性和可维护性</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="代码块效率重复阅读性|代码块效率重复可阅读" data-ok="✅ 全对！函数是一段可重用的代码块；三大优点：提高效率、重复使用、可阅读性强。" data-no="❌ 提示：第一空是「函数是一段……」的本体（三个字），后三空分别对应三大优点里的关键词。">
+      <p>函数是一段具有特定功能、可重用的<b>＿＿</b>；它的三大优点是提高<b>＿＿</b>、<b>＿＿</b>使用、可<b>＿＿</b>性强。（三空用空格隔开，例如：代码块 效率 重复 阅读性 的风格）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：代码块 效率 重复 阅读性">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>定义了却从不调用</b>：函数定义好但不调用，函数体一行都不会执行，也不报错——白写了。榨汁机买来不用，是榨不出果汁的；</p>
+      <p>②<b>以为函数能「少打字」就随便包</b>：两三行的代码反复出现，才值得包成函数；把只有一处使用的代码强行包成函数，反而多跳一层、更难读——粒度要适中；</p>
+      <p>③<b>复制粘贴三遍后再想改</b>：需求一变就要改三处，漏改一处就是隐藏 bug。看到「相似代码出现第二次」就该警觉：是不是该写函数了。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 函数的定义与三大优点（提高效率、重复使用、可阅读性强）。请：1）用「榨汁机」的类比解释定义、调用、参数、返回值四个概念；2）写一段「不用函数复制三遍」和「定义一次调用三次」的对照代码，标注改需求时要改几处；3）出 3 道判断/选择题考我函数的优点，并等我答完再讲解。">
+      我刚学了 Python 函数的定义与三大优点（提高效率、重复使用、可阅读性强）。请：1）用「榨汁机」的类比解释定义、调用、参数、返回值四个概念；2）写一段「不用函数复制三遍」和「定义一次调用三次」的对照代码，标注改需求时要改几处；3）出 3 道判断/选择题考我函数的优点，并等我答完再讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试</span>
+    <ol class="steps">
+      <li>把本页「写法二」的代码敲进 IDLE 运行一遍，确认输出和页面上一致——先混个脸熟。</li>
+      <li>改需求演练：把欢迎语改成「{name}，欢迎学习函数！」，体验只改函数体一行、三处调用全部生效的感觉。</li>
+      <li>再写一个函数 <code>print_line()</code>，函数体是 <code>print("-" * 30)</code>，调用它三次打印分隔线——体会「定义一次、调用多次」。</li>
+      <li>挑战：本章作业里凡是出现「重复打印 / 重复计算」的题，都先想一句——这段代码包成函数后，调用几次、参数是什么？带着这个问题往下学。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>函数是一段具有特定功能、可重用的代码块，定义后调用即可实现那组代码的功能；三大优点——提高效率（模块化开发测试）、重复使用（避免重复造轮子）、可阅读性强（易读易维护）；定义不等于执行，必须调用才生效。下一节：看看 Python 世界的函数都从哪来。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="ch06.html"><span class="nav-label">← 上一节</span><span class="nav-title">返回课程总目录</span></a>
+        <a class="next" href="6.02.html"><span class="nav-label">下一节 →</span><span class="nav-title">6.02 函数的分类</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

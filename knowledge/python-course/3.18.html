@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.18 列表修改元素 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第三章 字符串与列表 · 第 18 / 21 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.step-out{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;
+  padding:10px 14px;font-family:Consolas,Menlo,monospace;font-size:14px;margin-top:10px}
+.step-out b{color:var(--accent)}
+.step-guess{font-size:14px;color:var(--ink2);margin-top:6px}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch03.html">第三章 字符串与列表</a><span class="sep">/</span>
+          <span class="current">3.18</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">18</span>
+            <span class="lesson-hero-num-total">/ 21</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第三章 · 字符串与列表</span>
+            <h1>列表修改元素</h1>
+            <p class="hero-summary">第 18 / 21 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 21 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>字符串基础与三种引号</li>
+      <li>转义字符</li>
+      <li>字符串索引</li>
+      <li>字符串切片</li>
+      <li>实战：身份证号提取信息</li>
+      <li>字符串运算与内置函数</li>
+      <li>大小写转换方法</li>
+      <li>计数、查找与替换</li>
+      <li>分割、联合与剔除</li>
+      <li>判断字符串类别</li>
+      <li>format 格式化输出</li>
+      <li>f-string 格式化输出</li>
+      <li>列表定义与特性</li>
+      <li>列表的创建</li>
+      <li>列表索引与切片</li>
+      <li>列表增加元素</li>
+      <li>列表删除元素</li>
+      <li class="cur">列表修改元素</li>
+      <li>列表运算与函数</li>
+      <li>列表常用方法</li>
+      <li>实战：成绩排序和统计</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>名单写错了，改一个字就行</h2>
+    <p>前面学了怎么往列表里<b>加</b>元素、<b>删</b>元素，这一节解决最日常的需求：<b>改</b>。比如点名册上有人名字写错了、库存表里某个数字要更新——不必删了再加，直接「指哪改哪」。列表是<b>可变序列</b>，这正是它和字符串最本质的区别之一，也是本章作业的高频考点。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">点名换人 vs 整排换人</div>
+      <p><b>索引赋值</b>像「点名换人」：老师喊「3 号出列，6 号顶上」——只换那一个人，队伍人数不变。<b>切片赋值</b>像「整排换人」：把 3 号到 4 号这一整排都换掉，<b>新来几个人都行</b>——来 4 个人，队伍就自动变长；来 1 个人，队伍就自动变短。列表永远帮你把队站好。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>索引赋值改单个，切片赋值改一片</h2>
+    <ul class="points">
+      <li><b>可变序列</b>：列表支持通过索引直接赋值来修改指定位置的元素，操作会<b>直接改变原列表</b></li>
+      <li><b>单个修改</b>：<code>L[i] = 新值</code>，把下标 i 的元素换成新值</li>
+      <li><b>多个修改</b>：<code>L[M:N] = 新列表</code>，一次赋值同时替换一段元素</li>
+      <li><b>长度自动伸缩</b>：切片赋值时，新序列的长度<b>不必</b>与切片长度相同——原来占 2 个位置塞进 4 个，列表就变长；塞进 1 个，列表就变短</li>
+      <li>赋的值甚至可以是<b>另一个列表</b>：把 <code>[7, 8]</code> 整个塞进一个位置，列表里就会出现「列表套列表」</li>
+    </ul>
+
+    <div class="play-out" style="margin-top:14px">
+      <p style="font-weight:700;margin-bottom:10px">🔬 逐步推演：先在心里猜结果，再点下面的按钮看答案</p>
+      <div class="switch" role="tablist">
+        <button class="on" data-pane="p18-1">第 1 步</button>
+        <button data-pane="p18-2">第 2 步</button>
+        <button data-pane="p18-3">第 3 步</button>
+        <button data-pane="p18-4">第 4 步</button>
+      </div>
+      <div class="pane on" id="p18-1">
+        <p class="step-guess">起始：<code>L7 = [1, 2, 3, 4, 5]</code>。执行 <code>L7[2] = 6</code> 会怎样？</p>
+        <div class="step-out">L7[2] = 6<br>print(L7)　→　<b>[1, 2, 6, 4, 5]</b><br><span style="color:#5b6472"># 下标 2 的 3 被换成 6，其余不动</span></div>
+      </div>
+      <div class="pane" id="p18-2">
+        <p class="step-guess">接着执行 <code>L7[3] = [7, 8]</code>——把一个列表塞进一个位置？</p>
+        <div class="step-out">L7[3] = [7, 8]<br>print(L7)　→　<b>[1, 2, 6, [7, 8], 5]</b><br><span style="color:#5b6472"># 下标 3 整个变成列表 [7, 8]（套娃！）</span></div>
+      </div>
+      <div class="pane" id="p18-3">
+        <p class="step-guess">再执行 <code>L7[3:5] = [9, 10]</code>——切片赋值，2 个位置换 2 个元素。</p>
+        <div class="step-out">L7[3:5] = [9, 10]<br>print(L7)　→　<b>[1, 2, 6, 9, 10]</b><br><span style="color:#5b6472"># 下标 3、4 的 [7, 8] 和 5 被换成 9、10</span></div>
+      </div>
+      <div class="pane" id="p18-4">
+        <p class="step-guess">最后执行 <code>L7[2:4] = [11, 12, 13, 14]</code>——2 个位置塞 4 个元素？</p>
+        <div class="step-out">L7[2:4] = [11, 12, 13, 14]<br>print(L7)　→　<b>[1, 2, 11, 12, 13, 14, 10]</b><br><span style="color:#5b6472"># 原本占 2 个位置，塞进 4 个，列表自动变长！</span></div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：四步连起来看</h2>
+    <pre class="codeblock">L7 = [1, 2, 3, 4, 5]
+L7[2] = 6
+print(L7)      <span class="good"># [1, 2, 6, 4, 5]</span>
+L7[3] = [7, 8]
+print(L7)      <span class="good"># [1, 2, 6, [7, 8], 5]</span>
+L7[3:5] = [9, 10]
+print(L7)      <span class="good"># [1, 2, 6, 9, 10]</span>
+L7[2:4] = [11, 12, 13, 14]
+print(L7)      <span class="good"># [1, 2, 11, 12, 13, 14, 10]</span></pre>
+    <ul class="points">
+      <li>每一步的赋值都<b>直接改在 L7 身上</b>，没有产生新列表</li>
+      <li>第 4 步是精髓：<code>L7[2:4]</code> 原本只占 2 个位置，却塞进 4 个元素——列表从 5 个元素变成 7 个，<b>长度悄悄变了</b></li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！切片 [1:3] 占 2 个位置，却只塞进 1 个元素 9，列表自动变短，剩下 [1, 9, 4, 5]。"
+         data-no="❌ 再想想：L[1:3] 是下标 1、2 这 2 个位置，右边只给了 1 个元素——整排换人时新排只有 1 人，队伍会变短。结果是 [1, 9, 4, 5]。">
+      <p style="font-weight:700;margin-bottom:12px">L = [1, 2, 3, 4, 5]，执行 <code>L[1:3] = [9]</code> 后，L 的值是？</p>
+      <button class="opt" onclick="quizPick(this)">A. [1, 9, 3, 4, 5]</button>
+      <button class="opt" onclick="quizPick(this)">B. [1, 9, 4, 5]</button>
+      <button class="opt" onclick="quizPick(this)">C. [1, 9]</button>
+      <button class="opt" onclick="quizPick(this)">D. 程序报错</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="赋值 原" data-ok="✅ 正确！列表是可变序列，通过索引直接赋值即可修改元素，且操作会直接改变原列表。" data-no="❌ 再想想：第一空是修改元素的手段（索引直接……），第二空是被改变的是哪个列表？（两空连填，中间空格隔开）">
+      <p>列表是可变序列，通过索引直接＿＿即可修改元素，操作会直接改变＿＿列表。（两空连填，中间空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：× ×">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">字符串可改不了！还有「悄悄变长变短」的陷阱</div>
+      <p><b>坑一：字符串是不可变序列。</b>列表能 <code>L[0] = 'x'</code>，字符串不能——<code>s[0] = 'x'</code> 会直接报 <code>TypeError: 'str' object does not support item assignment</code>。想改字符串只能重新切片拼接生成新串。这是列表与字符串最本质的区别之一，考试爱考。</p>
+      <p><b>坑二：切片赋值左右长度不一致不报错。</b>2 个位置塞 4 个元素，Python 不吭声就把列表撑长了——如果你本意是「一对一替换」，结果列表却悄悄变了长，后面的索引全乱套。写切片赋值前，先数一数两边元素个数。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 列表修改元素：索引赋值改单个、切片赋值可一次改多个且长度可不同。请：1）用一个生活类比解释切片赋值时列表长度自动伸缩；2）以 L=[10,20,30,40,50] 为例出 4 道修改题（含一道切片赋值变长、一道变短、一道塞入子列表），等我作答后公布答案和讲解；3）解释为什么字符串 s[0]='x' 会报错而列表可以。">
+      我刚学了 Python 列表修改元素：索引赋值改单个、切片赋值可一次改多个且长度可不同。请：1）用一个生活类比解释切片赋值时列表长度自动伸缩；2）以 L=[10,20,30,40,50] 为例出 4 道修改题（含一道切片赋值变长、一道变短、一道塞入子列表），等我作答后公布答案和讲解；3）解释为什么字符串 s[0]='x' 会报错而列表可以。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：亲手改一改（4 分钟）</span>
+    <ol class="steps">
+      <li>交互模式输入 <code>L7 = [1, 2, 3, 4, 5]</code>，按本节四步依次执行：<code>L7[2] = 6</code>、<code>L7[3] = [7, 8]</code>、<code>L7[3:5] = [9, 10]</code>、<code>L7[2:4] = [11, 12, 13, 14]</code>，每步都 <code>print(L7)</code> 对照 PPT 结果。</li>
+      <li>再输入 <code>s = 'abc'</code>，试试 <code>s[0] = 'x'</code>——看看报的是什么错？把错误类型记下来。</li>
+      <li>思考：想让 s 变成 <code>'xbc'</code> 该怎么办？（提示：切片拼接 <code>s = 'x' + s[1:]</code>）</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>列表是<b>可变序列</b>：索引赋值 <code>L[i] = 新值</code> 改单个元素；切片赋值 <code>L[M:N] = 新列表</code> 一次改多个，且新序列长度不必与切片相同——<b>列表自动伸缩</b>，塞入子列表还会出现嵌套。字符串不可变，<code>s[0]='x'</code> 会报 TypeError。下一节：列表的运算符与四个统计函数。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="3.17.html"><span class="nav-label">← 上一节</span><span class="nav-title">3.17 列表删除元素</span></a>
+        <a class="next" href="3.19.html"><span class="nav-label">下一节 →</span><span class="nav-title">3.19 列表运算与函数</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

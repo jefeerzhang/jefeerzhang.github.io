@@ -1,0 +1,262 @@
+/* Python 语言基础与应用 · 专栏样式
+   由源课程站 assets/course.css 迁移而来：令牌改为承接 ../assets/site.css，
+   使本专栏的配色、字体与站点其余部分一致，并自动跟随深色模式。
+   生成脚本：gen_css.py（源站 course.css + 令牌映射 + 本站新增样式）。
+   ========================================================================== */
+
+/* ============================================================
+   Python语言基础与应用 · 第一章知识点课程页 · 共享样式
+   设计范式参照 aiolaola.com/lesson/0.1（浅色主题）
+   ============================================================ */
+:root{
+  /* ——— 本站令牌映射：课程页沿用的旧令牌名 → site.css 令牌 ——— */
+  --card: var(--surface);
+  --bg: var(--paper);
+  --border: var(--line);
+  --ink2: var(--text);
+  --code-bg: var(--surface-soft);
+  --accent-soft: rgba(36, 86, 66, .08);
+  --accent2: #9a6b2f;
+  --accent2-soft: #f7f1e6;
+  --ok: #245642;
+  --ok-soft: #eaf3ed;
+  --warn: #b07a2a;
+  --warn-soft: #fbf6ec;
+  --err: #a8443a;
+  --err-soft: #f7ecea;
+}
+[data-theme="dark"]{
+  --accent-soft: rgba(127, 176, 152, .16);
+  --accent2: #d8ab6e;
+  --accent2-soft: #2a2620;
+  --ok: #7fb098;
+  --ok-soft: #1c2a22;
+  --warn: #d8ab6e;
+  --warn-soft: #2a2620;
+  --err: #e0918a;
+  --err-soft: #2c2321;
+}
+/* ---------- header ---------- */
+/* ---------- 知识点地图 ---------- */
+.kmap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+      box-shadow:var(--shadow);margin-bottom:26px;overflow:hidden}
+.kmap-btn{width:100%;background:none;border:none;cursor:pointer;display:flex;
+      justify-content:space-between;align-items:center;padding:13px 18px;
+      font-size:14px;font-weight:600;color:var(--ink);font-family:inherit}
+.kmap-btn .arrow{transition:transform .25s;color:var(--ink2)}
+.kmap.open .kmap-btn .arrow{transform:rotate(180deg)}
+.kmap-list{display:none;padding:0 18px 16px;font-size:14px}
+.kmap.open .kmap-list{display:block}
+.kmap-list ol{list-style:none;counter-reset:k;display:grid;grid-template-columns:1fr 1fr;gap:4px 24px}
+.kmap-list li{counter-increment:k;color:var(--ink2);padding:3px 0;border-top:1px dashed var(--border)}
+.kmap-list li::before{content:counter(k,decimal-leading-zero) " ";color:var(--accent);font-weight:700;margin-right:6px}
+.kmap-list li.cur{color:var(--accent);font-weight:700}
+.kmap-list li.cur::after{content:"◀ 当前小节";font-size:11px;margin-left:8px;color:var(--accent)}
+
+/* ---------- section ---------- */
+.tag{display:inline-block;font-size:13px;font-weight:700;color:var(--accent);
+     background:var(--accent-soft);border-radius:999px;padding:3px 14px;margin-bottom:10px}
+p{margin-bottom:10px}
+.muted{color:var(--ink2)}
+code{background:var(--code-bg);border:1px solid var(--border);border-radius:6px;
+     padding:1px 7px;font-family:Consolas,Menlo,monospace;font-size:14px;color:#c2452d}
+pre.codeblock{background:#1f2430;color:#dbe2f0;border-radius:12px;padding:16px 18px;
+     font-family:Consolas,Menlo,monospace;font-size:13.5px;line-height:1.8;overflow-x:auto;margin:10px 0}
+pre.codeblock .good{color:#7ce3b0}
+pre.codeblock .bad{color:#ff9b9b}
+
+/* ---------- callouts ---------- */
+/* ---------- bullets ---------- */
+ul.points{list-style:none;margin:8px 0}
+ul.points li{padding:7px 0 7px 26px;position:relative}
+ul.points li::before{content:"";position:absolute;left:6px;top:16px;width:8px;height:8px;
+     border-radius:50%;background:var(--accent)}
+ol.steps{padding-left:22px;margin:8px 0}
+ol.steps li{margin-bottom:8px}
+
+/* ---------- 通用卡片网格（可点击揭示） ---------- */
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:680px){.g2,.g3{grid-template-columns:1fr}}
+.icard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;
+     cursor:pointer;transition:border-color .2s,box-shadow .2s}
+.icard:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+.icard h4{font-size:15px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.icard .dot{width:10px;height:10px;border-radius:50%;flex:none}
+.icard .desc{font-size:13.5px;color:var(--ink2)}
+.icard .more{display:none;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);
+     font-size:13.5px;color:var(--ink)}
+.icard.open .more{display:block}
+.icard .hint{font-size:12px;color:var(--accent);margin-top:8px}
+
+/* ---------- 简易条形图 ---------- */
+.barwrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+     box-shadow:var(--shadow);padding:20px}
+.barrow{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:14px}
+.barname{width:110px;text-align:right;flex:none;color:var(--ink2)}
+.bartrack{flex:1;background:var(--code-bg);border-radius:6px;height:26px;overflow:hidden}
+.bar{height:100%;border-radius:6px;background:var(--accent);display:flex;align-items:center;
+     justify-content:flex-end;padding-right:8px;color:#fff;font-size:12px;font-weight:700;
+     min-width:34px;transition:width 1s ease}
+.bar.top{background:linear-gradient(90deg,#4f6ef7,#7c5cf0)}
+.barrow .pct{width:64px;flex:none;font-weight:700;font-size:13px}
+
+/* ---------- 时间轴 ---------- */
+.timeline{position:relative;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;
+     background:var(--border)}
+.titem{position:relative;margin-bottom:18px}
+.titem::before{content:"";position:absolute;left:-24px;top:7px;width:12px;height:12px;
+     border-radius:50%;background:var(--accent);border:2.5px solid #fff;box-shadow:0 0 0 2px var(--accent-soft)}
+.titem .tyear{font-weight:800;color:var(--accent);font-size:15px}
+.titem .ttext{font-size:14.5px}
+
+/* ---------- 对比切换 ---------- */
+.switch{display:inline-flex;background:var(--code-bg);border-radius:10px;padding:4px;gap:4px;margin-bottom:12px}
+.switch button{border:none;background:none;font-family:inherit;font-size:14px;font-weight:600;
+     color:var(--ink2);padding:7px 16px;border-radius:8px;cursor:pointer}
+.switch button.on{background:var(--accent);color:#fff}
+.pane{display:none}
+.pane.on{display:block}
+
+/* ---------- 表格 ---------- */
+table{width:100%;border-collapse:collapse;font-size:14px;background:var(--card);
+      border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+th{background:var(--accent-soft);color:var(--accent);font-weight:700;text-align:left}
+th,td{padding:10px 14px;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+td:first-child{font-weight:600}
+
+/* ---------- 测验 / 填空 ---------- */
+.opt{display:block;width:100%;text-align:left;background:#fbfcfe;border:1.5px solid var(--border);
+     border-radius:10px;padding:11px 15px;margin-bottom:9px;cursor:pointer;font-family:inherit;
+     font-size:15px;color:var(--ink);transition:all .15s}
+.opt:hover{border-color:var(--accent);background:var(--accent-soft)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft);font-weight:700}
+.opt.wrong{border-color:var(--err);background:var(--err-soft)}
+.opt:disabled{cursor:default;opacity:.9}
+.fill-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px}
+input.blank{font-family:inherit;font-size:15px;padding:9px 12px;border:1.5px solid var(--border);
+     border-radius:10px;width:200px;outline:none;background:#fff;color:var(--ink)}
+input.blank:focus{border-color:var(--accent)}
+input.blank.right{border-color:var(--ok);background:var(--ok-soft)}
+input.blank.wrong{border-color:var(--err);background:var(--err-soft)}
+.fill-fb{font-size:14px;font-weight:700;min-height:22px;margin-top:8px}
+
+/* ---------- AI 提示词 ---------- */
+.prompt-box{position:relative;background:#1f2430;color:#dbe2f0;border-radius:12px;
+     padding:16px 48px 16px 16px;font-family:Consolas,Menlo,monospace;font-size:13.5px;line-height:1.8}
+.copy-btn{position:absolute;top:10px;right:10px;background:#39415a;color:#fff;border:none;
+     border-radius:8px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:inherit}
+.copy-btn:hover{background:var(--accent)}
+.copy-btn.done{background:var(--ok)}
+
+/* ---------- 翻页 ---------- */
+
+
+/* ==========================================================================
+   以下为发布到 jefeerzhang.github.io/knowledge/ 后新增的样式
+   ========================================================================== */
+
+/* ---------- 课时面包屑 / 知识点地图容器 ---------- */
+.lesson-map { padding: 26px 0 0; }
+.kmap { margin: 0; }
+.lesson-body .tag { font-size: 12px; padding: 3px 10px; margin-bottom: 12px; }
+
+/* ---------- 打比方 / 避坑 / 小结 卡片的标题（卡片本体交给 site.css .callout 系列） ---------- */
+.callout .co-title { color: var(--ink); }
+
+/* ---------- 行内代码改用站点强调色（源站是砖红） ---------- */
+code, .lesson-body code { color: var(--accent); }
+
+/* ---------- 配色对齐：源站遗留的蓝紫渐变 / 冷灰底 ---------- */
+.bar.top { background: linear-gradient(90deg, var(--accent), #7fb098); }
+.opt { background: var(--surface); }
+.opt:hover { background: var(--accent-soft); }
+.prompt-box { background: #111c17; color: #cfe4d6; border: 1px solid #223029; }
+.copy-btn { background: #223029; color: #cfe4d6; }
+.copy-btn:hover { background: var(--accent); color: var(--accent-ink); }
+[data-theme="dark"] .prompt-box { background: #0f1316; border-color: #333e47; }
+
+/* ---------- 代码块：与站点 .formula 同源配色 ---------- */
+pre.codeblock { background: #111c17; color: #cfe4d6; border: 1px solid #223029; }
+pre.codeblock .good { color: #7ce3b0; }
+pre.codeblock .bad { color: #ff9b9b; }
+pre.codeblock.out {
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--line); border-left: 3px solid var(--accent);
+}
+[data-theme="dark"] pre.codeblock {
+  background: #0f1316; color: #cfe4d6; border-color: #333e47;
+}
+
+/* ---------- 课时导航（替来源站的 .pager） ---------- */
+.lesson-nav .nav-title { display: block; font-weight: 700; font-size: 15px; line-height: 1.5; }
+.lesson-nav a .nav-label { margin-bottom: 6px; }
+
+/* ---------- 专栏首页 / 章目录 ---------- */
+.python-hero { padding: 72px 0 56px; background: var(--paper); border-bottom: 1px solid var(--line); }
+.python-hero .eyebrow {
+  margin: 0 0 14px; font-family: var(--mono); font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .18em; color: var(--accent);
+}
+.python-hero h1 {
+  margin: 0 0 18px; font-family: var(--display); font-weight: 700;
+  font-size: clamp(34px, 4.4vw, 52px); line-height: 1.15; letter-spacing: -.02em;
+}
+.python-hero .hero-summary {
+  margin: 0 0 26px; max-width: 680px; font-family: var(--serif);
+  font-size: 17px; line-height: 1.8; color: var(--muted);
+}
+.python-hero-meta { display: flex; flex-wrap: wrap; gap: 20px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.python-hero-meta strong { margin-right: 6px; color: var(--ink); font-weight: 700; }
+.python-section { padding: 56px 0 80px; }
+.python-section + .python-section { border-top: 1px solid var(--line); }
+.python-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-top: 26px; }
+.python-grid.python-grid--2 { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
+
+.python-card {
+  display: flex; gap: 18px; padding: 22px; border: 1px solid var(--line);
+  border-radius: 10px; background: var(--surface); color: inherit; text-decoration: none;
+  transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+}
+.python-card:hover { border-color: var(--accent); box-shadow: 0 6px 22px rgba(36, 86, 66, .08); transform: translateY(-2px); }
+.python-card-num {
+  display: flex; flex: 0 0 48px; align-items: center; justify-content: center;
+  width: 48px; height: 48px; border-radius: 8px; background: var(--accent-soft);
+  color: var(--accent); font-family: var(--mono); font-size: 16px; font-weight: 700;
+}
+.python-card-body { flex: 1; min-width: 0; }
+.python-card-tag {
+  display: inline-block; margin-bottom: 8px; color: var(--accent);
+  font-family: var(--mono); font-size: 11px; font-weight: 700;
+  letter-spacing: .06em;
+}
+.python-card-body h3 { margin: 0 0 8px; font-family: var(--serif); font-size: 19px; font-weight: 700; line-height: 1.4; color: var(--ink); }
+.python-card-body p { margin: 0 0 10px; font-family: var(--serif); font-size: 14.5px; line-height: 1.65; color: var(--muted); }
+.python-card-go { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--accent); }
+
+.python-part-label {
+  display: flex; align-items: center; gap: 12px; margin: 34px 0 4px;
+  color: var(--accent); font-family: var(--mono); font-size: 12px;
+  font-weight: 700; text-transform: uppercase; letter-spacing: .12em;
+}
+.python-part-label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+.python-note {
+  margin-top: 34px; padding: 22px 24px; border: 1px solid var(--line);
+  border-radius: 10px; background: var(--surface);
+}
+.python-note h2 { margin: 0 0 12px; font-family: var(--serif); font-size: 19px; font-weight: 700; }
+.python-note ol, .python-note ul { margin: 0; padding-left: 1.3em; }
+.python-note li { margin-bottom: 8px; color: var(--text); font-size: 15.5px; line-height: 1.8; }
+
+@media (max-width: 720px) {
+  .python-hero { padding: 48px 0 40px; }
+  .python-grid, .python-grid.python-grid--2 { grid-template-columns: 1fr; gap: 14px; }
+  .python-card { flex-direction: column; gap: 12px; }
+}
+@media print {
+  .python-card, .kmap { break-inside: avoid; }
+}

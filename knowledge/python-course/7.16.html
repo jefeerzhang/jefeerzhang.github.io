@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7.16 判断路径 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第七章 文件及目录操作 · 第 16 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.mtable{width:100%;border-collapse:collapse;margin:16px 0;font-size:14.5px;line-height:1.7}
+.mtable th,.mtable td{border:1px solid var(--border);padding:10px 12px;text-align:left;vertical-align:top}
+.mtable th{background:var(--code-bg);font-weight:700;white-space:nowrap}
+.play{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.play-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.chip{font-family:Consolas,monospace;font-size:13.5px;padding:7px 12px;border:1.5px solid var(--border);
+  border-radius:20px;background:#fff;cursor:pointer}
+.chip.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:700}
+.play-out{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:14.5px;min-height:120px;white-space:pre-wrap;line-height:1.9}
+.play-out .t{color:#16a34a;font-weight:800}
+.play-out .f{color:var(--err);font-weight:800}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch07.html">第七章 文件及目录操作</a><span class="sep">/</span>
+          <span class="current">7.16</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">16</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第七章 · 文件及目录操作</span>
+            <h1>判断路径</h1>
+            <p class="hero-summary">第 16 / 18 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>文件与目录的基本概念</li>
+      <li>文件类型：文本与二进制</li>
+      <li>绝对路径与相对路径</li>
+      <li>文件操作三步曲</li>
+      <li>打开文件与打开模式</li>
+      <li>关闭文件与 with 语句</li>
+      <li>写文件：write 与 writelines</li>
+      <li>读文件三方法</li>
+      <li>文件指针：tell 与 seek</li>
+      <li>目录路径两大模块</li>
+      <li>工作目录</li>
+      <li>新建目录</li>
+      <li>展示目录内容</li>
+      <li>重命名与移动</li>
+      <li>删除文件和目录</li>
+      <li class="cur">判断路径</li>
+      <li>获取文件信息</li>
+      <li>路径的合并与分解</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>上一节说过「删除之前先判断」——拿什么判断？</h2>
+    <p>rename 要求 oldpath 存在，rmdir 要求目录为空，open 要求文件在那儿——前面每一节都绕不开同一个问题：<b>这个路径到底存不存在？它是文件还是目录？</b>这一节的判断类方法就是回答这些问题的「安检仪」，全部返回 True / False，天然适合和第五章的 if 分支搭配。作业第 4 题「判断是否文件」、第 6 题「判断是否空文件夹」都从这里拿工具。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">判断类方法像「门卫三连问」：有人吗？是住户还是快递？从正门来的吗？</div>
+      <p><code>exists</code> 问「这个地址<b>有人吗</b>」；<code>isfile</code> / <code>isdir</code> 问「住的是<b>人（文件）还是公司（目录）</b>」；<code>isabs</code> 问「你登记的是<b>完整地址还是楼层号</b>」；<code>samefile</code> 问「这两个门牌<b>是不是同一户</b>」。门卫只回答「是 / 不是」（True / False），不替你干活——想动手，还得配合 if 来决定。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>路径相关操作在 os.path 子模块</h2>
+    <p>路径相关操作集中在 <code>os</code> 模块的 <b>path 子模块</b>里，习惯上导入并命名为 path：</p>
+    <pre class="codeblock">import os.path as path</pre>
+    <table class="mtable">
+      <tr><th>os.path 写法</th><th>pathlib 写法</th><th>作用</th></tr>
+      <tr><td><code>path.exists(p)</code></td><td><code>Path(p).exists()</code></td><td>判断路径是否存在，返回 True / False</td></tr>
+      <tr><td><code>path.isfile(p)</code></td><td><code>Path(p).is_file()</code></td><td>判断路径是否为文件</td></tr>
+      <tr><td><code>path.isdir(p)</code></td><td><code>Path(p).is_dir()</code></td><td>判断路径是否为目录</td></tr>
+      <tr><td><code>path.isabs(p)</code></td><td><code>Path(p).is_absolute()</code></td><td>判断是否为绝对路径</td></tr>
+      <tr><td><code>path.samefile(p1, p2)</code></td><td><code>Path(p1).samefile(p2)</code></td><td>判断两个路径是否相同</td></tr>
+    </table>
+    <ul class="points">
+      <li>判断类方法的返回值<b>都是 True / False</b>，常与 if 搭配（衔接第五章分支）</li>
+      <li>路径不存在时 exists 返回 False、isfile / isdir 也返回 False——<b>不报错</b>，很温和</li>
+      <li>isabs 看的是「写法」不是「事实」：以盘符或 / 开头就是绝对路径</li>
+      <li>samefile 判断两个路径是否指向<b>同一个</b>文件或目录（同一层 vs 里面的子目录当然不同）</li>
+    </ul>
+
+    <div class="play">
+      <p style="font-weight:700;margin-bottom:10px">🔬 判断实验台：先点一个路径，再用四个方法轮流「盘问」它</p>
+      <div class="play-row">
+        <span style="font-size:14px;color:var(--ink2);font-weight:600">选择路径：</span>
+        <button class="chip on" data-p="temp5" onclick="pick(this)">temp5</button>
+        <button class="chip" data-p="temp5//subtemp2" onclick="pick(this)">temp5//subtemp2</button>
+        <button class="chip" data-p="校训.txt" onclick="pick(this)">校训.txt</button>
+        <button class="chip" data-p="不存在.txt" onclick="pick(this)">不存在.txt</button>
+        <button class="chip" data-p="C://Users//XXX//校训.txt" onclick="pick(this)">C://Users//XXX//校训.txt</button>
+      </div>
+      <div class="play-row">
+        <button class="btn-main btn" onclick="ask('exists')">path.exists(p)</button>
+        <button class="btn-main btn" onclick="ask('isfile')">path.isfile(p)</button>
+        <button class="btn-main btn" onclick="ask('isdir')">path.isdir(p)</button>
+        <button class="btn-main btn" onclick="ask('isabs')">path.isabs(p)</button>
+        <button class="btn-ghost btn" onclick="ask('same')">path.samefile('temp5', 'temp5//subtemp2')</button>
+      </div>
+      <div class="play-out" id="out">当前盘问对象：temp5（一个真实存在的目录）。先选路径，再点方法按钮～</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：对 temp5 目录逐个盘问</h2>
+    <pre class="codeblock">import os.path as path
+from pathlib import Path
+
+print(path.exists('temp5'), Path('temp5').exists())
+print(path.isfile('temp5'), Path('temp5').is_file())
+print(path.isdir('temp5'), Path('temp5').is_dir())
+print(path.isabs('temp5'), Path('temp5').is_absolute())
+print(path.samefile('temp5', 'temp5//subtemp2'))</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">True True
+False False
+True True
+False False
+False</pre>
+    <ul class="points">
+      <li>temp5 是真实存在的目录：exists → True，isdir → True，isfile → False</li>
+      <li><code>'temp5'</code> 是相对路径写法（没以盘符开头），isabs → False</li>
+      <li>temp5 和它里面的 subtemp2 是<b>两个不同</b>的目录，samefile → False</li>
+      <li>os.path 版和 pathlib 版结果<b>完全一致</b>——两种写法任选，考试都认</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>与 if 搭配：先安检、再干活（衔接第五章）</h2>
+    <p class="muted">运行前先在本页所在目录建一个 <code>校训.txt</code>（或先跑 7.17 的第一个例子）。文件不存在时程序会走 <code>else</code> 分支，输出「校训.txt 不存在」——这本身就是「先安检、再干活」的完整演示。</p>
+    <pre class="codeblock">import os.path as path
+
+p = '校训.txt'
+if path.exists(p):
+    if path.isfile(p):
+        print(p, '是一个文件')
+    else:
+        print(p, '是一个目录')
+else:
+    print(p, '不存在')</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">校训.txt 是一个文件</pre>
+    <ul class="points">
+      <li>判断方法返回 True / False，直接放进 if 条件——第五章分支在这里落地</li>
+      <li>先 exists 再 isfile，能区分「不存在」和「存在但不是文件」两种情况</li>
+      <li>作业第 6 题「判断空文件夹」也是这个套路：<code>if path.isdir(p) and len(os.listdir(p)) == 0</code></li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！校训.txt 是文件不是目录，isdir 返回 False——判断类方法对「不符」的情况一律温和地返回 False，不报错。"
+         data-no="❌ 校训.txt 是文件不是目录，isdir 返回 False。记住：判断类方法不会因为「判断错了类型」而报错，只是 True / False。">
+      <p style="font-weight:700;margin-bottom:12px">已知「校训.txt」是一个<b>文件</b>，<code>path.isdir('校训.txt')</code> 的返回值是？</p>
+      <button class="opt" onclick="quizPick(this)">A. True</button>
+      <button class="opt" onclick="quizPick(this)">B. False</button>
+      <button class="opt" onclick="quizPick(this)">C. 报错</button>
+      <button class="opt" onclick="quizPick(this)">D. None</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="os.pathTrueFalse|os.path True False" data-ok="✅ 正确！路径相关操作在 os 模块的 path 子模块；判断类方法只回答 True 或 False。" data-no="❌ 三个空：路径相关操作所在的子模块（import os.path as path 里的＿＿），以及判断类方法返回值的两种可能。">
+      <p>路径相关操作在 <b>＿＿</b> 模块的 path 子模块中；判断类方法的返回值都是 <b>＿＿</b> 或 <b>＿＿</b>。（三空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：os.path True False">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>判断「是不是文件」别用 exists</b>：目录也 exists 返回 True——要区分文件和目录，必须用 isfile / isdir；</p>
+      <p>②<b>路径不存在不报错、只返回 False</b>：isfile('不存在.txt') 得到 False 而不是异常——这很方便，但也意味着<b>拼写错误会被悄悄当成「不存在」</b>，检查路径写法；</p>
+      <p>③<b>导入方式别搞混</b>：按 PPT 习惯 <code>import os.path as path</code> 之后用 <code>path.exists(...)</code>；如果只写了 <code>import os</code>，就得写全 <code>os.path.exists(...)</code>，直接写 <code>path.exists</code> 会 NameError。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 判断路径的方法：os.path 的 exists / isfile / isdir / isabs / samefile，以及 pathlib 对应的 exists / is_file / is_dir / is_absolute / samefile。请：1）用「门卫三连问」的类比帮我梳理各自用途；2）出 5 道 True/False 判断题考我（含一个不存在的路径、一个相对路径）；3）讲讲 exists 和 isfile 的区别，以及为什么这些方法常和 if 搭配使用。">
+      我刚学了 Python 判断路径的方法：os.path 的 exists / isfile / isdir / isabs / samefile，以及 pathlib 对应的 exists / is_file / is_dir / is_absolute / samefile。请：1）用「门卫三连问」的类比帮我梳理各自用途；2）出 5 道 True/False 判断题考我（含一个不存在的路径、一个相对路径）；3）讲讲 exists 和 isfile 的区别，以及为什么这些方法常和 if 搭配使用。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：直接演练作业第 4、6 题（5 分钟）</span>
+    <ol class="steps">
+      <li>作业第 4 题要判断是否文件：<code>if path.isfile(p): …</code>——先 exists 排除不存在的情况，再 isfile 细分。</li>
+      <li>作业第 6 题判断空文件夹 = 两条件同时成立：<code>path.isdir(p) and len(os.listdir(p)) == 0</code>，是目录<b>且</b>里面没东西。</li>
+      <li>把 7.15 的「判断后删除」升级：删空文件夹前先用 isdir 确认它是目录，防手滑。</li>
+      <li>挑战：<code>print(path.isabs('temp5'), path.isabs('C://Users//XXX'))</code>，体会 isabs 只看写法不看事实。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>路径相关操作在 os.path 子模块（import os.path as path）；exists / isfile / isdir / isabs / samefile 与 pathlib 的 exists / is_file / is_dir / is_absolute / samefile 一一对应，全部返回 True / False、不存在的路径也不报错，天然和 if 搭配。下一节：获取文件信息——不只问「在不在」，还要问「多大、什么时候改的」。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="7.15.html"><span class="nav-label">← 上一节</span><span class="nav-title">7.15 删除文件和目录</span></a>
+        <a class="next" href="7.17.html"><span class="nav-label">下一节 →</span><span class="nav-title">7.17 获取文件信息</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：判断实验台（模拟判断类方法） */
+const FAKE_FS = { 'temp5': 'dir', 'temp5//subtemp2': 'dir', '校训.txt': 'file', 'C://Users//XXX//校训.txt': 'file' };
+let CUR = 'temp5';
+function pick(btn){
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+  btn.classList.add('on');
+  CUR = btn.dataset.p;
+  document.getElementById('out').innerHTML = '当前盘问对象：<b>' + CUR.replace(/</g,'&lt;') + '</b>。点方法按钮开始「盘问」～';
+}
+function tf(v){
+  return v ? '<span class="t">True</span>' : '<span class="f">False</span>';
+}
+function ask(op){
+  const p = CUR;
+  if (op === 'exists'){
+    askShow("path.exists('" + p + "')", tf(FAKE_FS[p] !== undefined), '路径是否存在');
+  } else if (op === 'isfile'){
+    askShow("path.isfile('" + p + "')", tf(FAKE_FS[p] === 'file'), '是否为文件');
+  } else if (op === 'isdir'){
+    askShow("path.isdir('" + p + "')", tf(FAKE_FS[p] === 'dir'), '是否为目录');
+  } else if (op === 'isabs'){
+    askShow("path.isabs('" + p + "')", tf(/^([A-Za-z]:|\/|\/\/)/.test(p)), '是否为绝对路径（只看写法）');
+  } else if (op === 'same'){
+    const v = (FAKE_FS['temp5'] !== undefined && p === 'temp5');
+    document.getElementById('out').innerHTML = "path.samefile('temp5', 'temp5//subtemp2')　→　<span class=\"f\">False</span>　（temp5 和它里面的 subtemp2 是两个不同的目录）";
+  }
+}
+function askShow(expr, v, label){
+  document.getElementById('out').innerHTML = expr + '　→　' + v + '　（' + label + '）';
+}
+</script>
+</body>
+</html>

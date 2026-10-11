@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.09 range 函数与遍历整数 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第五章 程序控制 · 第 9 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.play{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.play-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.play-row label{font-size:14px;color:var(--ink2);font-weight:600}
+.play-row input{width:80px;font-family:Consolas,monospace;font-size:15px;padding:8px 10px;
+  border:1.5px solid var(--border);border-radius:8px;outline:none;color:var(--ink)}
+.play-row input:focus{border-color:var(--accent)}
+.play-out{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:15px;min-height:52px;word-break:break-all}
+.play-out .err{color:var(--err);font-weight:700}
+.rgbar{display:flex;gap:4px;flex-wrap:wrap;margin:6px 0 4px}
+.rcell{display:inline-block;min-width:32px;padding:6px 0;text-align:center;background:#fff;
+  border:1px solid var(--border);border-radius:8px;font-family:Consolas,monospace;font-size:14px}
+.rcell.pick{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:800}
+.rcell.skip{opacity:0.35}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch05.html">第五章 程序控制</a><span class="sep">/</span>
+          <span class="current">5.09</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">09</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第五章 · 程序控制</span>
+            <h1>range 函数与遍历整数</h1>
+            <p class="hero-summary">第 9 / 17 节 · 约 12 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序控制结构概述</li>
+      <li>单分支结构 if</li>
+      <li>双分支结构 if-else</li>
+      <li>IF 表达式</li>
+      <li>多分支结构 if-elif-else</li>
+      <li>嵌套分支结构</li>
+      <li>嵌套与多分支对比</li>
+      <li>无限循环 while</li>
+      <li class="cur">range 函数与遍历整数</li>
+      <li>遍历字符串列表元组</li>
+      <li>遍历字典</li>
+      <li>循环控制 break 与 continue</li>
+      <li>循环嵌套</li>
+      <li>常见语法错误</li>
+      <li>常见运行异常</li>
+      <li>异常处理语句</li>
+      <li>综合实战：古算题与成绩单</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>想让 for 循环跑 100 次，总不能写 100 个数字吧？</h2>
+    <p><code>for i in [1,2,3,…,100]</code>？太傻了。Python 提供了 <b>range() 函数</b>——一行代码生成任意区间的整数序列，是遍历循环最常用的「弹药库」。本章作业第 3、4 题都要靠它，先把它的脾气摸透。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">range 像「楼梯口喊话」：从第 M 级开始，到第 N 级之前，每 K 级站一个人</div>
+      <p><code>range(m, n, k)</code> 生成一个 <b>[m, n) 区间、步长为 k</b> 的整数序列——和第三章字符串切片 <code>[M:N:K]</code> 的规则<b>一模一样</b>：左闭右开，n 那一级永远站不上人。k 可以是负数（倒着数楼梯），但绝不能是 0（原地踏步会卡死）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>range(m, n, k) 三件套</h2>
+    <ul class="points">
+      <li><b>m 可以省略</b>：默认值为 0（<code>range(5)</code> 合法，等价于 <code>range(0, 5)</code>，此时省掉的是 m）</li>
+      <li><b>n 不能省略</b>：n <b>不包含</b>在序列内（左闭右开）</li>
+      <li><b>k 可以省略</b>：默认值为 1，<b>可以为负数，但不能等于 0</b></li>
+      <li><b>找不到符合条件的数据时，序列为空</b>：如 <code>range(2, 1)</code> 得到空序列，不报错</li>
+      <li><code>range(10)</code> 本身的类型是 <code>&lt;class 'range'&gt;</code>——一个「按需生成」的整数序列对象，常用 <code>list()</code> 转成列表查看</li>
+    </ul>
+
+    <div class="play">
+      <p style="font-weight:700;margin-bottom:10px">🔬 range 实验台：随便填 m、n、k（m、k 可留空，k 可负数），点「生成！」</p>
+      <div class="play-row">
+        <label>m</label><input id="inM" placeholder="默认0" value="0">
+        <label>n</label><input id="inN" placeholder="必填" value="10">
+        <label>k</label><input id="inK" placeholder="默认1" value="1">
+        <button class="btn-main btn" onclick="doRange()">生成！</button>
+        <button class="btn-ghost btn" onclick="setDemo(9,0,-2)">倒序示例</button>
+      </div>
+      <div class="rgbar" id="rgbar"></div>
+      <div class="play-out" id="out">print(list(range(0, 10, 1)))　→　请点击「生成！」</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：五种 range 写法</h2>
+    <pre class="codeblock">print(type(range(10)))
+print(list(range(10)))
+print(list(range(5, 10)))
+print(list(range(0, 10, 2)))
+print(list(range(9, 0, -2)))
+print(list(range(2, 1)))</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">&lt;class 'range'&gt;
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[5, 6, 7, 8, 9]
+[0, 2, 4, 6, 8]
+[9, 7, 5, 3, 1]
+[]</pre>
+    <ul class="points">
+      <li>第 2 行：只给 n，m 默认 0、k 默认 1——0 到 9 十个数</li>
+      <li>第 4 行：步长 2，隔一个取一个（0,2,4,6,8）</li>
+      <li>第 5 行：负步长倒着数，从 9 数到 1（不含 0）</li>
+      <li>第 6 行：区间 [2,1) 为空——<b>序列为空不报错</b></li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>for + range：同一道求和题的两种解</h2>
+    <pre class="codeblock"># for + range 版（推荐，三行搞定）
+total = 0
+for i in range(1, 101):
+    total += i
+print(f"1+2+3+...+100={total}")
+
+# while 版（对照）
+total = 0
+i = 1
+while i &lt;= 100:
+    total += i
+    i += 1
+print(f"1+2+3+...+100={total}")</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">1+2+3+...+100=5050</pre>
+    <ul class="points">
+      <li>for 版：循环变量 i 由 range 自动生成、自动更新，<b>不容易忘写更新语句</b></li>
+      <li>while 版：要自己管「初始化 i=1、条件 i&lt;=100、更新 i+=1」三件事</li>
+      <li>已知次数用 for，不确定次数（如「用户一直输」）用 while</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！负步长从 9 倒着走、步长 2，到 0 之前停：9、7、5、3、1。"
+         data-no="❌ 注意负步长是从 m 倒着走到 n 之前（不包含 n）：9 开始，隔 2 取一个，0 取不到。">
+      <p style="font-weight:700;margin-bottom:12px"><code>list(range(9, 0, -2))</code> 的输出是？</p>
+      <button class="opt" onclick="quizPick(this)">A. [1, 3, 5, 7, 9]</button>
+      <button class="opt" onclick="quizPick(this)">B. [9, 7, 5, 3, 1, -1]</button>
+      <button class="opt" onclick="quizPick(this)">C. [9, 7, 5, 3, 1]</button>
+      <button class="opt" onclick="quizPick(this)">D. [ ]</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="n10k1|n 10 k 1" data-ok="✅ 正确！m 默认 0 可省略；n 不能省略且不包含在序列内；k 默认 1，可为负数但不能为 0。" data-no="❌ 回忆一下：三个参数哪个可以省略、哪个不能？三个空的答案分别是默认 0 的省略参数、必填的结束值、默认 1 的步长。">
+      <p>range(m, n, k) 中：m 可省略默认为 <b>0</b>；<b>＿＿</b>不能省略且不包含在序列内；<b>＿＿</b>默认为 1，可为负数但不能为 0。（前两空填参数名，后两空填默认值，四空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：n 10 k 1">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>左闭右开</b>：<code>range(1, 101)</code> 才能取到 100，写成 <code>range(1, 100)</code> 只到 99——求 1~100 的和用错这一步，答案 4950 而不是 5050；</p>
+      <p>②<b>步长为 0 直接报错</b>：<code>range(0, 10, 0)</code> 抛 ValueError，因为原地踏步永远到不了 n；</p>
+      <p>③<b>range 对象不等于列表</b>：直接 <code>print(range(10))</code> 看到的是 <code>range(0, 10)</code>，想看内容要 <code>list(range(10))</code>——它像「菜谱」而不是「做好的菜」，用到才生成。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 的 range(m, n, k) 函数。请：1）用「楼梯喊话」的类比解释左闭右开和步长，并说明它和字符串切片 [M:N:K] 的相通之处；2）出 5 道 list(range(…)) 求值题考我（含一道负步长、一道空序列）；3）讲讲 for i in range(1, 101) 和 while 版求和 1~100 的写法差异，以及什么时候该用 for、什么时候该用 while。">
+      我刚学了 Python 的 range(m, n, k) 函数。请：1）用「楼梯喊话」的类比解释左闭右开和步长，并说明它和字符串切片 [M:N:K] 的相通之处；2）出 5 道 list(range(…)) 求值题考我（含一道负步长、一道空序列）；3）讲讲 for i in range(1, 101) 和 while 版求和 1~100 的写法差异，以及什么时候该用 for、什么时候该用 while。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：直接演练作业第 3、4 题（5 分钟）</span>
+    <ol class="steps">
+      <li>用 <code>list(range(5, 100, 5))</code> 生成 5~95 的所有 5 的倍数，和作业第 3 题的筛选结果对照（第 3 题是从列表里选，这里是直接生成）。</li>
+      <li>作业第 4 题求 1+2!+3!+…+10!：先想清楚 for 循环变量 i 应该 range(1, 11)——1 到 10 都要取到。</li>
+      <li>在交互模式输入 <code>range(10)</code> 和 <code>list(range(10))</code>，看看「菜谱」与「菜」的区别。</li>
+      <li>挑战：用 range 倒序输出 10 9 8 … 1（提示：负步长 + print 的 end 参数）。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>range(m, n, k) 生成 [m, n) 区间步长 k 的整数序列；m 默认 0 可省略、n 必填不能省略且取不到、k 默认 1 可负不可 0；序列为空不报错；for + range 适合「已知次数」的循环。下一节：用 for 遍历字符串、列表和元组。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="5.08.html"><span class="nav-label">← 上一节</span><span class="nav-title">5.08 无限循环 while</span></a>
+        <a class="next" href="5.10.html"><span class="nav-label">下一节 →</span><span class="nav-title">5.10 遍历字符串列表元组</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：range 实验台（实现 range 语义并可视化） */
+const MIN = -12, MAX = 30;
+function parseNum(id){
+  const v = document.getElementById(id).value.trim();
+  if (v === '') return null;
+  const n = parseInt(v, 10);
+  return isNaN(n) ? null : n;
+}
+function doRange(){
+  let m = parseNum('inM'), n = parseNum('inN'), k = parseNum('inK');
+  if (n === null){ document.getElementById('out').innerHTML = '<span class="err">n 不能省略！请填入结束值。</span>'; return; }
+  if (k === 0){ document.getElementById('out').innerHTML = '<span class="err">ValueError: range() arg 3 must not be zero（步长不能为 0）</span>'; return; }
+  const kk = k === null ? 1 : k;
+  const mm = m === null ? 0 : m;
+  const seq = [];
+  if (kk > 0){ for (let i = mm; i < n; i += kk) seq.push(i); }
+  else { for (let i = mm; i > n; i += kk) seq.push(i); }
+  const mShow = m === null ? '' : String(m);
+  const kShow = k === null ? '' : ', ' + k;
+  const expr = 'print(list(range(' + mShow + (m === null ? '' : ', ') + n + kShow + ')))';
+  let msg;
+  if (seq.length === 0){
+    msg = expr + '　→　输出：<b>[]</b>（序列为空，不报错）';
+  } else if (seq.length > 40){
+    msg = expr + '　→　共 <b>' + seq.length + '</b> 个元素：' + seq.slice(0, 8).join(', ') + ' … ' + seq.slice(-2).join(', ') + '（太长只展示首尾）';
+  } else {
+    msg = expr + '　→　输出：<b>[' + seq.join(', ') + ']</b>';
+  }
+  document.getElementById('out').innerHTML = msg;
+  // 可视化
+  const bar = document.getElementById('rgbar');
+  bar.innerHTML = '';
+  const picks = new Set(seq);
+  const step = kk > 0 ? kk : -kk;
+  for (let i = MIN; i <= MAX; i++){
+    const d = document.createElement('span');
+    d.className = 'rcell' + (picks.has(i) ? ' pick' : (seq.length && ((kk > 0 && i >= mm && i < n) || (kk < 0 && i <= mm && i > n)) ? ' skip' : ''));
+    d.textContent = i;
+    bar.appendChild(d);
+  }
+}
+function setDemo(m, n, k){
+  document.getElementById('inM').value = m;
+  document.getElementById('inN').value = n;
+  document.getElementById('inK').value = k;
+  doRange();
+}
+window.addEventListener('DOMContentLoaded', doRange);
+</script>
+</body>
+</html>

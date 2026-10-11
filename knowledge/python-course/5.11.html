@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.11 遍历字典 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第五章 程序控制 · 第 11 / 17 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.unpack{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin:10px 0;font-size:14.5px}
+.unpack .up-row{font-family:Consolas,Menlo,monospace;font-size:14px;margin:6px 0}
+.unpack .up-k{color:var(--accent);font-weight:700}
+.unpack .up-v{color:var(--accent2);font-weight:700}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch05.html">第五章 程序控制</a><span class="sep">/</span>
+          <span class="current">5.11</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">11</span>
+            <span class="lesson-hero-num-total">/ 17</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第五章 · 程序控制</span>
+            <h1>遍历字典</h1>
+            <p class="hero-summary">第 11 / 17 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 17 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>程序控制结构概述</li>
+      <li>单分支结构 if</li>
+      <li>双分支结构 if-else</li>
+      <li>IF 表达式</li>
+      <li>多分支结构 if-elif-else</li>
+      <li>嵌套分支结构</li>
+      <li>嵌套与多分支对比</li>
+      <li>无限循环 while</li>
+      <li>range 函数与遍历整数</li>
+      <li>遍历字符串列表元组</li>
+      <li class="cur">遍历字典</li>
+      <li>循环控制 break 与 continue</li>
+      <li>循环嵌套</li>
+      <li>常见语法错误</li>
+      <li>常见运行异常</li>
+      <li>异常处理语句</li>
+      <li>综合实战：古算题与成绩单</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>字典没有下标，遍历要换一条路</h2>
+    <p>上一节的字符串、列表、元组是<b>有序序列</b>，可以按下标遍历。但字典存的是「键 → 值」的映射，<b>没有下标这回事</b>，想拿到「张三 85 分」这样成对的数据，就得走<b>键值对</b>路线——这正是字典遍历的两种方式：<code>items()</code> 键值一起拿，或 <code>keys()</code> 先拿键再查值。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">items() 像「领成绩单连姓名带分数一起发」，keys() 像「先领名单再按名字去成绩表里查」</div>
+      <p><code>items()</code> 一次把键和值<b>打包发给你</b>，两个变量分别接住，一步到位；<code>keys()</code> 只发名单（键），想要分数得再跑一趟，用 <code>dic1[k]</code> 去成绩表里查。两种方式殊途同归，但「连发」通常更顺手。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>items() 双变量解包 与 keys() 单变量</h2>
+    <ul class="points">
+      <li><b>方式 1：items() 键值对遍历</b>——<code>for k, v in dic1.items():</code>，一次循环写出两个变量，k 接键、v 接值</li>
+      <li><b>双变量解包</b>：items() 给出的每个元素是形如 <code>('张三', 85)</code> 的元组，for 后面的 k、v 依次把它拆开接住（呼应 4.16 字典三视图：items() / keys() / values()）</li>
+      <li><b>方式 2：keys() 键遍历</b>——<code>for k in dic1.keys():</code> 只取键，再用 <code>dic1[k]</code> 按键取值</li>
+      <li>两种写法输出<b>完全一致</b>，按需选择：要键值成对用 items()，只要键用 keys()</li>
+      <li>顺带回顾：字符串、列表和元组都属于有序序列，遍历方式基本相似，主要有遍历元素和遍历索引两种，由于索引是整数，需要借助 range() 和 len() 函数——字典则不适用这套下标逻辑</li>
+    </ul>
+
+    <div class="switch">
+      <button class="on" data-pane="pane-items">items() 双变量</button>
+      <button data-pane="pane-keys">keys() 单变量</button>
+    </div>
+
+    <div class="pane on" id="pane-items">
+      <pre class="codeblock">dic1 = {'张三': 85, '李四': 92, '王五': 79}
+for k, v in dic1.items():
+    print(f'字典键为{k},值为{v}')</pre>
+      <pre class="codeblock">字典键为张三,值为85
+字典键为李四,值为92
+字典键为王五,值为79</pre>
+      <div class="unpack">
+        <b>双变量解包示意</b>——items() 依次交出三个元组：
+        <div class="up-row">('张三', 85)　→　<span class="up-k">k = '张三'</span>　<span class="up-v">v = 85</span></div>
+        <div class="up-row">('李四', 92)　→　<span class="up-k">k = '李四'</span>　<span class="up-v">v = 92</span></div>
+        <div class="up-row">('王五', 79)　→　<span class="up-k">k = '王五'</span>　<span class="up-v">v = 79</span></div>
+      </div>
+    </div>
+
+    <div class="pane" id="pane-keys">
+      <pre class="codeblock">dic1 = {'张三': 85, '李四': 92, '王五': 79}
+for k in dic1.keys():
+    print(f'字典键为{k},值为{dic1[k]}')</pre>
+      <pre class="codeblock">字典键为张三,值为85
+字典键为李四,值为92
+字典键为王五,值为79</pre>
+      <p class="muted">输出与 items() 版完全一致：keys() 先交出键 k，循环体内再用 <code>dic1[k]</code> 查值——「先领名单，再查成绩」。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="0"
+         data-ok="✅ 答对了！for k, v in dic1.items() 中，元组解包后 k 在前接键，v 在后接值。"
+         data-no="❌ 顺序别记反了：for 后面的变量按位置解包，第 1 个变量接键，第 2 个变量接值。">
+      <p style="font-weight:700;margin-bottom:12px"><code>for k, v in dic1.items():</code> 中，变量 k 接收的是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 键</button>
+      <button class="opt" onclick="quizPick(this)">B. 值</button>
+      <button class="opt" onclick="quizPick(this)">C. 整个键值对元组</button>
+      <button class="opt" onclick="quizPick(this)">D. 下标</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="keys" data-ok="✅ 正确！keys() 取出所有键，再用 dic1[k] 按键取值。" data-no="❌ 提示：它是 4.16 字典三视图里「只拿键」的那个方法，返回所有键的集合，方法名不带括号也算对。">
+      <p><code>for k in dic1.＿＿():</code> 可取出字典中所有的键，再用 <code>dic1[k]</code> 取出对应的值。（一个空，填方法名）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：keys">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">两个高频翻车点</div>
+      <p>①<b>双变量 for 后面必须是 items()</b>：写成 <code>for k, v in dic1.keys():</code> 会把每个键（字符串）当成一个整体交给两个变量——键的长度恰好是 2 时会被硬拆开（<code>'张三'</code> 变成 <code>张</code> 和 <code>三</code>），长度不是 2 时直接报 <code>ValueError: too many values to unpack (expected 2)</code>。两种情况都不是你要的结果——记住口诀「两变量配 items，单变量配 keys」；</p>
+      <p>②<b>遍历过程中不要增删字典元素</b>：一边遍历一边往字典里加键或删键，运行时会报错——需要改动时，先遍历收集，遍历结束后再动手（一句了解即可，后面用到再细讲）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 遍历字典的两种方式。请：1）用「领成绩单连姓名带分数一起发 vs 先领名单再按名字去查」的类比，解释 for k, v in dic.items() 和 for k in dic.keys() 的区别；2）讲清 items() 返回的 (键, 值) 元组是如何被 k、v 两个变量解包接住的；3）出 5 道字典遍历题考我（含一道 keys() 取值、一道统计及格人数）。">
+      我刚学了 Python 遍历字典的两种方式。请：1）用「领成绩单连姓名带分数一起发 vs 先领名单再按名字去查」的类比，解释 for k, v in dic.items() 和 for k in dic.keys() 的区别；2）讲清 items() 返回的 (键, 值) 元组是如何被 k、v 两个变量解包接住的；3）出 5 道字典遍历题考我（含一道 keys() 取值、一道统计及格人数）。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：两种写法都跑一遍（5 分钟）</span>
+    <ol class="steps">
+      <li>把 PPT 的 <code>dic1 = {'张三': 85, '李四': 92, '王五': 79}</code> 抄进交互模式，分别用 items() 和 keys() 两种方式遍历，确认输出一致。</li>
+      <li>试试只遍历 keys() 并打印 <code>type(k)</code>，确认拿到的是字符串键。</li>
+      <li>练本章作业第 5 题的雏形：遍历 <code>scores</code> 字典，用 <code>if</code> 按值 &gt;=60 分类，把键分别装进 <code>pass_list</code> 和 <code>fail_list</code> 两个列表——骨架是 <code>for k, v in scores.items():</code> 加一个 if-else。</li>
+      <li>挑战：在循环里顺便统计及格人数 <code>cnt</code>，最后打印「及格 X 人，不及格 Y 人」。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>字典没有「第几个」的下标，遍历走键值对路线：items() 一次交出 (键, 值) 元组，由 for 后面的 k、v 双变量解包接住；keys() 只交键，再用 dic1[k] 取值，两种写法输出一致。双变量必须配 items()，遍历中不要增删元素。下一节：break 与 continue，学会在循环里「踩刹车」和「跳过这轮」。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="5.10.html"><span class="nav-label">← 上一节</span><span class="nav-title">5.10 遍历字符串列表元组</span></a>
+        <a class="next" href="5.12.html"><span class="nav-label">下一节 →</span><span class="nav-title">5.12 循环控制 break 与 continue</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.08 AI 时代的编程学习理念 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第一章 导论与 Python 环境 · 第 8 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+/* —— 本页专属：好问题/坏问题对比气泡 —— */
+.qbox{border:1px solid var(--border);border-radius:12px;padding:16px;background:#fbfcfe;margin-bottom:12px}
+.qbox .q-label{font-size:12px;font-weight:700;display:inline-block;border-radius:999px;padding:2px 12px;margin-bottom:8px}
+.qbox.bad{border-color:#f0cfcf;background:#fdf7f7}
+.qbox.bad .q-label{background:var(--err-soft);color:var(--err)}
+.qbox.good{border-color:#c8ecdb;background:#f7fcfa}
+.qbox.good .q-label{background:var(--ok-soft);color:var(--ok)}
+.qbox .q-text{font-family:Consolas,Menlo,monospace;font-size:13.5px;background:var(--code-bg);
+     border-radius:8px;padding:8px 12px;margin-bottom:8px}
+.qbox .q-why{font-size:13.5px;color:var(--ink2)}
+.qbox .q-ai{font-size:13px;color:var(--accent);font-weight:700;margin-top:6px}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch01.html">第一章 导论与 Python 环境</a><span class="sep">/</span>
+          <span class="current">1.08</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">08</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第一章 · 导论与 Python 环境</span>
+            <h1>AI 时代的编程学习理念</h1>
+            <p class="hero-summary">第 8 / 18 节 · 约 9 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>计算机系统架构</li>
+      <li>操作系统及其分类</li>
+      <li>编程语言：人机沟通的桥梁</li>
+      <li>编程语言的三个层次</li>
+      <li>编译型 vs 解释型语言</li>
+      <li>TIOBE 排行与语言流行趋势</li>
+      <li>五大语言的诞生与用途</li>
+      <li class="cur">AI 时代的编程学习理念</li>
+      <li>与 AI 高效协作的三技巧</li>
+      <li>学习路径的三阶段</li>
+      <li>Python 的诞生与发展</li>
+      <li>PEP 与 PEP 8</li>
+      <li>The Zen of Python</li>
+      <li>Python 2 vs Python 3</li>
+      <li>Python 的六大特点</li>
+      <li>Python 的应用领域</li>
+      <li>Python 环境搭建</li>
+      <li>Anaconda 与 AI IDE</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>AI 都会写代码了，我为什么还要学编程？</h2>
+    <p>这是这一代大学生最真实的疑问。答案是：AI 改变的不是“要不要学编程”，而是<b>学习编程的重心</b>。以前拼“记住语法、敲出代码”，现在拼<b>“提出好问题、设计好方案、评估好结果”</b>。这一节给你两个贯穿整门课的核心理念：</p>
+    <ul class="points">
+      <li>AI 能秒出答案，但它<b>无法替你提问</b>——问题质量直接决定 AI 回答质量和你的学习深度；</li>
+      <li>AI 不是代码生成器，而是<b>你的编程搭档</b>——分工对了，才能 1 + 1 &gt; 2。</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">AI 是金牌员工，你得先当好会派活的老板</div>
+      <p>把 AI 想成一位<b>啥都会的金牌员工</b>：写代码、查资料、改 bug 样样精通。但他是员工，不是老板——<b>派活说不清楚，金牌员工也只能瞎干</b>。你说“做个东西”，他就随便做个东西给你；你说清“给谁用、解决什么问题、做到什么标准”，他才能交付让你满意的活。<b>老板的核心能力不是自己动手，而是把问题定义清楚、把活派明白</b>——这正是本节要教你的。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>两大核心理念，撑起 AI 时代的学习方式</h2>
+    <div class="grid g2">
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent)"></span>理念一：问题比答案更重要</h4>
+        <div class="desc">AI 能给你答案，但无法替你提问。</div>
+        <div class="more">
+          <p>提出好问题、定义清晰问题的价值，远大于直接获取答案。学会提出高质量问题，是驱动 AI、获取有效信息、深度思考的前提。<b>你的问题质量，直接决定 AI 回答的质量和你的学习深度。</b></p>
+          <p>所以要从“找答案”转变为“定义问题”：把精力放在<b>清晰描述需求、拆解复杂任务、设定评估标准</b>上——这是 AI 无法替代的核心能力。</p>
+          <div class="hint">👆 点击展开完整阐述</div>
+        </div>
+      </div>
+      <div class="icard" data-toggle>
+        <h4><span class="dot" style="background:var(--accent2)"></span>理念二：建立人机协作新模式</h4>
+        <div class="desc">AI 是编程搭档，不是代码生成器。</div>
+        <div class="more">
+          <p>把 AI 视为<b>高效的编程搭档或副驾驶</b>，而非简单的代码生成器。学会与 AI 分工：</p>
+          <p><b>人类负责</b>定义问题、设计架构、制定策略、评估结果；<b>AI 负责</b>执行具体的编码、调试和优化任务。</p>
+          <p>分工明确后，你从“码农”升级为“指挥官”，效率与学习深度同时提升。</p>
+          <div class="hint">👆 点击展开完整阐述</div>
+        </div>
+      </div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🎭 互动：坏问题 vs 好问题</span>
+    <h2>同一件事，两种问法，两种命运</h2>
+    <p>点下面的切换按钮，感受“问题质量决定回答质量”：</p>
+    <div>
+      <div class="switch">
+        <button class="on" data-pane="pane-bad">❌ 坏问题</button>
+        <button data-pane="pane-good">✅ 好问题</button>
+      </div>
+      <div class="pane on" id="pane-bad">
+        <div class="qbox bad">
+          <span class="q-label">坏问题 · 模糊丢锅</span>
+          <div class="q-text">帮我写个程序。</div>
+          <div class="q-why">没说要什么程序、用什么语言、解决什么问题。AI 只能瞎猜一个通用示例，你得不到任何针对性帮助——这就是“派活说不清，金牌员工只能瞎干”。</div>
+          <div class="q-ai">🤖 AI 内心 OS：那我就随便给你一个 Hello World 吧……</div>
+        </div>
+      </div>
+      <div class="pane" id="pane-good">
+        <div class="qbox good">
+          <span class="q-label">好问题 · 定义清晰</span>
+          <div class="q-text">用 Python 写一个统计 Excel 里学生成绩平均分的脚本，输出保留一位小数。</div>
+          <div class="q-why">语言（Python）、对象（Excel 成绩）、任务（算平均分）、输出要求（保留一位小数）全部说清。AI 能一次给出可直接运行的代码——因为你把问题定义清楚了。</div>
+          <div class="q-ai">🤖 AI 内心 OS：需求明确，安排！还能顺便讲讲用到的库。</div>
+        </div>
+      </div>
+    </div>
+    <p class="muted">对照两大理念：好问题正是「定义问题」能力的体现——描述需求、拆解任务、设定评估标准，全在这一句话里。</p>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="0"
+         data-ok="✅ 答对了！AI 时代最不可替代的能力是提出并定义好问题——清晰描述需求、拆解复杂任务、设定评估标准。AI 能给答案，但问不出你的问题。"
+         data-no="❌ 不对哦。AI 恰恰擅长快速生成代码、检索答案，甚至会取代死记语法。它无法替代的，是「提出好问题、定义清晰问题」这件事本身。">
+      <p style="font-weight:700;margin-bottom:12px">在 AI 时代，以下哪项是<b>最不可替代</b>的核心能力？</p>
+      <button class="opt" onclick="quizPick(this)">A. 提出好问题、清晰定义问题</button>
+      <button class="opt" onclick="quizPick(this)">B. 快速背熟所有语法细节</button>
+      <button class="opt" onclick="quizPick(this)">C. 高速手写大量代码</button>
+      <button class="opt" onclick="quizPick(this)">D. 第一时间找到现成答案</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="评估" data-ok="✅ 正确！人机协作的分工：人类负责定义问题、设计架构、制定策略和评估结果；AI 负责执行编码、调试和优化。" data-no="❌ 再想想：分工口诀是「人类定义问题、设计架构、制定策略、＿＿结果」。最后一步，由人类检查 AI 干得怎么样，该填哪两个字？">
+      <p>在人机协作新模式中，<b>人类负责</b>定义问题、设计架构、制定策略和<b>＿＿结果</b>；AI 负责执行具体的编码、调试和优化任务。请在框里填写这两个字：</p>
+      <div class="fill-row">
+        <input class="blank" id="blank1" placeholder="填两个字，如：××">
+        <button class="btn btn-main" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">两个极端，都走不通</div>
+      <p>极端一：<b>“AI 都能写代码，我可以躺平了。”</b>——错。看不懂 AI 给的代码，你既提不出下一个问题，也判断不了对错，等于把方向盘交给了不会看路的乘客。</p>
+      <p>极端二：<b>“用 AI 就是作弊，一点都不能碰。”</b>——也错。拒绝 AI 等于拒绝时代工具。关键不在“用不用”，而在<b>怎么用</b>：把 AI 当副驾驶，你坐主驾，边用边学，答案出来后多问一句“为什么这样写”。</p>
+      <p>记住分工口诀：<b>人类管方向，AI 管执行；你出问题，它出答案。</b></p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了「AI 时代的编程学习理念」：问题比答案更重要，以及建立人机协作新模式。请：1）用一个生活化的例子解释为什么「问题质量决定 AI 回答质量」；2）针对「人类负责定义问题、设计架构、制定策略和评估结果，AI 负责编码调试优化」这个分工，各举 1 个具体场景；3）出 2 道单选题考我，等我作答后再公布答案和讲解。">
+      我刚学了「AI 时代的编程学习理念」：问题比答案更重要，以及建立人机协作新模式。请：1）用一个生活化的例子解释为什么「问题质量决定 AI 回答质量」；2）针对「人类负责定义问题、设计架构、制定策略和评估结果，AI 负责编码调试优化」这个分工，各举 1 个具体场景；3）出 2 道单选题考我，等我作答后再公布答案和讲解。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：亲测“问题质量决定回答质量”（6 分钟）</span>
+    <ol class="steps">
+      <li>打开作业 05，找到题目：<b>什么是 Vibe Coding 和 Agent Coding？</b>先别急着问 AI。</li>
+      <li><b>第一轮</b>：直接把题目原文丢给 AI，看它给什么（大概率是一大段泛泛的名词解释）。</li>
+      <li><b>第二轮</b>：自己先列出三个具体小问题，例如：①两者的核心区别是什么？②各举一个真实工具的例子；③作为大一学生，我该先用哪种方式做课程作业？再依次发给 AI。</li>
+      <li>对比两轮的回答质量，把体会写进作业里——这本身就是一次「定义问题」能力的实战。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>AI 时代学编程，抓两条：<b>理念一「问题比答案更重要」</b>——AI 给得了答案，给不了你的问题，要把精力放在清晰描述需求、拆解复杂任务、设定评估标准上；<b>理念二「建立人机协作新模式」</b>——把 AI 当副驾驶：人类定义问题、设计架构、制定策略、评估结果，AI 执行编码、调试、优化。下一节，我们把这套理念落成三个能立刻上手的具体技巧。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="1.07.html"><span class="nav-label">← 上一节</span><span class="nav-title">1.07 五大语言的诞生与用途</span></a>
+        <a class="next" href="1.09.html"><span class="nav-label">下一节 →</span><span class="nav-title">1.09 与 AI 高效协作的三技巧</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

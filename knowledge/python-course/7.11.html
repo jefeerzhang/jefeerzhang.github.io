@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7.11 工作目录 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第七章 文件及目录操作 · 第 11 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.cmp{width:100%;border-collapse:collapse;margin:14px 0;font-size:14.5px}
+.cmp th,.cmp td{border:1px solid var(--border);padding:9px 10px;text-align:left;vertical-align:top;line-height:1.6}
+.cmp th{background:var(--code-bg);white-space:nowrap}
+.cmp code{white-space:nowrap}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch07.html">第七章 文件及目录操作</a><span class="sep">/</span>
+          <span class="current">7.11</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">11</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第七章 · 文件及目录操作</span>
+            <h1>工作目录</h1>
+            <p class="hero-summary">第 11 / 18 节 · 约 8 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>文件与目录的基本概念</li>
+      <li>文件类型：文本与二进制</li>
+      <li>绝对路径与相对路径</li>
+      <li>文件操作三步曲</li>
+      <li>打开文件与打开模式</li>
+      <li>关闭文件与 with 语句</li>
+      <li>写文件：write 与 writelines</li>
+      <li>读文件三方法</li>
+      <li>文件指针：tell 与 seek</li>
+      <li>目录路径两大模块</li>
+      <li class="cur">工作目录</li>
+      <li>新建目录</li>
+      <li>展示目录内容</li>
+      <li>重命名与移动</li>
+      <li>删除文件和目录</li>
+      <li>判断路径</li>
+      <li>获取文件信息</li>
+      <li>路径的合并与分解</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>7.03 说的「当前程序运行目录」，到底在哪？</h2>
+    <p>学相对路径时（7.03）提过：不带盘符的路径都从「当前程序运行目录」出发找文件——这个目录的正式名字叫<b>工作目录</b>。它通常就是 Python 文件或 jupyter 文件所在的目录。为什么 <code>open('《悯农》.txt')</code> 不写全路径也能找到？因为 Python 默认到工作目录里找。会用 <b>getcwd</b> 查看它、<b>chdir</b> 改变它，相对路径才算真正学明白。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">工作目录像「你现在站立的房间」，相对路径都是「出门左转」式的指路</div>
+      <p>你在哪个房间，说「隔壁那间」才有意义——<b>工作目录就是 Python 当前站立的房间</b>，相对路径全从脚下出发。<code>os.getcwd()</code> 是「看一眼自己在哪个房间」；<code>os.chdir(path)</code> 是「换一个房间站」——换完之后，所有「隔壁那间」式的相对路径指路<b>全部重新计算</b>，这就是 chdir 好用又危险的原因。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>三个工作目录方法</h2>
+    <table class="cmp">
+      <tr><th>方法</th><th>作用</th><th>返回值</th></tr>
+      <tr><td><code>os.getcwd()</code></td><td>获取当前工作目录</td><td><b>字符串</b></td></tr>
+      <tr><td><code>Path.cwd()</code></td><td>获取当前工作目录</td><td><b>Path 对象</b></td></tr>
+      <tr><td><code>os.chdir(path)</code></td><td>把工作目录改变到目标路径</td><td>无（None）</td></tr>
+    </table>
+    <ul class="points">
+      <li>cwd 是 current working directory（当前工作目录）的缩写，两种写法记一对「手动挡 / 自动挡」</li>
+      <li><code>getcwd()</code> 返回字符串、<code>Path.cwd()</code> 返回 Path 对象——这是两者唯一的实质差别</li>
+      <li>chdir 的参数相对路径、绝对路径都行；目标目录不存在会报 FileNotFoundError</li>
+      <li>呼应 7.03：相对路径的起点「当前程序运行目录」就是这里的工作目录——两节说的是同一件事</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：查看与切换工作目录</h2>
+    <pre class="codeblock">import os
+from pathlib import Path
+
+print(Path.cwd())
+os.chdir('C:\\')
+print(os.getcwd())</pre>
+    <p>输出结果（<b>不同电脑结果可能不同</b>）：</p>
+    <pre class="codeblock">C:\Users\xxx
+C:\</pre>
+    <ul class="points">
+      <li><code>Path.cwd()</code> 打印出程序启动时的工作目录，通常是 .py 文件所在文件夹</li>
+      <li><code>os.chdir('C:\\')</code> 把工作目录切到 C 盘根目录——注意 Windows 路径里 <code>\</code> 要写成 <code>\\</code></li>
+      <li>切换后再 <code>os.getcwd()</code> 查询，返回的已经是新目录 C:\</li>
+      <li>此刻若执行 <code>open('笔记.txt')</code>，Python 会到 C:\ 底下去找，而不是原来的文件夹</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">交互示例</span>
+    <h2>chdir 前后，同一个相对路径指向不同的地方</h2>
+    <pre class="codeblock">import os
+
+print(os.getcwd())          # 假设当前在 C:\code
+os.chdir('C:\\code\\data')  # 换到子目录 data
+print(os.getcwd())
+
+# 同一个相对路径，起点变了
+with open('score.txt', 'r', encoding='utf-8') as f:   # 实际打开 C:\code\data\score.txt
+    print(f.readline())</pre>
+    <p>输出结果（示例；运行前需先建好 <code>C:\code\data</code> 目录和其中的 <code>score.txt</code>）：</p>
+    <pre class="codeblock">C:\code
+C:\code\data
+张三 95</pre>
+    <ul class="points">
+      <li><code>score.txt</code> 这个相对路径在 chdir 前指向 C:\code\score.txt，chdir 后指向 C:\code\data\score.txt——<b>起点跟着工作目录走</b></li>
+      <li>这也解释了为什么有人运行代码报「找不到文件」：文件其实在别处，而工作目录不是你以为的那个</li>
+      <li>不确定时先 <code>print(os.getcwd())</code> 看一眼，再决定用相对还是绝对路径</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！os.getcwd() 返回字符串形式的当前工作目录；返回 Path 对象的是 Path.cwd()。"
+         data-no="❌ os.getcwd() 返回的是字符串；Path 对象是 pathlib 的 Path.cwd() 返回的。别把两家的返回类型记混。">
+      <p style="font-weight:700;margin-bottom:12px"><code>os.getcwd()</code> 的返回值是什么类型？</p>
+      <button class="opt" onclick="quizPick(this)">A. Path 对象</button>
+      <button class="opt" onclick="quizPick(this)">B. 字符串</button>
+      <button class="opt" onclick="quizPick(this)">C. 列表</button>
+      <button class="opt" onclick="quizPick(this)">D. 整数</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="getcwdchdircwd|getcwd chdir cwd" data-ok="✅ 正确！os.getcwd() 获取、os.chdir(path) 改变工作目录，pathlib 对应 Path.cwd()。" data-no="❌ 三个方法名：os 模块获取工作目录的、os 模块改变工作目录的、pathlib 获取工作目录的（cwd 是 current working directory 的缩写）。">
+      <p>os 模块中获取当前工作目录的方法是 os.<b>＿＿</b>()；把工作目录改变到目标路径的方法是 os.<b>＿＿</b>(path)；pathlib 中获取工作目录的方法是 Path.<b>＿＿</b>()。（填方法名，用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：getcwd chdir cwd">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">四个高频翻车点</div>
+      <p>①<b>每台电脑结果不一样</b>：<code>Path.cwd()</code> 的输出取决于程序放在哪运行，别把书上的 C:\Users\xxx 当标准答案；</p>
+      <p>②<b>chdir 之后相对路径全变</b>：切换工作目录后，之前写好的相对路径打开的文件可能「突然找不到」；</p>
+      <p>③<b>「Python 文件所在目录」和「工作目录」通常相同但不是一回事</b>：工作目录可以随时 chdir 改变，文件位置不会跟着变；</p>
+      <p>④<b>chdir 到不存在的目录直接报错</b>：FileNotFoundError——先确认目标目录存在（下一节就学怎么新建）。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 工作目录的知识：os.getcwd()、Path.cwd()、os.chdir(path)。请：1）用「站立房间 + 相对路径指路」的类比解释工作目录如何决定相对路径的起点；2）给一段代码（先打印 cwd，chdir 到另一个目录，再用相对路径 open 文件），让我预测行为，再逐行讲解；3）解释为什么 os.getcwd() 返回字符串而 Path.cwd() 返回 Path 对象，以及为什么程序会报「找不到文件」、如何用 getcwd 排查。">
+      我刚学了 Python 工作目录的知识：os.getcwd()、Path.cwd()、os.chdir(path)。请：1）用「站立房间 + 相对路径指路」的类比解释工作目录如何决定相对路径的起点；2）给一段代码（先打印 cwd，chdir 到另一个目录，再用相对路径 open 文件），让我预测行为，再逐行讲解；3）解释为什么 os.getcwd() 返回字符串而 Path.cwd() 返回 Path 对象，以及为什么程序会报「找不到文件」、如何用 getcwd 排查。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：亲眼看看你的工作目录（5 分钟）</span>
+    <ol class="steps">
+      <li>新建程序文件，运行 <code>import os; print(os.getcwd())</code> 和 <code>from pathlib import Path; print(Path.cwd())</code>——确认两种写法指向同一个目录。</li>
+      <li>观察输出：它是不是你的 .py 文件所在文件夹？和 7.03 学相对路径时的「当前程序运行目录」对照一下。</li>
+      <li>执行 <code>os.chdir('C:\\')</code> 再打印一次 getcwd()，然后回到自己代码所在目录（用 chdir 切回去），体会「换房间」的过程。</li>
+      <li>挑战：在 D 盘（或任意位置）建一个 test 文件夹，chdir 过去后用相对路径 open('a.txt', 'w') 写点内容，打开看看文件落在了哪里。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>工作目录是程序当前所在的目录（通常是 .py 或 jupyter 文件所在目录），相对路径都从这里出发；os.getcwd() 返回字符串、Path.cwd() 返回 Path 对象、os.chdir(path) 可切换工作目录；chdir 后所有相对路径的起点随之改变。下一节：在工作目录里新建文件夹——mkdir 与 makedirs。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="7.10.html"><span class="nav-label">← 上一节</span><span class="nav-title">7.10 目录路径两大模块</span></a>
+        <a class="next" href="7.12.html"><span class="nav-label">下一节 →</span><span class="nav-title">7.12 新建目录</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>

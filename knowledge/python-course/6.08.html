@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6.08 不定长参数 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第六章 函数 · 第 8 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+.play{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+.play-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.play-row label{font-size:14px;color:var(--ink2);font-weight:600}
+.play-row input{flex:1;min-width:200px;font-family:Consolas,monospace;font-size:15px;padding:8px 10px;
+  border:1.5px solid var(--border);border-radius:8px;outline:none;color:var(--ink)}
+.play-row input:focus{border-color:var(--accent)}
+.play-out{font-family:Consolas,monospace;background:var(--code-bg);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;font-size:15px;min-height:52px;word-break:break-all;color:#dbe2f0;white-space:pre-wrap}
+.play-out .err{color:#ff9b9b;font-weight:700}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch06.html">第六章 函数</a><span class="sep">/</span>
+          <span class="current">6.08</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">08</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第六章 · 函数</span>
+            <h1>不定长参数</h1>
+            <p class="hero-summary">第 8 / 18 节 · 约 10 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>函数的定义与优点</li>
+      <li>函数的分类</li>
+      <li>函数的定义</li>
+      <li>函数的调用</li>
+      <li>形参与实参</li>
+      <li>参数传递的两种方式</li>
+      <li>必须参数与可选参数</li>
+      <li class="cur">不定长参数</li>
+      <li>参数值的数据类型</li>
+      <li>变量作用域：局部与全局</li>
+      <li>global 修改全局变量</li>
+      <li>匿名函数 lambda</li>
+      <li>高阶函数：map 与 filter</li>
+      <li>高阶函数：sorted 与 key</li>
+      <li>递归函数：概念与两要素</li>
+      <li>递归执行逻辑：递推与回溯</li>
+      <li>递归实战：阶乘</li>
+      <li>递归实战：字符串逆序</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>要算「任意多个数」的和，参数写几个才够？</h2>
+    <p>上一节的 getpow 参数数量是固定的，可现实中很多函数<b>不知道调用者会传几个值</b>：求和可能传 2 个数也可能传 100 个数，报个名可能一个名字都没有也可能来一串。总不能写 100 个参数吧？Python 的答案是<b>不定长参数</b>——允许零到多个参数，而且有两种形式，收进来的「容器」还不一样。</p>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">*args 像自助餐托盘，**kwargs 像快递登记单</div>
+      <p><b>单星 <code>*args</code></b>：大家按先后顺序往托盘上放盘子——<b>按位置传递</b>，放完一起装进一个袋子，这个袋子是<b>元组 tuple</b>（按顺序排好、不许再改）。<b>双星 <code>**kwargs</code></b>：每件物品都得贴上标签「名称=东西」——<b>按名称传递</b>，逐条登记到一个本子上，这个本子是<b>字典 dict</b>（键值对，按名字取东西）。托盘可以是空的，本子也可以是空白的——不定长参数允许零到多个。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>两种形式，两种容器</h2>
+    <ul class="points">
+      <li><b>单星 <code>*args</code></b>：需要<b>按位置</b>传递，参数以<b>元组 tuple</b> 形式导入函数——函数内拿到的是一个装满「位置上的值」的元组</li>
+      <li><b>双星 <code>**kwargs</code></b>：需要<b>按名称</b>传递（调用时写 <code>a=1</code> 这种形式），参数以<b>字典 dict</b> 形式导入——键是参数名，值是传的值</li>
+      <li><b>零到多个</b>：一个都不传也可以——args 是空元组 <code>()</code>，kwargs 是空字典 <code>{}</code></li>
+      <li><b>名字可以随便起</b>：<code>*args</code>、<code>**kwargs</code> 只是约定俗成，真正起作用的是星号——写成 <code>*canshu</code> 效果一样</li>
+      <li>两种形式可以同时出现在一个函数里：<code>def f(a, *args, **kwargs)</code>——单星在前、双星在后</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">课堂代码</span>
+    <h2>PPT 原例：fun1 收元组，fun2 收字典</h2>
+    <pre class="codeblock">def fun1(*args):
+    print(args)
+    print(type(args))
+
+fun1(1, 2, 3)</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">(1, 2, 3)
+&lt;class 'tuple'&gt;</pre>
+    <p>双星形式：</p>
+    <pre class="codeblock">def fun2(**kwargs):
+    print(kwargs)
+    print(type(kwargs))
+
+fun2(a=1, b=2, c=3)</pre>
+    <p>输出结果：</p>
+    <pre class="codeblock out">{'a': 1, 'b': 2, 'c': 3}
+&lt;class 'dict'&gt;</pre>
+    <ul class="points">
+      <li>fun1 按位置收到 1、2、3，打包成元组 <code>(1, 2, 3)</code></li>
+      <li>fun2 按名称收到 a=1、b=2、c=3，登记成字典 <code>{'a': 1, 'b': 2, 'c': 3}</code></li>
+      <li><code>type()</code> 一验便知：单星收 <b>tuple</b>，双星收 <b>dict</b></li>
+    </ul>
+
+    <div class="play">
+      <p style="font-weight:700;margin-bottom:10px">🔬 不定长参数实验台：左边填按位置传的值（逗号隔开），右边填按名称传的（名称=值），看分别装进什么容器</p>
+      <div class="play-row">
+        <label>*args 按位置</label><input id="pa" value="1, 2, 3" placeholder="如：1, 2, 3">
+        <label>**kwargs 按名称</label><input id="pk" value="a=1, b=2, c=3" placeholder="如：a=1, b=2">
+      </div>
+      <div class="play-row">
+        <button class="btn-main btn" onclick="vkRun()">调用！</button>
+        <button class="btn-ghost btn" onclick="vkSet('','')">零个参数</button>
+        <button class="btn-ghost btn" onclick="vkSet('5, 10, 15, 20','x=9')">各来几个</button>
+      </div>
+      <div class="play-out" id="vkout">点「调用！」开始实验</div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="1"
+         data-ok="✅ 答对了！**kwargs 按名称传递（x=10、y=20），以字典形式导入，键是名称、值是数值。"
+         data-no="❌ 回想「快递登记单」：调用时写的是 x=10、y=20 这种名称=值的形式，对应双星参数，收进来是字典。">
+      <p style="font-weight:700;margin-bottom:12px"><code>def fun2(**kwargs): print(kwargs)</code>，调用 <code>fun2(x=10, y=20)</code> 后，kwargs 的类型和内容是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 元组 (10, 20)</button>
+      <button class="opt" onclick="quizPick(this)">B. 字典 {'x': 10, 'y': 20}</button>
+      <button class="opt" onclick="quizPick(this)">C. 列表 [10, 20]</button>
+      <button class="opt" onclick="quizPick(this)">D. 报错，参数太多了</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="位置 元组 名称 字典" data-ok="✅ 全对！单星按位置传、收元组；双星按名称传、收字典。" data-no="❌ 提示：四个空依次是——单星参数的传递方式、单星导入的容器、双星参数的传递方式、双星导入的容器。">
+      <p>不定长参数有两种形式：单星 <code>*args</code> 需按<b>＿＿</b>传递，参数以<b>＿＿</b>形式导入；双星 <code>**kwargs</code> 需按<b>＿＿</b>传递，参数以<b>＿＿</b>形式导入。（四空用空格隔开）</p>
+      <div class="fill-row">
+        <input class="blank" placeholder="例如：位置 元组 名称 字典">
+        <button class="btn-main btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">三个高频翻车点</div>
+      <p>①<b>只写名字不写星号</b>：<code>def fun1(args)</code> 里的 args 只是普通必须参数——不定长的灵魂在星号，<code>*args</code> 才会打包；</p>
+      <p>②<b>给双星按位置传值</b>：<code>fun2(1, 2, 3)</code> 报 TypeError——<code>**kwargs</code> 只认名称，必须写 <code>fun2(a=1)</code> 这种形式；</p>
+      <p>③<b>把元组当列表改</b>：args 收到的是 tuple，<code>args.append(4)</code> 会报 AttributeError——元组不可增删，求和请遍历累加或用 <code>sum(args)</code>。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了 Python 函数的不定长参数。请：1）用「自助餐托盘装元组、快递登记单装字典」的类比解释 *args 与 **kwargs 的区别；2）出 5 道判断题考我（涉及按位置与按名称传递、收到的容器类型、零个参数的情况）；3）带我一步步写一个用 *args 求任意多个数之和的函数 fun3，从 print(args) 观察开始。">
+      我刚学了 Python 函数的不定长参数。请：1）用「自助餐托盘装元组、快递登记单装字典」的类比解释 *args 与 **kwargs 的区别；2）出 5 道判断题考我（涉及按位置与按名称传递、收到的容器类型、零个参数的情况）；3）带我一步步写一个用 *args 求任意多个数之和的函数 fun3，从 print(args) 观察开始。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：直接演练作业第 3 题（5 分钟）</span>
+    <ol class="steps">
+      <li>本章作业第 3 题要求用不定长参数求和。先搭骨架：<code>def fun3(*args):</code>，函数体第一行先写 <code>print(args)</code>，调用 <code>fun3(1, 2, 3)</code> 亲眼看看收到的是不是元组。</li>
+      <li>删掉 print，写求和：<code>total = 0</code>，用 <code>for i in args:</code> 遍历累加，最后 <code>return total</code>——元组可以直接遍历，和列表一样。</li>
+      <li>三种情况都测一遍：<code>fun3(1, 2)</code>、<code>fun3(1, 2, 3, 4, 5)</code>、<code>fun3()</code>——最后这个是零个参数，结果应该是 0，这正是「不定长」的意义。</li>
+      <li>挑战：一行版本 <code>return sum(args)</code>——想想为什么内置函数 sum 能直接吃下这个元组。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>参数数量不定时用不定长参数，允许零到多个：单星 *args 按位置传递、以元组 tuple 导入；双星 **kwargs 按名称传递、以字典 dict 导入；星号才是关键，args/kwargs 只是习惯名。作业第 3 题的 fun3 就靠它。下一节：传进去的值，函数里改了之后外面会不会变——取决于数据类型。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="6.07.html"><span class="nav-label">← 上一节</span><span class="nav-title">6.07 必须参数与可选参数</span></a>
+        <a class="next" href="6.09.html"><span class="nav-label">下一节 →</span><span class="nav-title">6.09 参数值的数据类型</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+  <script>
+/* 本页专属：不定长参数实验台（模拟 *args 打包为元组、**kwargs 打包为字典） */
+function vkSet(a, k){
+  document.getElementById('pa').value = a;
+  document.getElementById('pk').value = k;
+  vkRun();
+}
+function fmtKv(str){
+  /* 把 a=1, b=2 解析成 {'a': 1, 'b': 2} 的展示形式 */
+  var parts = str.split(',');
+  var items = [];
+  for (var i = 0; i < parts.length; i++){
+    var p = parts[i].trim();
+    if (p === '') continue;
+    var eq = p.indexOf('=');
+    if (eq < 1) return null;
+    items.push("'" + p.slice(0, eq).trim() + "': " + p.slice(eq + 1).trim());
+  }
+  return items;
+}
+function vkRun(){
+  var aRaw = document.getElementById('pa').value.trim();
+  var kRaw = document.getElementById('pk').value.trim();
+  var out = document.getElementById('vkout');
+  var args = [];
+  var aParts = aRaw === '' ? [] : aRaw.split(',');
+  for (var i = 0; i < aParts.length; i++){
+    var t = aParts[i].trim();
+    if (t === '') continue;
+    if (isNaN(parseFloat(t))){ out.innerHTML = '<span class="err">按位置传的值要能当数字看哦，如：1, 2, 3</span>'; return; }
+    args.push(t);
+  }
+  var items = kRaw === '' ? [] : fmtKv(kRaw);
+  if (items === null){ out.innerHTML = '<span class="err">按名称传的格式要写成 名称=值，如：a=1, b=2</span>'; return; }
+  var lines = [];
+  var call = 'fun1(' + args.join(', ') + ')';
+  lines.push(call + '　→　print(args) 输出：(' + args.join(', ') + ')');
+  lines.push('　　　　　　　print(type(args)) 输出：&lt;class ' + "'tuple'" + '&gt;');
+  lines.push('');
+  var call2 = 'fun2(' + (kRaw === '' ? '' : kRaw) + ')';
+  lines.push(call2 + '　→　print(kwargs) 输出：{' + items.join(', ') + '}');
+  lines.push('　　　　　　　print(type(kwargs)) 输出：&lt;class ' + "'dict'" + '&gt;');
+  out.textContent = '';
+  out.innerHTML = lines.join('\n');
+}
+</script>
+</body>
+</html>

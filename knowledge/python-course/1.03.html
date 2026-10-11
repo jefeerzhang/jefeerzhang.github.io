@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.03 编程语言：人机沟通的桥梁 · Python 语言基础与应用</title>
+  <meta name="description" content="Python 语言基础与应用 · 第一章 导论与 Python 环境 · 第 3 / 18 节。">
+  <script src="../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/python.css">
+  <style>
+/* —— 本页专属：自然语言 vs 机器语言切换对比 —— */
+.demo{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+      box-shadow:var(--shadow);padding:22px;margin-top:10px}
+.codewindow{font-family:Consolas,Menlo,monospace;font-size:15px;background:#1f2430;color:#dbe2f0;
+      border-radius:12px;padding:18px;line-height:2;overflow-x:auto;margin:12px 0}
+.codewindow .hl{color:#7ce3b0;font-weight:700}
+.feat{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.feat span{display:inline-block;border:1.5px solid var(--border);border-radius:999px;
+      padding:4px 14px;font-size:13px;color:var(--ink2);background:#fbfcfe}
+.pane h3{font-size:16px;margin-bottom:4px}
+.pane .sub{font-size:13px;color:var(--ink2);margin-bottom:10px}
+.pane p{font-size:14.5px}
+.binary{letter-spacing:3px;white-space:nowrap}
+.binary em{font-style:normal;color:#ffd479}
+button.btn{font-family:inherit;font-size:14px;font-weight:600;border:none;border-radius:10px;
+      padding:10px 18px;cursor:pointer;background:var(--accent);color:#fff}
+button.btn:active{transform:scale(.97)}
+</style>
+</head>
+<body class="python-page">
+<a class="skip-link" href="#main-content">跳至主要内容</a>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+        <a href="../../">首页</a>
+        <a href="../../cv/">个人简历</a>
+        <a href="../" aria-current="page">知识学习</a>
+          <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">个人学习站</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main id="main-content">
+    <section class="lesson-hero">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="../">知识学习</a><span class="sep">/</span>
+          <a href="index.html">Python 语言基础与应用</a><span class="sep">/</span>
+          <a href="ch01.html">第一章 导论与 Python 环境</a><span class="sep">/</span>
+          <span class="current">1.03</span>
+        </nav>
+        <div class="lesson-hero-grid">
+          <div class="lesson-hero-num-block">
+            <span class="lesson-hero-num-label">Lesson</span>
+            <span class="lesson-hero-num">03</span>
+            <span class="lesson-hero-num-total">/ 18</span>
+          </div>
+          <div class="lesson-hero-text">
+            <span class="lesson-tag-pill">第一章 · 导论与 Python 环境</span>
+            <h1>编程语言：人机沟通的桥梁</h1>
+            <p class="hero-summary">第 3 / 18 节 · 约 6 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  <section class="lesson-map"><div class="container">
+<nav class="kmap">
+    <button class="kmap-btn"><span>🗺️ 本章知识点地图（共 18 个知识点，点击展开）</span><span class="arrow">▾</span></button>
+    <div class="kmap-list"><ol>
+      <li>计算机系统架构</li>
+      <li>操作系统及其分类</li>
+      <li class="cur">编程语言：人机沟通的桥梁</li>
+      <li>编程语言的三个层次</li>
+      <li>编译型 vs 解释型语言</li>
+      <li>TIOBE 排行与语言流行趋势</li>
+      <li>五大语言的诞生与用途</li>
+      <li>AI 时代的编程学习理念</li>
+      <li>与 AI 高效协作的三技巧</li>
+      <li>学习路径的三阶段</li>
+      <li>Python 的诞生与发展</li>
+      <li>PEP 与 PEP 8</li>
+      <li>The Zen of Python</li>
+      <li>Python 2 vs Python 3</li>
+      <li>Python 的六大特点</li>
+      <li>Python 的应用领域</li>
+      <li>Python 环境搭建</li>
+      <li>Anaconda 与 AI IDE</li>
+    </ol></div>
+  </nav>
+  </div></section>
+  <section class="lesson-body">
+    <div class="container">
+      <section>
+    <span class="tag">为什么学这个</span>
+    <h2>你说的它听不懂，它说的你看不懂</h2>
+    <p>前面两节我们认识了计算机的「身体」（硬件）和「管家」（操作系统）。但还有个根本问题没解决：<b>你怎么让计算机干活？</b>人说话它听不懂，它内部流动的电信号你也读不了——中间必须有一座桥。这座桥就是<b>编程语言</b>。理解了它，你才能明白：</p>
+    <ul class="points">
+      <li>为什么<b>计算机唯一能直接执行的语言是机器语言</b>？（必考概念）</li>
+      <li>为什么人类不好好写 0 和 1，非要发明 Python 这样的编程语言？</li>
+    </ul>
+  </section>
+      <section>
+    <span class="tag">💡 打个比方</span>
+    <div class="callout">
+      <div class="co-title">计算机是一个只听得懂「0 和 1」的外星人</div>
+      <p>想象你刚认识一位外星人朋友，它绝顶聪明、执行力爆表，但<b>只认识两个词：0 和 1</b>。你想让它「帮我放首歌」，怎么办？要么硬着头皮学它的「0 和 1 语」，要么找一个<b>翻译</b>站在中间。</p>
+      <p><b>编程语言就是你俩之间的翻译</b>：你用接近人类语言的方式下指令，翻译（编译器 / 解释器）再把它变成 0 和 1 送进机器。有了这位翻译，人类才从「背 0 和 1」的苦海里解脱出来。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">核心概念</span>
+    <h2>同一条指令，两个世界</h2>
+    <ul class="points">
+      <li><b>人类自然语言</b>：比如指令「<b>打开文件『东风破.mp3』并播放它</b>」——语义丰富、接近人类思维、易于理解，人一看就明白，但计算机完全听不懂。</li>
+      <li><b>机器语言</b>：计算机真正执行的是对应的二进制指令片段（如 <code>35 3 8 68</code> 这样的操作码与地址编码）——仅由 0 和 1 组成、晦涩难懂，却是<b>计算机唯一能直接执行的语言</b>。</li>
+      <li><b>结论</b>：正因为机器语言太难写太难读，人类才发明了<b>更接近自然语言的编程语言</b>。但记住铁律：编程语言写的程序，最终都必须翻译成机器语言才能被执行。</li>
+    </ul>
+
+    <div class="demo">
+      <div class="switch">
+        <button class="on" data-pane="pane-human">🗣️ 我说的话（自然语言）</button>
+        <button data-pane="pane-machine">🤖 计算机听到的（机器语言）</button>
+      </div>
+      <div class="pane on" id="pane-human">
+        <h3>🗣️ 人这一侧：一条再普通不过的指令</h3>
+        <div class="sub">场景：你双击电脑里的一首歌</div>
+        <div class="codewindow">打开文件<span class="hl">『东风破.mp3』</span>并播放它</div>
+        <div class="feat">
+          <span>✅ 语义丰富</span><span>✅ 接近人类思维</span><span>✅ 易于理解</span>
+        </div>
+        <p>对人类来说，这句话清清楚楚：找到哪个文件、干什么事。可计算机对着它一脸茫然——它不懂「打开」、不懂「播放」，更不懂「东风破」。</p>
+      </div>
+      <div class="pane" id="pane-machine">
+        <h3>🤖 机器这一侧：同一件事的真面目</h3>
+        <div class="sub">场景：CPU 收到的取指令（字段 [op | rs | rt | addr]）</div>
+        <div class="codewindow binary">100011 00011 01000 <em>0000000001000100</em></div>
+        <div class="codewindow">对应十进制字段：<span class="hl">35　3　8　68</span>　　（op=35 表示「取数」，rs=3、rt=8 是寄存器编号，addr=68 是内存地址）</div>
+        <div class="feat">
+          <span>⚠️ 仅由 0 和 1 组成</span><span>⚠️ 晦涩难懂</span><span>✅ 计算机唯一能直接执行</span>
+        </div>
+        <p>这就是机器语言：一长串 0 和 1，每个字段都有严格的含义，错一位就全乱。人写它费劲、读它更费劲——但对电路来说，这恰恰是最「舒服」的语言。</p>
+      </div>
+      <p class="muted" style="margin-top:14px">💡 点上面的按钮切换视角：同一条指令，人类版好读但机器不懂；机器版能执行但人读不懂——<b>所以需要编程语言当桥梁。</b></p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">📌 一图流总结</span>
+    <h2>桥梁两端的「语言版图」</h2>
+    <table>
+      <tr><th>对比维度</th><th>自然语言</th><th>机器语言</th></tr>
+      <tr><td>使用方</td><td>人类</td><td>计算机（CPU）</td></tr>
+      <tr><td>组成</td><td>丰富的词汇与语法</td><td>仅 0 和 1 两种符号</td></tr>
+      <tr><td>可读性</td><td>语义丰富、易于理解</td><td>晦涩难懂</td></tr>
+      <tr><td>能否被 CPU 直接执行</td><td>不能</td><td>能（唯一一种）</td></tr>
+      <tr><td>示例</td><td>打开文件『东风破.mp3』并播放它</td><td>100011 00011 01000 0000000001000100</td></tr>
+    </table>
+  </section>
+      <section>
+    <span class="tag">❓ 测验</span>
+    <div class="quiz" data-answer="2"
+         data-ok="✅ 答对了！机器语言由 0 和 1 组成，是计算机唯一能直接执行的语言；其他语言都必须先翻译成它。"
+         data-no="❌ 不对哦。自然语言和高级语言计算机都听不懂，汇编语言也要先「汇编」成机器语言。唯一能被 CPU 直接执行的只有机器语言。">
+      <p style="font-weight:700;margin-bottom:12px">计算机<b>唯一能直接执行</b>的语言是？</p>
+      <button class="opt" onclick="quizPick(this)">A. 自然语言</button>
+      <button class="opt" onclick="quizPick(this)">B. 高级语言（如 Python）</button>
+      <button class="opt" onclick="quizPick(this)">C. 机器语言</button>
+      <button class="opt" onclick="quizPick(this)">D. 汇编语言</button>
+      <div class="quiz-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">✏️ 填空</span>
+    <div class="quiz" data-answer="0 1|1 0|0和1|1和0|0、1|1、0" data-ok="✅ 正确！机器语言仅由 0 和 1 两种符号组成，这也正是它晦涩难懂的原因。" data-no="❌ 再想想：计算机底层电路只有「通电 / 断电」两种状态，所以它的语言只有两个符号——提示：比 2 小的数有几个？">
+      <p>机器语言仅由 <b>＿＿</b> 和 <b>＿＿</b> 两种符号组成。请在框里填出这两个数字：</p>
+      <div class="fill-row">
+        <input class="blank" id="blank1" placeholder="如：× 和 ×">
+        <button class="btn" onclick="checkFill(this)">检查</button>
+      </div>
+      <div class="fill-fb"></div>
+    </div>
+  </section>
+      <section>
+    <span class="tag">⚠️ 避坑</span>
+    <div class="callout callout-warn">
+      <div class="co-title">「我写的 Python，电脑直接就跑了呀？」</div>
+      <p>有同学会反驳：「我在电脑上敲 <code>print(1+1)</code> 立刻出结果，没见什么翻译啊！」——那是因为<b>翻译工作由 Python 解释器悄悄替你完成了</b>：你写的高级语言代码先被翻译成机器语言，CPU 执行的始终是机器语言那一侧。桥梁一直在，只是你感觉不到它。</p>
+      <p>另外注意别混淆概念：<b>「机器语言」</b>是 CPU 直接执行的 0 和 1；<b>「编程语言」</b>是 Python、C 这些人类用的语言的统称。考试问「计算机唯一能直接执行的语言」，答案永远是机器语言。</p>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🤖 用 AI 巩固这一节</span>
+    <p class="muted">复制下面这段话发给任意 AI 助手，让它换个角度帮你消化：</p>
+    <div class="prompt-box" data-text="我刚学了「编程语言是人机沟通的桥梁」：计算机只能直接执行由 0 和 1 组成的机器语言，自然语言语义丰富但机器听不懂，所以人类发明了接近自然语言的编程语言，由翻译程序转成机器语言。请：1）用外星人只懂两个词的类比再讲一遍；2）举一个「同一指令的人类版与机器版」的对比例子；3）出 2 道单选题考我，等我作答后再公布答案。">
+      我刚学了「编程语言是人机沟通的桥梁」：计算机只能直接执行由 0 和 1 组成的机器语言，自然语言语义丰富但机器听不懂，所以人类发明了接近自然语言的编程语言，由翻译程序转成机器语言。请：1）用外星人只懂两个词的类比再讲一遍；2）举一个「同一指令的人类版与机器版」的对比例子；3）出 2 道单选题考我，等我作答后再公布答案。
+      <button class="copy-btn" onclick="copyText(this)">复制</button>
+    </div>
+  </section>
+      <section>
+    <span class="tag">🔧 试一试：体验「只许说 0 和 1」的憋屈（3 分钟）</span>
+    <ol class="steps">
+      <li>拉上同桌（或对着 AI 助手也行），玩一个游戏：你要告诉对方<b>今天中午吃了什么</b>，但只许问能用「是 / 否」回答的问题。</li>
+      <li>对方只能答「是」或「否」这两个词——这就是只有 0 和 1 两个符号的机器语言。</li>
+      <li>数一数：费了十几轮问答才猜出是「食堂的红烧肉」。而你用自然语言说一句话就搞定了。</li>
+      <li>体会到了吗？<b>符号越少越「机器」，人就越难受</b>——这正是人类要发明编程语言的全部理由。</li>
+    </ol>
+  </section>
+      <section>
+    <span class="tag">✅ 小结</span>
+    <div class="callout callout-success">
+      <div class="co-title">你现在知道了</div>
+      <p>计算机只听得懂 <b>0 和 1</b> 组成的<b>机器语言</b>——这是它唯一能直接执行的语言，却晦涩难懂；人类习惯的是语义丰富、接近思维的自然语言。两者之间必须架一座桥，这就是<b>编程语言</b>。那么「桥梁家族」内部还分高低层次吗？当然分——下一节，我们把编程语言按「离机器多远」排成三个层次。</p>
+    </div>
+  </section>
+      <nav class="lesson-nav">
+        <a class="prev" href="1.02.html"><span class="nav-label">← 上一节</span><span class="nav-title">1.02 操作系统及其分类</span></a>
+        <a class="next" href="1.04.html"><span class="nav-label">下一节 →</span><span class="nav-title">1.04 编程语言的三个层次</span></a>
+      </nav>
+    </div>
+  </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+  <script src="assets/python.js"></script>
+</body>
+</html>
