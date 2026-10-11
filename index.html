@@ -13,7 +13,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23245642'/%3E%3Ctext x='8' y='12' text-anchor='middle' font-family='serif' font-size='10' fill='%23FAF7F2'%3E研%3C/text%3E%3C/svg%3E">
   <script src="assets/theme.js"></script>
   <link rel="stylesheet" href="assets/site.css?v=19">
-  <link rel="stylesheet" href="assets/ask.css?v=2">
+  <link rel="stylesheet" href="assets/ask.css?v=3">
 </head>
 <body>
   <a class="skip-link" href="#main-content">跳至主内容</a>
@@ -156,7 +156,10 @@
         <div class="section-heading">
           <h2>问一下</h2>
           <span class="label">Ask</span>
-          <p>每人每天 10 次，全站每天 50 次。</p>
+          <div class="ask-head-meta">
+            <p>每人每天 10 次，全站每天 50 次。</p>
+            <span class="ask-quota" id="ask-quota" role="status" aria-live="polite" hidden></span>
+          </div>
         </div>
         <div class="ask-panel">
           <div class="ask-log" id="ask-log" role="log" aria-live="polite" aria-label="对话记录">
@@ -239,6 +242,6 @@
     });
   })();
 </script>
-<script src="assets/ask.js?v=4" defer></script>
+<script src="assets/ask.js?v=5" defer></script>
 </body>
 </html>

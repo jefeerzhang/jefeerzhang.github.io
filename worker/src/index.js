@@ -22,8 +22,9 @@ function corsHeaders(origin, allowed) {
   const ok = allowed.includes(origin);
   return {
     'Access-Control-Allow-Origin': ok ? origin : allowed[0],
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Expose-Headers': 'X-Quota-Remaining, X-Quota-Per-IP-Remaining',
     'Access-Control-Max-Age': '86400',
     Vary: 'Origin',
   };
@@ -70,6 +71,27 @@ export default {
     }
 
     const url = new URL(request.url);
+    const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+    const stub = env.DAILY_COUNTER.get(env.DAILY_COUNTER.idFromName('global'));
+
+    // 只读查询剩余次数,不消耗配额
+    if (url.pathname === '/api/quota') {
+      if (request.method !== 'GET') {
+        return json({ error: '只支持 GET 请求。' }, 405, cors);
+      }
+      const peeked = await stub.fetch('https://counter/peek', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ip, peek: true }),
+      });
+      const quota = await peeked.json();
+      return json(
+        { remaining: quota.remaining, perIpRemaining: quota.perIpRemaining },
+        200,
+        { ...cors, 'Cache-Control': 'no-store' },
+      );
+    }
+
     if (url.pathname !== '/api/ask') {
       return json({ error: '接口不存在。' }, 404, cors);
     }
@@ -102,9 +124,6 @@ export default {
       return json({ error: '后端还没有配置好。' }, 500, cors);
     }
 
-    const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-    const id = env.DAILY_COUNTER.idFromName('global');
-    const stub = env.DAILY_COUNTER.get(id);
     const counted = await stub.fetch('https://counter/check', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -182,6 +201,9 @@ export default {
         ...cors,
         'Content-Type': 'text/event-stream; charset=utf-8',
         'Cache-Control': 'no-store',
+        // 前端据此刷新「今日剩余」,不用再单独查一次
+        'X-Quota-Remaining': String(verdict.remaining),
+        'X-Quota-Per-IP-Remaining': String(verdict.perIpRemaining),
       },
     });
   },

@@ -12,6 +12,40 @@
   overflow: hidden;
 }
 
+/* 说明文字居左,剩余次数徽标靠右 */
+.ask-head-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 16px;
+}
+
+.ask-head-meta p {
+  margin-right: auto;
+}
+
+.ask-quota {
+  margin-top: 12px;
+  padding: 3px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ask-quota b {
+  color: var(--accent);
+  font-size: 0.95em;
+}
+
+.ask-quota[hidden] {
+  display: none;
+}
+
 .ask-log {
   display: flex;
   flex-direction: column;

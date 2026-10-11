@@ -12,7 +12,10 @@
   var input = document.getElementById('ask-input');
   var send = document.getElementById('ask-send');
   var note = document.getElementById('ask-note');
+  var quotaEl = document.getElementById('ask-quota');
   if (!log || !form || !input || !send) return;
+
+  var QUOTA_URL = ENDPOINT.replace(/\/api\/ask$/, '/api/quota');
 
   var history = [];
   var busy = false;
@@ -49,6 +52,44 @@
   }
 
   // MiniMax 的思考内容可能以 <think> 标签混在正文里,显示前去掉
+  function toNum(v) {
+    if (v === null || v === undefined || v === '') return null;
+    var n = Number(v);
+    return isNaN(n) ? null : n;
+  }
+
+  // 单 IP 额度通常先到,所以取两者较小值
+  function quotaLeft(remaining, perIpRemaining) {
+    var a = toNum(remaining);
+    var b = toNum(perIpRemaining);
+    if (a === null) return b;
+    if (b === null) return a;
+    return Math.min(a, b);
+  }
+
+  function paintQuota(left) {
+    if (!quotaEl || left === null) return;
+    if (left <= 0) {
+      quotaEl.textContent = '今日次数已用完';
+    } else {
+      quotaEl.innerHTML = '今日剩余 <b>' + left + '</b> 次';
+    }
+    quotaEl.hidden = false;
+  }
+
+  // 查不到就保持隐藏,不打扰访客
+  function loadQuota() {
+    if (!quotaEl || !QUOTA_URL) return;
+    fetch(QUOTA_URL, { headers: { Accept: 'application/json' } })
+      .then(function (res) {
+        return res.ok ? res.json() : null;
+      })
+      .then(function (data) {
+        if (data) paintQuota(quotaLeft(data.remaining, data.perIpRemaining));
+      })
+      .catch(function () {});
+  }
+
   function stripThink(s) {
     var out = s.replace(/<(think|thinking)>[\s\S]*?<\/(think|thinking)>/g, '');
     var cut = out.search(/<(think|thinking)>/);
@@ -208,6 +249,8 @@
     return '';
   }
 
+  loadQuota();
+
   form.addEventListener('submit', function (event) {
     event.preventDefault();
     ask();
@@ -254,8 +297,11 @@
         caret.remove();
         answer.className = 'ask-bubble ask-bubble--error';
         answer.textContent = detail || '服务暂时不可用，请稍后再试。';
+        if (res.status === 429) paintQuota(0);
         return;
       }
+
+      paintQuota(quotaLeft(res.headers.get('X-Quota-Remaining'), res.headers.get('X-Quota-Per-IP-Remaining')));
 
       var reader = res.body.getReader();
       var decoder = new TextDecoder();

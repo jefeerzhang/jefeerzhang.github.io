@@ -10,9 +10,11 @@ export class DailyCounter {
     const perIp = Number(this.env.PER_IP_LIMIT || 10);
 
     let ip = 'unknown';
+    let peek = false;
     try {
       const body = await request.json();
       if (body && typeof body.ip === 'string' && body.ip) ip = body.ip;
+      if (body && body.peek === true) peek = true;
     } catch (e) {
       ip = 'unknown';
     }
@@ -27,18 +29,25 @@ export class DailyCounter {
     }
 
     const used = data.ips[ip] || 0;
+    const remaining = Math.max(0, limit - data.total);
+    const perIpRemaining = Math.max(0, perIp - used);
+
     if (data.total >= limit) {
-      return reply({ allowed: false, reason: 'global', limit });
+      return reply({ allowed: false, reason: 'global', limit, remaining, perIpRemaining });
     }
     if (used >= perIp) {
-      return reply({ allowed: false, reason: 'ip', limit: perIp });
+      return reply({ allowed: false, reason: 'ip', limit: perIp, remaining, perIpRemaining });
+    }
+    // 只查询不计数:首页加载时显示剩余次数用
+    if (peek) {
+      return reply({ allowed: true, peek: true, remaining, perIpRemaining });
     }
 
     data.total += 1;
     data.ips[ip] = used + 1;
     await this.state.storage.put('counter', data);
 
-    return reply({ allowed: true, remaining: limit - data.total });
+    return reply({ allowed: true, remaining: remaining - 1, perIpRemaining: perIpRemaining - 1 });
   }
 }
 
