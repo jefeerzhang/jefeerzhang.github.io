@@ -13,6 +13,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23245642'/%3E%3Ctext x='8' y='12' text-anchor='middle' font-family='serif' font-size='10' fill='%23FAF7F2'%3E研%3C/text%3E%3C/svg%3E">
   <script src="assets/theme.js"></script>
   <link rel="stylesheet" href="assets/site.css?v=19">
+  <link rel="stylesheet" href="assets/ask.css?v=1">
 </head>
 <body>
   <a class="skip-link" href="#main-content">跳至主内容</a>
@@ -150,6 +151,31 @@
       </div>
     </section>
 
+    <section class="ask-section" id="ask">
+      <div class="container">
+        <div class="section-heading">
+          <h2>问一下</h2>
+          <span class="label">Ask</span>
+          <p>每人每天 10 次，全站每天 50 次。</p>
+        </div>
+        <div class="ask-panel">
+          <div class="ask-log" id="ask-log" role="log" aria-live="polite" aria-label="对话记录">
+            <div class="ask-msg ask-msg--bot">
+              <span class="ask-role">助手</span>
+              <p class="ask-bubble">你好，可以问我本站有哪些栏目、知识库有哪些专栏，或张老师的研究方向。</p>
+            </div>
+          </div>
+          <form class="ask-form" id="ask-form">
+            <textarea id="ask-input" class="ask-input" rows="2" maxlength="500" aria-label="提问" placeholder="例如：知识库里有哪些专栏？"></textarea>
+            <div class="ask-actions">
+              <span class="ask-note" id="ask-note">回答由大模型生成，可能出错。</span>
+              <button type="submit" class="ask-send" id="ask-send">发送</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <footer class="site-footer">
@@ -213,5 +239,6 @@
     });
   })();
 </script>
+<script src="assets/ask.js?v=2" defer></script>
 </body>
 </html>

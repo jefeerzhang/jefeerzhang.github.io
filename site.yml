@@ -7,15 +7,15 @@
 
 # ---------- AI 阅读须知(每次接到网站任务先看这段) ----------
 # 接到"改站 / 加子站 / 调样式 / 写文案"这类任务,请按以下顺序:
-#   1. 读 `palette` + `design_rules`:知道能用什么色 / 什么字体 / 什么禁条
-#   2. 读 `sections`:知道顶层有哪几个栏目,目录路径是什么
-#   3. 读 `knowledge` 下的子站清单:挂新子站必须照 `lesson_page_shell` 的外壳写
-#   4. 读 `homepage_entries` + `knowledge_card`:主页/知识库卡要跟它们保持一致
-#   5. 写文案读 `writing_rules`;改样式读 `design_rules`
+#   1. 读 `theme.palette` + `theme.rule`:知道能用什么色 / 什么字体 / 什么禁条
+#   2. 读 `nav` + `sections`:知道顶层有哪几个栏目,目录路径是什么
+#   3. 读 `sections` 里 knowledge 的 columns:挂新子站照 `shells.knowledge-shell` 的外壳写
+#   4. 读 `knowledge_mount`:挂载步骤与卡片格式以它为准
+#   5. 写文案读 `copy_discipline`;改样式读 `theme.rule`
 # 铁律:
 #   - 不准删本文件的 key;新增 key 在最后追加
 #   - 不准自己改 `accent` 色 / 字体栈;要改先问张剑
-#   - 改完任何 html 后,按 `verification` 段两条 curl 验真
+#   - 改完任何 html 后,按 `workflow.verify` 段的工具与地址两条验真
 #   - commit 信息格式:`feat|fix|style|docs(scope): 中文说明`
 
 site:
@@ -27,10 +27,12 @@ site:
   wechat: jefeerzhang
 
 # -------------------------------------------------------------
-# 一、配色(huashu-design 学术极简 · master-course 同款)
+# 一、配色(学术极简 · master-course 同款)
 # -------------------------------------------------------------
 theme:
-  style_skill: huashu-design
+  # 2026-10-11 查证:huashu-design 与 taste_skill_sop 这两个技能在本机不存在。
+  # 视觉细则以 theme.rule 与 assets/site.css 为准;文案细则以 copy_discipline 为准。
+  style_skill: 已废弃,原值 huashu-design,改看 theme.rule 与 assets/site.css
   palette:
     paper:    "#f2f5f2"     # 页面主背景,米白偏绿
     surface:  "#fbfcfb"     # 卡片底
@@ -56,10 +58,11 @@ theme:
     no_gradient: true
     no_shadow_card: true
     circle_radius: 2px   # 极个别圆形元素(如头像)用,普通卡片仍 8px
-  design_discipline: taste_skill_sop
+  design_discipline: 已废弃,原值 taste_skill_sop,改看 copy_discipline
 
 # -------------------------------------------------------------
-# 二、导航(全站主入口,4 项)
+# 二、导航(全站主入口,5 项)
+#   2026-10-11 已核:19 个含导航的页面(顶层 5 页 + 子页)5 项全一致,顺序即下。
 # -------------------------------------------------------------
 nav:
   - id: home
@@ -70,8 +73,12 @@ nav:
     label: 个人简历
     path: /cv/
     file: cv/index.html
+  - id: courses
+    label: 课程中心
+    path: /courses/
+    file: courses/index.html
   - id: knowledge
-    label: 知识库
+    label: 知识学习
     path: /knowledge/
     file: knowledge/index.html
   - id: tools
@@ -96,31 +103,80 @@ sections:
     intro: 按主题整理的系列学习专栏,涵盖研究方法、实证分析等内容。每个专栏自成体系,由浅入深。
     layout: column-grid           # 卡片栅格
     columns:
-      - id: fsqca
-        path: /knowledge/fsqca/
-        title: fsQCA 模糊集定性比较分析
-        summary: 从 QCA 是什么到开题报告写作,系统掌握模糊集定性比较分析方法。
-        tag: 研究方法
-        meta: 6 节核心 · 入门 → 实战
-        shell: knowledge-shell
+      # 2026-10-11 与 knowledge/index.html 的卡片逐张核对,顺序也照它
+      - id: ai-biancheng
+        url: https://aiolaola.com/course
+        external: true
+        title: 从零学会 AI 编程
+        summary: 10 大阶段、182 节课,从"什么是文件"到"用 AI 做出真东西",前 2 章 21 节免登录试看。
+        tag: 推荐 · 零基础首选
+        meta: 外部课程 · 10 阶段 182 节 · 零基础 → 能动手
         status: live
-      - id: zhang-gen-li-lun
-        path: /knowledge/zhang-gen-li-lun/
-        title: 扎根理论 · 系统学习
-        summary: 从研究问题、访谈观察到编码与理论整合,系统掌握扎根理论的完整流程。
-        tag: 研究方法
-        meta: 12 节核心 + 7 篇辅助 · 入门 → 实战
-        shell: knowledge-shell
+        featured: true            # 在 knowledge/index.html 里置顶、独占一行
+      - id: datawhale-ai
+        url: https://www.datawhale.cn/learn/summary/40
+        external: true
+        title: Datawhale 人工智能
+        summary: 按 NLP、推荐系统、CV、大数据、数据分析五个方向编排的课程地图。
+        meta: 外部课程 · 5 个方向 · 基础 → 实践
         status: live
       - id: jiliang-fangfa
         path: /knowledge/jiliang-fangfa/
         title: 计量方法 · Stata 实操
         summary: 用 Stata 把因果推断的每一步跑通,从设计选择到诊断细节。
-        tag: 研究方法
-        meta: 1 篇讲稿 · DID 专题
+        tag: 最新专栏
+        meta: 1 篇讲稿 · DID 专题 · 入门 → 实战
         shell: knowledge-shell
         status: live
-        featured: true            # 在 knowledge/index.html 里置顶、独占一行
+      - id: ai-learning-methods
+        path: /knowledge/ai-learning-methods.html
+        title: AI 时代的学习方法
+        summary: AI 辅助学习的操作流程图,单页。
+        meta: 流程图 · 单页
+        shell: none
+        status: live
+      - id: git-guide
+        url: https://www.runoob.com/manual/git-guide/
+        external: true
+        title: Git 简明指南
+        summary: Git 基本工作流速查,含添加提交、分支管理、更新合并与标签。
+        meta: 外部资源 · 速查手册
+        status: live
+      - id: fsqca
+        path: /knowledge/fsqca/
+        title: fsQCA 模糊集定性比较分析
+        summary: 从 QCA 是什么到开题报告写作。
+        meta: 6 节 · 入门 → 实战
+        shell: knowledge-shell
+        status: live
+      - id: zhang-gen-li-lun
+        path: /knowledge/zhang-gen-li-lun/
+        title: 扎根理论 · 系统学习
+        summary: 从访谈观察到编码与理论整合。
+        meta: 12 节 + 7 篇辅助 · 入门 → 实战
+        shell: knowledge-shell
+        status: live
+      - id: wenjuan-sheji
+        path: /knowledge/wenjuan-sheji/
+        title: 问卷设计 · 系统课程
+        summary: 从研究问题到可审查的问卷研究。
+        meta: 11 节 + 5 份参考 · 入门 → 实战
+        shell: knowledge-shell
+        status: live
+      - id: ai-course
+        path: /knowledge/ai-course/
+        title: AI 入门课程
+        summary: 基于 Microsoft《AI-For-Beginners》中文版改编,12 节短课入门人工智能。
+        meta: 12 节 + Notebook · 入门 → 高级
+        shell: knowledge-shell
+        status: live
+      - id: abms
+        path: /knowledge/abms/
+        title: ABMS 基于主体的建模
+        summary: 从什么是 ABM 到模型验证方法论,讲解 Agent-Based Modeling 的核心概念、经典模型与实践工具。
+        meta: 8 节 · 入门 → 实战
+        shell: knowledge-shell
+        status: live
 
   - id: tools
     path: /tools/
@@ -133,6 +189,14 @@ sections:
     intro: 个人学术简历
     file: cv/index.html
     style: cv-page               # cv 页有独立 CV 段落样式
+
+  # 2026-10-11 补:nav 已有「课程中心」,sections 原先漏了它,此处补齐。
+  - id: courses
+    path: /courses/
+    intro: 按硕士与本科两层组织的课程中心,课程多指向站外 master-course。
+    file: courses/index.html
+    levels: [graduate, undergraduate]   # 页内 tab 切换硕士 / 本科
+    style: courses-page          # courses 页有 tab 切换与独立课程组样式
 
 # -------------------------------------------------------------
 # 四、知识库子页统一外壳(knowledge-shell)
@@ -173,7 +237,7 @@ copy_discipline:
     - id: specific_numbers
       rule: 凡是"课程数/章节数/课时数",必须写具体数字(如 12 节、7 篇),禁"多/一些/若干"
     - id: card_meta_arrow
-      rule: card 角标使用 → 而非 - 或 ~ (例: "12 节 + 7 篇 · 入门 → 实战")
+      rule: 'card 角标使用 → 而非 - 或 ~ (例: "12 节 + 7 篇 · 入门 → 实战")'
 
 # -------------------------------------------------------------
 # 六、改站流程(每次 AI 接站,必须按此顺序)
@@ -181,9 +245,9 @@ copy_discipline:
 workflow:
   steps:
     - read site.yml              # 先读总纲
-    - read jefeerzhang_site.md   # 站级硬规则
-    - read taste_skill_sop.md    # 反 AI 视觉
-    - read stop_ai_slop_zh_sop.md # 反 AI 文案
+    # 原先此处还要求读 jefeerzhang_site.md / taste_skill_sop.md / stop_ai_slop_zh_sop.md。
+    # 2026-10-11 查证:这三份文件在本机与仓库都不存在,规则已内联进本文件的
+    # theme.rule / theme.design_discipline / copy_discipline,故不再单列。
     - 修改
     - git commit + push master
     - curl 远端 raw 验真
@@ -266,3 +330,45 @@ knowledge_mount:
 maintainer:
   name: 张剑
   note: 本文件改一次,commit 一次;AI 不得擅改 site.yml
+
+# -------------------------------------------------------------
+# 八、首页问答组件(ask)
+#   实装:2026-10-11。只放首页,不进导航。
+#   链路:index.html 的 .ask-section → assets/ask.js → Cloudflare Worker → 模型接口
+#   密钥只存 Cloudflare secret,不进仓库,不进浏览器
+# -------------------------------------------------------------
+ask:
+  enabled: true
+  frontend:
+    markup: index.html 的 <section class="ask-section" id="ask">
+    script: assets/ask.js
+    style: assets/ask.css
+    endpoint_key: assets/ask.js 顶部的 ENDPOINT 常量,填 Worker 地址
+  worker:
+    dir: worker/
+    entry: worker/src/index.js
+    counter: worker/src/counter.js
+    api_path: /api/ask
+    local_test: npx wrangler dev
+    deploy: npx wrangler deploy
+    secret: npx wrangler secret put UPSTREAM_API_KEY
+  limits:
+    per_ip_per_day: 10
+    global_per_day: 50
+    reset: 北京时间 00:00
+    over_limit: 硬停止,返回 429 与提示文案
+  copy_rules:
+    - 面板下方固定显示「回答由大模型生成,可能出错。」
+    - 范围外的问题回答「这个问题我答不了,请看知识库 /knowledge/。」
+  upstream:
+    default: MiniMax Responses 接口 https://api.minimax.cn/v1/responses
+    system_prompt_field: instructions
+    history_field: input
+    reasoning_effort: high,写在 worker/wrangler.toml 的 REASONING_EFFORT
+    max_output_tokens: 4096,推理 token 计入这个上限,设小会返回 incomplete 且没有正文
+    model_default: MiniMax-M3.1-Flash-Preview,配 Token Plan 订阅 Key(sk-cp- 前缀)
+    model_alternate: MiniMax-M3,配按量付费 Key(sk-api- 前缀)
+    keys: 按量付费 Key 与订阅 Key 不可互换;区域填错会返回 401 与业务码 1004 / 2049
+    billing: Token Plan 按订阅配额扣减,不走按 token 计费
+    local_key: worker/.dev.vars 写 UPSTREAM_API_KEY,该文件已在 .gitignore 中
+  note: 系统提示词只写入站点结构、知识库专栏、联系方式;不写课件正文

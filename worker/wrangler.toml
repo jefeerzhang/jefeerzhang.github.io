@@ -1,0 +1,32 @@
+name = "jefeerzhang-ask"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+# 每日计数用 Durable Object(强一致)。免费版必须用 new_sqlite_classes。
+[durable_objects]
+bindings = [
+  { name = "DAILY_COUNTER", class_name = "DailyCounter" }
+]
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["DailyCounter"]
+
+[vars]
+# 上游模型接口:MiniMax Responses 接口。
+# 本机 Key 是 Token Plan 订阅 Key(sk-cp- 前缀),配 MiniMax-M3.1-Flash-Preview。
+# 换成按量付费 Key(sk-api- 前缀)时,模型改回 MiniMax-M3。
+UPSTREAM_URL = "https://api.minimax.cn/v1/responses"
+UPSTREAM_MODEL = "MiniMax-M3.1-Flash-Preview"
+# 思考强度:minimal / low / medium / high / xhigh / max
+# M3.1-Flash-Preview 的推理始终开启,不能填 none;省略时默认 max
+REASONING_EFFORT = "high"
+# 推理 token 计入这个上限。设太小会返回 incomplete 且没有正文
+MAX_OUTPUT_TOKENS = "4096"
+DAILY_LIMIT = "50"
+PER_IP_LIMIT = "10"
+ALLOWED_ORIGINS = "https://jefeerzhang.github.io,http://localhost:8000,http://127.0.0.1:8000"
+
+# 密钥不放这里。
+# 本地调试:在 worker/.dev.vars 写 UPSTREAM_API_KEY=sk-xxx,再跑 npx wrangler dev
+# 线上部署:npx wrangler secret put UPSTREAM_API_KEY

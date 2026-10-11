@@ -45,7 +45,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* huashu: 标题统一走 display 栈, 西文 Newsreader 优先, 中文 Noto Serif CJK SC fallback */
+/* 标题统一走 display 栈, 西文 Newsreader 优先, 中文 Noto Serif CJK SC fallback */
 h1, h2, h3, h4, .display {
   font-family: var(--display);
   font-feature-settings: "kern", "liga", "halt";
@@ -1106,7 +1106,7 @@ footer.site-footer a:hover { color: var(--accent); }
 }
 
 /* ============================================================
- * CV 页专用样式 — huashu-design 学术极简风
+ * CV 页专用样式,学术极简风
  * ============================================================ */
 
 /* CV 页面容器 + 整体栅格：aside 侧栏 + main 内容 */
@@ -1243,7 +1243,7 @@ footer.site-footer a:hover { color: var(--accent); }
   max-width: 100%;
 }
 
-/* content-section 标题：huashu display 风 — 衬线大标题 + 顶部细线 */
+/* content-section 标题:display 风,衬线大标题 + 顶部细线 */
 .content-section h2 {
   margin: 0 0 18px;
   padding-top: 26px;
