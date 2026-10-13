@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23002FA7'/%3E%3Ctext x='32' y='46' font-size='36' text-anchor='middle' fill='white' font-family='Georgia,serif'%3E%CE%BB%3C/text%3E%3C/svg%3E">
+<title>第5讲 · 主动基金评价：原则、思路与指标 — 学生自读讲义</title>
+<style>
+:root{
+  --paper:#fafaf8;
+  --ink:#0a0a0a;
+  --grey-1:#f0f0ee;
+  --grey-2:#d4d4d2;
+  --grey-3:#737373;
+  --accent:#002FA7;
+  --mono:"JetBrains Mono","Cascadia Code",Consolas,"Courier New",monospace;
+  --sans:"Inter","Helvetica Neue","Noto Sans SC","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+.container{max-width:880px;margin:0 auto;padding:0 24px}
+
+header{background:var(--ink);color:#fff;padding:56px 0 40px;border-bottom:6px solid var(--accent)}
+header .tag{font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;font-weight:600}
+header .tag::before{content:"// "}
+header h1{font-size:38px;line-height:1.22;font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+header .sub{font-size:16.5px;color:var(--grey-2);margin-bottom:22px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:12.5px;color:#fff;border:1px solid var(--grey-3);padding:4px 12px;background:rgba(255,255,255,.03);font-weight:500}
+
+nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--grey-2);margin-bottom:28px}
+nav .links{display:flex;gap:0;flex-wrap:wrap;padding:6px 0}
+nav a{font-size:14px;color:var(--grey-3);text-decoration:none;padding:8px 14px;border-left:1px solid var(--grey-2);transition:color .15s;font-weight:500}
+nav a:first-child{border-left:none}
+nav a:hover{color:var(--accent)}
+nav a.back{color:var(--accent);font-weight:500;margin-right:8px}
+
+section{margin-bottom:44px}
+h2{font-size:23px;font-weight:700;color:var(--ink);margin:36px 0 16px;padding:0 0 10px 14px;border-left:6px solid var(--accent);display:flex;align-items:baseline;gap:12px;letter-spacing:-.01em}
+h2 .no{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.12em;font-weight:600}
+h3{font-size:17.5px;font-weight:700;margin:24px 0 10px;color:var(--ink)}
+p{margin:8px 0}
+ul,ol{margin:8px 0 8px 24px}
+li{margin:5px 0}
+code{font-family:var(--mono);font-size:.86em;background:var(--grey-1);padding:1px 6px;color:var(--ink);font-weight:500}
+strong{font-weight:700}
+a{color:var(--accent)}
+
+.panel{background:var(--grey-1);border:1px solid var(--grey-2);padding:20px 22px;margin:14px 0}
+.takeaway{border-left:4px solid var(--accent);background:var(--grey-1);padding:12px 18px;font-weight:600;color:var(--ink);margin:14px 0}
+.warnbox{border-left:4px solid var(--ink);background:var(--grey-1);padding:12px 18px;margin:14px 0;font-size:14.5px}
+.note{font-size:14px;color:var(--grey-3);margin:6px 0}
+
+.formula{background:var(--paper);border:1px solid var(--grey-2);border-left:4px solid var(--ink);padding:14px 18px;margin:10px 0;font-family:var(--mono);font-size:14.5px;line-height:1.8;overflow-x:auto}
+.formula .cap{display:block;color:var(--grey-3);font-size:13px;margin-top:4px}
+
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px}
+th,td{border:1px solid var(--grey-2);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--grey-1);color:var(--ink);font-weight:600;font-size:14px}
+
+.cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:12px 0;border:1px solid var(--grey-2)}
+.cols3 .col{border-right:1px solid var(--grey-2);padding:12px 14px;background:var(--paper)}
+.cols3 .col:last-child{border-right:none}
+.cols3 .col .t{font-weight:700;font-size:14.5px;margin-bottom:4px}
+.cols3 .col .s{font-size:13.5px;color:var(--grey-3);line-height:1.6}
+
+.cols2{display:grid;grid-template-columns:repeat(2,1fr);gap:0;margin:12px 0;border:1px solid var(--grey-2)}
+.cols2 .col{border-right:1px solid var(--grey-2);padding:12px 14px;background:var(--paper)}
+.cols2 .col:last-child{border-right:none}
+.cols2 .col .t{font-weight:700;font-size:14.5px;margin-bottom:4px}
+.cols2 .col .s{font-size:13.5px;color:var(--grey-3);line-height:1.6}
+
+.chain{display:flex;gap:0;align-items:stretch;flex-wrap:wrap;margin:14px 0}
+.chain .step{flex:1;min-width:140px;background:var(--grey-1);border:1px solid var(--grey-2);padding:12px 14px;font-size:14px}
+.chain .step .t{font-weight:700;display:block;margin-bottom:4px}
+.chain .step .s{font-size:13px;color:var(--grey-3);line-height:1.5}
+.chain .arrow{align-self:center;font-family:var(--mono);color:var(--accent);font-size:18px;padding:0 6px;font-weight:700}
+
+.statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0;margin:14px 0;border:1px solid var(--grey-2)}
+.stat{border-right:1px solid var(--grey-2);border-bottom:1px solid var(--grey-2);padding:14px 16px;background:var(--paper)}
+.stat .k{font-family:var(--mono);font-size:12px;color:var(--grey-3);letter-spacing:.08em;margin-bottom:6px;font-weight:600}
+.stat .v{font-size:22px;font-weight:700;font-family:var(--mono);color:var(--ink)}
+.stat .v .ac{color:var(--accent)}
+.stat .d{font-size:12.5px;color:var(--grey-3);margin-top:4px;line-height:1.5}
+
+.check{list-style:none;margin-left:0}
+.check li{padding:8px 0 8px 30px;position:relative;border-bottom:1px solid var(--grey-2)}
+.check li::before{content:"☐";position:absolute;left:2px;font-size:17px;color:var(--accent);font-weight:700}
+.check li:last-child{border-bottom:none}
+
+footer{margin-top:48px;padding:28px 0 48px;border-top:2px solid var(--accent);color:var(--grey-3);font-size:13.5px}
+footer .mono{font-size:12.5px}
+footer strong{color:var(--ink)}
+
+@media (max-width:760px){
+  header h1{font-size:28px}
+  header{padding:40px 0 28px}
+  .cols3{grid-template-columns:1fr}
+  .cols3 .col{border-right:none;border-bottom:1px solid var(--grey-2)}
+  .cols3 .col:last-child{border-bottom:none}
+  .cols2{grid-template-columns:1fr}
+  .cols2 .col{border-right:none;border-bottom:1px solid var(--grey-2)}
+  .cols2 .col:last-child{border-bottom:none}
+  .chain{flex-direction:column}
+  .chain .arrow{transform:rotate(90deg);padding:4px 0}
+}
+@media print{
+  nav{display:none}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="tag">第7章 · 课时 5</div>
+    <h1>主动基金评价：原则、思路与指标</h1>
+    <div class="sub">收益高是否等于管理能力强——学术指标与晨星实务框架的系统对照</div>
+    <div class="chips">
+      <span class="chip">56 页</span>
+      <span class="chip">本科大三</span>
+      <span class="chip">学术讲义</span>
+      <span class="chip">晨星方法对照</span>
+      <span class="chip">不构成投资建议</span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="container links">
+    <a href="index.html" class="back">← 课程主页</a>
+    <a href="#why">为什么评价</a>
+    <a href="#principle">六项原则</a>
+    <a href="#framework">方法论框架</a>
+    <a href="#return-risk">收益与风险</a>
+    <a href="#risk-adjusted">风险调整指标</a>
+    <a href="#attribution">归因模型</a>
+    <a href="#practice">实务评级与误区</a>
+    <a href="#checklist">评价清单</a>
+  </div>
+</nav>
+
+<main class="container">
+
+<!-- ========== 引言 ========== -->
+<section id="intro">
+  <h2><span class="no">00</span> 本讲回答三个问题</h2>
+  <p>主动基金评价应遵循什么<strong>原则</strong>、沿什么<strong>思路</strong>展开、用哪些<strong>指标</strong>度量。本讲不围绕单只基金展开算例，而是同时覆盖学术指标体系与晨星等实务评价框架，帮助建立证据链意识。</p>
+  <div class="takeaway">核心立场：基金表现、相对表现与管理能力是三个不同层次的判断，需要不同强度的证据。收益是结果，不是原因。</div>
+</section>
+
+<!-- ========== 第一部分 ========== -->
+<section id="why">
+  <h2><span class="no">01</span> 为什么要对主动基金进行系统评价</h2>
+
+  <p>主动管理的核心主张是：基金经理凭借研究、判断与交易，能够在承担相应风险的前提下，为投资者赚取超过被动持有的回报。这一主张同时伴随更高的管理费、托管费与交易成本。因此，评价不是"看好或不看好某只基金"，而是回答一个更基本的问题：<strong>投资者支付的主动费用，是否换来了可识别、可解释、可持续的增量价值？</strong></p>
+
+  <div class="cols3">
+    <div class="col">
+      <div class="t">投资者视角</div>
+      <div class="s">在同类产品中选择风险收益特征与自身目标匹配的基金，而不是只看历史排名。</div>
+    </div>
+    <div class="col">
+      <div class="t">销售与监管视角</div>
+      <div class="s">依据《证券期货投资者适当性管理办法》，把合适风险等级的产品卖给合适风险承受能力的投资者。</div>
+    </div>
+    <div class="col">
+      <div class="t">学术视角</div>
+      <div class="s">用风险调整后收益、归因与持续性检验，考察市场是否存在可被持续获取的超额收益。</div>
+    </div>
+  </div>
+
+  <h3>主动管理：在评价什么，不在评价什么</h3>
+  <p>主动管理是指基金经理在合同约定的投资目标与约束下，通过证券选择、资产与行业配置、风险暴露调整和交易决策，追求与被动持有基准不同的结果。<strong>偏离基准 ≠ 创造价值</strong>：高换手、持仓集中、与指数差异大，只是"主动"的形式特征；是否产生风险调整后的正收益，是另一个需要独立检验的问题。</p>
+
+  <div class="warnbox">
+    <strong>评价对象的边界：</strong>评价产品表现——该份额在指定区间的净值与风险特征；评价经理能力——需以经理任职区间为单位，并扣除合同约束、风格暴露与市场行情。二者不可混同：区间内若经理变更，不能把全段结果归给现任经理。评价不是预测：历史业绩是对过去的描述，不构成对未来收益或损失的承诺。
+  </div>
+
+  <h3>核心问题：收益高，是否等于管理能力强？</h3>
+  <p>答案是否定的。一段较高的历史收益可能来自：承担了更高的市场风险、暴露了规模或价值等风格因子、恰好处于有利行情区间，或者仅仅是运气。收益率本身并不区分这些来源。</p>
+
+  <div class="chain">
+    <div class="step">
+      <span class="t">收益可能来自</span>
+      <span class="s">市场整体上涨（β）<br>规模/价值/动量暴露<br>行业集中或风格押注<br>样本区间的行情运气</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="step">
+      <span class="t">需要剥离后观察</span>
+      <span class="s">无风险利率与市场暴露<br>已知风险因子收益<br>合同基准的约定<br>费用与交易成本</span>
+    </div>
+    <div class="arrow">→</div>
+    <div class="step">
+      <span class="t">剩余的才是</span>
+      <span class="s">风险调整后收益<br>因子调整后 α<br>持仓选择与配置能力<br>仍可能含运气，需检验</span>
+    </div>
+  </div>
+
+  <h3>三层判断：表现 → 相对表现 → 管理能力</h3>
+  <table>
+    <tr><th>判断层次</th><th>需要回答的问题</th><th>需要的证据</th><th>不能混同的结论</th></tr>
+    <tr><td>历史表现</td><td>这段时间赚了多少？承受了多大波动与回撤？</td><td>复权净值序列、波动率、最大回撤</td><td>赚钱 ≠ 跑赢基准</td></tr>
+    <tr><td>相对表现</td><td>相对于合理基准，是否取得更好的结果？</td><td>合同基准、超额收益、跟踪误差、信息比率</td><td>跑赢 ≠ 经过风险与风格调整</td></tr>
+    <tr><td>管理能力</td><td>扣除市场与风格暴露后，还剩多少？是否可持续？</td><td>α、多因子回归、Brinson 归因、持续性检验</td><td>正 α ≠ 持续的管理能力</td></tr>
+  </table>
+  <p class="note">每向下一层，所需要的证据强度递增，结论的可解释范围递减。每一层都不能跳层下结论。</p>
+</section>
+
+<!-- ========== 六项原则 ========== -->
+<section id="principle">
+  <h2><span class="no">02</span> 主动基金评价的六项基本原则</h2>
+
+  <div class="cols3">
+    <div class="col">
+      <div class="t">一、风险与收益并表</div>
+      <div class="s">不可只看收益。同等收益下波动更小、回撤更浅者更优；脱离风险谈收益没有意义。</div>
+    </div>
+    <div class="col">
+      <div class="t">二、同类比较</div>
+      <div class="s">避免跨类错配。晨星先做基金分类，再在同类内做风险调整后收益排名；股债混排没有评价意义。</div>
+    </div>
+    <div class="col">
+      <div class="t">三、基准先行</div>
+      <div class="s">再谈超额。基准应来自合同约定与实际持仓风格，不能挑选"让自己看起来更好"的指数。</div>
+    </div>
+  </div>
+  <div class="cols3">
+    <div class="col">
+      <div class="t">四、长期视角与稳定性缓冲</div>
+      <div class="s">晨星以三年业绩为主，并设 2% 排名阈值缓冲，避免单期波动导致评级频繁变动。</div>
+    </div>
+    <div class="col">
+      <div class="t">五、定量与定性相结合</div>
+      <div class="s">晨星定量占 65%、定性占 35%；管理人治理、合规、产品结构均影响最终等级。</div>
+    </div>
+    <div class="col">
+      <div class="t">六、证据边界与不确定性披露</div>
+      <div class="s">所有指标都有口径与样本区间；统计显著不等于经济意义，历史结果不承诺未来。</div>
+    </div>
+  </div>
+
+  <h3>学术评价与实务评级：互补而非替代</h3>
+  <table>
+    <tr><th>维度</th><th>学术评价</th><th>实务评级（以晨星为代表）</th></tr>
+    <tr><td>核心目标</td><td>识别风险调整后超额收益及其来源，检验市场有效性</td><td>对产品做风险等级与同类评级，服务适当性管理与投资者选择</td></tr>
+    <tr><td>主要指标</td><td>Sharpe、Jensen α、多因子 α、IR、Brinson 归因、持续性</td><td>持仓风险、MRAR、业绩波动/下跌、回撤、规模与权益仓位附加项</td></tr>
+    <tr><td>时间窗口</td><td>研究者设定，常覆盖多周期、穿越牛熊</td><td>以最近三年为主；成立不满三年者调整权重并附加回撤项</td></tr>
+    <tr><td>输出形式</td><td>点估计、置信区间、因子暴露与分解</td><td>R1–R5 风险等级、1–5 星评级、风格箱</td></tr>
+  </table>
+</section>
+
+<!-- ========== 方法论框架 ========== -->
+<section id="framework">
+  <h2><span class="no">03</span> 评价思路：一条从净值到能力的证据链</h2>
+
+  <div class="chain">
+    <div class="step"><span class="t">① 原始数据</span><span class="s">单位净值、分红、份额类别</span></div>
+    <div class="arrow">→</div>
+    <div class="step"><span class="t">② 收益与风险</span><span class="s">复权净值、累计收益、波动、回撤</span></div>
+    <div class="arrow">→</div>
+    <div class="step"><span class="t">③ 相对基准</span><span class="s">超额收益、跟踪误差、信息比率</span></div>
+    <div class="arrow">→</div>
+    <div class="step"><span class="t">④ 风险调整</span><span class="s">Sharpe、Sortino、Treynor、Calmar</span></div>
+    <div class="arrow">→</div>
+    <div class="step"><span class="t">⑤ 归因与能力</span><span class="s">CAPM α、多因子 α、Brinson、持续性检验</span></div>
+  </div>
+
+  <p>每一步都回答前一步遗留的问题：收益是多少 → 风险多大 → 相对基准怎样 → 风险调整后性价比如何 → 剩余收益能否归于管理能力。晨星实务评价在第②③步加入持仓风险与定性因素，输出 R1–R5 等级；学术评价在第④⑤步深入，输出 α 与归因。</p>
+
+  <h3>数据基础：四种净值口径不能混用</h3>
+  <table>
+    <tr><th>口径</th><th>含义</th><th>评价中的用法</th></tr>
+    <tr><td>单位净值</td><td>每份基金资产的当前净值</td><td>理解分红对净值的机械影响，不直接用于收益计算</td></tr>
+    <tr><td>累计净值</td><td>单位净值加回历史累计分红的展示口径</td><td>不能简单用相邻累计净值之比替代分红再投收益</td></tr>
+    <tr><td>复权净值</td><td>按分红再投规则调整后的总收益序列</td><td><strong>收益与风险指标的主要输入</strong></td></tr>
+    <tr><td>场内市价</td><td>上市份额在交易所的成交价格</td><td>可能相对净值折溢价，不替代基金净值评价</td></tr>
+  </table>
+
+  <h3>基准选择：和谁比，决定在问什么</h3>
+  <table>
+    <tr><th>比较对象</th><th>回答的问题</th><th>注意事项</th></tr>
+    <tr><td>合同业绩比较基准</td><td>产品是否兑现了招募说明书约定的相对目标</td><td>核查区间内基准是否变更；混合基准需按合同权重与频率重建</td></tr>
+    <tr><td>市场指数</td><td>相对于所选市场暴露取得了怎样的结果</td><td>区分价格指数与全收益指数；分红口径差异会高估基金相对表现</td></tr>
+    <tr><td>同类基金中位数</td><td>在晨星同类或银河同类中处于什么分位</td><td>分类必须一致；晨星以实际持仓而非名称分类</td></tr>
+  </table>
+
+  <div class="takeaway">三条纪律：基准应先说明理由再计算，不能事后挑选；合同基准与 CAPM 市场代理不是同一个对象；混合基准不能用两端累计收益简单加权代替按期再平衡。</div>
+
+  <h3>晨星基金产品风险评价框架概览</h3>
+  <p>定量与定性相结合：定量占 65%，定性占 35%；持仓风险内部再分定量 50%、定性 50%。</p>
+  <table>
+    <tr><th>指标</th><th>权重</th><th>说明</th></tr>
+    <tr><td>基金持仓风险</td><td><strong>70%</strong></td><td>以注册类型与晨星分类为基础，结合补充标签识别，分 1–5 档</td></tr>
+    <tr><td>晨星评级调整风险</td><td>10%</td><td>Morningstar Return 与 MRAR 之差，反映下行波动</td></tr>
+    <tr><td>业绩波动风险</td><td>10%</td><td>近三年收益率标准差，按同类百分位 0–5 分</td></tr>
+    <tr><td>业绩下跌风险</td><td>10%</td><td>近三年下行波动率，按同类百分位 0–5 分</td></tr>
+    <tr><td>附加风险项</td><td>加项</td><td>业绩回撤、基金规模、高权益仓位，按规则加分</td></tr>
+  </table>
+
+  <h3>综合风险得分如何映射到 R1–R5</h3>
+  <table>
+    <tr><th>风险等级</th><th>综合得分区间</th><th>典型对应产品</th></tr>
+    <tr><td>低风险 R1</td><td>[0, 1.4)</td><td>货币市场基金</td></tr>
+    <tr><td>中低风险 R2</td><td>[1.4, 2.2)</td><td>纯债、利率债、信用债、短债、市场中性策略</td></tr>
+    <tr><td>中风险 R3</td><td>[2.2, 3.2)</td><td>普通债券、积极债券、可转债、宽基混合与股票基金</td></tr>
+    <tr><td>中高风险 R4</td><td>[3.2, 4.7)</td><td>行业主题股票、科创板/创业板/北交所重仓基金、QDII 行业基金</td></tr>
+    <tr><td>高风险 R5</td><td>[4.7, ∞)</td><td>大宗商品、衍生品及其他高风险结构产品</td></tr>
+  </table>
+  <p class="note">规则提示：合同约定权益仓位上限 ≥ 80% 或长期实际权益仓位 > 30% 的基金，持仓风险不得低于 3 分，对应综合等级不低于 R3。R1–R5 是监管适当性框架下的风险等级，不是业绩星级。</p>
+</section>
+
+<!-- ========== 收益与风险指标 ========== -->
+<section id="return-risk">
+  <h2><span class="no">04</span> 收益与风险指标</h2>
+
+  <h3>收益类指标：单期、累计与年化复合</h3>
+  <div class="formula">
+    r<sub>p,t</sub> = V<sub>t</sub> / V<sub>t−1</sub> − 1
+    <span class="cap">单期收益率：分子分母须为同一份额、同一净值口径</span>
+  </div>
+  <div class="formula">
+    R<sub>cum</sub> = ∏(1 + r<sub>p,t</sub>) − 1 = V<sub>T</sub>/V<sub>0</sub> − 1
+    <span class="cap">累计收益率：不能用算术加总代替复利；先涨 10% 再跌 10% 不是回到原点</span>
+  </div>
+  <div class="formula">
+    CAGR = (V<sub>T</sub>/V<sub>0</sub>)<sup>1/Y</sup> − 1
+    <span class="cap">年化复合收益率：Y 为起止区间年数；CAGR 不是每一年的实际收益</span>
+  </div>
+
+  <h3>两个"年化"不是一回事</h3>
+  <table>
+    <tr><th>口径</th><th>算术平均年化</th><th>CAGR（几何年化）</th></tr>
+    <tr><td>含义</td><td>单期平均收益 × 年化系数（日频 252、月频 12）</td><td>由起止净值反推的等效固定复合年率</td></tr>
+    <tr><td>主要用途</td><td>Sharpe、IR、回归 α 的分子</td><td>跨期限比较、宣传材料中的"年化收益"</td></tr>
+  </table>
+  <p class="note">两者数值通常不等，差异来自波动。报告中出现两个"年化收益"时，必须分别标注口径。</p>
+
+  <h3>波动率：总风险的基本度量</h3>
+  <div class="formula">
+    s<sub>p</sub> = √[ (1/(n−1)) Σ(r<sub>p,t</sub> − r̄<sub>p</sub>)² ]，&nbsp;&nbsp; σ<sub>ann</sub> = s<sub>p</sub>·√k
+    <span class="cap">样本标准差，分母为 n−1；日频年化乘 √252，月频乘 √12</span>
+  </div>
+  <div class="cols2">
+    <div class="col">
+      <div class="t">它度量什么</div>
+      <div class="s">收益围绕均值的离散程度；上涨与下跌同等计入波动。</div>
+    </div>
+    <div class="col">
+      <div class="t">它不度量什么</div>
+      <div class="s">不是"亏损概率"；不区分上行与下行波动；√k 缩放依赖收益不相关、同方差假设。</div>
+    </div>
+  </div>
+
+  <h3>下行风险：只惩罚低于目标的波动</h3>
+  <div class="formula">
+    σ<sub>d</sub> = √[ (1/n) Σ<sub>r<sub>t</sub>&lt;τ</sub>(r<sub>t</sub> − τ)² ]
+    <span class="cap">τ 通常取无风险利率或目标收益；只在 r&lt;τ 的期间计入偏差，上行正波动不再被视为风险</span>
+  </div>
+
+  <h3>最大回撤：真实路径上的最深跌幅</h3>
+  <div class="formula">
+    DD<sub>t</sub> = W<sub>t</sub>/H<sub>t</sub> − 1，&nbsp;&nbsp; MDD = min<sub>t</sub> DD<sub>t</sub>
+    <span class="cap">W<sub>t</sub>=V<sub>t</sub>/V<sub>0</sub>，H<sub>t</sub>=历史最高净值；MDD 是后视镜指标，不代表未来损失上限</span>
+  </div>
+
+  <h3>持仓风险：注册类型 × 晨星分类</h3>
+  <p>持仓风险占综合得分 70%，以基金注册类型为主、晨星分类为辅，分 1–5 档：</p>
+  <table>
+    <tr><th>持仓风险分</th><th>典型产品类型</th><th>分类依据</th></tr>
+    <tr><td>5 分</td><td>股票型基金、行业主题基金</td><td>股票仓位 ≥ 80%，承担主要权益市场风险</td></tr>
+    <tr><td>4 分</td><td>商品基金、基础设施 REITs</td><td>大宗商品、另类资产，波动率与流动性特征特殊</td></tr>
+    <tr><td>3 分</td><td>混合型基金、可转债基金</td><td>股债混合，权益仓位介于股票型与债券型之间</td></tr>
+    <tr><td>2 分</td><td>债券型基金、市场中性策略</td><td>债券仓位 ≥ 80%，权益敞口受限</td></tr>
+    <tr><td>1 分</td><td>货币市场基金</td><td>短期货币工具，久期与信用风险极低</td></tr>
+  </table>
+  <p class="note">晨星分类的核心是"按实际持仓分"，不是按基金名字分。这避免了名字叫"稳健"实际重仓股票的产品被错配风险等级。</p>
+
+  <h3>三项业绩风险指标：按百分位 0–5 分</h3>
+  <p>三项各占 10% 权重，按最近三年在全市场同类中的风险百分位升序打分：</p>
+  <table>
+    <tr><th>风险百分位（升序）</th><th>P ≤ 5%</th><th>5–15%</th><th>15–50%</th><th>50–85%</th><th>85% 以上</th></tr>
+    <tr><td><strong>得分</strong></td><td>0</td><td>1</td><td>2</td><td>3</td><td>4–5</td></tr>
+  </table>
+  <p class="note">缓冲规则：单项指标排名相对阈值变化不足 2% 时，沿用上期分值，避免评级在阈值附近频繁跳动。</p>
+</section>
+
+<!-- ========== 风险调整收益指标 ========== -->
+<section id="risk-adjusted">
+  <h2><span class="no">05</span> 风险调整收益指标</h2>
+
+  <p>两只基金年化收益同为 12%：一只波动率 8%，一只波动率 20%。仅看收益，二者"一样好"；承担风险后，前者的性价比显著更高。风险调整指标就是把"收益"除以"所承担风险"，得到单位风险报酬。</p>
+
+  <h3>夏普比率 Sharpe Ratio</h3>
+  <div class="formula">
+    SR = (E(R<sub>p</sub>) − R<sub>f</sub>) / σ<sub>p</sub>
+    <span class="cap">每承担一单位总波动，获得多少无风险超额收益；最通用的风险调整收益指标</span>
+  </div>
+  <p><strong>局限：</strong>对称处理上下波动，对期权类非对称策略失真；负 Sharpe 不能按大小排序；不区分收益来自 β 还是选股。</p>
+
+  <h3>索提诺比率 Sortino Ratio</h3>
+  <div class="formula">
+    Sortino = (R<sub>p</sub> − τ) / σ<sub>d</sub>
+    <span class="cap">分母从总波动率换为下行标准差；只惩罚低于目标 τ 的波动，更符合投资者对"亏损"的真实感受</span>
+  </div>
+
+  <h3>特雷诺比率 Treynor Ratio</h3>
+  <div class="formula">
+    Treynor = (R<sub>p</sub> − R<sub>f</sub>) / β<sub>p</sub>
+    <span class="cap">分母从总波动换为系统性风险 β；假设非系统性风险已被分散化，适合评价充分分散的组合</span>
+  </div>
+
+  <h3>卡玛比率 Calmar Ratio</h3>
+  <div class="formula">
+    Calmar = 年化收益率 / |MDD|
+    <span class="cap">每单位历史最大回撤换来的年化收益；直接回应投资者"最坏会跌多少"的问题</span>
+  </div>
+
+  <h3>跟踪误差 Tracking Error</h3>
+  <div class="formula">
+    TE = σ(R<sub>p</sub> − R<sub>b</sub>) × √k
+    <span class="cap">主动组合相对基准收益的波动；指数基金目标 TE 趋近 0，主动基金 TE 反映偏离基准的程度</span>
+  </div>
+
+  <h3>信息比率 Information Ratio</h3>
+  <div class="formula">
+    IR = E(R<sub>p</sub> − R<sub>b</sub>) / σ(R<sub>p</sub> − R<sub>b</sub>) = 主动收益 / 跟踪误差
+    <span class="cap">单位主动风险换来的主动收益；评价主动管理能力最直接的指标。Grinold-Kahn：IR ≈ IC × √Breadth</span>
+  </div>
+
+  <h3>主动持股 Active Share</h3>
+  <div class="formula">
+    Active Share = (1/2) Σ|w<sub>p,i</sub> − w<sub>b,i</sub>|
+    <span class="cap">持仓权重与基准权重差异的绝对值之和的一半；取值 0–100%；0% 完全复制基准</span>
+  </div>
+  <p>Active Share 是"持仓层面"的主动度，TE 是"收益层面"的主动度。一个基金可持仓差异大但收益轨迹接近（低 TE），也可持仓接近但行业择时导致高 TE。二者结合才能完整刻画"主动"。</p>
+
+  <h3>五个指标的分母与适用场景</h3>
+  <table>
+    <tr><th>指标</th><th>分子</th><th>分母</th><th>适用场景</th></tr>
+    <tr><td>Sharpe</td><td>超额收益（对 R<sub>f</sub>）</td><td>总波动率 σ<sub>p</sub></td><td>通用、分散化组合、近似正态收益</td></tr>
+    <tr><td>Sortino</td><td>超额收益（对目标 τ）</td><td>下行标准差 σ<sub>d</sub></td><td>关注亏损、偏态分布、绝对收益策略</td></tr>
+    <tr><td>Treynor</td><td>超额收益（对 R<sub>f</sub>）</td><td>系统性风险 β</td><td>已充分分散、无明显个股风险</td></tr>
+    <tr><td>Calmar</td><td>年化收益</td><td>最大回撤 |MDD|</td><td>固收+、绝对收益、关注尾部损失</td></tr>
+    <tr><td>IR</td><td>主动收益（对基准）</td><td>跟踪误差 TE</td><td>评价主动管理能力，必须先定基准</td></tr>
+  </table>
+  <div class="takeaway">没有"最好"的指标，只有与评价问题匹配的指标；报告中应同时给出 2–3 个，避免单一指标偏误。</div>
+
+  <h3>MRAR 与晨星星级：实务化的风险调整收益</h3>
+  <p>晨星 MRAR（Morningstar Risk-Adjusted Return）用幂效用函数把"下行波动惩罚"显式写进收益，再按同类百分位映射为 1–5 星：</p>
+  <div class="formula">
+    MRAR = [ (1/N) Σ<sub>t=1..N</sub>(1+r<sub>t</sub>)<sup>−γ</sup> ]<sup>−1/γ</sup> − 1
+    <span class="cap">γ 为风险厌恶系数（晨星取 γ = 2）；基金成立满 3 年方参评</span>
+  </div>
+  <table>
+    <tr><th>持有期</th><th>权重</th><th>说明</th></tr>
+    <tr><td>近十年</td><td><strong>50%</strong></td><td>长期表现权重最高</td></tr>
+    <tr><td>近五年</td><td>30%</td><td>中期表现，平滑短期波动</td></tr>
+    <tr><td>近三年</td><td>20%</td><td>近期表现，权重最低</td></tr>
+  </table>
+  <p class="note">不足十年者按 60% 五年 + 40% 三年加权。星级映射：前 10% 五星、22.5% 四星、35% 三星、22.5% 二星、10% 一星。</p>
+</section>
+
+<!-- ========== 归因与管理能力 ========== -->
+<section id="attribution">
+  <h2><span class="no">06</span> 归因模型与管理能力</h2>
+
+  <p>一只基金跑赢沪深 300 两年，可能是：承担了更高的市场 β（牛市中 β=1.2 自然跑赢）、超配了小盘/价值/高动量等风险因子、行业配置偏离基准且恰好押对，或者真正通过个股选股创造了 α。归因模型的任务：把基金收益拆成可被风险因子解释的部分与残差部分，<strong>只有残差（α）才能被审慎地归因为管理能力</strong>。</p>
+
+  <h3>机构如何区分"运气"与"能力"：六步归因流程</h3>
+  <div class="chain">
+    <div class="step"><span class="t">01 看历史业绩</span><span class="s">各周期收益、同类排名、与基准的主动收益</span></div>
+    <div class="arrow">→</div>
+    <div class="step"><span class="t">02 看持仓与盈亏来源</span><span class="s">行业、风格、个股权重分布；哪些持仓真正赚了钱</span></div>
+    <div class="arrow">→</div>
+    <div class="step"><span class="t">03 因子归因</span><span class="s">检验收益能否被已知风险因子解释；顺风车部分不是能力</span></div>
+  </div>
+  <div class="chain">
+    <div class="step"><span class="t">04 识别选股 α</span><span class="s">扣除因子暴露后仍显著为正的残差，才是真正来自独有信息的选股回报</span></div>
+    <div class="arrow">→</div>
+    <div class="step"><span class="t">05 访谈基金经理</span><span class="s">对照投资流程：他是否知道自己为什么赚钱、暴露在哪些因子上</span></div>
+    <div class="arrow">→</div>
+    <div class="step"><span class="t">06 长周期量化模拟</span><span class="s">主动管理的关键是 breadth：分散下很多很多的小注，而非少数几次豪赌</span></div>
+  </div>
+
+  <h3>CAPM 与 Jensen's α</h3>
+  <div class="formula">
+    R<sub>p,t</sub> − R<sub>f</sub> = α<sub>p</sub> + β<sub>p</sub>(R<sub>m,t</sub> − R<sub>f</sub>) + ε<sub>p,t</sub>
+    <span class="cap">β<sub>p</sub> 为市场风险暴露；α<sub>p</sub> 为剥离 β 后的异常收益。α 必须报告 t 值，不显著的 α 不可断言为能力。</span>
+  </div>
+
+  <h3>选股能力 vs 择时能力：T-M 与 H-M 模型</h3>
+  <div class="formula">
+    R<sub>p</sub> − R<sub>f</sub> = α + β(R<sub>m</sub> − R<sub>f</sub>) + γ(R<sub>m</sub> − R<sub>f</sub>)² + ε
+    <span class="cap">T-M 模型（Treynor & Mazuy, 1966）：α 显著为正 → 选股能力；γ 显著为正 → 市场择时能力</span>
+  </div>
+  <p>H-M 模型（Henriksson & Merton, 1981）用虚拟变量 max(0, R<sub>m</sub> − R<sub>f</sub>) 刻画择时。A 股实证：主动基金普遍表现为选股 α 为正、择时项为负或不显著——经理真正稳定贡献来自个股选择，而非预测市场涨跌。</p>
+
+  <h3>Fama-French 多因子模型</h3>
+  <div class="formula">
+    R<sub>p,t</sub> − R<sub>f</sub> = α<sub>p</sub> + β<sub>Mkt</sub>·Mkt<sub>t</sub> + β<sub>SMB</sub>·SMB<sub>t</sub> + β<sub>HML</sub>·HML<sub>t</sub> + ε<sub>p,t</sub>
+    <span class="cap">FF 三因子（1993）；五因子模型进一步加入 RMW（盈利）与 CMA（投资）</span>
+  </div>
+  <table>
+    <tr><th>因子</th><th>含义</th><th>在基金评价中的解读</th></tr>
+    <tr><td>Mkt</td><td>市场超额收益</td><td>与 CAPM 相同的 β 暴露</td></tr>
+    <tr><td>SMB</td><td>小市值 − 大市值</td><td>正暴露说明基金超配小盘股，并非选股能力</td></tr>
+    <tr><td>HML</td><td>高账面市值比 − 低账面市值比</td><td>正暴露说明基金偏价值风格，而非能力</td></tr>
+  </table>
+
+  <h3>Carhart 四因子：加入动量</h3>
+  <div class="formula">
+    R<sub>p,t</sub> − R<sub>f</sub> = α<sub>p</sub> + b·Mkt<sub>t</sub> + s·SMB<sub>t</sub> + h·HML<sub>t</sub> + m·MOM<sub>t</sub> + ε<sub>p,t</sub>
+    <span class="cap">Carhart (1997)：加入动量因子后，共同基金的"热手效应" largely 消失——过去赢家继续赢，是因为它们持有动量股票</span>
+  </div>
+  <div class="takeaway">关键发现：扣除费用后，多数主动基金的 α 不显著为正；费用率与 α 显著负相关。这一结论在 Fama & French (2010) 大样本检验中再次被确认。</div>
+
+  <h3>Brinson 归因：配置与选股</h3>
+  <div class="formula">
+    R<sub>p</sub> − R<sub>b</sub> = Σ(w<sub>p,i</sub>−w<sub>b,i</sub>)·r<sub>b,i</sub> + Σw<sub>b,i</sub>(r<sub>p,i</sub>−r<sub>b,i</sub>) + Σ(w<sub>p,i</sub>−w<sub>b,i</sub>)(r<sub>p,i</sub>−r<sub>b,i</sub>)
+    <span class="cap">配置效应 + 选股效应 + 交互效应</span>
+  </div>
+  <table>
+    <tr><th>效应</th><th>含义</th><th>典型解读</th></tr>
+    <tr><td>配置效应</td><td>超配/低配某行业带来的收益差</td><td>反映宏观与行业判断</td></tr>
+    <tr><td>选股效应</td><td>在同一行业内选到更好的股票</td><td>反映微观个股研究能力</td></tr>
+    <tr><td>交互效应</td><td>同时超配行业并选到更好个股</td><td>配置与选股的协同</td></tr>
+  </table>
+  <p class="note">局限：国内只能拿到季报前十大与半年报全持仓，存在"窗口粉饰"，且忽略季度内交易。关键检验：把归因结果与经理宣称的投资理念对照——声称"自下而上选股"的基金，若收益主要来自行业配置效应，就要打问号。</p>
+
+  <h3>业绩是否可持续：持续性检验</h3>
+  <p>"过去三年排名前 1/4"能否预测未来三年排名？这是投资者最关心的问题。</p>
+  <ul>
+    <li><strong>Carhart (1997)：</strong>扣除费用后，赢家继续赢 largely 由动量因子解释；输家继续输的现象较稳定。</li>
+    <li><strong>Fama & French (2010)：</strong>扣除费用后，主动基金净 α 不显著为正；最好的少数基金可能有真 α，但扣费后优势微薄。</li>
+  </ul>
+  <p>实务度量三种方法：<strong>① 滚动胜率</strong>——滚动 1 年/3 年窗口跑赢基准的比例；<strong>② 排名稳定性</strong>——各年度同类排名分位的标准差，"年年前 1/3" 比 "一年第一、一年垫底" 更有价值；<strong>③ 超额收益曲线形态</strong>——持续平稳向上，比靠一两次重仓押注带来的阶跃式上升更可信。</p>
+</section>
+
+<!-- ========== 实务评级与误区 ========== -->
+<section id="practice">
+  <h2><span class="no">07</span> 实务评级与常见误区</h2>
+
+  <h3>晨星风格箱：把"风格"可视化</h3>
+  <p>风格箱按市值（大/中/小）× 估值（价值/混合/成长）把股票基金放进 3×3 矩阵。用途：比较同风格箱内的基金，避免"拿大盘价值和小盘成长比收益"。风格归属以持仓实际市值与估值指标加权计算，而非基金名称。</p>
+
+  <h3>误区一：幸存者偏差</h3>
+  <p>公募基金行业每年都有产品清盘。如果只看"现在还活着的基金"的历史平均收益，会系统性高估主动管理的真实业绩。机制：表现差、规模小的基金更可能被清盘合并；它们从样本中消失后，幸存者的平均收益自然更高。</p>
+  <p><strong>如何避免：</strong>研究结论必须说明样本是否包含已清盘、已合并基金；看"行业整体"业绩时，不能用当前存续基金反推历史。</p>
+
+  <h3>误区二：基准错配</h3>
+  <p>用沪深 300 评价一只重仓创业板、科创板的成长基金；用中证全债评价一只可转债基金。后果：主动收益、跟踪误差、信息比率、Brinson 归因全部失真。基金看似"大幅跑赢"，实际只是站在了与基准不同的风格上。</p>
+  <div class="warnbox">
+    <strong>晨星中国实证（截至 2026/8/31，按基金份额层面统计）：</strong>把合同基准换成与历史投资风格更匹配、且采用全收益口径的晨星计算基准后，<strong>近六成主动基金的超额收益由正转负</strong>；官方基准下 0%~5% 区间占 38.17%，晨星基准下 −5%~0% 区间占 44.78%。
+  </div>
+
+  <h3>误区三：费用、规模与行为偏差</h3>
+  <table>
+    <tr><th>维度</th><th>要点</th></tr>
+    <tr><td>费用率</td><td>管理费、托管费、销售服务费持续从净值中扣除；高费用并未带来更高净 α。夏普《主动管理的算术》：扣费前平均主动=指数，扣费后主动落后。</td></tr>
+    <tr><td>基金规模</td><td>规模过小有清盘风险（晨星附加项惩罚 &lt; 5 千万）；规模过大则侵蚀小盘策略灵活性。</td></tr>
+    <tr><td>风格漂移</td><td>风格箱应随时间监控；一只"大盘价值"基金若实际持仓飘向小盘成长，其历史业绩不再可与同风格基金比较。</td></tr>
+    <tr><td>经理变更</td><td>历史业绩属于前任经理时，不能作为对现任能力的证据。评价窗口应与经理任职期匹配。</td></tr>
+  </table>
+</section>
+
+<!-- ========== 评价清单 ========== -->
+<section id="checklist">
+  <h2><span class="no">08</span> 主动基金评价清单</h2>
+
+  <h3>一、立基准与窗口</h3>
+  <ul class="check">
+    <li>按晨星分类与风格箱确定可比集合</li>
+    <li>说明基准、时间区间、数据频率</li>
+    <li>区分算术年化与 CAGR</li>
+    <li>基金经理任职满 3 年以上，最好完整经历牛熊</li>
+  </ul>
+
+  <h3>二、报指标</h3>
+  <ul class="check">
+    <li>收益：超额、CAGR、同类排名分位</li>
+    <li>风险：波动率、下行波动、MDD</li>
+    <li>风险调整：Sharpe / Sortino / IR（长期 IR&gt;0.5 已属优秀）</li>
+    <li>归因：α（Carhart/FF）、Brinson 配置/选股、T-M 择时</li>
+    <li>持续性：滚动胜率、年度排名分位标准差</li>
+  </ul>
+
+  <h3>三、看约束与定性</h3>
+  <ul class="check">
+    <li>费用率、规模、经理任职期</li>
+    <li>换手率、前十大持仓集中度、行业集中度</li>
+    <li>持有人结构（机构占比、经理自购）</li>
+    <li>风格漂移、基金合同约束</li>
+  </ul>
+
+  <h3>四、防偏差与红旗</h3>
+  <ul class="check">
+    <li>幸存者偏差、基准错配</li>
+    <li>单一指标偏误、过度外推历史</li>
+    <li>短期业绩爆发、单一行业高度集中、大幅风格漂移——"押对赛道"≠"有能力"</li>
+  </ul>
+
+  <div class="takeaway" style="margin-top:28px">
+    <p style="font-size:18px;margin-bottom:12px">收益高 ≠ 能力强</p>
+    <p style="font-weight:400;font-size:15.5px">
+      ① 赚了多少？——看超额收益，不是绝对收益；绝对收益里大部分是市场 β。<br>
+      ② 冒了多大风险？——看波动率、下行风险、最大回撤，而不是只看收益。<br>
+      ③ 钱是不是靠能力？——风险调整后 α 经因子归因、T-M 择时检验仍显著为正。<br>
+      ④ 能力能不能持续？——看滚动胜率、排名稳定性、风格一致性，而非一年冠军。<br>
+      <strong>只有经过基准、风险、因子、持续性四重检验的收益，才是管理能力。</strong>
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p><strong>教学参考：</strong>Morningstar《基金产品风险评价方法》（2026 年 7 月版）· Fama-French 多因子 · Carhart 四因子 · Brinson 归因 · Treynor-Mazuy 模型 · Cremers & Petajisto Active Share</p>
+    <p class="mono">本讲义不构成投资建议 · 学术教学用途 · 2026 年秋季学期</p>
+  </div>
+</footer>
+
+</body>
+</html>
