@@ -89,6 +89,9 @@ th{background:var(--grey-1);color:var(--ink);font-weight:600;font-size:14px}
 .check li::before{content:"☐";position:absolute;left:2px;font-size:17px;color:var(--accent);font-weight:700}
 .check li:last-child{border-bottom:none}
 
+.videofig{background:var(--ink);border:1px solid var(--grey-2);margin:12px 0}
+.videofig video{display:block;width:100%;height:auto;border:none}
+
 footer{margin-top:48px;padding:28px 0 48px;border-top:2px solid var(--accent);color:var(--grey-3);font-size:13.5px}
 footer .mono{font-size:12.5px}
 footer strong{color:var(--ink)}
@@ -423,17 +426,35 @@ footer strong{color:var(--ink)}
     TE = σ(R<sub>p</sub> − R<sub>b</sub>) × √k
     <span class="cap">主动组合相对基准收益的波动；指数基金目标 TE 趋近 0，主动基金 TE 反映偏离基准的程度</span>
   </div>
+  <div class="videofig">
+    <video controls preload="metadata" aria-label="跟踪误差教学视频：主动风险与偏离基准的度量">
+      <source src="tracking_error_teaching.mp4" type="video/mp4">
+      您的浏览器不支持 HTML5 视频播放，请直接下载 <a href="tracking_error_teaching.mp4">tracking_error_teaching.mp4</a> 观看。
+    </video>
+  </div>
 
   <h3>信息比率 Information Ratio</h3>
   <div class="formula">
     IR = E(R<sub>p</sub> − R<sub>b</sub>) / σ(R<sub>p</sub> − R<sub>b</sub>) = 主动收益 / 跟踪误差
     <span class="cap">单位主动风险换来的主动收益；评价主动管理能力最直接的指标。Grinold-Kahn：IR ≈ IC × √Breadth</span>
   </div>
+  <div class="videofig">
+    <video controls preload="metadata" aria-label="信息比率教学视频：单位主动风险的主动收益">
+      <source src="information_ratio_teaching.mp4" type="video/mp4">
+      您的浏览器不支持 HTML5 视频播放，请直接下载 <a href="information_ratio_teaching.mp4">information_ratio_teaching.mp4</a> 观看。
+    </video>
+  </div>
 
   <h3>主动持股 Active Share</h3>
   <div class="formula">
     Active Share = (1/2) Σ|w<sub>p,i</sub> − w<sub>b,i</sub>|
     <span class="cap">持仓权重与基准权重差异的绝对值之和的一半；取值 0–100%；0% 完全复制基准</span>
+  </div>
+  <div class="videofig">
+    <video controls preload="metadata" aria-label="主动基金与Active Share教学视频：持仓层面的主动度度量">
+      <source src="active_fund_teaching.mp4" type="video/mp4">
+      您的浏览器不支持 HTML5 视频播放，请直接下载 <a href="active_fund_teaching.mp4">active_fund_teaching.mp4</a> 观看。
+    </video>
   </div>
   <p>Active Share 是"持仓层面"的主动度，TE 是"收益层面"的主动度。一个基金可持仓差异大但收益轨迹接近（低 TE），也可持仓接近但行业择时导致高 TE。二者结合才能完整刻画"主动"。</p>
 
