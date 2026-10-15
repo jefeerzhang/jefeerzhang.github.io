@@ -71,8 +71,9 @@ class MomentumOpenTaskTests(unittest.TestCase):
             self.assertIn(text, self.text)
 
     def test_scoring_is_public_without_unconfirmed_totals(self):
-        expected = [f"{prefix}{i}" for prefix in "ORIQ" for i in range(1, 5)]
-        self.assertEqual(self.parser.points, expected)
+        self.assertEqual(self.parser.points, [])
+        self.assertNotIn("16个评价点 · 点击查看分档依据", self.html)
+        self.assertIn('experiment-01-resources/04_实验结果评价标准与记录表.docx', self.parser.hrefs)
         for text in ("未确认前不输出正式总分", "材料不足先补核", "不要求全班使用同一方法", "不另套任务各占50%的旧权重"):
             self.assertIn(text, self.text)
 
