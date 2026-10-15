@@ -157,7 +157,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 <body>
 <aside class="submission-bar" aria-label="基金实验作业提交"><div class="container"><div><strong>基金实验作业提交</strong><span>两项任务统一打包 · 建议一周内完成 · 截止日期见提交页面</span></div><a href="https://send2me.cn/s6scThjh/S7uneaqptLkaHg" target="_blank" rel="noopener">提交基金实验作业 ↗</a></div></aside>
 <header><div class="container"><div class="tag">Experiment 02 · Active Fund Management</div><h1>中国开放式证券投资基金的<br>积极组合管理能力评价</h1><div class="sub">学生实验手册 · 结合课堂所学，与 Agent 自主探索、核查结果，并从初步发现中设计后续实验。</div><div class="chips"><span class="chip">每位同学独立完成</span><span class="chip">两项任务各占 50%</span><span class="chip">2022 年 6 月—2026 年 9 月</span><span class="chip">建议一周内完成</span></div></div></header>
-<nav aria-label="手册目录"><div class="container"><div class="links"><a class="back" href="./">← 返回课程</a><a href="#task">实验任务</a><a href="#scope">起步材料</a><a href="#task1">任务一</a><a href="#task2">任务二</a><a href="#boundaries">研究边界</a><a href="#submission">提交成果</a><a href="#grading">评价依据</a></div></div></nav>
+<nav aria-label="手册目录"><div class="container"><div class="links"><a class="back" href="./">← 返回课程</a><a href="#task">实验任务</a><a href="#scope">起步材料</a><a href="#task1">任务一</a><a href="#task2">任务二</a><a href="#boundaries">研究边界</a><a href="#submission">提交成果</a></div></div></nav>
 <main class="container" id="main-content">
 <div class="panel attachments" aria-label="实验附件"><div><strong>起步附件 · 9 只基金名单</strong><p class="note">基金代码与名称，不附风格标签。读取 CSV 时保留基金代码的前导零。</p></div><a class="attachment-link" href="fund-experiment-9-funds.csv" download="基金实验_9只基金名单.csv">下载基金名单 CSV ↓</a></div>
 <blockquote>
@@ -257,6 +257,69 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 <section id="task1">
 <h2><span class="no">03</span>任务一：自主建立评价</h2>
 <p>你与 Agent 需要逐步回答：如何判断基金风格，如何形成合理比较，现有证据能够说明哪一方面的管理效果。自行选择所学的收益、风险或风险调整评价方法，说明它回答什么问题、为什么适合当前样本。计算方案应包含能够检验“收益较高是否足以说明管理效果较好”的比较依据；不以方法数量或复杂程度作为目标。</p>
+<p><strong>需要计算的指标：</strong>任务一应计算并报告下列指标，计算口径、数据来源与基准选择需在方案中说明，并纳入初步评价与任务一完成标准。</p>
+<div aria-label="可横向滚动的表格" class="tablewrap" role="region" tabindex="0"><table>
+<thead>
+<tr>
+<th>指标</th>
+<th>计算要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>年化收益率</td>
+<td>基于基金净值序列计算，说明年化方式与观测频率</td>
+</tr>
+<tr>
+<td>超额收益</td>
+<td>以基金合同基准收益率为基准收益率，计算基金相对基准的超额收益</td>
+</tr>
+<tr>
+<td>年化波动率</td>
+<td>收益率序列的年化标准差，说明年化因子</td>
+</tr>
+<tr>
+<td>分年度 MDD（最大回撤）</td>
+<td>按年度分别计算各年最大回撤，说明回撤计算口径</td>
+</tr>
+<tr>
+<td>下行波动率</td>
+<td>基于下行收益率序列的风险度量，说明下行阈值的定义</td>
+</tr>
+<tr>
+<td>Beta（相对市场）</td>
+<td>相对市场指数回归得到的系统风险系数，明确所用市场基准</td>
+</tr>
+<tr>
+<td>夏普比率</td>
+<td>超额收益与总风险的比值，说明无风险利率口径</td>
+</tr>
+<tr>
+<td>索提诺比率</td>
+<td>超额收益与下行风险的比值</td>
+</tr>
+<tr>
+<td>卡玛比率</td>
+<td>年化收益与最大回撤的比值</td>
+</tr>
+<tr>
+<td>特雷诺比率</td>
+<td>超额收益与 Beta 的比值</td>
+</tr>
+<tr>
+<td>信息比率 IR</td>
+<td>相对基金合同基准的超额收益与跟踪误差之比</td>
+</tr>
+<tr>
+<td>跟踪误差 TE</td>
+<td>相对基金合同基准的跟踪偏离的波动率</td>
+</tr>
+<tr>
+<td>多因子 Alpha</td>
+<td>以多因子模型回归得到的 Alpha，说明所用模型与因子</td>
+</tr>
+</tbody>
+</table></div>
 <p>在正式计算前，保存经你确认的任务一方案，例如 <code>plans/task1_plan.md</code>，也可使用 Word 或 PDF。写清研究问题、基金及区间、评价依据、数据和方法、Agent 可以直接做哪些事、哪些变化需要先由你决定，以及关键检查点和预期产物。方案可以迭代，保留旧版和修改理由。</p>
 <p>下面是参与与留痕要求，你可以往返推进。</p>
 <div aria-label="可横向滚动的表格" class="tablewrap" role="region" tabindex="0"><table>
@@ -458,104 +521,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 <p>同样的方法用于记录任务一及其他环节。每位同学的交流和判断单独留存；引用同伴、模板或其他资料时注明来源，凭证不放入提交包。</p>
 
 </section>
-<section id="grading">
-<h2><span class="no">07</span>评价依据</h2>
-<p>以下为拟定评分规则，正式版本在开课前公布。两项任务各占总成绩的 50%，每项按下面五个维度评价。</p>
-<div aria-label="可横向滚动的表格" class="tablewrap" role="region" tabindex="0"><table>
-<thead>
-<tr>
-<th>维度</th>
-<th>比例</th>
-<th>评价依据</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>问题与目标</td>
-<td>20%</td>
-<td>是否把开放任务转成可研究的问题，任务二是否有实际结果或发现作为来源</td>
-</tr>
-<tr>
-<td>方法与约束</td>
-<td>25%</td>
-<td>是否解释样本、资料、方法及适用条件，明确它们能回答什么；涉及比较时说明比较条件</td>
-</tr>
-<tr>
-<td>工具与执行控制</td>
-<td>20%</td>
-<td>是否检查实际工具和数据能力，明确执行范围，妥善处理缺口与变更</td>
-</tr>
-<tr>
-<td>核验与迭代</td>
-<td>20%</td>
-<td>是否核查关键产物，对建议、分歧或不足作出有依据的处理</td>
-</tr>
-<tr>
-<td>判断与认识更新</td>
-<td>15%</td>
-<td>是否根据证据形成有边界的评价，并说明新证据如何影响认识</td>
-</tr>
-</tbody>
-</table></div>
-<h3>1. 评分档次与计分</h3>
-<p>两项任务各按 100 分计。每个维度采用 0—4 档，其分值上限为上表比例对应的分数；维度得分＝分值上限×档次÷4。总成绩＝任务一得分×50%＋任务二得分×50%，最后保留一位小数。以下为拟定档次，以开课公布版本为准。</p>
-<div aria-label="可横向滚动的表格" class="tablewrap" role="region" tabindex="0"><table>
-<thead>
-<tr>
-<th>维度</th>
-<th>1 档：初步</th>
-<th>2 档：基本</th>
-<th>3 档：充分</th>
-<th>4 档：扎实</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>问题与目标</td>
-<td>有任务表述，但问题或目标含糊</td>
-<td>有可研究的问题和范围；任务二能指出任务一的来源</td>
-<td>能说明问题、目标与已有发现的联系，并转成可执行任务</td>
-<td>能辨析问题中的假设或歧义，说明研究意义和所需证据，执行目标清楚</td>
-</tr>
-<tr>
-<td>方法与约束</td>
-<td>有方法名称，但缺少选择理由或适用说明</td>
-<td>能解释方法与问题的联系，交代主要资料、样本和条件</td>
-<td>方法、证据与问题匹配，能说明适用条件及主要局限</td>
-<td>能对方法建议作有依据的选择，处理影响判断的关键条件，解释结论的适用范围</td>
-</tr>
-<tr>
-<td>工具与执行控制</td>
-<td>有工具使用记录，但数据检查和学生决定较少</td>
-<td>检查实际取数或检索结果，明确基本执行范围</td>
-<td>根据实际能力组织执行，检查覆盖和质量；发生缺口或变更时有处置依据</td>
-<td>能解释工具选择与执行决策，关键变更有确认，实际产物与方案及记录对应</td>
-</tr>
-<tr>
-<td>核验与迭代</td>
-<td>泛泛要求检查，缺少具体核查依据</td>
-<td>有明确核查点、实际过程和结果</td>
-<td>能判断核查结果的影响，有依据地修正或保留研究决定</td>
-<td>针对影响结论的关键环节核验，证据与处理决定对应，能解释为何修正或保留</td>
-</tr>
-<tr>
-<td>判断与认识更新</td>
-<td>有结论，但主要复述输出</td>
-<td>结论有关键证据，能说明主要不足或新增认识</td>
-<td>根据证据形成评价，说明支持与不足；任务二交代认识变化</td>
-<td>推理与证据相称，能处理不同解释；有依据地修正、保留或暂缓判断</td>
-</tr>
-</tbody>
-</table></div>
-<p>0 档表示有证据确认该维度未开展或完全不符合要求。因材料缺失或文件无法打开而无法判断的项目，暂待核验；可根据反馈补充原始交流、相关产物或可读取的文件，并注明位置。</p>
-<p>任务一的“认识更新”看初步评价是否有依据，任务二还看新证据与原认识的联系。没有发现错误、没有发生数据缺口、没有推翻原结论，都不妨碍取得高档，关键是判断依据和实际处理过程。</p>
-<h3>2. 评分证据与自主选题</h3>
-<p>评价结合你的原始交流与对应的数据、分析文件和结果，重点看你如何提出问题、判断 Agent 的建议、核查结果，以及根据证据改进认识。保留关键提问、决定和对应产物；过程总结不能替代原始交流。不按提示词篇幅、对话次数或报告措辞评分。</p>
-<p>任务二按问题来源、方法是否适合问题、实际执行、核验和认识更新评价。方法和研究深度由你决定；复杂方法或扩大样本不自动加分，简单方法也可以取得高档。</p>
-<p>风格分组按所声明的时点或时期、资料依据和推理评价，合理的不同归类可以获得认可。涉及比较或模型时说明相应条件；采用资料分析等方式时，说明资料选择、分析与核验方法。</p>
-<p>教师使用 Agent 辅助评分，并确认最终成绩。未完成的部分、缺少的证据和仍不确定的判断，应在提交材料中如实说明。</p>
 
-</section>
 </main>
 <div class="submission-bottom"><aside class="submission-bar" aria-label="基金实验作业提交"><div class="container"><div><strong>基金实验作业提交</strong><span>两项任务统一打包 · 建议一周内完成 · 截止日期见提交页面</span></div><a href="https://send2me.cn/s6scThjh/S7uneaqptLkaHg" target="_blank" rel="noopener">提交基金实验作业 ↗</a></div></aside></div>
 <footer><div class="container"><p><strong>提交前核对</strong></p><p>两项任务一并整理为 <code>学号_姓名_基金实验.zip</code>，保留原始交流、数据、分析文件与结果。建议一周内完成，截止日期以提交页面显示为准。</p><p class="note">学生手册 v0.8 设计稿 · 2026-10-10。正式评分版本以教师公布为准。Tushare MCP 接入说明已在课程 QQ 群发布。</p><p><a href="./">返回投资组合课程</a> · <a href="fund-experiment-9-funds.csv" download="基金实验_9只基金名单.csv">下载 9 只基金名单</a></p></div></footer>
