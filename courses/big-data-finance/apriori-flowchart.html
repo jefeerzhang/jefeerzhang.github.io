@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apriori 算法流程</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=Geist+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:  #fafaf8;
+      --color-ink:    #0a0a0a;
+      --color-muted:  #737373;
+      --color-accent: #002FA7;
+      --font-sans:  'Inter', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      --font-serif: 'Instrument Serif', 'Noto Serif SC', 'Songti SC', serif;
+      --font-mono:  'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+    }
+    .frame { max-width: 960px; width: 100%; min-width: 0; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+    }
+    svg { width: 100%; min-width: 960px; display: block; }
+    @media print {
+      .diagram-container { overflow-x: visible; }
+      svg { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Flowchart · 大数据金融 第 01 次课</p>
+    <h1>Apriori 算法流程</h1>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 960 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="apriori-flowchart-title apriori-flowchart-desc">
+        <title id="apriori-flowchart-title">Apriori 算法流程</title>
+        <desc id="apriori-flowchart-desc">Apriori 先扫描数据得到频繁 1-项集，再逐层执行连接、剪枝、计数和筛选，直到某层为空，最后汇总频繁项集并按最小置信度生成关联规则。</desc>
+        <defs>
+          <marker id="apriori-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#737373"/></marker>
+        </defs>
+
+        <rect width="100%" height="100%" fill="#fafaf8"/>
+
+        <!-- Arrows (drawn first, behind nodes) -->
+        <line x1="360" y1="88" x2="360" y2="112" stroke="#737373" stroke-width="1.2" marker-end="url(#apriori-arrow)"/>
+        <line x1="360" y1="160" x2="360" y2="184" stroke="#737373" stroke-width="1.2" marker-end="url(#apriori-arrow)"/>
+        <line x1="360" y1="232" x2="360" y2="256" stroke="#737373" stroke-width="1.2" marker-end="url(#apriori-arrow)"/>
+        <line x1="360" y1="304" x2="360" y2="328" stroke="#737373" stroke-width="1.2" marker-end="url(#apriori-arrow)"/>
+        <line x1="360" y1="376" x2="360" y2="400" stroke="#737373" stroke-width="1.2" marker-end="url(#apriori-arrow)"/>
+        <line x1="360" y1="448" x2="360" y2="472" stroke="#737373" stroke-width="1.2" marker-end="url(#apriori-arrow)"/>
+        <!-- 是：k = k + 1，回到连接 -->
+        <path d="M 260 520 H 136 A 8 8 0 0 1 128 512 V 216 A 8 8 0 0 1 136 208 H 220" fill="none" stroke="#737373" stroke-width="1.2" marker-end="url(#apriori-arrow)"/>
+        <!-- 否：进入阶段二 -->
+        <line x1="360" y1="568" x2="360" y2="600" stroke="#737373" stroke-width="1.2" marker-end="url(#apriori-arrow)"/>
+        <line x1="360" y1="648" x2="360" y2="672" stroke="#737373" stroke-width="1.2" marker-end="url(#apriori-arrow)"/>
+
+        <!-- Arrow labels -->
+        <rect x="184" y="496" width="24" height="16" rx="2" fill="#fafaf8"/>
+        <text x="196" y="508" fill="#737373" font-size="12" font-weight="500" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" text-anchor="middle">是</text>
+
+        <rect x="136" y="356" width="52" height="12" rx="2" fill="#fafaf8"/>
+        <text x="162" y="365" fill="#737373" font-size="8" font-family="'Geist Mono',ui-monospace,monospace" text-anchor="middle" letter-spacing="0.06em">k = k + 1</text>
+
+        <rect x="368" y="576" width="24" height="16" rx="2" fill="#fafaf8"/>
+        <text x="380" y="588" fill="#737373" font-size="12" font-weight="500" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" text-anchor="middle">否</text>
+
+        <!-- Phase labels -->
+        <text x="40" y="56" fill="#737373" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif">阶段一</text>
+        <text x="40" y="74" fill="#737373" font-size="12" font-weight="400" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif">找出频繁项集</text>
+        <text x="40" y="624" fill="#737373" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif">阶段二</text>
+        <text x="40" y="642" fill="#737373" font-size="12" font-weight="400" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif">生成关联规则</text>
+
+        <!-- n1 输入（起点） -->
+        <rect x="220" y="40" width="280" height="48" rx="20" fill="rgba(10,10,10,0.03)" stroke="rgba(10,10,10,0.30)" stroke-width="1"/>
+        <text x="360" y="60" fill="#0a0a0a" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" text-anchor="middle">输入：交易集 D 与 min_sup</text>
+        <text x="360" y="78" fill="#737373" font-size="9" font-family="'Geist Mono',ui-monospace,monospace" text-anchor="middle">min_count = ceil(min_sup × |D|)</text>
+
+        <!-- n2 扫描生成 L1 -->
+        <rect x="220" y="112" width="280" height="48" rx="6" fill="rgba(10,10,10,0.05)" stroke="#737373" stroke-width="1"/>
+        <text x="360" y="132" fill="#0a0a0a" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" text-anchor="middle">扫描 D，生成 L<tspan font-size="9" dy="3">1</tspan><tspan dy="-3">，令 k = 2</tspan></text>
+        <text x="360" y="150" fill="#737373" font-size="12" font-weight="500" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" text-anchor="middle">保留次数 ≥ min_count 的单项</text>
+
+        <!-- n3 连接 -->
+        <rect x="220" y="184" width="280" height="48" rx="6" fill="#ffffff" stroke="#0a0a0a" stroke-width="1"/>
+        <text x="360" y="204" fill="#0a0a0a" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" text-anchor="middle">连接：由 L<tspan font-size="9" dy="3">k−1</tspan><tspan dy="-3"> 生成 C</tspan><tspan font-size="9" dy="3">k</tspan></text>
+        <text x="360" y="222" fill="#737373" font-size="12" font-weight="500" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" text-anchor="middle">前 k−2 项相同、末项不同才合并</text>
+
+        <!-- n4 剪枝（focal） -->
+        <rect x="220" y="256" width="280" height="48" rx="6" fill="rgba(0,47,167,0.08)" stroke="#002FA7" stroke-width="1.2"/>
+        <text x="360" y="276" fill="#0a0a0a" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" text-anchor="middle">剪枝：删掉含非频繁子集的候选</text>
+        <text x="360" y="294" fill="#737373" font-size="12" font-weight="500" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" text-anchor="middle">在计数之前完成 · 依据先验性质</text>
+
+        <!-- n5 扫描计数 -->
+        <rect x="220" y="328" width="280" height="48" rx="6" fill="rgba(10,10,10,0.05)" stroke="#737373" stroke-width="1"/>
+        <text x="360" y="348" fill="#0a0a0a" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" text-anchor="middle">扫描 D，计数</text>
+        <text x="360" y="366" fill="#737373" font-size="12" font-weight="500" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" text-anchor="middle">包含该候选的交易数 · 主要开销</text>
+
+        <!-- n6 筛选 -->
+        <rect x="220" y="400" width="280" height="48" rx="6" fill="#ffffff" stroke="#0a0a0a" stroke-width="1"/>
+        <text x="360" y="420" fill="#0a0a0a" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" text-anchor="middle">筛选，得到 L<tspan font-size="9" dy="3">k</tspan></text>
+        <text x="360" y="438" fill="#737373" font-size="9" font-family="'Geist Mono',ui-monospace,monospace" text-anchor="middle">count &gt;= min_count</text>
+
+        <!-- n7 判断 -->
+        <polygon points="360,472 460,520 360,568 260,520" fill="#ffffff" stroke="#0a0a0a" stroke-width="1"/>
+        <text x="360" y="524" fill="#0a0a0a" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" text-anchor="middle">L<tspan font-size="9" dy="3">k</tspan><tspan dy="-3"> 里还有频繁项集？</tspan></text>
+
+        <!-- n8 汇总并生成规则 -->
+        <rect x="220" y="600" width="280" height="48" rx="6" fill="#ffffff" stroke="#0a0a0a" stroke-width="1"/>
+        <text x="360" y="620" fill="#0a0a0a" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" text-anchor="middle">汇总频繁项集，按 min_conf 生成规则</text>
+        <text x="360" y="638" fill="#737373" font-size="9" font-family="'Geist Mono',ui-monospace,monospace" text-anchor="middle">conf(A-&gt;B) = sup(F) / sup(A)</text>
+
+        <!-- n9 输出（终点） -->
+        <rect x="220" y="672" width="280" height="48" rx="20" fill="rgba(10,10,10,0.03)" stroke="rgba(10,10,10,0.30)" stroke-width="1"/>
+        <text x="360" y="692" fill="#0a0a0a" font-size="12" font-weight="600" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" text-anchor="middle">输出</text>
+        <text x="360" y="710" fill="#737373" font-size="12" font-weight="500" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif" text-anchor="middle">频繁项集及支持度 · 强规则</text>
+
+        <!-- Callout：剪枝的依据（focal） -->
+        <text x="600" y="276" fill="#002FA7" font-size="14" font-style="italic" font-family="'Instrument Serif','Noto Serif SC','Songti SC',serif">子集不频繁，超集必不频繁：</text>
+        <text x="600" y="296" fill="#002FA7" font-size="14" font-style="italic" font-family="'Instrument Serif','Noto Serif SC','Songti SC',serif">这些候选在扫描数据之前就被删掉。</text>
+        <path d="M 592 280 Q 552 280 508 280" fill="none" stroke="rgba(0,47,167,0.50)" stroke-width="1" stroke-dasharray="4,3"/>
+        <circle cx="508" cy="280" r="2" fill="#002FA7"/>
+
+        <!-- Legend -->
+        <line x1="40" y1="744" x2="920" y2="744" stroke="rgba(10,10,10,0.12)" stroke-width="0.8"/>
+        <text x="40" y="776" fill="#737373" font-size="12" font-weight="500" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif">图例</text>
+
+        <rect x="104" y="764" width="24" height="12" rx="6" fill="rgba(10,10,10,0.03)" stroke="rgba(10,10,10,0.30)" stroke-width="1"/>
+        <text x="136" y="776" fill="#737373" font-size="12" font-weight="500" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif">起止</text>
+
+        <rect x="208" y="764" width="24" height="12" rx="2" fill="#ffffff" stroke="#0a0a0a" stroke-width="1"/>
+        <text x="240" y="776" fill="#737373" font-size="12" font-weight="500" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif">步骤</text>
+
+        <rect x="312" y="764" width="24" height="12" rx="2" fill="rgba(10,10,10,0.05)" stroke="#737373" stroke-width="1"/>
+        <text x="344" y="776" fill="#737373" font-size="12" font-weight="500" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif">扫描数据集</text>
+
+        <polygon points="448,770 460,764 472,770 460,776" fill="#ffffff" stroke="#0a0a0a" stroke-width="1"/>
+        <text x="484" y="776" fill="#737373" font-size="12" font-weight="500" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif">判断</text>
+
+        <rect x="560" y="764" width="24" height="12" rx="2" fill="rgba(0,47,167,0.08)" stroke="#002FA7" stroke-width="1"/>
+        <text x="592" y="776" fill="#737373" font-size="12" font-weight="500" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif">重点：剪枝</text>
+
+        <path d="M 704 770 H 732" fill="none" stroke="rgba(10,10,10,0.40)" stroke-width="1" stroke-dasharray="4,3"/>
+        <circle cx="736" cy="770" r="2" fill="#0a0a0a"/>
+        <text x="748" y="776" fill="#737373" font-size="12" font-weight="500" font-family="'Inter','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif">注释</text>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>
