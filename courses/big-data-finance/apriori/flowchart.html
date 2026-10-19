@@ -45,8 +45,29 @@
       line-height: 1.15;
       margin-bottom: 1.5rem;
     }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 1.5rem;
+      padding: 6px 12px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--color-ink);
+      text-decoration: none;
+      background: #ffffff;
+      border: 1px solid rgba(10,10,10,0.12);
+      border-radius: 6px;
+      transition: border-color 160ms ease, color 160ms ease;
+    }
+    .back-link:hover,
+    .back-link:focus-visible {
+      color: var(--color-accent);
+      border-color: var(--color-accent);
+    }
     svg { width: 100%; min-width: 960px; display: block; }
     @media print {
+      .back-link { display: none; }
       .diagram-container { overflow-x: visible; }
       svg { min-width: 0; }
     }
@@ -54,6 +75,7 @@
 </head>
 <body>
   <div class="frame">
+    <a class="back-link" href="./"><span aria-hidden="true">←</span>返回课程主页</a>
     <p class="eyebrow">Flowchart · 大数据金融 第 01 次课</p>
     <h1>Apriori 算法流程</h1>
 
