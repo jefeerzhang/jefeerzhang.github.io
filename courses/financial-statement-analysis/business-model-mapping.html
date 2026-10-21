@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23002FA7'/%3E%3Ctext x='32' y='46' font-size='32' text-anchor='middle' fill='white' font-family='Georgia,serif'%3E¥%3C/text%3E%3C/svg%3E">
+<title>专题一 · 企业商业模式的财务报表映射与可比性分析 — 财报分析学生学习包</title>
+<meta name="description" content="硕士课程《财报分析》专题一：十家匿名 A 股样本共同比报表盲测配对，顺丰直营与中通加盟的报表结构对照与可比性调整，6 项递进课堂任务。">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+:root{
+  --paper:#fafaf8;
+  --ink:#0a0a0a;
+  --grey-1:#f0f0ee;
+  --grey-2:#d4d4d2;
+  --grey-3:#737373;
+  --accent:#002FA7;
+  --mono:"JetBrains Mono","Cascadia Code",Consolas,"Courier New",monospace;
+  --sans:"Inter","Helvetica Neue","Noto Sans SC","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+.container{max-width:920px;margin:0 auto;padding:0 24px}
+
+header{background:var(--ink);color:#fff;padding:56px 0 40px;border-bottom:6px solid var(--accent)}
+header .tag{font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;font-weight:600}
+header .tag::before{content:"// "}
+header h1{font-size:34px;line-height:1.25;font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+header .sub{font-size:16.5px;color:var(--grey-2);margin-bottom:22px;max-width:640px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:12.5px;color:#fff;border:1px solid var(--grey-3);padding:4px 12px;background:rgba(255,255,255,.03);font-weight:500}
+
+nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--grey-2);margin-bottom:28px}
+nav .links{display:flex;gap:0;flex-wrap:wrap;padding:6px 0}
+nav a{font-size:14px;color:var(--grey-3);text-decoration:none;padding:8px 14px;border-left:1px solid var(--grey-2);transition:color .15s;font-weight:500}
+nav a:first-child{border-left:none}
+nav a:hover{color:var(--accent)}
+nav a.back{color:var(--accent);font-weight:500;margin-right:8px}
+
+section{margin-bottom:44px;scroll-margin-top:56px}
+h2{font-size:23px;font-weight:700;color:var(--ink);margin:36px 0 16px;padding:0 0 10px 14px;border-left:6px solid var(--accent);display:flex;align-items:baseline;gap:12px;letter-spacing:-.01em;flex-wrap:wrap}
+h2 .no{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.12em;font-weight:600}
+h3{font-size:17.5px;font-weight:700;margin:24px 0 10px;color:var(--ink)}
+h4{font-size:15.5px;font-weight:700;margin:18px 0 8px;color:var(--ink)}
+p{margin:8px 0}
+ul,ol{margin:8px 0 8px 24px}
+li{margin:5px 0}
+code{font-family:var(--mono);font-size:.86em;background:var(--grey-1);padding:1px 6px;color:var(--ink);font-weight:500}
+strong{font-weight:700}
+a{color:var(--accent)}
+a:hover{color:#0047d0}
+
+.panel{background:var(--grey-1);border:1px solid var(--grey-2);padding:20px 22px;margin:14px 0}
+.takeaway{border-left:4px solid var(--accent);background:var(--grey-1);padding:12px 18px;font-weight:600;color:var(--ink);margin:14px 0}
+.warnbox{border-left:4px solid var(--ink);background:var(--grey-1);padding:12px 18px;margin:14px 0;font-size:14.5px}
+.note{font-size:14px;color:var(--grey-3);margin:6px 0}
+
+.tablewrap{overflow-x:auto;margin:4px 0}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px}
+th,td{border:1px solid var(--grey-2);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--grey-1);color:var(--ink);font-weight:600;font-size:14px}
+td.num,th.num{text-align:center;font-family:var(--mono);font-size:13.5px;white-space:nowrap}
+tr.total td{font-weight:700;background:var(--grey-1)}
+
+.task{border:1px solid var(--grey-2);margin:16px 0;background:var(--paper)}
+.task-head{background:var(--grey-1);padding:10px 20px;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--grey-2);font-size:15.5px}
+.task-head .meta{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--accent)}
+.task-body{padding:14px 20px 18px}
+
+.formula{background:var(--paper);border:1px solid var(--grey-2);border-left:4px solid var(--ink);padding:14px 18px;margin:10px 0;overflow-x:auto}
+.formula .katex-display{margin:6px 0}
+
+footer{margin-top:48px;padding:28px 0 48px;border-top:2px solid var(--accent);color:var(--grey-3);font-size:13.5px}
+footer .mono{font-size:12.5px}
+footer strong{color:var(--ink)}
+
+@media (max-width:760px){
+  header h1{font-size:26px}
+  header{padding:40px 0 28px}
+}
+@media print{
+  nav{display:none}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="tag">硕士课程 · 财报分析 · 专题一</div>
+    <h1>企业商业模式的财务报表映射与可比性分析</h1>
+    <div class="sub">学生学习包：十家匿名样本共同比报表盲测配对，再以顺丰直营与中通加盟对照，拆解组织模式如何转化为报表结构，并识别口径、准则与组织边界造成的不可比因素。</div>
+    <div class="chips">
+      <span class="chip">2 个案例</span>
+      <span class="chip">6 项课堂任务</span>
+      <span class="chip">10 家匿名样本</span>
+      <span class="chip">顺丰 vs 中通</span>
+      <span class="chip">学生学习包</span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="container links">
+    <a href="index.html" class="back">← 课程主页</a>
+    <a href="#objectives">学习目标</a>
+    <a href="#tasks">任务清单</a>
+    <a href="#handbook">概念手册</a>
+    <a href="#case-a">案例 A 盲测配对</a>
+    <a href="#case-b">案例 B 顺丰 vs 中通</a>
+    <a href="#ai-rules">AI 核验规范</a>
+    <a href="#references">参考文献</a>
+    <a href="#homework">课后作业</a>
+  </div>
+</nav>
+
+<main class="container">
+
+<div class="warnbox">
+  <p><strong>教学说明：</strong>本学习资料于课堂发放，请严格按照「教学任务清单」的顺序推进。案例 A 中的十家样本企业均已做匿名化处理，<strong>在教师揭晓答案前，严禁使用任何检索工具查询企业身份</strong>。本专题的核心训练目标是「基于财务报表结构逆向推导企业商业模式」，直接检索答案将失去分析训练的意义。答案揭晓后，教师将下发《样本企业背景与年报索引》，内含各企业年度报告原文链接。</p>
+  <p>本资料中的所有财务数据均摘自各样本企业 2025 年年度报告（合并财务报表口径），具体指标定义与计算口径详见第四部分「数据编制说明」。</p>
+</div>
+
+<!-- ============ 一、学习目标 ============ -->
+<section id="objectives">
+  <h2><span class="no">01</span> 专题学习目标与产出要求</h2>
+
+  <h3>1. 学习目标</h3>
+  <p>完成本专题学习后，学生应当能够：</p>
+  <ol>
+    <li><strong>基于财务报表识别商业模式：</strong>通过阅读共同比资产负债表（Common-Size Balance Sheet）及核心财务比率，准确推导企业的业务性质、盈利逻辑与融资结构，并定位支撑上述判断的 2–3 个关键会计科目。</li>
+    <li><strong>区分「行业技术约束」与「企业战略选择」：</strong>从报表结构中剥离出由行业生产技术、交易惯例所决定的刚性特征，以及由企业特定竞争战略、财务政策所形成的差异化特征。</li>
+    <li><strong>识别并修正财务数据的可比性问题：</strong>在进行同行业企业对标分析时，能够预先识别因收入确认口径、会计准则差异及组织边界（经营模式）不同所导致的「不可比因素」，在此基础上形成客观的财务评价。</li>
+    <li><strong>批判性审视生成式 AI 的财务分析结论：</strong>能够核验并指出 AI 辅助分析中存在的数据幻觉、口径混淆与逻辑跳跃，并给出采纳或驳回其分析结论的严谨依据。</li>
+  </ol>
+
+  <h3>2. 课堂及课后阶段性产出</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>编号</th><th>产出成果名称</th><th>呈现形式</th><th>完成主体</th><th>提交节点</th></tr>
+    <tr><td class="num">D1</td><td>核心概念自测题答案</td><td>电子文档</td><td>个人</td><td>第 1 节课内（不计分，供组内研讨）</td></tr>
+    <tr><td class="num">D2</td><td>样本企业初始配对表（AI 介入<strong>前</strong>版本）</td><td>结构化表格（含判断依据与置信度）</td><td>小组</td><td>第 1 节课结束时</td></tr>
+    <tr><td class="num">D3</td><td>AI 辅助分析核验表及分歧清单</td><td>结构化表格</td><td>小组</td><td>第 2 节课中段</td></tr>
+    <tr><td class="num">D4</td><td>报表结构特征总结表 + 核心争议项论证（$\leq 300$ 字）</td><td>表格 + 论述短文</td><td>小组</td><td>第 3 节课开始后 10 分钟</td></tr>
+    <tr><td class="num">D5</td><td>顺丰控股—中通快递「商业模式—财务报表映射表」</td><td>结构化表格</td><td>交叉重组小组</td><td>第 3 节课结束时</td></tr>
+    <tr><td class="num">D6</td><td>财务可比性调整说明 +「价格竞争韧性」评估报告</td><td>一页简报（One-pager）</td><td>交叉重组小组</td><td>第 4 节课课堂汇报时</td></tr>
+    <tr><td class="num">D7</td><td>课后拓展作业：第三家快递企业商业模式映射分析</td><td>表格 + 300 字分析说明</td><td>个人</td><td>下次课前</td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ============ 二、任务清单 ============ -->
+<section id="tasks">
+  <h2><span class="no">02</span> 教学任务清单</h2>
+
+  <div class="task" id="task0">
+    <div class="task-head"><span>任务 0｜概念基础自测</span><span class="meta">个人独立 · 10 分钟 · 禁用 AI</span></div>
+    <div class="task-body">
+      <p><strong>任务目标：</strong>快速梳理本专题涉及的核心会计科目与财务比率定义，明确自身的知识盲区。</p>
+      <p><strong>实施步骤：</strong>阅读第三部分「核心概念与财务比率速查手册」，独立完成 3.7 节的 8 道自测题。所有题目均可从手册中推导得出；存疑之处请标记「？」，进入任务 1 后在小组内部讨论解决。</p>
+      <p><strong>阶段产出：</strong>D1（不纳入平时成绩考核，作为小组研讨的基础材料）。</p>
+    </div>
+  </div>
+
+  <div class="task" id="task1">
+    <div class="task-head"><span>任务 1｜匿名样本企业配对</span><span class="meta">小组合作 · 27 分钟 · 严禁 AI 与联网检索</span></div>
+    <div class="task-body">
+      <p><strong>任务目标：</strong>将第四部分表 A-1、A-2 中的 A–J 十组财务数据，与 4.4 节的十段企业业务描述进行一一映射配对。</p>
+      <p><strong>实施步骤：</strong></p>
+      <ol>
+        <li><strong>独立研读（5 分钟）：</strong>小组成员各自审阅表 A-1、A-2，每人筛选出 2–3 家特征最为显著的样本企业，记录初步判断依据。</li>
+        <li><strong>组内交叉排除（15 分钟）：</strong>汇总成员意见，采取「从特征极值企业到结构相近企业」的顺序逐一锁定配对关系。</li>
+        <li><strong>提炼依据（7 分钟）：</strong>为每一组配对结果撰写简明的「决定性会计科目 + 商业逻辑成因」，并标注主观置信度（高 / 中 / 低）。</li>
+      </ol>
+      <p><strong>阶段产出：</strong>D2 初始配对表（使用 4.5 节模板一）。该版本代表小组在 AI 介入前的独立分析基准，<strong>提交后严禁篡改</strong>；后续认识的修正均记录于后续任务文档中。</p>
+      <div class="panel">
+        <p><strong>分析提示：</strong></p>
+        <ul>
+          <li>优先识别具有「单一科目极值」的样本（如某一资产或负债科目占比超过 $50\%$），再集中精力辨析资产结构高度相似的样本对。</li>
+          <li>面对结构相近的两组数据时，请聚焦于二者仅有的 1–2 个差异科目，并追问：「何种交易模式或契约安排会导致该科目余额显著扩张？」</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="task" id="task2">
+    <div class="task-head"><span>任务 2｜AI 交叉验证与分歧归因</span><span class="meta">小组合作 · 20 分钟 · 允许使用 AI</span></div>
+    <div class="task-body">
+      <p><strong>任务目标：</strong>将生成式 AI 视为「平行对照分析组」，通过对比人类判断与机器推理的差异，训练证据核验与逻辑证伪能力。</p>
+      <p><strong>实施步骤：</strong></p>
+      <ol>
+        <li>将表 A-1、A-2 数据及十段企业业务描述完整输入 AI，要求其输出配对结果、支撑理由及置信度。<strong>参考提示词（Prompt）如下：</strong>
+          <div class="panel">以下是十家中国 A 股上市公司 2025 年末的共同比资产负债表及核心经营指标（企业均已匿名化处理），以及十段企业业务特征描述。请完成数据列（A–J）与业务描述（1–10）的一一配对，并针对每一项配对明确给出：① 决定性会计科目或指标；② 商业逻辑推导过程；③ 置信度评级（高/中/低）；④ 最易发生混淆的备选对象及区分依据。</div>
+        </li>
+        <li>将 AI 输出结果与本组的 D2 配对表进行比对，列出所有存在分歧的配对项。</li>
+        <li>针对分歧项，向 AI 发起追问：「请分别为『本组配对方案』与『AI 配对方案』构建最具说服力的正反双向财务证据。」</li>
+        <li>逐条审视 AI 的推理链条，填写《AI 辅助分析核验表》（第六部分模板），并对 AI 的表现进行归类：<strong>数据读取错误、会计口径混淆、逻辑推理跳跃（由单一科目过度外推）、关键特征遗漏、后见之明偏差</strong>，或<strong>论证严密且具启发价值</strong>。</li>
+      </ol>
+      <p><strong>阶段产出：</strong>D3 AI 辅助分析核验表及分歧清单。</p>
+      <div class="warnbox"><strong>注意事项：</strong>若 AI 直接输出具体上市公司名称，请务必要求其退回至报表数据本身进行逻辑论证；仅凭记忆库匹配企业名称不属于有效的财务分析。</div>
+    </div>
+  </div>
+
+  <div class="task" id="task3">
+    <div class="task-head"><span>任务 3｜争议配对课堂辩论与答案揭晓</span><span class="meta">全班研讨 · 25 分钟 + 修正定稿 10 分钟</span></div>
+    <div class="task-body">
+      <p><strong>任务目标：</strong>在揭晓真实企业身份前，就核心争议配对项进行公开学术思辨与证据质询。</p>
+      <p><strong>实施步骤：</strong></p>
+      <ol>
+        <li>教师首先公布全班达成共识且正确的配对结果。</li>
+        <li>针对存在普遍分歧的样本对，由持不同结论的小组各推选一名代表进行陈述（限时 1 分钟/人），其余小组可就其数据引用与逻辑链条发起质询。</li>
+        <li>教师揭晓最终答案后，各组进行 2 分钟内部复盘：「本组的误判源于对哪个科目的误读？究竟是会计概念理解偏差，还是对特定行业商业运作模式的认知不足？」</li>
+        <li>课间休息后完成 D4 定稿：提炼十家样本企业各自的 2–3 项「核心报表特征」（关键科目数值 + 商业成因），并针对本组认为辨识难度最高的一项配对，撰写不超过 300 字的严密论证（须同时包含「正面支撑证据」与「潜在反例/竞争性解释」）。</li>
+      </ol>
+      <p><strong>阶段产出：</strong>D4 报表结构特征总结表及争议项论证。</p>
+    </div>
+  </div>
+
+  <div class="task" id="task4">
+    <div class="task-head"><span>任务 4｜顺丰控股 vs 中通快递：拼图式阅读与报表映射</span><span class="meta">35 分钟 · 允许 AI 检索年报章节</span></div>
+    <div class="task-body">
+      <p><strong>任务目标：</strong>深入解构快递行业「直营模式」与「网络加盟模式」如何通过会计确认规则转化为截然不同的财务报表结构。</p>
+      <p><strong>实施步骤：</strong></p>
+      <ol>
+        <li><strong>专家组深度研读（15 分钟）：</strong>全班小组分为「顺丰专家组」与「中通专家组」两大阵营，严格对照 5.3 节的《年报研读指引》查阅原始财报，完成专家组读书笔记。</li>
+        <li><strong>交叉重组研讨（20 分钟）：</strong>打破原有分组进行交叉重组（确保每个新小组内至少包含一名顺丰专家和一名中通专家），协同完成 D5 商业模式—财务报表映射表。</li>
+      </ol>
+      <p><strong>阶段产出：</strong>D5 商业模式—财务报表映射表（使用 5.4 节模板一）。</p>
+    </div>
+  </div>
+
+  <div class="task" id="task5">
+    <div class="task-head"><span>任务 5｜AI 辅助质询与财务可比性调整</span><span class="meta">15 分钟 · 允许使用 AI</span></div>
+    <div class="task-body">
+      <p><strong>任务目标：</strong>在进行跨企业盈利能力与经营效率评价前，系统识别并处理会计口径与商业边界差异。</p>
+      <p><strong>实施步骤：</strong></p>
+      <ol>
+        <li>在不提供任何背景提示的前提下，直接向 AI 提问：「顺丰控股与中通快递相比，哪家企业的盈利能力更强？」记录其初始结论与核心论据。</li>
+        <li>将小组在任务 4 中识别出的「不可比因素」（不少于两项）作为约束条件输入 AI，要求其重新评估两家企业的盈利能力，观察并记录其分析结论的变化轨迹及原因。</li>
+        <li>要求 AI 分别扮演「中通快递投资者关系总监」与「顺丰控股首席财务官」，为各自企业的商业模式与财务表现进行辩护；请小组成员敏锐识别双方话术中如何利用「会计口径差异」来美化自身指标。</li>
+        <li>撰写并统稿 D6。</li>
+      </ol>
+      <p><strong>阶段产出：</strong>D6 财务可比性调整说明及竞争韧性评估报告（使用 5.4 节模板二）。</p>
+    </div>
+  </div>
+
+  <div class="task" id="task6">
+    <div class="task-head"><span>任务 6｜课堂汇报与同行评议</span><span class="meta">20 分钟</span></div>
+    <div class="task-body">
+      <p>各重组小组限时 3 分钟汇报 D5 与 D6 的核心分析结论，其余各组须至少提出一个质询问题。教师将重点围绕以下维度进行追问：「你们所指出的财务指标差异，本质上是真实的『运营效率差异』，还是商业边界不同导致的『会计核算口径差异』？对应的原始财报证据位于哪一页？」</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 三、概念手册 ============ -->
+<section id="handbook">
+  <h2><span class="no">03</span> 核心概念与财务比率速查手册</h2>
+  <p class="note">本手册旨在帮助学生快速调取先修会计学概念。在任务 1 分析过程中如遇生疏科目，请优先查阅本手册，并在小组内部展开研讨。</p>
+
+  <h3>3.1 共同比资产负债表的分析逻辑</h3>
+  <p>共同比资产负债表（Common-Size Balance Sheet）通过将各报表项目余额除以期末资产总计，消除企业绝对规模差异，从而聚焦于资产配置结构与资本来源结构的横向可比性：</p>
+  <div class="formula">$$\text{共同比权重}(\%)=\frac{\text{某报表项目期末余额}}{\text{期末资产总计}}\times 100\%$$</div>
+  <p><strong>标准研读路径：</strong></p>
+  <ol>
+    <li><strong>审视资产端核心配置（前三大权重科目）：</strong>判断企业资金主要沉淀于何种形态（货币资金、存货、固定资产、发放贷款或应收款项），以此识别其生产要素特征。</li>
+    <li><strong>审视权益与负债端结构：</strong>识别企业支持上述资产配置的资金来源（金融机构有息负债、上游供应商商业信用、下游客户预收款、吸收公众存款或股东权益资本）。</li>
+    <li><strong>开展「资产—负债」联动匹配分析：</strong>将报表两端结合推导交易契约特征。例如，资产端「存货」高企且负债端「合同负债」同步高企，通常指向「预售制、长生产/建设周期」的商业模式。</li>
+  </ol>
+
+  <h3>3.2 核心资产负债表科目及其商业含义</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>报表科目</th><th>会计核算实质</th><th>导致该科目占比显著偏高的典型商业特征</th></tr>
+    <tr><td>货币资金、交易性金融资产</td><td>库存现金、银行活期存款及短期高流动性理财投资</td><td>经营性现金盈余充沛且短期资本开支需求较低；或近期刚完成大规模股权/债权融资</td></tr>
+    <tr><td>定期存款、大额存单（常列示于「其他流动资产」「其他非流动资产」或「一年内到期的非流动资产」）</td><td>期限较长、流动性受限的银行存款产品</td><td>账面资金极为充裕、注重无风险利息收益的现金牛企业</td></tr>
+    <tr><td>拆出资金、买入返售金融资产、发放贷款及垫款、吸收存款</td><td>典型金融中介业务核算科目</td><td>商业银行等金融机构；或<strong>合并了内部集团财务公司报表的超大型实业集团</strong></td></tr>
+    <tr><td>应收账款、应收票据、应收款项融资</td><td>已向客户转移商品控制权但尚未收讫的对价</td><td>下游客户集中度高、议价能力强，普遍采用赊销（先交付后收款）结算的 ToB 行业</td></tr>
+    <tr><td>合同资产</td><td>企业已向客户转让商品而有权收取对价的权利，且该权利取决于时间流逝之外的其他因素（如整体工程竣工验收、质保期届满）</td><td>按履约进度确认收入的建筑施工、大型基建工程及定制化系统集成企业</td></tr>
+    <tr><td>预付款项</td><td>预先支付给上游供应商的采购定金或货款</td><td>上游资源稀缺、供应商高度强势，或企业为锁定核心原材料供给而主动预付</td></tr>
+    <tr><td>存货</td><td>原材料、在产品、半成品、产成品；房地产企业的「开发成本」与「开发产品」</td><td>生产酿造或建设周期极长（如高端白酒陈酿、房地产开发），或需维持大规模铺货的行业</td></tr>
+    <tr><td>长期股权投资</td><td>对合营企业、联营企业的权益性投资（合并报表层面）</td><td>广泛采用项目合资、合作开发模式分散风险或撬动资源的企业（如房地产联合拿地开发）</td></tr>
+    <tr><td>固定资产、在建工程</td><td>生产厂房、机器设备、水电站坝体、运输机队等有形长期资产</td><td>资本密集型（重资产）制造业、公用事业及重型交通运输业</td></tr>
+    <tr><td>使用权资产 / 租赁负债</td><td>新租赁准则下，承租人就租赁期内的标的资产使用权确认的资产及相应未来付租义务现值</td><td>广泛采用经营租赁方式获取核心生产经营要素的企业（如航空机队租赁、连锁商超门店租赁）</td></tr>
+    <tr><td>无形资产、开发支出</td><td>土地使用权、专利权、非专利技术、特许经营权；<strong>满足资本化条件的研发阶段支出</strong></td><td>研发密集型企业（如将部分临床试验支出资本化的生物医药企业）或土地使用权密集型企业</td></tr>
+    <tr><td>商誉</td><td>非同一控制下企业合并中，购买对价超过被购买方可辨认净资产公允价值份额的溢价</td><td>历史上实施过大规模外延式并购扩张的企业</td></tr>
+    <tr><td>投资性房地产</td><td>为赚取租金或资本增值（或两者兼有）而持有的房地产</td><td>商业地产运营商，或持有大量自营购物中心、写字楼物业的综合开发商</td></tr>
+    <tr><td>应付账款、应付票据</td><td>因赊购原材料、商品或接受劳务而尚未支付给上游供应商的款项</td><td>对上游供应链具备强大议价能力与商业信用占用能力的链主企业</td></tr>
+    <tr><td>合同负债、预收款项</td><td>企业已收或应收客户对价而应向客户转让商品的义务（未交付前的预收款）</td><td>普遍实行预售制、会员订阅制、储值卡消费或先买票后服务的商业模式</td></tr>
+    <tr><td>预计负债</td><td>因产品质量保证、未决诉讼、亏损合同或销售返利等或有事项确认的现时义务</td><td>为产品提供长期质保承诺（如新能源汽车动力电池质保）或普遍采用年度销售返利政策的企业</td></tr>
+    <tr><td>一年内到期的非流动负债</td><td>距离到期日不足一年的长期借款、应付债券及长期租赁负债</td><td>处于债务偿还高峰期或存量长期债务集中到期的重资产/高杠杆企业</td></tr>
+    <tr><td>少数股东权益</td><td>合并报表范围内，非全资子公司中归属于母公司以外其他股东的净资产份额</td><td>广泛通过设立非全资控股项目公司开展业务的集团企业</td></tr>
+  </table>
+  </div>
+
+  <h3>3.3 核心财务比率定义与计算口径</h3>
+  <div class="formula">$$\text{销售毛利率}=\frac{\text{营业收入}-\text{营业成本}}{\text{营业收入}}\times 100\%$$</div>
+  <div class="formula">$$\text{销售净利率}=\frac{\text{净利润}}{\text{营业收入}}\times 100\%$$</div>
+  <div class="formula">$$\text{存货周转天数}=\frac{\text{期末存货}}{\text{营业成本}}\times 365$$</div>
+  <div class="formula">$$\text{应收账款周转天数}=\frac{\text{期末应收账款}}{\text{营业收入}}\times 365$$</div>
+  <div class="formula">$$\text{应付账款周转天数}=\frac{\text{期末应付账款及应付票据}}{\text{营业成本}}\times 365$$</div>
+  <div class="formula">$$\text{现金转换周期（CCC）}=\text{存货周转天数}+\text{应收账款周转天数}-\text{应付账款周转天数}$$</div>
+  <div class="formula">$$\text{总资产周转率}=\frac{\text{营业收入}}{\text{期末资产总计}}$$</div>
+  <div class="formula">$$\text{净资产收益率（ROE）}=\underbrace{\frac{\text{净利润}}{\text{营业收入}}}_{\text{销售净利率}}\times\underbrace{\frac{\text{营业收入}}{\text{资产总计}}}_{\text{总资产周转率}}\times\underbrace{\frac{\text{资产总计}}{\text{股东权益合计}}}_{\text{权益乘数}}$$</div>
+  <div class="formula">$$\text{盈利现金保障倍数}=\frac{\text{经营活动产生的现金流量净额}}{\text{净利润}}$$</div>
+  <div class="formula">$$\text{资本开支强度}=\frac{\text{购建固定资产、无形资产和其他长期资产支付的现金}}{\text{营业收入}}\times 100\%$$</div>
+  <div class="warnbox"><strong>分析口径提示：</strong>为简化课堂计算，本资料中的周转率及周转天数指标统一采用<strong>期末时点余额</strong>（而非期初与期末平均值）与当期流量进行匹配计算。若样本企业在报告期内发生剧烈的资产规模收缩（如大规模关停门店或大额资产减值），基于期末余额计算的周转指标可能产生结构性偏误，分析时需予以甄别。</div>
+
+  <h3>3.4 典型商业模式与财务报表信号映射表</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>商业模式特征</th><th>典型财务报表信号</th><th>需警惕的会计噪音与表象干扰</th></tr>
+    <tr><td>重资产投入、长周期回收</td><td>固定资产及在建工程占比高，总资产周转率低，长期借款及应付债券规模大</td><td>若企业通过经营租赁获取核心设备/门店，重资产特征将体现为「使用权资产」而非「固定资产」</td></tr>
+    <tr><td>轻资产运营、高毛利壁垒</td><td>货币资金及金融投资占比极高，固定资产微乎其微，股东权益占比高、有息负债极少</td><td>若轻资产企业将大额研发投入予以资本化，资产端会形成规模可观的「开发支出」与「无形资产」</td></tr>
+    <tr><td>预收款驱动（先款后货）</td><td>合同负债/预收款项占比高，经营活动现金流量净额显著优于同期净利润</td><td>房地产开发企业的合同负债规模受当期期房销售景气度影响极大，行业下行期会快速萎缩</td></tr>
+    <tr><td>赊销驱动（先货后款）</td><td>应收账款、应收票据及合同资产占比高，经营活动现金流明显滞后于账面净利润</td><td>企业若大量采用应收票据背书转让或无追索权保理融资，会人为压低期末应收款项账面余额</td></tr>
+    <tr><td>强势占用上游商业信用</td><td>应付账款及应付票据规模远大于应收款项，现金转换周期（CCC）甚至为负值</td><td>陷入流动性危机的困境企业因无力偿付货款而被动拖欠供应商，同样会推高应付款项占比</td></tr>
+    <tr><td>薄利多销、高周转零售</td><td>销售毛利率与净利率偏低，但总资产周转率极高、存货周转天数极短</td><td>若零售企业在年末集中闭店清仓，期末存货与总资产分母骤降，会人为虚增当期计算出的周转率</td></tr>
+    <tr><td>金融信用中介</td><td>发放贷款及垫款、金融投资、吸收存款占绝对主导地位，高财务杠杆（股东权益占比极低）</td><td>内部设有集团财务公司的实业龙头企业，其合并报表中同样会列示「吸收存款」与「拆出资金」</td></tr>
+    <tr><td>房地产开发与运营</td><td>存货（开发成本与开发产品）占比极高，合同负债、长期股权投资、投资性房地产均具相当规模</td><td>大型建筑施工央企若兼营房地产开发业务，其合并报表也会呈现出显著的「高存货」特征</td></tr>
+  </table>
+  </div>
+
+  <h3>3.5 中美会计准则核心科目对照表（供案例 B 使用）</h3>
+  <p>中通快递于纽约证券交易所及香港联交所上市，采用<strong>美国公认会计原则（US GAAP）</strong>编制财务报表；顺丰控股于深交所及港交所上市，其 A 股年报采用<strong>中国企业会计准则（CAS）</strong>编制。</p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>中通快递报表科目（US GAAP）</th><th>顺丰控股对应科目（CAS）</th><th>跨准则对标分析注意事项</th></tr>
+    <tr><td>Revenues</td><td>营业收入</td><td><strong>核心商业边界差异：</strong>中通的快递收入主要系向<strong>网络加盟商（合作伙伴）</strong>收取的中转及面单费，而非向终端寄件客户收取的全程快递费</td></tr>
+    <tr><td>Cost of revenues</td><td>营业成本</td><td><strong>成本归集维度差异：</strong>中通按「干线运输、分拣中心运营、其他」等作业环节归集；顺丰按「人工、运力、其他经营成本」等要素性质归集</td></tr>
+    <tr><td>Property and equipment, net</td><td>固定资产 + 在建工程</td><td>二者核算实质基本一致</td></tr>
+    <tr><td>Land use rights, net</td><td>无形资产（土地使用权）</td><td>US GAAP 下通常单独列示土地使用权；中国准则下非房企通常将其并入「无形资产」科目</td></tr>
+    <tr><td>Operating lease right-of-use assets</td><td>使用权资产</td><td>US GAAP 在承租人端区分经营租赁与融资租赁；中国新租赁准则在承租人端不再区分，统一确认使用权资产</td></tr>
+    <tr><td>Short-term / Long-term investment</td><td>交易性金融资产、定期存款等</td><td>需结合报表附注核查底层资产是否为银行定期存款或理财产品</td></tr>
+    <tr><td>Advances from customers</td><td>合同负债、预收款项</td><td>在中通报表中主要反映网络合作伙伴预存的面单及中转费余额</td></tr>
+    <tr><td>Adjusted net income</td><td>非公认会计准则指标（无直接对应）</td><td>企业自定义的 Non-GAAP 业绩指标（通常剔除股权激励费用、非经常性损益等），不可直接与 CAS 下的净利润简单对比</td></tr>
+  </table>
+  </div>
+
+  <h3>3.6 财务报表可比性分析的五大常见陷阱</h3>
+  <ol>
+    <li><strong>收入确认口径差异（总额法 vs 净额法 / 商业边界差异）：</strong>同样完成一件包裹的寄递，直营模式下向终端客户确认全额快递费收入，与加盟模式下仅向加盟商确认干线中转费及面单收入，单件收入规模可相差数倍乃至十倍以上。</li>
+    <li><strong>会计准则修订与切换：</strong>中国财政部修订的新收入准则（CAS 14，境内上市公司自 2020 年起施行）与新租赁准则（CAS 21，境内上市公司自 2021 年起全面施行），会导致同一企业跨年度历史数据失去直接可比性。</li>
+    <li><strong>合并报表范围的异质性：</strong>若实业集团合并了旗下的持牌财务公司、房地产开发子公司或大型海外并购标的，其合并资产负债表将混入大量非主业特征科目。</li>
+    <li><strong>期末时点效应与盈余管理：</strong>企业年末突击冲量促销、季节性集中备货或大规模关店重组，均会导致资产负债表期末时点数据偏离全年常态运营水平。</li>
+    <li><strong>非公认会计准则指标（Non-GAAP）的口径弹性：</strong>经调整净利润（Adjusted Net Income）、EBITDA 等指标缺乏统一的准则约束，引用前必须逐项审视其加回（剔除）项目的合理性。</li>
+  </ol>
+
+  <h3>3.7 课前概念自测题（任务 0）</h3>
+  <ol>
+    <li>会计准则中的「合同资产」与「应收账款」在收款权利的确定性上有何本质区别？哪类行业企业的报表中这两项资产占比往往同时偏高？</li>
+    <li>若某企业资产负债表中的「使用权资产」占总资产比重高达三分之一，可据此推断其生产经营要素的获取方式具有何种特征？</li>
+    <li>「应付账款及应付票据余额远大于应收账款余额」是否必然意味着企业对上下游具备极强的议价优势？请结合企业财务困境情境举出一例反证。</li>
+    <li>为何一家主营高端白酒生产与销售的实业企业，其合并资产负债表的负债端会出现「吸收存款」科目？</li>
+    <li>企业将部分研发投入进行「资本化」而非「费用化」处理，会直接推高资产负债表中的哪两个科目余额？对当期利润表有何影响？</li>
+    <li>房地产开发企业的「存货」科目与一般制造企业的存货在构成内容上有何显著不同？</li>
+    <li>商业银行的「权益乘数」（资产总计/股东权益）通常处于何种数量级？这一高杠杆特征是由何种商业逻辑与监管机制决定的？</li>
+    <li>采用期末时点余额（而非期初、期末平均值）计算存货周转天数或总资产周转率，在企业发生何种重大经营变动时会产生严重的信号失真？</li>
+  </ol>
+</section>
+
+<!-- ============ 四、案例 A ============ -->
+<section id="case-a">
+  <h2><span class="no">04</span> 案例 A：样本企业商业模式盲测配对</h2>
+
+  <h3>4.1 数据编制说明</h3>
+  <ul>
+    <li><strong>数据来源：</strong>十家中国 A 股上市公司 2025 年年度报告披露的合并资产负债表、合并利润表及合并现金流量表。</li>
+    <li><strong>共同比处理：</strong>表 A-1 中各项资产与负债权益科目均除以 2025 年末资产总计，四舍五入保留整数百分比（分项加总尾差已按最大余数法调整至 100%）。表中数值为「0」表示该项目余额占总资产比重不足 0.5%，或该企业无此报表科目。</li>
+    <li><strong>科目重分类与归并规则：</strong>
+      <ul>
+        <li><strong>「现金及金融投资」：</strong>汇总货币资金、交易性金融资产、列示于流动/非流动资产中的定期存款及大额存单、拆出资金、买入返售金融资产、债权投资及其他金融工具投资。</li>
+        <li><strong>「客户预付款」：</strong>汇总合同负债（含流动及非流动部分）、预收款项及性质相同的客户预交款项。</li>
+        <li><strong>「其他负债」：</strong>汇总应付职工薪酬、应交税费、其他应付款、预计负债、递延收益及递延所得税负债等。</li>
+        <li><strong>特殊列报说明：</strong>样本 F 因执行金融企业财务报表列报格式，部分非核心科目按大类归集，其固定资产、无形资产等均并入「其他非流动资产」列示。</li>
+      </ul>
+    </li>
+    <li><strong>财务比率计算口径：</strong>遵循 3.3 节定义，周转类指标统一采用 2025 年末时点余额计算。净利润及权益指标均采用合并报表口径（即包含少数股东损益与少数股东权益）。</li>
+  </ul>
+
+  <h3>4.2 表 A-1：样本企业共同比资产负债表（2025 年 12 月 31 日，单位：%）</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>报表项目</th><th class="num">A</th><th class="num">B</th><th class="num">C</th><th class="num">D</th><th class="num">E</th><th class="num">F</th><th class="num">G</th><th class="num">H</th><th class="num">I</th><th class="num">J</th></tr>
+    <tr><td colspan="11"><strong>资产结构</strong></td></tr>
+    <tr><td>现金及金融投资</td><td class="num">13</td><td class="num">81</td><td class="num">6</td><td class="num">64</td><td class="num">26</td><td class="num">44</td><td class="num">3</td><td class="num">61</td><td class="num">7</td><td class="num">42</td></tr>
+    <tr><td>发放贷款及垫款</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">53</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td></tr>
+    <tr><td>应收账款及票据</td><td class="num">12</td><td class="num">4</td><td class="num">1</td><td class="num">2</td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num">9</td><td class="num">1</td><td class="num">12</td></tr>
+    <tr><td>存货</td><td class="num">23</td><td class="num">0</td><td class="num">1</td><td class="num">20</td><td class="num">11</td><td class="num">0</td><td class="num">0</td><td class="num">4</td><td class="num">37</td><td class="num">10</td></tr>
+    <tr><td>合同资产</td><td class="num">16</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">0</td></tr>
+    <tr><td>预付及其他流动资产</td><td class="num">10</td><td class="num">1</td><td class="num">3</td><td class="num">0</td><td class="num">6</td><td class="num">0</td><td class="num">0</td><td class="num">2</td><td class="num">23</td><td class="num">3</td></tr>
+    <tr><td>长期股权投资</td><td class="num">4</td><td class="num">9</td><td class="num">5</td><td class="num">0</td><td class="num">7</td><td class="num">0</td><td class="num">14</td><td class="num">1</td><td class="num">10</td><td class="num">7</td></tr>
+    <tr><td>固定资产及在建工程</td><td class="num">2</td><td class="num">3</td><td class="num">43</td><td class="num">8</td><td class="num">12</td><td class="num">0</td><td class="num">77</td><td class="num">11</td><td class="num">2</td><td class="num">18</td></tr>
+    <tr><td>使用权资产</td><td class="num">0</td><td class="num">0</td><td class="num">34</td><td class="num">0</td><td class="num">24</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">0</td></tr>
+    <tr><td>无形资产、开发支出及商誉</td><td class="num">1</td><td class="num">1</td><td class="num">3</td><td class="num">3</td><td class="num">2</td><td class="num">0</td><td class="num">5</td><td class="num">10</td><td class="num">1</td><td class="num">2</td></tr>
+    <tr><td>投资性房地产</td><td class="num">4</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">13</td><td class="num">0</td></tr>
+    <tr><td>其他非流动资产</td><td class="num">15</td><td class="num">1</td><td class="num">4</td><td class="num">2</td><td class="num">10</td><td class="num">3</td><td class="num">0</td><td class="num">2</td><td class="num">4</td><td class="num">6</td></tr>
+    <tr class="total"><td>资产总计</td><td class="num">100</td><td class="num">100</td><td class="num">100</td><td class="num">100</td><td class="num">100</td><td class="num">100</td><td class="num">100</td><td class="num">100</td><td class="num">100</td><td class="num">100</td></tr>
+    <tr><td colspan="11"><strong>负债与股东权益结构</strong></td></tr>
+    <tr><td>短期借款及一年内到期的非流动负债</td><td class="num">8</td><td class="num">0</td><td class="num">19</td><td class="num">0</td><td class="num">16</td><td class="num">0</td><td class="num">15</td><td class="num">0</td><td class="num">16</td><td class="num">4</td></tr>
+    <tr><td>应付账款及应付票据</td><td class="num">28</td><td class="num">3</td><td class="num">6</td><td class="num">1</td><td class="num">22</td><td class="num">0</td><td class="num">0</td><td class="num">3</td><td class="num">13</td><td class="num">27</td></tr>
+    <tr><td>客户预付款</td><td class="num">11</td><td class="num">21</td><td class="num">4</td><td class="num">3</td><td class="num">13</td><td class="num">0</td><td class="num">0</td><td class="num">5</td><td class="num">9</td><td class="num">5</td></tr>
+    <tr><td>吸收存款</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">6</td><td class="num">0</td><td class="num">75</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">0</td></tr>
+    <tr><td>长期借款及应付债券</td><td class="num">18</td><td class="num">0</td><td class="num">27</td><td class="num">0</td><td class="num">3</td><td class="num">1</td><td class="num">36</td><td class="num">0</td><td class="num">17</td><td class="num">8</td></tr>
+    <tr><td>租赁负债</td><td class="num">0</td><td class="num">0</td><td class="num">18</td><td class="num">0</td><td class="num">30</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">0</td></tr>
+    <tr><td>其他负债</td><td class="num">12</td><td class="num">5</td><td class="num">15</td><td class="num">6</td><td class="num">11</td><td class="num">14</td><td class="num">7</td><td class="num">4</td><td class="num">21</td><td class="num">18</td></tr>
+    <tr class="total"><td>负债合计</td><td class="num">77</td><td class="num">29</td><td class="num">89</td><td class="num">16</td><td class="num">95</td><td class="num">90</td><td class="num">58</td><td class="num">12</td><td class="num">77</td><td class="num">62</td></tr>
+    <tr class="total"><td>股东权益合计</td><td class="num">23</td><td class="num">71</td><td class="num">11</td><td class="num">84</td><td class="num">5</td><td class="num">10</td><td class="num">42</td><td class="num">88</td><td class="num">23</td><td class="num">38</td></tr>
+  </table>
+  </div>
+
+  <h3>4.3 表 A-2：样本企业核心经营与现金流指标（2025 年度）</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>财务指标</th><th class="num">A</th><th class="num">B</th><th class="num">C</th><th class="num">D</th><th class="num">E</th><th class="num">F</th><th class="num">G</th><th class="num">H</th><th class="num">I</th><th class="num">J</th></tr>
+    <tr><td>销售毛利率（%）</td><td class="num">10</td><td class="num">86</td><td class="num">5</td><td class="num">91</td><td class="num">20</td><td class="num">—</td><td class="num">62</td><td class="num">86</td><td class="num">9</td><td class="num">26</td></tr>
+    <tr><td>销售净利率（%）</td><td class="num">3</td><td class="num">31</td><td class="num">−2</td><td class="num">51</td><td class="num">−5</td><td class="num">45</td><td class="num">41</td><td class="num">24</td><td class="num">−39</td><td class="num">18</td></tr>
+    <tr><td>研发费用/营业收入（%）</td><td class="num">2.1</td><td class="num">35</td><td class="num">0.3</td><td class="num">0.1</td><td class="num">0.1</td><td class="num">—</td><td class="num">1.4</td><td class="num">22</td><td class="num">0.2</td><td class="num">5.2</td></tr>
+    <tr><td>存货周转天数（天）</td><td class="num">159</td><td class="num">$\approx 0$</td><td class="num">11</td><td class="num">1,506</td><td class="num">29</td><td class="num">—</td><td class="num">9</td><td class="num">241</td><td class="num">645</td><td class="num">110</td></tr>
+    <tr><td>应收账款周转天数（天）</td><td class="num">73</td><td class="num">39</td><td class="num">7</td><td class="num">$\approx 0$</td><td class="num">1</td><td class="num">—</td><td class="num">31</td><td class="num">59</td><td class="num">15</td><td class="num">66</td></tr>
+    <tr><td>总资产周转率（次/年）</td><td class="num">0.58</td><td class="num">0.33</td><td class="num">0.50</td><td class="num">0.56</td><td class="num">1.76</td><td class="num">0.03</td><td class="num">0.15</td><td class="num">0.45</td><td class="num">0.23</td><td class="num">0.43</td></tr>
+    <tr><td>经营活动现金流/营业收入（%）</td><td class="num">1</td><td class="num">42</td><td class="num">25</td><td class="num">36</td><td class="num">1</td><td class="num">—</td><td class="num">70</td><td class="num">36</td><td class="num">−0.4</td><td class="num">31</td></tr>
+    <tr><td>经营活动现金流/净利润（倍）</td><td class="num">0.4</td><td class="num">1.4</td><td class="num">亏损</td><td class="num">0.7</td><td class="num">亏损</td><td class="num">—</td><td class="num">1.7</td><td class="num">1.5</td><td class="num">亏损</td><td class="num">1.7</td></tr>
+    <tr><td>资本开支/营业收入（%）</td><td class="num">1.3</td><td class="num">1.7</td><td class="num">10.2</td><td class="num">1.9</td><td class="num">3.3</td><td class="num">—</td><td class="num">21.4</td><td class="num">9.4</td><td class="num">1.4</td><td class="num">10.0</td></tr>
+  </table>
+  </div>
+  <div class="warnbox">
+    <p><strong>表注：</strong></p>
+    <ol>
+      <li>「—」表示该指标不适用于金融企业报表格式或未单独列示；样本 F 的销售净利率直接按「净利润/营业收入」计算。</li>
+      <li>「亏损」表示该样本 2025 年度净利润为负值，盈利现金保障倍数失去经济意义，请结合「经营活动现金流/营业收入」指标评估其现金造血能力。</li>
+      <li>样本 G 在表 A-1 中的共同比「存货」显示为 0（实际占总资产比重不足 0.5%，主要为电站备品备件），但由于其毛利率较高、分母「营业成本」绝对额较小，故按精确金额计算的存货周转天数为 9 天。</li>
+    </ol>
+  </div>
+
+  <h3>4.4 样本企业业务特征描述（编号 1–10）</h3>
+  <ol>
+    <li><strong>全服务型航空运输企业：</strong>主营国内及国际客运与货运业务，机队中相当比例通过租赁方式引进；客运业务普遍采用「先购票、后乘机」结算模式；营业成本对航油价格及汇率波动高度敏感；2025 年度业绩仍处于微亏状态。</li>
+    <li><strong>办公软件研发与服务商：</strong>C 端个人用户按期订阅会员服务，B 端政企客户采购软件授权或云订阅服务，普遍采用「先收款、后履约」模式；研发人员及研发投入占比极高；账面沉淀资金充裕，大量配置于银行定期存款及理财产品。</li>
+    <li><strong>全国性住宅房地产开发商：</strong>遵循「拿地、预售、施工建设、竣工交付结转收入」的开发周期；大量开发项目通过合营、联营项目公司模式运作；受行业深度调整影响，2025 年度计提大额减值并出现巨额亏损，依赖第一大股东提供流动性借款支持，年度审计报告被出具「与持续经营相关的重大不确定性」段落。</li>
+    <li><strong>新能源动力与储能电池制造商：</strong>典型重资产制造且处于产能快速扩张期；下游客户主要为整车制造企业及储能系统集成商；对上游材料供应商具备极强议价能力，广泛使用商业汇票结算；需为已售电池计提长期产品质量保证金（预计负债），并对部分核心客户执行销售返利政策。</li>
+    <li><strong>超高端白酒酿造企业：</strong>核心基酒从投料酿造、贮存老熟到勾调出厂需经历数年周期；近年来直销渠道（含自营数字电商平台）收入占比已超越传统经销商批发渠道；集团内部设有持牌财务公司，吸纳成员单位及产业链存款。</li>
+    <li><strong>全国性股份制商业银行：</strong>以零售金融业务及财富管理见长，营业收入中约六成来源于利息净收入。</li>
+    <li><strong>大型综合建筑与基础设施承包商：</strong>工程施工业务按履约进度确认收入，业主方按工程进度计量结算并留存一定比例的工程质保金，下游分包商众多；同时兼营规模较大的房地产开发与投资业务。</li>
+    <li><strong>全国性连锁商超零售企业：</strong>主营生鲜及日用快消品零售，绝大部分实体门店通过长期经营租赁方式获取；2025 年处于深度战略调整期，全年关闭数百家低效门店并对存量门店实施调改，导致当期显著亏损；账面存在大量顾客预付购物卡款项。</li>
+    <li><strong>特大型水力发电运营商：</strong>拥有并运营长江干流多座巨型梯级水电站，发电量受流域天然来水丰枯影响显著，上网电价受国家价格主管部门核定管制；属于典型的极重资产公用事业，有息债务规模庞大，但经营性现金流极为充沛，长期承诺高比例现金分红。</li>
+    <li><strong>生物医药创新药研发企业：</strong>营业收入主要源自商业化处方药销售及对外技术授权（License-out），研发投入强度极高，且将部分进入后期临床阶段的研发支出予以资本化；2025 年向多家跨国药企达成新药海外权益授权并收取大额首付款，同年完成境外 H 股上市募集巨额资金。</li>
+  </ol>
+
+  <h3>4.5 课堂研讨工作表</h3>
+
+  <h4>模板一：样本企业初始配对表（D2，AI 介入前独立完成）</h4>
+  <div class="tablewrap">
+  <table>
+    <tr><th>数据列</th><th>匹配业务描述编号（1–10）</th><th>决定性会计科目或指标（1–2 项）</th><th>商业逻辑成因推导（一句话概括）</th><th>主观置信度</th><th>最易混淆的备选对象</th></tr>
+    <tr><td class="num">A</td><td></td><td></td><td></td><td>高 / 中 / 低</td><td></td></tr>
+    <tr><td class="num">B</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td class="num">…</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td class="num">J</td><td></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+  </div>
+
+  <h4>模板二：企业报表结构特征总结表（D4，答案揭晓后修正定稿）</h4>
+  <div class="tablewrap">
+  <table>
+    <tr><th>样本企业真实名称</th><th>核心特征 1（科目 + 数值）</th><th>核心特征 2</th><th>核心特征 3</th><th>特征属性辨析：属于「行业技术硬约束」还是「企业战略选择」？</th></tr>
+    <tr><td></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+  </div>
+
+  <h4>模板三：高难度配对项深度论证（D4，字数 $\leq 300$ 字）</h4>
+  <div class="panel">
+    <p>本组认为数据列 ______ 对应业务描述编号 ______。</p>
+    <ul>
+      <li><strong>正面支撑证据</strong>（须结合至少两个报表科目或比率指标，阐明商业逻辑链条）：</li>
+      <li><strong>潜在反例或竞争性解释</strong>（至少指出一项看似矛盾的数据特征）：</li>
+      <li><strong>增量信息需求：</strong>若允许进一步查阅一项报表附注信息，本组最希望获取 ____________，原因在于 ____________________。</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 五、案例 B ============ -->
+<section id="case-b">
+  <h2><span class="no">05</span> 案例 B：顺丰控股 vs 中通快递，组织模式与报表可比性</h2>
+
+  <h3>5.1 行业背景与商业模式分野</h3>
+  <p>根据国家邮政局统计公报，2025 年中国快递业务量累计完成 1,989.5 亿件，同比增长 13.6%；快递业务收入累计完成 1.5 万亿元，同比增长 6.5%，行业整体呈现出显著的「量增价减」与存量博弈特征（<a href="https://www.gov.cn/lianbo/202601/content_7055886.htm" target="_blank" rel="noopener">国家邮政局 2025 年邮政行业运行情况通报</a>）。</p>
+  <p>顺丰控股与中通快递均为中国快递物流行业的领军企业，但二者在组织边界与商业模式选择上截然不同：</p>
+  <ul>
+    <li><strong>顺丰控股（直营制模式）：</strong>采用总部对全网各环节集中管控的直营模式，从末端揽派、中转分拨到干线运输均由自有团队或受控外包资源完成；核心产品主打高附加值时效快递，并广泛布局快运大件、冷运医药、同城即时配送及国际供应链业务。</li>
+    <li><strong>中通快递（网络合作伙伴/加盟制模式）：</strong>采用「核心枢纽自营 + 末端网络加盟」的协同模式。总部集中资本投资并运营核心干线运输车队与自动化分拣中心，而将直接面向终端客户的揽收与派送环节交由数千家独立的「网络合作伙伴（加盟商）」承担。中通总部按包裹件数向加盟商收取<strong>网络中转费</strong>（包含固定电子面单费，以及按包裹重量和运输距离核算的分拣与干线运输费，<a href="https://www.publicnow.com/view/82534B584EDA9DF78892C872A54CC068001DFD53?1744890458=" target="_blank" rel="noopener">网络中转费计费机制披露摘录</a>）。截至 2025 年末，中通全网共运营 93 个分拣中心（其中 88 个为总部自营）、10,000 余辆自有干线运输车辆，连接逾 6,000 家一级网络合作伙伴及 31,000 余个末端揽派网点（<a href="https://zto.investorroom.com/2026-03-17-ZTO-Reports-Fourth-Quarter-2025-and-Full-Year-2025-Unaudited-Financial-Results" target="_blank" rel="noopener">中通 2025 年第四季度及全年未经审计财务业绩公告</a>）。</li>
+  </ul>
+
+  <h3>5.2 表 B-1：顺丰控股与中通快递核心财务数据对照表（2025 年度，金额单位：亿元人民币）</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>财务与运营指标</th><th>顺丰控股（002352.SZ / 06936.HK）</th><th>中通快递（ZTO.N / 02057.HK）</th><th>小组分析备注</th></tr>
+    <tr><td>财务报表编制准则</td><td>中国企业会计准则（经审计年报）</td><td>美国公认会计原则（未经审计全年业绩公告）</td><td></td></tr>
+    <tr><td>营业收入</td><td class="num">3,082.27</td><td class="num">490.99</td><td></td></tr>
+    <tr><td>营业成本</td><td class="num">2,671.78</td><td class="num">368.27</td><td></td></tr>
+    <tr><td>销售毛利率</td><td class="num">13.3%</td><td class="num">25.0%（2024 年度为 31.0%）</td><td></td></tr>
+    <tr><td>净利润（合并口径）</td><td class="num">116.85</td><td class="num">92.36</td><td></td></tr>
+    <tr><td>销售净利率</td><td class="num">3.8%</td><td class="num">18.8%</td><td></td></tr>
+    <tr><td>经营活动现金流量净额</td><td class="num">275.55</td><td class="num">119.68</td><td></td></tr>
+    <tr><td>年末资产总计</td><td class="num">2,164.69</td><td class="num">910.24</td><td></td></tr>
+    <tr><td>总资产净利率（ROA，期末口径）</td><td class="num">5.4%</td><td class="num">10.1%</td><td></td></tr>
+    <tr><td>资产负债率</td><td class="num">49.0%</td><td class="num">26.2%</td><td></td></tr>
+    <tr><td>固定资产/资产总计</td><td class="num">24.0%</td><td class="num">38.9%（另持有土地使用权占总资产 7.4%）</td><td></td></tr>
+    <tr><td>使用权资产/资产总计</td><td class="num">7.1%</td><td class="num">0.4%</td><td></td></tr>
+    <tr><td>应收账款/资产总计</td><td class="num">14.1%</td><td class="num">1.4%</td><td></td></tr>
+    <tr><td>全年快递业务量</td><td>167 亿票以上（含国际快递，不含海外本土快递）</td><td>同比增加 45 亿件、增长 13.3%（请据此反推其 2025 全年总件量并至业绩公告核实）</td><td></td></tr>
+    <tr><td>营业成本内部结构（占营业成本比重）</td><td>人工成本 48.6%，运力成本 37.0%，其他经营成本 12.4%（均含外包成本，合计占总成本 98.0%）</td><td>干线运输成本 37.9%，分拣中心运营成本 26.7%，其他成本 31.7%，货代及物料配件成本 3.6%</td><td></td></tr>
+  </table>
+  </div>
+  <p class="note">数据出处：顺丰控股数据摘自其《2025 年年度报告》（合并财务报表及第四节「管理层讨论与分析」）；中通快递数据摘自其《2025 年第四季度及全年未经审计财务业绩公告》。原始文献链接详见第七部分。</p>
+
+  <h3>5.3 原始财报研读指引（供任务 4 专家组使用）</h3>
+  <div class="panel">
+    <h4>【顺丰专家组】研读任务（查阅《顺丰控股 2025 年年度报告》）</h4>
+    <ol>
+      <li><strong>成本要素拆解：</strong>精读第四节「管理层讨论与分析」中的营业成本分析表。顺丰的「人工成本」与「运力成本」具体涵盖哪些支出？规模庞大的劳务外包及运力外包支出被归集在哪个科目下？</li>
+      <li><strong>多元业务结构：</strong>查阅分部报告或主营业务收入拆解表，速运及大件、供应链及国际、同城即时配送三大板块各自贡献的收入占比与毛利率水平如何？</li>
+      <li><strong>长期资产与并购商誉：</strong>查阅合并资产负债表及附注，顺丰的固定资产、使用权资产及商誉账面价值分别为多少？巨额商誉主要源于历史上对哪家境外物流企业的并购（如嘉里物流）？</li>
+      <li><strong>现金流结构：</strong>查阅现金流量表补充资料，为何顺丰的经营活动现金流量净额（275.55 亿元）远高于其账面净利润（116.85 亿元）？核心调节项是什么？</li>
+      <li><strong>专家组必答题：</strong>通常认为顺丰属于「重资产直营模式」，但为何其「固定资产/总资产」比重（24.0%）反而显著低于加盟制的中通快递（38.9%）？顺丰的「重」究竟体现在哪三个报表维度上？</li>
+    </ol>
+  </div>
+  <div class="panel">
+    <h4>【中通专家组】研读任务（查阅《中通快递 2025 全年业绩公告》，学有余力者可拓展查阅 SEC 20-F 年报）</h4>
+    <ol>
+      <li><strong>收入确认机制：</strong>查阅收入分类明细，核心快递服务、跨境货代、物料配件销售各占总收入比重多少？<strong>中通账面确认的快递服务收入，其直接付费客户究竟是谁？是否包含末端派件费？</strong>（详见 20-F 报告 Item 4 及 Item 5）</li>
+      <li><strong>成本结构异动分析：</strong>干线运输成本、分拣中心运营成本与「其他成本」分别核算什么内容？为何 2025 年度中通的「其他成本」出现大幅攀升（提示：关注面向企业客户的散件/逆向物流业务成本核算口径）？</li>
+      <li><strong>组织边界与表外资产：</strong>审视中通的合并资产负债表，哪些核心资产由中通总部直接持有？遍布全国的 31,000 余个末端网点的门店租赁、派件三轮车及数十万快递员的薪酬社保，是否纳入中通快递的合并报表范围？</li>
+      <li><strong>非公认会计准则调节：</strong>中通业绩公告中披露的「经调整净利润（Adjusted Net Income）」对 GAAP 净利润进行了哪些项目的加回或扣除？</li>
+      <li><strong>专家组必答题：</strong>网络加盟模式实际上将哪些资产、人员成本与经营风险剥离出了中通总部的财务报表？在全行业残酷的「价格战」背景下，这些被移出表外的风险是否真正消失了？</li>
+    </ol>
+  </div>
+
+  <h3>5.4 课堂研讨工作表</h3>
+  <h4>模板一：商业模式—财务报表映射表（D5）</h4>
+  <div class="tablewrap">
+  <table>
+    <tr><th>分析维度</th><th>顺丰控股（具体数据 + 财报页码）</th><th>中通快递（具体数据 + 公告页码）</th><th>差异归因：属于「真实经营效率差异」还是「商业边界/会计口径差异」？</th></tr>
+    <tr><td>快递收入的直接确认对象</td><td></td><td></td><td></td></tr>
+    <tr><td>单票（单件）快递账面收入</td><td></td><td></td><td></td></tr>
+    <tr><td>营业成本内部结构特征</td><td></td><td></td><td></td></tr>
+    <tr><td>固定资产与使用权资产配置</td><td></td><td></td><td></td></tr>
+    <tr><td>应收账款占比与周转效率</td><td></td><td></td><td></td></tr>
+    <tr><td>资本开支强度（CapEx/营收）</td><td></td><td></td><td></td></tr>
+    <tr><td>杜邦分析拆解（净利率 × 周转率 × 权益乘数）</td><td></td><td></td><td></td></tr>
+    <tr><td>末端揽派人员及网点风险的报表归属</td><td></td><td></td><td></td></tr>
+  </table>
+  </div>
+
+  <h4>模板二：财务可比性调整说明与竞争韧性评估（D6，一页简报）</h4>
+  <ol>
+    <li><strong>核心不可比因素识别</strong>（不少于两项）：明确阐述导致两家企业毛利率（13.3% vs 25.0%）与净利率（3.8% vs 18.8%）无法直接横向对比的制度或商业原因，并标注原文证据出处。</li>
+    <li><strong>可比性模拟调整方案：</strong>设计一套将二者拉齐至同一商业边界的财务测算思路（例如：将顺丰的全链路收入剥离末端收派环节，还原为可比的「中转干线口径」；或估算中通全网加盟商的末端收派收入与成本并予以「模拟并表」，测算中通全网口径的真实利润率）。若现有公开数据不足以完成精确测算，请明确指出缺失的关键数据变量。</li>
+    <li><strong>调整前后的评价结论对比：</strong>经口径拉齐思维修正后，你们对两家企业盈利能力的判断发生了何种变化？</li>
+    <li><strong>行业价格战韧性评估：</strong>在快递行业「单票价格持续下探」的竞争格局下，直营模式与加盟模式何者具备更强的财务抗压韧性？（<strong>硬性要求：</strong>必须严格基于两家企业的资产负债表结构、现金流充裕度、成本刚性及表外加盟商生存空间等财务证据展开论证，严禁泛泛引用外部新闻评论）。</li>
+  </ol>
+</section>
+
+<!-- ============ 六、AI 规范 ============ -->
+<section id="ai-rules">
+  <h2><span class="no">06</span> 生成式 AI 课堂协作规范与核验表</h2>
+
+  <h3>三大协作准则</h3>
+  <ol>
+    <li><strong>独立思考前置，AI 介入后置：</strong>任务 1 阶段严禁使用任何 AI 工具，以确保学生建立独立的财务直觉；D2 表格一经提交不得事后涂改。</li>
+    <li><strong>数据与事实的源头溯源原则：</strong>凡引用 AI 输出的财务数据或业务事实，必须在本资料表格或上市公司原始年报中核实到具体页码。无法提供原始文献出处的 AI 陈述，一律视为「未经核验信息」，不得作为课堂汇报依据。</li>
+    <li><strong>认知修正留痕原则：</strong>小组在引入 AI 辅助后对原有结论作出的任何修正，均须在核验表中如实记录修正动因（究竟是受 AI 的严密逻辑启发、经查阅原始年报附注证实，还是经证伪 AI 后坚持本组原判）。</li>
+  </ol>
+
+  <h3>《AI 辅助分析核验表》模板（D3，案例 A 与案例 B 通用）</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>AI 输出的核心论断</th><th>原始数据出处（表号/年报页码）</th><th>交叉核验结果</th><th>缺陷/价值归类</th><th>本组采纳或驳回的处理意见及理由</th></tr>
+    <tr><td>示例：B 公司现金及金融投资占总资产 81%，故必然属于商业银行</td><td>表 A-1</td><td>数据读取正确，但逻辑推导错误：B 公司发放贷款与吸收存款均为 0%</td><td>逻辑推理跳跃</td><td><strong>驳回</strong>；B 公司客户预付款高达 21% 且毛利率 86%、研发占比 35%，符合订阅制软件企业特征</td></tr>
+    <tr><td></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+  </div>
+  <div class="takeaway">归类标签体系（共六类）：数据读取错误、会计口径混淆、逻辑推理跳跃、关键特征遗漏、后见之明偏差、论证严密且具启发价值。请特别注意记录第六类情形，能够敏锐识别并吸纳 AI 提供的有效增量视角，同样是高阶分析能力的重要体现。</div>
+</section>
+
+<!-- ============ 七、参考文献 ============ -->
+<section id="references">
+  <h2><span class="no">07</span> 参考文献、准则文件与原始年报索引</h2>
+  <p class="note">案例 A 十家样本企业的真实身份及年度报告全文链接，将在课堂揭晓环节后通过《样本企业背景与年报索引》统一发放。</p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>序号</th><th>文献与资料名称</th><th>资料属性</th><th>对应教学任务</th><th>建议查阅节点</th><th>核心研读目标</th></tr>
+    <tr><td class="num">1</td><td>本学习资料第三部分《核心概念与财务比率速查手册》</td><td>先修基础</td><td>任务 0、任务 1</td><td>任务 0 开始时</td><td>掌握以规范会计语言描述企业商业模式的方法</td></tr>
+    <tr><td class="num">2</td><td>哈佛商学院经典教学案例介绍：<a href="https://www.hbs.edu/faculty/Pages/item.aspx?num=45609" target="_blank" rel="noopener">The Case of the Unidentified Industries—2013</a></td><td>学术拓展</td><td>案例 A 方法论原型</td><td>课后拓展阅读</td><td>理解经典商学院「盲测财务报表推导行业特征」的教学设计源流</td></tr>
+    <tr><td class="num">3</td><td>财政部《企业会计准则第 14 号——收入》（财会〔2017〕22 号）：<a href="https://www.shui5.cn/article/36/113269.html" target="_blank" rel="noopener">条文链接</a></td><td>准则文献</td><td>合同资产、合同负债、总额法与净额法</td><td>任务 1、任务 5 遇准则疑问时</td><td>从制度层面理解「合同资产」「合同负债」的确认条件及收入确认口径</td></tr>
+    <tr><td class="num">4</td><td>财政部《企业会计准则第 21 号——租赁》（财会〔2018〕35 号）：<a href="https://app.www.gov.cn/govdata/gov/201812/15/433102/article.html" target="_blank" rel="noopener">条文链接</a></td><td>准则文献</td><td>使用权资产、租赁负债</td><td>任务 1 分析样本 C、E 时</td><td>理解经营租赁资产为何由「表外承诺」转化为「表内资产与负债」</td></tr>
+    <tr><td class="num">5</td><td>国家邮政局《2025 年邮政行业运行情况通报》：<a href="https://www.gov.cn/lianbo/202601/content_7055886.htm" target="_blank" rel="noopener">原文链接</a></td><td>行业数据</td><td>案例 B 宏观背景</td><td>任务 4 启动前</td><td>把握中国快递行业「业务量高增长、单票收入下行」的宏观竞争格局</td></tr>
+    <tr><td class="num">6</td><td>《顺丰控股股份有限公司 2025 年年度报告》全文：<a href="https://ir.sf-express.com/media/mdhljxgn/%E9%A1%BA%E4%B8%B0%E6%8E%A7%E8%82%A1-2025%E5%B9%B4%E5%B9%B4%E5%BA%A6%E6%8A%A5%E5%91%8A.pdf" target="_blank" rel="noopener">年报 PDF</a></td><td>原始财报</td><td>任务 4 顺丰专家组核心材料</td><td>任务 4 启动起</td><td>核查顺丰营业成本构成、分部收入及长期资产配置的原始披露数据</td></tr>
+    <tr><td class="num">7</td><td>中通快递《2025 年第四季度及全年未经审计财务业绩公告》：<a href="https://zto.investorroom.com/2026-03-17-ZTO-Reports-Fourth-Quarter-2025-and-Full-Year-2025-Unaudited-Financial-Results" target="_blank" rel="noopener">业绩公告</a></td><td>原始财报</td><td>任务 4 中通专家组核心材料</td><td>任务 4 启动起</td><td>核查中通收入结构、干线与分拣成本及 US GAAP 资产负债表数据</td></tr>
+    <tr><td class="num">8</td><td>中通快递 2025 年度 20-F 年报（美国证监会 SEC EDGAR 数据库）：<a href="https://www.sec.gov/Archives/edgar/data/1677250/000110465926044613/zto-20251231x20f.htm" target="_blank" rel="noopener">20-F 全文</a></td><td>进阶财报</td><td>收入确认会计政策、网络合作伙伴契约安排</td><td>任务 4、5 深度求证及课后作业</td><td>查证中通快递服务收入确认的法律与经济实质（向加盟商收费机制）</td></tr>
+    <tr><td class="num">9</td><td>中通快递 20-F 年报关于网络中转费（Network Transit Fee）计费机制的披露摘录：<a href="https://www.publicnow.com/view/82534B584EDA9DF78892C872A54CC068001DFD53?1744890458=" target="_blank" rel="noopener">披露摘录</a></td><td>补充文献</td><td>同上</td><td>任务 5 可比性分析</td><td>从定价机制理解为何中通的账面单件收入显著低于顺丰控股</td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ============ 八、课后作业 ============ -->
+<section id="homework">
+  <h2><span class="no">08</span> 课后拓展作业（D7，个人独立完成，下次课前提交）</h2>
+  <p>请从中国 A 股或港股市场中任选一家未在课堂重点剖析的快递物流上市公司（如<strong>圆通速递、韵达股份、申通快递</strong>或<strong>京东物流</strong>），参照 5.4 节「模板一」为其编制一份《商业模式—财务报表映射表》（基于 2025 年年度报告数据），并撰写一篇不少于 300 字的分析短文，核心回答以下问题：</p>
+  <ol>
+    <li>该企业的组织架构与财务报表特征更接近顺丰控股（直营模式）还是中通快递（网络加盟模式）？</li>
+    <li>资产负债表或利润表中的哪 1–2 个决定性科目（或财务比率）最有力地支撑了你的上述判断？</li>
+  </ol>
+  <div class="warnbox"><strong>提交规范：</strong>所有引用的财务数据必须严格标注其在公司 2025 年年度报告中的具体页码；若在资料搜集与分析过程中使用了生成式 AI 工具，须随作业一并提交《AI 辅助分析核验表》。</div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p><strong>《财报分析》专题一：企业商业模式的财务报表映射与可比性分析</strong> · 案例 A 为匿名化教学样本 · 案例 B 基于顺丰控股与中通快递公开披露文件。</p>
+    <p class="mono">本材料仅供课堂教学使用 · 财务数据摘自 2025 年年度报告与业绩公告 · 2026 年秋季学期</p>
+  </div>
+</footer>
+
+</body>
+</html>
