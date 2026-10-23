@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>实验作业 03 · 主动基金收益率与持续性 — 学生任务书</title>
+<meta name="description" content="第三次实验作业：站在2025年1月1日选出10只主动基金，用2025年1月至2026年10月数据检验收益率持续性，提交研究报告与Agent对话记录。">
+<style>
+:root{
+  --paper:#fafaf8;
+  --ink:#0a0a0a;
+  --grey-1:#f0f0ee;
+  --grey-2:#d4d4d2;
+  --grey-3:#737373;
+  --accent:#002FA7;
+  --accent-on:#ffffff;
+  --mono:"JetBrains Mono","Cascadia Code",Consolas,"Courier New",monospace;
+  --sans:"Inter","Helvetica Neue","Noto Sans SC","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+.container{max-width:880px;margin:0 auto;padding:0 24px}
+.submission-bar{background:var(--accent);color:#fff}
+.submission-bar .container{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px}
+.submission-bar strong{display:block;font-size:16px}
+.submission-bar span{font-size:13px;color:#e8edff}
+.submission-bar a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 20px;background:#fff;color:var(--accent);font-weight:700;text-decoration:none;white-space:nowrap}
+.submission-bar a:hover{background:#edf1ff}
+.submission-bar a:focus-visible{outline:3px solid #fff;outline-offset:4px}
+header{background:var(--ink);color:#fff;padding:56px 0 40px;border-bottom:6px solid var(--accent)}
+header .tag{font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:#8fb0ff;text-transform:uppercase;margin-bottom:14px;font-weight:600}
+header .tag::before{content:"// "}
+header h1{font-size:38px;line-height:1.22;font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+header .sub{font-size:16.5px;color:var(--grey-2);margin-bottom:22px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:12.5px;color:#fff;border:1px solid var(--grey-3);padding:4px 12px;background:rgba(255,255,255,.03);font-weight:500}
+nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--grey-2);margin-bottom:28px}
+nav .links{display:flex;gap:0;flex-wrap:wrap;padding:6px 0}
+nav a{font-size:14px;color:var(--grey-3);text-decoration:none;padding:8px 14px;border-left:1px solid var(--grey-2);transition:color .15s;font-weight:500}
+nav a:first-child{border-left:none}
+nav a:hover{color:var(--accent)}
+nav a.back{color:var(--accent);font-weight:500;margin-right:8px}
+section{margin-bottom:44px;scroll-margin-top:52px}
+h2{font-size:23px;font-weight:700;color:var(--ink);margin:36px 0 16px;padding:0 0 10px 14px;border-left:6px solid var(--accent);display:flex;align-items:baseline;gap:12px;letter-spacing:-.01em;flex-wrap:wrap}
+h2 .no{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.12em;font-weight:600}
+p{margin:10px 0}
+ul{margin:8px 0 8px 24px}
+li{margin:6px 0}
+strong{font-weight:700}
+.callout{border-left:4px solid var(--accent);background:var(--grey-1);padding:12px 18px;margin:16px 0}
+.callout p{margin:0}
+.check{list-style:none;margin-left:0}
+.check li{padding:9px 0 9px 30px;position:relative;border-bottom:1px solid var(--grey-2)}
+.check li::before{content:"☐";position:absolute;left:2px;font-size:17px;color:var(--accent);font-weight:700}
+.check li:last-child{border-bottom:none}
+.submission-bottom{margin-top:26px}
+.attachment-link{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 18px;border:1px solid var(--accent);color:var(--accent);text-decoration:none;font-weight:600}
+.attachment-link:hover{background:#edf1ff}
+footer{margin-top:48px;padding:28px 0 48px;border-top:2px solid var(--accent);color:var(--grey-3);font-size:13.5px}
+footer strong{color:var(--ink)}
+footer a{color:var(--accent)}
+@media (max-width:760px){
+  header{padding:40px 0 28px}
+  header h1{font-size:28px}
+  h2{font-size:21px}
+}
+@media print{
+  nav,.submission-bar,.attachment-link{display:none}
+  body{background:#fff}
+  header{background:#fff;color:var(--ink);padding:20px 0}
+  header .sub,header .chip{color:var(--ink)}
+}
+</style>
+</head>
+<body>
+
+<aside class="submission-bar" aria-label="第三次实验作业提交">
+  <div class="container">
+    <div><strong>第三次实验作业提交</strong><span>选基方案、研究报告、数据与代码、Agent 对话记录统一打包</span></div>
+    <a href="https://send2me.cn/s6scThjh/S7uneaqptLkaHg" target="_blank" rel="noopener">提交作业 ↗</a>
+  </div>
+</aside>
+
+<header>
+  <div class="container">
+    <div class="tag">Experiment 03 · Active Fund Return &amp; Persistence</div>
+    <h1>主动基金收益率与持续性</h1>
+    <div class="sub">学生任务书 · 投资组合课程第三次实验</div>
+    <div class="chips">
+      <span class="chip">2025-01-01 决策时点</span>
+      <span class="chip">10 只主动基金</span>
+      <span class="chip">2025-01—2026-10 样本外</span>
+      <span class="chip">独立完成</span>
+    </div>
+  </div>
+</header>
+
+<nav aria-label="任务书目录">
+  <div class="container">
+    <div class="links">
+      <a class="back" href="./">← 返回课程</a>
+      <a href="#task">任务</a>
+      <a href="#requirements">要求</a>
+      <a href="#submission">提交</a>
+    </div>
+  </div>
+</nav>
+
+<main class="container" id="main-content">
+
+  <section id="task">
+    <h2><span class="no">01</span>任务</h2>
+    <p>站在 2025 年 1 月 1 日，仅使用 2024 年 12 月 31 日及以前已公开的信息，选出 10 只主动基金。学生自行界定“优秀”的标准、基金池和选择规则，并说明依据。名单与选择方案须在查看 2025 年以后的数据之前冻结；同一基金的不同份额只计一只。</p>
+    <p>随后使用 2025 年 1 月至 2026 年 10 月的数据，检验这 10 只基金的收益率是否具有持续性，并给出反思：选择标准是否有效，收益在多大程度上来自选基、风格或运气，结论的边界是什么。若取数时 10 月尚未结束，以最后一个完整交易日或月份为准，并在报告中注明。</p>
+    <div class="callout">
+      <p><strong>回溯性样本外检验。</strong> 本实验的主要风险是事后信息渗入选择规则。基金池应包含 2025 年 1 月 1 日时存续、此后可能清盘或合并的基金，不得只用当前存续基金反推。</p>
+    </div>
+  </section>
+
+  <section id="requirements">
+    <h2><span class="no">02</span>要求</h2>
+    <p>研究设计由学生完成。方案须说明基金池、选择标准、数据来源、收益口径、对照，以及“持续性”的判断标准。选基不得使用 2025 年以后的公开信息、评级或推荐。</p>
+  </section>
+
+  <section id="submission">
+    <h2><span class="no">03</span>提交</h2>
+    <ul class="check">
+      <li>选基方案与 10 只基金名单（含入选理由）；</li>
+      <li>研究报告（含数据、检验结果与反思）；</li>
+      <li>数据来源、代码和结果文件；</li>
+      <li>与 Agent 的完整对话记录（原始 session，保留角色、顺序和关键判断，能看出先冻结名单、后查看 2025 年以后数据的顺序）。</li>
+    </ul>
+    <p>对话记录须保留原始内容，不能以事后总结替代。不得编造数据或事后补记过程。具体提交格式、截止时间和渠道以课程通知为准。</p>
+    <div class="submission-bottom">
+      <a class="attachment-link" href="https://send2me.cn/s6scThjh/S7uneaqptLkaHg" target="_blank" rel="noopener">提交第三次实验作业 ↗</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p><strong>第三次实验作业 · 学生任务书</strong></p>
+    <p><a href="./">返回投资组合课程</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
