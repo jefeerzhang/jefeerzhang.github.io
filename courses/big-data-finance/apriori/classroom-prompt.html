@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>课堂演示提示词 · Agent 分析 Groceries · Apriori 算法 · 课程中心</title>
+  <meta name="description" content="用 Agent 对 Groceries 购物篮数据完成关联规则分析的课堂演示提示词，可直接复制发给学生。">
+  <script src="../../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../../assets/site.css?v=22">
+  <style>
+    .page-hero { padding: 48px 0 28px; border-bottom: 1px solid var(--line-strong); }
+    .page-hero h1 { margin: 0; font-family: var(--display); font-size: clamp(26px, 3.2vw, 36px); font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+    .breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--muted); }
+    .breadcrumb a { color: var(--muted); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb .sep { opacity: 0.5; }
+    .breadcrumb .current { color: var(--ink); }
+    .article { max-width: 820px; padding: 36px 0 80px; }
+    .article h2 { margin-top: 2em; font-family: var(--display); font-size: 20px; font-weight: 700; color: var(--ink); border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+    .article h3 { margin-top: 1.5em; font-size: 16px; font-weight: 700; color: var(--ink); }
+    .article p { margin: 0.7em 0; color: var(--text); font-size: 15px; line-height: 1.8; }
+    .article ul, .article ol { margin: 0.6em 0; padding-left: 1.6em; color: var(--text); font-size: 14.5px; line-height: 1.8; }
+    .article li { margin: 0.3em 0; }
+    .article blockquote { margin: 1em 0; padding: 12px 18px; border-left: 3px solid var(--accent); background: var(--surface-soft); border-radius: 0 6px 6px 0; }
+    .article blockquote p { margin: 0.3em 0; }
+    .article strong { color: var(--ink); }
+    .article code { font-family: var(--mono); font-size: 0.9em; padding: 1px 5px; background: var(--surface-soft); border-radius: 4px; }
+    .prompt-box { position: relative; margin: 1.5em 0; padding: 20px 22px; background: var(--surface-soft); border: 1px solid var(--line); border-radius: 10px; }
+    .prompt-box .copy-btn { position: absolute; top: 12px; right: 12px; padding: 5px 14px; font-family: var(--mono); font-size: 12px; font-weight: 700; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--accent); cursor: pointer; transition: all 150ms ease; }
+    .prompt-box .copy-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .prompt-box pre { margin: 0; white-space: pre-wrap; word-wrap: break-word; font-family: var(--mono); font-size: 13px; line-height: 1.7; color: var(--text); max-height: 600px; overflow-y: auto; }
+  </style>
+</head>
+<body class="home-page">
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+          <a href="../../../">首页</a>
+          <a href="../../../cv/">个人简历</a>
+          <a href="../../" aria-current="page">课程中心</a>
+          <a href="../../../knowledge/">知识学习</a>
+          <a href="../../../tools/">小工具</a>
+          <button type="button" class="theme-toggle" id="theme-toggle" aria-label="切换主题">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.9 4.9l1.4 1.4"/><path d="M17.7 17.7l1.4 1.4"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M4.9 19.1l1.4-1.4"/><path d="M17.7 6.3l1.4-1.4"/></svg>
+          </button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="面包屑">
+          <a href="../../">课程中心</a><span class="sep">/</span>
+          <a href="../">大数据金融</a><span class="sep">/</span>
+          <a href="./">Apriori 算法</a><span class="sep">/</span>
+          <span class="current">课堂演示提示词</span>
+        </nav>
+        <h1>用 Agent 分析 Groceries：课堂演示提示词</h1>
+      </div>
+    </section>
+
+    <section class="container article">
+      <h2>教师使用方法</h2>
+      <p>两种情况都用这一份文件。</p>
+      <p><strong>在仓库里演示</strong>：在本模块 <code>02_Agent关联分析实操/</code> 目录向 Agent 输入：</p>
+      <blockquote><p>读取 <code>课堂演示提示词.md</code>，执行其中「可复制的提示词」，从第一阶段开始。</p></blockquote>
+      <p>如果从课程总目录 <code>大数据金融/</code> 启动，使用 <code>02_Agent关联分析实操/课堂演示提示词.md</code>。工作目录自动识别为本模块目录，结果仍写到本模块的 <code>交付/</code>。</p>
+      <p><strong>发给学生</strong>：只发这一份 Markdown，或只发「可复制的提示词」那一段。学生不需要本仓库的任何其他目录。Agent 会在学生桌面上建 <code>Groceries关联分析/</code>（含 <code>数据/</code>、<code>交付/</code>）并在那里工作，不碰仓库目录。</p>
+      <p>本提示词只规定分析任务，没有预填分析结论。运行时由 Agent 计算结果。</p>
+      <p>提示词内含多个 CSV 下载地址，包括国内可用的 CDN 节点与 GitHub 加速镜像。学生本地没有 <code>数据/groceries.csv</code> 时，Agent 会依次尝试并校验，教师不需要另外分发数据文件。若全班都无法下载，把 CSV 随课程材料直接发给学生，学生放入 <code>数据/</code> 后用同一提示词即可。</p>
+
+      <h2>可复制的提示词</h2>
+      <p>点击右上角按钮复制，粘贴给 Agent 即可开始：</p>
+
+      <div class="prompt-box">
+        <button class="copy-btn" onclick="copyPrompt(this)">复制</button>
+        <pre id="prompt-text">你是我的数据分析助教。我正在给学生演示：如何用自然语言驱动 Agent，对真实购物篮数据完成关联规则分析。请实际读取文件、编写并运行 Python 代码，不要只给操作建议或代码模板。
+
+### 数据与执行范围
+
+- 先确定工作目录，再开始任何分析。按以下顺序判定，命中即停止：
+  1. 当前工作目录下已有 `数据/groceries.csv`，就把当前工作目录当作工作目录。
+  2. 当前工作目录包含本提示词（文件名 `课堂演示提示词.md`）且目录名以 `02_Agent关联分析实操` 开头，就把当前工作目录当作工作目录，这是教师仓库内演示的情形。
+  3. 当前工作目录下存在 `02_Agent关联分析实操/课堂演示提示词.md`，就把该 `02_Agent关联分析实操/` 子目录作为工作目录，这是从课程总目录 `大数据金融/` 启动的情形。
+  4. 其他情形（从桌面启动、或把本提示词直接粘给你、或目录里没有任何相关文件），在用户桌面新建 `Groceries关联分析/` 作为工作目录，内含 `数据/` 与 `交付/` 两个子目录。桌面用 `Path.home() / "Desktop"` 定位；不存在时试 `Path.home() / "OneDrive" / "Desktop"`；两者都不存在就报告实际探测结果并问我，不要自行选别的盘或路径。
+- 工作目录确定后，数据文件为 `<工作目录>/数据/groceries.csv`，代码与结果写入 `<工作目录>/交付/`；按需创建这两个子目录。不要在桌面根目录或其他文件夹散落文件。
+- 按以下顺序取数：
+  1. 数据文件已存在时，先按第 3 项完成四项校验；通过后使用，不得覆盖。已有文件校验失败时报告实测值并暂停，请我核对文件，不自动下载替换。
+  2. 文件缺失时，按顺序尝试下列地址，每次先将响应内容读入内存，按第 3 项校验，四项全部通过后才写入 `数据/groceries.csv` 并停止尝试。这些地址均用于获取同一份 CSV，内容以校验结果为准；前三个不经过 GitHub 主域名，国内网络优先试它们：
+     - https://fastly.jsdelivr.net/gh/stedy/Machine-Learning-with-R-datasets@master/groceries.csv
+     - https://gcore.jsdelivr.net/gh/stedy/Machine-Learning-with-R-datasets@master/groceries.csv
+     - https://cdn.jsdelivr.net/gh/stedy/Machine-Learning-with-R-datasets@master/groceries.csv
+     - https://ghfast.top/https://raw.githubusercontent.com/stedy/Machine-Learning-with-R-datasets/master/groceries.csv
+     - https://gh-proxy.com/https://raw.githubusercontent.com/stedy/Machine-Learning-with-R-datasets/master/groceries.csv
+     - https://raw.githubusercontent.com/stedy/Machine-Learning-with-R-datasets/master/groceries.csv
+     用 `urllib.request` 或 `requests` 依次请求，每个地址设 30 秒超时。请求失败、内容无法解析或任一校验不符，都记下该地址的错误或实测值，再试下一个地址；HTTP 请求成功不代表文件可用，未通过校验的内容不写入目标文件。
+  3. 四项校验基准：文件 500843 字节；9835 笔交易；169 个不同商品类别；SHA-256 为 `ff1be892fd6b9b57d1a7bc50de067798963dda607619645988b21789bf23ae3b`。基于原始字节计算文件大小和哈希，并用 UTF-8 解码、按无表头 CSV 解析后统计交易数与类别数；四项全部通过才进入分析，不修改数据凑数。校验失败时，已有文件按第 1 项暂停处理，新下载的响应按第 2 项继续尝试。
+  4. 全部地址均未通过请求与校验时，列出每个地址的错误或实测值，暂停并请我把 `groceries.csv` 放到 `<工作目录>/数据/`，重新校验通过后再继续。不用模拟数据，也不凭记忆生成数据。
+  5. 报告里写明以下数据来源、引用，以及本次实际下载地址和四项校验结果；若使用已有文件，写明本地路径，实际下载地址未知时如实标注，不把来源链接冒充本次下载记录。学生无需另取 `README.md`；教师端的模块 `README.md` 仅作补充：
+     - 数据说明：arules 官方将 Groceries 描述为一家食品杂货店连续 30 天的真实收银交易。官方说明：https://mhahsler.github.io/arules/reference/Groceries.html 。
+     - CSV 来源：Machine-Learning-with-R-datasets 仓库提供的镜像，原始地址为 https://raw.githubusercontent.com/stedy/Machine-Learning-with-R-datasets/master/groceries.csv 。
+     - 官方列示的论文引用：Michael Hahsler, Kurt Hornik, and Thomas Reutterer (2006). Implications of probabilistic data modeling for mining association rules. In *From Data and Information Analysis to Knowledge Engineering*, pp. 598–605. Springer-Verlag.
+- CSV 无表头，每行是一笔交易，逗号分隔商品类别，各行长度不同。使用 `csv.reader` 或等价方法读取，第一行必须保留。
+- 原始 CSV 保持不变。分析代码和结果保存到工作目录的 `交付/`，仅保留 `关联分析.py`、`关联规则.csv`、`分析报告.md`。脚本位于 `交付/`，数据位于其上一级目录下的 `数据/`，使用 `Path(__file__).resolve().parent.parent / "数据" / "groceries.csv"` 定位输入；输出写入 `Path(__file__).resolve().parent`，确保换工作目录后仍可复跑。
+- 优先使用现有 Python 环境。缺少依赖时说明情况，征得同意后再安装，不擅自修改全局环境。
+- 用中文讲解；商品名保留英文，并在展示时补中文释义。所有数值来自实际执行，清楚区分已执行与未执行的检查。
+
+### 演示节奏
+
+按以下四个阶段执行。每阶段开始前，用两三句话说明目标和做法；执行后展示关键结果，解释给初学者听。**每阶段结束暂停，等待我回复「继续」再进入下一阶段。**
+
+### 第一阶段：认识并检查数据
+
+先确认数据已经就位：使用已有的工作目录，或按「数据与执行范围」新建工作目录并下载、通过四项校验。开场报一句工作目录的绝对路径。然后展示前 5 笔交易，说明一行代表什么。统计交易数、不同商品类别数、商品类别出现总次数，以及每笔交易的商品类别数的最小值、最大值和平均值。
+
+检查空交易、空商品名和同一交易内重复类别。展示实际交易数、类别数与本提示词四项校验基准的对照；如有差异，按上述校验失败分支处理，不修改数据凑数。遇到必须清洗的情况，说明规则，清洗仅作用于内存副本，并记录前后数量。
+
+### 第二阶段：先看单个商品
+
+列出出现最频繁的 10 个商品类别，展示出现的交易数及其占全部交易的比例。用其中一个商品解释「支持度」，再提出一个问题：热门商品出现在很多规则里，是否就代表规则有价值？暂不预设答案。
+
+### 第三阶段：用 Apriori 挖掘关联规则
+
+在完整数据上进行探索性分析。按购物篮内是否出现某商品编码，不把类别出现次数当成购买数量。
+
+参数固定为：最小支持度 0.01，最小置信度 0.30，最小提升度 1.20；项集最多包含 3 个商品，规则后件只包含 1 个商品。
+
+说明三个指标的含义和分母。报告频繁项集数、置信度筛选后的规则数、提升度筛选后的规则数。按提升度降序排列，同提升度按支持度降序排列，展示前 10 条规则；不足 10 条则如实展示，不暗中降低阈值。
+
+根据实际结果解释每次筛选是否减少了规则数。若置信度筛选后仍有规则，且提升度筛选前后数量相同，说明本次通过置信度筛选的规则也都达到了提升度阈值，并展示这些规则中的最小提升度作为核对；数量相同本身不代表漏做筛选。若置信度筛选后没有规则，则说明没有可供提升度筛选的规则，不计算不存在的最小值。保持原定阈值，不为制造筛选差异调整参数。
+
+规则表至少包含：前件、后件、共同出现的交易数、支持度、置信度、后件支持度、提升度。完整精度的结果保存为 `关联规则.csv`，展示时再四舍五入。
+
+### 第四阶段：解释、复核与判断
+
+从结果中选一条容易解释的规则，回到购物篮原始记录，独立数出总交易数 N、包含前件的交易数 n(A)、包含后件的交易数 n(B)、共同出现的交易数 n(A∩B)。代入公式复核支持度、置信度和提升度，并与规则表比较。
+
+用同一组计数计算反向规则的置信度，说明为什么 A→B 与 B→A 的置信度可以不同，而支持度、提升度相同。
+
+选择最多 3 条规则解释其业务含义。每条都区分「数据中观察到的关联」和「有待验证的经营建议」。说明这份数据没有顾客身份、交易时间、售价和成本，不能据此判断购买先后、因果关系或利润增长。
+
+最后保存可复跑的 `关联分析.py` 和 `分析报告.md`。报告记录数据来源、检查结果、参数、规则摘要、计数复核和局限。明确这是同一份数据上的探索性结果，尚未用独立样本检验，也未验证经营建议的实际效果。展示工作目录与交付文件的绝对路径，以及一条重新运行分析的命令。</pre>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  (function () {
+    var btn = document.getElementById('theme-toggle');
+    if (btn && window.Theme) btn.addEventListener('click', function () { window.Theme.toggle(); });
+  })();
+  function copyPrompt(btn) {
+    var text = document.getElementById('prompt-text').innerText;
+    navigator.clipboard.writeText(text).then(function () {
+      btn.textContent = '已复制';
+      setTimeout(function () { btn.textContent = '复制'; }, 2000);
+    });
+  }
+</script>
+</body>
+</html>
