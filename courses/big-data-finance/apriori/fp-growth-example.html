@@ -82,7 +82,7 @@
         <tr><td>是否生成候选</td><td class="col-apriori">是。k 项集由 (k−1) 项集两两连接生成，再剪枝</td><td class="col-fpgrowth">否。不枚举候选，直接在树上读路径</td></tr>
         <tr><td>扫描数据次数</td><td class="col-apriori">每一层扫一次全表；n 个商品最多扫 n 次</td><td class="col-fpgrowth">只扫两次：第一次建头表，第二次建树</td></tr>
         <tr><td>内存占用</td><td class="col-apriori">候选项集可能爆炸式增长，尤其支持度低时</td><td class="col-fpgrowth">整棵树压缩在内存里，相同前缀的路径共享节点</td></tr>
-        <tr><td>适合数据</td><td class="col-apriori">稀疏、项集短、支持度较高的数据集</td><td class="col-fpgrowth">稠密、重复模式多的数据集；树塞不进内存时反而不如 Apriori</td></tr>
+        <tr><td>适合数据</td><td class="col-apriori">像街边小店：SKU 少、每笔就买一两样、重复率低——反复盘点也不累，因为本来就没多少货</td><td class="col-fpgrowth">像大超市：购物篮里东西多、大家买的重叠度高——建仓库有规模效应；但如果店太小，建仓库反而浪费</td></tr>
         <tr><td>主要代价</td><td class="col-apriori">像反复跑全量报表：每一层都重新盘点一遍，时间和人力成本高，但不需要额外租"仓库"</td><td class="col-fpgrowth">像一次性建数据仓库：前期投入大（建树占内存），但后续找规律快；仓库本身也有维护成本</td></tr>
         <tr><td>结果是否相同</td><td colspan="2">相同——在相同最小支持度下，两个算法找出的频繁项集集合完全一致，只是路径不同</td></tr>
       </table>
