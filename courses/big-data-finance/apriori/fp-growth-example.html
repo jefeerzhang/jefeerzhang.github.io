@@ -31,6 +31,12 @@
     .article code { font-family: var(--mono); font-size: 0.9em; padding: 1px 5px; background: var(--surface-soft); border-radius: 4px; }
     .article pre code { padding: 0; background: none; }
     .article strong { color: var(--ink); }
+    .compare-table th, .compare-table td { text-align: left; }
+    .compare-table th.col-apriori { background: rgba(220, 80, 60, 0.12); color: #c0392b; }
+    .compare-table th.col-fpgrowth { background: rgba(40, 120, 200, 0.12); color: #2471a3; }
+    .compare-table td.col-apriori { background: rgba(220, 80, 60, 0.04); }
+    .compare-table td.col-fpgrowth { background: rgba(40, 120, 200, 0.04); }
+    .compare-table tr:last-child td { background: var(--surface-soft); text-align: center; font-style: italic; color: var(--muted); }
   </style>
 </head>
 <body class="home-page">
@@ -70,14 +76,14 @@
     <section class="container article">
       <h2>先看对比：Apriori 和 FP-Growth 差在哪</h2>
       <p>两个算法目标相同——找出满足最小支持度的频繁项集，但思路完全不同。下表用同一组维度对比，看完再读后面的递归示例会更清楚 FP-Growth 省在哪里。</p>
-      <table>
-        <tr><th>维度</th><th>Apriori</th><th>FP-Growth</th></tr>
-        <tr><td>核心思路</td><td>逐层生成候选项集，每一层都扫描全表计数</td><td>把数据压缩成一棵 FP 树，再在树上递归提取条件模式基</td></tr>
-        <tr><td>是否生成候选</td><td>是。k 项集由 (k−1) 项集两两连接生成，再剪枝</td><td>否。不枚举候选，直接在树上读路径</td></tr>
-        <tr><td>扫描数据次数</td><td>每一层扫一次全表；n 个商品最多扫 n 次</td><td>只扫两次：第一次建头表，第二次建树</td></tr>
-        <tr><td>内存占用</td><td>候选项集可能爆炸式增长，尤其支持度低时</td><td>整棵树压缩在内存里，相同前缀的路径共享节点</td></tr>
-        <tr><td>适合数据</td><td>稀疏、项集短、支持度较高的数据集</td><td>稠密、重复模式多的数据集；树塞不进内存时反而不如 Apriori</td></tr>
-        <tr><td>主要代价</td><td>多次 I/O + 候选生成与剪枝的计算</td><td>建树和递归的内存开销，条件模式基可能反复拷贝</td></tr>
+      <table class="compare-table">
+        <tr><th>维度</th><th class="col-apriori">Apriori</th><th class="col-fpgrowth">FP-Growth</th></tr>
+        <tr><td>核心思路</td><td class="col-apriori">逐层生成候选项集，每一层都扫描全表计数</td><td class="col-fpgrowth">把数据压缩成一棵 FP 树，再在树上递归提取条件模式基</td></tr>
+        <tr><td>是否生成候选</td><td class="col-apriori">是。k 项集由 (k−1) 项集两两连接生成，再剪枝</td><td class="col-fpgrowth">否。不枚举候选，直接在树上读路径</td></tr>
+        <tr><td>扫描数据次数</td><td class="col-apriori">每一层扫一次全表；n 个商品最多扫 n 次</td><td class="col-fpgrowth">只扫两次：第一次建头表，第二次建树</td></tr>
+        <tr><td>内存占用</td><td class="col-apriori">候选项集可能爆炸式增长，尤其支持度低时</td><td class="col-fpgrowth">整棵树压缩在内存里，相同前缀的路径共享节点</td></tr>
+        <tr><td>适合数据</td><td class="col-apriori">稀疏、项集短、支持度较高的数据集</td><td class="col-fpgrowth">稠密、重复模式多的数据集；树塞不进内存时反而不如 Apriori</td></tr>
+        <tr><td>主要代价</td><td class="col-apriori">多次 I/O + 候选生成与剪枝的计算</td><td class="col-fpgrowth">建树和递归的内存开销，条件模式基可能反复拷贝</td></tr>
         <tr><td>结果是否相同</td><td colspan="2">相同——在相同最小支持度下，两个算法找出的频繁项集集合完全一致，只是路径不同</td></tr>
       </table>
 
