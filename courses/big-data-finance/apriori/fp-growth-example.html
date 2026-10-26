@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FP-Growth 条件树递归示例 · Apriori 算法 · 课程中心</title>
+  <meta name="description" content="用 5 笔交易完整走完 FP-Growth：建树、提取条件模式基、递归，得到全部 18 个频繁项集。">
+  <script src="../../../assets/theme.js"></script>
+  <link rel="stylesheet" href="../../../assets/site.css?v=22">
+  <style>
+    .page-hero { padding: 48px 0 28px; border-bottom: 1px solid var(--line-strong); }
+    .page-hero h1 { margin: 0; font-family: var(--display); font-size: clamp(28px, 3.5vw, 40px); font-weight: 700; line-height: 1.15; letter-spacing: -0.01em; }
+    .breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--muted); }
+    .breadcrumb a { color: var(--muted); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb .sep { opacity: 0.5; }
+    .breadcrumb .current { color: var(--ink); }
+    .article { max-width: 820px; padding: 36px 0 80px; }
+    .article h2 { margin-top: 2.2em; font-family: var(--display); font-size: 22px; font-weight: 700; line-height: 1.3; color: var(--ink); border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+    .article h3 { margin-top: 1.8em; font-family: var(--display); font-size: 17px; font-weight: 700; color: var(--ink); }
+    .article p { margin: 0.8em 0; color: var(--text); font-size: 15px; line-height: 1.8; }
+    .article ul, .article ol { margin: 0.6em 0; padding-left: 1.6em; color: var(--text); font-size: 15px; line-height: 1.8; }
+    .article li { margin: 0.3em 0; }
+    .article blockquote { margin: 1em 0; padding: 12px 18px; border-left: 3px solid var(--accent); background: var(--surface-soft); color: var(--text); font-size: 14.5px; line-height: 1.7; border-radius: 0 6px 6px 0; }
+    .article table { width: 100%; margin: 1em 0; border-collapse: collapse; font-size: 14px; }
+    .article th, .article td { padding: 8px 12px; border: 1px solid var(--line); text-align: left; }
+    .article th { background: var(--surface-soft); font-weight: 700; color: var(--ink); }
+    .article td { color: var(--text); }
+    .article td:last-child, .article th:last-child { text-align: right; }
+    .article pre { margin: 1em 0; padding: 16px 18px; background: var(--surface-soft); border: 1px solid var(--line); border-radius: 8px; overflow-x: auto; font-family: var(--mono); font-size: 13px; line-height: 1.6; color: var(--text); }
+    .article code { font-family: var(--mono); font-size: 0.9em; padding: 1px 5px; background: var(--surface-soft); border-radius: 4px; }
+    .article pre code { padding: 0; background: none; }
+    .article strong { color: var(--ink); }
+  </style>
+</head>
+<body class="home-page">
+  <header class="site-header">
+    <nav class="site-nav" aria-label="主导航">
+      <div class="container nav-inner">
+        <a class="site-brand" href="../../../">张剑 <span>/ Jian Zhang</span></a>
+        <div class="nav-links">
+          <a href="../../../">首页</a>
+          <a href="../../../cv/">个人简历</a>
+          <a href="../../" aria-current="page">课程中心</a>
+          <a href="../../../knowledge/">知识学习</a>
+          <a href="../../../tools/">小工具</a>
+          <button type="button" class="theme-toggle" id="theme-toggle" aria-label="切换主题">
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.9 4.9l1.4 1.4"/><path d="M17.7 17.7l1.4 1.4"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M4.9 19.1l1.4-1.4"/><path d="M17.7 6.3l1.4-1.4"/></svg>
+          </button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="面包屑">
+          <a href="../../">课程中心</a><span class="sep">/</span>
+          <a href="../../#undergraduate">本科课程</a><span class="sep">/</span>
+          <a href="../">大数据金融</a><span class="sep">/</span>
+          <a href="./">Apriori 算法</a><span class="sep">/</span>
+          <span class="current">FP-Growth 示例</span>
+        </nav>
+        <h1>FP-Growth 条件模式基与条件 FP 树：完整递归示例</h1>
+      </div>
+    </section>
+
+    <section class="container article">
+      <p>用 5 笔交易走完 FP-Growth 的全过程：建树，再逐个商品提取条件模式基、建立条件 FP 树、递归，最后得到全部 18 个频繁项集。每一步都可以手算复核。</p>
+
+      <p>本文用到的记号：</p>
+      <table>
+        <tr><th>写法</th><th>含义</th></tr>
+        <tr><td><code>f(3)</code></td><td>树中这个节点有 3 笔交易经过</td></tr>
+        <tr><td><code>{f, c}: 3</code></td><td>项集 {f, c} 的支持度计数为 3，即有 3 笔交易同时包含 f 和 c</td></tr>
+        <tr><td><code>f → c → a</code></td><td>树中从根节点往下的一条路径</td></tr>
+      </table>
+      <p>支持度计数按<strong>交易笔数</strong>统计，不是商品件数。</p>
+
+      <h2>1. 数据</h2>
+      <table>
+        <tr><th>交易</th><th>商品</th></tr>
+        <tr><td>T1</td><td>f、a、c、d、g、i、m、p</td></tr>
+        <tr><td>T2</td><td>a、b、c、f、l、m、o</td></tr>
+        <tr><td>T3</td><td>b、f、h、j、o</td></tr>
+        <tr><td>T4</td><td>b、c、k、s、p</td></tr>
+        <tr><td>T5</td><td>a、f、c、e、l、p、m、n</td></tr>
+      </table>
+      <p><strong>最小支持度计数为 3</strong>（即 3/5 = 60%）：一个项集至少出现在 3 笔交易中，才算频繁项集。</p>
+
+      <h2>2. 建立 FP 树：扫描两遍数据</h2>
+
+      <h3>一个类比：很多人走山路</h3>
+      <ul>
+        <li>每笔交易看成一个人走的一条路线。</li>
+        <li>路线开头相同的人，就走同一段路。</li>
+        <li>走到岔口，大家才各走各的。</li>
+        <li>每段路上立一块牌子，记录走过的人数。</li>
+      </ul>
+      <p>FP 树就是这张路线图。树上的 <code>f(4)</code> 表示有 4 笔交易经过 f 这个节点。</p>
+
+      <h3>第一遍：筛选商品并排序</h3>
+      <table>
+        <tr><th>商品</th><th>f</th><th>c</th><th>a</th><th>b</th><th>m</th><th>p</th><th>其他</th></tr>
+        <tr><td>交易笔数</td><td>4</td><td>4</td><td>3</td><td>3</td><td>3</td><td>3</td><td>都小于 3</td></tr>
+      </table>
+      <p>只保留这 6 个商品，按计数从高到低排列。f 与 c 计数相同，本例把 f 排在前面：</p>
+      <pre><code>f &gt; c &gt; a &gt; b &gt; m &gt; p</code></pre>
+      <p>每笔交易删去不频繁的商品，再按这个顺序重排：</p>
+      <table>
+        <tr><th>交易</th><th>有序商品序列</th></tr>
+        <tr><td>T1</td><td>f → c → a → m → p</td></tr>
+        <tr><td>T2</td><td>f → c → a → b → m</td></tr>
+        <tr><td>T3</td><td>f → b</td></tr>
+        <tr><td>T4</td><td>c → b → p</td></tr>
+        <tr><td>T5</td><td>f → c → a → m → p</td></tr>
+      </table>
+
+      <h3>第二遍：逐笔插入，建成 FP 树</h3>
+      <p>开头相同的交易共用同一段路径，从第一个不同的商品开始分叉。T1 与 T5 完全相同，所以整条路径的计数都是 2。</p>
+      <pre><code>根节点
+├── f(4)
+│   ├── c(3)
+│   │   └── a(3)
+│   │       ├── m(2)
+│   │       │   └── p(2)      ← T1、T5
+│   │       └── b(1)
+│   │           └── m(1)      ← T2
+│   └── b(1)                  ← T3
+└── c(1)
+    └── b(1)
+        └── p(1)              ← T4</code></pre>
+      <p>算法还会维护一张<strong>头表</strong>：记录每个商品的总计数，并用节点链把树中所有同名节点串起来，便于快速找到某个商品的全部位置。上图省略了节点链。</p>
+      <table>
+        <tr><th>头表商品</th><th>f</th><th>c</th><th>a</th><th>b</th><th>m</th><th>p</th></tr>
+        <tr><td>总计数</td><td>4</td><td>4</td><td>3</td><td>3</td><td>3</td><td>3</td></tr>
+      </table>
+
+      <h3>FP 树的用处</h3>
+      <ul>
+        <li><strong>只扫描两遍数据。</strong>第一遍数商品，第二遍建树。之后的挖掘只在树上进行。</li>
+        <li><strong>不生成候选组合。</strong>Apriori 每一层都要先列出所有候选组合，再回头扫描数据逐个检查。FP-Growth 直接沿着树上的路径找组合。</li>
+        <li><strong>头表相当于目录。</strong>头表用节点链把同名节点串起来。比如要找所有 m，顺着链就能走到每个 m 节点，不必遍历整棵树。</li>
+      </ul>
+
+      <h2>3. 递归的方法</h2>
+      <p>核心思路只有一句：</p>
+      <blockquote>固定一个商品 x，把所有通向 x 的路径单独取出来，看哪些商品经常和 x 一起出现。</blockquote>
+      <p>对当前树中的每个商品 x，按头表<strong>从后往前</strong>依次做四步：</p>
+      <ol>
+        <li><strong>输出项集。</strong>把树中所有 x 节点的计数相加，就是 x 与已固定商品组成的项集的支持度。</li>
+        <li><strong>提取条件模式基。</strong>对每个 x 节点，取根节点到它之前的路径（前缀路径），并把该节点的计数作为这条路径的<strong>权重</strong>。</li>
+        <li><strong>建立条件 FP 树。</strong>按权重汇总前缀中每个商品的计数，删去小于 3 的商品，用剩下的路径建一棵更小的树。</li>
+        <li><strong>递归。</strong>条件 FP 树不为空时，就在这棵树上重复这四步，并把 x 加入已固定的商品；条件 FP 树为空时，这一支结束。</li>
+      </ol>
+      <p>伪代码：</p>
+      <pre><code>挖掘(树 T, 已固定的商品 α):
+    按头表从后往前，依次处理每个商品 x:
+        输出 {x} ∪ α 及其支持度
+        提取 x 的条件模式基，建立条件 FP 树 T_x
+        如果 T_x 不为空:
+            挖掘(T_x, {x} ∪ α)</code></pre>
+      <p>条件 FP 树里的计数是<strong>条件支持度</strong>：只统计同时包含已固定商品的交易，通常小于该商品的原始计数。</p>
+
+      <h2>4. 逐个商品挖掘</h2>
+      <p>处理顺序是 <code>p → m → b → a → c → f</code>。先看总览：</p>
+      <table>
+        <tr><th>商品</th><th>条件模式基（权重）</th><th>保留的商品</th><th>条件 FP 树</th><th>频繁项集数</th></tr>
+        <tr><td>p</td><td>f→c→a→m (2)；c→b (1)</td><td>c</td><td><code>c(3)</code></td><td>2</td></tr>
+        <tr><td>m</td><td>f→c→a (2)；f→c→a→b (1)</td><td>f、c、a</td><td><code>f(3)→c(3)→a(3)</code></td><td>8</td></tr>
+        <tr><td>b</td><td>f→c→a (1)；f (1)；c (1)</td><td>无</td><td>空</td><td>1</td></tr>
+        <tr><td>a</td><td>f→c (3)</td><td>f、c</td><td><code>f(3)→c(3)</code></td><td>4</td></tr>
+        <tr><td>c</td><td>f (3)</td><td>f</td><td><code>f(3)</code></td><td>2</td></tr>
+        <tr><td>f</td><td>无</td><td>无</td><td>空</td><td>1</td></tr>
+      </table>
+      <p>下面逐个展开。</p>
+
+      <h3>4.1 p：条件支持度不等于原始支持度</h3>
+      <p>树中有两个 p 节点，计数为 2 和 1，所以 <code>{p}: 3</code>。</p>
+      <table>
+        <tr><th>条件模式基</th><th>权重</th></tr>
+        <tr><td>f → c → a → m</td><td>2</td></tr>
+        <tr><td>c → b</td><td>1</td></tr>
+      </table>
+      <p>按权重汇总：</p>
+      <table>
+        <tr><th>前缀商品</th><th>f</th><th>c</th><th>a</th><th>m</th><th>b</th></tr>
+        <tr><td>条件支持度</td><td>2</td><td>2+1=3</td><td>2</td><td>2</td><td>1</td></tr>
+      </table>
+      <p>只有 c 达到 3，条件 FP 树只有一个节点 <code>c(3)</code>，得到 <code>{c, p}: 3</code>。c 没有前缀，这一支结束。</p>
+      <p>f 的原始计数是 4，但包含 p 的交易里只有 2 笔含 f，所以 <code>{f, p}</code> 不频繁。</p>
+      <p><strong>结果</strong>：<code>{p}: 3</code>、<code>{c, p}: 3</code></p>
+
+      <h3>4.2 m：多层递归</h3>
+      <p>树中有两个 m 节点，计数为 2 和 1，所以 <code>{m}: 3</code>。</p>
+      <table>
+        <tr><th>条件模式基</th><th>权重</th></tr>
+        <tr><td>f → c → a</td><td>2</td></tr>
+        <tr><td>f → c → a → b</td><td>1</td></tr>
+      </table>
+      <p>按权重汇总：</p>
+      <table>
+        <tr><th>前缀商品</th><th>f</th><th>c</th><th>a</th><th>b</th></tr>
+        <tr><td>条件支持度</td><td>3</td><td>3</td><td>3</td><td>1</td></tr>
+      </table>
+      <p>删去 b，得到条件 FP 树：</p>
+      <pre><code>FP-tree(m)
+根节点
+└── f(3)
+    └── c(3)
+        └── a(3)</code></pre>
+      <p>这棵树不为空，继续递归。已固定的商品是 m，按 <code>a → c → f</code> 的顺序处理：</p>
+      <table>
+        <tr><th>在 FP-tree(m) 中处理</th><th>输出</th><th>条件模式基</th><th>继续递归</th></tr>
+        <tr><td>a</td><td><code>{a, m}: 3</code></td><td>f → c (3)</td><td>在 f(3)→c(3) 上：处理 c 得 {c,a,m}，再处理 f 得 {f,c,a,m}；处理 f 得 {f,a,m}</td></tr>
+        <tr><td>c</td><td><code>{c, m}: 3</code></td><td>f (3)</td><td>在 f(3) 上：得 {f, c, m}</td></tr>
+        <tr><td>f</td><td><code>{f, m}: 3</code></td><td>无</td><td>结束</td></tr>
+      </table>
+      <p>递归路线：</p>
+      <pre><code>{m}
+├── {a, m}
+│   ├── {c, a, m}
+│   │   └── {f, c, a, m}
+│   └── {f, a, m}
+├── {c, m}
+│   └── {f, c, m}
+└── {f, m}</code></pre>
+      <p>一条只有三个节点的链，递归出了 f、c、a 所有非空组合与 m 的搭配，共 7 种，加上 <code>{m}</code> 本身共 8 个。</p>
+      <p><strong>结果</strong>：<code>{m}</code>、<code>{f, m}</code>、<code>{c, m}</code>、<code>{a, m}</code>、<code>{f, c, m}</code>、<code>{f, a, m}</code>、<code>{c, a, m}</code>、<code>{f, c, a, m}</code>，计数均为 3。</p>
+
+      <h3>4.3 b：条件树为空</h3>
+      <p>树中有三个 b 节点，各为 1，所以 <code>{b}: 3</code>。</p>
+      <table>
+        <tr><th>条件模式基</th><th>权重</th></tr>
+        <tr><td>f → c → a</td><td>1</td></tr>
+        <tr><td>f</td><td>1</td></tr>
+        <tr><td>c</td><td>1</td></tr>
+      </table>
+      <p>汇总后 f = 2、c = 2、a = 1，都小于 3。条件 FP 树为空，这一支结束。</p>
+      <p><strong>结果</strong>：<code>{b}: 3</code></p>
+
+      <h3>4.4 a：与 m 分支里的子树相同</h3>
+      <p>树中只有一个 a 节点，计数为 3，所以 <code>{a}: 3</code>。条件模式基只有 <code>f → c</code>（权重 3），条件 FP 树为 <code>f(3) → c(3)</code>。</p>
+      <p>在这棵树上：处理 c 得到 <code>{c, a}</code>，再处理 f 得到 <code>{f, c, a}</code>；处理 f 得到 <code>{f, a}</code>。</p>
+      <p><strong>结果</strong>：<code>{a}</code>、<code>{f, a}</code>、<code>{c, a}</code>、<code>{f, c, a}</code>，计数均为 3。</p>
+
+      <h3>4.5 c：根节点下的空前缀</h3>
+      <p>树中有两个 c 节点：f 下方的 <code>c(3)</code> 和根节点下方的 <code>c(1)</code>，所以 <code>{c}: 4</code>。</p>
+      <p>根节点下方的 <code>c(1)</code> 前面没有商品，不产生条件模式，只计入 <code>{c}</code> 的支持度。条件模式基只有 <code>f</code>（权重 3），条件 FP 树为 <code>f(3)</code>。</p>
+      <p><strong>结果</strong>：<code>{c}: 4</code>、<code>{f, c}: 3</code></p>
+
+      <h3>4.6 f：没有前缀</h3>
+      <p>f 只在根节点下方出现，没有前缀。</p>
+      <p><strong>结果</strong>：<code>{f}: 4</code></p>
+
+      <h2>5. 全部频繁项集</h2>
+      <table>
+        <tr><th>长度</th><th>频繁项集及支持度计数</th></tr>
+        <tr><td>1</td><td><code>{f}: 4</code>、<code>{c}: 4</code>、<code>{a}: 3</code>、<code>{b}: 3</code>、<code>{m}: 3</code>、<code>{p}: 3</code></td></tr>
+        <tr><td>2</td><td><code>{f, c}: 3</code>、<code>{f, a}: 3</code>、<code>{f, m}: 3</code>、<code>{c, a}: 3</code>、<code>{c, m}: 3</code>、<code>{c, p}: 3</code>、<code>{a, m}: 3</code></td></tr>
+        <tr><td>3</td><td><code>{f, c, a}: 3</code>、<code>{f, c, m}: 3</code>、<code>{f, a, m}: 3</code>、<code>{c, a, m}: 3</code></td></tr>
+        <tr><td>4</td><td><code>{f, c, a, m}: 3</code></td></tr>
+      </table>
+      <p>共 <strong>18 个</strong>。回到原始交易抽查：</p>
+      <table>
+        <tr><th>项集</th><th>出现的交易</th><th>计数</th><th>是否频繁</th></tr>
+        <tr><td><code>{f, c}</code></td><td>T1、T2、T5</td><td>3</td><td>是</td></tr>
+        <tr><td><code>{c, p}</code></td><td>T1、T4、T5</td><td>3</td><td>是</td></tr>
+        <tr><td><code>{f, c, a, m}</code></td><td>T1、T2、T5</td><td>3</td><td>是</td></tr>
+        <tr><td><code>{f, b}</code></td><td>T2、T3</td><td>2</td><td>否</td></tr>
+      </table>
+
+      <h2>6. 为什么不重复、不遗漏</h2>
+      <p>在顺序 <code>f &gt; c &gt; a &gt; b &gt; m &gt; p</code> 下，每个项集里排在最后的商品是唯一确定的，这个项集就由那个商品的分支负责产生：</p>
+      <table>
+        <tr><th>项集</th><th>排在最后的商品</th><th>产生路径</th></tr>
+        <tr><td><code>{c, p}</code></td><td>p</td><td>p 分支 → c</td></tr>
+        <tr><td><code>{f, c, a}</code></td><td>a</td><td>a 分支 → c → f</td></tr>
+        <tr><td><code>{f, c, a, m}</code></td><td>m</td><td>m 分支 → a → c → f</td></tr>
+      </table>
+      <p>每个项集只属于一个分支，所以不会重复；每个分支都穷举了它的所有前缀组合，所以不会遗漏。FP-Growth 的"增长"，就是在已固定的商品前面不断加入新商品，让短组合逐步变长。</p>
+
+      <h2>7. 手算常见错误</h2>
+      <table>
+        <tr><th>错误</th><th>正确做法</th></tr>
+        <tr><td>把每条前缀路径都当作 1 笔交易</td><td>用节点计数作为路径权重</td></tr>
+        <tr><td>在条件树里沿用原始计数</td><td>在条件模式基中按权重重新计数</td></tr>
+        <tr><td>把节点下方的商品也放进条件模式基</td><td>只取从根节点到该节点之前的前缀</td></tr>
+        <tr><td>漏算根节点下方的节点</td><td>空前缀不进入条件模式基，但节点计数要计入支持度</td></tr>
+        <tr><td>只挖一层就停</td><td>条件 FP 树不为空，就继续递归</td></tr>
+      </table>
+      <p>FP-Growth 只负责找出频繁项集。关联规则要在这些项集的基础上，再按置信度和提升度生成。</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>由 GitHub Pages 托管</span>
+      <div class="footer-links">
+        <a href="https://github.com/jefeerzhang" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://orcid.org/0000-0002-8024-5483" target="_blank" rel="noopener">ORCID</a>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  (function () {
+    var btn = document.getElementById('theme-toggle');
+    if (!btn || !window.Theme) return;
+    btn.addEventListener('click', function () { window.Theme.toggle(); });
+  })();
+</script>
+</body>
+</html>
