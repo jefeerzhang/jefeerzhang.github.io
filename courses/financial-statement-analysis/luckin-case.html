@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23002FA7'/%3E%3Ctext x='32' y='46' font-size='32' text-anchor='middle' fill='white' font-family='Georgia,serif'%3E¥%3C/text%3E%3C/svg%3E">
+<title>专题二 · 利润是真的吗？——财务造假识别与报表可信度审计 — 财报分析学生学习包</title>
+<meta name="description" content="硕士课程《财报分析》专题二：四家匿名 A 股医药公司盲测判断与瑞幸咖啡做空复盘，红旗识别、封存排序、AI 后见之明测试与经营数据交叉验证。">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+:root{
+  --paper:#fafaf8;
+  --ink:#0a0a0a;
+  --grey-1:#f0f0ee;
+  --grey-2:#d4d4d2;
+  --grey-3:#737373;
+  --accent:#002FA7;
+  --mono:"JetBrains Mono","Cascadia Code",Consolas,"Courier New",monospace;
+  --sans:"Inter","Helvetica Neue","Noto Sans SC","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+.container{max-width:920px;margin:0 auto;padding:0 24px}
+
+header{background:var(--ink);color:#fff;padding:56px 0 40px;border-bottom:6px solid var(--accent)}
+header .tag{font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;font-weight:600}
+header .tag::before{content:"// "}
+header h1{font-size:34px;line-height:1.25;font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+header .sub{font-size:16.5px;color:var(--grey-2);margin-bottom:22px;max-width:640px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:12.5px;color:#fff;border:1px solid var(--grey-3);padding:4px 12px;background:rgba(255,255,255,.03);font-weight:500}
+
+nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--grey-2);margin-bottom:28px}
+nav .links{display:flex;gap:0;flex-wrap:wrap;padding:6px 0}
+nav a{font-size:14px;color:var(--grey-3);text-decoration:none;padding:8px 14px;border-left:1px solid var(--grey-2);transition:color .15s;font-weight:500}
+nav a:first-child{border-left:none}
+nav a:hover{color:var(--accent)}
+nav a.back{color:var(--accent);font-weight:500;margin-right:8px}
+
+section{margin-bottom:44px;scroll-margin-top:56px}
+h2{font-size:23px;font-weight:700;color:var(--ink);margin:36px 0 16px;padding:0 0 10px 14px;border-left:6px solid var(--accent);display:flex;align-items:baseline;gap:12px;letter-spacing:-.01em;flex-wrap:wrap}
+h2 .no{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.12em;font-weight:600}
+h3{font-size:17.5px;font-weight:700;margin:24px 0 10px;color:var(--ink)}
+h4{font-size:15.5px;font-weight:700;margin:18px 0 8px;color:var(--ink)}
+p{margin:8px 0}
+ul,ol{margin:8px 0 8px 24px}
+li{margin:5px 0}
+code{font-family:var(--mono);font-size:.86em;background:var(--grey-1);padding:1px 6px;color:var(--ink);font-weight:500}
+strong{font-weight:700}
+a{color:var(--accent)}
+a:hover{color:#0047d0}
+
+.panel{background:var(--grey-1);border:1px solid var(--grey-2);padding:20px 22px;margin:14px 0}
+.takeaway{border-left:4px solid var(--accent);background:var(--grey-1);padding:12px 18px;font-weight:600;color:var(--ink);margin:14px 0}
+.warnbox{border-left:4px solid var(--ink);background:var(--grey-1);padding:12px 18px;margin:14px 0;font-size:14.5px}
+.note{font-size:14px;color:var(--grey-3);margin:6px 0}
+
+.submission-bar{background:var(--accent);color:#fff}
+.submission-bar .container{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px}
+.submission-bar strong{display:block;font-size:16px}
+.submission-bar span{font-size:13px;color:#e8edff}
+.submission-bar a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 20px;background:#fff;color:var(--accent);font-weight:700;text-decoration:none;white-space:nowrap}
+.submission-bar a:hover{background:#edf1ff}
+.submission-bar a:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.submission-bottom{margin-top:32px}
+
+.tablewrap{overflow-x:auto;margin:4px 0}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px}
+th,td{border:1px solid var(--grey-2);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--grey-1);color:var(--ink);font-weight:600;font-size:14px}
+td.num,th.num{text-align:center;font-family:var(--mono);font-size:13.5px;white-space:nowrap}
+tr.total td{font-weight:700;background:var(--grey-1)}
+
+.task{border:1px solid var(--grey-2);margin:16px 0;background:var(--paper)}
+.task-head{background:var(--grey-1);padding:10px 20px;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--grey-2);font-size:15.5px}
+.task-head .meta{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--accent)}
+.task-body{padding:14px 20px 18px}
+
+.prompt{background:#fff;border:1px dashed var(--grey-3);padding:14px 18px;margin:10px 0;font-size:14px;color:var(--ink);line-height:1.7}
+.prompt::before{content:"提示词 · Prompt";display:block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:8px;text-transform:uppercase}
+
+@media (max-width:760px){
+  header h1{font-size:26px}
+  header{padding:40px 0 28px}
+}
+@media print{
+  nav{display:none}
+  .submission-bar{display:none}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+<aside class="submission-bar" aria-label="财报分析专题二作业提交"><div class="container"><div><strong>财报分析专题二作业提交</strong><span>课堂任务产出统一提交 · 截止日期见提交页面</span></div><a href="https://send2me.cn/fAmv-n6r/Thyfs318Zeddhg" target="_blank" rel="noopener">提交作业 ↗</a></div></aside>
+
+<header>
+  <div class="container">
+    <div class="tag">硕士课程 · 财报分析 · 专题二</div>
+    <h1>利润是真的吗？——财务造假识别与报表可信度审计</h1>
+    <div class="sub">学生学习包：四家匿名 A 股医药公司盲测判断，再以瑞幸咖啡做空事件为样本，用红旗识别、封存排序、AI 后见之明测试与经营数据交叉验证，训练"事前识别可疑报表"的职业能力。</div>
+    <div class="chips">
+      <span class="chip">2 个案例</span>
+      <span class="chip">9 项任务卡</span>
+      <span class="chip">4 家匿名医药公司</span>
+      <span class="chip">瑞幸咖啡</span>
+      <span class="chip">学生学习包</span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="container links">
+    <a href="index.html" class="back">← 课程主页</a>
+    <a href="#overview">学习目标</a>
+    <a href="#tasks">任务卡</a>
+    <a href="#handbook">速查表</a>
+    <a href="#case-a">案例 A 匿名医药公司</a>
+    <a href="#case-b">案例 B 瑞幸咖啡</a>
+    <a href="#ai-rules">AI 规则与审查表</a>
+    <a href="#references">资料包</a>
+    <a href="#homework">课后任务</a>
+  </div>
+</nav>
+
+<main class="container">
+
+<div class="warnbox">
+  <p><strong>使用说明：</strong></p>
+  <ol>
+    <li>本学习包在课上发放，请按「任务卡」的顺序完成，<strong>达到一张卡的完成标准再进入下一张</strong>。每张任务卡都写明了要用的材料、具体步骤、按小组人数的分工、必答问题、交付物和完成标准，做完一项勾一项。</li>
+    <li><strong>小组人数为 2–4 人</strong>。开课时先看第一部分第 3 节「按小组人数分工」，确定本组的角色和计算卡分配；任务卡中凡标有「按人数分工」的步骤，都照该节执行。</li>
+    <li><strong>案例 A 是「四选几」的辨认题，并且有「时间锁」</strong>：四家匿名的 A 股医药公司 K1–K4，你被设定为站在 <strong>T+1 年 5 月 31 日</strong>的分析师，只能使用当时已公开的信息（第四部分的四张数据卡）。其中<strong>可能有 0 家、1 家或不止 1 家</strong>的报表存在重大问题，老师不会告诉你是几家。每家公司的金额都按<strong>不同且不公开的系数</strong>缩放过，所以绝对金额无法直接搜索，但比率和增速不受影响。</li>
+    <li><strong>先判断，后猜名字</strong>：你们要先独立完成计算和「有问题可能性」排序，并把排序<strong>封存</strong>交给老师；之后才进入「猜身份」环节，届时可以按规则使用 AI。封存之前请不要检索公司身份；如果你认出了某家公司，也请不要说出来——「不带后见之明地判断」本身就是今天要练的能力。</li>
+    <li>案例 B（瑞幸咖啡）不匿名，可以使用公开资料。</li>
+  </ol>
+</div>
+
+<!-- ============ 一、这一上午你要做成什么 ============ -->
+<section id="overview">
+  <h2><span class="no">01</span> 这一上午你要做成什么</h2>
+
+  <h3>1. 学习目标</h3>
+  <ol>
+    <li><strong>用报表内部勾稽找疑点</strong>：能计算并解释「存贷双高」、隐含利率、盈利含金量、周转天数等指标，把异常变成可检验的问题。</li>
+    <li><strong>区分「信号」和「结论」</strong>：同一个红旗会同时出现在有问题和没问题的公司身上。能为每个疑点写出合理解释和能够证伪它的证据，并在几家公司之间做出有依据的排序。</li>
+    <li><strong>从报表推断「这是谁」</strong>：能从毛利率、周转天数、负债结构等「报表指纹」推断细分行业，再用 AI 做受控的假设检验，而不是让 AI 直接给答案。</li>
+    <li><strong>用经营数据检验财务数据</strong>：能用门店数、销量、客单价、成本结构等经营指标，复算或交叉验证财务数字。</li>
+    <li><strong>识别 AI 和自己的「后见之明」</strong>：知道 AI 和人在知道答案后会怎样「倒着解释」，并在审查表中把它标出来。</li>
+  </ol>
+
+  <h3>2. 你要交出的成果</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>编号</th><th>成果</th><th>形式</th><th>完成人</th><th>对应任务</th><th>能否用 AI</th></tr>
+    <tr><td class="num">E1</td><td>速查表自测</td><td>个人答题</td><td>个人</td><td>任务 0，不计分</td><td>否</td></tr>
+    <tr><td class="num">E2</td><td>四家公司指标计算表 + 横向对比表（工作表 K-W1、K-W1b）</td><td>表格</td><td>小组（按人数分工）</td><td>任务 1</td><td><strong>否，禁止联网</strong></td></tr>
+    <tr><td class="num">E3</td><td>红旗清单 + <strong>封存排序</strong>（工作表 K-W2）</td><td>表格</td><td>个人先排、小组合并</td><td>任务 2</td><td>否</td></tr>
+    <tr><td class="num">E3b</td><td>猜身份记录 + AI 提问日志（工作表 K-W5）；如修改排序，另交 K-W2b</td><td>表格</td><td>小组（按人数分工）</td><td>任务 3A</td><td>按规则使用</td></tr>
+    <tr><td class="num">E4</td><td>AI 审查表 + 匿名版/实名版对比记录</td><td>表格</td><td>小组</td><td>任务 3B、任务 5</td><td>是</td></tr>
+    <tr><td class="num">E5</td><td>听证会评审票（工作表 K-W3）</td><td>表格</td><td>评审组</td><td>任务 4</td><td>否</td></tr>
+    <tr><td class="num">E6</td><td>复盘表：命中、误报、漏报、正确排除（工作表 K-W4）</td><td>表格</td><td>小组</td><td>任务 5</td><td>是</td></tr>
+    <tr><td class="num">E7</td><td>瑞幸证据链图 + 复算表（工作表 L-W1、L-W2）</td><td>图 + 表</td><td>小组（按人数分工）</td><td>任务 6</td><td>仅用于核对</td></tr>
+    <tr><td class="num">E8</td><td>2025 年交叉验证表 +「最难同时造假的指标对」论证（工作表 L-W3、L-W4）</td><td>表 + 200 字</td><td>小组（按人数分工）</td><td>任务 7、任务 8</td><td>先设计后使用</td></tr>
+    <tr><td class="num">E9</td><td>课后：给投资委员会的一页备忘录</td><td>短文</td><td>个人</td><td>课后</td><td>可，需附审查表</td></tr>
+  </table>
+  </div>
+
+  <h3>3. 按小组人数分工（开课时先完成）</h3>
+  <p>本次课小组为 2–4 人。无论几人，下面三条<strong>不随人数改变</strong>：</p>
+  <ol>
+    <li><strong>每个数字都要经过「计算人 ≠ 复核人」的检查</strong>；</li>
+    <li><strong>每个人都要有自己独立完成、能署名的部分</strong>（计算卡、证据链环节或验证对），评分时会看署名；</li>
+    <li><strong>案例 B 开始前轮换一次角色</strong>，让每个人都既做过计算，也做过质询或 AI 审查。</li>
+  </ol>
+
+  <h4>（1）角色分配</h4>
+  <div class="tablewrap">
+  <table>
+    <tr><th>角色</th><th>职责</th><th>4 人组</th><th>3 人组</th><th>2 人组</th></tr>
+    <tr><td>计算员</td><td>统筹计算卡，保证口径一致（平均余额、单位）</td><td>成员 1</td><td>成员 1</td><td>成员 1 兼</td></tr>
+    <tr><td>记录员</td><td>汇总工作表，管理交付物和署名</td><td>成员 2</td><td>成员 2 兼</td><td>成员 1 兼</td></tr>
+    <tr><td>质询员</td><td>专门挑毛病：追问「这个数从哪来」「有没有清白解释」</td><td>成员 3</td><td>成员 3</td><td>成员 2 兼</td></tr>
+    <tr><td>AI 操作员</td><td>按提示词操作 AI，逐条填写 AI 审查表</td><td>成员 4</td><td>成员 2 兼</td><td>成员 2 兼</td></tr>
+  </table>
+  </div>
+  <p class="note">说明：3 人组让记录员兼 AI 操作员，是因为这两个角色都在「整理材料」，与质询员的「挑毛病」分开，避免自己审自己。2 人组按「算的人」和「审的人」分开；任务 5 结束后两人互换。</p>
+
+  <h4>（2）任务 1 计算卡分配</h4>
+  <p>每家公司一张计算卡（K1、K2、K3、K4），每张卡 10 个指标。</p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>小组人数</th><th>分配方式</th><th>交叉复核方式</th><th>减量规则</th></tr>
+    <tr><td class="num">4 人</td><td>每人一家公司</td><td>两两交换（1↔2、3↔4），每人复核对方至少 3 个数字</td><td>无</td></tr>
+    <tr><td class="num">3 人</td><td>每人一家公司（K1–K3）；K4 的 10 个指标拆成三份认领（指标 1–3、4–6、7–10）</td><td>轮转复核（1→2→3→1），每人复核下一位至少 3 个数字</td><td>无</td></tr>
+    <tr><td class="num">2 人</td><td>每人两家公司（成员 1：K1、K2；成员 2：K3、K4）</td><td>互相复核，每家公司至少复核 3 个数字，隐含存款收益率必须复核</td><td>T−1 年只需计算指标 1、6；其余指标只算 T 年</td></tr>
+  </table>
+  </div>
+
+  <h4>（3）其余任务的分工要点</h4>
+  <div class="tablewrap">
+  <table>
+    <tr><th>任务</th><th>4 人组</th><th>3 人组</th><th>2 人组</th></tr>
+    <tr><td>任务 2 封存排序</td><td>每人先独立给四家排序，再合并；每人为自己算的公司提名至少 2 条红旗</td><td>每人先独立排序，再合并；每人为自己算的公司提名至少 2 条红旗，K4 的红旗共同提名</td><td>每人先独立排序，再合并；每人为自己算的两家公司各提名至少 2 条红旗</td></tr>
+    <tr><td>任务 3A 猜身份</td><td>每人负责猜自己算过的那家公司</td><td>每人负责一家，K4 共同负责</td><td>每人负责两家</td></tr>
+    <tr><td>任务 3B AI 对照</td><td>AI 操作员提问；其余三人各核对 AI 的一部分数字</td><td>AI 操作员提问；另外两人分头核对</td><td>一人提问，另一人核对，然后交换完成「辩护人」提问</td></tr>
+    <tr><td>任务 6 瑞幸复算</td><td>两人画证据链，两人复算，最后互查</td><td>一人画证据链，两人分头复算（销量与售价 / 利润率与情景推算）</td><td>一人画证据链并算单店销量，另一人算售价、利润率和情景推算，最后互查</td></tr>
+    <tr><td>任务 7 交叉验证</td><td>至少 5 组验证对，每人至少负责 1 组</td><td>至少 4 组验证对，每人至少负责 1 组</td><td>至少 3 组验证对（即三组必选项），每人至少负责 1 组</td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ============ 二、任务卡 ============ -->
+<section id="tasks">
+  <h2><span class="no">02</span> 任务卡</h2>
+
+  <div class="task" id="task0">
+    <div class="task-head"><span>任务 0｜速查表自测</span><span class="meta">个人 · 不用 AI</span></div>
+    <div class="task-body">
+      <p><strong>材料：</strong>第三部分「基础知识速查表」。</p>
+      <p><strong>步骤：</strong></p>
+      <ol>
+        <li>完成 3.6 节的 8 道自测题，每题不超过 2 行。</li>
+        <li>不会的题标「？」，任务 1 开始前在组内互相解释。</li>
+        <li>对照第一部分第 3 节，确定本组角色和计算卡分配，把姓名写进 K-W1 的「计算人」栏。</li>
+      </ol>
+      <p><strong>完成标准：</strong>□ 8 题都有作答或标「？」　□ 组内至少解决了一个「？」　□ 角色和计算卡已分配到人</p>
+    </div>
+  </div>
+
+  <div class="task" id="task1">
+    <div class="task-head"><span>任务 1｜四家公司指标计算</span><span class="meta">小组按人数分工 · 禁止 AI 和联网</span></div>
+    <div class="task-body">
+      <p><strong>材料：</strong>第四部分 K1–K4 四张数据卡；工作表 K-W1、K-W1b；速查表 3.2 节公式。</p>
+      <p><strong>步骤：</strong></p>
+      <ol>
+        <li><strong>分工（按人数分工）：</strong>每家公司一张计算卡，每张卡 10 个指标。按第一部分第 3 节表（2）领卡。
+          <div class="tablewrap">
+          <table>
+            <tr><th>序号</th><th>指标</th><th>计算年份</th></tr>
+            <tr><td class="num">1</td><td>货币资金/总资产</td><td>T−1、T</td></tr>
+            <tr><td class="num">2</td><td>总债务/总资产</td><td>T−1、T</td></tr>
+            <tr><td class="num">3</td><td>隐含存款收益率</td><td>T</td></tr>
+            <tr><td class="num">4</td><td>隐含借款成本</td><td>T</td></tr>
+            <tr><td class="num">5</td><td>净利息负担</td><td>T</td></tr>
+            <tr><td class="num">6</td><td>盈利含金量</td><td>T−1、T</td></tr>
+            <tr><td class="num">7</td><td>销售收现比</td><td>T−1、T</td></tr>
+            <tr><td class="num">8</td><td>应收账款周转天数</td><td>T−1、T</td></tr>
+            <tr><td class="num">9</td><td>存货周转天数</td><td>T−1、T</td></tr>
+            <tr><td class="num">10</td><td>两年累计筹资净流入 vs 经营净流入</td><td>T−1 + T 合计</td></tr>
+          </table>
+          </div>
+        </li>
+        <li><strong>独立计算：</strong>每人在自己公司的 K-W1 中填入结果（2 人组按减量规则），并在「一句话解读」栏写下第一判断。<strong>这一步不讨论</strong>。</li>
+        <li><strong>交叉核对：</strong>按第一部分第 3 节表（2）的复核方式，用计算器复核。核对通过的，在「复核人」栏签名；不一致的，两人一起找原因并写在表下方。</li>
+        <li><strong>横向汇总：</strong>记录员把四家公司的 T 年结果抄进 K-W1b 横向对比表，全组逐行圈出「这一行最不正常的公司」。</li>
+      </ol>
+      <p><strong>必答问题</strong>（写在 K-W1b 下方）：</p>
+      <ol>
+        <li>四家公司都「既有现金、又有有息负债」。哪一家的「存贷双高」最难用正常经营来解释？哪一家最容易解释？各给一条数据依据。</li>
+        <li>哪几家公司的现金增长主要来自筹资而不是经营？用指标 10 回答。</li>
+      </ol>
+      <p><strong>交付物：</strong>E2（四张 K-W1 + 一张 K-W1b）。</p>
+      <p><strong>完成标准：</strong>□ 四家公司的指标都有数值或说明「无法计算」及原因（2 人组按减量规则）　□ 每个数字都有复核人，且复核人不是计算人　□ K-W1b 每一行都圈出了最异常的公司　□ 两道必答题都用了数据</p>
+      <div class="panel">
+        <p><strong>卡住了怎么办：</strong></p>
+        <ul>
+          <li>收益率和成本用<strong>平均余额</strong>：（T−1 年末 + T 年末） ÷ 2。</li>
+          <li>缩放系数不影响任何比率，但<strong>不同公司之间不能比较绝对金额</strong>。</li>
+          <li>算出的隐含存款收益率如果大于 10% 或小于 0.1%，先检查单位。</li>
+          <li>销售收现比的分子含增值税，分母不含，所以「正常」水平会略高于 1。</li>
+          <li>数据卡单列了「应付票据」。开具银行承兑汇票通常要存入保证金，保证金存在货币资金里、收益很低——想一想这会怎样影响隐含存款收益率。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="task" id="task2">
+    <div class="task-head"><span>任务 2｜红旗排序与封存</span><span class="meta">先个人、后小组 · 不用 AI</span></div>
+    <div class="task-body">
+      <p><strong>材料：</strong>完成的 K-W1、K-W1b；工作表 K-W2；速查表 3.4 节「红旗不等于结论」、3.8 节「概率的参照标准」。</p>
+      <p><strong>步骤：</strong></p>
+      <ol>
+        <li><strong>个人先排：</strong>每人不讨论，在 K-W2 的「个人排序」栏把 K1–K4 按「报表存在重大问题的可能性」从高到低排序，各写一句理由。</li>
+        <li><strong>提名红旗（按人数分工）：</strong>每人为自己算过的公司提名至少 2 条红旗，写入 K-W2 红旗清单，注明提名人。</li>
+        <li><strong>打分：</strong>按三项标准给每条红旗打分——异常程度（1–3）、可证伪性（1–3，越容易用外部证据核实分越高）、与其他疑点的相互印证程度（1–3）。质询员负责对每个打分追问一次「为什么不是低一分」。</li>
+        <li><strong>找「同款红旗」：</strong>检查有没有同一种红旗同时出现在两家以上公司身上。如果有，写出「为什么它在 A 公司是问题、在 B 公司可能不是」。</li>
+        <li><strong>小组排序：</strong>合并个人排序，形成小组排序，并给每家公司写一个「有重大问题的概率」（0–100%，依据 3.8 节参照标准）。四个概率<strong>不需要加起来等于 100%</strong>，因为可能不止一家有问题，也可能一家都没有。</li>
+        <li><strong>写清白解释与证伪证据：</strong>为排名前两位的公司，各选最关键的 2 条红旗，写出「公司可能是清白的」解释，以及「需要看到什么证据，才能排除这个解释」。</li>
+        <li><strong>封存：</strong>把 K-W2 交给老师（或拍照发到课程群）。<strong>封存后不能修改</strong>；之后如果改变判断，另填 K-W2b，并如实写明改变的原因。</li>
+      </ol>
+      <p><strong>必答问题：</strong></p>
+      <ol>
+        <li>如果你是 T+1 年 5 月为排名第一那家公司做年审的会计师，你会要求公司补充哪三项信息？为什么是这三项？</li>
+        <li>四家公司的审计意见都是标准无保留。这能帮你区分它们吗？</li>
+      </ol>
+      <p><strong>交付物：</strong>E3（封存的 K-W2）。</p>
+      <p><strong>完成标准：</strong>□ 每人都有个人排序　□ 每家公司至少 2 条红旗完成打分　□ 写出了至少 1 组「同款红旗、不同解释」　□ 前两名公司都有「清白解释 + 证伪证据」　□ 已封存</p>
+    </div>
+  </div>
+
+  <div class="task" id="task3a">
+    <div class="task-head"><span>任务 3A｜猜身份：用报表指纹推断「这是谁」</span><span class="meta">小组按人数分工 · AI 按规则使用</span></div>
+    <div class="task-body">
+      <p><strong>材料：</strong>四张数据卡、你们的 K-W1b；工作表 K-W5（猜身份记录 + AI 提问日志）；速查表 3.7 节。</p>
+      <p><strong>为什么要猜：</strong>知道「这是谁」能帮你找到行业基准和同行，是分析的一部分；但如果在判断之前就知道答案，判断就会被污染。所以这一步放在封存之后。</p>
+      <p><strong>步骤：</strong></p>
+      <ol>
+        <li><strong>先不用 AI，推断细分行业：</strong>每人对自己负责的公司，根据毛利率、存货和应收周转天数、负债结构、收入增速和业务描述，推断它属于哪一类医药企业（例如医药分销、品牌中成药、化学制剂、中药材与饮片等），写进 K-W5，并写出依据。</li>
+        <li><strong>用 AI 做假设检验：</strong>AI 操作员负责提问，每次提问都记入「提问日志」。<strong>规则如下</strong>：
+          <ul>
+            <li><strong>禁止：</strong>把整张数据卡或业务描述原样交给 AI；直接问「这是哪家公司」。</li>
+            <li><strong>允许三类提问：</strong>
+              <ul>
+                <li>① <strong>行业常识</strong>：例如「2017 年 A 股医药分销企业的毛利率通常在什么区间？」</li>
+                <li>② <strong>候选筛选</strong>：只能用比率、增速和定性特征，不能用金额。例如「2017 年 A 股医药企业中，存货周转天数超过 300 天、毛利率约 30% 的有哪些？」</li>
+                <li>③ <strong>候选核验</strong>：例如「X 公司 2017 年年报中的毛利率和应收账款周转天数大约是多少？请给出处。」</li>
+              </ul>
+            </li>
+            <li><strong>核验义务：</strong>AI 给出的每个候选和数字，都要回到年报原文或可靠数据源确认，并在日志中写明来源。<strong>注意：数据库和 AI 给出的历史数字可能是事后追溯重述过的，不一定是当年披露的数字。</strong></li>
+          </ul>
+        </li>
+        <li><strong>写出猜测：</strong>每家公司在 K-W5 中写出：猜测的公司、置信度（%）、<strong>两条支持证据</strong>、<strong>一条反对证据</strong>（即你的猜测与数据卡不太吻合的地方）。</li>
+        <li><strong>回看封存排序：</strong>如果猜身份的过程改变了你们对某家公司的判断，填写 K-W2b，并在「原因」栏如实勾选：
+          <ul>
+            <li>□ <strong>新的报表证据</strong>：例如找到了同行基准，发现某个指标其实正常或其实更异常；</li>
+            <li>□ <strong>事后信息</strong>：例如我们知道或听说这家公司后来出了事。</li>
+          </ul>
+          <p>第二种属于「后见之明」，不扣分，但必须如实勾选，揭晓后我们会专门讨论它。</p>
+        </li>
+      </ol>
+      <p><strong>必答问题：</strong>哪一家公司最难猜？是因为它的报表指纹不典型，还是因为缩放和模糊处理遮住了关键信息？</p>
+      <p><strong>交付物：</strong>E3b（K-W5；如有修改，另附 K-W2b）。</p>
+      <p><strong>完成标准：</strong>□ 四家公司都有行业推断和公司猜测　□ 每个猜测都有 2 条支持证据和 1 条反对证据　□ 提问日志中每个被采用的 AI 回答都有核验来源　□ 没有违反提问规则</p>
+    </div>
+  </div>
+
+  <div class="task" id="task3b">
+    <div class="task-head"><span>任务 3B｜匿名版 AI 对照</span><span class="meta">小组 · 可用 AI</span></div>
+    <div class="task-body">
+      <p><strong>材料：</strong>四张数据卡、你们封存的 K-W2、第六部分 AI 审查表。</p>
+      <p><strong>前提：</strong>K-W5 的猜测已经写完。这样即使 AI 说出了公司名字，也不会影响你们已经记录下来的猜测。</p>
+      <p><strong>分工（按人数分工）：</strong>AI 操作员负责提问和保存回答；其余成员分头核对 AI 引用的数字（4 人组三人各核对一部分，3 人组两人分头，2 人组由另一人核对，「辩护人」提问时两人交换）。</p>
+      <p><strong>步骤：</strong></p>
+      <ol>
+        <li><strong>只给 AI 匿名数据：</strong>把四张数据卡原样交给 AI，使用下面的提示词，<strong>不要告诉 AI 任何公司名称、年份或你们的猜测</strong>。
+          <div class="prompt">你是一名谨慎的财务分析师，现在是 T+1 年 5 月 31 日，只能使用以下四家公司的信息，金额已按不同系数缩放。请把四家公司按「报表存在重大问题的可能性」从高到低排序；对排名前两位的公司，各列出最值得警惕的 3 个信号，每个信号给出：①依据的数据，②一种可能的清白解释，③能证伪该解释的证据。请不要猜测公司身份。最后告诉我：仅凭这些数据，你能否判断其中有公司存在财务造假？</div>
+        </li>
+        <li><strong>比较：</strong>把 AI 的排序和你们封存的排序并排，标出「排序相同」「排序不同」以及「AI 有我们没有的红旗」「我们有 AI 没有的红旗」。</li>
+        <li><strong>让 AI 当辩护人：</strong>针对老师指定的听证会目标公司提问：
+          <div class="prompt">请扮演这家公司的财务负责人，为「账上现金很多、同时借款很多」这一现象给出最有说服力的三条解释。</div>
+          <p>把 AI 的三条解释记下来，听证会上「管理层组」可以直接使用。</p>
+        </li>
+        <li><strong>记录越界：</strong>如果 AI 没有遵守「不猜身份」的要求而说出了公司名字，原样记录下来，<strong>不要追问、不要展开</strong>，揭晓后再回来检查。</li>
+      </ol>
+      <p><strong>交付物：</strong>E4 的第一部分（AI 审查表中至少 4 条记录）。</p>
+      <p><strong>完成标准：</strong>□ AI 的每个数字都核对过数据卡　□ 至少找出 1 条 AI 的「推理跳跃」或「数据错误」　□ 记录了 AI 是否越界猜测身份</p>
+    </div>
+  </div>
+
+  <div class="task" id="task4">
+    <div class="task-head"><span>任务 4｜听证会</span><span class="meta">全班</span></div>
+    <div class="task-body">
+      <p><strong>材料：</strong>工作表 K-W3（角色卡与评审票）。</p>
+      <p><strong>目标公司：</strong>老师汇总各组封存的排序后，选出<strong>全班分歧最大</strong>的一家公司作为听证对象（如果分歧不明显，就选全班平均排名第一的那家）。时间允许时可以再听证第二家。</p>
+      <p><strong>角色分配</strong>（老师按全班小组数现场指定）：</p>
+      <div class="tablewrap">
+      <table>
+        <tr><th>全班小组数</th><th>管理层组</th><th>做空组</th><th>评审组</th></tr>
+        <tr><td class="num">3–4 组</td><td class="num">1 组</td><td class="num">1 组</td><td>其余 1–2 组</td></tr>
+        <tr><td class="num">5–7 组</td><td class="num">2 组</td><td class="num">2 组</td><td>其余 1–3 组</td></tr>
+        <tr><td class="num">8 组及以上</td><td class="num">2 组</td><td class="num">2 组</td><td>其余各组；评审组可两两合并后投票</td></tr>
+      </table>
+      </div>
+      <ul>
+        <li><strong>管理层组：</strong>为目标公司辩护，必须回应该公司排名最高的红旗；可以拿另外三家公司作对比，说明「同款红旗在别人身上也有」。</li>
+        <li><strong>做空组：</strong>论证目标公司的报表不可信，必须给出可核查的证据要求，并说明为什么这家比另外三家更可疑。</li>
+        <li><strong>评审组：</strong>独立打分，不发言，最后投票。</li>
+        <li><strong>共同规则：</strong>任何一方都<strong>不得使用公司身份或事后信息作为论据</strong>（例如「这家公司后来被查了」）。违反者该条论据作废。</li>
+      </ul>
+      <p><strong>组内分工（按人数分工）：</strong></p>
+      <ul>
+        <li>4 人组：一人主陈述，一人答辩，一人记录对方论点，一人（AI 操作员）提供任务 3B 的 AI 辩护或攻击材料。</li>
+        <li>3 人组：一人主陈述，一人答辩，一人记录对方论点。</li>
+        <li>2 人组：一人陈述，一人答辩并记录。</li>
+        <li>两个小组同为管理层组（或做空组）时，各出一人陈述，不重复同一条论据。</li>
+      </ul>
+      <p><strong>流程</strong>（发言时限是规则，用于保证双方公平）：</p>
+      <div class="tablewrap">
+      <table>
+        <tr><th>环节</th><th>发言时限</th><th>规则</th></tr>
+        <tr><td>做空组陈述</td><td class="num">每方 3 分钟</td><td>只能使用四张数据卡中的数据</td></tr>
+        <tr><td>管理层组回应</td><td class="num">每方 3 分钟</td><td>每条解释都要说明「可以用什么证据证明」</td></tr>
+        <tr><td>评审组质询</td><td class="num">每组 1 个问题</td><td>必须指向具体数字</td></tr>
+        <tr><td>评审打分与投票</td><td class="num">—</td><td>填写 K-W3 评审票</td></tr>
+      </table>
+      </div>
+      <p><strong>交付物：</strong>E5（评审组的 K-W3）。管理层组和做空组把陈述要点写在单独一页纸上（K-W2 已封存，不要写在上面）。</p>
+      <p><strong>完成标准：</strong>□ 评审票对每条红旗都给出「解释是否成立」和「还缺什么证据」</p>
+    </div>
+  </div>
+
+  <div class="task" id="task5">
+    <div class="task-head"><span>任务 5｜揭晓与复盘</span><span class="meta">小组 · 可用 AI</span></div>
+    <div class="task-body">
+      <p><strong>材料：</strong>老师发放的《案例资料》（揭晓卡）；工作表 K-W4；你们封存的 K-W2、K-W5 和 K-W2b（如有）。</p>
+      <p><strong>步骤：</strong></p>
+      <ol>
+        <li><strong>听揭晓：</strong>老师公布四家公司的身份、哪几家事后被认定存在问题，以及查明的事实。同时公布全班的「猜身份命中榜」。</li>
+        <li><strong>对照封存排序：</strong>把封存的 K-W2 拿回来，在 K-W4 中逐家公司归类：
+          <ul>
+            <li><strong>命中：</strong>排得靠前，事后确实有问题；</li>
+            <li><strong>误报：</strong>排得靠前，事后未发现问题；</li>
+            <li><strong>漏报：</strong>排得靠后，事后却有问题；</li>
+            <li><strong>正确排除：</strong>排得靠后，事后也未发现问题。</li>
+          </ul>
+          <p>再逐条检查红旗：哪些红旗真正对应了事后查明的问题，哪些是「同款红旗」造成的误报。每条红旗由当初的提名人先归类，另一名成员复核。</p>
+        </li>
+        <li><strong>检查自己的后见之明：</strong>如果你们在任务 3A 后修改过排序（K-W2b），对照揭晓结果判断：修改让排序变好了还是变差了？修改的原因是新证据，还是事后信息？</li>
+        <li><strong>AI 后见之明测试：</strong>现在把<strong>实名</strong>数据交给 AI，用任务 3B 的同一个提示词再问一次（删去「请不要猜测公司身份」一句）。检查：
+          <ul>
+            <li>AI 是否引用了 T+1 年 5 月之后才公开的信息？</li>
+            <li>AI 的排序和匿名版相比有什么变化？它对「同款红旗」的解释是否突然变得「很有把握」？</li>
+            <li>把发现写进 AI 审查表，问题类型标为「后见之明」。</li>
+          </ul>
+        </li>
+        <li><strong>轮换角色：</strong>完成本任务后，按第一部分第 3 节的规则轮换角色，再进入案例 B（2 人组两人互换；3 人组、4 人组按顺序顺移一位）。</li>
+      </ol>
+      <p><strong>必答问题：</strong></p>
+      <ol>
+        <li>哪个指标在事前最有区分力？它在四家公司中有没有造成误报？如果有，当时用什么证据可以把误报排除？</li>
+        <li>两家出问题的公司，手法一样吗？这对「应该优先看哪个指标」有什么启示？</li>
+        <li>造假者「顺手」虚增的利息收入，让隐含存款收益率变得更高还是更低？这说明了什么？</li>
+        <li>封存时全班给出 ≥70% 的公司中，事后确认存在问题的比例是多少？该结果与 70% 的置信水平存在多大偏差？说明全班判断整体偏激进还是偏保守。</li>
+      </ol>
+      <p><strong>交付物：</strong>E6（工作表 K-W4）；E4 的第二部分（匿名版/实名版对比）。</p>
+      <p><strong>完成标准：</strong>□ 四家公司都完成了归类　□ 至少写出 1 个误报或漏报，以及「当时多做哪一步就能避免」　□ 找到至少 1 条 AI 的后见之明　□ 如果改过排序，已说明修改是变好还是变差</p>
+    </div>
+  </div>
+
+  <div class="task" id="task6">
+    <div class="task-head"><span>任务 6｜瑞幸（上）：拆解做空报告、复算公告数字</span><span class="meta">小组按人数分工</span></div>
+    <div class="task-body">
+      <p><strong>材料：</strong>第五部分 5.1–5.3；工作表 L-W1、L-W2。</p>
+      <p><strong>分工（按人数分工）：</strong>4 人组两人负责步骤 2（证据链）、两人负责步骤 3（复算）；3 人组一人负责证据链，两人分头复算（一人算单店日均销量和每件售价，一人算门店利润率和情景推算）；2 人组一人负责证据链并算单店日均销量，另一人算售价、利润率和情景推算。步骤 1 和步骤 4 全组共同完成，步骤 3 结束后交换互查。</p>
+      <p><strong>步骤：</strong></p>
+      <ol>
+        <li><strong>读做空报告要点：</strong>全组阅读 5.3 节中文摘要。</li>
+        <li><strong>画证据链：</strong>在 L-W1 中，按「观测数据 → 推算单店日均销量 → 推算客单价 → 推算收入 → 与公告对比」画出做空报告的推理链条，并在每个环节旁写出「这一步最可能出错的地方」。</li>
+        <li><strong>复算公告数字：</strong>用表 L-1 的 2019 年第三季度数据，在 L-W2 中计算：
+          <ul>
+            <li>单店日均销量（总销量 ÷ 平均门店数 ÷ 天数）；</li>
+            <li>每件商品平均净售价（产品收入 ÷ 总销量）；</li>
+            <li>门店层面利润率（自己用成本项相加验证 12.5%）；</li>
+            <li><strong>情景推算：</strong>如果做空报告的两项结论成立（日均销量只有 263 件、每件售价被高估 1.23 元），第三季度产品收入大约是多少？比公告数低多少？</li>
+          </ul>
+        </li>
+        <li><strong>对照官方结论：</strong>阅读 5.1 节中 SEC 和公司内部调查的结论，比较你的情景推算与官方结论在数量级上是否接近，并讨论「高估了 45%」这句话可能有哪两种理解。</li>
+      </ol>
+      <p><strong>必答问题：</strong></p>
+      <ol>
+        <li>做空报告的样本有什么局限？（提示：成功率、调查季度、门店选择）</li>
+        <li>如果你是 2020 年 2 月的投资者，读完这份报告后，最想向公司核实的一个数字是什么？</li>
+      </ol>
+      <p><strong>交付物：</strong>E7（L-W1 + L-W2）。</p>
+      <p><strong>完成标准：</strong>□ 证据链每个环节都标注了「可能出错的地方」　□ 四项复算都写出了计算过程　□ 情景推算结果与官方结论做了比较</p>
+    </div>
+  </div>
+
+  <div class="task" id="task7">
+    <div class="task-head"><span>任务 7｜瑞幸（下）：设计并执行 2025 年交叉验证</span><span class="meta">小组按人数分工</span></div>
+    <div class="task-body">
+      <p><strong>材料：</strong>表 L-2；工作表 L-W3；速查表 3.5 节。</p>
+      <p><strong>验证对数量（按人数分工）：</strong>4 人组至少 5 组，3 人组至少 4 组，2 人组至少 3 组（即下面三组必选项）。每人至少负责 1 组的设计和计算，并在 L-W3 中署名；另一名成员复核。</p>
+      <p><strong>步骤：</strong></p>
+      <ol>
+        <li><strong>先设计，不用 AI：</strong>在 L-W3 中设计「经营指标 ↔ 财务科目」的验证对。每组写明：用哪两个数、预期关系是什么、如果关系不成立说明什么。下面三组是必选项，3 人组和 4 人组再按上面的数量自选：
+          <ul>
+            <li>自营门店数 ↔ 自营门店收入（算单店年收入，并与同店销售增长对照）；</li>
+            <li>收入增速 ↔ 原材料成本增速；</li>
+            <li>配送费用增速 ↔ 自营门店收入增速。</li>
+          </ul>
+        </li>
+        <li><strong>计算：</strong>全组设计完成后才可使用 AI。用表 L-2 的数据完成计算。可以让 AI 帮你<strong>查找</strong>表 L-2 没有的数据（例如 2025 年 20-F 中的员工人数、使用权资产），但每个数字都要记下出处。</li>
+        <li><strong>判断：</strong>逐组写出结论——一致、可解释的不一致、无法解释的不一致。</li>
+      </ol>
+      <p><strong>必答问题：</strong>联营门店收入里包括向联营商卖原材料、设备，以及利润分成。这会让「单店收入」指标在自营店和联营店之间失去可比性吗？应该怎样处理？</p>
+      <p><strong>交付物：</strong>E8 的第一部分（L-W3）。</p>
+      <p><strong>完成标准：</strong>□ 验证对数量达到本组人数对应的要求　□ 每组都有计算、结论和署名　□ AI 提供的每个数字都有出处</p>
+    </div>
+  </div>
+
+  <div class="task" id="task8">
+    <div class="task-head"><span>任务 8｜组间比较与「造假者视角」</span><span class="meta">全班 · 可用 AI</span></div>
+    <div class="task-body">
+      <p><strong>步骤：</strong></p>
+      <ol>
+        <li><strong>红队攻击：</strong>把你们的 L-W3 交给 AI：
+          <div class="prompt">假设你是一名想虚增收入的财务人员。请逐一说明，你会怎样同时修改哪些经营数据和财务数据，才能让下面每一组验证对看起来仍然一致？哪一组最难同时造假？</div>
+        </li>
+        <li><strong>写论证：</strong>每人先独立写下自己认为「最难同时造假」的一组及一句理由，再在组内比较，最后在 L-W4 中写不超过 200 字的小组结论；如果组内意见不一致，保留少数意见。</li>
+        <li><strong>全班分享：</strong>每组用 30 秒报出答案，老师记在黑板上，看全班是否有共识。</li>
+      </ol>
+      <p><strong>交付物：</strong>E8 的第二部分（L-W4）。</p>
+      <p><strong>完成标准：</strong>□ 论证说明了「造假需要同时改动哪些独立来源的数据」</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 三、基础知识速查表 ============ -->
+<section id="handbook">
+  <h2><span class="no">03</span> 基础知识速查表</h2>
+
+  <h3>3.1 利润、现金和资产的三角勾稽</h3>
+  <p>一家公司的利润最终要变成现金，现金要么留在账上，要么变成资产，要么用来还债和分红。三者之间任何一处「对不上」，都值得追问：</p>
+  <ul>
+    <li>利润很高，但经营现金流长期远低于利润 → 利润可能还没收回来（应收、存货在膨胀），也可能根本不存在。</li>
+    <li>账上现金很多，但仍在大量借款、发债、增发 → 「钱」可能不能自由使用，或者并不存在。</li>
+    <li>现金很多，但利息收入很少 → 现金的真实余额、存放方式或使用限制需要核实。</li>
+  </ul>
+
+  <h3>3.2 常用指标与公式</h3>
+  <div class="panel">
+    <p>$$\text{隐含存款收益率}=\frac{\text{利息收入}}{(\text{期初货币资金}+\text{期末货币资金})\div 2}$$</p>
+    <p>$$\text{隐含借款成本}=\frac{\text{利息支出}}{(\text{期初总债务}+\text{期末总债务})\div 2}$$</p>
+    <p>$$\text{净利息负担}=\frac{\text{利息支出}-\text{利息收入}}{\text{净利润}}$$</p>
+    <p>$$\text{盈利含金量}=\frac{\text{经营活动现金流量净额}}{\text{净利润}}$$</p>
+    <p>$$\text{销售收现比}=\frac{\text{销售商品、提供劳务收到的现金}}{\text{营业收入}}$$</p>
+    <p>$$\text{应收账款周转天数}=\frac{\text{应收账款}}{\text{营业收入}}\times 365$$</p>
+    <p>$$\text{存货周转天数}=\frac{\text{存货}}{\text{营业成本}}\times 365$$</p>
+    <p>$$\text{单店日均销量}=\frac{\text{季度总销量}}{\text{季度平均门店数}\times\text{季度天数}}$$</p>
+    <p>$$\text{每件平均净售价}=\frac{\text{产品收入}}{\text{总销量}}$$</p>
+    <p>$$\text{门店层面利润率}=1-\frac{\text{原材料成本}+\text{门店租金及其他运营成本}+\text{折旧}}{\text{产品收入}}$$</p>
+  </div>
+
+  <h3>3.3 常见红旗信号</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>信号</th><th>为什么可疑</th><th>常见的清白解释</th></tr>
+    <tr><td>存贷双高</td><td>有钱为什么还要付利息借钱？</td><td>资金分散在子公司、募集资金专户限制用途、季节性备付、维护银行授信</td></tr>
+    <tr><td>隐含存款收益率远低于定期存款利率</td><td>大额资金通常能拿到较好的利率</td><td>资金以活期形式存放、年末突击收款导致日均余额低</td></tr>
+    <tr><td>盈利含金量长期偏低</td><td>利润没有变成现金</td><td>快速扩张期备货和赊销增加</td></tr>
+    <tr><td>应收增速远快于收入增速</td><td>收入可能靠放宽信用「买」来，或者是虚构的</td><td>新客户结构变化、渠道政策调整</td></tr>
+    <tr><td>毛利率显著高于同行</td><td>竞争性行业很难长期获得超额毛利</td><td>产品结构差异、独家代理</td></tr>
+    <tr><td>控股股东高比例质押</td><td>股东资金紧张，有动机维持股价、占用公司资金</td><td>股东用于其他正常投资</td></tr>
+    <tr><td>频繁股权和债务融资</td><td>和「账上有钱」相矛盾</td><td>为大型项目储备资金</td></tr>
+  </table>
+  </div>
+
+  <h3>3.4 红旗不等于结论</h3>
+  <p>每一个疑点都要回答三个问题：</p>
+  <ol>
+    <li><strong>它有多异常？</strong>——和公司自己的历史比、和同行比、和市场利率比。</li>
+    <li><strong>有没有清白的解释？</strong>——尽量替公司想出最好的解释。</li>
+    <li><strong>什么证据能排除这个解释？</strong>——例如银行函证、按银行列示的存款明细、募集资金专项报告、前五大客户明细、存货盘点记录。</li>
+  </ol>
+  <p>只有当多个相互独立的疑点指向同一个问题，而清白解释又都需要「恰好」成立时，你才有理由提高怀疑程度。</p>
+
+  <h3>3.5 经营数据检验财务数据</h3>
+  <ul>
+    <li><strong>单店模型：</strong>收入 = 门店数 × 单店日均销量 × 每件售价 × 天数。四个因子里，门店数最容易被外部核实（门店可以数），单店销量最难核实（需要实地观察）。</li>
+    <li><strong>成本的物理约束：</strong>卖出更多杯咖啡，就必须买更多咖啡豆、牛奶、杯子。原材料成本、包装成本、配送费用应当与销量同向变动。</li>
+    <li><strong>增值税记录：</strong>收入会在税务记录中留下痕迹，虚构收入往往需要多缴税，这是造假的成本，也是线索。</li>
+    <li><strong>Non-GAAP 指标：</strong>经调整利润、门店层面利润由公司自定义，先看清楚调整了什么，再比较。</li>
+    <li><strong>联营模式：</strong>瑞幸对联营门店的收入主要是卖原材料、设备、配送服务和利润分成，不是联营门店的全部零售额。</li>
+  </ul>
+
+  <h3>3.6 自测题（任务 0）</h3>
+  <ol>
+    <li>为什么「存贷双高」本身不能直接证明造假？举一个清白的解释。</li>
+    <li>计算隐含存款收益率时，为什么要用平均余额而不用期末余额？</li>
+    <li>销售收现比为什么通常略高于 1？</li>
+    <li>经营现金流长期低于净利润，可能有哪两类原因？</li>
+    <li>控股股东质押比例高，为什么会被视为风险信号？</li>
+    <li>标准无保留审计意见能证明报表没有造假吗？</li>
+    <li>「门店层面利润」和「营业利润」有什么区别？</li>
+    <li>联营门店的收入为什么不能直接和自营门店收入相加，用来算「单店收入」？</li>
+  </ol>
+
+  <h3>3.7 医药企业的「报表指纹」（任务 3A 用）</h3>
+  <p>下面是经验性特征，不是严格标准，用来帮助你提出「它可能是哪一类企业」的假设，再去核验。</p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>类型</th><th>典型报表特征</th></tr>
+    <tr><td>医药分销 / 流通</td><td>毛利率低（多在个位数到 10% 出头）；应收账款、应付账款和应付票据规模大；存货周转较快；资产负债率偏高；经营现金流容易随扩张波动</td></tr>
+    <tr><td>品牌中成药 / 健康消费品</td><td>毛利率较高；销售费用率高；客户以经销商为主，应收账款周转较快；有息负债通常不多</td></tr>
+    <tr><td>中药材贸易 / 中药饮片</td><td>存货占比高、周转慢（药材有储存期和采购季节性）；毛利率中等</td></tr>
+    <tr><td>化学药 / 制剂生产</td><td>毛利率中高；研发费用占一定比例；医院渠道为主时应收账款周转较慢</td></tr>
+  </table>
+  </div>
+
+  <h3>3.8 概率的参照标准（任务 2 使用）</h3>
+  <p>「存在重大问题的概率」是对判断置信度的量化，应当对应可执行的分析结论，而非主观怀疑程度的任意表达。为避免各组评分口径不一，本课程统一采用下表所示的参照标准；填写前请先确定结论属于哪一档，再取对应区间。</p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>概率区间</th><th>对应的分析结论与行动建议</th></tr>
+    <tr><td class="num">≥ 80%</td><td>证据充分，足以支持公开发表做空或警示报告的置信度</td></tr>
+    <tr><td class="num">60–79%</td><td>疑点确凿但仍有未排除的合理解释，建议回避或减持</td></tr>
+    <tr><td class="num">40–59%</td><td>证据两可，须补充资料后方可形成结论</td></tr>
+    <tr><td class="num">20–39%</td><td>基本可信，个别疑点留档跟踪</td></tr>
+    <tr><td class="num">&lt; 20%</td><td>无明显疑点，可形成买入或增持建议</td></tr>
+  </table>
+  </div>
+  <p>填写理由时，应当说明置信度取该档而非相邻档位的依据，即「何种证据足以使判断上调（或下调）一档」。</p>
+</section>
+
+<!-- ============ 四、案例 A 材料：四家匿名医药公司 ============ -->
+<section id="case-a">
+  <h2><span class="no">04</span> 案例 A 材料：四家匿名医药公司（站在 T+1 年 5 月 31 日）</h2>
+
+  <h3>4.1 背景与规则</h3>
+  <p>K1–K4 都是 A 股上市医药企业，T 年年报都已在 T+1 年 4 月底前披露。你能使用的就是下面四张数据卡。</p>
+  <ul>
+    <li>每家公司的金额都按<strong>不同且不公开的系数</strong>缩放，单位记为「亿元（已缩放）」。比率、增速和结构不受影响。</li>
+    <li>短期债务 = 短期借款 + 应付票据 + 一年内到期的非流动负债 + 短期融资券；长期债务 = 长期借款 + 应付债券。</li>
+    <li>利息支出和利息收入只提供 T 年数据，所以隐含利率只算 T 年。</li>
+    <li>市场利率参考：一年期定期存款基准利率 1.50%。</li>
+    <li>四家公司 T 年年报的审计意见均为<strong>标准无保留意见</strong>。</li>
+  </ul>
+
+  <h3>4.2 四家公司的业务与基本特征</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>公司</th><th>业务描述</th><th>T 年收入增速</th><th>毛利率（T−1 / T）</th></tr>
+    <tr><td class="num">K1</td><td>以品牌中成药及健康消费品为核心，兼营区域医药商业</td><td class="num">+8.5%</td><td class="num">29.86% / 31.19%</td></tr>
+    <tr><td class="num">K2</td><td>中药相关产品生产与贸易、药品及医疗器械批发、医疗服务等多元业务</td><td class="num">+22.3%</td><td class="num">29.90% / 30.32%</td></tr>
+    <tr><td class="num">K3</td><td>化学药与中成药制剂生产；T 年末完成一项由控股股东注入医药资产的同一控制下重组，T−1 年数据已追溯重述</td><td class="num">+15.7%</td><td class="num">38.20% / 40.36%</td></tr>
+    <tr><td class="num">K4</td><td>以医药分销和医药物流为主，兼营零售与工业</td><td class="num">+20.1%</td><td class="num">7.84% / 8.44%</td></tr>
+  </table>
+  </div>
+
+  <h3>4.3 数据卡 K1（单位：亿元，已缩放）</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>项目</th><th class="num">T−1 年</th><th class="num">T 年</th></tr>
+    <tr><td>货币资金</td><td class="num">23.05</td><td class="num">18.66</td></tr>
+    <tr><td>应收账款</td><td class="num">7.08</td><td class="num">8.64</td></tr>
+    <tr><td>存货</td><td class="num">48.43</td><td class="num">60.64</td></tr>
+    <tr><td>资产总计</td><td class="num">172.11</td><td class="num">193.92</td></tr>
+    <tr><td>短期债务</td><td class="num">8.36</td><td class="num">6.90</td></tr>
+    <tr><td>其中：应付票据</td><td class="num">8.29</td><td class="num">6.90</td></tr>
+    <tr><td>长期债务</td><td class="num">12.61</td><td class="num">12.60</td></tr>
+    <tr><td>总债务</td><td class="num">20.97</td><td class="num">19.50</td></tr>
+    <tr><td>负债合计</td><td class="num">61.20</td><td class="num">66.92</td></tr>
+    <tr><td>所有者权益合计</td><td class="num">110.90</td><td class="num">127.00</td></tr>
+    <tr><td>营业收入</td><td class="num">156.87</td><td class="num">170.20</td></tr>
+    <tr><td>营业成本</td><td class="num">110.03</td><td class="num">117.12</td></tr>
+    <tr><td>净利润</td><td class="num">20.52</td><td class="num">21.93</td></tr>
+    <tr><td>利息支出</td><td class="num">—</td><td class="num">0.90</td></tr>
+    <tr><td>利息收入</td><td class="num">—</td><td class="num">0.55</td></tr>
+    <tr><td>经营活动现金流量净额</td><td class="num">20.89</td><td class="num">8.09</td></tr>
+    <tr><td>投资活动现金流量净额</td><td class="num">−27.91</td><td class="num">−2.46</td></tr>
+    <tr><td>筹资活动现金流量净额</td><td class="num">1.58</td><td class="num">−6.38</td></tr>
+    <tr><td>销售商品、提供劳务收到的现金</td><td class="num">190.92</td><td class="num">196.44</td></tr>
+    <tr><td>吸收投资收到的现金</td><td class="num">0.08</td><td class="num">—</td></tr>
+    <tr><td>取得借款收到的现金</td><td class="num">6.28</td><td class="num">—</td></tr>
+    <tr><td>发行债券收到的现金</td><td class="num">—</td><td class="num">—</td></tr>
+  </table>
+  </div>
+
+  <h3>4.4 数据卡 K2（单位：亿元，已缩放）</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>项目</th><th class="num">T−1 年</th><th class="num">T 年</th></tr>
+    <tr><td>货币资金</td><td class="num">136.63</td><td class="num">170.76</td></tr>
+    <tr><td>应收账款</td><td class="num">15.48</td><td class="num">21.76</td></tr>
+    <tr><td>存货</td><td class="num">63.10</td><td class="num">78.50</td></tr>
+    <tr><td>资产总计</td><td class="num">274.12</td><td class="num">343.61</td></tr>
+    <tr><td>短期债务</td><td class="num">79.08</td><td class="num">94.46</td></tr>
+    <tr><td>其中：应付票据</td><td class="num">未单列</td><td class="num">未单列</td></tr>
+    <tr><td>长期债务</td><td class="num">24.44</td><td class="num">50.53</td></tr>
+    <tr><td>总债务</td><td class="num">103.53</td><td class="num">144.99</td></tr>
+    <tr><td>负债合计</td><td class="num">127.20</td><td class="num">182.94</td></tr>
+    <tr><td>所有者权益合计</td><td class="num">146.92</td><td class="num">160.67</td></tr>
+    <tr><td>营业收入</td><td class="num">108.21</td><td class="num">132.38</td></tr>
+    <tr><td>营业成本</td><td class="num">75.86</td><td class="num">92.25</td></tr>
+    <tr><td>净利润</td><td class="num">16.68</td><td class="num">20.47</td></tr>
+    <tr><td>利息支出</td><td class="num">—</td><td class="num">6.08</td></tr>
+    <tr><td>利息收入</td><td class="num">—</td><td class="num">1.35</td></tr>
+    <tr><td>经营活动现金流量净额</td><td class="num">8.02</td><td class="num">9.21</td></tr>
+    <tr><td>投资活动现金流量净额</td><td class="num">−9.93</td><td class="num">−7.65</td></tr>
+    <tr><td>筹资活动现金流量净额</td><td class="num">59.17</td><td class="num">32.53</td></tr>
+    <tr><td>销售商品、提供劳务收到的现金</td><td class="num">119.64</td><td class="num">143.83</td></tr>
+    <tr><td>吸收投资收到的现金</td><td class="num">41.00</td><td class="num">1.50</td></tr>
+    <tr><td>取得借款收到的现金</td><td class="num">81.47</td><td class="num">113.33</td></tr>
+    <tr><td>发行债券收到的现金</td><td class="num">37.50</td><td class="num">55.00</td></tr>
+  </table>
+  </div>
+  <p class="note">注：K2 的长期债务含长期应付款中的有息部分。</p>
+
+  <h3>4.5 数据卡 K3（单位：亿元，已缩放）</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>项目</th><th class="num">T−1 年</th><th class="num">T 年</th></tr>
+    <tr><td>货币资金</td><td class="num">28.39</td><td class="num">25.78</td></tr>
+    <tr><td>应收账款</td><td class="num">35.29</td><td class="num">47.25</td></tr>
+    <tr><td>存货</td><td class="num">13.82</td><td class="num">13.23</td></tr>
+    <tr><td>资产总计</td><td class="num">175.61</td><td class="num">197.60</td></tr>
+    <tr><td>短期债务</td><td class="num">61.11</td><td class="num">62.86</td></tr>
+    <tr><td>其中：应付票据</td><td class="num">14.22</td><td class="num">11.67</td></tr>
+    <tr><td>长期债务</td><td class="num">8.88</td><td class="num">9.06</td></tr>
+    <tr><td>总债务</td><td class="num">69.99</td><td class="num">71.92</td></tr>
+    <tr><td>负债合计</td><td class="num">89.92</td><td class="num">104.38</td></tr>
+    <tr><td>所有者权益合计</td><td class="num">85.69</td><td class="num">93.22</td></tr>
+    <tr><td>营业收入</td><td class="num">100.27</td><td class="num">116.00</td></tr>
+    <tr><td>营业成本</td><td class="num">61.96</td><td class="num">69.18</td></tr>
+    <tr><td>净利润</td><td class="num">13.50</td><td class="num">15.51</td></tr>
+    <tr><td>利息支出</td><td class="num">—</td><td class="num">2.72</td></tr>
+    <tr><td>利息收入</td><td class="num">—</td><td class="num">0.14</td></tr>
+    <tr><td>经营活动现金流量净额</td><td class="num">11.97</td><td class="num">10.61</td></tr>
+    <tr><td>投资活动现金流量净额</td><td class="num">−11.03</td><td class="num">−17.79</td></tr>
+    <tr><td>筹资活动现金流量净额</td><td class="num">4.15</td><td class="num">7.79</td></tr>
+    <tr><td>销售商品、提供劳务收到的现金</td><td class="num">102.00</td><td class="num">102.66</td></tr>
+    <tr><td>吸收投资收到的现金</td><td class="num">0.84</td><td class="num">—</td></tr>
+    <tr><td>取得借款收到的现金</td><td class="num">46.08</td><td class="num">55.99</td></tr>
+    <tr><td>发行债券收到的现金</td><td class="num">—</td><td class="num">—</td></tr>
+  </table>
+  </div>
+  <p class="note">注：K3 另有少量长期应付款，未计入总债务。</p>
+
+  <h3>4.6 数据卡 K4（单位：亿元，已缩放）</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>项目</th><th class="num">T−1 年</th><th class="num">T 年</th></tr>
+    <tr><td>货币资金</td><td class="num">15.71</td><td class="num">25.62</td></tr>
+    <tr><td>应收账款</td><td class="num">27.23</td><td class="num">42.32</td></tr>
+    <tr><td>存货</td><td class="num">30.46</td><td class="num">36.55</td></tr>
+    <tr><td>资产总计</td><td class="num">116.19</td><td class="num">156.15</td></tr>
+    <tr><td>短期债务</td><td class="num">48.58</td><td class="num">51.68</td></tr>
+    <tr><td>其中：应付票据</td><td class="num">26.24</td><td class="num">27.51</td></tr>
+    <tr><td>长期债务</td><td class="num">3.87</td><td class="num">4.39</td></tr>
+    <tr><td>总债务</td><td class="num">52.44</td><td class="num">56.07</td></tr>
+    <tr><td>负债合计</td><td class="num">80.15</td><td class="num">97.53</td></tr>
+    <tr><td>所有者权益合计</td><td class="num">36.03</td><td class="num">58.61</td></tr>
+    <tr><td>营业收入</td><td class="num">184.67</td><td class="num">221.83</td></tr>
+    <tr><td>营业成本</td><td class="num">170.20</td><td class="num">203.12</td></tr>
+    <tr><td>净利润</td><td class="num">2.71</td><td class="num">4.42</td></tr>
+    <tr><td>利息支出</td><td class="num">—</td><td class="num">2.15</td></tr>
+    <tr><td>利息收入</td><td class="num">—</td><td class="num">0.14</td></tr>
+    <tr><td>经营活动现金流量净额</td><td class="num">1.29</td><td class="num">−3.04</td></tr>
+    <tr><td>投资活动现金流量净额</td><td class="num">−4.49</td><td class="num">−5.99</td></tr>
+    <tr><td>筹资活动现金流量净额</td><td class="num">−1.25</td><td class="num">18.23</td></tr>
+    <tr><td>销售商品、提供劳务收到的现金</td><td class="num">201.22</td><td class="num">246.03</td></tr>
+    <tr><td>吸收投资收到的现金</td><td class="num">4.46</td><td class="num">19.26</td></tr>
+    <tr><td>取得借款收到的现金</td><td class="num">25.83</td><td class="num">40.29</td></tr>
+    <tr><td>发行债券收到的现金</td><td class="num">18.39</td><td class="num">16.50</td></tr>
+  </table>
+  </div>
+  <p class="note">注：K4 列报在「其他流动负债」中的短期融资券已计入短期债务。</p>
+
+  <h3>4.7 工作表</h3>
+
+  <h4>K-W1：指标计算表（E2，每家公司一张，共四张）</h4>
+  <p>公司：K__　计算人：__　复核人：__</p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>序号</th><th>指标</th><th class="num">T−1</th><th class="num">T</th><th>一句话解读</th><th>复核签名</th></tr>
+    <tr><td class="num">1</td><td>货币资金/总资产</td><td class="num"></td><td class="num"></td><td></td><td></td></tr>
+    <tr><td class="num">2</td><td>总债务/总资产</td><td class="num"></td><td class="num"></td><td></td><td></td></tr>
+    <tr><td class="num">3</td><td>隐含存款收益率</td><td class="num">—</td><td class="num"></td><td></td><td></td></tr>
+    <tr><td class="num">4</td><td>隐含借款成本</td><td class="num">—</td><td class="num"></td><td></td><td></td></tr>
+    <tr><td class="num">5</td><td>净利息负担</td><td class="num">—</td><td class="num"></td><td></td><td></td></tr>
+    <tr><td class="num">6</td><td>盈利含金量</td><td class="num"></td><td class="num"></td><td></td><td></td></tr>
+    <tr><td class="num">7</td><td>销售收现比</td><td class="num"></td><td class="num"></td><td></td><td></td></tr>
+    <tr><td class="num">8</td><td>应收账款周转天数</td><td class="num"></td><td class="num"></td><td></td><td></td></tr>
+    <tr><td class="num">9</td><td>存货周转天数</td><td class="num"></td><td class="num"></td><td></td><td></td></tr>
+    <tr><td class="num">10</td><td>两年累计筹资净流入 vs 经营净流入</td><td class="num" colspan="2">合并填写</td><td></td><td></td></tr>
+  </table>
+  </div>
+
+  <h4>K-W1b：T 年横向对比表（E2）</h4>
+  <div class="tablewrap">
+  <table>
+    <tr><th>指标</th><th class="num">K1</th><th class="num">K2</th><th class="num">K3</th><th class="num">K4</th><th>这一行最异常的公司</th></tr>
+    <tr><td>货币资金/总资产</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
+    <tr><td>总债务/总资产</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
+    <tr><td>隐含存款收益率</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
+    <tr><td>隐含借款成本</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
+    <tr><td>净利息负担</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
+    <tr><td>盈利含金量</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
+    <tr><td>销售收现比</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
+    <tr><td>应收账款周转天数</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
+    <tr><td>存货周转天数</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
+    <tr><td>两年筹资净流入 ÷ 经营净流入</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
+    <tr><td>应付票据 ÷ 货币资金</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
+  </table>
+  </div>
+
+  <h4>K-W2：红旗清单与封存排序（E3）</h4>
+  <p><strong>（1）个人排序</strong></p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>成员</th><th class="num">第 1</th><th class="num">第 2</th><th class="num">第 3</th><th class="num">第 4</th><th>一句话理由</th></tr>
+    <tr><td></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
+    <tr><td></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
+  </table>
+  </div>
+  <p><strong>（2）红旗清单</strong></p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>公司</th><th>红旗</th><th>提名人</th><th>依据数据</th><th class="num">异常程度（1–3）</th><th class="num">可证伪性（1–3）</th><th class="num">相互印证（1–3）</th><th class="num">总分</th></tr>
+    <tr><td></td><td></td><td></td><td></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+    <tr><td></td><td></td><td></td><td></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+  </table>
+  </div>
+  <p>同款红旗、不同解释：红旗__同时出现在 K__和 K__；它在 K__更可疑，因为__。</p>
+  <p><strong>（3）小组排序（封存）</strong></p>
+  <p class="note">概率依据 3.8 节参照标准评定，各组口径统一。</p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>排名</th><th>公司</th><th class="num">有重大问题的概率（%）</th><th>最关键的两条红旗</th><th>清白解释（前两名填写）</th><th>能排除该解释的证据（前两名填写）</th></tr>
+    <tr><td class="num">1</td><td></td><td class="num"></td><td></td><td></td><td></td></tr>
+    <tr><td class="num">2</td><td></td><td class="num"></td><td></td><td></td><td></td></tr>
+    <tr><td class="num">3</td><td></td><td class="num"></td><td></td><td>—</td><td>—</td></tr>
+    <tr><td class="num">4</td><td></td><td class="num"></td><td></td><td>—</td><td>—</td></tr>
+  </table>
+  </div>
+  <p>要求排名第一的公司补充的三项信息：① __ ② __ ③ __</p>
+  <p>封存时间：__　老师签收：__</p>
+
+  <h4>K-W2b：排序修改记录（如有）</h4>
+  <div class="tablewrap">
+  <table>
+    <tr><th>公司</th><th>原排名 → 新排名</th><th>修改依据</th><th>原因（□ 新的报表证据 □ 事后信息）</th></tr>
+    <tr><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td><td></td></tr>
+  </table>
+  </div>
+
+  <h4>K-W5：猜身份记录与 AI 提问日志（E3b）</h4>
+  <p><strong>（1）猜身份记录</strong></p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>公司</th><th>推断的细分行业及依据</th><th>猜测的公司</th><th class="num">置信度（%）</th><th>支持证据 1</th><th>支持证据 2</th><th>反对证据</th><th>负责人</th></tr>
+    <tr><td class="num">K1</td><td></td><td></td><td class="num"></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td class="num">K2</td><td></td><td></td><td class="num"></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td class="num">K3</td><td></td><td></td><td class="num"></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td class="num">K4</td><td></td><td></td><td class="num"></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+  </div>
+  <p><strong>（2）AI 提问日志</strong></p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>编号</th><th>提问原文</th><th>类型（常识/筛选/核验）</th><th>AI 回答要点</th><th>核验来源</th><th>是否采用</th></tr>
+    <tr><td class="num">Q1</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td class="num">Q2</td><td></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+  </div>
+
+  <h4>K-W3：听证会评审票（E5）</h4>
+  <p>目标公司：K__</p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>红旗</th><th>做空组的核心论据</th><th>管理层组的解释</th><th>解释是否成立（成立/部分成立/不成立）</th><th>还缺什么证据</th></tr>
+    <tr><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+  </div>
+  <p>总体判断（勾选）：□ 报表基本可信　□ 需要补充证据才能判断　□ 报表存在重大疑问</p>
+
+  <h4>K-W4：复盘表（E6，揭晓后填写）</h4>
+  <p><strong>（1）公司层面</strong></p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>公司</th><th>真实身份</th><th>我们猜的是</th><th class="num">封存排名</th><th>事后情况</th><th>归类（命中/误报/漏报/正确排除）</th><th>当时如果多做哪一步就能判断对</th></tr>
+    <tr><td class="num">K1</td><td></td><td></td><td class="num"></td><td></td><td></td><td></td></tr>
+    <tr><td class="num">K2</td><td></td><td></td><td class="num"></td><td></td><td></td><td></td></tr>
+    <tr><td class="num">K3</td><td></td><td></td><td class="num"></td><td></td><td></td><td></td></tr>
+    <tr><td class="num">K4</td><td></td><td></td><td class="num"></td><td></td><td></td><td></td></tr>
+  </table>
+  </div>
+  <p><strong>（2）红旗层面</strong></p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>我们的红旗</th><th>所属公司</th><th>事后查明的事实</th><th>这条红旗是真信号还是「同款红旗」造成的误报</th></tr>
+    <tr><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td><td></td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ============ 五、案例 B 材料：瑞幸咖啡 ============ -->
+<section id="case-b">
+  <h2><span class="no">05</span> 案例 B 材料：瑞幸咖啡</h2>
+
+  <h3>5.1 时间线</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>时间</th><th>事件</th></tr>
+    <tr><td class="num">2019 年 5 月</td><td>在纳斯达克上市</td></tr>
+    <tr><td class="num">2019 年 11 月 13 日</td><td>公布第三季度业绩，称门店层面利润率 12.5%，首次转正</td></tr>
+    <tr><td class="num">2020 年 1 月 31 日</td><td>浑水研究公开一份收到的匿名 89 页做空报告</td></tr>
+    <tr><td class="num">2020 年 4 月 2 日</td><td>公司公告：内部调查初步发现，首席运营官等人自 2019 年二季度起伪造交易，2019 年二至四季度相关销售额约 22 亿元人民币</td></tr>
+    <tr><td class="num">2020 年 7 月 1 日</td><td>公司公告内部调查基本完成：2019 年净收入被虚增约 21.2 亿元，成本费用被虚增约 13.4 亿元</td></tr>
+    <tr><td class="num">2020 年 7 月 13 日</td><td>美国存托股最后一个交易日（纳斯达克）</td></tr>
+    <tr><td class="num">2020 年 12 月 16 日</td><td>SEC 起诉：2019 年 4 月至 2020 年 1 月虚构零售额超过 3 亿美元，为掩盖造假虚增费用超过 1.9 亿美元；截至 2019 年 6 月 30 日和 9 月 30 日的期间，公布收入分别被高估约 28% 和 45%；公司同意支付 1.8 亿美元罚款和解</td></tr>
+    <tr><td class="num">2025 年</td><td>门店达 31,048 家，全年总净收入 492.88 亿元</td></tr>
+  </table>
+  </div>
+
+  <h3>5.2 表 L-1：2019 年第三季度公告数据（单位：百万元人民币）</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>项目</th><th class="num">2019 年三季度</th></tr>
+    <tr><td>产品净收入</td><td class="num">1,493.2</td></tr>
+    <tr><td>原材料成本</td><td class="num">721.1（占产品收入 48.3%）</td></tr>
+    <tr><td>门店租金及其他运营成本</td><td class="num">477.3（32.0%）</td></tr>
+    <tr><td>折旧费用</td><td class="num">108.5（7.3%）</td></tr>
+    <tr><td>门店层面利润</td><td class="num">186.3（12.5%）</td></tr>
+    <tr><td>销售及营销费用</td><td class="num">557.7</td></tr>
+    <tr><td>第四季度产品收入指引</td><td class="num">21 亿–22 亿元</td></tr>
+  </table>
+  </div>
+  <p><strong>季度运营数据</strong></p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>项目</th><th class="num">2018Q2</th><th class="num">2018Q3</th><th class="num">2018Q4</th><th class="num">2019Q1</th><th class="num">2019Q2</th><th class="num">2019Q3</th></tr>
+    <tr><td>期末门店数</td><td class="num">624</td><td class="num">1,189</td><td class="num">2,073</td><td class="num">2,370</td><td class="num">2,963</td><td class="num">3,680</td></tr>
+    <tr><td>月均交易客户（千人）</td><td class="num">1,207.6</td><td class="num">1,877.4</td><td class="num">4,325.9</td><td class="num">4,402.0</td><td class="num">6,166.0</td><td class="num">9,339.7</td></tr>
+    <tr><td>月均总销量（千件）</td><td class="num">4,001.0</td><td class="num">7,760.3</td><td class="num">17,645.1</td><td class="num">16,275.8</td><td class="num">27,593.0</td><td class="num">44,244.6</td></tr>
+    <tr><td>其中：现制饮品</td><td class="num">3,743.7</td><td class="num">6,220.4</td><td class="num">13,418.8</td><td class="num">13,077.2</td><td class="num">21,055.7</td><td class="num">34,655.4</td></tr>
+    <tr><td>其中：其他产品</td><td class="num">257.3</td><td class="num">1,539.9</td><td class="num">4,226.4</td><td class="num">3,198.6</td><td class="num">6,537.3</td><td class="num">9,589.2</td></tr>
+  </table>
+  </div>
+  <p class="note">注：季度总销量 = 月均总销量 × 3；2019 年三季度共 92 天。</p>
+
+  <h3>5.3 做空报告要点（中文摘要）</h3>
+  <ol>
+    <li><strong>单店日均销量被夸大：</strong>调查方动员 92 名全职和 1,418 名兼职人员，在 38 个城市的 620 家门店录制了 981 个「店日」的全天客流，合计 11,260 小时录像，统计得到 2019 年四季度单店日均销量仅 263 件；而按公司口径，三季度为 444 件，四季度按业绩指引推算为 483–506 件。报告称三季度和四季度分别被夸大至少 69% 和 88%。</li>
+    <li><strong>调查成功率：</strong>共走访 1,832 个店日，其中 851 个因被店员劝离、设备故障或录像缺失超过 10 分钟而作废，成功率约 54%。</li>
+    <li><strong>每单件数下降：</strong>从 2019 年二季度的 1.38 件降至四季度的 1.14 件。</li>
+    <li><strong>售价被高估：</strong>收集 25,843 张小票，称每件净售价被高估至少 1.23 元（12.3%）。</li>
+    <li><strong>广告费被高估：</strong>引用第三方媒体监测，称三季度广告费被高估超过 150%。</li>
+    <li><strong>「其他产品」收入占比：</strong>小票显示仅约 6%，远低于公司口径。</li>
+    <li><strong>管理层股权质押：</strong>管理层通过质押套现其持股的 49%（占总股本 24%）。</li>
+  </ol>
+
+  <h3>5.4 表 L-2：2025 年数据卡（单位：百万元人民币；未经审计业绩公告）</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>项目</th><th class="num">2025 年</th><th class="num">2024 年</th><th>备注</th></tr>
+    <tr><td>总净收入</td><td class="num">49,288.1</td><td class="num">由 43.0% 增速推算</td><td></td></tr>
+    <tr><td>自营门店收入</td><td class="num">36,242.8</td><td class="num">增速 41.6%</td><td></td></tr>
+    <tr><td>联营门店收入</td><td class="num">11,593.7</td><td class="num">增速 49.7%</td><td>四季度构成：原材料 1,744.4、配送服务 506.6、利润分成及特许权费 387.9、设备 187.7、加盟及其他 20.0</td></tr>
+    <tr><td>原材料成本</td><td class="num">18,783.5</td><td class="num">14,083.3</td><td></td></tr>
+    <tr><td>门店租金及其他运营成本</td><td class="num">11,241.9</td><td class="num">8,540.7</td><td></td></tr>
+    <tr><td>折旧摊销</td><td class="num">1,557.4</td><td class="num">1,190.0</td><td></td></tr>
+    <tr><td>配送费用</td><td class="num">6,878.7</td><td class="num">2,821.1</td><td></td></tr>
+    <tr><td>销售及营销费用</td><td class="num">2,595.7</td><td class="num">1,920.3</td><td></td></tr>
+    <tr><td>营业利润（GAAP）</td><td class="num">5,072.9</td><td class="num">3,570.1</td><td></td></tr>
+    <tr><td>净利润</td><td class="num">3,600.4</td><td class="num">2,955.7</td><td></td></tr>
+    <tr><td>经营活动现金流量净额</td><td class="num">6,091.1</td><td class="num">4,229.3</td><td></td></tr>
+    <tr><td>自营门店层面利润率</td><td class="num">17.8%</td><td class="num">19.0%</td><td></td></tr>
+    <tr><td>自营门店同店销售增长</td><td class="num">7.5%</td><td class="num">−16.7%</td><td></td></tr>
+    <tr><td>年末门店数（自营 / 联营）</td><td class="num">31,048（20,234 / 10,814）</td><td class="num">22,340（14,591 / 7,749）</td><td></td></tr>
+    <tr><td>月均交易客户</td><td class="num">9,420 万</td><td class="num"></td><td>含仅用免费券的客户</td></tr>
+  </table>
+  </div>
+
+  <h3>5.5 工作表</h3>
+
+  <h4>L-W1：做空报告证据链（E7）</h4>
+  <div class="panel">
+    <p>观测：<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> → 推算单店日均销量：<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> → 推算每件售价：<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> → 推算收入：<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> → 与公告对比：__</p>
+    <p>每一步最可能出错的地方：①<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> ②<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> ③<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> ④<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></p>
+  </div>
+
+  <h4>L-W2：复算表（E7）</h4>
+  <div class="tablewrap">
+  <table>
+    <tr><th>指标</th><th>计算过程</th><th>结果</th><th>与做空报告或公告的差异</th></tr>
+    <tr><td>2019Q3 单店日均销量</td><td></td><td></td><td></td></tr>
+    <tr><td>2019Q3 每件平均净售价</td><td></td><td></td><td></td></tr>
+    <tr><td>2019Q3 门店层面利润率</td><td></td><td></td><td></td></tr>
+    <tr><td>情景推算：做空报告成立时的 Q3 产品收入</td><td></td><td></td><td></td></tr>
+    <tr><td>情景收入比公告数低多少</td><td></td><td></td><td></td></tr>
+  </table>
+  </div>
+
+  <h4>L-W3：2025 年交叉验证表（E8）</h4>
+  <div class="tablewrap">
+  <table>
+    <tr><th>验证对</th><th>用到的两个数</th><th>预期关系</th><th>计算结果</th><th>结论（一致/可解释的不一致/无法解释的不一致）</th><th>负责人 / 复核人</th></tr>
+    <tr><td>自营门店数 ↔ 自营门店收入</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>收入增速 ↔ 原材料成本增速</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>配送费用增速 ↔ 自营门店收入增速</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>自选（3 人组、4 人组必填）：__</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>自选（4 人组必填）：__</td><td></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+  </div>
+
+  <h4>L-W4：最难同时造假的指标对（E8，≤200 字）</h4>
+  <div class="panel">
+    <p>我们认为最难同时造假的是<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>和<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>，因为造假者需要同时改动<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>和<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>，而这两项数据分别来自__。</p>
+  </div>
+</section>
+
+<!-- ============ 六、AI 协作规则与审查表 ============ -->
+<section id="ai-rules">
+  <h2><span class="no">06</span> AI 协作规则与审查表</h2>
+
+  <p><strong>三条规则</strong>（与第一次课相同）：先独立后 AI；AI 的每个数字都要找到出处；每处修改都要说明理由。</p>
+
+  <p><strong>本次课新增两条：</strong></p>
+  <ol>
+    <li><strong>AI 使用分三个阶段：</strong>任务 1–2（计算和封存排序）完全不用 AI；任务 3A 猜身份只能按「常识 / 筛选 / 核验」三类规则提问，并记入提问日志；任务 3B 才能把四张匿名数据卡整体交给 AI，任务 5 才能给实名数据。所有回答都要保存，用于比较。</li>
+    <li><strong>警惕「被改写过的历史」：</strong>数据库和 AI 给出的历史财务数字，可能是事后追溯重述过的，不一定是当年报表上的数字。核验时以当年披露的原始年报为准。</li>
+  </ol>
+
+  <h3>AI 审查表（E4）</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>AI 的主张</th><th>出处（表格/文件页码）</th><th>核验结果</th><th>问题类型</th><th>我们的处理与理由</th></tr>
+    <tr><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+  </div>
+  <p class="note">问题类型：数据错误、口径错误、推理跳跃、关键遗漏、<strong>后见之明</strong>、正确且有增益。</p>
+
+  <h3>匿名版与实名版对比记录（E4）</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>对比项</th><th>匿名版（任务 3B）</th><th>实名版（任务 5）</th></tr>
+    <tr><td>四家公司的排序</td><td></td><td></td></tr>
+    <tr><td>排名第一公司的首要疑点</td><td></td><td></td></tr>
+    <tr><td>是否断言「造假」</td><td></td><td></td></tr>
+    <tr><td>是否引用了 T+1 年 5 月之后的信息</td><td></td><td></td></tr>
+    <tr><td>是否越界说出公司身份</td><td></td><td></td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ============ 七、资料包与使用顺序 ============ -->
+<section id="references">
+  <h2><span class="no">07</span> 资料包与使用顺序</h2>
+  <p class="note">案例 A 四家公司的身份和原始资料在揭晓后随《案例资料》发放。任务 3A 中你们自己检索到的年报链接，请记在 K-W5 的「核验来源」栏。</p>
+
+  <div class="tablewrap">
+  <table>
+    <tr><th>顺序</th><th>资料</th><th>与任务的关系</th><th>何时使用</th><th>预期收获</th></tr>
+    <tr><td class="num">1</td><td>本学习包第三部分「基础知识速查表」</td><td>任务 0–3A 的概念工具</td><td>任务 0 起；3.7 节在任务 3A 使用</td><td>能把疑点写成可检验的问题，能从报表指纹推断行业</td></tr>
+    <tr><td class="num">2</td><td>瑞幸匿名做空报告全文（英文）：<a href="https://cdn.gmtresearch.com/public-ckfinder/Short-sellers/Unknown%20author/Luckin%20Coffee_Anonymous.pdf" target="_blank" rel="noopener">Luckin Coffee_Anonymous.pdf</a></td><td>任务 6</td><td>任务 6 步骤 1–2：先读 5.3 节摘要，再查原文第 1–5 页</td><td>看清做空调查的方法和局限</td></tr>
+    <tr><td class="num">3</td><td>瑞幸 2019 年第三季度业绩公告：<a href="https://www.sec.gov/Archives/edgar/data/1767582/000110465919065621/a19-23472_1ex99d1.htm" target="_blank" rel="noopener">SEC 公告原文</a></td><td>任务 6 复算</td><td>任务 6 步骤 3</td><td>学会用公司自己的数字检验公司自己的说法</td></tr>
+    <tr><td class="num">4</td><td>瑞幸 2020 年 4 月 2 日公告（成立特别委员会）：<a href="https://investor.luckincoffee.com/news-releases/news-release-details/luckin-coffee-announces-formation-independent-special-committee" target="_blank" rel="noopener">公司公告</a></td><td>任务 6 对照</td><td>任务 6 步骤 4</td><td>了解公司自曝的范围</td></tr>
+    <tr><td class="num">5</td><td>SEC 诉讼公告：<a href="https://www.sec.gov/enforcement-litigation/litigation-releases/lr-24987" target="_blank" rel="noopener">SEC 诉讼公告</a></td><td>任务 6 对照</td><td>任务 6 步骤 4</td><td>了解监管认定的造假规模与手法</td></tr>
+    <tr><td class="num">6</td><td>瑞幸 2025 年第四季度及全年业绩公告：<a href="https://www.globenewswire.com/news-release/2026/02/26/3245426/0/en/luckin-coffee-announces-fourth-quarter-and-fiscal-year-2025-financial-results.html" target="_blank" rel="noopener">业绩公告</a></td><td>任务 7</td><td>任务 7 步骤 2</td><td>获取交叉验证所需的经营与财务数据</td></tr>
+    <tr><td class="num">7</td><td>瑞幸 2020 年度 20-F（含内部调查结论）：<a href="https://www.sec.gov/Archives/edgar/data/1767582/000110465921117647/a21-22184_320f.htm" target="_blank" rel="noopener">20-F 全文</a></td><td>拓展</td><td>课后</td><td>了解造假对收入和成本的具体影响</td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ============ 八、课后任务 ============ -->
+<section id="homework">
+  <h2><span class="no">08</span> 课后任务（E9，个人，下次课前提交）</h2>
+  <p>假设你是一家基金的分析师，投资委员会要求你在<strong>一页纸</strong>内回答：「我们是否应当继续持有瑞幸咖啡？」</p>
+  <p>要求：</p>
+  <ol>
+    <li>只能使用 2025 年业绩公告和 2025 年 20-F 中的数据；</li>
+    <li>至少使用两组你在 L-W3 中设计的交叉验证对，说明结论；</li>
+    <li>写出你<strong>最不放心</strong>的一个数字，以及你会用什么外部证据去核实它；</li>
+    <li>如果使用了 AI，附上 AI 审查表。</li>
+  </ol>
+  <div class="warnbox"><strong>提交规范：</strong>一页纸（单面），所有引用的财务数据须标注出处；使用 AI 须随附审查表。</div>
+</section>
+
+</main>
+
+<div class="submission-bottom"><aside class="submission-bar" aria-label="财报分析专题二作业提交"><div class="container"><div><strong>财报分析专题二作业提交</strong><span>课堂任务产出统一提交 · 截止日期见提交页面</span></div><a href="https://send2me.cn/fAmv-n6r/Thyfs318Zeddhg" target="_blank" rel="noopener">提交作业 ↗</a></div></aside></div>
+
+<footer>
+  <div class="container">
+    <p><strong>《财报分析》专题二：利润是真的吗？——财务造假识别与报表可信度审计</strong> · 案例 A 为匿名化教学样本（已缩放） · 案例 B 基于瑞幸咖啡公开披露文件。</p>
+    <p class="mono">本材料仅供课堂教学使用 · 财务数据摘自 2025 年年度报告与业绩公告 · 2026 年秋季学期</p>
+  </div>
+</footer>
+
+</body>
+</html>
+
+
