@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" width="900" height="420">
+<style>
+text{font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC","Source Han Sans SC",sans-serif;fill:#1f2933}
+.tick{font-size:12px;fill:#52606d}
+.axis{font-size:14px}
+.lab{font-size:13px;font-weight:700}
+</style>
+<rect width="900" height="420" fill="#ffffff"/>
+<g stroke="#e4e7eb" stroke-width="1">
+<line x1="90" y1="285.7" x2="600" y2="285.7"/><line x1="90" y1="221.4" x2="600" y2="221.4"/><line x1="90" y1="157.1" x2="600" y2="157.1"/><line x1="90" y1="92.9" x2="600" y2="92.9"/>
+<line x1="217.5" y1="50" x2="217.5" y2="350"/><line x1="345" y1="50" x2="345" y2="350"/><line x1="472.5" y1="50" x2="472.5" y2="350"/><line x1="600" y1="50" x2="600" y2="350"/>
+</g>
+<line x1="90" y1="350" x2="600" y2="350" stroke="#52606d" stroke-width="1.2"/>
+<line x1="90" y1="50" x2="90" y2="350" stroke="#52606d" stroke-width="1.2"/>
+<g class="tick" text-anchor="middle">
+<text x="90" y="370">0</text><text x="217.5" y="370">0.5</text><text x="345" y="370">1.0</text><text x="472.5" y="370">1.5</text><text x="600" y="370">2.0</text>
+</g>
+<g class="tick" text-anchor="end">
+<text x="82" y="354">0%</text><text x="82" y="289.7">6%</text><text x="82" y="225.4">12%</text><text x="82" y="161.1">18%</text><text x="82" y="96.9">24%</text>
+</g>
+<text class="axis" x="345" y="402" text-anchor="middle">净财务杠杆（净金融负债 ÷ 股东权益）</text>
+<text class="axis" x="36" y="200" text-anchor="middle" transform="rotate(-90 36 200)">净资产收益率</text>
+<line x1="90" y1="221.4" x2="600" y2="92.9" stroke="#1f4e79" stroke-width="2.6"/>
+<line x1="90" y1="221.4" x2="600" y2="221.4" stroke="#52606d" stroke-width="2.2" stroke-dasharray="8 5"/>
+<line x1="90" y1="221.4" x2="600" y2="350" stroke="#9c5b16" stroke-width="2.6" stroke-dasharray="2 5" stroke-linecap="round"/>
+<circle cx="90" cy="221.4" r="4.5" fill="#1f2933"/>
+<text class="lab" x="610" y="90" style="fill:#1f4e79">税后净利息率 6%</text>
+<text x="610" y="108" style="font-size:12px;fill:#1f4e79">低于净经营资产收益率</text>
+<text class="lab" x="610" y="219" style="fill:#52606d">税后净利息率 12%</text>
+<text x="610" y="237" style="font-size:12px;fill:#52606d">等于净经营资产收益率</text>
+<text class="lab" x="610" y="340" style="fill:#9c5b16">税后净利息率 18%</text>
+<text x="610" y="358" style="font-size:12px;fill:#9c5b16">高于净经营资产收益率</text>
+<text x="104" y="74" style="font-size:13px;fill:#52606d">净经营资产收益率固定为 12%</text>
+</svg>

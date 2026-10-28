@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23006B5B'/%3E%3Ctext x='32' y='46' font-size='32' text-anchor='middle' fill='white' font-family='Georgia,serif'%3E¥%3C/text%3E%3C/svg%3E">
+<title>补充讲义 · 盈利能力分解与盈余质量 — 财报分析</title>
+<meta name="description" content="硕士课程《财报分析》补充知识专题：净资产收益率的传统杜邦分解与改进分解、管理用报表、杠杆贡献率，以及应计项目、现金转换周期与自由现金流衡量的盈余质量。">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+:root{
+  --paper:#fafaf8;
+  --ink:#0a0a0a;
+  --grey-1:#f0f0ee;
+  --grey-2:#d4d4d2;
+  --grey-3:#737373;
+  --accent:#006B5B;
+  --mono:"JetBrains Mono","Cascadia Code",Consolas,"Courier New",monospace;
+  --sans:"Inter","Helvetica Neue","Noto Sans SC","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+.container{max-width:920px;margin:0 auto;padding:0 24px}
+
+header{background:var(--ink);color:#fff;padding:56px 0 40px;border-bottom:6px solid var(--accent)}
+header .tag{font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:#7FD1C0;text-transform:uppercase;margin-bottom:14px;font-weight:600}
+header .tag::before{content:"// "}
+header h1{font-size:34px;line-height:1.25;font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+header .sub{font-size:16.5px;color:var(--grey-2);margin-bottom:22px;max-width:640px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:12.5px;color:#fff;border:1px solid var(--grey-3);padding:4px 12px;background:rgba(255,255,255,.03);font-weight:500}
+
+nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--grey-2);margin-bottom:28px}
+nav .links{display:flex;gap:0;flex-wrap:wrap;padding:6px 0}
+nav a{font-size:14px;color:var(--grey-3);text-decoration:none;padding:8px 14px;border-left:1px solid var(--grey-2);transition:color .15s;font-weight:500}
+nav a:first-child{border-left:none}
+nav a:hover{color:var(--accent)}
+nav a.back{color:var(--accent);font-weight:500;margin-right:8px}
+
+h2{font-size:23px;font-weight:700;color:var(--ink);margin:40px 0 16px;padding:0 0 10px 14px;border-left:6px solid var(--accent);display:flex;align-items:baseline;gap:12px;letter-spacing:-.01em;flex-wrap:wrap;scroll-margin-top:56px}
+h2 .no{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.12em;font-weight:600}
+h3{font-size:17.5px;font-weight:700;margin:26px 0 10px;color:var(--ink);scroll-margin-top:56px}
+h4{font-size:15.5px;font-weight:700;margin:18px 0 8px;color:var(--ink)}
+p{margin:8px 0}
+ul,ol{margin:8px 0 8px 24px}
+li{margin:5px 0}
+code{font-family:var(--mono);font-size:.86em;background:var(--grey-1);padding:1px 6px;color:var(--ink);font-weight:500}
+strong{font-weight:700}
+a{color:var(--accent)}
+a:hover{color:#00917c}
+
+blockquote{border-left:4px solid var(--accent);background:var(--grey-1);padding:12px 18px;margin:14px 0;font-size:14.5px}
+blockquote p{margin:4px 0}
+hr.sep{border:none;border-top:1px solid var(--grey-2);margin:28px 0}
+
+figure{margin:20px 0 6px;text-align:center}
+figure img{max-width:100%;height:auto}
+.figcap{font-size:14px;color:var(--grey-3);text-align:center;margin:4px 0 16px}
+
+.tablewrap{overflow-x:auto;margin:4px 0}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px}
+th,td{border:1px solid var(--grey-2);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--grey-1);color:var(--ink);font-weight:600;font-size:14px}
+td.num,th.num{text-align:center;font-family:var(--mono);font-size:13.5px;white-space:nowrap}
+
+.katex-display{margin:14px 0;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+.katex{font-size:1.04em}
+
+footer.site-foot{margin-top:56px;padding:22px 0;border-top:1px solid var(--grey-2);font-size:13px;color:var(--grey-3)}
+footer.site-foot .container{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+footer.site-foot a{color:var(--grey-3);text-decoration:none}
+footer.site-foot a:hover{color:var(--accent)}
+
+@media (max-width:760px){
+  header h1{font-size:26px}
+  header{padding:40px 0 28px}
+}
+@media print{
+  nav{display:none}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="tag">硕士课程 · 财报分析 · 补充知识专题</div>
+    <h1>盈利能力分解与盈余质量</h1>
+    <div class="sub">补充讲义：从传统杜邦分析到管理用报表上的改进分解，区分经营回报与杠杆贡献；再以应计项目、现金转换周期与自由现金流衡量利润的现金实现程度与持续性。</div>
+    <div class="chips">
+      <span class="chip">3 个部分</span>
+      <span class="chip">改进的杜邦分析</span>
+      <span class="chip">管理用报表</span>
+      <span class="chip">盈余质量</span>
+      <span class="chip">8 张图</span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="container links">
+    <a href="index.html" class="back">← 课程主页</a>
+    <a href="#sec-01">一、盈利能力的系统分解</a>
+    <a href="#sec-02">二、现金流与盈余质量</a>
+    <a href="#sec-03">三、两部分的衔接</a>
+    <a href="#references">参考文献</a>
+  </div>
+</nav>
+
+<main class="container">
+
+<blockquote>
+<p>除另有说明外，比率中的资产负债表项目均采用平均余额，即（期初余额 + 期末余额）÷ 2，以使存量指标与利润表的期间口径相匹配。</p>
+</blockquote>
+<hr class="sep">
+<h2 id="sec-01"><span class="no">01</span> 盈利能力的系统分解</h2>
+<h3>1.1 净资产收益率</h3>
+<p>$$\text{净资产收益率}=\text{净利润}\div\text{平均股东权益}$$</p>
+<p>净资产收益率衡量股东投入资本的回报水平，是盈利能力分析的综合指标。单一的净资产收益率数值不能说明回报的来源：同一水平既可以来自较高的利润率，也可以来自较快的资产周转或较高的财务杠杆。三种来源的经济含义与风险特征不同，须分解后才能判断。</p>
+<h3>1.2 传统杜邦分析：三因素分解</h3>
+<p>$$\text{净资产收益率}=\text{销售净利率}\times\text{总资产周转率}\times\text{权益乘数}$$</p>
+<p>其中：</p>
+<p>$$\text{销售净利率}=\text{净利润}\div\text{营业收入}$$</p>
+<p>$$\text{总资产周转率}=\text{营业收入}\div\text{平均总资产}$$</p>
+<p>$$\text{权益乘数}=\text{平均总资产}\div\text{平均股东权益}$$</p>
+<figure><img alt="净资产收益率的三因素分解" src="figures/fig1-dupont-three.svg"  loading="lazy"></figure>
+<p class="figcap">图 1　净资产收益率的三因素分解</p>
+<p>分解包含两个层次：</p>
+<ul>
+<li>销售净利率与总资产周转率之积为总资产净利率，反映经营效率，即单位资产创造利润的能力；</li>
+<li>权益乘数反映财务杠杆，即单位股东权益所支撑的资产规模。</li>
+</ul>
+<p>各项可以继续向下追溯：销售净利率追溯至毛利率、期间费用率与税负；总资产周转率追溯至应收账款、存货、固定资产等各类资产的周转；权益乘数追溯至资本结构。分解的目的，是把净资产收益率的变动定位到具体的报表项目。</p>
+<h3>1.3 利润率与周转率的替代关系</h3>
+<p>总资产净利率等于销售净利率与总资产周转率之积。总资产净利率给定时，二者呈反比例关系，构成一条等总资产净利率曲线。</p>
+<figure><img alt="等总资产净利率曲线" src="figures/fig2-iso-roa.svg"  loading="lazy"></figure>
+<p class="figcap">图 2　等总资产净利率曲线：利润率与周转率的组合</p>
+<p>图中 A、B 两点的总资产净利率均为 20%：A 依靠高利润率与低周转，B 依靠低利润率与高周转。由此得到两点推论：</p>
+<ol>
+<li>利润率的高低本身不能说明盈利能力的强弱，须结合资产周转率判断；</li>
+<li>不同商业模式通常位于曲线的不同位置，<strong>跨模式比较利润率之前</strong>，应先识别双方在资产周转上的结构差异。</li>
+</ol>
+<h3>1.4 传统分解的局限</h3>
+<p>分解净资产收益率的目的，是判断股东回报来自经营活动还是融资活动。两类活动的性质不同：经营活动通过生产、销售与服务创造回报，是企业价值的来源；融资活动决定资本结构，通过财务杠杆放大或缩小经营回报，并改变股东承担的风险。来源不同的净资产收益率，其可持续性与风险也不同，因此分解必须把两类活动分开。</p>
+<p>传统杜邦分析试图以总资产净利率代表经营效率、以权益乘数代表财务杠杆，但这一划分并不成立。原因在于它所依据的报表并非按活动性质编制：资产负债表按流动性与法律权利列报，主要服务于偿债能力判断；利润表中的财务费用、投资收益、公允价值变动损益等项目，又使经营损益与金融损益交织在一起。以此为基础计算的比率，必然同时混入两类活动。具体表现为三处口径问题：</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>传统指标</th>
+<th>混入的项目</th>
+<th>后果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>总资产周转率</td>
+<td>分母总资产包含货币资金、交易性金融资产等金融资产</td>
+<td>持有金融资产越多，周转率越低，即使经营活动未发生任何变化</td>
+</tr>
+<tr>
+<td>销售净利率与总资产净利率</td>
+<td>分子净利润已扣除利息费用，并包含金融资产收益</td>
+<td>经营回报受资本结构与金融资产收益影响</td>
+</tr>
+<tr>
+<td>权益乘数</td>
+<td>应付账款、合同负债等经营负债与有息负债一并计入</td>
+<td>通常不计息的经营负债被计作财务杠杆，杠杆被高估</td>
+</tr>
+</tbody>
+</table></div>
+<p>上述问题导致三项分析结论的偏差。</p>
+<p><strong>第一，总资产净利率不能独立衡量经营业绩。</strong> 设两家企业的经营活动完全相同，仅资本结构不同：一家全部以股权融资，另一家以借款替代部分股权。二者总资产相同，但后者的净利润因利息费用而较低，总资产净利率也随之较低。经营业绩相同而总资产净利率不同，说明该指标同时受融资决策影响。同理，企业以闲置资金偿还借款时，经营活动并未改变，但总资产减少，净利润又因借款利率通常高于存款利率而增加，总资产净利率通常随之上升。</p>
+<p><strong>第二，无法显示财务杠杆的作用方向。</strong> 在"净资产收益率 = 总资产净利率 × 权益乘数"中，权益乘数恒不小于 1，形式上提高负债总会放大净资产收益率。实际上，负债增加带来的利息费用已计入净利润，使总资产净利率同时下降；净资产收益率最终上升还是下降，取决于两种效应的相对大小。传统公式没有给出决定这一结果的条件，因而无法判断杠杆是在增加还是侵蚀股东回报。</p>
+<p><strong>第三，误判财务风险的来源。</strong> 权益乘数将经营负债与有息负债合并计算。经营负债较多的企业，权益乘数较高，看似财务风险较大；但经营负债通常不计息，也没有固定的还本付息压力，往往反映企业对上下游的议价能力。将其计为财务杠杆，既高估了财务风险，也使其节约资本占用的作用无法在经营回报中体现。</p>
+<p>因此，改进需要分两步：<strong>先按活动性质对报表重新分类，再在重新分类的报表上分解净资产收益率。</strong> 前者即管理用报表（1.5 节），后者即改进的杜邦分析（1.6 节）。</p>
+<h3>1.5 管理用报表：区分经营活动与金融活动</h3>
+<p>比率的口径取决于其所依据的报表分类。要使比率分别衡量经营活动与融资活动，报表本身须先按这两类活动划分；否则，无论如何组合比率，经营因素与金融因素仍混在一起。管理用报表的作用即在于此：它不改变任何会计数字，只改变项目的分组方式，使经营资本与经营损益相对应、金融资本与金融损益相对应。</p>
+<p>重新分类的标准是：项目源于<strong>经营活动</strong>（生产、销售与服务），还是源于<strong>融资决策</strong>及闲置资金的<strong>投资</strong>。</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>定义</th>
+<th>主要项目</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>经营资产</td>
+<td>用于生产经营的资产</td>
+<td>应收账款、存货、预付款项、固定资产、无形资产、使用权资产、长期股权投资</td>
+</tr>
+<tr>
+<td>经营负债</td>
+<td>经营活动中自然形成、通常不计息的负债</td>
+<td>应付账款、合同负债、应付职工薪酬、应交税费</td>
+</tr>
+<tr>
+<td>金融资产</td>
+<td>闲置资金的投资</td>
+<td>货币资金、交易性金融资产、债权投资</td>
+</tr>
+<tr>
+<td>金融负债</td>
+<td>融资活动形成、承担利息的负债</td>
+<td>短期借款、长期借款、应付债券、一年内到期的非流动负债、租赁负债</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>注：货币资金中维持日常经营所需的部分在理论上属于经营资产，实务中因难以区分，通常整体视为金融资产。应付票据、长期应付款等边界项目，按是否计息及形成原因归类；同一分析中须保持口径一致。</p>
+</blockquote>
+<p>在此基础上定义：</p>
+<p>$$\text{净经营资产}=\text{经营资产}-\text{经营负债}$$</p>
+<p>$$\text{净金融负债}=\text{金融负债}-\text{金融资产}$$</p>
+<p>资产负债表恒等式随之改写。重新分类后，资产等于经营资产与金融资产之和，负债等于经营负债与金融负债之和，代入基本恒等式得：</p>
+<p>$$\text{经营资产}+\text{金融资产}=\text{经营负债}+\text{金融负债}+\text{股东权益}$$</p>
+<p>将经营负债移至等式左边、金融资产移至等式右边：</p>
+<p>$$\text{经营资产}-\text{经营负债}=\text{金融负债}-\text{金融资产}+\text{股东权益}$$</p>
+<p>等式左边即净经营资产，右边前两项即净金融负债，因此：</p>
+<p>$$\text{净经营资产}=\text{净金融负债}+\text{股东权益}$$</p>
+<p>该式是基本恒等式的移项形式，不引入新的会计关系。左边为经营活动净占用的资本（资本运用），右边为净债权人与股东提供的资本（资本来源）。</p>
+<figure><img alt="资产负债表的重新分类" src="figures/fig3-reclassification.svg"  loading="lazy"></figure>
+<p class="figcap">图 3　资产负债表的重新分类</p>
+<p>利润表按同一标准分为经营损益与金融损益：</p>
+<p>$$\text{净利润}=\text{税后经营净利润}-\text{税后净利息费用}$$</p>
+<p>$$\text{税后净利息费用}=(\text{利息费用}-\text{金融资产收益})\times(1-\text{所得税税率})$$</p>
+<p>其中，金融资产收益包括利息收入以及金融资产的投资收益和公允价值变动损益。税后经营净利润可由净利润加回税后净利息费用得到。</p>
+<p>重新分类后，资产负债表与利润表形成三组对应关系，每一组的回报与资本来自同一类活动：</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>对象</th>
+<th>资本（资产负债表）</th>
+<th>回报（利润表）</th>
+<th>回报率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>经营活动</td>
+<td>净经营资产</td>
+<td>税后经营净利润</td>
+<td>净经营资产收益率 = 税后经营净利润 ÷ 净经营资产</td>
+</tr>
+<tr>
+<td>融资活动</td>
+<td>净金融负债</td>
+<td>税后净利息费用</td>
+<td>税后净利息率 = 税后净利息费用 ÷ 净金融负债</td>
+</tr>
+<tr>
+<td>股东</td>
+<td>股东权益</td>
+<td>净利润 = 税后经营净利润 − 税后净利息费用</td>
+<td>净资产收益率 = 净利润 ÷ 股东权益</td>
+</tr>
+</tbody>
+</table></div>
+<p>分子与分母口径一致，是改进的杜邦分析得以成立的前提。</p>
+<blockquote>
+<p>注：本讲义略去少数股东权益的区分。分析合并报表时，可将少数股东权益并入股东权益，并保持分子与分母口径一致。</p>
+</blockquote>
+<h3>1.6 改进的杜邦分析</h3>
+<p>以经营活动与金融活动的划分为基础，净资产收益率可分解为经营回报与杠杆贡献两部分。以下各式中的净经营资产、净金融负债与股东权益均为平均余额。</p>
+<p><strong>第一步：</strong> 按 1.5 节，净利润等于税后经营净利润减去税后净利息费用，两项分别除以股东权益：</p>
+<p>$$\text{净资产收益率}=\frac{\text{税后经营净利润}}{\text{股东权益}}-\frac{\text{税后净利息费用}}{\text{股东权益}}$$</p>
+<p><strong>第二步：</strong> 第一项分子分母同乘净经营资产，第二项分子分母同乘净金融负债：</p>
+<p>$$\text{净资产收益率}=\text{净经营资产收益率}\times\frac{\text{净经营资产}}{\text{股东权益}}-\text{税后净利息率}\times\text{净财务杠杆}$$</p>
+<p>其中，净财务杠杆 = 净金融负债 ÷ 股东权益。</p>
+<p><strong>第三步：</strong> 由"净经营资产 = 净金融负债 + 股东权益"可知，净经营资产 ÷ 股东权益 = 1 + 净财务杠杆。代入后整理得：</p>
+<p>$$\text{净资产收益率}=\text{净经营资产收益率}+(\text{净经营资产收益率}-\text{税后净利息率})\times\text{净财务杠杆}$$</p>
+<p>括号中的差额称为经营差异率，经营差异率与净财务杠杆之积称为杠杆贡献率，因此：</p>
+<p>$$\text{净资产收益率}=\text{净经营资产收益率}+\text{杠杆贡献率}$$</p>
+<p>其中经营回报部分可继续分解：</p>
+<p>$$\text{净经营资产收益率}=\text{税后经营净利率}\times\text{净经营资产周转率}$$</p>
+<p>$$\text{税后经营净利率}=\text{税后经营净利润}\div\text{营业收入}$$</p>
+<p>$$\text{净经营资产周转率}=\text{营业收入}\div\text{净经营资产}$$</p>
+<figure><img alt="改进的杜邦分析" src="figures/fig4-dupont-improved.svg"  loading="lazy"></figure>
+<p class="figcap">图 4　改进的杜邦分析</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>指标</th>
+<th>公式</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>净经营资产收益率（亦称净经营资产净利率）</td>
+<td>税后经营净利润 ÷ 净经营资产</td>
+<td>经营活动的回报率，不受资本结构影响</td>
+</tr>
+<tr>
+<td>税后净利息率</td>
+<td>税后净利息费用 ÷ 净金融负债</td>
+<td>净金融负债的税后成本</td>
+</tr>
+<tr>
+<td>经营差异率</td>
+<td>净经营资产收益率 − 税后净利息率</td>
+<td>经营回报率超过融资成本的部分</td>
+</tr>
+<tr>
+<td>净财务杠杆</td>
+<td>净金融负债 ÷ 股东权益</td>
+<td>单位股东权益对应的净金融负债</td>
+</tr>
+<tr>
+<td>杠杆贡献率</td>
+<td>经营差异率 × 净财务杠杆</td>
+<td>融资活动对净资产收益率的贡献</td>
+</tr>
+</tbody>
+</table></div>
+<blockquote>
+<p>注：
+1. 投入资本回报率与净经营资产收益率在概念上一致：投入资本 = 净金融负债 + 股东权益 = 净经营资产。二者在实务中的差异，主要来自经营资产与金融资产的划分口径。
+2. 企业持有净金融资产时，净金融负债与净财务杠杆为负，公式仍然成立。此时若净经营资产收益率高于金融资产收益率，持有净金融资产会使净资产收益率低于净经营资产收益率。</p>
+</blockquote>
+<p>与 1.4 节所列局限对照，改进的分解逐项作了处理：</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>传统分解的局限</th>
+<th>改进分解的处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>总资产包含金融资产</td>
+<td>以净经营资产为分母，金融资产归入净金融负债并与金融负债轧差</td>
+</tr>
+<tr>
+<td>净利润包含融资成本与金融资产收益</td>
+<td>以税后经营净利润为分子，净经营资产收益率不受资本结构影响</td>
+</tr>
+<tr>
+<td>经营负债计入财务杠杆</td>
+<td>净财务杠杆只包含净金融负债；经营负债从净经营资产中扣除，其作用体现为经营负债杠杆（1.8 节）</td>
+</tr>
+<tr>
+<td>无法显示杠杆的作用方向</td>
+<td>经营差异率直接给出方向（1.7 节）</td>
+</tr>
+</tbody>
+</table></div>
+<p>两种分解所能回答的问题因此不同：传统分解只说明净资产收益率由利润率、周转率与杠杆三者相乘得到；<strong>改进分解能够回答净资产收益率中有多少来自经营活动、有多少来自融资活动，以及融资活动的贡献为正还是为负。</strong></p>
+<h3>1.7 财务杠杆效应的方向</h3>
+<p>$$\text{净资产收益率}-\text{净经营资产收益率}=\text{经营差异率}\times\text{净财务杠杆}$$</p>
+<p>杠杆效应的方向由经营差异率决定，强度由净财务杠杆决定。</p>
+<figure><img alt="财务杠杆效应" src="figures/fig5-leverage-effect.svg"  loading="lazy"></figure>
+<p class="figcap">图 5　净经营资产收益率为 12% 时，净资产收益率随净财务杠杆的变化</p>
+<ul>
+<li>净经营资产收益率高于税后净利息率：杠杆放大净资产收益率，杠杆越高，净资产收益率越高；</li>
+<li>净经营资产收益率等于税后净利息率：杠杆不影响净资产收益率；</li>
+<li>净经营资产收益率低于税后净利息率：杠杆侵蚀净资产收益率，杠杆越高，净资产收益率越低。</li>
+</ul>
+<p>由此得到两点推论：第一，财务杠杆放大的是经营差异率，本身不创造经营回报；第二，净资产收益率若主要来自杠杆贡献率，其可持续性取决于利差与杠杆水平能否维持，并伴随更高的财务风险。</p>
+<h3>1.8 经营负债杠杆</h3>
+<p>经营负债从经营资产中扣除，使净经营资产减少。税后经营净利润不变时，经营负债越多，净经营资产收益率越高。这一效应称为经营负债杠杆：企业凭借对上下游的议价能力占用无息资金，以较少的净经营资产支撑同等规模的经营。经营负债不承担显性利息，但其隐含成本可能体现在采购价格或销售条件之中。</p>
+<hr class="sep">
+<h2 id="sec-02"><span class="no">02</span> 现金流与盈余质量</h2>
+<h3>2.1 盈余质量的含义</h3>
+<p>盈余质量指会计利润反映企业真实经营业绩的程度。本讲义从两个维度把握：一是<strong>现金实现程度</strong>，即利润转化为现金的程度；二是<strong>持续性</strong>，即本期利润延续到未来期间的程度。两个维度相互关联：现金实现程度低的利润，持续性通常也较低。</p>
+<h3>2.2 权责发生制与应计项目</h3>
+<p>利润表按权责发生制编制：收入在履约时确认，费用与收入配比，均不以现金收付为准。利润与现金流因此在各期之间存在差异，这一差异称为应计项目：</p>
+<p>$$\text{应计项目}=\text{净利润}-\text{经营活动现金净流量}$$</p>
+<p>现金流量表补充资料（间接法）列示了从净利润到经营活动现金净流量的调节过程：</p>
+<p>$$\text{经营活动现金净流量}=\text{净利润}+\text{非现金费用}-\text{经营营运资本增加额}\pm\text{非经营损益调整}$$</p>
+<p>其中，非现金费用包括折旧、摊销与资产减值；非经营损益调整剔除投资收益、财务费用等不属于经营活动的损益。经营活动现金净流量扣除资本性支出，即为企业自由现金流。</p>
+<figure><img alt="从净利润到自由现金流" src="figures/fig6-profit-to-fcf.svg"  loading="lazy"></figure>
+<p class="figcap">图 6　从净利润到自由现金流（图中略去非经营损益调整）</p>
+<p>应计项目本身并非缺陷。权责发生制正是通过应计项目，使利润更准确地反映当期业绩。问题在于应计项目依赖估计与判断，可靠性低于现金流，也更容易受到管理层的影响。</p>
+<h3>2.3 应计项目的反转</h3>
+<p>应计项目只改变利润在各期之间的分布，不改变企业整个存续期内的利润总额：</p>
+<ul>
+<li><strong>营运资本应计会在后续期间反转。</strong> 本期因应收账款增加而确认的收入，在以后期间或者收回现金，或者以坏账核销冲减利润。</li>
+<li><strong>长期应计与资本性支出相对应。</strong> 折旧与摊销是以前期间资本性支出在当期的分摊。</li>
+</ul>
+<p>就企业整个存续期而言，累计税后经营净利润与累计企业自由现金流之差，等于存续期内净经营资产的净变动（参见第三部分的衔接关系）；由于存续期首尾的净经营资产均为零，二者相等。判断盈余质量的关键不在单期差异，而在多期差异的累积方向：若利润持续高于经营活动现金净流量，且营运资本的扩大快于收入增长，说明营运资本应计在累积而未反转，这是盈余质量下降的信号。</p>
+<h3>2.4 营运资本与现金转换周期</h3>
+<p>$$\text{经营营运资本}=\text{经营性流动资产}-\text{经营性流动负债}$$</p>
+<p>营运资本占用资金的时间长度，用现金转换周期度量：</p>
+<p>$$\text{存货周转天数}=\text{存货}\div\text{营业成本}\times 365$$</p>
+<p>$$\text{应收账款周转天数}=\text{应收账款}\div\text{营业收入}\times 365$$</p>
+<p>$$\text{应付账款周转天数}=\text{应付账款}\div\text{营业成本}\times 365$$</p>
+<p>$$\text{现金转换周期}=\text{存货周转天数}+\text{应收账款周转天数}-\text{应付账款周转天数}$$</p>
+<figure><img alt="现金转换周期" src="figures/fig7-cash-conversion-cycle.svg"  loading="lazy"></figure>
+<p class="figcap">图 7　现金转换周期</p>
+<blockquote>
+<p>注：式中存货、应收账款与应付账款可取平均余额，也可取期末余额；后者便于只有两年数据时逐年比较。同一分析中须统一口径。</p>
+</blockquote>
+<p>现金转换周期衡量企业从支付采购款到收回销售款之间，资金被经营活动占用的天数。它与盈余质量的关系有三层：</p>
+<ol>
+<li><strong>增长本身消耗现金。</strong> 现金转换周期不变时，营运资本随收入同比例增长。收入增长越快，营运资本增加越多，经营活动现金净流量低于利润越明显。这类差异属于增长性占用。</li>
+<li><strong>周期延长是更强的信号。</strong> 应收账款周转天数或存货周转天数持续上升时，营运资本增速超过收入增速，表明收入的现金回收变慢或存货积压。这类差异不能用增长解释。</li>
+<li><strong>负的现金转换周期使增长产生现金。</strong> 应付账款周转天数大于存货周转天数与应收账款周转天数之和时，企业以上下游资金维持经营，收入增长反而带来经营现金流入。这与 1.8 节的经营负债杠杆属于同一机制。</li>
+</ol>
+<h3>2.5 应计项目的度量</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>口径</th>
+<th>应计比率</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>现金流量表口径</td>
+<td>（净利润 − 经营活动现金净流量）÷ 平均总资产</td>
+<td>只包含经营应计，数据直接取自现金流量表</td>
+</tr>
+<tr>
+<td>资产负债表口径</td>
+<td>净经营资产增加额 ÷ 平均净经营资产</td>
+<td>包含营运资本与长期经营资产的全部变动，与管理用报表衔接</td>
+</tr>
+</tbody>
+</table></div>
+<p>盈利含金量与应计项目的关系为：</p>
+<p>$$\text{盈利含金量}=\frac{\text{经营活动现金净流量}}{\text{净利润}}=1-\frac{\text{应计项目}}{\text{净利润}}$$</p>
+<p>盈利含金量以净利润为分母，净利润较小或为负时会失真；应计比率以资产为分母，跨期与跨企业比较时更为稳定。</p>
+<p>实证研究表明，利润中应计部分的持续性低于现金部分（Sloan，1996），且应计项目的可靠性越低，其持续性越低（Richardson et al.，2005）。因此，在利润水平相同的条件下，应计比率较高的企业，其利润延续到未来的程度通常较低。</p>
+<h3>2.6 自由现金流</h3>
+<p>企业自由现金流是经营活动产生的现金在满足经营资产再投资之后，可供全部资本提供者支配的部分。它有两种计算口径：</p>
+<p>$$\text{企业自由现金流}=\text{经营活动现金净流量}-\text{资本性支出}\qquad\text{（现金流量表口径）}$$</p>
+<p>$$\text{企业自由现金流}=\text{税后经营净利润}-\text{净经营资产增加额}\qquad\text{（资产负债表口径）}$$</p>
+<p>自由现金流最终流向资本提供者：</p>
+<p>$$\text{企业自由现金流}=\text{对债权人的净支付}+\text{股权自由现金流}$$</p>
+<p>$$\text{对债权人的净支付}=\text{税后净利息费用}-\text{净金融负债增加额}$$</p>
+<p>据此：</p>
+<p>$$\text{股权自由现金流}=\text{企业自由现金流}-\text{税后净利息费用}+\text{净金融负债增加额}$$</p>
+<blockquote>
+<p>注：两种口径在理论上一致，实务中因利息与税收的列报位置不同而存在差异。中国企业会计准则将支付的利息列入筹资活动，经营活动现金净流量基本不含利息支出；美国公认会计原则将支付的利息列入经营活动；现行国际财务报告准则允许企业在经营活动与筹资活动之间选择。跨准则比较自由现金流时，须先统一利息的列报口径。</p>
+</blockquote>
+<h3>2.7 盈余质量的分析顺序</h3>
+<ol>
+<li><strong>比较利润与经营现金流。</strong> 观察多期累计差异及其变动趋势，而非单期差异。</li>
+<li><strong>分解差异来源。</strong> 区分非现金费用、营运资本变动与非经营损益。</li>
+<li><strong>检查营运资本。</strong> 判断营运资本增加属于增长性占用（现金转换周期稳定），还是周转恶化（现金转换周期延长）。</li>
+<li><strong>检查再投资强度。</strong> 比较资本性支出与折旧摊销，判断自由现金流的高低是否来自再投资的收缩或扩张。</li>
+<li><strong>结合盈利能力分析。</strong> 净经营资产收益率较高且净经营资产快速扩张时，须确认扩张来自生产性资产，还是来自应收账款与存货的累积。</li>
+</ol>
+<hr class="sep">
+<h2 id="sec-03"><span class="no">03</span> 两部分的衔接</h2>
+<p>$$\text{税后经营净利润}=\text{企业自由现金流}+\text{净经营资产增加额}$$</p>
+<p>税后经营净利润有两个去向：一部分以自由现金流的形式流向资本提供者，另一部分沉淀为净经营资产的增加。前者是已经以现金实现的回报，后者是尚待在未来以现金收回的回报。</p>
+<figure><img alt="税后经营净利润、自由现金流与净经营资产的关系" src="figures/fig8-noa-linkage.svg"  loading="lazy"></figure>
+<p class="figcap">图 8　税后经营净利润、自由现金流与净经营资产的关系</p>
+<p>因此，盈利能力分析与盈余质量分析须结合使用：净经营资产收益率衡量回报率的高低，企业自由现金流与净经营资产增加额的构成衡量回报的现金实现程度。净经营资产收益率相同时，净经营资产增加额占税后经营净利润的比重越高，且其中营运资本所占比重越高，利润的现金实现程度越低。</p>
+<hr class="sep">
+<h2 id="references">参考文献</h2>
+<ol>
+<li>中国注册会计师协会. 财务成本管理[M]. 北京: 中国财政经济出版社（年度版）.</li>
+<li>Penman S H. Financial Statement Analysis and Security Valuation[M]. 5th ed. New York: McGraw-Hill, 2013.</li>
+<li>Nissim D, Penman S H. Ratio Analysis and Equity Valuation: From Research to Practice[J]. Review of Accounting Studies, 2001, 6(1): 109-154.</li>
+<li>Sloan R G. Do Stock Prices Fully Reflect Information in Accruals and Cash Flows about Future Earnings?[J]. The Accounting Review, 1996, 71(3): 289-315.</li>
+<li>Richardson S A, Sloan R G, Soliman M T, Tuna I. Accrual Reliability, Earnings Persistence and Stock Prices[J]. Journal of Accounting and Economics, 2005, 39(3): 437-485.</li>
+</ol>
+
+</main>
+
+<footer class="site-foot">
+  <div class="container">
+    <span>财报分析 · 补充知识专题</span>
+    <a href="index.html">返回课程主页</a>
+  </div>
+</footer>
+
+</body>
+</html>

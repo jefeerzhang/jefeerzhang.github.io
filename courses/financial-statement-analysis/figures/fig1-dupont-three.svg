@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 380" width="760" height="380">
+<style>
+text{font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC","Source Han Sans SC",sans-serif;fill:#1f2933}
+.n1{font-size:15px;font-weight:700}
+.n2{font-size:13px;fill:#52606d}
+.dr{font-size:13px;fill:#52606d}
+.op{font-size:22px;fill:#52606d}
+.band{font-size:13px;font-weight:700}
+</style>
+<rect width="760" height="380" fill="#ffffff"/>
+<rect x="12" y="96" width="436" height="272" rx="8" fill="#f3f7fb" stroke="#c9d8e8"/>
+<rect x="456" y="96" width="292" height="272" rx="8" fill="#fcf6ee" stroke="#ead6bb"/>
+<g fill="none" stroke="#7b8794" stroke-width="1.4">
+<path d="M380 64 V80 H230 V112 M380 80 H602 V112"/>
+<path d="M230 168 V192 H120 V216 M230 192 H340 V216"/>
+</g>
+<g fill="none" stroke="#9aa5b1" stroke-width="1.2" stroke-dasharray="4 4">
+<path d="M120 272 V296 M340 272 V296 M602 168 V296"/>
+</g>
+<rect x="270" y="16" width="220" height="48" rx="6" fill="#1f4e79"/>
+<text x="380" y="46" text-anchor="middle" style="font-size:16px;font-weight:700;fill:#ffffff">净资产收益率</text>
+<rect x="130" y="112" width="200" height="56" rx="6" fill="#ffffff" stroke="#1f4e79" stroke-width="1.4"/>
+<text class="n1" x="230" y="136" text-anchor="middle">总资产净利率</text>
+<text class="n2" x="230" y="157" text-anchor="middle">净利润 ÷ 总资产</text>
+<text class="op" x="421" y="148" text-anchor="middle">×</text>
+<rect x="512" y="112" width="180" height="56" rx="6" fill="#ffffff" stroke="#9c5b16" stroke-width="1.4"/>
+<text class="n1" x="602" y="136" text-anchor="middle">权益乘数</text>
+<text class="n2" x="602" y="157" text-anchor="middle">总资产 ÷ 股东权益</text>
+<rect x="30" y="216" width="180" height="56" rx="6" fill="#ffffff" stroke="#1f4e79" stroke-width="1.4"/>
+<text class="n1" x="120" y="240" text-anchor="middle">销售净利率</text>
+<text class="n2" x="120" y="261" text-anchor="middle">净利润 ÷ 营业收入</text>
+<text class="op" x="230" y="252" text-anchor="middle">×</text>
+<rect x="250" y="216" width="180" height="56" rx="6" fill="#ffffff" stroke="#1f4e79" stroke-width="1.4"/>
+<text class="n1" x="340" y="240" text-anchor="middle">总资产周转率</text>
+<text class="n2" x="340" y="261" text-anchor="middle">营业收入 ÷ 总资产</text>
+<text class="dr" x="120" y="314" text-anchor="middle">毛利率 · 期间费用率 · 税负</text>
+<text class="dr" x="340" y="314" text-anchor="middle">应收 · 存货 · 固定资产周转</text>
+<text class="dr" x="602" y="314" text-anchor="middle">资本结构（负债 ÷ 股东权益）</text>
+<text class="band" x="28" y="354" style="fill:#1f4e79">经营效率</text>
+<text class="band" x="472" y="354" style="fill:#9c5b16">财务杠杆</text>
+</svg>

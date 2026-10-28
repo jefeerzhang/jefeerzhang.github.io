@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" width="760" height="360">
+<style>
+text{font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC","Source Han Sans SC",sans-serif;fill:#1f2933}
+.b{font-size:14px;font-weight:700}
+.s{font-size:13px}
+.xs{font-size:12px;fill:#52606d}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#52606d"/></marker>
+</defs>
+<rect width="760" height="360" fill="#ffffff"/>
+<text class="b" x="150" y="50" text-anchor="middle">税后经营净利润</text>
+<rect x="80" y="64" width="140" height="90" fill="#1f4e79"/>
+<text class="b" x="150" y="114" text-anchor="middle" style="fill:#ffffff">企业自由现金流</text>
+<rect x="80" y="154" width="140" height="75" fill="#cfe0f1" stroke="#1f4e79" stroke-width="1.4"/>
+<text class="s" x="150" y="196" text-anchor="middle" style="fill:#1f4e79;font-weight:700">经营营运资本增加</text>
+<rect x="80" y="229" width="140" height="75" fill="#e8f0f8" stroke="#1f4e79" stroke-width="1.4"/>
+<text class="s" x="150" y="262" text-anchor="middle" style="fill:#1f4e79;font-weight:700">长期经营资产</text>
+<text class="s" x="150" y="281" text-anchor="middle" style="fill:#1f4e79;font-weight:700">净增加</text>
+<path d="M230 154 H238 V304 H230" fill="none" stroke="#1f2933" stroke-width="1.4"/>
+<text class="b" x="246" y="226">净经营资产</text>
+<text class="b" x="246" y="245">增加额</text>
+<line x1="222" y1="109" x2="510" y2="109" stroke="#52606d" stroke-width="1.6" marker-end="url(#ah)"/>
+<text class="s" x="366" y="99" text-anchor="middle">以现金形式实现</text>
+<rect x="512" y="70" width="220" height="78" rx="6" fill="#ffffff" stroke="#52606d" stroke-width="1.4"/>
+<text class="b" x="622" y="102" text-anchor="middle">资本提供者</text>
+<text class="xs" x="622" y="126" text-anchor="middle">支付利息、偿还债务、分配股利</text>
+<line x1="330" y1="245" x2="510" y2="245" stroke="#52606d" stroke-width="1.6" marker-end="url(#ah)"/>
+<text class="s" x="420" y="236" text-anchor="middle">沉淀为经营资产</text>
+<rect x="512" y="196" width="220" height="104" rx="6" fill="#e8f0f8" stroke="#1f4e79" stroke-width="1.4"/>
+<text class="b" x="622" y="224" text-anchor="middle" style="fill:#1f4e79">净经营资产（存量）</text>
+<text class="xs" x="622" y="250" text-anchor="middle">期末余额 = 期初余额 + 本期增加额</text>
+<text class="xs" x="622" y="276" text-anchor="middle">其平均余额为净经营资产收益率的分母</text>
+<text x="380" y="342" text-anchor="middle" style="font-size:15px;font-weight:700">税后经营净利润 = 企业自由现金流 + 净经营资产增加额</text>
+</svg>

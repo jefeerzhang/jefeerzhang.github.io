@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" width="760" height="400">
+<style>
+text{font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC","Source Han Sans SC",sans-serif;fill:#1f2933}
+.title{font-size:15px;font-weight:700}
+.head{font-size:13px;fill:#52606d}
+.blk{font-size:14px;font-weight:700}
+.sm{font-size:13px}
+</style>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#52606d"/></marker>
+</defs>
+<rect width="760" height="400" fill="#ffffff"/>
+<text class="title" x="200" y="34" text-anchor="middle">传统资产负债表</text>
+<text class="title" x="580" y="34" text-anchor="middle">管理用资产负债表</text>
+<text class="head" x="120" y="66" text-anchor="middle">资产</text>
+<text class="head" x="280" y="66" text-anchor="middle">负债与股东权益</text>
+<text class="head" x="510" y="196" text-anchor="middle">资本运用</text>
+<text class="head" x="650" y="196" text-anchor="middle">资本来源</text>
+<rect x="40" y="80" width="160" height="200" fill="#e8f0f8" stroke="#1f4e79" stroke-width="1.4"/>
+<text class="blk" x="120" y="185" text-anchor="middle" style="fill:#1f4e79">经营资产</text>
+<rect x="40" y="280" width="160" height="60" fill="#fbf0e1" stroke="#9c5b16" stroke-width="1.4"/>
+<text class="blk" x="120" y="315" text-anchor="middle" style="fill:#9c5b16">金融资产</text>
+<rect x="200" y="80" width="160" height="70" fill="#e8f0f8" stroke="#1f4e79" stroke-width="1.4"/>
+<text class="blk" x="280" y="120" text-anchor="middle" style="fill:#1f4e79">经营负债</text>
+<rect x="200" y="150" width="160" height="90" fill="#fbf0e1" stroke="#9c5b16" stroke-width="1.4"/>
+<text class="blk" x="280" y="200" text-anchor="middle" style="fill:#9c5b16">金融负债</text>
+<rect x="200" y="240" width="160" height="100" fill="#f0f1f3" stroke="#52606d" stroke-width="1.4"/>
+<text class="blk" x="280" y="295" text-anchor="middle">股东权益</text>
+<line x1="372" y1="225" x2="428" y2="225" stroke="#52606d" stroke-width="1.6" marker-end="url(#ah)"/>
+<text class="sm" x="400" y="212" text-anchor="middle" style="fill:#52606d">重新分类</text>
+<text class="sm" x="580" y="110" text-anchor="middle" style="fill:#1f4e79">净经营资产 = 经营资产 − 经营负债</text>
+<text class="sm" x="580" y="138" text-anchor="middle" style="fill:#9c5b16">净金融负债 = 金融负债 − 金融资产</text>
+<rect x="440" y="210" width="140" height="130" fill="#e8f0f8" stroke="#1f4e79" stroke-width="1.4"/>
+<text class="blk" x="510" y="280" text-anchor="middle" style="fill:#1f4e79">净经营资产</text>
+
+<rect x="580" y="210" width="140" height="30" fill="#fbf0e1" stroke="#9c5b16" stroke-width="1.4"/>
+<text class="sm" x="650" y="230" text-anchor="middle" style="fill:#9c5b16;font-weight:700">净金融负债</text>
+<rect x="580" y="240" width="140" height="100" fill="#f0f1f3" stroke="#52606d" stroke-width="1.4"/>
+<text class="blk" x="650" y="295" text-anchor="middle">股东权益</text>
+<text class="sm" x="200" y="374" text-anchor="middle">资产 = 负债 + 股东权益</text>
+<text class="sm" x="580" y="374" text-anchor="middle" style="font-weight:700">净经营资产 = 净金融负债 + 股东权益</text>
+</svg>
