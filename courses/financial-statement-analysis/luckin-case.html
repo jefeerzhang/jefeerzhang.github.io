@@ -81,6 +81,7 @@ tr.total td{font-weight:700;background:var(--grey-1)}
 
 .prompt{background:#fff;border:1px dashed var(--grey-3);padding:14px 18px;margin:10px 0;font-size:14px;color:var(--ink);line-height:1.7}
 .prompt::before{content:"提示词 · Prompt";display:block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:8px;text-transform:uppercase}
+.rf{color:#c81e1e;font-weight:600}
 
 @media (max-width:760px){
   header h1{font-size:26px}
@@ -145,7 +146,7 @@ tr.total td{font-weight:700;background:var(--grey-1)}
   <h3>1. 学习目标</h3>
   <ol>
     <li><strong>从报表科目之间的对应关系找疑点</strong>：计算并解释「存贷双高」（账上既有大额存款又有大额借款）、隐含利率、盈利含金量（经营现金流占净利润的比重）、周转天数等指标，看利润、现金和资产负债能不能对得上，把报表异常转化为可核查的具体问题。</li>
-    <li><strong>区分「异常信号」和「造假结论」</strong>：财务分析中常把报表里的危险迹象称为「红旗」（风险信号），但同一个异常信号既可能出现在问题公司，也可能出现在正常公司。为每个疑点写出合理的业务解释和排除该解释所需的证据，再对四家公司排出有依据的次序。</li>
+    <li><strong>区分「异常信号」和「造假结论」</strong>：财务分析中常把报表里的危险迹象称为「<span class="rf">红旗</span>」（风险信号），但同一个异常信号既可能出现在问题公司，也可能出现在正常公司。为每个疑点写出合理的业务解释和排除该解释所需的证据，再对四家公司排出有依据的次序。</li>
     <li><strong>从财务特征反推「这是谁」</strong>：根据毛利率、周转天数、负债结构等行业财务特征推断细分行业，再用 AI 检验假设，而不是让 AI 直接给答案。</li>
     <li><strong>用经营数据检验财务数据</strong>：用门店数、销量、客单价、成本结构等经营指标，复算或交叉验证财务数字。</li>
     <li><strong>识别 AI 和自己的「后见之明」</strong>：看清知道结果后，人和 AI 会怎样倒推解释，并在审查表中标出来。</li>
@@ -157,7 +158,7 @@ tr.total td{font-weight:700;background:var(--grey-1)}
     <tr><th>编号</th><th>成果</th><th>形式</th><th>完成人</th><th>对应任务</th><th>能否用 AI</th></tr>
     <tr><td class="num">E1</td><td>速查表自测</td><td>个人答题</td><td>个人</td><td>任务 0，不计分</td><td>否</td></tr>
     <tr><td class="num">E2</td><td>四家公司指标计算表 + 横向对比表（工作表 K-W1、K-W1b）</td><td>表格</td><td>小组（按人数分工）</td><td>任务 1</td><td><strong>否，禁止联网</strong></td></tr>
-    <tr><td class="num">E3</td><td>红旗清单 + <strong>封存排序</strong>（工作表 K-W2）</td><td>表格</td><td>个人先排、小组合并</td><td>任务 2</td><td>否</td></tr>
+    <tr><td class="num">E3</td><td><span class="rf">红旗</span>清单 + <strong>封存排序</strong>（工作表 K-W2）</td><td>表格</td><td>个人先排、小组合并</td><td>任务 2</td><td>否</td></tr>
     <tr><td class="num">E3b</td><td>猜身份记录 + AI 提问日志（工作表 K-W5）；如修改排序，另交 K-W2b</td><td>表格</td><td>小组（按人数分工）</td><td>任务 3A</td><td>按规则使用</td></tr>
     <tr><td class="num">E4</td><td>AI 审查表 + 匿名版/实名版对比记录</td><td>表格</td><td>小组</td><td>任务 3B、任务 5</td><td>是</td></tr>
     <tr><td class="num">E5</td><td>听证会评审票（工作表 K-W3）</td><td>表格</td><td>评审组</td><td>任务 4</td><td>否</td></tr>
@@ -203,7 +204,7 @@ tr.total td{font-weight:700;background:var(--grey-1)}
   <div class="tablewrap">
   <table>
     <tr><th>任务</th><th>4 人组</th><th>3 人组</th><th>2 人组</th></tr>
-    <tr><td>任务 2 封存排序</td><td>每人先独立给四家排序，再合并；每人为自己算的公司提名至少 2 条红旗</td><td>每人先独立排序，再合并；每人为自己算的公司提名至少 2 条红旗，K4 的红旗共同提名</td><td>每人先独立排序，再合并；每人为自己算的两家公司各提名至少 2 条红旗</td></tr>
+    <tr><td>任务 2 封存排序</td><td>每人先独立给四家排序，再合并；每人为自己算的公司提名至少 2 条<span class="rf">红旗</span></td><td>每人先独立排序，再合并；每人为自己算的公司提名至少 2 条<span class="rf">红旗</span>，K4 的<span class="rf">红旗</span>共同提名</td><td>每人先独立排序，再合并；每人为自己算的两家公司各提名至少 2 条<span class="rf">红旗</span></td></tr>
     <tr><td>任务 3A 猜身份</td><td>每人负责猜自己算过的那家公司</td><td>每人负责一家，K4 共同负责</td><td>每人负责两家</td></tr>
     <tr><td>任务 3B AI 对照</td><td>AI 操作员提问；其余三人各核对 AI 的一部分数字</td><td>AI 操作员提问；另外两人分头核对</td><td>一人提问，另一人核对，然后交换完成「辩护人」提问</td></tr>
     <tr><td>任务 6 瑞幸复算</td><td>两人画证据链，两人复算，最后互查</td><td>一人画证据链，两人分头复算（销量与售价 / 利润率与情景推算）</td><td>一人画证据链并算单店销量，另一人算售价、利润率和情景推算，最后互查</td></tr>
@@ -278,17 +279,17 @@ tr.total td{font-weight:700;background:var(--grey-1)}
   </div>
 
   <div class="task" id="task2">
-    <div class="task-head"><span>任务 2｜红旗排序与封存</span><span class="meta">先个人、后小组 · 不用 AI</span></div>
+    <div class="task-head"><span>任务 2｜<span class="rf">红旗</span>排序与封存</span><span class="meta">先个人、后小组 · 不用 AI</span></div>
     <div class="task-body">
-      <p><strong>材料：</strong>填好的 K-W1、K-W1b；工作表 K-W2；速查表 3.4 节「红旗不等于结论」、3.8 节「概率的参照标准」。</p>
+      <p><strong>材料：</strong>填好的 K-W1、K-W1b；工作表 K-W2；速查表 3.4 节「<span class="rf">红旗</span>不等于结论」、3.8 节「概率的参照标准」。</p>
       <p><strong>步骤：</strong></p>
       <ol>
         <li><strong>个人先排：</strong>先不讨论，各自在 K-W2 的「个人排序」栏把 K1–K4 按「报表存在重大问题的可能性」从高到低排序，各写一句理由。</li>
-        <li><strong>提名红旗（按人数分工）：</strong>每人为自己算过的公司提名至少 2 条红旗，写入 K-W2 红旗清单，注明提名人。</li>
-        <li><strong>打分：</strong>按三项标准给每条红旗打分（1–3 分）——异常程度、可证伪性（越容易用外部证据核实，分越高）、与其他疑点的相互印证程度。质询员对每个打分追问一次「为什么不是低一分」。</li>
-        <li><strong>找「同款红旗」：</strong>检查有没有同一种红旗同时出现在两家以上公司身上。如果有，写出「为什么它在 A 公司可疑、在 B 公司可能正常」。</li>
+        <li><strong>提名<span class="rf">红旗</span>（按人数分工）：</strong>每人为自己算过的公司提名至少 2 条<span class="rf">红旗</span>，写入 K-W2 <span class="rf">红旗</span>清单，注明提名人。</li>
+        <li><strong>打分：</strong>按三项标准给每条<span class="rf">红旗</span>打分（1–3 分）——异常程度、可证伪性（越容易用外部证据核实，分越高）、与其他疑点的相互印证程度。质询员对每个打分追问一次「为什么不是低一分」。</li>
+        <li><strong>找「同款<span class="rf">红旗</span>」：</strong>检查有没有同一种<span class="rf">红旗</span>同时出现在两家以上公司身上。如果有，写出「为什么它在 A 公司可疑、在 B 公司可能正常」。</li>
         <li><strong>小组排序：</strong>合并个人排序，形成小组排序，并参照 3.8 节标准给每家公司写一个「有重大问题的概率」（0–100%）。四个概率<strong>加起来不必等于 100%</strong>，因为有问题的不止一家或一家都没有都有可能。</li>
-        <li><strong>写清白解释与证伪证据：</strong>为排名前两位的公司，各选最关键的 2 条红旗，写出「公司可能是清白的」业务解释，以及「拿到什么证据就能排除这个解释」。</li>
+        <li><strong>写清白解释与证伪证据：</strong>为排名前两位的公司，各选最关键的 2 条<span class="rf">红旗</span>，写出「公司可能是清白的」业务解释，以及「拿到什么证据就能排除这个解释」。</li>
         <li><strong>封存：</strong>把 K-W2 交给老师（或拍照发到课程群）。<strong>封存后不能修改</strong>；之后如果改变判断，另填 K-W2b，并如实写明改变的原因。</li>
       </ol>
       <p><strong>必答问题：</strong></p>
@@ -297,7 +298,7 @@ tr.total td{font-weight:700;background:var(--grey-1)}
         <li>四家公司的年报审计意见都是标准无保留。这能帮你区分它们吗？</li>
       </ol>
       <p><strong>交付物：</strong>E3（封存的 K-W2）。</p>
-      <p><strong>完成标准：</strong>□ 每人都有个人排序　□ 每家公司至少 2 条红旗完成打分　□ 写出了至少 1 组「同款红旗、不同解释」　□ 前两名公司都有「清白解释 + 证伪证据」　□ 已封存</p>
+      <p><strong>完成标准：</strong>□ 每人都有个人排序　□ 每家公司至少 2 条<span class="rf">红旗</span>完成打分　□ 写出了至少 1 组「同款<span class="rf">红旗</span>、不同解释」　□ 前两名公司都有「清白解释 + 证伪证据」　□ 已封存</p>
     </div>
   </div>
 
@@ -348,7 +349,7 @@ tr.total td{font-weight:700;background:var(--grey-1)}
         <li><strong>只给 AI 匿名数据：</strong>把四张数据卡原样发给 AI，使用下面的提示词，<strong>不要告诉 AI 任何公司名称、年份或你们的猜测</strong>。
           <div class="prompt">你是一名谨慎的财务分析师，现在是 T+1 年 5 月 31 日，只能使用以下四家公司的信息，金额已按不同系数缩放。请把四家公司按「报表存在重大问题的可能性」从高到低排序；对排名前两位的公司，各列出最值得警惕的 3 个信号，每个信号给出：①依据的数据，②一种可能的清白解释，③能证伪该解释的证据。请不要猜测公司身份。最后告诉我：仅凭这些数据，你能否判断其中有公司存在财务造假？</div>
         </li>
-        <li><strong>比较：</strong>把 AI 的排序和本组封存的排序并排对照，标出「排序相同」「排序不同」以及「AI 指出但我们没想到的红旗」「我们找到但 AI 漏掉的红旗」。</li>
+        <li><strong>比较：</strong>把 AI 的排序和本组封存的排序并排对照，标出「排序相同」「排序不同」以及「AI 指出但我们没想到的<span class="rf">红旗</span>」「我们找到但 AI 漏掉的<span class="rf">红旗</span>」。</li>
         <li><strong>让 AI 当辩护人：</strong>针对老师指定的听证会目标公司提问：
           <div class="prompt">请扮演这家公司的财务负责人，为「账上现金很多、同时借款很多」这一现象给出最有说服力的三条解释。</div>
           <p>记下 AI 给出的三条解释，听证会上「管理层组」可以直接选用。</p>
@@ -375,7 +376,7 @@ tr.total td{font-weight:700;background:var(--grey-1)}
       </table>
       </div>
       <ul>
-        <li><strong>管理层组：</strong>为目标公司辩护，必须回应该公司得分最高的红旗；可以拿另外三家公司作对比，说明「同款红旗在同行身上也有」。</li>
+        <li><strong>管理层组：</strong>为目标公司辩护，必须回应该公司得分最高的<span class="rf">红旗</span>；可以拿另外三家公司作对比，说明「同款<span class="rf">红旗</span>在同行身上也有」。</li>
         <li><strong>做空组：</strong>论证目标公司的报表不可信，给出可核查的证据要求，并说明为什么这家比另外三家更可疑。</li>
         <li><strong>评审组：</strong>独立打分，质询环节提问，最后投票。</li>
         <li><strong>共同规则：</strong>任何一方<strong>不得拿公司真实身份或事后信息当论据</strong>（例如「这家公司后来被查了」）。违反者该条论据作废。</li>
@@ -398,7 +399,7 @@ tr.total td{font-weight:700;background:var(--grey-1)}
       </table>
       </div>
       <p><strong>交付物：</strong>E5（评审组的 K-W3）。管理层组和做空组把陈述要点另写在一页纸上（K-W2 已封存，不要写在上面）。</p>
-      <p><strong>完成标准：</strong>□ 评审票对每条红旗都给出「解释是否成立」和「还缺什么证据」</p>
+      <p><strong>完成标准：</strong>□ 评审票对每条<span class="rf">红旗</span>都给出「解释是否成立」和「还缺什么证据」</p>
     </div>
   </div>
 
@@ -416,13 +417,13 @@ tr.total td{font-weight:700;background:var(--grey-1)}
             <li><strong>漏报：</strong>排在后面，事后却有问题；</li>
             <li><strong>正确排除：</strong>排在后面，事后也未发现问题。</li>
           </ul>
-          <p>再逐条检查红旗：哪些红旗对应了事后查明的问题，哪些只是「同行共性」造成的误报。每条红旗由原提名人先归类，另一名成员复核。</p>
+          <p>再逐条检查<span class="rf">红旗</span>：哪些<span class="rf">红旗</span>对应了事后查明的问题，哪些只是「同行共性」造成的误报。每条<span class="rf">红旗</span>由原提名人先归类，另一名成员复核。</p>
         </li>
         <li><strong>检查自己的后见之明：</strong>如果你们在任务 3A 后修改过排序（K-W2b），对照揭晓结果看：修改让排序更准了还是更偏了？修改的原因是新查到的报表证据，还是知道它后来出事的事后信息？</li>
         <li><strong>测试 AI 的后见之明：</strong>现在把<strong>实名</strong>数据发给 AI，用任务 3B 的同一个提示词再问一次（删去「请不要猜测公司身份」一句）。检查：
           <ul>
             <li>AI 是否引用了 T+1 年 5 月之后才公开的信息？</li>
-            <li>AI 的排序和匿名版相比有什么变化？它对「同款红旗」的解释是否突然变得很笃定？</li>
+            <li>AI 的排序和匿名版相比有什么变化？它对「同款<span class="rf">红旗</span>」的解释是否突然变得很笃定？</li>
             <li>把发现写进 AI 审查表，问题类型标为「后见之明」。</li>
           </ul>
         </li>
@@ -535,7 +536,7 @@ tr.total td{font-weight:700;background:var(--grey-1)}
     <p>$$\text{门店层面利润率}=1-\frac{\text{原材料成本}+\text{门店租金及其他运营成本}+\text{折旧}}{\text{产品收入}}$$</p>
   </div>
 
-  <h3>3.3 常见异常信号（红旗信号）</h3>
+  <h3>3.3 常见异常信号（<span class="rf">红旗</span>信号）</h3>
   <div class="tablewrap">
   <table>
     <tr><th>信号</th><th>为什么可疑</th><th>常见的正常业务解释</th></tr>
@@ -549,7 +550,7 @@ tr.total td{font-weight:700;background:var(--grey-1)}
   </table>
   </div>
 
-  <h3>3.4 红旗不等于结论</h3>
+  <h3>3.4 <span class="rf">红旗</span>不等于结论</h3>
   <p>看到任何一个疑点，都要接着问三个问题：</p>
   <ol>
     <li><strong>它有多异常？</strong>——和公司自己的历史比、和同行比、和市场基准利率比。</li>
@@ -788,7 +789,7 @@ tr.total td{font-weight:700;background:var(--grey-1)}
   </table>
   </div>
 
-  <h4>K-W2：红旗清单与封存排序（E3）</h4>
+  <h4>K-W2：<span class="rf">红旗</span>清单与封存排序（E3）</h4>
   <p><strong>（1）个人排序</strong></p>
   <div class="tablewrap">
   <table>
@@ -797,20 +798,20 @@ tr.total td{font-weight:700;background:var(--grey-1)}
     <tr><td></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
   </table>
   </div>
-  <p><strong>（2）红旗清单</strong></p>
+  <p><strong>（2）<span class="rf">红旗</span>清单</strong></p>
   <div class="tablewrap">
   <table>
-    <tr><th>公司</th><th>红旗</th><th>提名人</th><th>依据数据</th><th class="num">异常程度（1–3）</th><th class="num">可证伪性（1–3）</th><th class="num">相互印证（1–3）</th><th class="num">总分</th></tr>
+    <tr><th>公司</th><th><span class="rf">红旗</span></th><th>提名人</th><th>依据数据</th><th class="num">异常程度（1–3）</th><th class="num">可证伪性（1–3）</th><th class="num">相互印证（1–3）</th><th class="num">总分</th></tr>
     <tr><td></td><td></td><td></td><td></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
     <tr><td></td><td></td><td></td><td></td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
   </table>
   </div>
-  <p>同款红旗、不同解释：红旗__同时出现在 K__和 K__；它在 K__更可疑，因为__。</p>
+  <p>同款<span class="rf">红旗</span>、不同解释：<span class="rf">红旗</span>__同时出现在 K__和 K__；它在 K__更可疑，因为__。</p>
   <p><strong>（3）小组排序（封存）</strong></p>
   <p class="note">概率依据 3.8 节参照标准评定，各组口径统一。</p>
   <div class="tablewrap">
   <table>
-    <tr><th>排名</th><th>公司</th><th class="num">有重大问题的概率（%）</th><th>最关键的两条红旗</th><th>清白解释（前两名填写）</th><th>能排除该解释的证据（前两名填写）</th></tr>
+    <tr><th>排名</th><th>公司</th><th class="num">有重大问题的概率（%）</th><th>最关键的两条<span class="rf">红旗</span></th><th>清白解释（前两名填写）</th><th>能排除该解释的证据（前两名填写）</th></tr>
     <tr><td class="num">1</td><td></td><td class="num"></td><td></td><td></td><td></td></tr>
     <tr><td class="num">2</td><td></td><td class="num"></td><td></td><td></td><td></td></tr>
     <tr><td class="num">3</td><td></td><td class="num"></td><td></td><td>—</td><td>—</td></tr>
@@ -853,7 +854,7 @@ tr.total td{font-weight:700;background:var(--grey-1)}
   <p>目标公司：K__</p>
   <div class="tablewrap">
   <table>
-    <tr><th>红旗</th><th>做空组的核心论据</th><th>管理层组的解释</th><th>解释是否成立（成立/部分成立/不成立）</th><th>还缺什么证据</th></tr>
+    <tr><th><span class="rf">红旗</span></th><th>做空组的核心论据</th><th>管理层组的解释</th><th>解释是否成立（成立/部分成立/不成立）</th><th>还缺什么证据</th></tr>
     <tr><td></td><td></td><td></td><td></td><td></td></tr>
     <tr><td></td><td></td><td></td><td></td><td></td></tr>
     <tr><td></td><td></td><td></td><td></td><td></td></tr>
@@ -872,10 +873,10 @@ tr.total td{font-weight:700;background:var(--grey-1)}
     <tr><td class="num">K4</td><td></td><td></td><td class="num"></td><td></td><td></td><td></td></tr>
   </table>
   </div>
-  <p><strong>（2）红旗层面</strong></p>
+  <p><strong>（2）<span class="rf">红旗</span>层面</strong></p>
   <div class="tablewrap">
   <table>
-    <tr><th>我们的红旗</th><th>所属公司</th><th>事后查明的事实</th><th>这条红旗是真信号还是「同款红旗」造成的误报</th></tr>
+    <tr><th>我们的<span class="rf">红旗</span></th><th>所属公司</th><th>事后查明的事实</th><th>这条<span class="rf">红旗</span>是真信号还是「同款<span class="rf">红旗</span>」造成的误报</th></tr>
     <tr><td></td><td></td><td></td><td></td></tr>
     <tr><td></td><td></td><td></td><td></td></tr>
   </table>
