@@ -145,7 +145,7 @@ tr.total td{font-weight:700;background:var(--grey-1)}
 
   <h3>1. 学习目标</h3>
   <ol>
-    <li><strong>从报表科目之间的对应关系找疑点</strong>：计算并解释「存贷双高」（账上既有大额存款又有大额借款）、隐含利率、盈利含金量（经营现金流占净利润的比重）、周转天数等指标，看利润、现金和资产负债能不能对得上，把报表异常转化为可核查的具体问题。</li>
+    <li><strong>从报表科目之间的对应关系找疑点</strong>：计算并解释「存贷双高」（账上既有大额存款又有大额借款）、隐含利率、盈利含金量（净现比，即经营现金流占净利润的比重）、周转天数等指标，看利润、现金和资产负债能不能对得上，把报表异常转化为可核查的具体问题。</li>
     <li><strong>区分「异常信号」和「造假结论」</strong>：财务分析中常把报表里的危险迹象称为「<span class="rf">红旗</span>」（风险信号），但同一个异常信号既可能出现在问题公司，也可能出现在正常公司。为每个疑点写出合理的业务解释和排除该解释所需的证据，再对四家公司排出有依据的次序。</li>
     <li><strong>从财务特征反推「这是谁」</strong>：根据毛利率、周转天数、负债结构等行业财务特征推断细分行业，再用 AI 检验假设，而不是让 AI 直接给答案。</li>
     <li><strong>用经营数据检验财务数据</strong>：用门店数、销量、客单价、成本结构等经营指标，复算或交叉验证财务数字。</li>
@@ -241,16 +241,16 @@ tr.total td{font-weight:700;background:var(--grey-1)}
           <div class="tablewrap">
           <table>
             <tr><th>序号</th><th>指标</th><th>计算年份</th></tr>
-            <tr><td class="num">1</td><td>货币资金/总资产</td><td>T−1、T</td></tr>
-            <tr><td class="num">2</td><td>总债务/总资产</td><td>T−1、T</td></tr>
-            <tr><td class="num">3</td><td>隐含存款收益率</td><td>T</td></tr>
-            <tr><td class="num">4</td><td>隐含借款成本</td><td>T</td></tr>
-            <tr><td class="num">5</td><td>净利息负担</td><td>T</td></tr>
-            <tr><td class="num">6</td><td>盈利含金量</td><td>T−1、T</td></tr>
+            <tr><td class="num">1</td><td>货币资金/资产总计</td><td>T−1、T</td></tr>
+            <tr><td class="num">2</td><td>有息负债（总债务）/资产总计</td><td>T−1、T</td></tr>
+            <tr><td class="num">3</td><td>隐含存款收益率（货币资金收益率）</td><td>T</td></tr>
+            <tr><td class="num">4</td><td>隐含借款成本（平均债务利率）</td><td>T</td></tr>
+            <tr><td class="num">5</td><td>净利息负担（净利息费用/净利润）</td><td>T</td></tr>
+            <tr><td class="num">6</td><td>盈利含金量（净现比）</td><td>T−1、T</td></tr>
             <tr><td class="num">7</td><td>销售收现比</td><td>T−1、T</td></tr>
             <tr><td class="num">8</td><td>应收账款周转天数</td><td>T−1、T</td></tr>
             <tr><td class="num">9</td><td>存货周转天数</td><td>T−1、T</td></tr>
-            <tr><td class="num">10</td><td>两年累计筹资净流入 vs 经营净流入</td><td>T−1 + T 合计</td></tr>
+            <tr><td class="num">10</td><td>两年筹资净流入 ÷ 经营净流入</td><td>T−1 + T 合计</td></tr>
           </table>
           </div>
         </li>
@@ -268,7 +268,7 @@ tr.total td{font-weight:700;background:var(--grey-1)}
       <div class="panel">
         <p><strong>卡住了怎么办：</strong></p>
         <ul>
-          <li>收益率和借款成本用<strong>平均余额</strong>：（T−1 年末 + T 年末） ÷ 2。</li>
+          <li>隐含存款收益率和隐含借款成本的分母用<strong>期初期末平均余额</strong>：（T−1 年末 + T 年末） ÷ 2；其余时点指标（指标 1、2、8、9）为便于比较 T−1 年与 T 年，统一用<strong>当年期末余额</strong>计算。</li>
           <li>缩放系数不影响比率，但<strong>不同公司之间不能直接比绝对金额</strong>。</li>
           <li>算出的隐含存款收益率如果大于 10% 或小于 0.1%，先检查小数点和单位。</li>
           <li>销售收现比的分子含增值税、分母不含税，正常水平会略高于 1。</li>
@@ -449,13 +449,13 @@ tr.total td{font-weight:700;background:var(--grey-1)}
       <p><strong>步骤：</strong></p>
       <ol>
         <li><strong>读做空报告要点：</strong>全组阅读 5.3 节中文摘要。</li>
-        <li><strong>画证据链：</strong>在 L-W1 中，按「门店观测数据 → 推算单店日均销量 → 推算单件售价 → 推算收入 → 与公告对比」画出做空报告的推算链条，并在每个环节旁写出「这一步最可能出错的地方」。</li>
+        <li><strong>画证据链：</strong>在 L-W1 中，按「门店观测数据 → 推算单店日均销量 → 推算每件平均净售价 → 推算产品净收入 → 与公告对比」画出做空报告的推算链条，并在每个环节旁写出「这一步最可能出错的地方」。</li>
         <li><strong>复算公告数字：</strong>用表 L-1 的 2019 年第三季度数据，在 L-W2 中计算：
           <ul>
-            <li>单店日均销量（季度总销量 ÷ 平均门店数 ÷ 季度天数）；</li>
-            <li>每件商品平均净售价（产品收入 ÷ 季度总销量）；</li>
+            <li>单店日均销量（季度总销量 ÷ 季度平均门店数 ÷ 季度天数）；</li>
+            <li>每件平均净售价（产品净收入 ÷ 季度总销量）；</li>
             <li>门店层面利润率（把各项门店成本相加，验算是否等于 12.5%）；</li>
-            <li><strong>情景推算：</strong>如果做空报告的两项结论成立（单店日均销量只有 263 件、每件净售价被高估 1.23 元），第三季度产品收入大约是多少？比公告数低多少？</li>
+            <li><strong>情景推算：</strong>如果做空报告的两项结论成立（单店日均销量只有 263 件、每件净售价被高估 1.23 元），第三季度产品净收入大约是多少？比公告数低多少？</li>
           </ul>
         </li>
         <li><strong>对照官方结论：</strong>阅读 5.1 节中 SEC 和公司内部调查的结论，看看你们的情景推算与官方认定在数量级上是否接近，并讨论「收入被高估约 45%」这句话在计算口径上有哪两种理解。</li>
@@ -480,7 +480,7 @@ tr.total td{font-weight:700;background:var(--grey-1)}
         <li><strong>先设计，不用 AI：</strong>在 L-W3 中设计「经营指标 ↔ 财务科目」的验证对。每组写明：用哪两个数、正常情况下应当是什么关系、如果对不上说明什么问题。下面三组为必选项，3 人组和 4 人组再按人数要求自选：
           <ul>
             <li>自营门店数 ↔ 自营门店收入（算单店年收入，并与同店销售增速对照）；</li>
-            <li>营业收入增速 ↔ 原材料成本增速；</li>
+            <li>总净收入增速 ↔ 原材料成本增速；</li>
             <li>配送费用增速 ↔ 自营门店收入增速。</li>
           </ul>
         </li>
@@ -524,17 +524,18 @@ tr.total td{font-weight:700;background:var(--grey-1)}
 
   <h3>3.2 常用指标与公式</h3>
   <div class="panel">
-    <p>$$\text{隐含存款收益率}=\frac{\text{利息收入}}{(\text{期初货币资金}+\text{期末货币资金})\div 2}$$</p>
-    <p>$$\text{隐含借款成本}=\frac{\text{利息支出}}{(\text{期初总债务}+\text{期末总债务})\div 2}$$</p>
+    <p>$$\text{隐含存款收益率（货币资金收益率）}=\frac{\text{利息收入}}{(\text{期初货币资金}+\text{期末货币资金})\div 2}$$</p>
+    <p>$$\text{隐含借款成本（平均债务利率）}=\frac{\text{利息支出}}{(\text{期初总债务}+\text{期末总债务})\div 2}$$</p>
     <p>$$\text{净利息负担}=\frac{\text{利息支出}-\text{利息收入}}{\text{净利润}}$$</p>
-    <p>$$\text{盈利含金量}=\frac{\text{经营活动现金流量净额}}{\text{净利润}}$$</p>
+    <p>$$\text{盈利含金量（净现比 / 盈利现金比率）}=\frac{\text{经营活动现金流量净额}}{\text{净利润}}$$</p>
     <p>$$\text{销售收现比}=\frac{\text{销售商品、提供劳务收到的现金}}{\text{营业收入}}$$</p>
-    <p>$$\text{应收账款周转天数}=\frac{\text{应收账款}}{\text{营业收入}}\times 365$$</p>
-    <p>$$\text{存货周转天数}=\frac{\text{存货}}{\text{营业成本}}\times 365$$</p>
+    <p>$$\text{应收账款周转天数}=\frac{365}{\text{应收账款周转率}}=\frac{\text{期末应收账款}}{\text{营业收入}}\times 365$$</p>
+    <p>$$\text{存货周转天数}=\frac{365}{\text{存货周转率}}=\frac{\text{期末存货}}{\text{营业成本}}\times 365$$</p>
     <p>$$\text{单店日均销量}=\frac{\text{季度总销量}}{\text{季度平均门店数}\times\text{季度天数}}$$</p>
-    <p>$$\text{每件平均净售价}=\frac{\text{产品收入}}{\text{总销量}}$$</p>
-    <p>$$\text{门店层面利润率}=1-\frac{\text{原材料成本}+\text{门店租金及其他运营成本}+\text{折旧}}{\text{产品收入}}$$</p>
+    <p>$$\text{每件平均净售价}=\frac{\text{产品净收入}}{\text{季度总销量}}$$</p>
+    <p>$$\text{门店层面利润率}=1-\frac{\text{原材料成本}+\text{门店租金及其他运营成本}+\text{折旧费用}}{\text{产品净收入}}$$</p>
   </div>
+  <p class="note">口径说明：① 国内 CPA《财务成本管理》及标准教材计算周转率与周转天数时，通常取应收账款、存货的「期初期末平均余额」；本学习包案例 A 仅提供两年数据，为同时计算并比较 T−1 年与 T 年的周转天数，与第一次课及《补充讲义》一致，统一采用<strong>期末余额</strong>计算。② 季度平均门店数 =（上季末门店数 + 本季末门店数）÷ 2（如 2019Q3 平均门店数取 2019Q2 与 2019Q3 期末门店数的均值）。③「总债务」即全部有息负债（口径见 4.1 节），不含应付账款等无息经营负债。</p>
 
   <h3>3.3 常见异常信号（<span class="rf">红旗</span>信号）</h3>
   <div class="tablewrap">
@@ -561,7 +562,7 @@ tr.total td{font-weight:700;background:var(--grey-1)}
 
   <h3>3.5 用经营数据检验财务数据</h3>
   <ul>
-    <li><strong>单店收入拆解：</strong>产品收入 = 门店数 × 单店日均销量 × 每件售价 × 营业天数。四个变量里，门店数最容易外部核实（门店可以实地数），单店销量最难核实（需要蹲点统计）。</li>
+    <li><strong>单店收入拆解：</strong>产品净收入 = 平均门店数 × 单店日均销量 × 每件平均净售价 × 营业天数。四个变量里，门店数最容易外部核实（门店可以实地数），单店销量最难核实（需要蹲点统计）。</li>
     <li><strong>成本与销量的匹配：</strong>多卖一杯咖啡，就要多用咖啡豆、牛奶和杯子。原材料成本、包装成本、配送费用应当随销量同向变动。</li>
     <li><strong>增值税留痕：</strong>销售收入会在税务系统留下记录，虚增收入往往要多缴税——这既是造假的真金白银成本，也是核查线索。</li>
     <li><strong>Non-GAAP 指标：</strong>经调整利润、门店层面利润由公司自己定义，先看清楚剔除了哪些费用，再拿来比较。</li>
@@ -615,7 +616,7 @@ tr.total td{font-weight:700;background:var(--grey-1)}
   <p>K1–K4 均为 A 股医药上市公司，T 年年报均于 T+1 年 4 月底前披露。分析时只能使用下方四张数据卡的信息。</p>
   <ul>
     <li>各家公司的金额均乘过<strong>不同且不公开的系数</strong>，单位标为「亿元（已缩放）」。财务比率、增速与结构占比不受缩放影响。</li>
-    <li>口径定义：短期债务 = 短期借款 + 应付票据 + 一年内到期的非流动负债 + 短期融资券；长期债务 = 长期借款 + 应付债券。</li>
+    <li>口径定义：<strong>总债务（有息负债）</strong> = 短期债务 + 长期债务。其中，短期债务 = 短期借款 + 应付票据 + 一年内到期的非流动负债 + 短期融资券；长期债务 = 长期借款 + 应付债券。</li>
     <li>利息支出与利息收入仅提供 T 年数据，因此隐含利率只算 T 年。</li>
     <li>市场利率参照：当时一年期定期存款基准利率为 1.50%。</li>
     <li>四家公司 T 年年报的审计意见均为<strong>标准无保留意见</strong>。</li>
@@ -758,16 +759,16 @@ tr.total td{font-weight:700;background:var(--grey-1)}
   <div class="tablewrap">
   <table>
     <tr><th>序号</th><th>指标</th><th class="num">T−1</th><th class="num">T</th><th>一句话解读</th><th>复核签名</th></tr>
-    <tr><td class="num">1</td><td>货币资金/总资产</td><td class="num"></td><td class="num"></td><td></td><td></td></tr>
-    <tr><td class="num">2</td><td>总债务/总资产</td><td class="num"></td><td class="num"></td><td></td><td></td></tr>
+    <tr><td class="num">1</td><td>货币资金/资产总计</td><td class="num"></td><td class="num"></td><td></td><td></td></tr>
+    <tr><td class="num">2</td><td>有息负债（总债务）/资产总计</td><td class="num"></td><td class="num"></td><td></td><td></td></tr>
     <tr><td class="num">3</td><td>隐含存款收益率</td><td class="num">—</td><td class="num"></td><td></td><td></td></tr>
     <tr><td class="num">4</td><td>隐含借款成本</td><td class="num">—</td><td class="num"></td><td></td><td></td></tr>
     <tr><td class="num">5</td><td>净利息负担</td><td class="num">—</td><td class="num"></td><td></td><td></td></tr>
-    <tr><td class="num">6</td><td>盈利含金量</td><td class="num"></td><td class="num"></td><td></td><td></td></tr>
+    <tr><td class="num">6</td><td>盈利含金量（净现比）</td><td class="num"></td><td class="num"></td><td></td><td></td></tr>
     <tr><td class="num">7</td><td>销售收现比</td><td class="num"></td><td class="num"></td><td></td><td></td></tr>
     <tr><td class="num">8</td><td>应收账款周转天数</td><td class="num"></td><td class="num"></td><td></td><td></td></tr>
     <tr><td class="num">9</td><td>存货周转天数</td><td class="num"></td><td class="num"></td><td></td><td></td></tr>
-    <tr><td class="num">10</td><td>两年累计筹资净流入 vs 经营净流入</td><td class="num" colspan="2">合并填写</td><td></td><td></td></tr>
+    <tr><td class="num">10</td><td>两年筹资净流入 ÷ 经营净流入</td><td class="num" colspan="2">合并填写</td><td></td><td></td></tr>
   </table>
   </div>
 
@@ -775,17 +776,17 @@ tr.total td{font-weight:700;background:var(--grey-1)}
   <div class="tablewrap">
   <table>
     <tr><th>指标</th><th class="num">K1</th><th class="num">K2</th><th class="num">K3</th><th class="num">K4</th><th>这一行最异常的公司</th></tr>
-    <tr><td>货币资金/总资产</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
-    <tr><td>总债务/总资产</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
+    <tr><td>货币资金/资产总计</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
+    <tr><td>有息负债（总债务）/资产总计</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
     <tr><td>隐含存款收益率</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
     <tr><td>隐含借款成本</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
     <tr><td>净利息负担</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
-    <tr><td>盈利含金量</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
+    <tr><td>盈利含金量（净现比）</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
     <tr><td>销售收现比</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
     <tr><td>应收账款周转天数</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
     <tr><td>存货周转天数</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
     <tr><td>两年筹资净流入 ÷ 经营净流入</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
-    <tr><td>应付票据 ÷ 货币资金</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
+    <tr><td>应付票据 ÷ 货币资金（注：仅作辅助参考，不占 K-W1 指标序号）</td><td class="num"></td><td class="num"></td><td class="num"></td><td class="num"></td><td></td></tr>
   </table>
   </div>
 
@@ -965,7 +966,7 @@ tr.total td{font-weight:700;background:var(--grey-1)}
 
   <h4>L-W1：做空报告证据链（E7）</h4>
   <div class="panel">
-    <p>观测：<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> → 推算单店日均销量：<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> → 推算每件售价：<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> → 推算收入：<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> → 与公告对比：__</p>
+    <p>门店观测数据：<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> → 推算单店日均销量：<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> → 推算每件平均净售价：<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> → 推算产品净收入：<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> → 与公告对比：__</p>
     <p>每一步最可能出错的地方：①<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> ②<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> ③<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u> ④<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></p>
   </div>
 
@@ -976,7 +977,7 @@ tr.total td{font-weight:700;background:var(--grey-1)}
     <tr><td>2019Q3 单店日均销量</td><td></td><td></td><td></td></tr>
     <tr><td>2019Q3 每件平均净售价</td><td></td><td></td><td></td></tr>
     <tr><td>2019Q3 门店层面利润率</td><td></td><td></td><td></td></tr>
-    <tr><td>情景推算：做空报告成立时的 Q3 产品收入</td><td></td><td></td><td></td></tr>
+    <tr><td>情景推算：做空报告成立时的 Q3 产品净收入</td><td></td><td></td><td></td></tr>
     <tr><td>情景收入比公告数低多少</td><td></td><td></td><td></td></tr>
   </table>
   </div>
@@ -986,7 +987,7 @@ tr.total td{font-weight:700;background:var(--grey-1)}
   <table>
     <tr><th>验证对</th><th>用到的两个数</th><th>预期关系</th><th>计算结果</th><th>结论（一致/可解释的不一致/无法解释的不一致）</th><th>负责人 / 复核人</th></tr>
     <tr><td>自营门店数 ↔ 自营门店收入</td><td></td><td></td><td></td><td></td><td></td></tr>
-    <tr><td>收入增速 ↔ 原材料成本增速</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>总净收入增速 ↔ 原材料成本增速</td><td></td><td></td><td></td><td></td><td></td></tr>
     <tr><td>配送费用增速 ↔ 自营门店收入增速</td><td></td><td></td><td></td><td></td><td></td></tr>
     <tr><td>自选（3 人组、4 人组必填）：__</td><td></td><td></td><td></td><td></td><td></td></tr>
     <tr><td>自选（4 人组必填）：__</td><td></td><td></td><td></td><td></td><td></td></tr>
