@@ -74,6 +74,13 @@
       gap: 12px;
     }
 
+    .page-divider {
+      grid-column: 1 / -1;
+      margin: 12px 0;
+      border: 0;
+      border-top: 1px solid var(--line);
+    }
+
     .page-card {
       position: relative;
       display: flex;
@@ -311,6 +318,8 @@
                 <span class="page-arrow" aria-hidden="true">→</span>
               </div>
             </a>
+
+            <hr class="page-divider">
 
             <a class="page-card supplement" href="./profitability-earnings-quality.html">
               <span class="page-tag">补充讲义 · Reading</span>
