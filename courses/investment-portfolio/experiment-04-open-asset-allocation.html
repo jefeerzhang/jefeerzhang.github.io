@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>实验作业 04 · 开放式资产配置研究 — 学生任务书</title>
+<meta name="description" content="投资组合管理第四次实验：完成基准策略回测，自主设计资产配置方案，并在冻结后开展留出期检验。">
+<style>
+:root{
+  --paper:#fafaf8;
+  --ink:#0a0a0a;
+  --grey-1:#f0f0ee;
+  --grey-2:#d4d4d2;
+  --grey-3:#737373;
+  --accent:#002FA7;
+  --accent-on:#ffffff;
+  --mono:"JetBrains Mono","Cascadia Code",Consolas,"Courier New",monospace;
+  --sans:"Inter","Helvetica Neue","Noto Sans SC","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+.container{max-width:880px;margin:0 auto;padding:0 24px}
+.submission-bar{background:var(--accent);color:#fff}
+.submission-bar .container{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px}
+.submission-bar strong{display:block;font-size:16px}
+.submission-bar span{font-size:13px;color:#e8edff}
+.submission-bar a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 20px;background:#fff;color:var(--accent);font-weight:700;text-decoration:none;white-space:nowrap}
+.submission-bar a:hover{background:#edf1ff}
+.submission-bar a:focus-visible{outline:3px solid #fff;outline-offset:4px}
+header{background:var(--ink);color:#fff;padding:56px 0 40px;border-bottom:6px solid var(--accent)}
+header .tag{font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:#8fb0ff;text-transform:uppercase;margin-bottom:14px;font-weight:600}
+header .tag::before{content:"// "}
+header h1{font-size:38px;line-height:1.22;font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+header .sub{font-size:16.5px;color:var(--grey-2);margin-bottom:22px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:12.5px;color:#fff;border:1px solid var(--grey-3);padding:4px 12px;background:rgba(255,255,255,.03);font-weight:500}
+nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--grey-2);margin-bottom:28px}
+nav .links{display:flex;gap:0;flex-wrap:wrap;padding:6px 0}
+nav a{font-size:14px;color:var(--grey-3);text-decoration:none;padding:8px 14px;border-left:1px solid var(--grey-2);transition:color .15s;font-weight:500}
+nav a:first-child{border-left:none}
+nav a:hover{color:var(--accent)}
+nav a.back{color:var(--accent);font-weight:500;margin-right:8px}
+section{margin-bottom:44px;scroll-margin-top:52px}
+h2{font-size:23px;font-weight:700;color:var(--ink);margin:36px 0 16px;padding:0 0 10px 14px;border-left:6px solid var(--accent);display:flex;align-items:baseline;gap:12px;letter-spacing:-.01em;flex-wrap:wrap}
+h2 .no{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.12em;font-weight:600}
+p{margin:10px 0}
+ul{margin:8px 0 8px 24px}
+li{margin:6px 0}
+strong{font-weight:700}
+.callout{border-left:4px solid var(--accent);background:var(--grey-1);padding:12px 18px;margin:16px 0}
+.callout p{margin:0}
+.check{list-style:none;margin-left:0}
+.check li{padding:9px 0 9px 30px;position:relative;border-bottom:1px solid var(--grey-2)}
+.check li::before{content:"☐";position:absolute;left:2px;font-size:17px;color:var(--accent);font-weight:700}
+.check li:last-child{border-bottom:none}
+.submission-bottom{margin-top:26px}
+.attachment-link{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 18px;border:1px solid var(--accent);color:var(--accent);text-decoration:none;font-weight:600}
+.attachment-link:hover{background:#edf1ff}
+footer{margin-top:48px;padding:28px 0 48px;border-top:2px solid var(--accent);color:var(--grey-3);font-size:13.5px}
+footer strong{color:var(--ink)}
+footer a{color:var(--accent)}
+@media (max-width:760px){
+  header{padding:40px 0 28px}
+  header h1{font-size:28px}
+  h2{font-size:21px}
+}
+@media print{
+  nav,.submission-bar,.attachment-link{display:none}
+  body{background:#fff}
+  header{background:#fff;color:var(--ink);padding:20px 0}
+  header .sub,header .chip{color:var(--ink)}
+}
+
+h3{font-size:19px;line-height:1.4;margin:28px 0 12px;scroll-margin-top:100px}
+h4{font-size:17px;margin:22px 0 10px} p,li{overflow-wrap:anywhere} ol{margin:12px 0 16px 24px} a{color:var(--accent)}
+table{display:block;width:100%;overflow-x:auto;border-collapse:collapse;margin:18px 0 24px;font-size:14px;line-height:1.65} th,td{border:1px solid var(--grey-2);padding:10px 12px;text-align:left;vertical-align:top;min-width:110px} th{background:var(--grey-1);font-weight:700} td{min-width:180px} table col{width:auto!important}
+code{font-family:var(--mono);font-size:.9em;background:var(--grey-1);padding:.12em .25em} pre{overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;padding:18px;background:var(--grey-1);border-left:4px solid var(--accent);font-size:14px;line-height:1.7} pre code{background:none;padding:0} hr{border:0;border-top:1px solid var(--grey-2);margin:32px 0}
+h2{scroll-margin-top:115px} .experiment-flow ol{list-style:none;margin:16px 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;counter-reset:flow}.experiment-flow li{margin:0;padding:16px;border:1px solid var(--grey-2);background:#fff}.experiment-flow strong,.experiment-flow span,.experiment-flow small{display:block}.experiment-flow strong{color:var(--accent);margin-bottom:6px}.experiment-flow small{margin-top:8px;color:var(--grey-3)}
+.execution-step{border-left:3px solid var(--grey-2);padding-left:18px;margin:24px 0}.execution-step h4{margin:0 0 8px;color:var(--accent)}.execution-step ul{margin-top:8px}
+@media(max-width:760px){.experiment-flow ol{grid-template-columns:1fr}nav{position:static}h2{scroll-margin-top:20px}}
+</style>
+</head>
+<body>
+<aside class="submission-bar" aria-label="第四次实验作业提交">
+  <div class="container">
+    <div><strong>第四次实验作业提交</strong><span>报告、方案、原始会话与研究文件统一打包</span></div>
+    <a href="https://send2me.cn/s6scThjh/S7uneaqptLkaHg" target="_blank" rel="noopener">提交作业 ↗</a>
+  </div>
+</aside>
+<header><div class="container"><div class="tag">Experiment 04 · Asset Allocation</div><h1>开放式资产配置研究</h1><div class="sub">学生任务书 · 投资组合课程第四次实验</div><div class="chips"><span class="chip">独立完成</span><span class="chip">基准策略回测</span><span class="chip">自主开放研究</span><span class="chip">留出期 2024-01—2026-09</span></div></div></header>
+<nav aria-label="任务书目录"><div class="container"><div class="links"><a class="back" href="./">← 返回课程</a><a href="#一实验任务与规范">实验任务</a><a href="#二研究与协作流程">研究流程</a><a href="#三提交材料清单">提交材料</a><a href="#附原始session一键导出提示词">导出提示词</a></div></div></nav>
+<main class="container" id="main-content">
+<p>本实验由个人独立完成。请自行确定投资目标，设计资产配置方案，通过回测检验方案，并说明结论的适用范围。</p>
+<p>你可以使用 Agent 检索资料、获取数据、编程和计算。研究问题、关键选择、结果核验和最终判断由你本人负责，并保留原始对话记录。</p>
+<p>评分不看收益高低，也不要求结果显著或符合预期。即使结果与最初设想相反，研究设计严谨、结论有据且边界清楚，仍可获得高分。</p>
+<hr />
+<h2 id="一实验任务与规范">一、实验任务与规范</h2>
+<p>本实验由两部分构成：<strong>第一部分（基准策略封闭回测）</strong> 在统一的股债指数上完成3项基础再平衡规则与1项组合保险（CPPI）规则的回测，帮助你校准回测程序、直观体会凹性与凸性规则的差异；<strong>第二部分（自主开放研究）</strong> 在此基础上由你自主设定投资目标、构建资产池、设计配置与调整规则，并通过预留的留出期数据检验方案。</p>
+<h3 id="通用规范">1.1 通用规范</h3>
+<p>无论选择何种具体主题，两部分研究均须遵守以下基本规范：</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>项目</th>
+<th>规范要求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>研究主题与层次</td>
+<td>围绕自行界定的投资目标提出一项核心研究问题（防止堆砌无关模型）。研究可归属以下任一层次或它们的衔接，报告中须明确界定：<br>• <strong>战略资产配置（SAA）</strong>：按长期目标与风险约束确定政策基准权重；<br>• <strong>战术资产配置（TAA）</strong>：依据中短期估值、趋势或宏观信号对政策权重作有限偏离；<br>• <strong>动态资产配置</strong>：按事先写明的机械规则（如再平衡、CPPI、目标波动率、下滑曲线），随价格、风险或状态变化调整权重</td>
+</tr>
+<tr>
+<td>标的限制</td>
+<td>仅限股票与指数，禁用公募基金（含ETF）。若纳入个股，股票池须在样本内期初按事前规则锁定（例如调用Tushare <code>index_weight</code> 获取样本内起点日某指数成分股后按既定财务或市值条件筛选），严禁依据当前存续名单或事后表现挑选个股（防范幸存者偏差与事后选样偏差）</td>
+</tr>
+<tr>
+<td>样本内期</td>
+<td>自定起点至 <strong>2023-12-31</strong>。方案构思、资产筛选、参数试算与规则修订全部在此区间内完成</td>
+</tr>
+<tr>
+<td>留出期（Holdout）</td>
+<td><strong>2024-01-01 至 2026-09-30</strong>（共33个月）。参见下方《留出期隔离与使用规范》</td>
+</tr>
+<tr>
+<td>数据记录</td>
+<td>来源自选，优先使用Tushare MCP。须记录接口名称/网址、查询参数、取数日期、复权方式、收益率计算公式及缺失/异常处理规则，确保他人仅凭记录即可复取完全相同的数据</td>
+</tr>
+<tr>
+<td>指数口径</td>
+<td>跨股债比较需同时计入股票分红与债券票息，否则将系统性低估某类资产；因此本实验作为课程总大纲“指数使用价格收益”的专项例外，统一优先采用<strong>全收益指数</strong>。鉴于Tushare <code>index_monthly</code> 对中证指数仅返回2022年1月起的数据，计算中证系列指数月度收益时，须调用 <code>index_daily</code> 提取每月最后一个交易日的收盘价自行计算</td>
+</tr>
+<tr>
+<td>利率与时点</td>
+<td>无风险利率取年化1.8%（月度折算为1.8%/12），改用其他利率口径须说明理由。t月末生成的调仓信号仅能使用t月末及此前已公开的信息，并在t+1月初执行，信号日与执行日须分开记录</td>
+</tr>
+</tbody>
+</table>
+<h4>留出期（Holdout）隔离与使用规范</h4>
+<p>在回测中反复观察全样本表现并据此修改规则，极易产生只在历史特定路径上有效的过拟合方案。</p>
+<p>本实验将最近33个月（2024-01至2026-09）统一划为<strong>留出期</strong>，作为检验方案稳健性的样本外试金石。执行时须遵守以下四项限定：</p>
+<ol>
+<li><strong>取数隔离</strong>：在第二部分研究方案正式冻结之前，任何数据查询的截止日期（<code>end_date</code>）均不得晚于 <code>20231231</code>，严禁提前获取、查阅或利用留出期数据筛选资产与调整参数。</li>
+<li><strong>参数锁定</strong>：进入留出期检验后，资产池名单、政策权重、触发阈值、滚动窗口长度等全部参数必须原样沿用冻结方案，不得在留出期内重新估计或动态微调。</li>
+<li><strong>状态衔接</strong>：留出期首月（2024年1月）生成信号所需的前序滚动历史窗口（例如计算过去12个月波动率或10个月均线），正常使用截至2023年12月末的样本内数据无缝衔接。</li>
+<li><strong>单次正式运行</strong>：冻结方案在留出期仅作一次正式检验并如实报告结果。若看到留出期结果后发现原方案存在缺陷，允许另行提出“事后修订方案”并作补充对比，但必须在报告中明确标示为看过留出期数据后的修订，且不得替换或隐瞒冻结方案的原始留出期表现。</li>
+</ol>
+<hr />
+<h3 id="第一部分基准策略封闭回测">1.2 第一部分：基准策略封闭回测</h3>
+<p><strong>什么是回测，以及本部分要回测什么</strong>： 回测（Backtesting）是将一套事先写死、不留模糊空间的投资规则，逐期投放到真实历史行情中，模拟组合在每个时点上的权重漂移、信号触发、买卖调仓、交易费用扣减与净值演进。回测的目的不是寻找一条漂亮的净值曲线，而是检验规则在历史路径上的风险收益性质与脆弱点。</p>
+<p>使用统一的股债双指数和2014—2023年样本内数据，逐月回测三项策略：买入持有、月度恒定比例和年度再平衡。鼓励尝试组合保险（CPPI）策略。</p>
+<p>比较结果时，重点回答三个问题：</p>
+<ol>
+<li>不同调整规则如何改变组合的收益与风险？如尝试CPPI，可比较其保护效果与震荡磨损。</li>
+<li>换手率和交易成本如何影响收益与策略排序？</li>
+<li>同一策略在前后两个5年子样本中的表现是否稳定？</li>
+</ol>
+<p>本部分也用于检查回测程序。请核对月末权重计算、次月初调仓和单边换手成本，并检查是否使用了未来信息。</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>要素</th>
+<th>设定与要求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>回测标的</td>
+<td>沪深300全收益指数（<code>H00300.CSI</code>）、中证全债指数（<code>H11001.CSI</code>），通过 <code>index_daily</code> 提取月末收盘价计算月度收益率</td>
+</tr>
+<tr>
+<td>回测期间</td>
+<td><strong>2014-01 至 2023-12</strong>（共120个月；以 <strong>2013-12-31</strong> 收盘价完成期初建仓；前后等分为两个60个月子样本：2014-01—2018-12、2019-01—2023-12）</td>
+</tr>
+<tr>
+<td>执行与扣费</td>
+<td>月末根据收盘后净值计算目标权重，次月初按月末收盘价执行调仓；单边交易成本设 <strong>0、0.1%、0.3%</strong> 三档分别核算（根据当期调仓引起的单边换手率扣减组合净值）</td>
+</tr>
+<tr>
+<td>必报指标</td>
+<td>每项策略在三档成本下的：年化收益率、年化波动率、最大回撤、夏普比率、年均单边换手率</td>
+</tr>
+<tr>
+<td>必报比较与分析</td>
+<td>①以策略2（月度恒定比例）为政策组合基准，报告其余策略相对它的绩效差异；<br>②对比前后两个60个月子样本中各策略的绩效排序变化；<br>③撰写一段400字以内的分析结论，说明再平衡频率、交易成本与样本期间如何影响策略表现（若完成CPPI，一并分析其与恒定比例在牛熊及震荡期的差异）</td>
+</tr>
+<tr>
+<td>否决红线</td>
+<td>事后修改规则迎合行情，或在调仓计算中使用未来信息者，本部分记为不合格</td>
+</tr>
+</tbody>
+</table>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>策略编号</th>
+<th>策略名称</th>
+<th>要求</th>
+<th>配置与调仓规则</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>买入持有</td>
+<td>必做</td>
+<td>2013年末按股债60/40建仓，2014—2023年期间任由权重随涨跌漂移，不作再平衡</td>
+</tr>
+<tr>
+<td>2</td>
+<td>月度恒定比例</td>
+<td>必做</td>
+<td>每月末将股债权重调回60/40（作为本部分的<strong>政策组合基准</strong>）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>年度再平衡</td>
+<td>必做</td>
+<td>每年12月末将股债权重调回60/40，其余月份任由权重漂移不调仓</td>
+</tr>
+<tr>
+<td>4</td>
+<td>组合保险（CPPI）</td>
+<td>鼓励尝试</td>
+<td>期初净值设为100，保底线 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math> 固定为期初净值的80%（即 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo>=</mo><mn>80</mn></mrow><annotation encoding="application/x-tex">F=80</annotation></semantics></math>），乘数 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">m=3</annotation></semantics></math>；每月末按 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>E</mi><mi>t</mi></msub><mo>=</mo><mrow><mi mathvariant="normal">min</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mrow><mi mathvariant="normal">max</mi><mo>&#8289;</mo></mrow><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>V</mi><mi>t</mi></msub><mo>−</mo><mi>F</mi><mo stretchy="false" form="postfix">)</mo><mo>,</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo><mo>,</mo><msub><mi>V</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">E_t = \min(\max(m(V_t - F), 0), V_t)</annotation></semantics></math> 确定下月股票金额，其余配置债券</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="第二部分自主开放研究">1.3 第二部分：自主开放研究</h3>
+<p>完成第一部分后，进入你的自主研究。开放研究常见问题是“直接让Agent给出一个策略并跑出一条净值曲线”，导致方案缺乏投资逻辑、实证沦为数字罗列。为保证研究有据可依，本部分要求你按“<strong>初始记录 → 六步设计 → 方案冻结 → 留出期检验与核验 → 结论与反思</strong>”的完整链条推进。</p>
+<h4 id="六步方案设计须按顺序推进前一步产出约束后一步选择">（1）六步方案设计（须按顺序推进，前一步产出约束后一步选择）</h4>
+<p>每一项资产配置方案都必须从具体的投资者约束出发：先有投资者画像，才能决定需要哪些资产类别；有了资产池，才能确定长期政策权重（SAA）；有了政策基准，才能定义偏离或动态调整规则（TAA/动态）以及拿什么作对照。请严格按以下六步递进设计，每步均可请Agent协助梳理备选方案或排查漏洞，但最终选择与理由必须由你本人给出：</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>步骤</th>
+<th>设计内容</th>
+<th>必交产出与具体要求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. 投资者画像</td>
+<td>界定投资者类型与客观约束</td>
+<td>明确投资期限、可承受的最大回撤阈值、流动性提取需求与目标收益要求，形成约束清单</td>
+</tr>
+<tr>
+<td>2. 资产池构建</td>
+<td>依据约束选择资产大类与代表标的</td>
+<td>给出资产类别、标的代码、数据起点与纳入理由；若包含个股，须写明在样本内起点锁定名单的具体规则</td>
+</tr>
+<tr>
+<td>3. 政策权重（SAA）</td>
+<td>确定长期基准配置比例及定权方法</td>
+<td>给出政策组合的固定或基准权重，并论证所用定权方法（如固定比例、风险预算、均值-方差等）为何适配第1步的约束</td>
+</tr>
+<tr>
+<td>4. 调整规则（TAA/动态）</td>
+<td>设定偏离或动态调整的执行条件与幅度</td>
+<td>提交一张完整的<strong>动态配置规则卡</strong>：包含触发条件、调整幅度、权重上下限、信号日与执行日、单边交易成本假设、规则停用条件。若研究纯SAA不作动态调整，须论证定期再平衡规则及不作战术偏离的理由</td>
+</tr>
+<tr>
+<td>5. 比较基准设计</td>
+<td>设定对照方案与控制变量</td>
+<td>列出比较对象清单（默认必须包含第3步的政策组合作为基准），并说明比较时哪些条件改变、哪些条件保持一致</td>
+</tr>
+<tr>
+<td>6. 命题与检验设计</td>
+<td>提炼核心研究主张及证伪条件</td>
+<td>分别写出<strong>投资命题</strong>与<strong>可检验命题</strong>，明确统计或模拟检验方法，以及样本内与留出期结果的判读准则</td>
+</tr>
+</tbody>
+</table>
+<h4>区分投资命题与可检验命题</h4>
+<p>一段历史回测不能证明长期投资目标一定实现。例如，回测年化收益率为8%，不能证明方案能保障未来30年的养老支出。</p>
+<ul>
+<li><strong>投资命题</strong>：说明配置方案为什么有助于实现投资目标。例如，通过股债搭配和下滑曲线控制临近退休时的序列风险。本实验不对长期目标作实证检验；请说明理论与制度依据。</li>
+<li><strong>可检验命题</strong>：对规则执行、组合风险收益或结果稳健性提出具体主张。每条命题必须写明什么结果会削弱或推翻它。实证部分只检验这类命题。</li>
+</ul>
+<p><strong>示例：</strong>目标波动率规则将样本内和留出期的年化波动率控制在10%±2%以内。若留出期波动率超过12%，或单边成本升至0.3%后最大回撤不再低于政策组合，则削弱这一主张。</p>
+<p>单凭一张跑赢基准的净值曲线，不构成有效的实证证据。</p>
+<h4 id="研究执行与核验规范">（2）研究执行与核验规范</h4>
+<div class="execution-steps">
+  <div class="execution-step">
+    <h4>1. 初始认识记录</h4>
+    <p>向 Agent 征询研究方案之前，先在原始会话中用自己的话写下：</p>
+    <ul>
+      <li>你对投资目标的理解；</li>
+      <li>初步关心的研究问题；</li>
+      <li>已掌握的课程知识或市场信息；</li>
+      <li>当前的初步观点；</li>
+      <li>最需要澄清的一处疑问。</li>
+    </ul>
+    <p>保存后不得事后修改。在结论部分对照这份记录，说明认识如何变化。</p>
+  </div>
+  <div class="execution-step">
+    <h4>2. 方案冻结</h4>
+    <p>完成样本内试算与六步设计后，在读取留出期数据之前，保存独立的方案文档并注明冻结时间。样本内数据截至 2023-12-31。</p>
+    <p>文档须包含核心研究问题、六步完整产出、样本内数据参数、独立核验计划，以及 Agent 可自行执行的工作和必须暂停等待你决策的节点。</p>
+    <p>保留冻结前的历史版本和修改理由。冻结后，方案文档不得修改。</p>
+  </div>
+  <div class="execution-step">
+    <h4>3. 留出期检验</h4>
+    <p>使用冻结方案，在留出期（2024-01—2026-09）完整运行一次，并与样本内结果并列对照。</p>
+    <p>若结果不佳或发现规则漏洞，可以提出补充方案。须标明“事后修正”，并保留冻结方案的原始结果。</p>
+  </div>
+  <div class="execution-step">
+    <h4>4. 独立核验</h4>
+    <p>针对至少一项会影响核心结论的数据、计算或假设，完成独立核验。例如，抽查调仓月的原始行情与权重计算，或用 Excel、另一段独立脚本复算关键指标。</p>
+    <p>记录核验对象、方法、比对结果和最终处置决定。注意检查复权、首月收益对齐和年化因子等口径。</p>
+  </div>
+  <div class="execution-step">
+    <h4>5. 结论与反思</h4>
+    <p>在报告结论中回答：</p>
+    <ul>
+      <li>证据支持哪些判断？初始记录中的哪些想法被削弱或推翻？</li>
+      <li>样本内与留出期结论是否一致？不一致时，如何解释市场环境或机制原因？</li>
+      <li>投资命题中哪些部分尚未检验？方案适用范围是什么？</li>
+      <li>你在哪些关键环节采纳、纠正、限制或否决了 Agent？最终方案中的哪些核心主张来自你的独立判断？</li>
+    </ul>
+  </div>
+</div>
+<hr />
+<h2 id="二研究与协作流程">二、研究与协作流程</h2>
+<div class="experiment-flow" role="group" aria-label="研究与协作流程">
+<ol>
+<li>
+<strong>① 封闭回测</strong><span>统一标的与基础规则，校准框架（2014—2023）</span>
+</li>
+<li>
+<strong>② 初始记录</strong><span>先写本人理解、问题、既有信息、观点与疑问</span>
+</li>
+<li>
+<strong>③ 六步设计</strong><span>画像 → 资产池 → 政策权重 → 调整规则 → 比较基准 → 命题</span><small>样本内试算与迭代修订</small>
+</li>
+<li>
+<strong>④ 方案冻结</strong><span>保存定稿并标注时间戳，锁定全部规则与参数</span>
+</li>
+<li>
+<strong>⑤ 留出期检验与核验</strong><span>2024-01—2026-09运行一次，完成至少一项独立核验</span>
+</li>
+<li>
+<strong>⑥ 结论与反思</strong><span>对照证据边界与初始认识，提炼本人独立判断</span>
+</li>
+</ol>
+</div>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>协作与留痕要求</th>
+<th>规范标准</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>人机协作方式</td>
+<td>向Agent下达任务时，不要只发一句模糊指令（如“帮我设计一个养老配置方案并回测”）。每一步应先说明你的研究目的、约束条件与验收标准，明确约定Agent做到哪里必须停下来由你做决定，并对Agent给出的方案或代码给出具体反馈（说明保留什么、修改什么及理由）。协作方法参阅<a href="https://jefeerzhang.github.io/knowledge/ai-agent-communication.html">与 AI Agent 有效沟通</a></td>
+</tr>
+<tr>
+<td>过程留痕底线</td>
+<td>研究过程中的全部提问、讨论、方案取舍、代码执行、报错排查及版本修订，均须完整保留在原始session中。严禁在研究结束后用一段事后整理的“对话摘要”替代原始会话记录</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="三提交材料清单">三、提交材料清单</h2>
+<p>提交前核对报告、原始session与代码数据结果一致，将以下材料打包为单个ZIP文件提交（提交截止时间与渠道由任课教师统一通知）：</p>
+<div class="submission-materials">
+  <div class="execution-step">
+    <h4>1. 研究报告</h4>
+    <p>报告分为<strong>基准策略封闭回测</strong>和<strong>自主开放研究</strong>两章。正文为 <strong>3000—5000 字</strong>；图表、代码清单和附录不计入字数。</p>
+    <p>第二章须包含初始认识记录、六步方案产出、冻结方案摘要、样本内与留出期对照结果、独立核验记录，以及研究结论与反思。</p>
+  </div>
+  <div class="execution-step">
+    <h4>2. 方案文档</h4>
+    <p>提交注明冻结时间的方案定稿，以及冻结前各次修订版本和修改理由。</p>
+  </div>
+  <div class="execution-step">
+    <h4>3. 完整原始会话</h4>
+    <p>提交覆盖两部分研究全过程的原始会话，保留角色、发言顺序、本人提示词、Agent 回复、工具调用和报错记录。</p>
+    <p>附导出范围与缺口说明。可以使用下方提示词，请 Agent 导出会话。</p>
+  </div>
+  <div class="execution-step">
+    <h4>4. 代码、数据与运行说明</h4>
+    <ul>
+      <li>数据文件及来源、参数清单；</li>
+      <li>分析代码；</li>
+      <li>分别存放的样本内与留出期结果；</li>
+      <li><code>README.md</code>：说明文件结构和一键复现步骤。</li>
+    </ul>
+    <p>受版权或再分发限制的数据，须写明精确的复取接口和参数。</p>
+  </div>
+</div>
+<div class="submission-bottom"><a class="attachment-link" href="https://send2me.cn/s6scThjh/S7uneaqptLkaHg" target="_blank" rel="noopener">提交第四次实验作业 ↗</a></div>
+<h3 id="附原始session一键导出提示词">附：原始session一键导出提示词</h3>
+<p>完成全部研究与报告后，无需手工寻找日志目录或编写转换脚本，直接将下方代码块中的提示词<strong>整段复制发送给你的研究Agent</strong>，由Agent自动完成原始会话定位、导出、核对与ZIP打包：</p>
+<pre class="text"><code>请直接为本次《实验四：开放式资产配置研究》导出完整原始对话（session）及全部研究产物，在本地生成真实文件并打包为一个可提交的ZIP压缩包。请直接执行导出操作，不要只告诉我操作方法。
+
+【1. 导出范围】
+导出本实验“第一部分：基准策略封闭回测”与“第二部分：自主开放研究（初始记录→六步设计→方案冻结→留出期检验与独立核验→结论与反思）”所涉及的全部相关session。若本次实验跨了多个session，请全部读取并按时间顺序合并归档，同时保留每个session内部的原始顺序。截至本条导出请求发送时的全部消息均须纳入。
+
+【2. 由你直接执行】
+请自行定位当前客户端环境（如Claude Code、Pi、Cursor、Trae、WorkBuddy等）在本地存储的底层原始会话文件（如.jsonl/.json/.db日志），必要时自行编写并运行解析导出脚本。全程不要让我去操作菜单、找文件夹或敲命令。导出前请自动剔除配置或命令中出现的私有API Token/密钥，并在导出说明中注明脱敏位置，但不得借脱敏删改任何研究对话、报错或工具记录。
+
+【3. 逐字保留学生输入与协作过程】
+- 逐字原样保留我发送的每一条提示词（含初始认识记录、六步方案指令、追问、否决、纠偏、确认及重复发送的消息），保留原有换行、代码、公式和文件引用，不得合并、去重或改写。
+- 完整保留Agent回复、每次工具调用的参数（特别是Tushare等数据查询的接口名、start_date/end_date参数与调用时间）、工具返回结果、报错信息与失败尝试。
+- 严格区分我的真实输入与系统注入指令、工具返回或上下文压缩摘要；不得将上下文摘要冒充为完整原始session。
+
+【4. 打包输出目录结构】
+请在当前工作目录下新建“实验四_提交包_导出时间”文件夹，整理并核对以下内容后打包为同名ZIP文件：
+1. 研究报告与方案文档/：放入最终研究报告、加注时间戳的冻结方案定稿，以及冻结前的历次修订版本。
+2. 完整原始session/：
+   - 完整对话.md：按session分节、按原始时间顺序可读化展示用户、Agent与工具调用的完整原文；
+   - 原始记录/：原样拷贝底层原始会话日志文件副本（如.jsonl/.json文件）；
+   - 导出说明.md：由你自动生成（无需我填表），写明本次导出的session清单、底层日志路径、起止时间、各session消息条数、方案冻结时间点与首次查询留出期数据（2024-01至2026-09）的时间先后核对结果、API密钥脱敏说明，以及是否存在未能读取的历史记录。
+3. 代码与数据结果/：按“第一部分_封闭回测”“第二部分_样本内”“第二部分_留出期”“独立核验”分开归档数据清单、分析代码与输出图表结果，并生成说明目录结构与复现命令的 README.md。
+
+【5. 完成前自检与如实报告】
+打包前请重新读取生成的文件，逐条核对我的提示词是否与底层原始记录逐字一致、顺序是否无误、附件与代码是否齐全。若因客户端权限限制只能读取当前上下文窗口而无法获取底层完整历史，必须在《导出说明.md》及回复中明确标记为“部分导出”并说明缺失范围与原因，严禁凭记忆编造历史对话或虚构文件路径。
+
+完成后请直接告诉我：导出是否完整、生成的目录与ZIP文件绝对路径、方案冻结与留出期取数时间的核对结论，以及是否还有需要我手动补充的材料。</code></pre>
+
+</main>
+<footer><div class="container"><p><strong>第四次实验作业 · 学生任务书</strong></p><p>提交截止时间与渠道由任课教师统一通知。</p><p><a href="./">返回投资组合课程</a></p></div></footer>
+</body>
+</html>
