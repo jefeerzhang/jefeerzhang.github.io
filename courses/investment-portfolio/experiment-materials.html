@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23002FA7'/%3E%3Ctext x='32' y='46' font-size='36' text-anchor='middle' fill='white' font-family='Georgia,serif'%3E%CE%BB%3C/text%3E%3C/svg%3E">
 <title>材料汇总 · 投资组合课程</title>
-<meta name="description" content="投资组合课程实验材料统一入口：发布会课件、实验一正式任务书与 Agent 运行约束。">
+<meta name="description" content="投资组合课程实验材料统一入口：发布会课件、实验一与实验二正式任务书及 Agent 运行约束。">
 <style>
 /* ===== 瑞士国际主义 · 克莱因蓝 IKB（与课程站点同款） ===== */
 :root{
@@ -47,8 +47,8 @@ h2{font-size:23px;font-weight:700;color:var(--ink);margin:36px 0 16px;padding:0 
 p{margin:8px 0}
 .note{font-size:14px;color:var(--grey-3);margin:6px 0}
 
-/* ===== 挂载卡片（三张独立入口） ===== */
-.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}
+/* ===== 挂载卡片（独立入口） ===== */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin:18px 0}
 .m-card{position:relative;display:flex;flex-direction:column;gap:10px;padding:22px 20px 18px;background:var(--grey-1);border:1px solid var(--grey-2);border-radius:10px;text-decoration:none;color:inherit;transition:border-color .15s,transform .15s}
 .m-card:hover{border-color:var(--accent);transform:translateY(-2px)}
 .m-card .m-tag{align-self:flex-start;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:rgba(0,47,167,.07);padding:3px 9px;border-radius:999px}
@@ -78,9 +78,9 @@ footer strong{color:var(--ink)}
   <div class="container">
     <p class="tag">Materials · 实验材料</p>
     <h1>材料汇总</h1>
-    <p class="sub">投资组合课程实验材料的统一入口。当前为实验一正式发布材料：发布会课件、任务书与 Agent 运行约束。</p>
+    <p class="sub">投资组合课程实验材料的统一入口。实验一、实验二正式发布材料：发布会课件、任务书与 Agent 运行约束。</p>
     <div class="chips">
-      <span class="chip">实验一 · 正式发布</span>
+      <span class="chip">实验一 / 实验二 · 正式发布</span>
       <span class="chip">课件 / 任务书 / 运行约束</span>
       <span class="chip">Agent 辅助 · 人工审核</span>
     </div>
@@ -91,8 +91,8 @@ footer strong{color:var(--ink)}
   <div class="container links">
     <a href="index.html" class="back">← 课程主页</a>
     <a href="#deck">发布会课件</a>
-    <a href="#task">任务书</a>
-    <a href="#agent">Agent 运行约束</a>
+    <a href="#exp1">实验一</a>
+    <a href="#exp2">实验二</a>
   </div>
 </nav>
 
@@ -111,9 +111,9 @@ footer strong{color:var(--ink)}
     </div>
   </section>
 
-  <section id="task">
-    <h2>实验一 · 任务书</h2>
-    <p>正式版任务书：个人独立完成，研究方法自行设计；任务 A 分别检验动量与反转，任务 B 提出并验证一个新问题；按“方案确认 → 方案推进 → 结果复核 → 报告完成”四步推进。</p>
+  <section id="exp1">
+    <h2>实验一 · 任务书与 Agent 运行约束</h2>
+    <p>正式版任务书：个人独立完成，研究方法自行设计；任务 A 分别检验动量与反转，任务 B 提出并验证一个新问题；按“方案确认 → 方案推进 → 结果复核 → 报告完成”四步推进。开始研究前先让学生 Agent 加载运行约束。</p>
     <div class="card-grid">
       <a class="m-card" href="实验一_动量反转任务书.html">
         <span class="m-tag">任务书</span>
@@ -121,17 +121,29 @@ footer strong{color:var(--ink)}
         <p>研究范围（481 只固定名单、2019-12-31 至 2026-09-01）、任务 A/B、方案与核验要求、实验流程与交付内容。</p>
         <div class="m-action"><span>打开任务书</span><span class="m-fmt">HTML</span><span class="m-arrow">→</span></div>
       </a>
-    </div>
-  </section>
-
-  <section id="agent">
-    <h2>实验一 · Agent 运行约束</h2>
-    <p>学生 Agent 唯一需要加载的运行提示词：开始研究前把本文件交给自己的 Agent，按“学生使用方法”发送开场消息。已包含角色、四步流程、主动提问、核验与导出要求。</p>
-    <div class="card-grid">
       <a class="m-card" href="实验一_Agent运行约束.html">
         <span class="m-tag">运行约束</span>
         <h3>实验一：动量与反转研究的 Agent 运行约束</h3>
-        <p>人机分工（可以代做什么、必须留给学生什么）、四步执行与暂停条件、数据与方法底线、工具目录与真实留痕。</p>
+        <p>学生 Agent 唯一需要加载的运行提示词：人机分工、四步执行与暂停条件、数据与方法底线、工具目录与真实留痕。</p>
+        <div class="m-action"><span>打开运行约束</span><span class="m-fmt">HTML</span><span class="m-arrow">→</span></div>
+      </a>
+    </div>
+  </section>
+
+  <section id="exp2">
+    <h2>实验二 · 任务书与 Agent 运行约束</h2>
+    <p>正式版任务书：依托 9 只候选基金，任务 A 逐只判断风格并完成 12 项必算指标的基础绩效评价，任务 B 提出并验证一个新问题；按同一四步流程推进。开始研究前先让学生 Agent 加载运行约束。</p>
+    <div class="card-grid">
+      <a class="m-card" href="实验二_基金评价任务书.html">
+        <span class="m-tag">任务书</span>
+        <h3>实验二：主动基金表现与积极组合管理评价</h3>
+        <p>研究范围（9 只候选基金、2022-06 至 2026-09）、任务 A 必算指标口径、任务 B、方案与核验要求、实验流程与交付内容。</p>
+        <div class="m-action"><span>打开任务书</span><span class="m-fmt">HTML</span><span class="m-arrow">→</span></div>
+      </a>
+      <a class="m-card" href="实验二_Agent运行约束.html">
+        <span class="m-tag">运行约束</span>
+        <h3>实验二：主动基金评价的 Agent 运行约束</h3>
+        <p>学生 Agent 唯一需要加载的运行提示词：研究范围与分工、学生先答助手再反馈、四步执行与暂停条件、数据与方法底线、工具与真实留痕。</p>
         <div class="m-action"><span>打开运行约束</span><span class="m-fmt">HTML</span><span class="m-arrow">→</span></div>
       </a>
     </div>
@@ -142,8 +154,8 @@ footer strong{color:var(--ink)}
 <footer>
   <div class="container">
     <p><strong>使用顺序</strong></p>
-    <p class="note">先让学生打开 Agent 运行约束、按“学生使用方法”交给 Agent 并核对回复，再读任务书开展研究；发布会课件供课堂启动使用。规则以教师下发的正式文件为权威版本，材料更新以本页为准。</p>
-    <p class="mono">投资组合 · 实验一正式发布材料 · 课件 / 任务书 / 运行约束</p>
+    <p class="note">每个实验先让学生 Agent 加载对应的运行约束、按“学生使用方法”发送开场消息并核对回复，再读任务书开展研究；发布会课件供课堂启动使用。规则以教师下发的正式文件为权威版本，材料更新以本页为准。</p>
+    <p class="mono">投资组合 · 实验一 / 实验二正式发布材料 · 课件 / 任务书 / 运行约束</p>
   </div>
 </footer>
 </body>
