@@ -78,11 +78,11 @@ footer strong{color:var(--ink)}
   <div class="container">
     <p class="tag">Materials · 实验材料</p>
     <h1>材料汇总</h1>
-    <p class="sub">投资组合课程实验材料的统一入口。实验一、实验二正式发布材料：发布会课件、任务书与 Agent 运行约束。</p>
+    <p class="sub">投资组合课程实验材料的统一入口。实验一、实验二正式发布材料（发布会课件、任务书、学生端 Agent 运行约束），及教师端评阅材料。</p>
     <div class="chips">
       <span class="chip">实验一 / 实验二 · 正式发布</span>
       <span class="chip">课件 / 任务书 / 运行约束</span>
-      <span class="chip">Agent 辅助 · 人工审核</span>
+      <span class="chip">教师端 · 评阅专用</span>
     </div>
   </div>
 </header>
@@ -93,6 +93,7 @@ footer strong{color:var(--ink)}
     <a href="#deck">发布会课件</a>
     <a href="#exp1">实验一</a>
     <a href="#exp2">实验二</a>
+    <a href="#teacher">教师端</a>
   </div>
 </nav>
 
@@ -149,13 +150,26 @@ footer strong{color:var(--ink)}
     </div>
   </section>
 
+  <section id="teacher">
+    <h2>教师端 · 评阅材料</h2>
+    <p>教师端评阅 Agent 运行约束：交给教师端 Agent 审查学生提交包与评阅输出的专用提示词，含实验任务边界、评阅步骤、内嵌十档评分规则与可选的随机抽问协议。评阅专用，非学生发布材料。</p>
+    <div class="card-grid">
+      <a class="m-card" href="实验二_教师Agent运行约束.md" download="实验二_教师Agent运行约束.md">
+        <span class="m-tag">教师端 · 评阅专用</span>
+        <h3>实验二：教师 Agent 运行约束（主动基金评价评阅与随机抽问）</h3>
+        <p>教师使用方法、任务边界与必查指标、评阅对象与权限、四步评阅、联网核查边界、内嵌十档评分规则、评阅输出三部分、可选随机抽问协议。</p>
+        <div class="m-action"><span>查看 / 下载</span><span class="m-fmt">MD</span><span class="m-arrow">→</span></div>
+      </a>
+    </div>
+  </section>
+
 </div>
 
 <footer>
   <div class="container">
     <p><strong>使用顺序</strong></p>
-    <p class="note">每个实验先让学生 Agent 加载对应的运行约束、按“学生使用方法”发送开场消息并核对回复，再读任务书开展研究；发布会课件供课堂启动使用。规则以教师下发的正式文件为权威版本，材料更新以本页为准。</p>
-    <p class="mono">投资组合 · 实验一 / 实验二正式发布材料 · 课件 / 任务书 / 运行约束</p>
+    <p class="note">每个实验先让学生 Agent 加载对应的运行约束、按“学生使用方法”发送开场消息并核对回复，再读任务书开展研究；发布会课件供课堂启动使用。评阅时由教师端 Agent 加载“教师端”区段的运行约束，再提供学生提交包与评阅输出位置。规则以教师下发的正式文件为权威版本，材料更新以本页为准。</p>
+    <p class="mono">投资组合 · 实验一 / 实验二正式发布材料 · 课件 / 任务书 / 运行约束 · 教师端评阅</p>
   </div>
 </footer>
 </body>
