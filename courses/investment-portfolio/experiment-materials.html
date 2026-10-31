@@ -5,19 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23002FA7'/%3E%3Ctext x='32' y='46' font-size='36' text-anchor='middle' fill='white' font-family='Georgia,serif'%3E%CE%BB%3C/text%3E%3C/svg%3E">
 <title>材料汇总 · 投资组合课程</title>
-<meta name="description" content="投资组合课程实验材料统一入口：实验任务书、固定股票名单、基金名单、样本数据、评价标准与记录表、学生证据模板与研究助手配置。">
+<meta name="description" content="投资组合课程实验材料统一入口：发布会课件、实验一正式任务书与 Agent 运行约束。">
 <style>
-/* ===== 瑞士国际主义 · 克莱因蓝 IKB（与实验作业页同款） ===== */
+/* ===== 瑞士国际主义 · 克莱因蓝 IKB（与课程站点同款） ===== */
 :root{
   --paper:#fafaf8;
-  --paper-rgb:250,250,248;
   --ink:#0a0a0a;
-  --ink-rgb:10,10,10;
   --grey-1:#f0f0ee;
   --grey-2:#d4d4d2;
   --grey-3:#737373;
   --accent:#002FA7;
-  --accent-rgb:0,47,167;
   --accent-on:#ffffff;
   --mono:"JetBrains Mono","Cascadia Code",Consolas,"Courier New",monospace;
   --sans:"Inter","Helvetica Neue","Noto Sans SC","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
@@ -25,7 +22,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
-.container{max-width:880px;margin:0 auto;padding:0 24px}
+.container{max-width:960px;margin:0 auto;padding:0 24px}
 
 /* ===== header（纯色，无渐变） ===== */
 header{background:var(--ink);color:#fff;padding:56px 0 40px;border-bottom:6px solid var(--accent)}
@@ -46,33 +43,21 @@ nav a.back{color:var(--accent);font-weight:500;margin-right:8px}
 
 /* ===== sections ===== */
 section{margin-bottom:44px;scroll-margin-top:52px}
-h2{font-size:23px;font-weight:700;color:var(--ink);margin:36px 0 16px;padding:0 0 10px 14px;border-left:6px solid var(--accent);display:flex;align-items:baseline;gap:12px;letter-spacing:-.01em;flex-wrap:wrap}
-h2 .no{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.12em;font-weight:600}
-h3{font-size:17.5px;font-weight:700;margin:24px 0 10px;color:var(--ink)}
+h2{font-size:23px;font-weight:700;color:var(--ink);margin:36px 0 16px;padding:0 0 10px 14px;border-left:6px solid var(--accent);letter-spacing:-.01em}
 p{margin:8px 0}
-ul,ol{margin:8px 0 8px 24px}
-li{margin:5px 0}
-code{font-family:var(--mono);font-size:.86em;background:var(--grey-1);padding:1px 6px;color:var(--ink);font-weight:500}
-strong{font-weight:700}
-a{color:var(--accent)}
-a:hover{color:#0047d0}
-
-/* ===== 面板与提示 ===== */
-.panel{background:var(--grey-1);border:1px solid var(--grey-2);padding:20px 22px;margin:14px 0}
-.takeaway{border-left:4px solid var(--accent);background:var(--grey-1);padding:12px 18px;font-weight:600;color:var(--ink);margin:14px 0}
 .note{font-size:14px;color:var(--grey-3);margin:6px 0}
 
-/* ===== 材料表格（hairline；宽表横向滚动） ===== */
-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px}
-th,td{border:1px solid var(--grey-2);padding:9px 12px;text-align:left;vertical-align:top}
-th{background:var(--grey-1);color:var(--ink);font-weight:600;font-size:14px}
-td .mono,th .mono{font-family:var(--mono);font-size:13px}
-.tablewrap{overflow-x:auto;margin:4px 0}
-.tablewrap table{margin:8px 0}
-.material-name{font-weight:700;white-space:nowrap}
-.dl{white-space:nowrap;font-family:var(--mono);font-size:13px;font-weight:600}
-.dl a{text-decoration:none;border-bottom:1px solid var(--grey-2);padding-bottom:1px}
-.dl a:hover{border-bottom-color:var(--accent)}
+/* ===== 挂载卡片（三张独立入口） ===== */
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}
+.m-card{position:relative;display:flex;flex-direction:column;gap:10px;padding:22px 20px 18px;background:var(--grey-1);border:1px solid var(--grey-2);border-radius:10px;text-decoration:none;color:inherit;transition:border-color .15s,transform .15s}
+.m-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.m-card .m-tag{align-self:flex-start;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:rgba(0,47,167,.07);padding:3px 9px;border-radius:999px}
+.m-card h3{font-size:18px;font-weight:700;line-height:1.35;color:var(--ink)}
+.m-card p{flex:1;font-size:13.5px;line-height:1.65;color:var(--grey-3);margin:0}
+.m-card .m-action{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:10px;border-top:1px solid var(--grey-2);font-family:var(--mono);font-size:12px;font-weight:700;color:var(--accent)}
+.m-card .m-fmt{color:var(--grey-3);font-weight:600}
+.m-card .m-arrow{font-size:14px;transition:transform .15s}
+.m-card:hover .m-arrow{transform:translateX(3px)}
 
 /* ===== footer ===== */
 footer{margin-top:48px;padding:28px 0 48px;border-top:2px solid var(--accent);color:var(--grey-3);font-size:13.5px}
@@ -83,7 +68,7 @@ footer strong{color:var(--ink)}
 @media (max-width:760px){
   header h1{font-size:28px}
   header{padding:40px 0 28px}
-  .material-name{white-space:normal}
+  .card-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -93,10 +78,10 @@ footer strong{color:var(--ink)}
   <div class="container">
     <p class="tag">Materials · 实验材料</p>
     <h1>材料汇总</h1>
-    <p class="sub">投资组合课程实验材料的统一入口：实验任务书、样本数据、模板与评价标准，集中在此下载。</p>
+    <p class="sub">投资组合课程实验材料的统一入口。当前为实验一正式发布材料：发布会课件、任务书与 Agent 运行约束。</p>
     <div class="chips">
-      <span class="chip">实验作业 01–04</span>
-      <span class="chip">任务书 · 数据 · 模板</span>
+      <span class="chip">实验一 · 正式发布</span>
+      <span class="chip">课件 / 任务书 / 运行约束</span>
       <span class="chip">Agent 辅助 · 人工审核</span>
     </div>
   </div>
@@ -105,163 +90,50 @@ footer strong{color:var(--ink)}
 <nav>
   <div class="container links">
     <a href="index.html" class="back">← 课程主页</a>
-    <a href="#common">通用材料</a>
-    <a href="#exp01">实验 01</a>
-    <a href="#exp02">实验 02</a>
-    <a href="#exp03">实验 03</a>
-    <a href="#exp04">实验 04</a>
+    <a href="#deck">发布会课件</a>
+    <a href="#task">任务书</a>
+    <a href="#agent">Agent 运行约束</a>
   </div>
 </nav>
 
 <div class="container">
 
-  <!-- ============ 通用材料 ============ -->
-  <section id="common">
-    <h2><span class="no">00</span> 通用材料</h2>
-    <p>以下规范与模板适用于全部实验，每个实验单独使用一份。原始交流按实际产品原生导出或完整逐轮保存，摘要索引不替代原始记录。</p>
-    <div class="tablewrap">
-      <table>
-        <thead>
-          <tr><th style="width:26%">材料</th><th>说明</th><th style="width:18%">格式</th><th style="width:16%">获取</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="material-name">学生研究助手配置</td>
-            <td>学生研究助手的角色指令与使用说明：学生决定问题、范围与关键规则，助手负责获准的资料检索、取数、程序生成与运行。</td>
-            <td><span class="mono">Markdown</span></td>
-            <td class="dl"><a href="experiment-01-resources/学生研究助手配置.md" download="学生研究助手配置.md">下载 ↓</a></td>
-          </tr>
-          <tr>
-            <td class="material-name">学生证据模板</td>
-            <td>空白证据模板，每个实验单独一份；记录任务与环境、对话留痕、核验过程与结论依据。</td>
-            <td><span class="mono">Markdown</span></td>
-            <td class="dl"><a href="experiment-01-resources/学生证据模板.md" download="学生证据模板.md">下载 ↓</a></td>
-          </tr>
-          <tr>
-            <td class="material-name">实验结果评价标准与记录表</td>
-            <td>逐项计分试评稿：按 16 个评分点逐项赋分并汇总，含教师评阅流程与记录表。</td>
-            <td><span class="mono">Markdown</span> / <span class="mono">Word</span></td>
-            <td class="dl"><a href="experiment-01-resources/04_实验结果评价标准与记录表.md" download="实验结果评价标准与记录表.md">.md ↓</a>　<a href="experiment-01-resources/04_实验结果评价标准与记录表.docx" download="实验结果评价标准与记录表.docx">.docx ↓</a></td>
-          </tr>
-        </tbody>
-      </table>
+  <section id="deck">
+    <h2>发布会课件</h2>
+    <p>实验发布会课件（13 页）：当 Agent 走向科研前沿，实验教学评什么；研究任务、四步流程、独立核验、评价、课堂组织，以及首轮学生反馈与改进方向。</p>
+    <div class="card-grid">
+      <a class="m-card" href="1029.pptx" download="1029.pptx">
+        <span class="m-tag">发布课件</span>
+        <h3>1029 · 实验发布会课件</h3>
+        <p>AI 智能体赋能的积极组合管理实验：背景、任务、协作与样本边界、学生反馈与下一轮改进方向。</p>
+        <div class="m-action"><span>下载课件</span><span class="m-fmt">PPTX</span><span class="m-arrow">↓</span></div>
+      </a>
     </div>
   </section>
 
-  <!-- ============ 实验 01 ============ -->
-  <section id="exp01">
-    <h2><span class="no">01</span> 中证500成分股的动量与反转</h2>
-    <p>固定股票池上的 REV1 与 MOM12–1 五组等权、一期持有回测，加一项自主提出的比较研究。任务一不扣交易成本（任务二专门研究成本除外）。</p>
-    <div class="tablewrap">
-      <table>
-        <thead>
-          <tr><th style="width:26%">材料</th><th>说明</th><th style="width:18%">格式</th><th style="width:16%">获取</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="material-name">实验任务书（在线版）</td>
-            <td>学生实验手册：研究范围、任务一基准回测、任务二自主选题与提交要求。</td>
-            <td><span class="mono">网页</span></td>
-            <td class="dl"><a href="experiment-01-momentum-reversal.html">打开 →</a></td>
-          </tr>
-          <tr>
-            <td class="material-name">实验任务书（原件）</td>
-            <td>方案自拟版｜个人独立完成｜可以使用智能体，但研究决定与结果判断由本人负责。</td>
-            <td><span class="mono">Markdown</span> / <span class="mono">Word</span></td>
-            <td class="dl"><a href="experiment-01-resources/实验A_动量反转任务书.md" download="实验A_动量反转任务书.md">.md ↓</a>　<a href="experiment-01-resources/实验A_动量反转任务书.docx" download="实验A_动量反转任务书.docx">.docx ↓</a></td>
-          </tr>
-          <tr>
-            <td class="material-name">固定股票名单</td>
-            <td>2019-12-31 中证500成分股经事后存续筛选的 481 只固定名单，整个研究期不自行增删。教师已排除已退市股票，结论仅适用于保留样本。</td>
-            <td><span class="mono">CSV</span></td>
-            <td class="dl"><a href="sample500_teaching.csv" download="sample500_teaching.csv">下载 ↓</a></td>
-          </tr>
-          <tr>
-            <td class="material-name">实验课件</td>
-            <td>课堂配套演示文稿，含任务结构与口径提示。</td>
-            <td><span class="mono">PPT</span></td>
-            <td class="dl"><a href="experiment-01-momentum-reversal.pptx" download="实验作业01·动量与反转.pptx">下载 ↓</a></td>
-          </tr>
-        </tbody>
-      </table>
+  <section id="task">
+    <h2>实验一 · 任务书</h2>
+    <p>正式版任务书：个人独立完成，研究方法自行设计；任务 A 分别检验动量与反转，任务 B 提出并验证一个新问题；按“方案确认 → 方案推进 → 结果复核 → 报告完成”四步推进。</p>
+    <div class="card-grid">
+      <a class="m-card" href="实验一_动量反转任务书.html">
+        <span class="m-tag">任务书</span>
+        <h3>实验一：中证500股票的动量与反转</h3>
+        <p>研究范围（481 只固定名单、2019-12-31 至 2026-09-01）、任务 A/B、方案与核验要求、实验流程与交付内容。</p>
+        <div class="m-action"><span>打开任务书</span><span class="m-fmt">HTML</span><span class="m-arrow">→</span></div>
+      </a>
     </div>
   </section>
 
-  <!-- ============ 实验 02 ============ -->
-  <section id="exp02">
-    <h2><span class="no">02</span> 积极组合管理能力评价</h2>
-    <p>依托教师提供的 9 只开放式主动权益基金样本，自主界定“积极组合管理能力”、选用实证指标开展初步评价，再提出新问题并设计扩展实验。</p>
-    <div class="tablewrap">
-      <table>
-        <thead>
-          <tr><th style="width:26%">材料</th><th>说明</th><th style="width:18%">格式</th><th style="width:16%">获取</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="material-name">实验任务书（在线版）</td>
-            <td>学生实验手册：实验流程、任务一与任务二、研究边界与提交材料清单。</td>
-            <td><span class="mono">网页</span></td>
-            <td class="dl"><a href="experiment-02-active-fund-management.html">打开 →</a></td>
-          </tr>
-          <tr>
-            <td class="material-name">9 只基金名单</td>
-            <td>份额代码与名称，不附预设风格标签；读取 CSV 时请保留 6 位基金代码的前导零。</td>
-            <td><span class="mono">CSV</span></td>
-            <td class="dl"><a href="fund-experiment-9-funds.csv" download="基金实验_9只基金名单.csv">下载 ↓</a></td>
-          </tr>
-          <tr>
-            <td class="material-name">实验课件</td>
-            <td>课堂配套演示文稿，含评价思路与指标口径提示。</td>
-            <td><span class="mono">PPT</span></td>
-            <td class="dl"><a href="experiment-02-active-fund-management.pptx" download="实验作业02·积极组合管理能力评价.pptx">下载 ↓</a></td>
-          </tr>
-        </tbody>
-      </table>
-      <p class="note">数据获取：行情与净值数据经 Tushare MCP 接口取数，接口说明见实验任务书“研究范围与起步材料”；除该接口外也可结合自身条件调用其他合规数据工具。</p>
-    </div>
-  </section>
-
-  <!-- ============ 实验 03 ============ -->
-  <section id="exp03">
-    <h2><span class="no">03</span> 主动基金收益率与持续性</h2>
-    <p>站在 2025 年 1 月 1 日选出 10 只主动基金并冻结名单，用 2025 年 1 月至 2026 年 10 月数据检验收益率持续性，提交研究报告与 Agent 对话记录。</p>
-    <div class="tablewrap">
-      <table>
-        <thead>
-          <tr><th style="width:26%">材料</th><th>说明</th><th style="width:18%">格式</th><th style="width:16%">获取</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="material-name">实验任务书（在线版）</td>
-            <td>任务、要求与提交规范：选基方案与名单冻结、持续性检验、反思与完整对话记录。</td>
-            <td><span class="mono">网页</span></td>
-            <td class="dl"><a href="experiment-03-active-fund-return-persistence.html">打开 →</a></td>
-          </tr>
-        </tbody>
-      </table>
-      <p class="note">本实验不提供固定数据文件：选基、取数与检验均由学生自主完成；选基不得使用 2025 年以后的公开信息、评级或推荐。</p>
-    </div>
-  </section>
-
-  <!-- ============ 实验 04 ============ -->
-  <section id="exp04">
-    <h2><span class="no">04</span> 开放式资产配置研究</h2>
-    <p>完成基准策略回测，自主设计资产配置方案，冻结方案后进行留出期检验，并提交研究报告与 Agent 对话记录。</p>
-    <div class="tablewrap">
-      <table>
-        <thead>
-          <tr><th style="width:26%">材料</th><th>说明</th><th style="width:18%">格式</th><th style="width:16%">获取</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="material-name">实验任务书（在线版）</td>
-            <td>学生任务书：基准回测、方案设计、留出期检验与提交规范。</td>
-            <td><span class="mono">网页</span></td>
-            <td class="dl"><a href="experiment-04-open-asset-allocation.html">打开 →</a></td>
-          </tr>
-        </tbody>
-      </table>
-      <p class="note">本实验不提供固定数据文件：资产与基准行情经数据接口自行取数，回测口径以任务书为准。</p>
+  <section id="agent">
+    <h2>实验一 · Agent 运行约束</h2>
+    <p>学生 Agent 唯一需要加载的运行提示词：开始研究前把本文件交给自己的 Agent，按“学生使用方法”发送开场消息。已包含角色、四步流程、主动提问、核验与导出要求。</p>
+    <div class="card-grid">
+      <a class="m-card" href="实验一_Agent运行约束.html">
+        <span class="m-tag">运行约束</span>
+        <h3>实验一：动量与反转研究的 Agent 运行约束</h3>
+        <p>人机分工（可以代做什么、必须留给学生什么）、四步执行与暂停条件、数据与方法底线、工具目录与真实留痕。</p>
+        <div class="m-action"><span>打开运行约束</span><span class="m-fmt">HTML</span><span class="m-arrow">→</span></div>
+      </a>
     </div>
   </section>
 
@@ -269,9 +141,9 @@ footer strong{color:var(--ink)}
 
 <footer>
   <div class="container">
-    <p><strong>材料说明</strong></p>
-    <p class="note">本页为实验材料统一入口。规则以教师下发的任务书原件为权威版本；数据文件以本页链接的版本为准，重复文件请以课程页引用版为准。实验材料持续更新，如遇链接失效请通过课程作业通道反馈。</p>
-    <p class="mono">投资组合 · 实验材料汇总 · 任务书 / 数据 / 模板 / 评价标准</p>
+    <p><strong>使用顺序</strong></p>
+    <p class="note">先让学生打开 Agent 运行约束、按“学生使用方法”交给 Agent 并核对回复，再读任务书开展研究；发布会课件供课堂启动使用。规则以教师下发的正式文件为权威版本，材料更新以本页为准。</p>
+    <p class="mono">投资组合 · 实验一正式发布材料 · 课件 / 任务书 / 运行约束</p>
   </div>
 </footer>
 </body>
