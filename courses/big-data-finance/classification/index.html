@@ -16,19 +16,35 @@
     .breadcrumb a:hover { color: var(--accent); }
     .breadcrumb .sep { opacity: 0.5; }
     .breadcrumb .current { color: var(--ink); }
-    .page-content { padding: 40px 0 72px; }
     .course-meta-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 26px 0 0; }
     .course-meta-chip { padding: 6px 14px; font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.02em; border-radius: 999px; background: var(--surface-soft); color: var(--accent); }
-    .page-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
-    .page-card { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 22px 20px 16px; min-height: 130px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); color: inherit; text-decoration: none; transition: border-color 200ms ease; }
-    .page-card:hover { border-color: var(--accent); }
-    .page-card .page-tag { align-self: flex-start; padding: 3px 9px; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 999px; background: var(--surface-soft); color: var(--accent); }
-    .page-card h3 { margin: 0; font-family: var(--display); font-size: 19px; font-weight: 700; line-height: 1.3; color: var(--ink); }
-    .page-card p { margin: 0; color: var(--text); font-size: 13.5px; line-height: 1.65; }
-    .page-card .page-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 10px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.02em; color: var(--accent); }
+
+    .page-content { padding: 44px 0 80px; }
+    .section-block { margin-bottom: 46px; }
+    .section-block:last-child { margin-bottom: 0; }
+    .section-heading { display: flex; align-items: baseline; gap: 14px; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+    .section-heading h2 { margin: 0; font-family: var(--display); font-size: 21px; font-weight: 700; color: var(--ink); }
+    .section-heading .section-note { font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: var(--muted); }
+
+    .page-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+    .page-card { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 24px 22px 18px; min-height: 148px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); color: inherit; text-decoration: none; transition: border-color 200ms ease, transform 200ms ease, box-shadow 200ms ease; }
+    .page-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(36, 86, 66, 0.09); }
+    .page-card .card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .page-card .page-tag { padding: 3px 10px; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 999px; background: var(--surface-soft); color: var(--accent); }
+    .page-card .card-num { font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; color: var(--muted); }
+    .page-card h3 { margin: 0; font-family: var(--display); font-size: 20px; font-weight: 700; line-height: 1.3; color: var(--ink); }
+    .page-card p { margin: 0; color: var(--text); font-size: 13.5px; line-height: 1.7; }
+    .page-card .page-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.02em; color: var(--accent); }
     .page-card .page-arrow { font-size: 14px; transition: transform 180ms ease; }
-    .page-card:hover .page-arrow { transform: translateX(3px); }
-    @media (max-width: 760px) { .page-hero { padding: 40px 0 24px; } .page-hero h1 { font-size: 36px; } .page-content { padding: 28px 0 48px; } .page-grid { grid-template-columns: 1fr; } }
+    .page-card:hover .page-arrow { transform: translateX(4px); }
+
+    @media (max-width: 760px) {
+      .page-hero { padding: 40px 0 24px; }
+      .page-hero h1 { font-size: 36px; }
+      .page-content { padding: 30px 0 52px; }
+      .page-grid { grid-template-columns: 1fr; }
+      .section-heading { flex-direction: column; gap: 4px; }
+    }
   </style>
 </head>
 <body class="home-page">
@@ -73,52 +89,67 @@
 
     <section class="page-content">
       <div class="container">
-        <div class="page-grid">
-          <a class="page-card" href="./videos.html">
-            <span class="page-tag">视频 · Video</span>
-            <h3>教学视频</h3>
-            <p>kNN 五步流程与量纲陷阱、朴素贝叶斯证据叠加与拉普拉斯平滑，两段共 6 分 04 秒。</p>
-            <div class="page-meta">
-              <span>2 段 · 共 6 分 04 秒</span>
-              <span class="page-arrow" aria-hidden="true">→</span>
-            </div>
-          </a>
-          <a class="page-card" href="./flowchart.html">
-            <span class="page-tag">流程图 · Flowchart</span>
-            <h3>三种分类算法流程图解</h3>
-            <p>kNN 邻居投票、朴素贝叶斯概率比较、决策树逐层分裂，一张图对比三种思路。</p>
-            <div class="page-meta">
-              <span>SVG 流程图 · 3 节</span>
-              <span class="page-arrow" aria-hidden="true">→</span>
-          <a class="page-card" href="./kNN距离图解.html">
-            <span class="page-tag">图解 · Diagram</span>
-            <h3>kNN 距离图解</h3>
-            <p>欧氏、曼哈顿、余弦三种“尺子”怎样衡量“像不像”，拖动样本点，看邻居与判断如何改变。</p>
-            <div class="page-meta">
-              <span>交互图解 · 3 种距离</span>
-              <span class="page-arrow" aria-hidden="true">→</span>
-            </div>
-          </a>
-          <a class="page-card" href="./kNN医药生物估值图解.html">
-            <span class="page-tag">图解 · Diagram</span>
-            <h3>kNN 医药生物估值图解</h3>
-            <p>A 股医药生物真实案例：用规模、利润、增速找最像的公司，让 k 个邻居投票猜估值高低。</p>
-            <div class="page-meta">
-              <span>交互图解 · 真实案例</span>
-              <span class="page-arrow" aria-hidden="true">→</span>
-            </div>
-          </a>
-            </div>
-          </a>
-          <a class="page-card" href="./分类算法_课件.pdf">
-            <span class="page-tag">课件 · Slides</span>
-            <h3>课件 PDF（在线查看）</h3>
-            <p>三模型整合课件：kNN、朴素贝叶斯、决策树，含贷款审批与信用卡欺诈案例。</p>
-            <div class="page-meta">
-              <span>PDF · PPTX 源文件同目录</span>
-              <span class="page-arrow" aria-hidden="true">→</span>
-            </div>
-          </a>
+        <div class="section-block">
+          <div class="section-heading">
+            <h2>图解与可视化</h2>
+            <span class="section-note">Interactive Diagrams · 交互式图解</span>
+          </div>
+          <div class="page-grid">
+            <a class="page-card" href="./flowchart.html">
+              <span class="card-top"><span class="page-tag">流程图 · Flowchart</span><span class="card-num">01</span></span>
+              <h3>三种分类算法流程图解</h3>
+              <p>kNN 邻居投票、朴素贝叶斯概率比较、决策树逐层分裂，一张图对比三种思路。</p>
+              <div class="page-meta">
+                <span>SVG 流程图 · 3 节</span>
+                <span class="page-arrow" aria-hidden="true">→</span>
+              </div>
+            </a>
+            <a class="page-card" href="./kNN距离图解.html">
+              <span class="card-top"><span class="page-tag">图解 · Diagram</span><span class="card-num">02</span></span>
+              <h3>kNN 距离图解</h3>
+              <p>欧氏、曼哈顿、余弦三种“尺子”怎样衡量“像不像”，拖动样本点，看邻居与判断如何改变。</p>
+              <div class="page-meta">
+                <span>交互图解 · 3 种距离</span>
+                <span class="page-arrow" aria-hidden="true">→</span>
+              </div>
+            </a>
+            <a class="page-card" href="./kNN医药生物估值图解.html">
+              <span class="card-top"><span class="page-tag">图解 · Diagram</span><span class="card-num">03</span></span>
+              <h3>kNN 医药生物估值图解</h3>
+              <p>A 股医药生物真实案例：用规模、利润、增速找最像的公司，让 k 个邻居投票猜估值高低。</p>
+              <div class="page-meta">
+                <span>交互图解 · 真实案例</span>
+                <span class="page-arrow" aria-hidden="true">→</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-heading">
+            <h2>学习材料</h2>
+            <span class="section-note">Materials · 视频与课件</span>
+          </div>
+          <div class="page-grid">
+            <a class="page-card" href="./videos.html">
+              <span class="card-top"><span class="page-tag">视频 · Video</span><span class="card-num">01</span></span>
+              <h3>教学视频</h3>
+              <p>kNN 五步流程与量纲陷阱、朴素贝叶斯证据叠加与拉普拉斯平滑，两段共 6 分 04 秒。</p>
+              <div class="page-meta">
+                <span>2 段 · 共 6 分 04 秒</span>
+                <span class="page-arrow" aria-hidden="true">→</span>
+              </div>
+            </a>
+            <a class="page-card" href="./分类算法_课件.pdf">
+              <span class="card-top"><span class="page-tag">课件 · Slides</span><span class="card-num">02</span></span>
+              <h3>课件 PDF（在线查看）</h3>
+              <p>三模型整合课件：kNN、朴素贝叶斯、决策树，含贷款审批与信用卡欺诈案例。</p>
+              <div class="page-meta">
+                <span>PDF · PPTX 源文件同目录</span>
+                <span class="page-arrow" aria-hidden="true">→</span>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
     </section>
