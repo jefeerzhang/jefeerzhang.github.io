@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KNN 距离图解｜用怎样的尺子找邻居</title>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface: #fcfcfb;
+  --surface-2: #f0efec;
+  --ink: #0b0b0b;
+  --secondary: #52514e;
+  --muted: #898781;
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+  --border: rgba(11, 11, 11, .10);
+  --euclid: #2a78d6;
+  --manhattan: #eb6834;
+  --cosine: #1baf7a;
+  --focus: #6250d6;
+  --euclid-text: #1f62b3; --manhattan-text: #b8481a; --cosine-text: #0f7a54; --cosine-bg: rgba(27, 175, 122, .07);
+  --key: #6250d6; --key-bg: rgba(98, 80, 214, .07); --key-hl: rgba(98, 80, 214, .16);
+  --warn: #fab219; --warn-text: #8a5a00; --warn-bg: rgba(250, 178, 25, .13);
+  --good: #0ca30c; --good-text: #1d7a1d; --good-bg: rgba(12, 163, 12, .08);
+  --bad: #d03b3b; --bad-text: #b3261e; --bad-bg: rgba(208, 59, 59, .08);
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --surface-2: #2c2c2a;
+    --ink: #f0efec;
+    --secondary: #c3c2b7;
+    --muted: #898781;
+    --grid: #2c2c2a;
+    --axis: #383835;
+    --border: rgba(255, 255, 255, .10);
+    --euclid: #3987e5;
+    --manhattan: #d95926;
+    --cosine: #199e70;
+    --focus: #9085e9;
+    --euclid-text: #5a9ff0; --manhattan-text: #ef7a4a; --cosine-text: #3cc795; --cosine-bg: rgba(27, 175, 122, .12);
+    --key: #9085e9; --key-bg: rgba(144, 133, 233, .13); --key-hl: rgba(144, 133, 233, .30);
+    --warn-text: #fab219; --warn-bg: rgba(250, 178, 25, .12);
+    --good-text: #3fbf3f; --good-bg: rgba(12, 163, 12, .14);
+    --bad-text: #e66767; --bad-bg: rgba(208, 59, 59, .16);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d;
+  --surface: #1a1a19;
+  --surface-2: #2c2c2a;
+  --ink: #f0efec;
+  --secondary: #c3c2b7;
+  --muted: #898781;
+  --grid: #2c2c2a;
+  --axis: #383835;
+  --border: rgba(255, 255, 255, .10);
+  --euclid: #3987e5;
+  --manhattan: #d95926;
+  --cosine: #199e70;
+  --focus: #9085e9;
+  --euclid-text: #5a9ff0; --manhattan-text: #ef7a4a; --cosine-text: #3cc795; --cosine-bg: rgba(27, 175, 122, .12);
+  --key: #9085e9; --key-bg: rgba(144, 133, 233, .13); --key-hl: rgba(144, 133, 233, .30);
+  --warn-text: #fab219; --warn-bg: rgba(250, 178, 25, .12);
+  --good-text: #3fbf3f; --good-bg: rgba(12, 163, 12, .14);
+  --bad-text: #e66767; --bad-bg: rgba(208, 59, 59, .16);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.6;
+}
+button, input { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+main { max-width: 1180px; margin: auto; padding: 42px 30px 32px; }
+p, h1, h2, h3 { margin: 0; }
+header { margin-bottom: 38px; }
+.header-top { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.eyebrow { color: var(--secondary); font-size: 12px; font-weight: 750; letter-spacing: .16em; }
+.theme-button, .reset-button {
+  min-height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  padding: 8px 14px;
+  font-size: 14px;
+}
+.theme-button:hover, .reset-button:hover { background: var(--surface-2); }
+h1 { max-width: 850px; margin: 14px 0 18px; font-size: clamp(38px, 5.6vw, 64px); line-height: 1.13; letter-spacing: -.05em; }
+.lead { max-width: 780px; color: var(--secondary); font-size: clamp(17px, 2vw, 21px); }
+.lead strong { color: var(--ink); font-weight: 800; box-shadow: inset 0 -.42em 0 var(--key-hl); }
+.overview {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  margin-top: 28px;
+  padding: 20px 24px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  text-align: center;
+  font-weight: 700;
+}
+.overview { font-size: 18px; }
+.overview small { display: block; color: var(--secondary); font-size: 13px; font-weight: 400; }
+.num { display: inline-grid; place-items: center; width: 24px; height: 24px; margin-right: 7px; border-radius: 50%; background: var(--key); color: #fff; font-size: 13px; font-style: normal; font-weight: 800; vertical-align: 2px; }
+.arrow { color: var(--muted); font-size: 22px; font-weight: 400; }
+section { margin: 38px 0; }
+.section-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 16px; }
+h2 { font-size: 25px; letter-spacing: -.02em; }
+h2 > span {
+  display: inline-grid;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  margin-right: 9px;
+  border: 1.5px solid var(--key);
+  border-radius: 50%;
+  color: var(--key);
+  font-size: 13px;
+  font-weight: 800;
+  vertical-align: 3px;
+}
+/* 颜色约定：蓝=欧氏，橙=曼哈顿，青绿=余弦；紫=核心结论，黄=注意，绿/红=对比的好坏，都配图标和文字 */
+.callout { display: grid; grid-template-columns: auto 1fr; gap: 2px 14px; align-items: start; align-content: start; padding: 16px 20px; border: 1px solid var(--border); border-left: 6px solid var(--c); border-radius: 14px; background: var(--cbg); }
+.callout > .ico { grid-row: span 3; display: grid; place-items: center; width: 30px; height: 30px; margin-top: 2px; border-radius: 50%; background: var(--c); color: #fff; font-size: 16px; font-weight: 800; }
+.callout.warn > .ico { color: #0b0b0b; }
+.callout .tag { color: var(--ct); font-size: 12px; font-weight: 800; letter-spacing: .14em; }
+.callout .msg { color: var(--ink); font-size: 19px; font-weight: 750; line-height: 1.5; }
+.callout .msg em { color: var(--ct); font-style: normal; }
+.callout .sub { color: var(--secondary); font-size: 14px; }
+.callout .sub strong { color: var(--ink); }
+.callout.key { --c: var(--key); --cbg: var(--key-bg); --ct: var(--key); }
+.callout.warn { --c: var(--warn); --cbg: var(--warn-bg); --ct: var(--warn-text); }
+.callout.cos { --c: var(--cosine); --cbg: var(--cosine-bg); --ct: var(--cosine-text); }
+.callout-gap { margin-top: 16px; }
+.t-euclid { color: var(--euclid-text); }
+.t-manhattan { color: var(--manhattan-text); }
+.t-cosine { color: var(--cosine-text); }
+.hint, .caption { color: var(--secondary); font-size: 14px; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 12px; color: var(--secondary); font-size: 15px; }
+.legend-item { display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); }
+.legend-item b { font-weight: 800; }
+.line-key { display: inline-block; width: 28px; height: 0; border-top: 3px solid var(--euclid); }
+.line-key.manhattan { border-top-color: var(--manhattan); border-top-style: dashed; }
+.line-key.cosine { border-top-color: var(--cosine); }
+.cosine-guide { opacity: .75; stroke-dasharray: 3 5; }
+.preset-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.preset-row button { flex: 1; }
+.application { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--grid); }
+.angle-note { margin: 8px; }
+.angle-note + .angle-note { margin-top: 12px; }
+.angle-note .sub strong { color: var(--cosine-text); font-size: 16px; font-variant-numeric: tabular-nums; }
+.formula-panel > .metric:last-of-type { grid-column: 1 / -1; }
+.distance-layout { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(280px, .85fr); gap: 18px; align-items: stretch; }
+.chart-card, .formula-panel, .scale-card, .flow-card {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+}
+.chart-card { min-width: 0; padding: 10px; }
+.chart-wrap { position: relative; width: 100%; }
+#distance-chart { display: block; width: 100%; height: auto; touch-action: none; }
+.grid-line { stroke: var(--grid); stroke-width: 1; }
+.axis-line { stroke: var(--axis); stroke-width: 1; }
+.axis-text { fill: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+.axis-title { fill: var(--secondary); font-size: 14px; }
+.distance-line { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.cosine-guide { stroke-width: 2; }
+.point { stroke: var(--surface); stroke-width: 2px; }
+.point-label { fill: var(--ink); font-size: 15px; font-weight: 700; }
+.distance-label { fill: var(--secondary); font-size: 16px; font-weight: 800; paint-order: stroke; stroke: var(--surface); stroke-width: 5px; stroke-linejoin: round; }
+.distance-label.t-euclid { fill: var(--euclid-text); }
+.distance-label.t-manhattan { fill: var(--manhattan-text); }
+.distance-label.t-cosine { fill: var(--cosine-text); }
+.hit-target { fill: transparent; stroke: none; cursor: pointer; }
+#a-hit { cursor: grab; }
+#a-hit.dragging { cursor: grabbing; }
+.hit-target:focus-visible { fill: color-mix(in srgb, var(--focus) 12%, transparent); stroke: var(--focus); stroke-width: 3px; outline: none; }
+.tooltip {
+  position: absolute;
+  z-index: 3;
+  width: max-content;
+  max-width: 240px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, .14);
+  color: var(--secondary);
+  font-size: 12px;
+  pointer-events: none;
+}
+.tooltip strong, .tooltip span { display: block; }
+.tooltip strong { color: var(--ink); font-size: 15px; }
+.tooltip[hidden] { display: none; }
+.formula-panel { display: flex; flex-direction: column; gap: 14px; padding: 20px; }
+.point-controls { padding-bottom: 14px; border-bottom: 1px solid var(--grid); }
+.control-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.control-title h3 { font-size: 16px; }
+.slider-row { display: grid; grid-template-columns: 72px 1fr 38px; align-items: center; gap: 10px; margin: 10px 0; color: var(--secondary); font-size: 13px; }
+.slider-row output { color: var(--ink); text-align: right; font-variant-numeric: tabular-nums; }
+input[type="range"] { width: 100%; accent-color: var(--euclid); }
+.metric { --c: var(--euclid); --ct: var(--euclid-text); padding: 14px 17px 15px; border: 1px solid var(--border); border-top: 6px solid var(--c); border-radius: 14px; background: var(--surface); }
+.metric.manhattan { --c: var(--manhattan); --ct: var(--manhattan-text); }
+.metric.cosine { --c: var(--cosine); --ct: var(--cosine-text); }
+.metric-title { display: flex; align-items: center; gap: 8px; color: var(--ct); font-size: 17px; font-weight: 800; }
+.metric-value { display: block; margin: 4px 0 6px; color: var(--ct); font-size: 48px; font-weight: 800; line-height: 1.1; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.metric p { color: var(--secondary); font-size: 14px; }
+.metric p.gist { margin-top: 8px; color: var(--ink); font-size: 16px; font-weight: 750; }
+.equation { width: fit-content; max-width: 100%; margin-top: 6px; padding: 4px 10px; border-radius: 8px; background: var(--surface-2); overflow-wrap: anywhere; font-size: 16px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.use-tag { display: inline-block; margin-right: 6px; padding: 0 8px; border-radius: 999px; background: var(--c); color: #fff; font-size: 12px; font-weight: 800; }
+.general-formula { margin-top: auto; padding: 14px 16px; border: 1px solid var(--border); border-left: 6px solid var(--key); border-radius: 12px; background: var(--key-bg); color: var(--secondary); font-size: 14px; }
+.general-formula strong { display: block; margin-bottom: 4px; color: var(--key); font-size: 16px; }
+.general-formula .big-formula { display: block; margin: 2px 0 4px; color: var(--ink); font-size: 19px; font-weight: 700; }
+details { margin-top: 12px; }
+summary { width: fit-content; color: var(--secondary); cursor: pointer; font-size: 14px; }
+.table-wrap { margin-top: 10px; overflow-x: auto; border: 1px solid var(--border); border-radius: 13px; background: var(--surface); }
+table { width: 100%; border-collapse: collapse; text-align: right; font-variant-numeric: tabular-nums; }
+th, td { padding: 12px 15px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+thead { color: var(--secondary); font-size: 13px; }
+tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+.caption { margin-top: 10px; }
+.scale-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.scale-card { --c: var(--axis); --ct: var(--ink); --cbg: var(--surface-2); padding: 23px; border-top: 6px solid var(--c); }
+.scale-card.bad { --c: var(--bad); --ct: var(--bad-text); --cbg: var(--bad-bg); }
+.scale-card.good { --c: var(--good); --ct: var(--good-text); --cbg: var(--good-bg); }
+.scale-card h3 { font-size: 21px; }
+.verdict-tag { display: inline-flex; align-items: center; gap: 5px; margin-bottom: 8px; padding: 2px 11px; border-radius: 999px; background: var(--cbg); color: var(--ct); font-size: 14px; font-weight: 800; }
+.scale-card > p { margin-top: 5px; color: var(--secondary); font-size: 14px; }
+.scale-rows { margin: 20px 0; }
+.scale-row { display: grid; grid-template-columns: 72px 1fr auto; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--grid); }
+.scale-row:last-child { border-bottom: 0; }
+.scale-row strong { font-size: 15px; }
+.scale-row span { color: var(--secondary); font-size: 14px; }
+.scale-row b { font-size: 24px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.scale-row b.hot { color: var(--bad-text); font-size: 30px; }
+.scale-result { padding: 16px 18px; border: 1px solid var(--border); border-left: 6px solid var(--c); border-radius: 12px; background: var(--cbg); }
+.scale-result small { color: var(--secondary); font-size: 13px; }
+.scale-result strong { display: block; margin: 4px 0; color: var(--ct); font-size: 30px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.scale-result p { color: var(--ink); font-size: 15px; font-weight: 700; }
+.flow-card { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; padding: 18px; }
+.flow-step { position: relative; padding: 13px 18px 13px 13px; }
+.flow-step:not(:last-child)::after { content: "→"; position: absolute; right: -9px; top: 19px; z-index: 1; color: var(--muted); }
+.flow-card { gap: 10px; }
+.flow-step b { display: block; font-size: 17px; }
+.flow-step small { color: var(--secondary); font-size: 14px; }
+.flow-step.here { border: 2px solid var(--key); border-radius: 12px; background: var(--key-bg); }
+.flow-step.here b { color: var(--key); }
+.flow-step .here-tag { display: inline-block; margin-left: 6px; padding: 0 7px; border-radius: 999px; background: var(--key); color: #fff; font-size: 11px; font-weight: 800; vertical-align: 2px; }
+.recap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.recap { --c: var(--euclid); --ct: var(--euclid-text); padding: 18px 20px; border: 1px solid var(--border); border-top: 6px solid var(--c); border-radius: 14px; background: var(--surface); }
+.recap.manhattan { --c: var(--manhattan); --ct: var(--manhattan-text); }
+.recap.cosine { --c: var(--cosine); --ct: var(--cosine-text); }
+.recap h3 { color: var(--ct); font-size: 22px; font-weight: 800; }
+.recap .gist { margin-top: 4px; color: var(--ink); font-size: 18px; font-weight: 750; }
+.recap p { margin-top: 6px; color: var(--secondary); font-size: 14px; }
+footer { padding-top: 18px; border-top: 1px solid var(--grid); color: var(--secondary); font-size: 13px; }
+@media (max-width: 900px) {
+  .distance-layout { grid-template-columns: 1fr; }
+  .formula-panel { display: grid; grid-template-columns: 1fr 1fr; }
+  .point-controls, .general-formula { grid-column: 1 / -1; }
+  .general-formula { margin-top: 0; }
+}
+@media (max-width: 680px) {
+  main { padding: 28px 16px; }
+  .header-top { align-items: start; }
+  .eyebrow { max-width: 220px; }
+  h1 { font-size: 39px; }
+  .overview { grid-template-columns: 1fr; gap: 8px; padding: 16px; }
+  .overview .arrow { transform: rotate(90deg); }
+  .section-heading { display: block; }
+  .section-heading .hint { margin-top: 6px; }
+  .formula-panel, .scale-grid { grid-template-columns: 1fr; }
+  .point-controls, .general-formula { grid-column: auto; }
+  .flow-card, .recap-grid { grid-template-columns: 1fr; }
+  .flow-step { padding: 9px 10px 9px 32px; }
+  .flow-step:not(:last-child)::after { content: "↓"; left: 8px; right: auto; top: 10px; }
+  .scale-row { grid-template-columns: 62px 1fr auto; gap: 8px; }
+  .chart-card { padding: 3px; }
+  th, td { padding: 10px 12px; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+@media print {
+  :root { color-scheme: light; }
+  body { background: #fff; }
+  main { max-width: none; padding: 8px; }
+  .theme-button, .reset-button, input[type="range"], .tooltip { display: none !important; }
+  section, .distance-layout, .scale-grid, .flow-card { break-inside: avoid; }
+  .chart-card, .formula-panel, .scale-card, .flow-card { border-color: #c3c2b7; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 18px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--secondary);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: border-color 160ms ease, color 160ms ease;
+    }
+    .back-link:hover,
+    .back-link:focus-visible {
+      color: var(--focus);
+      border-color: var(--focus);
+    }
+    @media print { .back-link { display: none; } }
+  </style>
+</head>
+<body>
+<main>
+<header>
+  <a class="back-link" href="./"><span aria-hidden="true">←</span>返回课程主页</a>
+  <div class="header-top">
+    <p class="eyebrow">算法图解 / K NEAREST NEIGHBORS</p>
+    <button class="theme-button" id="theme-toggle" type="button" aria-pressed="false">深色模式</button>
+  </div>
+  <h1>KNN 的距离，<br>就是找邻居的尺子。</h1>
+  <p class="lead"><strong>距离越小，样本越相似。</strong>拖动样本点，看<b class="t-euclid">欧氏</b>、<b class="t-manhattan">曼哈顿</b>、<b class="t-cosine">余弦</b>三种“尺子”怎样衡量不同的差异。</p>
+  <div class="overview" aria-label="KNN 使用距离的三个环节">
+    <div><i class="num">1</i>统一尺度<small>让特征可以比较</small></div><span class="arrow">→</span>
+    <div><i class="num">2</i>计算距离<small>衡量样本差异</small></div><span class="arrow">→</span>
+    <div><i class="num">3</i>寻找邻居<small>选择最近的 k 个</small></div>
+  </div>
+  <div class="callout key callout-gap"><span class="ico" aria-hidden="true">★</span><span class="tag">核心结论</span><p class="msg">尺子变了，<em>邻居就可能改变</em>，KNN 的判断也跟着变。</p><p class="sub">所以要先统一尺度，再按数据的含义选距离。</p></div>
+</header>
+
+<section aria-labelledby="distance-title">
+  <div class="section-heading">
+    <h2 id="distance-title"><span>1</span>同一对样本，三种距离</h2>
+    <p class="hint">拖动 A 点，或使用右侧滑块。</p>
+  </div>
+  <div class="legend" aria-label="距离图例">
+    <span class="legend-item"><i class="line-key"></i><b class="t-euclid">欧氏距离</b>量直线</span>
+    <span class="legend-item"><i class="line-key manhattan"></i><b class="t-manhattan">曼哈顿距离</b>量分轴路径</span>
+    <span class="legend-item"><i class="line-key cosine"></i><b class="t-cosine">余弦距离</b>量方向夹角</span>
+  </div>
+  <div class="distance-layout">
+    <div class="chart-card">
+      <div class="chart-wrap" id="chart-wrap">
+        <svg id="distance-chart" viewBox="0 0 600 600" role="group" aria-labelledby="chart-title chart-desc">
+          <title id="chart-title">欧氏距离、曼哈顿距离与余弦距离对比</title>
+          <desc id="chart-desc">O 为坐标原点，Q 点固定在坐标 1，1。A 点可以移动。蓝线表示欧氏距离，橙色虚线表示曼哈顿距离，绿色弧线表示 OQ 与 OA 的夹角。两个坐标轴采用相同尺度。</desc>
+          <g id="grid" aria-hidden="true"></g>
+          <line id="cosine-q-line" class="distance-line cosine-guide" x1="70" y1="530" x2="153.33" y2="446.67" stroke="var(--cosine)"></line>
+          <line id="cosine-a-line" class="distance-line cosine-guide" x1="70" y1="530" x2="403.33" y2="113.33" stroke="var(--cosine)"></line>
+          <path id="cosine-arc" class="distance-line" d="M111.01 488.99A58 58 0 0 0 106.33 484.75" stroke="var(--cosine)"></path>
+          <text id="theta-label" class="distance-label t-cosine" x="119" y="477">θ</text>
+          <line id="euclid-line" class="distance-line" x1="153.33" y1="446.67" x2="403.33" y2="113.33" stroke="var(--euclid)"></line>
+          <path id="manhattan-path" class="distance-line" d="M153.33 446.67H403.33V113.33" stroke="var(--manhattan)" stroke-dasharray="8 6"></path>
+          <circle id="d-point" class="point" cx="403.33" cy="446.67" r="4" fill="var(--manhattan)"></circle>
+          <circle class="point" cx="70" cy="530" r="5" fill="var(--ink)"></circle>
+          <circle class="point" cx="153.33" cy="446.67" r="6" fill="var(--ink)"></circle>
+          <circle id="a-point" class="point" cx="403.33" cy="113.33" r="6" fill="var(--ink)"></circle>
+          <text class="point-label" x="52" y="516" text-anchor="end">O(0, 0)</text>
+          <text id="q-label" class="point-label" x="167" y="473" text-anchor="start">Q(1, 1)</text>
+          <text id="d-label" class="axis-text" x="411" y="435">D</text>
+          <text id="a-label" class="point-label" x="417" y="100">A(4, 5)</text>
+          <text id="euclid-label" class="distance-label t-euclid" x="248" y="258">欧氏 5.00</text>
+          <text id="manhattan-label" class="distance-label t-manhattan" x="417" y="285">曼哈顿 7.00</text>
+          <circle id="q-hit" class="hit-target" cx="153.33" cy="446.67" r="18" tabindex="0" role="button" aria-label="样本 Q，坐标 1，1"></circle>
+          <circle id="a-hit" class="hit-target" cx="403.33" cy="113.33" r="20" tabindex="0" role="button" aria-label="样本 A，坐标 4，5。可拖动，或用方向键调整。"></circle>
+        </svg>
+        <div class="tooltip" id="tooltip" role="tooltip" hidden>
+          <strong id="tooltip-title"></strong>
+          <span id="tooltip-coords"></span>
+          <span id="tooltip-distance"></span>
+        </div>
+      </div>
+      <div class="callout cos angle-note"><span class="ico" aria-hidden="true">θ</span><span class="tag">余弦距离的类比</span><p class="msg">像比较两束手电筒：<em>只看朝向，不看长短</em>。</p><p class="sub">绿色虚线是方向参考线，弧线标出夹角 θ。<span id="angle-readout"></span></p></div>
+  <div class="callout warn angle-note"><span class="ico" aria-hidden="true">!</span><span class="tag">注意</span><p class="msg">三种距离的数值<em>不能直接比大小</em>。</p><p class="sub">欧氏与曼哈顿比较 <strong>Q 和 A 两个点</strong>，余弦比较 <strong>OQ 与 OA 两个方向</strong>。Q 固定在 (1, 1)，不是原点，因为零向量没有方向。</p></div>
+    </div>
+    <div class="formula-panel">
+      <div class="point-controls">
+        <div class="control-title">
+          <h3>样本 A 的坐标</h3>
+          <button class="reset-button" id="reset" type="button">复位到 (4, 5)</button>
+        </div>
+        <label class="slider-row" for="x-slider"><span>特征 1</span><input id="x-slider" type="range" min="0.5" max="6" step="0.5" value="4"><output id="x-output" for="x-slider">4</output></label>
+        <label class="slider-row" for="y-slider"><span>特征 2</span><input id="y-slider" type="range" min="0.5" max="6" step="0.5" value="5"><output id="y-output" for="y-slider">5</output></label>
+        <div class="preset-row" role="group" aria-label="方向对比算例">
+          <button class="reset-button" id="same-direction" type="button">同方向 (4, 4)</button>
+          <button class="reset-button" id="different-direction" type="button">换方向 (1, 5)</button>
+        </div>
+      </div>
+      <article class="metric euclid">
+        <div class="metric-title"><i class="line-key"></i>欧氏距离 d₂</div>
+        <strong class="metric-value" id="euclid-value">5.00</strong>
+        <div class="equation">√((<span id="euclid-x">3</span>)² + (<span id="euclid-y">4</span>)²)</div>
+        <p class="gist">像量两点之间的直线。</p>
+        <p class="application"><span class="use-tag">适用</span>经过合理缩放的连续数值。金额大小有意义时，保留数值差异。</p>
+      </article>
+      <article class="metric manhattan">
+        <div class="metric-title"><i class="line-key manhattan"></i>曼哈顿距离 d₁</div>
+        <strong class="metric-value" id="manhattan-value">7.00</strong>
+        <div class="equation">|<span id="manhattan-x">3</span>| + |<span id="manhattan-y">4</span>|</div>
+        <p class="gist">像沿街区走路：Q → D → A。</p>
+        <p class="application"><span class="use-tag">适用</span>各项绝对差累计有意义的数值。单项差值增大时，不用平方放大。</p>
+      </article>
+      <article class="metric cosine">
+        <div class="metric-title"><i class="line-key cosine"></i>余弦距离 d<sub>cos</sub></div>
+        <strong class="metric-value" id="cosine-value">0.0061</strong>
+        <div class="equation">1 − cos θ，θ = ∠QOA</div>
+        <div class="equation" id="cosine-equation">1 − 9 ÷ (√2 × √41) ≈ 0.0061</div>
+        <p class="gist">比较 OQ 与 OA 的方向，不看长度。</p>
+        <p class="application"><span class="use-tag">适用</span>用词频表示的文章。词频整体翻倍时，方向不变。零向量没有余弦距离。</p>
+      </article>
+      <div class="general-formula">
+        <strong>前两种的统一写法：闵可夫斯基距离</strong>
+        <span class="big-formula">d<sub>p</sub>(x, y) = (Σ |x<sub>i</sub> − y<sub>i</sub>|<sup>p</sup>)<sup>1/p</sup></span>
+        <b class="t-euclid">p = 2</b> 时为欧氏距离；<b class="t-manhattan">p = 1</b> 时为曼哈顿距离。
+      </div>
+    </div>
+  </div>
+  <details>
+    <summary>查看当前数据表</summary>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th scope="col">项目</th><th scope="col">Δ特征 1</th><th scope="col">Δ特征 2</th><th scope="col">欧氏距离</th><th scope="col">曼哈顿距离</th><th scope="col">余弦距离</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Q → A</th><td id="table-x">3</td><td id="table-y">4</td><td id="table-euclid">5.00</td><td id="table-manhattan">7.00</td><td id="table-cosine">0.0061</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+</section>
+
+<section aria-labelledby="scale-title">
+  <div class="section-heading">
+    <h2 id="scale-title"><span>2</span>先统一尺度，再计算距离</h2>
+    <p class="hint">特征单位会改变原始距离的数值。</p>
+  </div>
+  <div class="scale-grid">
+    <article class="scale-card bad">
+      <span class="verdict-tag">✗ 收入一项说了算</span>
+      <h3>直接使用原始单位</h3>
+      <p>年龄差为 2 岁，收入差为 20,000 元。</p>
+      <div class="scale-rows">
+        <div class="scale-row"><strong>年龄</strong><span>绝对差</span><b>2</b></div>
+        <div class="scale-row"><strong>收入</strong><span>绝对差</span><b class="hot">20,000</b></div>
+      </div>
+      <div class="scale-result">
+        <small>欧氏距离</small>
+        <strong>√(2² + 20,000²) ≈ <span id="raw-euclid">20,000.00</span></strong>
+        <p>年龄项只占平方和的约一亿分之一，等于没算。</p>
+      </div>
+    </article>
+    <article class="scale-card good">
+      <span class="verdict-tag">✓ 两项换成同一单位</span>
+      <h3>用标准差转换尺度</h3>
+      <p>假设年龄标准差为 10 岁，收入标准差为 10,000 元。</p>
+      <div class="scale-rows">
+        <div class="scale-row"><strong>年龄</strong><span>2 ÷ 10</span><b>0.20</b></div>
+        <div class="scale-row"><strong>收入</strong><span>20,000 ÷ 10,000</span><b>2.00</b></div>
+      </div>
+      <div class="scale-result">
+        <small>标准化后的欧氏距离</small>
+        <strong>√(0.20² + 2.00²) ≈ <span id="z-euclid">2.01</span></strong>
+        <p>两项都换成「差几个标准差」，可以相加。</p>
+      </div>
+    </article>
+  </div>
+  <div class="callout warn callout-gap"><span class="ico" aria-hidden="true">!</span><span class="tag">注意</span><p class="msg">左右两个距离数值<em>不能直接比较</em>，它们用的坐标尺度不同。</p><p class="sub">实际建模时，<strong>先只用训练数据估计缩放参数</strong>，再用同一组参数转换训练数据与新样本。</p></div>
+</section>
+
+<section aria-labelledby="flow-title">
+  <div class="section-heading">
+    <h2 id="flow-title"><span>3</span>距离在 KNN 中的位置</h2>
+    <p class="hint">距离负责找邻居，不直接给出类别。</p>
+  </div>
+  <div class="flow-card">
+    <div class="flow-step here"><b><i class="num">1</i>统一尺度<span class="here-tag">第 2 节</span></b><small>处理量纲差异</small></div>
+    <div class="flow-step here"><b><i class="num">2</i>计算距离<span class="here-tag">第 1 节</span></b><small>新样本对全部训练样本</small></div>
+    <div class="flow-step"><b><i class="num">3</i>距离排序</b><small>从近到远</small></div>
+    <div class="flow-step"><b><i class="num">4</i>取 k 个邻居</b><small>选择距离最小者</small></div>
+    <div class="flow-step"><b><i class="num">5</i>形成预测</b><small>分类投票，回归取均值</small></div>
+  </div>
+  <div class="callout key callout-gap"><span class="ico" aria-hidden="true">★</span><span class="tag">核心结论</span><p class="msg">距离只负责<em>找邻居</em>；类别由 k 个邻居<em>投票</em>决定。</p></div>
+</section>
+
+<section aria-labelledby="recap-title">
+  <div class="section-heading">
+    <h2 id="recap-title"><span>✓</span>记住三把尺子</h2>
+  </div>
+  <div class="recap-grid">
+    <article class="recap"><h3>欧氏距离</h3><p class="gist">量两点之间的直线</p><p>差值先平方再相加，大的差值被放大。</p></article>
+    <article class="recap manhattan"><h3>曼哈顿距离</h3><p class="gist">量沿坐标轴走的路程</p><p>各项绝对差直接相加，不放大单项。</p></article>
+    <article class="recap cosine"><h3>余弦距离</h3><p class="gist">量两个方向的夹角</p><p>只看朝向，不看长短。</p></article>
+  </div>
+</section>
+
+<footer>尺子变了，邻居可能改变 · 教学构造算例 · 可离线打开</footer>
+</main>
+<script>
+const state = { x: 4, y: 5 };
+const reference = { x: 1, y: 1 };
+const svg = document.getElementById('distance-chart');
+const NS = 'http://www.w3.org/2000/svg';
+const plot = { left: 70, top: 30, originY: 530, scale: 500 / 6, min: 0.5, max: 6 };
+const byId = id => document.getElementById(id);
+const put = (id, value) => { byId(id).textContent = value; };
+const coordText = value => Number(value.toFixed(1)).toString();
+const clamp = value => Math.min(plot.max, Math.max(plot.min, value));
+const snap = value => Math.round(value * 2) / 2;
+function calculate(x, y) {
+  const dx = x - reference.x;
+  const dy = y - reference.y;
+  const dot = reference.x * x + reference.y * y;
+  const lengths = Math.hypot(reference.x, reference.y) * Math.hypot(x, y);
+  const cosine = lengths === 0 ? null : 1 - Math.max(-1, Math.min(1, dot / lengths));
+  return { dx, dy, euclid: Math.hypot(dx, dy), manhattan: Math.abs(dx) + Math.abs(dy), cosine };
+}
+const chartX = value => plot.left + value * plot.scale;
+const chartY = value => plot.originY - value * plot.scale;
+
+function makeSvg(tag, attributes, text) {
+  const element = document.createElementNS(NS, tag);
+  Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+  if (text !== undefined) element.textContent = text;
+  return element;
+}
+
+function buildGrid() {
+  const grid = byId('grid');
+  for (let tick = 0; tick <= 6; tick += 1) {
+    const x = chartX(tick);
+    const y = chartY(tick);
+    grid.appendChild(makeSvg('line', { x1: x, y1: plot.top, x2: x, y2: plot.originY, class: tick === 0 ? 'axis-line' : 'grid-line' }));
+    grid.appendChild(makeSvg('line', { x1: plot.left, y1: y, x2: 570, y2: y, class: tick === 0 ? 'axis-line' : 'grid-line' }));
+    grid.appendChild(makeSvg('text', { x, y: 554, 'text-anchor': 'middle', class: 'axis-text' }, tick));
+    grid.appendChild(makeSvg('text', { x: 52, y: y + 5, 'text-anchor': 'end', class: 'axis-text' }, tick));
+  }
+  grid.appendChild(makeSvg('text', { x: 320, y: 586, 'text-anchor': 'middle', class: 'axis-title' }, '特征 1（统一尺度后）'));
+  grid.appendChild(makeSvg('text', { x: 18, y: 280, transform: 'rotate(-90 18 280)', 'text-anchor': 'middle', class: 'axis-title' }, '特征 2（统一尺度后）'));
+}
+
+function render() {
+  const { x, y } = state;
+  const { euclid, manhattan, cosine, dx, dy } = calculate(x, y);
+  const px = chartX(x);
+  const py = chartY(y);
+  const ox = chartX(0);
+  const oy = chartY(0);
+  const qx = chartX(reference.x);
+  const qy = chartY(reference.y);
+  const xText = coordText(x);
+  const yText = coordText(y);
+  const dxText = coordText(dx);
+  const dyText = coordText(dy);
+
+  byId('euclid-line').setAttribute('x1', qx);
+  byId('euclid-line').setAttribute('y1', qy);
+  byId('euclid-line').setAttribute('x2', px);
+  byId('euclid-line').setAttribute('y2', py);
+  byId('manhattan-path').setAttribute('d', `M${qx} ${qy}H${px}V${py}`);
+  byId('cosine-a-line').setAttribute('x2', px);
+  byId('cosine-a-line').setAttribute('y2', py);
+  ['d-point', 'a-point', 'a-hit'].forEach(id => {
+    byId(id).setAttribute('cx', px);
+    byId(id).setAttribute('cy', id === 'd-point' ? qy : py);
+  });
+  byId('d-label').setAttribute('x', x > 5 ? px - 10 : px + 8);
+  byId('d-label').setAttribute('y', qy - 12);
+
+  const aLabel = byId('a-label');
+  aLabel.setAttribute('x', x > 4.5 ? px - 13 : px + 13);
+  aLabel.setAttribute('y', y > 5 ? py + 25 : py - 13);
+  aLabel.setAttribute('text-anchor', x > 4.5 ? 'end' : 'start');
+  put('a-label', `A(${xText}, ${yText})`);
+
+  const lineLength = Math.hypot(px - qx, py - qy);
+  const normalX = lineLength ? (py - qy) / lineLength : 0;
+  const normalY = lineLength ? -(px - qx) / lineLength : 0;
+  const euclidLabel = byId('euclid-label');
+  euclidLabel.setAttribute('x', lineLength ? (px + qx) / 2 + normalX * 24 : qx);
+  euclidLabel.setAttribute('y', lineLength ? (py + qy) / 2 + normalY * 24 : qy - 22);
+  euclidLabel.setAttribute('text-anchor', 'middle');
+  put('euclid-label', `欧氏 ${euclid.toFixed(2)}`);
+
+  const manhattanLabel = byId('manhattan-label');
+  manhattanLabel.setAttribute('x', x > 4.5 ? px - 13 : px + 13);
+  manhattanLabel.setAttribute('y', lineLength ? (py + qy) / 2 + 5 : qy + 25);
+  manhattanLabel.setAttribute('text-anchor', x > 4.5 ? 'end' : 'start');
+  put('manhattan-label', `曼哈顿 ${manhattan.toFixed(2)}`);
+
+  const radius = 58;
+  const thetaQ = Math.atan2(reference.y, reference.x);
+  const thetaA = Math.atan2(y, x);
+  const startX = ox + radius * Math.cos(thetaQ);
+  const startY = oy - radius * Math.sin(thetaQ);
+  const endX = ox + radius * Math.cos(thetaA);
+  const endY = oy - radius * Math.sin(thetaA);
+  const sweep = thetaA >= thetaQ ? 0 : 1;
+  byId('cosine-arc').setAttribute('d', `M${startX} ${startY}A${radius} ${radius} 0 0 ${sweep} ${endX} ${endY}`);
+  const thetaMid = (thetaQ + thetaA) / 2;
+  byId('theta-label').setAttribute('x', ox + (radius + 17) * Math.cos(thetaMid));
+  byId('theta-label').setAttribute('y', oy - (radius + 17) * Math.sin(thetaMid) + 5);
+
+  put('x-output', xText);
+  put('y-output', yText);
+  byId('x-slider').value = x;
+  byId('y-slider').value = y;
+  ['euclid-x', 'manhattan-x', 'table-x'].forEach(id => put(id, dxText));
+  ['euclid-y', 'manhattan-y', 'table-y'].forEach(id => put(id, dyText));
+  ['euclid-value', 'table-euclid'].forEach(id => put(id, euclid.toFixed(2)));
+  ['manhattan-value', 'table-manhattan'].forEach(id => put(id, manhattan.toFixed(2)));
+  ['cosine-value', 'table-cosine'].forEach(id => put(id, cosine.toFixed(4)));
+  const degrees = Math.abs(thetaA - thetaQ) * 180 / Math.PI;
+  byId('angle-readout').innerHTML = degrees < 1e-10
+    ? '<br>两束光朝向相同：<strong>余弦距离为 0</strong>，即使两个样本的长度不同。'
+    : `<br>当前夹角约 <strong>${degrees.toFixed(2)}°</strong>，余弦距离约 <strong>${cosine.toFixed(4)}</strong>。`;
+  put('cosine-equation', `1 − ${coordText(x + y)} ÷ (√2 × √${x * x + y * y}) ≈ ${cosine.toFixed(4)}`);
+  byId('a-hit').setAttribute('aria-label', `样本 A，坐标 ${xText}，${yText}。欧氏距离 ${euclid.toFixed(2)}，曼哈顿距离 ${manhattan.toFixed(2)}，余弦距离 ${cosine.toFixed(4)}。可拖动，或用方向键调整。`);
+}
+
+function setFromPointer(event) {
+  const point = svg.createSVGPoint();
+  point.x = event.clientX;
+  point.y = event.clientY;
+  const local = point.matrixTransform(svg.getScreenCTM().inverse());
+  state.x = clamp(snap((local.x - plot.left) / plot.scale));
+  state.y = clamp(snap((plot.originY - local.y) / plot.scale));
+  render();
+}
+
+let dragging = false;
+const aHit = byId('a-hit');
+aHit.addEventListener('pointerdown', event => {
+  event.preventDefault();
+  dragging = true;
+  aHit.classList.add('dragging');
+  aHit.setPointerCapture(event.pointerId);
+  setFromPointer(event);
+});
+aHit.addEventListener('pointermove', event => {
+  if (dragging) {
+    setFromPointer(event);
+    showTooltip(event.clientX, event.clientY, 'A');
+  } else {
+    showTooltip(event.clientX, event.clientY, 'A');
+  }
+});
+aHit.addEventListener('pointerup', event => {
+  dragging = false;
+  aHit.classList.remove('dragging');
+  if (aHit.hasPointerCapture(event.pointerId)) aHit.releasePointerCapture(event.pointerId);
+});
+aHit.addEventListener('pointercancel', () => {
+  dragging = false;
+  aHit.classList.remove('dragging');
+});
+aHit.addEventListener('keydown', event => {
+  const moves = { ArrowLeft: [-0.5, 0], ArrowRight: [0.5, 0], ArrowUp: [0, 0.5], ArrowDown: [0, -0.5] };
+  if (!moves[event.key]) return;
+  event.preventDefault();
+  state.x = clamp(state.x + moves[event.key][0]);
+  state.y = clamp(state.y + moves[event.key][1]);
+  render();
+  showPointTooltip('A');
+});
+
+byId('x-slider').addEventListener('input', event => { state.x = Number(event.target.value); render(); });
+byId('y-slider').addEventListener('input', event => { state.y = Number(event.target.value); render(); });
+for (const [id, x, y] of [['reset', 4, 5], ['same-direction', 4, 4], ['different-direction', 1, 5]]) {
+  byId(id).addEventListener('click', () => { state.x = x; state.y = y; render(); hideTooltip(); });
+}
+
+function positionTooltip(clientX, clientY) {
+  const wrap = byId('chart-wrap');
+  const rect = wrap.getBoundingClientRect();
+  const tooltip = byId('tooltip');
+  const width = tooltip.offsetWidth;
+  const height = tooltip.offsetHeight;
+  const left = Math.max(8, Math.min(rect.width - width - 8, clientX - rect.left + 14));
+  const top = Math.max(8, Math.min(rect.height - height - 8, clientY - rect.top - height - 12));
+  tooltip.style.left = `${left}px`;
+  tooltip.style.top = `${top}px`;
+}
+
+function showTooltip(clientX, clientY, pointName) {
+  const { euclid, manhattan, cosine } = calculate(state.x, state.y);
+  put('tooltip-title', pointName === 'A' ? '样本 A' : '待分类样本 Q');
+  put('tooltip-coords', pointName === 'A' ? `坐标：(${coordText(state.x)}, ${coordText(state.y)})` : `坐标：(${reference.x}, ${reference.y})`);
+  put('tooltip-distance', `欧氏 ${euclid.toFixed(2)} · 曼哈顿 ${manhattan.toFixed(2)} · 余弦 ${cosine.toFixed(4)}`);
+  byId('tooltip').hidden = false;
+  positionTooltip(clientX, clientY);
+}
+
+function showPointTooltip(pointName) {
+  const point = svg.createSVGPoint();
+  point.x = pointName === 'A' ? chartX(state.x) : chartX(reference.x);
+  point.y = pointName === 'A' ? chartY(state.y) : chartY(reference.y);
+  const screen = point.matrixTransform(svg.getScreenCTM());
+  showTooltip(screen.x, screen.y, pointName);
+}
+
+function hideTooltip() { byId('tooltip').hidden = true; }
+[['a-hit', 'A'], ['q-hit', 'Q']].forEach(([id, pointName]) => {
+  const element = byId(id);
+  element.addEventListener('pointerenter', event => showTooltip(event.clientX, event.clientY, pointName));
+  element.addEventListener('pointerleave', () => { if (!dragging) hideTooltip(); });
+  element.addEventListener('focus', () => showPointTooltip(pointName));
+  element.addEventListener('blur', hideTooltip);
+});
+byId('q-hit').addEventListener('pointermove', event => showTooltip(event.clientX, event.clientY, 'Q'));
+
+const themeToggle = byId('theme-toggle');
+function currentThemeIsDark() {
+  const selected = document.documentElement.dataset.theme;
+  return selected ? selected === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+function syncThemeButton() { themeToggle.setAttribute('aria-pressed', String(currentThemeIsDark())); }
+themeToggle.addEventListener('click', () => {
+  document.documentElement.dataset.theme = currentThemeIsDark() ? 'light' : 'dark';
+  syncThemeButton();
+});
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', syncThemeButton);
+
+// 固定算例校验，防止距离公式或显示结果被改错。
+for (const [x, y, euclid, manhattan, cosine] of [
+  [4, 5, 5, 7, 1 - 9 / Math.sqrt(82)],
+  [1, 1, 0, 0, 0],
+  [4, 4, Math.sqrt(18), 6, 0],
+  [1, 5, 4, 4, 1 - 6 / Math.sqrt(52)],
+  [0.5, 0.5, Math.SQRT1_2, 1, 0]
+]) {
+  const result = calculate(x, y);
+  if (Math.abs(result.euclid - euclid) > 1e-12 || Math.abs(result.manhattan - manhattan) > 1e-12 ||
+      Math.abs(result.cosine - cosine) > 1e-12) {
+    throw new Error('距离算例校验失败');
+  }
+}
+if (calculate(0, 0).cosine !== null) throw new Error('零向量余弦边界校验失败');
+put('raw-euclid', Math.hypot(2, 20000).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+put('z-euclid', Math.hypot(0.2, 2).toFixed(2));
+buildGrid();
+render();
+syncThemeButton();
+</script>
+</body>
+</html>
