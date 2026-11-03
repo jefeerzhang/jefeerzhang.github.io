@@ -1,0 +1,879 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="《财务报表分析》补充讲义：按中国企业会计准则讲解资产负债表、利润表、现金流量表及三表勾稽，含三年制造业案例业务模拟器与分类练习。">
+<title>财务报表分析 · 补充讲义 · 三张报表基础（互动版）</title>
+<style>
+:root{--paper:#f6f7f9;--paper-2:#eceff3;--ink:#17202b;--muted:#505c6c;--rule:#cbd2dc;--accent:#002fa7;--accent-tint:#edf1ff;--accent-deep:#001f6e;--pos:#0b7a43;--pos-tint:#e7f5ed;--neg:#b42318;--neg-tint:#fdecea;--warn:#8a5a00;--warn-tint:#fff6e0;--inv:#9b7ad8;--inv-tint:#f1ebff;--o-c:#3563d4;--o-t:#e3edff;--i-c:#c07f10;--i-t:#fdf1d8;--f-c:#7c5fd4;--f-t:#efe9ff;--sans:"Microsoft YaHei","PingFang SC","Noto Sans SC",Arial,sans-serif;--serif:"Noto Serif SC","Source Han Serif SC","SimSun",serif;--mono:Consolas,"SF Mono",monospace}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.75}
+main{max-width:1040px;margin:auto;padding:28px 28px 80px}
+.wide{max-width:1280px}
+header.top{border-bottom:2px solid var(--accent);padding-bottom:20px;margin-bottom:8px}
+.eyebrow em{font-style:normal;color:var(--accent);border:1px solid var(--accent);padding:0 7px;margin-right:4px;font-family:var(--mono);font-size:12px}
+.eyebrow{font-size:13px;color:var(--muted);letter-spacing:.08em;margin:0 0 6px}
+h1{font-family:var(--serif);font-weight:600;font-size:32px;line-height:1.3;margin:0 0 12px}
+h1 .co{color:var(--accent);border-bottom:3px solid var(--accent-tint)}
+.intro{margin:0;color:var(--muted);font-size:15px}
+h2{font-family:var(--serif);font-weight:600;font-size:25px;margin:56px 0 14px;padding-top:12px;border-top:2px solid var(--ink);display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+h2 .no{font-family:var(--mono);color:var(--accent);font-size:18px}
+h2 .hl{background:linear-gradient(to top,var(--accent-tint) 0%,var(--accent-tint) 55%,transparent 55%)};padding:0 2px}
+h2 .time{margin-left:auto;font-family:var(--sans);font-size:13px;font-weight:400;color:var(--muted);border:1px solid var(--rule);padding:1px 8px;background:#fff}
+h3{font-size:18px;margin:30px 0 12px;padding:8px 14px;background:#fff;border:1px solid var(--rule);border-left:4px solid var(--accent)}
+h3 .badge2{float:right;font-family:var(--sans);font-size:12px;font-weight:400;color:var(--warn);background:var(--warn-tint);border:1px solid var(--warn);padding:1px 8px;letter-spacing:.05em}
+p{margin:10px 0}
+ul,ol{padding-left:24px;margin:10px 0}
+li{margin:5px 0}
+a{color:var(--accent);text-underline-offset:3px}
+code{font-family:var(--mono);font-size:.92em;background:var(--paper-2);padding:1px 5px}
+strong{font-weight:600}
+.note{margin:16px 0;padding:12px 18px;background:var(--accent-tint);border-left:4px solid var(--accent);font-size:15px}
+.note.warn{background:var(--warn-tint);border-left-color:var(--warn)}
+.note.pos{background:var(--pos-tint);border-left-color:var(--pos)}
+.note p{margin:6px 0}.note ul{margin:6px 0}
+.muted{color:var(--muted)}.small{font-size:13.5px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card{background:#fff;border:1px solid var(--rule);padding:14px 16px;box-shadow:0 1px 3px rgba(23,32,43,.06);transition:box-shadow .15s,transform .15s}
+.card:hover{box-shadow:0 4px 14px rgba(0,47,167,.10);transform:translateY(-1px)}
+.card h4{margin:0 0 6px;font-size:16px}
+.card .big{font-family:var(--serif);font-size:20px;font-weight:600;color:var(--accent)}
+/* nav */
+nav.toc{position:sticky;top:0;z-index:20;background:rgba(246,247,249,.96);border-bottom:1px solid var(--rule);backdrop-filter:blur(4px)}
+nav.toc .in{max-width:1280px;margin:auto;display:flex;gap:4px;overflow-x:auto;padding:8px 20px;font-size:14px}
+nav.toc a{white-space:nowrap;text-decoration:none;color:var(--muted);padding:4px 10px;border:1px solid transparent}
+nav.toc a.on{color:var(--accent);border-color:var(--accent);background:#fff}
+/* tables */
+table{border-collapse:collapse;width:100%;background:#fff;font-size:14.5px;line-height:1.55}
+th,td{border:1px solid var(--rule);padding:6px 10px;text-align:left;vertical-align:top}
+thead th{background:var(--paper-2);font-weight:600}
+table.plain tbody tr:nth-child(even){background:#fafbfc}
+.stmt td.n,.stmt th.n{text-align:right;font-family:var(--mono);white-space:nowrap;width:118px}
+.stmt tr.hd td{background:#f3f5f8;font-weight:600}
+.stmt tr.tot td{font-weight:600;border-top:1.5px solid var(--ink);background:#fafbfd}
+.stmt tr.gtot td{font-weight:700;border-top:2px solid var(--ink);background:var(--accent-tint);border-bottom:2px solid var(--accent)}
+.stmt tr.tot td.n,.stmt tr.gtot td.n{color:var(--accent-deep)}
+.stmt tr.ghost td{color:#a3abb7;background:#fbfcfd}
+.stmt td.l1{padding-left:26px}.stmt td.l2{padding-left:44px;color:var(--muted);font-size:13.5px}
+.stmt caption{caption-side:top;text-align:left;font-weight:600;padding:6px 0;font-size:15px}
+.stmt caption .u{font-weight:400;color:var(--muted);font-size:13px;margin-left:8px}
+.lk{cursor:pointer;border-bottom:1px dotted var(--accent)}
+.lk:hover{color:var(--accent);background:var(--accent-tint)}
+.lk.num{font-family:var(--mono);border-bottom:0;background:var(--paper-2);padding:0 4px}
+.lk.num:hover{background:var(--accent-tint)}
+.scroll{overflow-x:auto}
+/* controls */
+.seg{display:inline-flex;border:1px solid var(--accent);background:#fff}
+.seg button{border:0;background:#fff;color:var(--accent);padding:4px 14px;font:inherit;font-size:14px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--accent)}
+.seg button.on{background:var(--accent);color:#fff}
+.btn{border:1px solid var(--accent);background:#fff;color:var(--accent);padding:6px 14px;font:inherit;font-size:14px;cursor:pointer}
+.btn:hover{background:var(--accent-tint)}
+.btn.pri{background:var(--accent);color:#fff}
+.btn.pri:hover{background:#00238a}
+.btn:disabled{opacity:.4;cursor:default}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0}
+label.chk{font-size:14px;color:var(--muted);cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+/* accrual demo */
+.flip{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:12px}
+.flip .card .lbl{font-size:13px;color:var(--muted)}
+.flip .card .val{font-family:var(--serif);font-size:26px;font-weight:600}
+/* cost flow */
+.flow{display:grid;grid-template-columns:1.1fr auto 1fr auto 1fr auto 1fr;align-items:center;gap:8px;margin:14px 0}
+.flow .box{background:#fff;border:1px solid var(--rule);padding:10px 12px;font-size:14px}
+.flow .box b{display:block;font-size:13px;color:var(--muted);font-weight:600;margin-bottom:4px}
+.flow .box .r{display:flex;justify-content:space-between;gap:10px}
+.flow .box .r span:last-child{font-family:var(--mono)}
+.flow .box.bs{border-top:3px solid var(--accent)}
+.flow .box.pl{border-top:3px solid var(--warn)}
+.flow .box.in{border-top:3px solid var(--inv)}
+.flow .arr{color:var(--accent);font-size:22px;text-align:center}
+.flow .period{grid-column:1/-1}
+/* simulator */
+.sim{display:grid;grid-template-columns:330px 1fr;gap:16px;align-items:start}
+.steps{background:#fff;border:1px solid var(--rule);max-height:620px;overflow:auto}
+.steps .yr{padding:6px 12px;background:var(--paper-2);font-weight:600;font-size:13.5px;position:sticky;top:0}
+.steps button{display:flex;gap:8px;width:100%;text-align:left;border:0;border-top:1px solid #edf0f4;background:#fff;padding:7px 12px;font:inherit;font-size:14px;cursor:pointer;color:var(--muted)}
+.steps button .k{font-family:var(--mono);min-width:22px;color:#9aa3af}
+.steps button.done{color:var(--ink)}
+.steps button.done .k{color:var(--pos)}
+.steps button.cur{background:var(--accent-tint);color:var(--accent);font-weight:600;border-left:3px solid var(--accent);padding-left:9px}
+.steps button.cur .k{color:var(--accent)}
+.steps button.close{font-weight:600}
+.focus{background:#fff;border:1px solid var(--rule);border-top:3px solid var(--accent);padding:14px 18px;box-shadow:0 2px 8px rgba(23,32,43,.05)}
+.focus .tag{font-size:13px;color:var(--muted)}
+.focus h4{margin:2px 0 6px;font-size:19px;font-family:var(--serif)}
+.je{font-family:var(--mono);font-size:14px;background:#fafbfc;border:1px solid #e4e8ee;border-left:4px solid var(--accent);padding:8px 12px;margin:8px 0;line-height:1.6}
+.je .dr{color:var(--pos)}
+.je .cr{color:var(--neg);padding-left:2.2em}
+.je .cr{padding-left:2.2em}
+.je .amt{float:right}
+.je .sep{border-top:1px dashed #d5dbe3;margin:5px 0}
+.cfline{font-size:14px;margin:6px 0}
+.cfline span{display:inline-block;padding:1px 8px;margin:2px 4px 2px 0;border:1px solid var(--rule);background:#fff;font-size:13.5px}
+.cfline span.o{border-left:3px solid var(--o-c);background:var(--o-t);color:#1a3f8f}
+.cfline span.i{border-left:3px solid var(--i-c);background:var(--i-t);color:#6b4800}
+.cfline span.f{border-left:3px solid var(--f-c);background:var(--f-t);color:#4a2fa0}
+.eq{display:flex;gap:10px;flex-wrap:wrap;font-size:14px;margin:8px 0}
+.eq span{padding:2px 10px;border-left:3px solid var(--accent);background:var(--accent-tint);font-weight:600;font-family:var(--mono);font-size:13px}
+.eq span.up{background:var(--pos-tint);border-color:var(--pos);color:var(--pos)}
+.eq span.dn{background:var(--neg-tint);border-color:var(--neg);color:var(--neg)}
+.eq span.eqo{background:none;border:none;font-weight:700;color:var(--accent)}
+.insight{margin-top:10px;padding:10px 14px;background:var(--warn-tint);border-left:4px solid var(--warn);font-size:14.5px}
+.insight::before{content:'✦';color:var(--warn);margin-right:6px}
+.badge{display:inline-block;font-size:12.5px;padding:1px 8px;border:1px solid var(--pos);color:var(--pos);background:var(--pos-tint)}
+.badge.bad{border-color:var(--neg);color:var(--neg);background:var(--neg-tint)}
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px;align-items:start}
+.tri table{font-size:13.5px}
+.tri td{padding:4px 8px}
+.tri td.n{width:auto;min-width:74px}
+.tri td.d{width:58px;text-align:right;font-family:var(--mono);font-size:12px;border-left:0}
+.tri td.n{border-right:0}
+.tri tr.chg td{background:var(--warn-tint) !important;transition:background .2s;border-left:2px solid var(--warn)}
+.d.up{color:var(--pos)}.d.dn{color:var(--neg)}
+.prog{font-size:13.5px;color:var(--muted)}
+/* drawer */
+.drawer{position:fixed;top:0;right:0;height:100%;width:420px;max-width:92vw;background:#fff;border-left:2px solid var(--accent);box-shadow:-8px 0 24px rgba(0,0,0,.08);transform:translateX(105%);transition:transform .22s;z-index:50;overflow:auto;padding:20px 22px}
+.drawer.open{transform:none}
+.drawer h4{font-family:var(--serif);font-size:22px;margin:0 0 4px}
+.drawer .sec{margin:14px 0}
+.drawer .sec b{display:block;font-size:13px;color:var(--accent);letter-spacing:.05em;margin-bottom:2px}
+.drawer .x{position:absolute;right:14px;top:12px;border:0;background:none;font-size:24px;cursor:pointer;color:var(--muted)}
+.drawer table{font-size:13.5px}
+.drawer td:first-child{white-space:nowrap}
+/* checks & chart */
+.ok{color:var(--pos);font-weight:600}.no{color:var(--neg);font-weight:600}
+.chart{background:#fff;border:1px solid var(--rule);padding:10px}
+.flags li{margin:8px 0;padding:6px 10px 6px 8px;background:var(--neg-tint);border-left:3px solid var(--neg)}
+.flags li b,.flags li strong{color:var(--neg)}
+details{background:#fff;border:1px solid var(--rule);border-left:3px solid var(--accent);padding:8px 14px;margin:8px 0}
+details summary{cursor:pointer;font-weight:600}
+details summary::marker{color:var(--accent)}
+details[open] summary{margin-bottom:6px}
+/* dnd */
+.pool{display:flex;flex-wrap:wrap;gap:8px;min-height:56px;padding:10px;background:#fff;border:1px dashed var(--rule)}
+.chip{padding:5px 12px;border:1px solid var(--rule);background:#fff;cursor:grab;font-size:14px;user-select:none}
+.chip.sel{outline:2px solid var(--accent)}
+.chip.right{border-color:var(--pos);background:var(--pos-tint)}
+.chip.wrong{border-color:var(--neg);background:var(--neg-tint)}
+.bins{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
+.bin{background:#fff;border:1px solid var(--rule);min-height:150px}
+.bin .bh{padding:6px 10px;background:var(--paper-2);font-weight:600;font-size:14px}
+.bin .bb{display:flex;flex-direction:column;gap:6px;padding:8px;min-height:110px}
+.bin.over{outline:2px solid var(--accent)}
+.fb{margin-top:10px;font-size:14.5px}
+.fb li{margin:4px 0}
+footer{margin-top:60px;border-top:1px solid var(--rule);padding-top:16px;font-size:13.5px;color:var(--muted)}
+@media(max-width:980px){.sim{grid-template-columns:1fr}.tri{grid-template-columns:1fr}.steps{max-height:280px}.flow{grid-template-columns:1fr}.flow .arr{transform:rotate(90deg)}.bins{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr}}
+@media(max-width:700px){main{padding:20px 14px}h1{font-size:25px}h2{font-size:20px}.grid2,.flip{grid-template-columns:1fr}.bins{grid-template-columns:1fr}}
+@media print{nav.toc,.drawer,.bar .btn{display:none}body{background:#fff}}
+</style>
+</head>
+<body>
+<nav class="toc"><div class="in">
+<a href="#s1">1 三张表的分工</a><a href="#s2">2 资产负债表</a><a href="#s3">3 利润表</a><a href="#s4">4 现金流量表</a><a href="#s5">5 业务模拟器</a><a href="#s6">6 勾稽与分析入门</a><a href="#s7">7 分类练习</a>
+</div></nav>
+<main>
+<header class="top">
+<p class="eyebrow"><em>BS</em><em>PL</em><em>CF</em> 《财务报表分析》补充讲义 · 硕士 · 课前自学</p>
+<h1>三张报表基础：按<span class="co">中国企业会计准则</span>读懂资产负债表、利润表与现金流量表</h1>
+<p class="intro">本页用一家虚构的制造业公司「岭川精工」连续 3 年的业务，讲清三张表分别记录什么、如何由逐笔业务生成、彼此怎样勾稽，以及分析时先看哪些信号。报表格式依据财政部《关于修订印发 2019 年度一般企业财务报表格式的通知》（财会〔2019〕6号）中适用于已执行新金融工具准则、新收入准则和新租赁准则企业的格式。</p>
+</header>
+
+<div class="note">
+<p><strong>怎样使用本页</strong></p>
+<ul>
+<li>报表中带虚线下划线的项目可以点击。点击后，右侧显示定义、准则依据、常见误解和本案例数字。</li>
+<li>第 2–4 节右上角的「第 1 / 2 / 3 年」按钮联动切换三张表的年份。</li>
+<li>第 5 节的模拟器是本页核心。请逐笔点击「下一笔业务」，观察三张表的同时变动。</li>
+<li>页面全部计算在浏览器中完成，不需要联网。刷新页面后，模拟器和练习回到初始状态。</li>
+</ul>
+</div>
+
+<!-- ================= 1 ================= -->
+<h2 id="s1"><span class="no">01</span>三张表各回答一个问题</h2>
+<div class="grid3">
+<div class="card"><h4>资产负债表</h4><p class="small muted">时点 · 存量 · 「拍照」</p><p>某一日（如 12 月 31 日）企业拥有什么资源、欠了谁多少、股东还剩多少。</p></div>
+<div class="card"><h4>利润表</h4><p class="small muted">期间 · 流量 · 权责发生制</p><p>一段期间（如一年）企业赚了还是亏了。收入和费用按「归属期间」确认，与是否收付现金无关。</p></div>
+<div class="card"><h4>现金流量表</h4><p class="small muted">期间 · 流量 · 收付实现制</p><p>同一期间现金从哪里来、到哪里去。按经营、投资、筹资三类活动列示。</p></div>
+</div>
+
+<h3>会计恒等式：三张表的共同骨架</h3>
+<p style="font-family:var(--serif);font-size:20px;text-align:center;margin:16px 0">资产 ＝ 负债 ＋ 所有者权益</p>
+<p>每一笔业务都按复式记账法记录：有借必有贷，借贷必相等。因此，任何业务发生后，恒等式都成立。期间内取得的收入增加所有者权益，发生的费用减少所有者权益，于是恒等式可以展开为：</p>
+<p style="font-family:var(--serif);font-size:17px;text-align:center;margin:12px 0">资产 ＝ 负债 ＋ 期初所有者权益 ＋（收入 － 费用）＋ 股东投入 － 利润分配</p>
+<p>括号中的「收入 − 费用」就是利润表的净利润。它在期末结转进资产负债表的「未分配利润」。这是利润表与资产负债表之间最基本的连接。</p>
+
+<h3>权责发生制：利润和现金为什么不一样</h3>
+<p>《企业会计准则——基本准则》规定，企业应当以权责发生制为基础进行会计确认、计量和报告。凡是当期已经实现的收入和已经发生或应当负担的费用，不论款项是否收付，都作为当期的收入和费用。下面是案例公司第 2 年的数字。请点击按钮切换口径。</p>
+<div class="bar"><div class="seg" id="accSeg"><button class="on" data-v="acc">权责发生制（利润表）</button><button data-v="cash">收付实现制（现金流量表）</button></div></div>
+<div class="flip" id="accDemo"></div>
+<p class="small muted" id="accExplain"></p>
+
+<h3>一套完整的财务报表</h3>
+<p>《企业会计准则第 30 号——财务报表列报》规定，财务报表至少包括：资产负债表、利润表、现金流量表、所有者权益（或股东权益）变动表和附注。本页只讲前三张。所有者权益变动表解释资产负债表中权益各项目的期初到期末变动，第 6 节的勾稽检查会用到它的核心逻辑。附注提供报表项目的明细与会计政策，分析时离不开它。</p>
+
+<h3>案例公司：岭川精工（虚构）</h3>
+<p>岭川精工是一家为工程机械整机厂生产液压零部件的制造企业。它买入钢材等原材料，在车间加工成零部件，再赊销给整机厂。以下 3 年的剧情贯穿全页。</p>
+<div class="scroll"><table class="plain">
+<thead><tr><th style="width:80px">年份</th><th style="width:110px">阶段</th><th>主要业务</th><th>请留意</th></tr></thead>
+<tbody>
+<tr><td>第 1 年</td><td>创立与投产</td><td>股东出资、长期借款、购入设备、首批采购、生产与少量销售</td><td>小幅亏损；投资活动大额流出，依赖筹资活动流入支撑</td></tr>
+<tr><td>第 2 年</td><td>扩张</td><td>短期借款、新增设备、放宽信用期使收入大增、开始研发</td><td>净利润转正，经营活动现金流量为负；应收账款和存货大幅增加</td></tr>
+<tr><td>第 3 年</td><td>风险暴露</td><td>需求放缓、产大于销、大客户逾期、计提减值、借新还旧、仍发放股利</td><td>利润下滑；减值不产生现金流出；存货积压对利润的影响</td></tr>
+</tbody></table></div>
+<div class="note warn">
+<p><strong>本案例的简化假设</strong>（实际企业比这复杂；遇到差异以准则原文为准）</p>
+<ul>
+<li>金额单位为万元。</li>
+<li>不考虑增值税，也不考虑城市维护建设税、教育费附加等税金及附加。实际企业的采购和销售都含增值税，「税金及附加」通常不为零。</li>
+<li>企业所得税税率 25%，年末按利润总额（先弥补以前年度亏损）计提，次年汇算清缴时缴纳。不考虑纳税调整和递延所得税，详见第 3 节的说明。</li>
+<li>设备在购入当年年初投入使用，当年计提全年折旧。实际规定是当月增加的固定资产当月不计提折旧，自次月起计提。</li>
+<li>一年中的同类业务合并为一笔记录。例如「全年赊销 7,000 万元」。</li>
+</ul>
+</div>
+
+<!-- ================= 2 ================= -->
+<h2 id="s2"><span class="no">02</span>资产负债表：某一日的家底<span class="yrsel" style="margin-left:0"></span></h2>
+<p>资产负债表采用账户式结构：左方列资产，右方列负债和所有者权益。资产按流动性由强到弱排列，负债按偿还期由近到远排列。本页为了阅读方便，把右方放在资产下方。</p>
+<h3>流动与非流动的划分</h3>
+<p>按《企业会计准则第 30 号——财务报表列报》，资产满足下列条件之一的，归类为流动资产：</p>
+<ul>
+<li>预计在一个正常营业周期中变现、出售或耗用；</li>
+<li>主要为交易目的而持有；</li>
+<li>预计在资产负债表日起一年内变现；</li>
+<li>自资产负债表日起一年内，交换其他资产或清偿负债的能力不受限制的现金或现金等价物。</li>
+</ul>
+<p>负债的划分逻辑相同：预计在一个正常营业周期中清偿、主要为交易目的而持有、自资产负债表日起一年内到期应予清偿，或企业没有权利在资产负债表日后将清偿推迟至一年以上的，归类为流动负债。</p>
+<div class="bar"><label class="chk"><input type="checkbox" id="fullBS"> 显示完整格式（未使用的项目显示为灰色「—」）</label></div>
+<div class="scroll" id="bsTable"></div>
+<h3>读资产负债表的三个要点</h3>
+<ol>
+<li><strong>报表项目不等于会计科目。</strong>「存货」一行合并了原材料、生产成本（在产品）、库存商品等科目，并扣减存货跌价准备。「应收账款」「固定资产」都以扣除备抵科目后的净额列示。</li>
+<li><strong>计量属性是混合的。</strong>存货、固定资产以历史成本为基础计量，交易性金融资产以公允价值计量。账面净资产不等于企业的市场价值。</li>
+<li><strong>制造业的存货有三种形态。</strong>请点开「存货」查看原材料、在产品、库存商品的构成。第 3 年库存商品大幅增加，是第 6 节分析的线索。</li>
+</ol>
+
+<!-- ================= 3 ================= -->
+<h2 id="s3"><span class="no">03</span>利润表：一年赚了多少<span class="yrsel"></span></h2>
+<p>我国利润表采用多步式：营业收入 → 营业利润 → 利润总额 → 净利润。每一步回答一个问题：主营业务经营成果如何，加上营业外收支后如何，缴纳所得税后股东可获得多少。</p>
+<div class="bar"><label class="chk"><input type="checkbox" id="fullPL"> 显示完整格式</label></div>
+<div class="scroll" id="plTable"></div>
+<h3>制造业的关键：营业成本从哪里来</h3>
+<p>制造业的支出分为两类。<strong>产品成本</strong>先计入存货，产品卖出时才转为营业成本。<strong>期间费用</strong>直接计入当期利润表。下图是所选年份的成本流转，数字由第 5 节的分录汇总得到。</p>
+<div id="flow"></div>
+<div class="note">
+<p><strong>为什么这一点重要：</strong>车间工人工资和车间设备折旧属于产品成本。产品没卖出去时，这些成本留在资产负债表的存货里，不进入当年利润表。产量大于销量时，一部分固定制造费用随存货递延到以后期间，当期利润因此偏高。第 3 年完工 5,700 万元，结转营业成本 4,300 万元，差额留在库存商品中。</p>
+</div>
+<h3>其他要点</h3>
+<ul>
+<li><strong>收入确认看控制权，不看收款。</strong>按《企业会计准则第 14 号——收入》，企业在客户取得相关商品控制权时确认收入。赊销同样确认收入。</li>
+<li><strong>研发费用单独列示。</strong>按《企业会计准则第 6 号——无形资产》，研究阶段支出全部费用化；开发阶段支出满足规定条件的，资本化为「开发支出」。财会〔2019〕6号报表格式中，研发费用从管理费用中分出，单独列示。</li>
+<li><strong>减值损失以负数列示。</strong>2019 年格式中，「信用减值损失」和「资产减值损失」列在「公允价值变动收益」之后，损失以「-」号填列。</li>
+<li><strong>所得税费用的简化。</strong>按税法，减值准备在实际发生损失前不得税前扣除。严格按《企业会计准则第 18 号——所得税》处理，第 3 年应纳税所得额应调增 270 万元，同时确认递延所得税资产 67.5 万元。所得税费用仍为 60 万元，仅资产负债表的「应交税费」和「递延所得税资产」两项与本页不同。本页为聚焦三表关系，省略这一调整。</li>
+</ul>
+
+<!-- ================= 4 ================= -->
+<h2 id="s4"><span class="no">04</span>现金流量表：现金从哪来、到哪去<span class="yrsel"></span></h2>
+<p>现金流量表中的「现金」指库存现金、可以随时用于支付的存款，以及现金等价物。现金等价物指企业持有的期限短（通常为自购买日起三个月内到期）、流动性强、易于转换为已知金额现金、价值变动风险很小的投资。</p>
+<h3>三类活动与我国准则的归类口径</h3>
+<div class="scroll"><table class="plain">
+<thead><tr><th style="width:110px">活动</th><th>含义</th><th>本案例中的例子</th></tr></thead>
+<tbody>
+<tr><td>经营活动</td><td>投资活动和筹资活动以外的所有交易和事项</td><td>收回货款、支付材料款、发工资、缴纳所得税、支付水电费和研发试验费</td></tr>
+<tr><td>投资活动</td><td>长期资产的购建和不包括在现金等价物范围内的投资及其处置</td><td>购买生产设备</td></tr>
+<tr><td>筹资活动</td><td>导致企业资本及债务规模和构成发生变化的活动</td><td>股东出资、取得和归还借款、支付利息、发放现金股利</td></tr>
+</tbody></table></div>
+<div class="note">
+<p><strong>请记住我国准则的三个口径：</strong>支付的借款利息列入<strong>筹资活动</strong>；收到的利息和股利列入<strong>投资活动</strong>；支付的所得税列入<strong>经营活动</strong>。《国际会计准则第 7 号》允许企业在经营、投资、筹资活动之间选择利息和股利的归类，比较境内外公司时须先统一口径。</p>
+</div>
+<h3>主表：直接法</h3>
+<p>《企业会计准则第 31 号——现金流量表》要求主表用直接法列示经营活动现金流量，即按现金收入和现金支出的主要类别列示。借款和还款分别列示，不相互抵销。</p>
+<div class="bar"><label class="chk"><input type="checkbox" id="fullCF"> 显示完整格式</label></div>
+<div class="scroll" id="cfTable"></div>
+<h3>补充资料：间接法（点击每一行查看原因）</h3>
+<p>附注中还要用间接法把净利润调节为经营活动现金流量净额。间接法回答一个分析问题：<strong>利润和经营现金流的差距是由什么造成的？</strong></p>
+<div class="scroll" id="indTable"></div>
+<p class="small muted" id="indExplain">点击上表任一行，这里显示该调整的原因。</p>
+<p>附注还应披露不涉及现金收支的重大投资和筹资活动，例如以发行股票方式购入固定资产、债务转为资本。此类活动不进入现金流量表主表。</p>
+</main>
+
+<!-- ================= 5 ================= -->
+<main class="wide" style="padding-top:0">
+<h2 id="s5"><span class="no">05</span>业务模拟器：做三年账，看三张表同时变动</h2>
+<p>左侧是 3 年的全部业务。点击「下一笔业务」，中间显示该笔业务的会计分录、现金流量表归类和对恒等式的影响，下方三张表同时更新，变动行以黄色标出。每年最后一步是「年末结账」：计提所得税、提取盈余公积，并将净利润结转至未分配利润。</p>
+<div class="bar">
+<div class="seg" id="yearTabs"><button data-y="1">第 1 年</button><button data-y="2">第 2 年</button><button data-y="3">第 3 年</button></div>
+<button class="btn" id="bPrev">← 上一笔</button>
+<button class="btn pri" id="bNext">下一笔业务 →</button>
+<button class="btn" id="bEnd">直接到本年年末</button>
+<button class="btn" id="bReset">重置</button>
+<span class="prog" id="prog"></span>
+</div>
+<div class="sim">
+<div class="steps" id="stepList"></div>
+<div>
+<div class="focus" id="focus"></div>
+</div>
+</div>
+<div class="tri" id="tri"></div>
+<p class="small muted">年中各表为年初至当前的累计数。结账前，资产负债表的「未分配利润」包含本年累计净利润（尚未计提所得税）。</p>
+</main>
+
+<main style="padding-top:0">
+<!-- ================= 6 ================= -->
+<h2 id="s6"><span class="no">06</span>三表勾稽与分析入门</h2>
+<h3>勾稽检查：三张表怎样咬合</h3>
+<p>下表由页面根据案例数据自动计算。每一行均须成立。分析真实公司时，某一行不相等，通常表明数据摘录有误，或附注中存在需要追查的项目。</p>
+<div class="scroll" id="checks"></div>
+
+<h3>净利润与经营活动现金流量净额</h3>
+<div class="chart" id="chart"></div>
+<p>3 年中，岭川精工的净利润两年为正，经营活动现金流量净额三年均为负。这是「有利润、无现金」的典型形态。间接法表已给出原因：应收账款和存货增加占用了现金。</p>
+
+<h3>几个入门比率</h3>
+<div class="scroll" id="ratios"></div>
+<p class="small muted">为便于入门，周转天数用期末余额计算，一年按 360 天。正式分析一般使用平均余额。比率的系统用法见补充讲义《盈利能力分解与盈余质量》。</p>
+
+<h3>从本案例读出的预警信号</h3>
+<ul class="flags" id="flags"></ul>
+<p>本案例未出现、但实务中常见的信号还包括：开发支出资本化比例突然上升、其他应收款或关联方往来激增、利润高度依赖营业外收入或资产处置收益、货币资金和有息负债同时较高（「存贷双高」）。上述信号表明需要进一步追查，不等同于证明存在舞弊。</p>
+
+<h3>讨论题</h3>
+<details><summary>1. 第 2 年净利润 500 万元，经营活动现金流量净额为负。请用间接法表说明两项主要原因。</summary><p>应收账款增加 1,400 万元（放宽信用期），存货增加 1,080 万元（扩产）。两项合计 2,480 万元，超过净利润与非现金费用之和。</p></details>
+<details><summary>2. 第 3 年产量大于销量。如果第 3 年只生产到刚好满足销售，利润表会怎样变化？</summary><p>车间折旧等固定制造费用不随产量减少。产量下降后，该费用分摊至更少的产品，几乎全部随售出产品进入营业成本，第 3 年利润更低。存货积压会使利润表现优于实际经营结果。</p></details>
+<details><summary>3. 如果你是银行信贷经理，第 3 年末会重点关注岭川精工的哪三个数字？</summary><p>可以从以下指标中选择：经营活动现金流量净额连续为负；应收账款周转天数大幅上升且存在逾期客户；存货周转天数大幅上升；短期借款借新还旧；经营现金流为负时仍发放股利。</p></details>
+<details><summary>4. 假如第 3 年管理层少计提 270 万元减值，三张表分别怎样变化？</summary><p>利润表：利润总额增加 270 万元。资产负债表：应收账款和存货净额增加 270 万元，未分配利润相应增加（税后）。现金流量表：经营活动现金流量净额不变，仅间接法中加回的减值减少 270 万元。这表明现金流量表比利润表更难受会计估计影响。</p></details>
+
+<!-- ================= 7 ================= -->
+<h2 id="s7"><span class="no">07</span>分类练习</h2>
+<p>将卡片拖入对应格中。也可先点击卡片，再点击格子。完成后点击「检查」，错误卡片显示为红色，并在下方给出解析。</p>
+<h3>练习一：这个项目列在哪里？</h3>
+<div id="dnd1"></div>
+<h3>练习二：这笔现金流属于哪类活动？</h3>
+<div id="dnd2"></div>
+
+<footer>
+<p><strong>主要依据</strong>：《企业会计准则——基本准则》；《企业会计准则第 1 号——存货》《第 4 号——固定资产》《第 6 号——无形资产》《第 8 号——资产减值》《第 9 号——职工薪酬》《第 14 号——收入》《第 18 号——所得税》《第 22 号——金融工具确认和计量》《第 30 号——财务报表列报》《第 31 号——现金流量表》；财政部《关于修订印发 2019 年度一般企业财务报表格式的通知》（财会〔2019〕6号）。</p>
+<p><strong>相关材料</strong>：同目录《盈利能力分解与盈余质量》（比率与盈余质量的展开）；《财报分析基础知识_学生题库》（课前准入题）；第二次课学生学习包《利润是真的吗？》。</p>
+<p>本页为教学简化材料。案例公司、人物和数字均为虚构。涉及具体会计处理时，以准则原文和财政部发布的解释为准。</p>
+</footer>
+</main>
+
+<aside class="drawer" id="drawer" aria-hidden="true"><button class="x" id="dx" aria-label="关闭">×</button><div id="dbody"></div></aside>
+
+<script>
+// ===== 科目 =====
+const ACC={cash:['银行存款','A'],ar:['应收账款','A'],bad:['坏账准备','XA'],rm:['原材料','A'],moh:['制造费用','A'],wip:['生产成本','A'],fg:['库存商品','A'],invp:['存货跌价准备','XA'],fa:['固定资产','A'],dep:['累计折旧','XA'],stl:['短期借款','L'],ap:['应付账款','L'],wage:['应付职工薪酬','L'],tax:['应交税费','L'],divp:['应付股利','L'],ltl:['长期借款','L'],cap:['实收资本','E'],sur:['盈余公积','E'],re:['利润分配—未分配利润','E'],rev:['主营业务收入','R'],cogs:['主营业务成本','X'],sell:['销售费用','X'],adm:['管理费用','X'],rd:['研发费用','X'],fin:['财务费用','X'],cil:['信用减值损失','X'],ail:['资产减值损失','X'],itx:['所得税费用','X']};
+const sgn=k=>{const t=ACC[k][1];return (t==='A'||t==='X')?1:-1};
+// ===== 业务 =====
+const STEPS=[
+// ---- 第1年 ----
+{y:1,t:'股东出资',d:'两位创始股东以货币出资 5,000 万元，存入公司银行账户。',je:[{dr:[['cash',5000]],cr:[['cap',5000]]}],cf:[['f_cap',5000]]},
+{y:1,t:'取得长期借款',d:'向银行借入 5 年期借款 2,000 万元，年利率 5%，每年付息、到期还本。',je:[{dr:[['cash',2000]],cr:[['ltl',2000]]}],cf:[['f_loan',2000]]},
+{y:1,t:'购买生产设备',d:'购入数控加工设备 3,600 万元，当年投入使用。预计使用 10 年，无残值，直线法折旧。',je:[{dr:[['fa',3600]],cr:[['cash',3600]]}],cf:[['i_fa',3600]]},
+{y:1,t:'赊购原材料',d:'向钢材供应商赊购原材料 1,500 万元，验收入库，货款暂欠。',je:[{dr:[['rm',1500]],cr:[['ap',1500]]}],cf:[]},
+{y:1,t:'生产领用原材料',d:'车间领用原材料 1,200 万元投入生产。',je:[{dr:[['wip',1200]],cr:[['rm',1200]]}],cf:[]},
+{y:1,t:'计提并发放职工薪酬',d:'全年工资 750 万元：生产工人 450、管理人员 220、销售人员 80。已发放 700，年末尚欠 50。',je:[{dr:[['wip',450],['adm',220],['sell',80]],cr:[['wage',750]]},{dr:[['wage',700]],cr:[['cash',700]]}],cf:[['o_emp',700]]},
+{y:1,t:'归集制造费用并转入生产成本',d:'车间设备折旧 360（3,600÷10），车间水电费 150 以银行存款支付。月末把制造费用转入生产成本。',je:[{dr:[['moh',510]],cr:[['dep',360],['cash',150]]},{dr:[['wip',510]],cr:[['moh',510]]}],cf:[['o_buy',150]]},
+{y:1,t:'产品完工入库',d:'完工零部件成本 1,800 万元转入库存商品；其余仍在车间加工（在产品）。',je:[{dr:[['fg',1800]],cr:[['wip',1800]]}],cf:[]},
+{y:1,t:'赊销产品并结转成本',d:'向整机厂赊销零部件，售价 1,500 万元，控制权已转移；同时结转这批产品的成本 1,150 万元。',je:[{dr:[['ar',1500]],cr:[['rev',1500]]},{dr:[['cogs',1150]],cr:[['fg',1150]]}],cf:[]},
+{y:1,t:'收回应收账款',d:'收回客户货款 1,100 万元。',je:[{dr:[['cash',1100]],cr:[['ar',1100]]}],cf:[['o_sale',1100]]},
+{y:1,t:'支付供应商货款',d:'偿付原材料欠款 1,100 万元。',je:[{dr:[['ap',1100]],cr:[['cash',1100]]}],cf:[['o_buy',1100]]},
+{y:1,t:'支付借款利息',d:'支付长期借款当年利息 100 万元（2,000×5%）。',je:[{dr:[['fin',100]],cr:[['cash',100]]}],cf:[['f_div',100]]},
+{y:1,close:true,t:'年末结账'},
+// ---- 第2年 ----
+// ---- 第2年 ----
+{y:2,t:'取得短期借款',d:'为扩大生产，借入 1 年期流动资金借款 1,000 万元，年利率 4%，年末付息。',je:[{dr:[['cash',1000]],cr:[['stl',1000]]}],cf:[['f_loan',1000]]},
+{y:2,t:'购买第二台设备',d:'新增一条生产线，设备价款 1,200 万元，当年年初投入使用，10 年直线法折旧，无残值。',je:[{dr:[['fa',1200]],cr:[['cash',1200]]}],cf:[['i_fa',1200]]},
+{y:2,t:'赊购原材料',d:'产量扩大，全年赊购原材料 4,800 万元。',je:[{dr:[['rm',4800]],cr:[['ap',4800]]}],cf:[]},
+{y:2,t:'生产领用原材料',d:'车间领用原材料 4,800 万元（含上年结存）。',je:[{dr:[['wip',4800]],cr:[['rm',4800]]}],cf:[]},
+{y:2,t:'计提并发放职工薪酬',d:'全年工资 1,510 万元：生产工人 1,000、管理人员 320、销售人员 190。发放 1,440（含上年末欠薪 50），年末尚欠 120。',je:[{dr:[['wip',1000],['adm',320],['sell',190]],cr:[['wage',1510]]},{dr:[['wage',1440]],cr:[['cash',1440]]}],cf:[['o_emp',1440]]},
+{y:2,t:'归集制造费用并转入生产成本',d:'设备折旧 480（4,800÷10），车间水电费 300 以银行存款支付。月末转入生产成本。',je:[{dr:[['moh',780]],cr:[['dep',480],['cash',300]]},{dr:[['wip',780]],cr:[['moh',780]]}],cf:[['o_buy',300]]},
+{y:2,t:'支付研发费用',d:'为配套新客户开发两款新型号零部件，支付外部试验、检测与材料费 200 万元。研究阶段支出，全部费用化。',je:[{dr:[['rd',200]],cr:[['cash',200]]}],cf:[['o_buy',200]]},
+{y:2,t:'产品完工入库',d:'完工产品成本 6,400 万元转入库存商品。',je:[{dr:[['fg',6400]],cr:[['wip',6400]]}],cf:[]},
+{y:2,t:'放宽信用期，赊销大增',d:'为抢占市场，把客户信用期从 60 天放宽到 120 天。全年赊销 7,000 万元，结转成本 5,500 万元。',je:[{dr:[['ar',7000]],cr:[['rev',7000]]},{dr:[['cogs',5500]],cr:[['fg',5500]]}],cf:[]},
+{y:2,t:'收回应收账款',d:'全年收回货款 5,600 万元（含上年末余额 400）。',je:[{dr:[['cash',5600]],cr:[['ar',5600]]}],cf:[['o_sale',5600]]},
+{y:2,t:'支付供应商货款',d:'全年支付原材料货款 4,600 万元。',je:[{dr:[['ap',4600]],cr:[['cash',4600]]}],cf:[['o_buy',4600]]},
+{y:2,t:'支付借款利息',d:'长期借款利息 100，短期借款利息 40（1,000×4%），合计 140 万元。',je:[{dr:[['fin',140]],cr:[['cash',140]]}],cf:[['f_div',140]]},
+{y:2,close:true,t:'年末结账'},
+// ---- 第3年 ----
+{y:3,t:'缴纳上年企业所得税',d:'',auto:'paytax',je:[],cf:[]},
+{y:3,t:'短期借款到期，还旧借新',d:'1,000 万元短期借款到期。公司归还本金，同时向银行续借 1,000 万元（1 年期，年利率 4%）。借款和还款在现金流量表中分别列示，不相互抵销。',je:[{dr:[['stl',1000]],cr:[['cash',1000]]},{dr:[['cash',1000]],cr:[['stl',1000]]}],cf:[['f_repay',1000],['f_loan',1000]]},
+{y:3,t:'宣告并发放现金股利',d:'股东会决议，从累计未分配利润中分配现金股利 150 万元，当年发放。',je:[{dr:[['re',150]],cr:[['divp',150]]},{dr:[['divp',150]],cr:[['cash',150]]}],cf:[['f_div',150]]},
+{y:3,t:'收回上年末应收账款',d:'上年末的应收账款 1,800 万元在年内陆续收回。',je:[{dr:[['cash',1800]],cr:[['ar',1800]]}],cf:[['o_sale',1800]]},
+{y:3,t:'赊购原材料',d:'按年初的乐观预算组织采购，全年赊购原材料 3,600 万元。',je:[{dr:[['rm',3600]],cr:[['ap',3600]]}],cf:[]},
+{y:3,t:'生产领用原材料',d:'车间领用原材料 3,900 万元（含上年结存）。',je:[{dr:[['wip',3900]],cr:[['rm',3900]]}],cf:[]},
+{y:3,t:'计提并发放职工薪酬',d:'全年工资 1,500 万元：生产工人 1,000、管理人员 330、销售人员 170。发放 1,520（含上年末欠薪 120），年末尚欠 100。',je:[{dr:[['wip',1000],['adm',330],['sell',170]],cr:[['wage',1500]]},{dr:[['wage',1520]],cr:[['cash',1520]]}],cf:[['o_emp',1520]]},
+{y:3,t:'归集制造费用并转入生产成本',d:'设备折旧 480，车间水电费 300 以银行存款支付。月末转入生产成本。',je:[{dr:[['moh',780]],cr:[['dep',480],['cash',300]]},{dr:[['wip',780]],cr:[['moh',780]]}],cf:[['o_buy',300]]},
+{y:3,t:'支付研发费用',d:'继续开发新型号，支付外部试验、检测与材料费 150 万元，全部费用化。',je:[{dr:[['rd',150]],cr:[['cash',150]]}],cf:[['o_buy',150]]},
+{y:3,t:'产品完工入库',d:'完工产品成本 5,700 万元转入库存商品。',je:[{dr:[['fg',5700]],cr:[['wip',5700]]}],cf:[]},
+{y:3,t:'下游需求放缓，销售回落',d:'整机厂减产。全年赊销 5,600 万元，结转成本 4,300 万元。产成品明显积压。',je:[{dr:[['ar',5600]],cr:[['rev',5600]]},{dr:[['cogs',4300]],cr:[['fg',4300]]}],cf:[]},
+{y:3,t:'收回本年货款',d:'收回本年销售的货款 3,400 万元。一家大客户陷入经营困难，欠款逾期。',je:[{dr:[['cash',3400]],cr:[['ar',3400]]}],cf:[['o_sale',3400]]},
+{y:3,t:'支付供应商货款',d:'资金偏紧，公司放慢付款节奏。全年支付原材料货款 3,400 万元。',je:[{dr:[['ap',3400]],cr:[['cash',3400]]}],cf:[['o_buy',3400]]},
+{y:3,t:'支付借款利息',d:'长期借款利息 100，短期借款利息 40（1,000×4%），合计 140 万元。',je:[{dr:[['fin',140]],cr:[['cash',140]]}],cf:[['f_div',140]]},
+{y:3,t:'计提应收账款坏账准备',d:'按预期信用损失模型评估，逾期大客户的应收账款预计损失 150 万元。',je:[{dr:[['cil',150]],cr:[['bad',150]]}],cf:[]},
+{y:3,t:'计提存货跌价准备',d:'部分型号已被下游淘汰，可变现净值低于成本 120 万元。',je:[{dr:[['ail',120]],cr:[['invp',120]]}],cf:[]},
+{y:3,close:true,t:'年末结账'}
+];
+// ===== 引擎 =====
+const TAXR=0.25,RESR=0.10;
+function zero(){const b={};for(const k in ACC)b[k]=0;return b}
+function post(b,je){for(const[k,a]of je.dr)b[k]+=a*sgn(k);for(const[k,a]of je.cr)b[k]-=a*sgn(k)}
+const PL_KEYS=['rev','cogs','sell','adm','fin','rd','cil','ail','itx'];
+function plOf(b){const p={rev:b.rev,cogs:b.cogs,sell:b.sell,adm:b.adm,fin:b.fin,cil:b.cil,ail:b.ail,itx:b.itx,rd:b.rd,tx:0};
+ p.op=p.rev-p.cogs-p.tx-p.sell-p.adm-p.rd-p.fin-p.cil-p.ail;p.tp=p.op;p.ni=p.tp-p.itx;p.int=b.fin;p.ci=p.ni;return p}
+function bsOf(b){const ni=plOf(b).ni;const s={};
+ s.cash=b.cash;s.ar=b.ar-b.bad;s.inv=b.rm+b.moh+b.wip+b.fg-b.invp;s.ca=s.cash+s.ar+s.inv;s.rm=b.rm;s.wip=b.wip+b.moh;s.fg=b.fg;s.invp=b.invp;s.arg=b.ar;s.bad=b.bad;s.fag=b.fa;s.dep=b.dep;
+ s.fa=b.fa-b.dep;s.nca=s.fa;s.ta=s.ca+s.nca;
+ s.stl=b.stl;s.ap=b.ap;s.wage=b.wage;s.tax=b.tax;s.divp=b.divp;s.cl=s.stl+s.ap+s.wage+s.tax+s.divp;
+ s.ltl=b.ltl;s.ncl=s.ltl;s.tl=s.cl+s.ncl;
+ s.cap=b.cap;s.sur=b.sur;s.re=b.re+ni;s.te=s.cap+s.sur+s.re;s.tle=s.tl+s.te;return s}
+function cfOf(c,cash0){const g=k=>c[k]||0;const s={};
+ for(const k of['o_sale','o_buy','o_emp','o_tax','i_fa','f_cap','f_loan','f_repay','f_div'])s[k]=g(k);
+ s.oin=s.o_sale;s.oout=s.o_buy+s.o_emp+s.o_tax;s.onet=s.oin-s.oout;
+ s.iin=0;s.iout=s.i_fa;s.inet=s.iin-s.iout;
+ s.fin_=s.f_cap+s.f_loan;s.fout=s.f_repay+s.f_div;s.fnet=s.fin_-s.fout;
+ s.net=s.onet+s.inet+s.fnet;s.beg=cash0;s.end=s.beg+s.net;return s}
+function run(){
+ const b=zero();let cf={};let cash0=0;let lossCF=0;let lastTax=0;const states=[];const years={};
+ for(let i=0;i<STEPS.length;i++){const st=STEPS[i];
+  if(st.auto==='paytax'){st.je=[{dr:[['tax',lastTax]],cr:[['cash',lastTax]]}];st.cf=[['o_tax',lastTax]];
+   st.d='汇算清缴：缴纳第 '+(st.y-1)+' 年企业所得税 '+lastTax+' 万元。'}
+  if(st.close){const tp=plOf(b).tp;let base=0;
+   if(tp<0){lossCF+=-tp}else{base=Math.max(0,tp-lossCF);lossCF=Math.max(0,lossCF-tp)}
+   const tx=Math.round(base*TAXR);const je=[];
+   if(tx>0){const e={dr:[['itx',tx]],cr:[['tax',tx]]};post(b,e);je.push(e)}
+   const ni=plOf(b).ni;const resBase=Math.max(0,ni+Math.min(0,b.re));const res=Math.round(resBase*RESR);
+   if(res>0){const e={dr:[['re',res]],cr:[['sur',res]]};post(b,e);je.push(e)}
+   st.je=je;st.cf=[];st.tax=tx;st.res=res;st.resBase=resBase;st.ni=ni;st.tp=tp;st.lossUsed=tp>0?tp-base:0;lastTax=tx;
+   const snap={bs:bsOf(b),pl:plOf(b),cf:cfOf(cf,cash0),bal:{...b}};years[st.y]=snap;
+   b.re+=snap.pl.ni;for(const k of PL_KEYS)b[k]=0;cf={};cash0=b.cash;
+   states.push({i,y:st.y,bs:snap.bs,pl:snap.pl,cf:snap.cf,bal:{...b},closed:true});continue}
+  (st.je||[]).forEach(e=>post(b,e));for(const[k,a]of(st.cf||[]))cf[k]=(cf[k]||0)+a;
+  states.push({i,y:st.y,bs:bsOf(b),pl:plOf(b),cf:cfOf(cf,cash0),bal:{...b}})}
+ return{states,years}}
+if(typeof module!=='undefined')module.exports={ACC,STEPS,run,bsOf,plOf,cfOf};
+
+</script>
+<script>
+(function(){
+'use strict';
+const R=run();const STATES=R.states,YEARS=R.years;
+const $=s=>document.querySelector(s),$$=s=>Array.from(document.querySelectorAll(s));
+const setH=(el,h)=>el.replaceChildren(...new DOMParser().parseFromString(h,'text/html').body.childNodes);
+function fmt(v){if(v===undefined||v===null)return '';if(Math.abs(v)<1e-9)return '—';const a=Math.abs(v).toLocaleString('en-US',{maximumFractionDigits:1});return v<0?'−'+a:a}
+function fmtD(v){if(!v)return '';const a=Math.abs(v).toLocaleString('en-US');return (v>0?'+':'−')+a}
+function pct(v){return (v*100).toFixed(1)+'%'}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- 词条 ---------- */
+const G={
+cash:{n:'货币资金',def:'库存现金、银行存款和其他货币资金的合计。',basis:'财会〔2019〕6号报表格式；现金流量表口径见《企业会计准则第 31 号》。',mis:'货币资金不一定都能自由使用。保证金、冻结存款属于受限资金，要看附注。「存贷双高」（货币资金和有息负债同时很高）是常见的追查信号。',src:['bs','cash']},
+ar:{n:'应收账款',def:'企业因销售商品、提供服务，应向客户收取但尚未收到的款项。报表列示扣除坏账准备后的账面价值。',basis:'《企业会计准则第 22 号——金融工具确认和计量》：按预期信用损失模型计提坏账准备。',mis:'赊销确认收入，但不带来现金。应收账款增速持续快于营业收入增速，是盈余质量的预警信号。',src:['bs','ar'],sub:[['应收账款原值','arg'],['减：坏账准备','bad']]},
+inv:{n:'存货',def:'日常活动中持有以备出售的产成品或商品、处在生产过程中的在产品、在生产过程中耗用的材料和物料。',basis:'《企业会计准则第 1 号——存货》：期末按成本与可变现净值孰低计量；可变现净值低于成本的差额计提存货跌价准备，影响因素消失时可以在原计提金额内转回。',mis:'车间工资和车间折旧先进入存货，产品卖出时才转为营业成本。存货增加意味着一部分成本被递延到以后期间。',src:['bs','inv'],sub:[['原材料','rm'],['在产品（生产成本）','wip'],['库存商品','fg'],['减：存货跌价准备','invp']]},
+fa:{n:'固定资产',def:'为生产商品、提供劳务、出租或经营管理而持有，使用寿命超过一个会计年度的有形资产。报表列示原价减累计折旧和减值准备后的净额。',basis:'《企业会计准则第 4 号——固定资产》；减值见《企业会计准则第 8 号——资产减值》，固定资产减值损失一经确认，以后期间不得转回。',mis:'折旧是成本分摊，不是现金流出。购买设备的现金在购买当年已列入投资活动现金流出。',src:['bs','fa'],sub:[['固定资产原价','fag'],['减：累计折旧','dep']]},
+stl:{n:'短期借款',def:'企业向银行或其他金融机构借入、期限在一年以下（含一年）的各种借款。',basis:'财会〔2019〕6号报表格式。',mis:'借新还旧时，余额可能不变，但现金流量表中借款收到的现金和偿还债务支付的现金分别列示，不相互抵销。',src:['bs','stl']},
+ap:{n:'应付账款',def:'企业因购买材料、商品和接受服务，应支付给供应商但尚未支付的款项。',basis:'财会〔2019〕6号报表格式。',mis:'放慢付款会使经营活动现金流量变好，但这是在占用供应商的资金，不代表经营改善。',src:['bs','ap']},
+wage:{n:'应付职工薪酬',def:'企业为获得职工提供的服务而应付给职工的各种报酬中尚未支付的部分。',basis:'《企业会计准则第 9 号——职工薪酬》：按受益对象分配。生产工人计入生产成本，管理人员计入管理费用，销售人员计入销售费用。',mis:'性质相同的工资，按受益对象不同，进入利润表的时间不同：车间工资要等产品卖出才进入营业成本。',src:['bs','wage']},
+tax:{n:'应交税费',def:'企业按税法规定应缴纳但尚未缴纳的各种税费，包括增值税、企业所得税、城市维护建设税等。',basis:'财会〔2019〕6号报表格式；所得税见《企业会计准则第 18 号——所得税》。',mis:'利润表的所得税费用不等于当年缴纳的税款。会计口径和税法口径的差异形成递延所得税。',src:['bs','tax']},
+divp:{n:'其他应付款（其中：应付股利）',def:'2019 年格式中，「应付利息」「应付股利」并入「其他应付款」项目列示。应付股利指已经宣告但尚未支付的现金股利。',basis:'财会〔2019〕6号报表格式；《企业会计准则第 29 号——资产负债表日后事项》：资产负债表日后才宣告的股利，不确认为资产负债表日的负债。',mis:'股利是利润分配，不是费用。它减少未分配利润，不进入利润表。',src:['bs','divp']},
+ltl:{n:'长期借款',def:'企业向银行或其他金融机构借入、期限在一年以上（不含一年）的各种借款。',basis:'财会〔2019〕6号报表格式。',mis:'自资产负债表日起一年内到期的长期借款，要重分类到「一年内到期的非流动负债」。本案例的 5 年期借款第 4 年末才进入这一项目。',src:['bs','ltl']},
+cap:{n:'实收资本（或股本）',def:'投资者按企业章程或合同、协议约定实际投入企业的资本。股份有限公司称「股本」。',basis:'财会〔2019〕6号报表格式；投入超过注册资本份额的部分计入资本公积。',mis:'实收资本是股东投入的记录，不等于公司现有的现金。',src:['bs','cap']},
+sur:{n:'盈余公积',def:'企业从税后利润中提取的积累资金。公司制企业按净利润（先弥补以前年度亏损）的 10% 提取法定盈余公积，累计额达到注册资本的 50% 以上时可以不再提取。',basis:'《中华人民共和国公司法》关于利润分配的规定。',mis:'有累计亏损时，要先弥补亏损再提取。本案例第 2 年按（500 − 50）× 10% = 45 万元提取。',src:['bs','sur']},
+re:{n:'未分配利润',def:'企业历年实现的净利润，扣除已提取的盈余公积和已分配利润后的余额。负数表示累计亏损。',basis:'财会〔2019〕6号报表格式。',mis:'未分配利润多，不等于现金多。它只是所有者权益的一个累计数字。',src:['bs','re']},
+ta:{n:'资产总计',def:'流动资产与非流动资产的合计。',basis:'会计恒等式：资产 ＝ 负债 ＋ 所有者权益。',mis:'资产总计必须等于负债和所有者权益总计。分析时对不上，一般是摘录错误。',src:['bs','ta']},
+rev:{n:'营业收入',def:'企业在日常活动中形成的、会导致所有者权益增加的、与所有者投入资本无关的经济利益的总流入。',basis:'《企业会计准则第 14 号——收入》：五步法；企业在客户取得相关商品控制权时确认收入。',mis:'收入确认与是否收到现金无关。比较营业收入与「销售商品、提供劳务收到的现金」，可以判断收入的含金量。',src:['pl','rev']},
+cogs:{n:'营业成本',def:'已销售商品或已提供服务的成本。制造业的营业成本来自库存商品，包含材料、直接人工和分摊的制造费用。',basis:'《企业会计准则第 1 号——存货》：已售存货的成本结转为当期损益。',mis:'当年生产的成本不等于当年的营业成本。只有卖出去的那部分进入利润表。',src:['pl','cogs']},
+tx:{n:'税金及附加',def:'经营活动应负担的消费税、城市维护建设税、教育费附加、房产税、城镇土地使用税、车船税、印花税等。',basis:'财会〔2019〕6号报表格式。',mis:'增值税是价外税，不列入此项。本案例简化为零，实际企业几乎都有。',src:['pl','tx']},
+sell:{n:'销售费用',def:'企业销售商品过程中发生的费用，如销售人员薪酬、广告费、运输费、售后服务费。',basis:'财会〔2019〕6号报表格式。',mis:'放宽信用期不直接增加销售费用，但会增加应收账款占用的资金和坏账风险。',src:['pl','sell']},
+adm:{n:'管理费用',def:'企业为组织和管理生产经营发生的费用，如管理人员薪酬、办公费、行政部门资产折旧、中介机构费。',basis:'财会〔2019〕6号报表格式。',mis:'车间设备折旧计入生产成本，行政部门资产折旧计入管理费用。同样是折旧，进入利润表的路径不同。',src:['pl','adm']},
+rd:{n:'研发费用',def:'企业研究与开发过程中发生的费用化支出，以及计入管理费用的自行开发无形资产的摊销。',basis:'《企业会计准则第 6 号——无形资产》：研究阶段支出全部费用化；开发阶段支出满足规定条件的，资本化为「开发支出」。财会〔2018〕15号起单独列示。',mis:'资本化比例上升会使当期利润提高。要在附注中看资本化的条件和金额。',src:['pl','rd']},
+fin:{n:'财务费用',def:'企业为筹集生产经营所需资金发生的费用，包括利息支出（减利息收入）、汇兑损益和相关手续费。报表在下方单列「其中：利息费用」和「利息收入」。',basis:'财会〔2019〕6号报表格式。',mis:'利息费用进入利润表，但支付利息的现金在我国准则下列入筹资活动现金流出。',src:['pl','fin']},
+cil:{n:'信用减值损失',def:'按预期信用损失模型，对应收账款等金融资产计提的减值准备。以「−」号填列。',basis:'《企业会计准则第 22 号——金融工具确认和计量》；财会〔2019〕6号报表格式。',mis:'计提减值减少利润，但不产生现金流出。间接法中要加回。',src:['pl','cil'],neg:true},
+ail:{n:'资产减值损失',def:'存货跌价准备，以及固定资产、无形资产、商誉等长期资产计提的减值准备。以「−」号填列。',basis:'《企业会计准则第 1 号——存货》（存货跌价准备可以转回）；《企业会计准则第 8 号——资产减值》（长期资产减值不得转回）。',mis:'大额减值集中在某一年计提（「洗大澡」），会使以后年度利润更好看。',src:['pl','ail'],neg:true},
+op:{n:'营业利润',def:'营业收入减去营业成本、税金及附加、期间费用，加上其他收益、投资收益、公允价值变动收益，减去减值损失，加上资产处置收益后的金额。',basis:'财会〔2019〕6号报表格式。',mis:'营业利润包含投资收益、公允价值变动收益等非主营项目。判断主业能力要拆开看。',src:['pl','op']},
+tp:{n:'利润总额',def:'营业利润加营业外收入、减营业外支出后的金额。',basis:'财会〔2019〕6号报表格式。',mis:'营业外收入占比高的公司，利润不可持续。',src:['pl','tp']},
+itx:{n:'所得税费用',def:'当期所得税与递延所得税之和。当期所得税按税法计算的应纳税所得额乘以适用税率得出。',basis:'《企业会计准则第 18 号——所得税》。',mis:'所得税费用不等于当年缴纳的所得税。本案例年末计提，次年缴纳。',src:['pl','itx']},
+ni:{n:'净利润',def:'利润总额减去所得税费用后的金额。',basis:'财会〔2019〕6号报表格式。',mis:'净利润为正，不代表现金增加。要与经营活动现金流量净额一起看。',src:['pl','ni']},
+o_sale:{n:'销售商品、提供劳务收到的现金',def:'本期实际收到的销售商品、提供劳务的现金，包括收回以前的应收账款和本期预收的款项。',basis:'《企业会计准则第 31 号——现金流量表》。',mis:'它与营业收入的差额，主要来自应收账款和合同负债的变动。',src:['cf','o_sale']},
+o_buy:{n:'购买商品、接受劳务支付的现金',def:'本期实际支付的购买商品、接受劳务的现金，包括偿还以前的应付账款。',basis:'《企业会计准则第 31 号——现金流量表》。',mis:'本案例中，车间水电费和外部研发试验费也列入此项。',src:['cf','o_buy']},
+o_emp:{n:'支付给职工以及为职工支付的现金',def:'本期实际支付给职工的工资、奖金、津贴，以及为职工支付的社会保险等。',basis:'《企业会计准则第 31 号——现金流量表》。',mis:'在建工程人员的薪酬列入投资活动的「购建固定资产、无形资产和其他长期资产支付的现金」。',src:['cf','o_emp']},
+o_tax:{n:'支付的各项税费',def:'本期实际缴纳的各项税费，包括所得税、增值税、税金及附加等。',basis:'《企业会计准则第 31 号——现金流量表》。',mis:'我国准则把支付的所得税列入经营活动。',src:['cf','o_tax']},
+i_fa:{n:'购建固定资产、无形资产和其他长期资产支付的现金',def:'购买、建造固定资产，取得无形资产和其他长期资产实际支付的现金。',basis:'《企业会计准则第 31 号——现金流量表》。',mis:'扩张期公司的投资活动现金流出大，经营活动现金流量常常不够覆盖，要靠筹资。',src:['cf','i_fa']},
+f_cap:{n:'吸收投资收到的现金',def:'以发行股票、接受投资者投入等方式筹集资金实际收到的现金。',basis:'《企业会计准则第 31 号——现金流量表》。',mis:'以设备等非现金资产出资，不进入现金流量表，在附注中披露。',src:['cf','f_cap']},
+f_loan:{n:'取得借款收到的现金',def:'企业举借各种短期、长期借款实际收到的现金。',basis:'《企业会计准则第 31 号——现金流量表》。',mis:'借新还旧时，借款和还款分别列示，不相互抵销。',src:['cf','f_loan']},
+f_repay:{n:'偿还债务支付的现金',def:'企业以现金偿还债务本金。',basis:'《企业会计准则第 31 号——现金流量表》。',mis:'偿还的利息不列入此项，列入「分配股利、利润或偿付利息支付的现金」。',src:['cf','f_repay']},
+f_div:{n:'分配股利、利润或偿付利息支付的现金',def:'企业实际支付的现金股利、支付给其他投资单位的利润，以及支付的借款利息、债券利息。',basis:'《企业会计准则第 31 号——现金流量表》。',mis:'我国准则把支付的利息列入筹资活动；《国际会计准则第 7 号》允许选择。比较境内外公司时要统一口径。',src:['cf','f_div']},
+onet:{n:'经营活动产生的现金流量净额',def:'经营活动现金流入小计减经营活动现金流出小计。',basis:'《企业会计准则第 31 号——现金流量表》：主表用直接法，附注用间接法把净利润调节为本项目。',mis:'它是判断利润质量的第一个数字。长期低于净利润，要追查原因。',src:['cf','onet']},
+/* --- 本案例未涉及的行（完整格式中为灰色）：只给解释 --- */
+x_tfa:{n:'交易性金融资产',def:'以交易为目的持有的金融资产，如准备近期出售的股票、债券。CAS22 要求按公允价值计量。',mis:'公允价值涨跌计入当期损益（公允价值变动收益），持有期间股利、利息计入投资收益，利润随行情波动。'},
+x_note:{n:'应收票据',def:'销售商品、提供劳务收到的商业汇票，包括银行承兑汇票和商业承兑汇票。',mis:'银行承兑汇票由银行兑付、信用较好；商业承兑汇票到期要看付款人信用。贴现、背书可提前变现。'},
+x_arf:{n:'应收款项融资',def:'业务模式既以收取合同现金流量为目标、又以出售为目标的应收票据和应收账款，按公允价值计量且变动计入其他综合收益。',mis:'常见于拟贴现、背书的银行承兑汇票；公允价值变动不进利润。'},
+x_prepay:{n:'预付款项',def:'按合同预付给供应商、尚未收到商品或服务的款项。',mis:'是一项收货的权利、属资产；长期挂账未收货要追问是否实质变为拆借。'},
+x_orec:{n:'其他应收款',def:'除应收票据、应收账款、预付账款外的各种应收款项：备用金、押金保证金、员工借款、应收股利利息、往来款等。',mis:'股东及关联方占款、资金拆借常挂在这里，金额异常要查附注明细。'},
+x_contract:{n:'合同资产',def:'企业已向客户转让商品而有权收取对价、但该权利取决于时间流逝之外其他条件的金额（CAS14）。',mis:'与应收账款的区别：应收账款是无条件收款权，合同资产还须再履约或满足其他条件。'},
+x_curl:{n:'一年内到期的非流动资产',def:'债权投资、长期应收款等非流动资产中，将于资产负债表日后一年内到期收回的部分。',mis:'重分类提醒：到期前的非流动资产要挪入流动资产，影响流动比率。'},
+x_oca:{n:'其他流动资产',def:'不能归入其他流动资产项目的流动资产：待抵扣增值税进项税额、预缴税款、短期理财产品等。',mis:'兜底项目，具体构成要看附注明细。'},
+x_debt:{n:'债权投资',def:'以收取合同现金流量（本金和利息）为目标持有的债券等债权类投资，按摊余成本计量。',mis:'持有期间按实际利率法确认利息收入；不为短期出售，账面价值不随行情波动。'},
+x_lei:{n:'长期股权投资',def:'对子公司（控制）、合营企业（共同控制）、联营企业（重大影响）的股权投资（CAS2）。',mis:'母公司个别报表对子公司用成本法、合营联营用权益法；合并报表中子公司改为全额合并。'},
+x_oei:{n:'其他权益工具投资',def:'企业指定的、非交易目的权益工具投资，按公允价值计量且变动计入其他综合收益（CAS22）。',mis:'公允价值变动进 OCI 不进利润；持有期间股利计入投资收益；处置时累计公允价值变动不能转回利润、直接转留存收益。'},
+x_ip:{n:'投资性房地产',def:'为赚取租金或资本增值、或两者兼有而持有的房地产、土地使用权（CAS3）。',mis:'自用房产在固定资产；后续计量可选成本模式或公允价值模式，公允价值模式不得再改回成本模式。'},
+x_cip:{n:'在建工程',def:'正在建造、安装中，尚未达到预定可使用状态的固定资产工程成本。',mis:'达到预定可使用状态时应转固并开始计提折旧；长期挂账不转固可能是在推迟折旧、虚增利润。'},
+x_rou:{n:'使用权资产',def:'新租赁准则（CAS21）下，承租人在租赁期内使用租赁资产的权利。',mis:'租入资产也确认资产和负债；对应「租赁负债」。短期租赁和低价值资产租赁可豁免、直接计入费用。'},
+x_ia:{n:'无形资产',def:'没有实物形态的可辨认非货币性资产：专利权、商标权、土地使用权、特许权、软件等（CAS6）。',mis:'使用寿命有限的摊销；寿命不确定的不摊销、只做年度减值测试。研究阶段支出费用化、开发阶段符合条件资本化。'},
+x_dev:{n:'开发支出',def:'研发项目进入开发阶段、满足资本化条件但尚未形成无形资产的支出余额（CAS6）。',mis:'资本化推迟费用确认、抬高当期利润；资本化比例过高或条件不严要警惕。'},
+x_gw:{n:'商誉',def:'非同一控制下企业合并中，合并成本超过被购买方可辨认净资产公允价值份额的差额（CAS8、CAS20）。',mis:'不摊销，但至少每年做减值测试；高溢价收购的商誉集中减值是上市公司暴雷重灾区。'},
+x_ltd:{n:'长期待摊费用',def:'已经发生、应由本期和以后各期负担、分摊期在一年以上的各项费用，如租入固定资产改良支出。',mis:'是「资本化的费用」，本身不能变现；摊销期是否合理要看附注。'},
+x_dta:{n:'递延所得税资产',def:'因可抵扣暂时性差异、可抵扣亏损确认的，未来可减少应纳税所得额的权利（CAS18）。',mis:'确认前提是企业未来很可能取得足够的应纳税所得额，否则应减记。'},
+x_ona:{n:'其他非流动资产',def:'不能归入其他非流动资产项目的非流动资产：长期保证金、预付长期资产购置款等。',mis:'兜底项目，看附注明细。'},x_tfl:{n:'交易性金融负债',def:'为近期回购或短期出售而承担的金融负债（含衍生金融负债），或企业指定的以公允价值计量且变动计入当期损益的金融负债。',mis:'按公允价值计量，变动计入当期损益，与交易性金融资产对称。'},
+x_notep:{n:'应付票据',def:'购买商品、接受劳务开出、承兑的商业汇票。',mis:'以商业信用延后付款，到期必须兑付；逾期会转为应付账款或形成诉讼。'},
+x_adv:{n:'预收款项',def:'新收入准则（CAS14）实施后，仅保留预收租金等不构成「合同」的预收款项。',mis:'大部分预收客户货款已改入「合同负债」；两项并存时含义不同。'},
+x_cl:{n:'合同负债',def:'已收或应收客户对价、而应向客户转让商品的义务（CAS14）——预收的客户货款。',mis:'是负债不是收入；客户取得商品控制权时转入营业收入。'},
+x_curlb:{n:'一年内到期的非流动负债',def:'长期借款、应付债券、租赁负债等非流动负债中，将于资产负债表日后一年内到期偿付的部分。',mis:'重分类会使流动负债骤增，分析短期偿债压力时要盯住这项。'},
+x_ocl:{n:'其他流动负债',def:'不能归入其他流动负债项目的流动负债：待转销项税额等。',mis:'兜底项目，看附注。'},
+x_bond:{n:'应付债券',def:'企业发行一年以上期限的公司债券、中期票据等，尚未偿还的本息（一般列示面值与利息调整）。',mis:'到期必须连本带息兑付，属刚性负债；折价或溢价按实际利率法摊销。'},
+x_lease:{n:'租赁负债',def:'新租赁准则（CAS21）下，承租人尚未支付的租赁付款额的现值。',mis:'与「使用权资产」配对确认；短期租赁和低价值资产租赁可豁免。'},
+x_prov:{n:'预计负债',def:'很可能发生、金额能可靠估计的现时义务：产品质量保证、未决诉讼、亏损合同、弃置费用等（CAS13）。',mis:'必须在义务发生时计提，不能等实际支付才记；少提会虚增利润。'},
+x_dtl:{n:'递延所得税负债',def:'因应纳税暂时性差异确认的，未来应补缴所得税的义务（CAS18）。',mis:'与递延所得税资产相反，代表会计利润与应纳税所得额口径差「早晚要补的税」。'},
+x_capi:{n:'资本公积',def:'资本溢价（股本溢价）和其他资本公积。资本溢价是投资者投入超过其在注册资本（股本）中所占份额的部分。',mis:'不是经营赚来的；资本溢价可以转增资本。新公司法（2024-7-1 施行）取消了资本公积不得用于弥补亏损的限制。'},
+x_ts:{n:'减：库存股',def:'公司回购、尚未注销或转让的本公司股份，按回购成本作为所有者权益的减项。',mis:'是所有者权益的负项：回购直接减少净资产；注销时冲减股本和资本公积。'},
+x_oci:{n:'其他综合收益',def:'按准则不计入当期损益、直接计入所有者权益的利得和损失：其他权益工具投资/其他债权投资公允价值变动、外币财务报表折算差额、现金流量套期储备等。',mis:'是绕开利润表的损益；看企业真实盈亏必须把净利润加它（综合收益总额）。'},
+x_int:{n:'利息收入',def:'存款利息、债券利息等收入。',mis:'在利润表「财务费用」项下列示为抵减项（其中项目）；财务费用为负常因利息收入大于利息支出。'},
+x_oth:{n:'其他收益',def:'与企业日常活动相关、但不宜确认为收入或冲减成本的政府补助等收益（CAS16）。',mis:'财会〔2017〕15号起单列，不再计入营业外收入；分析主营盈利要剔掉它。'},
+x_inv:{n:'投资收益（损失以「−」号填列）',def:'对外投资取得的收益或损失：股利利息、处置损益、权益法核算的份额、金融资产处置价差等。',mis:'为负时以「−」号填列；占利润比重过大说明主业贡献弱。'},
+x_fv:{n:'公允价值变动收益（损失以「−」号填列）',def:'交易性金融资产/负债、按公允价值计量的投资性房地产等公允价值变动形成的未实现利得或损失。',mis:'是账面损益、未变现，能抬高利润但没有现金流入；行情反转会回吐。'},
+x_adisp:{n:'资产处置收益（损失以「−」号填列）',def:'出售、转让固定资产、在建工程、无形资产等非流动资产的处置利得或损失。',mis:'财会〔2017〕30号起单列，不再计入营业外收支；毁损报废仍走营业外。'},
+x_no:{n:'营业外收入',def:'与日常活动无直接关系的利得：捐赠利得、罚没利得、确实无法支付的应付款项、非流动资产毁损报废利得等。',mis:'多是一次性项目，不代表持续盈利能力。'},
+x_noe:{n:'营业外支出',def:'与日常活动无直接关系的损失：公益性捐赠、罚款滞纳金、非常损失、非流动资产毁损报废损失等。',mis:'多是一次性损失，剔除后更能看清主业。'},
+x_ocinet:{n:'其他综合收益的税后净额',def:'按准则不计入净利润、直接计入所有者权益的利得和损失的税后净额。',mis:'净利润加它等于综合收益总额；分「以后不能重分类进损益」和「以后可重分类进损益」两类。'},
+x_taxr:{n:'收到的税费返还',def:'收到的增值税出口退税、所得税及其他税费返还。',mis:'我国现金流量表中单列的经营活动项目。'},
+x_oorec:{n:'收到其他与经营活动有关的现金',def:'经营现金流入的兜底项：押金保证金、政府补助收现、存款利息、赔偿收入等。',mis:'兜底项目，金额异常大要查附注。'},
+x_oopay:{n:'支付其他与经营活动有关的现金',def:'经营现金流出的兜底项：以现金支付的销售/管理/研发费用、押金保证金、罚款等。',mis:'金额异常大要查附注。'},
+x_irec:{n:'收回投资收到的现金',def:'出售、转让或到期收回除现金等价物以外的股票、债券等投资实际收到的现金。',mis:'含本金和已实现收益部分；股利利息在「取得投资收益收到的现金」。'},
+x_divrec:{n:'取得投资收益收到的现金',def:'因股权、债权投资实际分得的现金股利、利息等投资收益。',mis:'只计实际收到的现金，与利润表「投资收益」确认口径不同。'},
+x_fadisp:{n:'处置固定资产、无形资产和其他长期资产收回的现金净额',def:'处置固定资产、无形资产、在建工程及其他长期资产收回的现金，扣除处置费用后的净额。',mis:'处置收现属投资活动；报废毁损收到的现金也在此列示。'},
+x_invpay:{n:'投资支付的现金',def:'购买除现金等价物以外的股票、债券、基金及取得子公司等投资实际支付的现金。',mis:'与「收回投资收到的现金」一收一付，看投资规模与进出节奏。'},
+x_ofrec:{n:'收到其他与筹资活动有关的现金',def:'筹资现金流入的兜底项：接受现金捐赠、收到其他与筹资有关的现金等。',mis:'兜底项目；「发行债券收到的现金」在 2019 格式中单列，不在此项。'},
+x_ofpay:{n:'支付其他与筹资活动有关的现金',def:'筹资现金流出的兜底项：回购股份、租赁负债本金和利息（承租人）、发行费用等。',mis:'兜底项目；新租赁准则后承租人偿还租赁负债本息在此列示。'},
+x_fx:{n:'汇率变动对现金及现金等价物的影响',def:'持有的外币现金及现金等价物按期末汇率折算产生的差额。',mis:'不是实际现金流动，是折算调整；有外币业务的公司才有。'}
+};
+
+/* ---------- 报表行定义 ---------- */
+// [标签, 取值键或null, 类型(hd/tot/gtot/空), 层级, 词条键, 符号]
+const BS_ROWS=[
+['流动资产：',null,'hd'],['货币资金','cash','',1,'cash'],['交易性金融资产','x','',1,'x_tfa'],['应收票据','x','',1,'x_note'],['应收账款','ar','',1,'ar'],['应收款项融资','x','',1,'x_arf'],['预付款项','x','',1,'x_prepay'],['其他应收款','x','',1,'x_orec'],['存货','inv','',1,'inv'],['合同资产','x','',1,'x_contract'],['一年内到期的非流动资产','x','',1,'x_curl'],['其他流动资产','x','',1,'x_oca'],['流动资产合计','ca','tot'],
+['非流动资产：',null,'hd'],['债权投资','x','',1,'x_debt'],['长期股权投资','x','',1,'x_lei'],['其他权益工具投资','x','',1,'x_oei'],['投资性房地产','x','',1,'x_ip'],['固定资产','fa','',1,'fa'],['在建工程','x','',1,'x_cip'],['使用权资产','x','',1,'x_rou'],['无形资产','x','',1,'x_ia'],['开发支出','x','',1,'x_dev'],['商誉','x','',1,'x_gw'],['长期待摊费用','x','',1,'x_ltd'],['递延所得税资产','x','',1,'x_dta'],['其他非流动资产','x','',1,'x_ona'],['非流动资产合计','nca','tot'],
+['资产总计','ta','gtot',0,'ta'],
+['流动负债：',null,'hd'],['短期借款','stl','',1,'stl'],['交易性金融负债','x','',1,'x_tfl'],['应付票据','x','',1,'x_notep'],['应付账款','ap','',1,'ap'],['预收款项','x','',1,'x_adv'],['合同负债','x','',1,'x_cl'],['应付职工薪酬','wage','',1,'wage'],['应交税费','tax','',1,'tax'],['其他应付款','divp','',1,'divp'],['一年内到期的非流动负债','x','',1,'x_curlb'],['其他流动负债','x','',1,'x_ocl'],['流动负债合计','cl','tot'],
+['非流动负债：',null,'hd'],['长期借款','ltl','',1,'ltl'],['应付债券','x','',1,'x_bond'],['租赁负债','x','',1,'x_lease'],['预计负债','x','',1,'x_prov'],['递延所得税负债','x','',1,'x_dtl'],['非流动负债合计','ncl','tot'],
+['负债合计','tl','tot'],
+['所有者权益：',null,'hd'],['实收资本（或股本）','cap','',1,'cap'],['资本公积','x','',1,'x_capi'],['减：库存股','x','',1,'x_ts'],['其他综合收益','x','',1,'x_oci'],['盈余公积','sur','',1,'sur'],['未分配利润','re','',1,'re'],['所有者权益合计','te','tot'],
+['负债和所有者权益总计','tle','gtot']];
+const PL_ROWS=[
+['一、营业收入','rev','tot',0,'rev'],['减：营业成本','cogs','',1,'cogs'],['税金及附加','tx','',1,'tx'],['销售费用','sell','',1,'sell'],['管理费用','adm','',1,'adm'],['研发费用','rd','',1,'rd'],['财务费用','fin','',1,'fin'],['其中：利息费用','int','',2],['利息收入','x','',2,'x_int'],
+['加：其他收益','x','',1,'x_oth'],['投资收益（损失以「−」号填列）','x','',1,'x_inv'],['公允价值变动收益（损失以「−」号填列）','x','',1,'x_fv'],['信用减值损失（损失以「−」号填列）','cil','',1,'cil',-1],['资产减值损失（损失以「−」号填列）','ail','',1,'ail',-1],['资产处置收益（损失以「−」号填列）','x','',1,'x_adisp'],
+['二、营业利润','op','tot',0,'op'],['加：营业外收入','x','',1,'x_no'],['减：营业外支出','x','',1,'x_noe'],['三、利润总额','tp','tot',0,'tp'],['减：所得税费用','itx','',1,'itx'],['四、净利润','ni','gtot',0,'ni'],['五、其他综合收益的税后净额','x','',0,'x_ocinet'],['六、综合收益总额','ci','tot',0]];
+const CF_ROWS=[
+['一、经营活动产生的现金流量：',null,'hd'],['销售商品、提供劳务收到的现金','o_sale','',1,'o_sale'],['收到的税费返还','x','',1,'x_taxr'],['收到其他与经营活动有关的现金','x','',1,'x_oorec'],['经营活动现金流入小计','oin','tot'],['购买商品、接受劳务支付的现金','o_buy','',1,'o_buy'],['支付给职工以及为职工支付的现金','o_emp','',1,'o_emp'],['支付的各项税费','o_tax','',1,'o_tax'],['支付其他与经营活动有关的现金','x','',1,'x_oopay'],['经营活动现金流出小计','oout','tot'],['经营活动产生的现金流量净额','onet','gtot',0,'onet'],
+['二、投资活动产生的现金流量：',null,'hd'],['收回投资收到的现金','x','',1,'x_irec'],['取得投资收益收到的现金','x','',1,'x_divrec'],['处置固定资产、无形资产和其他长期资产收回的现金净额','x','',1,'x_fadisp'],['投资活动现金流入小计','iin','tot'],['购建固定资产、无形资产和其他长期资产支付的现金','i_fa','',1,'i_fa'],['投资支付的现金','x','',1,'x_invpay'],['投资活动现金流出小计','iout','tot'],['投资活动产生的现金流量净额','inet','gtot'],
+['三、筹资活动产生的现金流量：',null,'hd'],['吸收投资收到的现金','f_cap','',1,'f_cap'],['取得借款收到的现金','f_loan','',1,'f_loan'],['收到其他与筹资活动有关的现金','x','',1,'x_ofrec'],['筹资活动现金流入小计','fin_','tot'],['偿还债务支付的现金','f_repay','',1,'f_repay'],['分配股利、利润或偿付利息支付的现金','f_div','',1,'f_div'],['支付其他与筹资活动有关的现金','x','',1,'x_ofpay'],['筹资活动现金流出小计','fout','tot'],['筹资活动产生的现金流量净额','fnet','gtot'],
+['四、汇率变动对现金及现金等价物的影响','x','',0,'x_fx'],['五、现金及现金等价物净增加额','net','tot'],['加：期初现金及现金等价物余额','beg','',1],['六、期末现金及现金等价物余额','end','gtot']];
+const CORE={bs:['tot','gtot','hd'],pl:[],cf:[]};
+
+/* ---------- 年份选择（第2–4节） ---------- */
+let selY=2;
+function yearSeg(){const el=$$('.yrsel').find(x=>!x.querySelector('.seg'));if(el){setH(el,'<span class="seg">'+[1,2,3].map(y=>`<button data-y="${y}" class="${y===selY?'on':''}">第 ${y} 年</button>`).join('')+'</span>');el.style.marginLeft='auto'}}
+ $$('.yrsel button').forEach(b=>b.onclick=()=>{selY=+b.dataset.y;renderStatic()})
+function stmtTable(rows,cur,prev,opts){
+ const full=opts.full;let h=`<table class="stmt"><caption>${opts.cap}<span class="u">单位：万元</span></caption><thead><tr><th>项目</th><th class="n">${opts.c1}</th><th class="n">${opts.c2}</th></tr></thead><tbody>`;
+ for(const r of rows){const[lab,key,type,lvl,gk,sg]=r;const s=sg||1;
+  if(type==='hd'){h+=`<tr class="hd"><td colspan="3">${lab}</td></tr>`;continue}
+  const ghost=key==='x';
+  if(ghost&&!full)continue;
+  if(!full&&!ghost&&!type&&!(gk)&&key!=='int'&&key!=='beg')continue;
+  const v=ghost?0:cur[key],pv=prev&&!ghost?prev[key]:undefined;
+  const labH=gk?`<span class="lk" data-g="${gk}">${lab}</span>`:lab;
+  h+=`<tr class="${type||''} ${ghost?'ghost':''}"><td class="${lvl===1?'l1':lvl===2?'l2':''}">${labH}</td><td class="n">${ghost?'—':fmt(v*s)}</td><td class="n">${prev?(ghost?'—':fmt(pv*s)):''}</td></tr>`}
+ return h+'</tbody></table>'}
+function renderStatic(){
+ yearSeg();const Y=YEARS[selY],P=YEARS[selY-1];
+ setH($('#bsTable'),stmtTable(BS_ROWS,Y.bs,P?P.bs:null,{full:$('#fullBS').checked,cap:`资产负债表 · 第 ${selY} 年 12 月 31 日`,c1:'期末余额',c2:P?'上年年末余额':'上年年末（新设）'}));
+ setH($('#plTable'),stmtTable(PL_ROWS,Y.pl,P?P.pl:null,{full:$('#fullPL').checked,cap:`利润表 · 第 ${selY} 年度`,c1:'本期金额',c2:P?'上期金额':'上期（新设）'}));
+ setH($('#cfTable'),stmtTable(CF_ROWS,Y.cf,P?P.cf:null,{full:$('#fullCF').checked,cap:`现金流量表 · 第 ${selY} 年度`,c1:'本期金额',c2:P?'上期金额':'上期（新设）'}));
+ renderInd();renderFlow();bindLinks();}
+['#fullBS','#fullPL','#fullCF'].forEach(id=>$(id).addEventListener('change',renderStatic));
+
+/* ---------- 间接法 ---------- */
+const IND_EXPL=[
+'从净利润出发。净利润按权责发生制计算，下面各行把它逐项调整为现金口径。',
+'减值准备减少了利润，但没有支付现金，所以加回。',
+'折旧减少了利润（或先进入存货再进入营业成本），但没有支付现金，所以加回。设备的现金在购买当年已列入投资活动。',
+'利息费用减少了利润，但支付利息的现金在我国准则下属于筹资活动，所以在经营活动中加回。',
+'存货增加（按未扣跌价准备的原值）意味着现金变成了存货，没有进入营业成本，所以减去增加额；存货减少则加回。',
+'应收账款增加（按未扣坏账准备的原值）意味着一部分收入没有收到现金，所以减去增加额。',
+'应付账款、应付职工薪酬、应交税费增加，意味着一部分成本费用没有付现，所以加上增加额；减少则减去。',
+'调节结果必须等于主表直接法计算的经营活动现金流量净额。'];
+function indOf(y){const Y=YEARS[y],P=YEARS[y-1];const b=Y.bal,pb=P?P.bal:null;const g=k=>pb?pb[k]:0;
+ const inv=x=>x?x.rm+x.moh+x.wip+x.fg:0;
+ const pay=(b.ap-g('ap'))+(b.wage-g('wage'))+(b.tax-g('tax'));
+ const rows=[['净利润',Y.pl.ni],['加：资产减值准备（含信用减值损失）',Y.pl.cil+Y.pl.ail],['固定资产折旧',b.dep-g('dep')],['财务费用（收益以「−」号填列）',Y.pl.fin],['存货的减少（增加以「−」号填列）',-(inv(b)-inv(pb))],['经营性应收项目的减少（增加以「−」号填列）',-(b.ar-g('ar'))],['经营性应付项目的增加（减少以「−」号填列）',pay]];
+ const tot=rows.reduce((a,r)=>a+r[1],0);rows.push(['经营活动产生的现金流量净额',tot]);return{rows,tot,direct:Y.cf.onet,payDetail:[b.ap-g('ap'),b.wage-g('wage'),b.tax-g('tax')]}}
+function renderInd(){const I=indOf(selY);let h=`<table class="stmt"><caption>将净利润调节为经营活动现金流量 · 第 ${selY} 年<span class="u">单位：万元</span></caption><tbody>`;
+ I.rows.forEach((r,i)=>{const last=i===I.rows.length-1;h+=`<tr class="${last?'gtot':''}" data-i="${i}" style="cursor:pointer"><td class="${i&&!last?'l1':''}">${r[0]}</td><td class="n">${fmt(r[1])}</td></tr>`});
+ h+=`</tbody></table><p class="small">核对：直接法主表经营活动现金流量净额 ${fmt(I.direct)}；间接法调节结果 ${fmt(I.tot)}。${I.direct===I.tot?'<span class="ok">一致 ✓</span>':'<span class="no">不一致</span>'}</p>`;
+ setH($('#indTable'),h);
+ $$('#indTable tr[data-i]').forEach(tr=>tr.onclick=()=>{const i=+tr.dataset.i;let t=IND_EXPL[i];
+  if(i===6){const d=I.payDetail;t+=` 本年：应付账款 ${fmtD(d[0])||'0'}，应付职工薪酬 ${fmtD(d[1])||'0'}，应交税费 ${fmtD(d[2])||'0'}。`}
+  setH($('#indExplain'),'<strong>'+esc(I.rows[i][0])+'：</strong>'+t);$$('#indTable tr').forEach(x=>x.style.background='');tr.style.background='#fff7d6'})}
+
+/* ---------- 成本流转 ---------- */
+function flowOf(y){const o={rm:0,lab:0,moh:0,dep:0,fg:0,cogs:0};
+ STEPS.forEach(s=>{if(s.y!==y||!s.je)return;s.je.forEach(e=>{
+  e.dr.forEach(([k,a])=>{if(k==='wip'){const c=e.cr.map(x=>x[0]);if(c.includes('rm'))o.rm+=a;else if(c.includes('wage'))o.lab+=a;else if(c.includes('moh'))o.moh+=a}
+   if(k==='fg')o.fg+=a;if(k==='cogs')o.cogs+=a;if(k==='moh'){const d=e.cr.find(x=>x[0]==='dep');if(d)o.dep+=d[1]}})})});return o}
+function renderFlow(){const y=selY,o=flowOf(y),Y=YEARS[y],P=YEARS[y-1];const w0=P?P.bal.wip+P.bal.moh:0,f0=P?P.bal.fg:0;const pl=Y.pl;
+ const r=(a,b)=>`<div class="r"><span>${a}</span><span>${fmt(b)}</span></div>`;
+ setH($('#flow'),`<div class="flow">
+ <div class="box bs"><b>投入生产（产品成本）</b><div class="r small muted"><span>资产负债表</span></div>${r('直接材料',o.rm)}${r('直接人工',o.lab)}${r('制造费用',o.moh)}<div class="r small muted"><span>其中：车间折旧</span><span>${fmt(o.dep)}</span></div></div>
+ <div class="arr">→</div>
+ <div class="box in"><b>生产成本（在产品）· 存货</b>${r('年初',w0)}${r('加：本年投入',o.rm+o.lab+o.moh)}${r('减：完工转出',o.fg)}${r('年末',Y.bal.wip+Y.bal.moh)}</div>
+ <div class="arr">→</div>
+ <div class="box in"><b>库存商品 · 存货</b>${r('年初',f0)}${r('加：完工入库',o.fg)}${r('减：销售结转',o.cogs)}${r('年末',Y.bal.fg)}</div>
+ <div class="arr">→</div>
+ <div class="box pl"><b>营业成本 · 利润表</b>${r('本年',o.cogs)}</div>
+ <div class="box pl period"><b>期间费用：不经过存货，直接进入利润表</b><div class="r"><span>销售费用 ${fmt(pl.sell)} · 管理费用 ${fmt(pl.adm)} · 研发费用 ${fmt(pl.rd)} · 财务费用 ${fmt(pl.fin)}</span><span>合计 ${fmt(pl.sell+pl.adm+pl.rd+pl.fin)}</span></div></div>
+ </div><p class="small muted">第 ${y} 年：库存商品${Y.bal.fg-f0>=0?'增加':'减少'} ${fmt(Math.abs(Y.bal.fg-f0))} 万元。${Y.bal.fg-f0>0?'这部分成本（含车间折旧和车间工资）留在资产负债表上，没有进入当年利润表。':''}</p>`)}
+
+/* ---------- 权责发生制演示 ---------- */
+function renderAcc(v){const Y=YEARS[2];const d=$('#accDemo');
+ const a=v==='acc'?[['营业收入',Y.pl.rev,'客户取得零部件的控制权即确认，含尚未收款的部分'],['净利润',Y.pl.ni,'收入减去与之配比的成本费用']]
+  :[['销售商品收到的现金',Y.cf.o_sale,'只计本年实际收到的货款，含上年末的应收账款'],['经营活动现金流量净额',Y.cf.onet,'本年经营活动实际收到的现金减去实际支付的现金']];
+ setH(d,a.map(x=>`<div class="card"><div class="lbl">${x[0]}（第 2 年）</div><div class="val" style="color:${x[1]<0?'var(--neg)':'var(--accent)'}">${fmt(x[1])} 万元</div><div class="small muted">${x[2]}</div></div>`).join(''));
+ $('#accExplain').textContent=v==='acc'?'切换到「收付实现制」，看同一年的现金口径数字。':`同一年：收入 ${fmt(Y.pl.rev)} 万元只收回 ${fmt(Y.cf.o_sale)} 万元；净利润 ${fmt(Y.pl.ni)} 万元，经营活动现金流量净额却是 ${fmt(Y.cf.onet)} 万元。原因在第 4 节的间接法表中。`}
+$$('#accSeg button').forEach(b=>b.onclick=()=>{$$('#accSeg button').forEach(x=>x.classList.toggle('on',x===b));renderAcc(b.dataset.v)});
+
+/* ---------- 词条抽屉 ---------- */
+function openG(k){const g=G[k];if(!g)return;
+ if(!g.src){setH($('#dbody'),`<p class="eyebrow">本案例未涉及</p><h4>${g.n}</h4>
+ <div class="sec"><b>定义</b>${g.def}</div><div class="sec"><b>分析要点</b>${g.mis}</div>
+ <p class="small muted">本项目在本案例三年业务中金额为零，在完整格式中以灰色列示。</p>`);
+  $('#drawer').classList.add('open');$('#drawer').setAttribute('aria-hidden','false');return}
+ const[t,key]=g.src;const s=g.neg?-1:1;
+ let rows=[1,2,3].map(y=>{const o=YEARS[y][t];return `<td class="n">${fmt(o[key]*s)}</td>`}).join('');
+ let sub='';if(g.sub){sub=g.sub.map(([lab,kk])=>`<tr><td class="l1">${lab}</td>${[1,2,3].map(y=>`<td class="n">${fmt(YEARS[y].bs[kk])}</td>`).join('')}</tr>`).join('')}
+ setH($('#dbody'),`<p class="eyebrow">${t==='bs'?'资产负债表':t==='pl'?'利润表':'现金流量表'}项目</p><h4>${g.n}</h4>
+ <div class="sec"><b>定义</b>${g.def}</div><div class="sec"><b>准则依据</b>${g.basis}</div><div class="sec"><b>常见误解</b>${g.mis}</div>
+ <div class="sec"><b>本案例数字（万元）</b><table class="stmt"><thead><tr><th></th><th class="n">第 1 年</th><th class="n">第 2 年</th><th class="n">第 3 年</th></tr></thead><tbody><tr><td>${t==='bs'?'年末余额':'本年金额'}</td>${rows}</tr>${sub}</tbody></table></div>`);
+ $('#drawer').classList.add('open');$('#drawer').setAttribute('aria-hidden','false')}
+$('#dx').onclick=()=>{if(document.activeElement)document.activeElement.blur();$('#drawer').classList.remove('open');$('#drawer').setAttribute('aria-hidden','true')};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#dx').onclick()});
+function bindLinks(){$$('.lk').forEach(el=>el.onclick=()=>openG(el.dataset.g))}
+
+/* ---------- 模拟器 ---------- */
+const INS={
+'股东出资':'资产（银行存款）和所有者权益（实收资本）同时增加。现金流量表：筹资活动流入。利润表不变：股东投入不是收入。',
+'取得长期借款':'资产和负债同时增加。借款不是收入，利润表不变。',
+'购买生产设备':'资产内部一增一减，资产总计不变。现金流出列入投资活动。利润表不变：设备成本以后通过折旧分期进入成本费用。',
+'赊购原材料':'存货和应付账款同时增加。没有现金流动，现金流量表不变。',
+'生产领用原材料':'只是存货内部从「原材料」转到「在产品」。三张表的合计数都不变。',
+'计提并发放职工薪酬':'生产工人工资进入在产品（资产），管理和销售人员工资直接进入利润表。实际发放的部分才是经营活动现金流出。',
+'归集制造费用并转入生产成本':'车间折旧不付现，水电费付现。两者都先进入在产品，产品卖出后才成为营业成本。',
+'产品完工入库':'存货内部从「在产品」转到「库存商品」。三张表的合计数都不变。',
+'赊销产品并结转成本':'收入与成本同时确认，体现配比原则。赊销没有现金流入：利润增加，现金不变。',
+'放宽信用期，赊销大增':'收入大增，但应收账款同时大增。利润表很好看，现金还没有进来。',
+'下游需求放缓，销售回落':'营业成本只结转卖出部分。没卖出的产品留在库存商品中。',
+'收回应收账款':'资产内部一增一减。利润表不变：收入在赊销时已经确认。现金流入列入经营活动。',
+'收回上年末应收账款':'上年已确认收入，今年只收现金。利润表不变，经营活动现金流入。',
+'收回本年货款':'利润表不变，经营活动现金流入。逾期欠款仍留在应收账款中。',
+'支付供应商货款':'负债减少、现金减少。成本在采购和领用时已经记录，利润表不变。',
+'支付借款利息':'利息进入利润表的财务费用；支付的现金列入筹资活动。这是我国准则的口径。',
+'取得短期借款':'资产和负债同时增加。筹资活动流入。',
+'购买第二台设备':'投资活动流出。从下一年起，每年折旧增加 120 万元。',
+'支付研发费用':'研究阶段支出全部费用化，直接进入利润表的研发费用。',
+'缴纳上年企业所得税':'所得税费用在上年结账时已确认。本年只减少应交税费和现金，列入经营活动。',
+'短期借款到期，还旧借新':'余额不变，但现金流量表分别列示借款流入和还款流出，不相互抵销。',
+'宣告并发放现金股利':'股利是利润分配，减少未分配利润，不进入利润表。支付的现金列入筹资活动。',
+'计提应收账款坏账准备':'信用减值损失减少利润，应收账款净额减少。没有现金流出。',
+'计提存货跌价准备':'资产减值损失减少利润，存货净额减少。没有现金流出。'};
+const CFL={o_sale:['o','经营活动','销售商品、提供劳务收到的现金',1],o_buy:['o','经营活动','购买商品、接受劳务支付的现金',-1],o_emp:['o','经营活动','支付给职工以及为职工支付的现金',-1],o_tax:['o','经营活动','支付的各项税费',-1],i_fa:['i','投资活动','购建固定资产、无形资产和其他长期资产支付的现金',-1],f_cap:['f','筹资活动','吸收投资收到的现金',1],f_loan:['f','筹资活动','取得借款收到的现金',1],f_repay:['f','筹资活动','偿还债务支付的现金',-1],f_div:['f','筹资活动','分配股利、利润或偿付利息支付的现金',-1]};
+const ZBS=(()=>{const s=bsOf((()=>{const b={};for(const k in ACC)b[k]=0;return b})());return s})();
+const ZPL=plOf((()=>{const b={};for(const k in ACC)b[k]=0;return b})());
+function viewAt(p,ys){ // p=已执行步数
+ if(p===0)return{bs:ZBS,pl:ZPL,cf:cfOf({},0)};
+ const s=STATES[p-1];
+ if(ys&&s.closed){return{bs:s.bs,pl:ZPL,cf:cfOf({},s.bal.cash)}}
+ return{bs:s.bs,pl:s.pl,cf:s.cf}}
+let PI=0,YSI=false;
+function curY(){if(PI===0)return 1;const st=STEPS[PI-1];return YSI?st.y+1:st.y}
+function prevView(){if(PI===0||YSI)return null;if(PI===1)return viewAt(0,false);
+ return STEPS[PI-2].close?viewAt(PI-1,true):viewAt(PI-1,false)}
+const firstOf=y=>STEPS.findIndex(s=>s.y===y);
+const closeOf=y=>STEPS.findIndex(s=>s.y===y&&s.close);
+function next(){if(PI===STEPS.length)return;if(PI>0&&STEPS[PI-1].close&&!YSI){YSI=true}else{PI++;YSI=false}renderSim()}
+function prev(){if(PI===0)return;if(YSI){YSI=false}else if(PI>=2&&STEPS[PI-2].close){PI--;YSI=true}else{PI--}renderSim()}
+function toYear(y){if(y===1){PI=0;YSI=false}else{PI=firstOf(y);YSI=true}renderSim()}
+function toEnd(){const y=curY();PI=closeOf(y)+1;YSI=false;renderSim()}
+function goStep(i){PI=i+1;YSI=false;renderSim()}
+$('#bNext').onclick=next;$('#bPrev').onclick=prev;$('#bEnd').onclick=toEnd;$('#bReset').onclick=()=>{PI=0;YSI=false;renderSim()};
+$$('#yearTabs button').forEach(b=>b.onclick=()=>toYear(+b.dataset.y));
+function jeHTML(je){if(!je||!je.length)return '';return '<div class="je">'+je.map((e,i)=>(i?'<div class="sep"></div>':'')+e.dr.map(([k,a])=>`<div class="dr">借：${ACC[k][0]}<span class="amt">${fmt(a)}</span></div>`).join('')+e.cr.map(([k,a])=>`<div class="cr">贷：${ACC[k][0]}<span class="amt">${fmt(a)}</span></div>`).join('')).join('')+'</div>'}
+function cfHTML(cf){if(!cf||!cf.length)return '<div class="cfline">现金流量表：<span>不涉及现金，不进入现金流量表</span></div>';
+ return '<div class="cfline">现金流量表：'+cf.map(([k,a])=>{const c=CFL[k];return `<span class="${c[0]}">${c[1]} · ${c[2]} ${c[3]>0?'+':'−'}${fmt(a)}</span>`}).join('')+'</div>'}
+function closeText(st){const L=[];
+ L.push('1. 把各损益类科目的余额结转到「本年利润」，再把本年净利润转入「利润分配—未分配利润」。');
+ if(st.tp<0){L.push(`2. 本年利润总额 ${fmt(st.tp)} 万元，为亏损，不计提所得税。按税法，亏损可以用以后五个纳税年度的税前利润弥补。`);L.push('3. 没有可供分配的利润，不提取盈余公积。')}
+ else{L.push(`2. 计提企业所得税：利润总额 ${fmt(st.tp)}${st.lossUsed?` − 弥补以前年度亏损 ${fmt(st.lossUsed)}`:''}，乘以 25% = ${fmt(st.tax)} 万元。次年汇算清缴时缴纳。`);
+  L.push(`3. 提取法定盈余公积：${st.resBase!==st.ni?`（净利润 ${fmt(st.ni)} − 弥补以前年度亏损 ${fmt(st.ni-st.resBase)}）`:`净利润 ${fmt(st.ni)}`} × 10% = ${fmt(st.res)} 万元。`)}
+ L.push(`4. 第 ${st.y} 年的三张表定稿。利润表和现金流量表从下一年起重新累计；资产负债表的期末余额成为下一年的期初余额。`);
+ return '<ol style="margin:6px 0;padding-left:20px;list-style:none">'+L.map(x=>`<li>${x}</li>`).join('')+'</ol>'}
+const SB=[['货币资金','cash'],['应收账款','ar'],['存货','inv'],['　其中：原材料','rm'],['　　　　在产品','wip'],['　　　　库存商品','fg'],['固定资产','fa'],['资产总计','ta',1],['短期借款','stl'],['应付账款','ap'],['应付职工薪酬','wage'],['应交税费','tax'],['长期借款','ltl'],['负债合计','tl',1],['实收资本','cap'],['盈余公积','sur'],['未分配利润','re'],['所有者权益合计','te',1],['负债和所有者权益总计','tle',1]];
+const SP=[['营业收入','rev'],['营业成本','cogs'],['销售费用','sell'],['管理费用','adm'],['研发费用','rd'],['财务费用','fin'],['信用减值损失','cil',0,-1],['资产减值损失','ail',0,-1],['营业利润','op',1],['利润总额','tp',1],['所得税费用','itx'],['净利润','ni',1]];
+const SC=[['销售商品收到的现金','o_sale'],['购买商品支付的现金','o_buy',0,-1],['支付给职工的现金','o_emp',0,-1],['支付的各项税费','o_tax',0,-1],['经营活动现金流量净额','onet',1],['购建固定资产支付的现金','i_fa',0,-1],['投资活动现金流量净额','inet',1],['吸收投资收到的现金','f_cap'],['取得借款收到的现金','f_loan'],['偿还债务支付的现金','f_repay',0,-1],['分配股利或偿付利息','f_div',0,-1],['筹资活动现金流量净额','fnet',1],['现金净增加额','net',1],['期末现金余额','end',1]];
+function mini(title,rows,cur,prv){let h=`<table class="stmt"><caption>${title}<span class="u">万元</span></caption><tbody>`;
+ for(const[l,k,b,sg]of rows){const s=sg||1;const v=cur[k]*s;const d=prv?(cur[k]-prv[k])*s:0;
+  h+=`<tr class="${b?'tot':''} ${d?'chg':''}"><td>${l}</td><td class="n">${fmt(v)}</td><td class="d ${d>0?'up':d<0?'dn':''}">${fmtD(d)}</td></tr>`}
+ return h+'</tbody></table>'}
+function renderSim(){const y=curY();const V=viewAt(PI,YSI);const PV=prevView();
+ $$('#yearTabs button').forEach(b=>b.classList.toggle('on',+b.dataset.y===y));
+ $('#bPrev').disabled=PI===0;$('#bNext').disabled=PI===STEPS.length;
+ const done=STEPS.filter((s,i)=>i<PI&&!s.close).length,tot=STEPS.filter(s=>!s.close).length;
+ $('#prog').textContent=`已执行 ${done} / ${tot} 笔业务`;
+ // 步骤列表
+ let h='';[1,2,3].forEach(yy=>{h+=`<div class="yr">第 ${yy} 年</div>`;let n=0;STEPS.forEach((s,i)=>{if(s.y!==yy)return;n++;
+  const cls=(i<PI?'done':'')+(i===PI-1&&!YSI?' cur':'')+(s.close?' close':'');
+  h+=`<button data-i="${i}" class="${cls}"><span class="k">${s.close?'■':n}</span><span>${s.t}</span></button>`})});
+ setH($('#stepList'),h);$$('#stepList button').forEach(b=>b.onclick=()=>goStep(+b.dataset.i));
+ const cur=$('#stepList button.cur');if(cur){const L=$('#stepList');const t=cur.offsetTop-L.offsetTop;if(t<L.scrollTop+30||t>L.scrollTop+L.clientHeight-40)L.scrollTop=t-L.clientHeight/2}
+ // 焦点卡
+ let f='';
+ if(PI===0){f=`<div class="tag">准备开始</div><h4>岭川精工成立前：三张表全部为零</h4><p>点击「下一笔业务」，从股东出资开始。每一步请先自己想：这笔业务会让哪张表的哪一行变动？再看下方的答案。</p>`}
+ else if(YSI){f=`<div class="tag">第 ${y} 年 · 年初</div><h4>第 ${y} 年开始</h4><p>资产负债表沿用第 ${y-1} 年末余额。利润表和现金流量表从零开始累计。</p><p class="small muted">可以在左侧点击第 ${y-1} 年任一步骤回看。</p>`}
+ else{const st=STEPS[PI-1];const k=STEPS.filter((s,i)=>s.y===st.y&&i<PI).length;
+  if(st.close){f=`<div class="tag">第 ${st.y} 年 · 年末</div><h4>年末结账</h4>${closeText(st)}${jeHTML(st.je)}`}
+  else{const pv=PV?PV.bs:ZBS;const dA=V.bs.ta-pv.ta,dL=V.bs.tl-pv.tl,dE=V.bs.te-pv.te;
+   f=`<div class="tag">第 ${st.y} 年 · 第 ${k} 笔</div><h4>${st.t}</h4><p>${st.d}</p>${jeHTML(st.je)}${cfHTML(st.cf)}
+   <div class="eq"><span class="${dA>0?'up':dA<0?'dn':''}">资产 ${fmtD(dA)||'不变'}</span><span class="eqo">＝</span><span class="${dL>0?'up':dL<0?'dn':''}">负债 ${fmtD(dL)||'不变'}</span><span class="eqo">＋</span><span class="${dE>0?'up':dE<0?'dn':''}">所有者权益 ${fmtD(dE)||'不变'}</span></div>
+   ${INS[st.t]?`<div class="insight">${INS[st.t]}</div>`:''}`}}
+ const ok=V.bs.ta===V.bs.tle;
+ f+=`<p style="margin:10px 0 0"><span class="badge ${ok?'':'bad'}">${ok?'资产总计 '+fmt(V.bs.ta)+' ＝ 负债和所有者权益总计 '+fmt(V.bs.tle)+' ✓':'不平衡'}</span></p>`;
+ setH($('#focus'),f);
+ const lbl=YSI?`第 ${y} 年初`:(PI===0?'成立前':(STEPS[PI-1].close?`第 ${y} 年末（结账后）`:`第 ${y} 年，当前时点`));
+ setH($('#tri'),mini('资产负债表 · '+lbl,SB,V.bs,PV&&PV.bs)+mini('利润表 · 第 '+y+' 年累计',SP,V.pl,PV&&PV.pl)+mini('现金流量表 · 第 '+y+' 年累计',SC,V.cf,PV&&PV.cf));
+}
+
+/* ---------- 第 6 节 ---------- */
+function renderChecks(){const ck=(a,b)=>a===b?'<span class="ok">✓</span>':'<span class="no">✗</span>';
+ const rows=[];[1,2,3].forEach(y=>{const Y=YEARS[y],Pp=YEARS[y-1];const pb=Pp?Pp.bs:ZBS;const I=indOf(y);
+  const div=STEPS.filter(s=>s.y===y).reduce((a,s)=>a+(s.je||[]).reduce((b,e)=>b+e.dr.filter(x=>x[0]==='re'&&e.cr.some(c=>c[0]==='divp')).reduce((c,x)=>c+x[1],0),0),0);
+  const capex=Y.cf.i_fa,dep=Y.bal.dep-(Pp?Pp.bal.dep:0);
+  rows.push([y,'资产负债表','资产总计 ＝ 负债和所有者权益总计',`${fmt(Y.bs.ta)} ＝ ${fmt(Y.bs.tle)}`,ck(Y.bs.ta,Y.bs.tle)]);
+  rows.push([y,'利润表 → 资产负债表','期初未分配利润 ＋ 净利润 − 提取盈余公积 − 分配股利 ＝ 期末未分配利润',`${fmt(pb.re)} ＋ ${fmt(Y.pl.ni)} − ${fmt(Y.bs.sur-pb.sur)} − ${fmt(div)} ＝ ${fmt(Y.bs.re)}`,ck(pb.re+Y.pl.ni-(Y.bs.sur-pb.sur)-div,Y.bs.re)]);
+  rows.push([y,'现金流量表 → 资产负债表','期初现金 ＋ 现金净增加额 ＝ 期末现金 ＝ 货币资金',`${fmt(Y.cf.beg)} ＋ ${fmt(Y.cf.net)} ＝ ${fmt(Y.cf.end)}；货币资金 ${fmt(Y.bs.cash)}`,ck(Y.cf.end,Y.bs.cash)]);
+  rows.push([y,'利润表 → 现金流量表','间接法调节结果 ＝ 直接法经营活动现金流量净额',`${fmt(I.tot)} ＝ ${fmt(Y.cf.onet)}`,ck(I.tot,Y.cf.onet)]);
+  rows.push([y,'现金流量表 → 资产负债表','期初固定资产净额 ＋ 购建支付的现金 − 折旧 ＝ 期末固定资产净额',`${fmt(pb.fa)} ＋ ${capex?fmt(capex):'0'} − ${fmt(dep)} ＝ ${fmt(Y.bs.fa)}`,ck(pb.fa+capex-dep,Y.bs.fa)])});
+ let h='<table class="plain"><thead><tr><th>年</th><th>连接</th><th>关系</th><th>本案例</th><th></th></tr></thead><tbody>';
+ rows.forEach(r=>h+=`<tr><td>${r[0]}</td><td style="white-space:nowrap">${r[1]}</td><td>${r[2]}</td><td style="font-family:var(--mono);font-size:13px">${r[3]}</td><td>${r[4]}</td></tr>`);
+ setH($('#checks'),h+'</tbody></table><p class="small muted">「固定资产」一行只在没有处置、没有赊购设备、没有减值时成立。真实公司要结合附注中的固定资产变动表。</p>')}
+function renderChart(){const W=640,H=300,pad=70;const data=[1,2,3].map(y=>[YEARS[y].pl.ni,YEARS[y].cf.onet]);
+ const vals=data.flat();const mx=Math.max(...vals,0),mn=Math.min(...vals,0);const sc=v=>30+(mx-v)/(mx-mn)*(H-pad);const z=sc(0);
+ let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="净利润与经营活动现金流量净额">`;
+ s+=`<line x1="40" x2="${W-10}" y1="${z}" y2="${z}" stroke="#17202b"/>`;
+ data.forEach((d,i)=>{const x0=80+i*190;d.forEach((v,j)=>{const x=x0+j*62,y=Math.min(sc(v),z),h=Math.abs(sc(v)-z);const c=j?'#b8860b':'#002fa7';
+  s+=`<rect x="${x}" y="${y}" width="52" height="${Math.max(h,1)}" fill="${c}" opacity="${j?.8:1}"/><text x="${x+26}" y="${v>=0?y-5:y+h+14}" text-anchor="middle" font-size="12" font-family="Consolas">${fmt(v)}</text>`});
+  s+=`<text x="${x0+57}" y="${H-4}" text-anchor="middle" font-size="13">第 ${i+1} 年</text>`});
+ s+=`<rect x="${W-230}" y="8" width="12" height="12" fill="#002fa7"/><text x="${W-212}" y="18" font-size="12">净利润</text><rect x="${W-150}" y="8" width="12" height="12" fill="#b8860b" opacity=".8"/><text x="${W-132}" y="18" font-size="12">经营活动现金流量净额</text></svg>`;
+ setH($('#chart'),s)}
+function renderRatios(){const R=[['毛利率','（营业收入 − 营业成本）÷ 营业收入',y=>{const p=YEARS[y].pl;return pct((p.rev-p.cogs)/p.rev)}],
+ ['净利率','净利润 ÷ 营业收入',y=>{const p=YEARS[y].pl;return pct(p.ni/p.rev)}],
+ ['应收账款周转天数','期末应收账款 ÷ 营业收入 × 360',y=>Math.round(YEARS[y].bs.ar/YEARS[y].pl.rev*360)+' 天'],
+ ['存货周转天数','期末存货 ÷ 营业成本 × 360',y=>Math.round(YEARS[y].bs.inv/YEARS[y].pl.cogs*360)+' 天'],
+ ['资产负债率','负债合计 ÷ 资产总计',y=>pct(YEARS[y].bs.tl/YEARS[y].bs.ta)],
+ ['流动比率','流动资产 ÷ 流动负债',y=>(YEARS[y].bs.ca/YEARS[y].bs.cl).toFixed(2)],
+ ['速动比率','（流动资产 − 存货）÷ 流动负债',y=>((YEARS[y].bs.ca-YEARS[y].bs.inv)/YEARS[y].bs.cl).toFixed(2)],
+ ['净利润现金含量','经营活动现金流量净额 ÷ 净利润',y=>YEARS[y].pl.ni>0?(YEARS[y].cf.onet/YEARS[y].pl.ni).toFixed(2):'净利润为负，不适用'],
+ ['净资产收益率','净利润 ÷ 期末所有者权益',y=>pct(YEARS[y].pl.ni/YEARS[y].bs.te)]];
+ let h='<table class="plain"><thead><tr><th>比率</th><th>公式</th><th class="n">第 1 年</th><th class="n">第 2 年</th><th class="n">第 3 年</th></tr></thead><tbody>';
+ R.forEach(r=>h+=`<tr><td>${r[0]}</td><td class="small">${r[1]}</td>${[1,2,3].map(y=>`<td style="text-align:right;font-family:var(--mono)">${r[2](y)}</td>`).join('')}</tr>`);
+ setH($('#ratios'),h+'</tbody></table>');
+ const y1=YEARS[1],y2=YEARS[2],y3=YEARS[3];const g=(a,b)=>pct(b/a-1);
+ const F=[
+ `<strong>有利润、没现金。</strong>第 2、3 年净利润分别为 ${fmt(y2.pl.ni)}、${fmt(y3.pl.ni)} 万元，经营活动现金流量净额分别为 ${fmt(y2.cf.onet)}、${fmt(y3.cf.onet)} 万元。`,
+ `<strong>应收账款增速快于收入。</strong>第 3 年营业收入下降 ${pct(1-y3.pl.rev/y2.pl.rev)}，应收账款原值却从 ${fmt(y2.bs.arg)} 增加到 ${fmt(y3.bs.arg)} 万元，周转天数从 ${Math.round(y2.bs.ar/y2.pl.rev*360)} 天升到 ${Math.round(y3.bs.ar/y3.pl.rev*360)} 天。`,
+ `<strong>存货增速快于营业成本。</strong>第 3 年营业成本下降 ${pct(1-y3.pl.cogs/y2.pl.cogs)}，库存商品从 ${fmt(y2.bs.fg)} 增加到 ${fmt(y3.bs.fg)} 万元。产大于销会把固定制造费用留在存货里，抬高当期利润。`,
+ `<strong>减值集中出现。</strong>第 3 年一次计提信用减值 ${fmt(y3.pl.cil)} 万元和存货跌价 ${fmt(y3.pl.ail)} 万元。要追问前一年是否少提，以及以后年度是否会转回。`,
+ `<strong>靠拖欠供应商维持现金。</strong>第 3 年采购减少，应付账款仍从 ${fmt(y2.bs.ap)} 增加到 ${fmt(y3.bs.ap)} 万元。`,
+ `<strong>现金紧张时仍分红、借新还旧。</strong>第 3 年经营活动现金流量为负，公司仍发放现金股利 150 万元，并以新借款归还到期的短期借款。`];
+ setH($('#flags'),F.map(x=>`<li>⚠ ${x}</li>`).join(''))}
+
+/* ---------- 第 7 节：拖放 ---------- */
+const EX1={bins:[['A','资产'],['L','负债'],['E','所有者权益'],['P','利润表项目']],items:[
+['预付款项','A','已付款、尚未收到商品或服务，是一项收取商品或服务的权利。'],
+['合同负债','L','已收客户对价、尚未转让商品的义务。新收入准则下替代了大部分「预收款项」。'],
+['开发支出','A','开发阶段满足资本化条件的支出，尚未形成无形资产前列示为资产。'],
+['研发费用','P','费用化的研发支出，列入利润表。'],
+['使用权资产','A','新租赁准则下，承租人对租赁资产的使用权确认为资产。'],
+['租赁负债','L','承租人尚未支付的租赁付款额的现值。'],
+['资本公积','E','投资者投入超过注册资本份额的部分（资本溢价或股本溢价）。'],
+['减：库存股','E','公司回购的本公司股份，作为所有者权益的减项列示。'],
+['资产减值损失','P','计提减值准备形成的损失，列入利润表，以「−」号填列。'],
+['应交税费','L','应缴未缴的税费。'],
+['盈余公积','E','从税后利润中提取的积累。'],
+['长期待摊费用','A','已经支出、摊销期在一年以上的费用，例如租入固定资产的改良支出。']]};
+const EX2={bins:[['O','经营活动'],['I','投资活动'],['F','筹资活动'],['N','不涉及现金']],items:[
+['支付银行借款利息','F','我国准则把支付的利息列入「分配股利、利润或偿付利息支付的现金」。'],
+['收到被投资单位分来的现金股利','I','列入「取得投资收益收到的现金」。'],
+['缴纳企业所得税','O','列入「支付的各项税费」。'],
+['支付车间工人工资','O','列入「支付给职工以及为职工支付的现金」。'],
+['向股东发放现金股利','F','利润分配支付的现金，列入筹资活动。'],
+['出售旧设备收到现金','I','列入「处置固定资产、无形资产和其他长期资产收回的现金净额」。'],
+['发行公司债券收到现金','F','列入「收到其他与筹资活动有关的现金」或单列「发行债券收到的现金」。'],
+['计提固定资产折旧','N','折旧是成本分摊，没有现金流动；间接法中加回。'],
+['以发行股票换取一台设备','N','不涉及现金的投资和筹资活动，在附注中披露。'],
+['收到客户预付的货款','O','列入「销售商品、提供劳务收到的现金」。'],
+['支付租赁负债的本金和利息','F','新租赁准则下，承租人偿还租赁负债本金和利息支付的现金列入筹资活动（短期租赁和低价值资产租赁的付款列入经营活动）。'],
+['计提应收账款坏账准备','N','只影响利润和应收账款净额，没有现金流动。']]};
+function dnd(root,ex,seed){
+ const items=ex.items.map((x,i)=>({i,t:x[0],a:x[1],e:x[2]}));
+ // 固定洗牌，保证每次相同顺序
+ let r=seed;const sh=items.slice();for(let i=sh.length-1;i>0;i--){r=(r*9301+49297)%233280;const j=Math.floor(r/233280*(i+1));[sh[i],sh[j]]=[sh[j],sh[i]]}
+ setH(root,`<div class="pool" data-b=""></div><div class="bins">${ex.bins.map(b=>`<div class="bin" data-b="${b[0]}"><div class="bh">${b[1]}</div><div class="bb"></div></div>`).join('')}</div>
+ <div class="bar"><button class="btn pri" data-act="check">检查</button><button class="btn" data-act="reset">重来</button><span class="prog" data-act="score"></span></div><div class="fb"></div>`);
+ const pool=root.querySelector('.pool');let sel=null;
+ const zone=b=>b===''?pool:root.querySelector(`.bin[data-b="${b}"] .bb`);
+ function place(){pool.textContent='';root.querySelectorAll('.bb').forEach(x=>x.textContent='');
+  sh.forEach(it=>{const c=document.createElement('div');c.className='chip';c.textContent=it.t;c.draggable=true;c.dataset.i=it.i;it.el=c;it.at='';pool.appendChild(c);
+   c.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',String(it.i));});
+   c.addEventListener('click',e=>{e.stopPropagation();if(sel===it){sel=null;c.classList.remove('sel');return}if(sel)sel.el.classList.remove('sel');sel=it;c.classList.add('sel')})});
+  root.querySelector('.fb').textContent='';root.querySelector('[data-act=score]').textContent=''}
+ function move(it,b){it.at=b;it.el.classList.remove('right','wrong','sel');zone(b).appendChild(it.el)}
+ root.querySelectorAll('.bin,.pool').forEach(z=>{const b=z.dataset.b;
+  z.addEventListener('dragover',e=>{e.preventDefault();z.classList.add('over')});
+  z.addEventListener('dragleave',()=>z.classList.remove('over'));
+  z.addEventListener('drop',e=>{e.preventDefault();z.classList.remove('over');const it=items[+e.dataTransfer.getData('text/plain')];if(it)move(it,b)});
+  z.addEventListener('click',()=>{if(sel){move(sel,b);sel=null}})});
+ root.querySelector('[data-act=check]').onclick=()=>{let ok=0,done=0;const wrong=[];
+  items.forEach(it=>{it.el.classList.remove('right','wrong');if(!it.at)return;done++;if(it.at===it.a){ok++;it.el.classList.add('right')}else{it.el.classList.add('wrong');wrong.push(it)}});
+  const nm=k=>ex.bins.find(b=>b[0]===k)[1];
+  root.querySelector('[data-act=score]').textContent=`已放置 ${done} / ${items.length}，正确 ${ok}`;
+  const all=items.filter(it=>it.at);
+  const fb=root.querySelector('.fb');fb.textContent='';if(all.length){const ul=document.createElement('ul');all.forEach(it=>{const li=document.createElement('li');const sp=document.createElement('span');sp.className=it.at===it.a?'ok':'no';sp.textContent=it.at===it.a?'✓':'✗';li.appendChild(sp);const st=document.createElement('strong');st.textContent=' '+it.t+' ';li.appendChild(st);li.append('→ '+nm(it.a)+'。'+it.e);ul.appendChild(li)});fb.appendChild(ul)}}
+ root.querySelector('[data-act=reset]').onclick=place;place()}
+
+/* ---------- 导航高亮 ---------- */
+const secs=$$('h2[id]');const links=$$('nav.toc a');
+function spy(){let cur=secs[0].id;for(const s of secs){if(s.getBoundingClientRect().top<120)cur=s.id}links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+cur))}
+window.addEventListener('scroll',spy,{passive:true});
+
+/* ---------- 启动 ---------- */
+renderAcc('acc');renderStatic();renderSim();renderChecks();renderChart();renderRatios();
+dnd($('#dnd1'),EX1,7);dnd($('#dnd2'),EX2,11);spy();
+window.__FS={YEARS,STATES,STEPS,indOf};
+})();
+
+</script>
+</body>
+</html>
