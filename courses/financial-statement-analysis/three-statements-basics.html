@@ -586,8 +586,9 @@ const CORE={bs:['tot','gtot','hd'],pl:[],cf:[]};
 
 /* ---------- 年份选择（第2–4节） ---------- */
 let selY=2;
-function yearSeg(){const el=$$('.yrsel').find(x=>!x.querySelector('.seg'));if(el){setH(el,'<span class="seg">'+[1,2,3].map(y=>`<button data-y="${y}" class="${y===selY?'on':''}">第 ${y} 年</button>`).join('')+'</span>');el.style.marginLeft='auto'}}
- $$('.yrsel button').forEach(b=>b.onclick=()=>{selY=+b.dataset.y;renderStatic()})
+function yearSeg(){const html='<span class="seg">'+[1,2,3].map(y=>`<button data-y="${y}" class="${y===selY?'on':''}">第 ${y} 年</button>`).join('')+'</span>';
+ $$('.yrsel').forEach(el=>{setH(el,html);el.style.marginLeft='auto'});
+ $$('.yrsel button').forEach(b=>b.onclick=()=>{selY=+b.dataset.y;renderStatic()})}
 function stmtTable(rows,cur,prev,opts){
  const full=opts.full;let h=`<table class="stmt"><caption>${opts.cap}<span class="u">单位：万元</span></caption><thead><tr><th>项目</th><th class="n">${opts.c1}</th><th class="n">${opts.c2}</th></tr></thead><tbody>`;
  for(const r of rows){const[lab,key,type,lvl,gk,sg]=r;const s=sg||1;
