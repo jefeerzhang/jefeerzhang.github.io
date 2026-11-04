@@ -170,12 +170,23 @@ details[open] summary{margin-bottom:6px}
 .fb{margin-top:10px;font-size:14.5px}
 .fb li{margin:4px 0}
 footer{margin-top:60px;border-top:1px solid var(--rule);padding-top:16px;font-size:13.5px;color:var(--muted)}
+/* 作业提交模块（与财报分析专题一、二一致） */
+.submission-bar{background:var(--accent);color:#fff}
+.submission-bar .bar-in{max-width:1040px;margin:0 auto;padding:12px 28px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.submission-bar strong{display:block;font-size:16px}
+.submission-bar span{font-size:13px;color:#e8edff}
+.submission-bar a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 20px;background:#fff;color:var(--accent);font-weight:700;text-decoration:none;white-space:nowrap}
+.submission-bar a:hover{background:var(--accent-tint)}
+.submission-bar a:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.submission-bottom{margin-top:32px}
 @media(max-width:980px){.sim{grid-template-columns:1fr}.tri{grid-template-columns:1fr}.steps{max-height:280px}.flow{grid-template-columns:1fr}.flow .arr{transform:rotate(90deg)}.bins{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr}}
 @media(max-width:700px){main{padding:20px 14px}h1{font-size:25px}h2{font-size:20px}.grid2,.flip{grid-template-columns:1fr}.bins{grid-template-columns:1fr}}
-@media print{nav.toc,.drawer,.bar .btn{display:none}body{background:#fff}}
+@media print{nav.toc,.drawer,.bar .btn,.submission-bar{display:none}body{background:#fff}}
+@media(max-width:700px){.submission-bar .bar-in{padding:12px 14px}}
 </style>
 </head>
 <body>
+<aside class="submission-bar" aria-label="财报分析课前准入作业提交"><div class="bar-in"><div><strong>财报分析课前准入作业提交</strong><span>通关后导出完整对话 session 一次性提交 · 截止日期见提交页面</span></div><a href="https://send2me.cn/fAmv-n6r/Thyfs318Zeddhg" target="_blank" rel="noopener">提交作业 ↗</a></div></aside>
 <nav class="toc"><div class="in">
 <a href="#s1">1 三张表的分工</a><a href="#s2">2 资产负债表</a><a href="#s3">3 利润表</a><a href="#s4">4 现金流量表</a><a href="#s5">5 业务模拟器</a><a href="#s6">6 勾稽与分析入门</a><a href="#s7">7 分类练习</a><a href="#s8">8 准入材料</a>
 </div></nav>
@@ -389,6 +400,7 @@ footer{margin-top:60px;border-top:1px solid var(--rule);padding-top:16px;font-si
 <p>本页为教学简化材料。案例公司、人物和数字均为虚构。涉及具体会计处理时，以准则原文和财政部发布的解释为准。</p>
 </footer>
 </main>
+<div class="submission-bottom"><aside class="submission-bar" aria-label="财报分析课前准入作业提交"><div class="bar-in"><div><strong>财报分析课前准入作业提交</strong><span>通关后导出完整对话 session 一次性提交 · 截止日期见提交页面</span></div><a href="https://send2me.cn/fAmv-n6r/Thyfs318Zeddhg" target="_blank" rel="noopener">提交作业 ↗</a></div></aside></div>
 
 <aside class="drawer" id="drawer" aria-hidden="true"><button class="x" id="dx" aria-label="关闭">×</button><div id="dbody"></div></aside>
 
