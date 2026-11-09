@@ -1,0 +1,667 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>朴素贝叶斯与决策树｜同一批借款人，两种问法</title>
+<style>
+:root{
+  --page:#f9f9f7;--surface:#fff;--ink:#0b0b0b;--secondary:#52514e;--muted:#898781;
+  --grid:#e1e0d9;--axis:#c3c2b7;--border:rgba(11,11,11,.12);
+  --normal:#2a78d6;--default:#eb6834;--focus:#6250d6;--warning:#a44908;--success:#087549;
+  --normal-soft:#e4eefb;--default-soft:#fde9df;--focus-soft:#ece9fb;--warn-soft:#fbefe2;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#e7e6e1;overflow:hidden;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink)}
+#stage{position:absolute;left:50%;top:50%;width:1600px;height:900px;background:var(--page);
+  transform-origin:center center;box-shadow:0 12px 48px rgba(0,0,0,.14);overflow:hidden}
+button{font:inherit;cursor:pointer}
+b{font-weight:700}
+
+/* 顶栏 */
+header{position:absolute;left:0;top:0;width:1600px;height:84px;display:flex;align-items:center;gap:22px;
+  padding:0 28px;background:var(--surface);border-bottom:1px solid var(--grid)}
+#part{font-size:16px;font-weight:700;color:#fff;padding:6px 12px;border-radius:8px;background:var(--focus);white-space:nowrap}
+#part.dt{background:var(--success)}#part.both{background:var(--ink)}
+#sceneTitle{font-size:30px;font-weight:800;letter-spacing:.5px;flex:1;white-space:nowrap}
+#applicant{display:flex;align-items:center;gap:8px}
+#applicant .lab{font-size:15px;color:var(--muted);margin-right:2px}
+.chip{border:1.5px solid var(--border);background:var(--surface);border-radius:999px;padding:6px 14px;font-size:18px}
+.chip.on{border-color:var(--focus);background:var(--focus-soft);color:var(--focus);font-weight:700}
+.tog{border:1.5px solid var(--border);background:#f3f2ee;border-radius:8px;padding:6px 10px;font-size:16px;min-width:84px}
+.tog.v1{background:var(--default-soft);border-color:rgba(235,104,52,.45)}
+.sep{width:1px;height:34px;background:var(--grid);margin:0 4px}
+
+/* 主区 */
+#main{position:absolute;left:0;top:84px;width:1600px;height:716px}
+.abs{position:absolute}
+.panel{position:absolute;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:22px 26px}
+.fade{transition:opacity .5s, transform .5s}
+.hide{opacity:0;pointer-events:none;transform:translateY(10px)}
+
+/* 底栏 */
+footer{position:absolute;left:0;top:800px;width:1600px;height:100px;background:var(--surface);border-top:1px solid var(--grid);
+  display:flex;align-items:center;padding:0 28px;gap:24px}
+#caption{flex:1;font-size:25px;line-height:1.45;color:var(--ink)}
+#caption b{color:var(--focus)}
+#nav{display:flex;align-items:center;gap:10px;white-space:nowrap}
+#nav button{width:54px;height:54px;border-radius:14px;border:1.5px solid var(--border);background:var(--surface);font-size:24px}
+#nav button:hover{border-color:var(--focus)}
+#pos{font-size:15px;color:var(--muted);min-width:96px;text-align:center;line-height:1.3}
+#dots{position:absolute;left:0;bottom:0;width:1600px;height:5px;display:flex}
+#dots i{flex:1;background:var(--grid);margin-right:2px;cursor:pointer}
+#dots i.done{background:#c9c2f0}#dots i.cur{background:var(--focus)}
+
+/* 小人 */
+.person{transition:transform .85s cubic-bezier(.2,.8,.2,1),opacity .5s}
+.person circle,.person path{fill:var(--c,#c3c2b7);transition:fill .6s}
+.person text{font-size:12px;text-anchor:middle;fill:var(--secondary);font-weight:600}
+.person.dim{opacity:.16}
+.person .ring{fill:none;stroke:var(--ink);stroke-width:2.2;opacity:0;transition:opacity .4s}
+.person.hl .ring{opacity:.9}
+
+/* 通用元素 */
+svg text{font-family:inherit}
+.big{font-weight:800}
+.num{font-family:var(--mono)}
+.D{color:var(--default)}.N{color:var(--normal)}
+.tbl{border-collapse:collapse;width:100%;font-size:19px}
+.tbl th{font-size:15px;color:var(--muted);font-weight:600;text-align:left;padding:6px 8px;border-bottom:1.5px solid var(--grid)}
+.tbl td{padding:6px 8px;border-bottom:1px solid var(--grid)}
+.tbl tr.cur td{background:var(--focus-soft)}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.tag{display:inline-block;padding:3px 10px;border-radius:999px;font-size:15px;font-weight:700}
+.tag.D{background:var(--default-soft);color:var(--default)}.tag.N{background:var(--normal-soft);color:var(--normal)}
+.tag.W{background:var(--warn-soft);color:var(--warning)}
+.btn{border:1.5px solid var(--border);background:var(--surface);border-radius:12px;padding:10px 18px;font-size:19px}
+.btn:hover{border-color:var(--focus)}
+.btn.on{border-color:var(--focus);background:var(--focus-soft);color:var(--focus);font-weight:700}
+.stack{height:46px;border-radius:12px;overflow:hidden;display:flex;background:var(--grid)}
+.stack div{height:100%;transition:width .8s cubic-bezier(.2,.8,.2,1);display:flex;align-items:center;font-weight:700;color:#fff;font-size:19px;white-space:nowrap;overflow:hidden}
+.stack .sd{background:var(--default);justify-content:flex-start}
+.stack .sn{background:var(--normal);justify-content:flex-end}
+.stack span{padding:0 12px}
+.verdict{display:inline-flex;align-items:center;justify-content:center;font-size:34px;font-weight:800;border-radius:16px;padding:10px 28px;color:#fff}
+.verdict.D{background:var(--default)}.verdict.N{background:var(--normal)}
+.verdict.flip{animation:flip .6s}
+@keyframes flip{0%{transform:rotateX(0)}50%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}
+.new{animation:glow 1.2s}
+@keyframes glow{0%{background:#fff3a8}100%{background:transparent}}
+.pop{animation:pop .6s cubic-bezier(.2,.8,.2,1.2) both;transform-box:fill-box;transform-origin:center}
+@keyframes pop{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+.draw{stroke-dasharray:600;animation:draw .9s ease forwards}
+@keyframes draw{from{stroke-dashoffset:600}to{stroke-dashoffset:0}}
+.pulse{animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{stroke-opacity:1;stroke-width:4}50%{stroke-opacity:.35;stroke-width:9}}
+
+/* 场景专用 */
+.ccard{position:absolute;top:18px;width:288px;height:136px;border-radius:16px;border:1.5px solid var(--border);background:var(--surface);
+  padding:14px 16px;transition:opacity .5s,border-color .4s,box-shadow .4s,left .7s cubic-bezier(.2,.8,.2,1)}
+.ccard.off{opacity:.28}
+.ccard.cur{border-color:var(--focus);box-shadow:0 0 0 4px var(--focus-soft)}
+.ccard h4{margin:0 0 8px;font-size:21px}
+.ccard .lk{font-size:17px;color:var(--secondary);line-height:1.5}
+.ratio{display:inline-block;margin-top:6px;font-size:16px;font-weight:700;padding:2px 10px;border-radius:999px}
+.eq{font-size:23px;line-height:1.9;font-family:var(--mono)}
+.eq .t{padding:1px 4px;border-radius:6px}
+.mini{position:relative;width:170px;height:118px;border-radius:14px;border:1.5px solid var(--border);background:var(--surface);padding:12px 14px;display:inline-block;margin:0 12px 14px 0;vertical-align:top}
+.mini.dup{border-style:dashed;border-color:var(--default);background:var(--default-soft)}
+.mini .badge{position:absolute;right:-8px;top:-10px}
+.gauge{position:relative;height:56px;border-radius:14px;background:linear-gradient(90deg,var(--normal-soft),var(--default-soft));border:1px solid var(--border)}
+.gauge .mk{position:absolute;top:-12px;width:6px;height:80px;margin-left:-3px;border-radius:3px;background:var(--ink);transition:left .9s cubic-bezier(.2,.8,.2,1)}
+.gauge .half{position:absolute;left:50%;top:-6px;bottom:-6px;border-left:2.5px dashed var(--muted)}
+.hist span{display:inline-block;margin:0 8px 8px 0;padding:6px 12px;border-radius:10px;background:#f1f0ec;font-size:18px}
+.hist span.cur{background:var(--focus);color:#fff;font-weight:700}
+.bar-row{display:flex;align-items:center;gap:12px;margin:12px 0;font-size:19px;transition:opacity .5s}
+.bar-row .nm{width:150px}
+.bar-row .tr{flex:1;height:34px;background:#f1f0ec;border-radius:8px;position:relative}
+.bar-row .fl{height:100%;border-radius:8px;background:var(--axis);transition:width .8s}
+.bar-row.best .fl{background:var(--success)}
+.bar-row .vl{width:70px;text-align:right;font-family:var(--mono);font-weight:700}
+.slider{width:100%;accent-color:var(--focus);height:28px}
+.noanim *,.noanim *::before{transition:none!important;animation:none!important}
+</style>
+</head>
+<body>
+<div id="stage">
+  <header>
+    <span id="part">朴素贝叶斯</span>
+    <div id="sceneTitle"></div>
+    <div id="applicant"></div>
+  </header>
+  <div id="main"></div>
+  <footer>
+    <div id="caption"></div>
+    <div id="nav"><button id="prev" title="上一步（←）">←</button><div id="pos"></div><button id="next" title="下一步（→ 或空格）">→</button></div>
+    <div id="dots"></div>
+  </footer>
+</div>
+<script>
+/* ========== 数据：14 位借款人（教学构造，与 02 讲义第 2.1 节一致） ========== */
+const F=[
+  {name:'有历史逾期',q:'有历史逾期？',a:['无','有'],t:['无逾期','有逾期']},
+  {name:'负债收入比高',q:'负债收入比高？',a:['低','高'],t:['负债低','负债高']},
+  {name:'工作满 3 年',q:'工作满 3 年？',a:['否','是'],t:['未满 3 年','满 3 年']},
+  {name:'有房',q:'有房？',a:['无','有'],t:['无房','有房']}];
+const RAW=[[1,1,0,0,1],[1,1,1,0,1],[1,0,0,0,1],[1,0,1,1,0],[1,1,0,1,1],[0,1,0,0,1],[0,1,1,0,0],
+  [0,1,0,1,1],[0,0,0,0,0],[0,0,1,0,0],[0,0,1,1,0],[0,0,0,1,0],[0,1,1,1,0],[0,0,0,0,0]];
+const ROWS=RAW.map((r,i)=>({id:i+1,x:r.slice(0,4),y:r[4]}));
+const ND=ROWS.filter(r=>r.y).length, NN=ROWS.length-ND;
+const PRESET={'小周':[1,0,1,0],'小吴':[1,1,0,0]};
+const S={name:'小周',app:[1,0,1,0],order:[0,1,2,3],depth:99,cost:1};
+const COL=y=>y?'var(--default)':'var(--normal)';
+
+/* ========== 计算 ========== */
+const cnt=(y,i,v)=>ROWS.filter(r=>r.y===y&&r.x[i]===v).length;
+const lik=(y,i,v,a=1)=>(cnt(y,i,v)+a)/((y?ND:NN)+2*a);
+function nbSteps(x,order=[0,1,2,3],a=1,extra=[]){
+  let d=ND/14,n=NN/14;const out=[{d,n,p:d/(d+n)}];
+  for(const i of order){const ld=lik(1,i,x[i],a),ln=lik(0,i,x[i],a);d*=ld;n*=ln;out.push({i,ld,ln,d,n,p:d/(d+n)})}
+  for(const e of extra){d*=e.ld;n*=e.ln;out.push({...e,d,n,p:(d+n)>0?d/(d+n):0})}
+  return out}
+function gini(ids){const n=ids.length;if(!n)return 0;const p=ids.filter(i=>ROWS[i].y).length/n;return 1-p*p-(1-p)*(1-p)}
+function buildTree(ids=ROWS.map((_,i)=>i),depth=0,maxD=99,key='r'){
+  const n=ids.length,k=ids.filter(i=>ROWS[i].y).length,node={ids,n,k,depth,key};
+  if(k===0||k===n||depth>=maxD)return node;
+  let best=null;
+  for(let f=0;f<4;f++){const L=ids.filter(i=>ROWS[i].x[f]===0),R=ids.filter(i=>ROWS[i].x[f]===1);
+    if(!L.length||!R.length)continue;const w=(L.length*gini(L)+R.length*gini(R))/n;if(!best||w<best.w-1e-9)best={f,w,L,R}}
+  if(!best||best.w>=gini(ids)-1e-9)return node;
+  node.f=best.f;node.w=best.w;
+  node.kids=[buildTree(best.L,depth+1,maxD,key+'0'),buildTree(best.R,depth+1,maxD,key+'1')];
+  node.kids.forEach((c,v)=>{c.parent=node;c.v=v});return node}
+const verdictOf=nd=>nd.k/nd.n>.5?1:0;   // 平票按多数规则判批准
+function leafOf(root,x){let nd=root;const path=[nd];while(nd.kids){nd=nd.kids[x[nd.f]];path.push(nd)}return {leaf:nd,path}}
+function bfsInternal(root){const q=[root],o=[];while(q.length){const nd=q.shift();if(nd.kids){o.push(nd);q.push(...nd.kids)}}return o}
+function pathText(nd){const a=[];while(nd.parent){a.unshift(F[nd.parent.f].t[nd.v]);nd=nd.parent}return a.join(' → ')}
+
+/* ========== 小工具 ========== */
+const $=s=>document.querySelector(s);
+const pct=(p,d=1)=>(p*100).toFixed(d)+'%';
+const f3=v=>v.toFixed(3);
+const f4=v=>v<0.001&&v>0?v.toExponential(2):v.toFixed(4);
+const NS='http://www.w3.org/2000/svg';
+function sv(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+function avatar(){return S.name==='小周'?'周':S.name==='小吴'?'吴':'新'}
+function verdictHTML(el,v){const txt=v?'拒绝':'批准',cls=v?'D':'N';
+  if(el.dataset.v!==undefined&&el.dataset.v!==String(v)){el.classList.remove('flip');void el.offsetWidth;el.classList.add('flip')}
+  el.dataset.v=v;el.className='verdict '+cls+(el.classList.contains('flip')?' flip':'');el.textContent=txt}
+function ratioTag(ld,ln){const r=ld/ln;return r>=1?`<span class="ratio" style="background:var(--default-soft);color:var(--default)">偏向违约 ×${r.toFixed(2)}</span>`
+  :`<span class="ratio" style="background:var(--normal-soft);color:var(--normal)">偏向正常 ×${(1/r).toFixed(2)}</span>`}
+
+/* 小人图层 */
+function people(svg){return ROWS.map(r=>{const g=sv('g',{class:'person'},svg);
+  g.innerHTML=`<circle class="ring" cx="0" cy="-2" r="21"/><circle cx="0" cy="-15" r="9"/><path d="M-13,13 C-13,-3 13,-3 13,13 Z"/><text y="38">${r.id}</text>`;return g})}
+function place(g,x,y,s=1,o={}){
+  if(!g._p){g.style.transition='none';}
+  g.style.transform=`translate(${x}px,${y}px) scale(${s})`;
+  if(!g._p){void g.getBoundingClientRect();g.style.transition='';g._p=1}
+  g.style.setProperty('--c',o.color||'#c3c2b7');
+  g.classList.toggle('dim',!!o.dim);g.classList.toggle('hl',!!o.hl)}
+function grid(list,x0,y0,cols,dx,dy){return list.map((_,j)=>[x0+(j%cols)*dx,y0+Math.floor(j/cols)*dy])}
+
+/* 树绘制 */
+function layoutTree(root,W,x0,y0,dy){const lv=[];(function d(nd){nd.kids?nd.kids.forEach(d):lv.push(nd)})(root);
+  const sp=W/lv.length;lv.forEach((l,i)=>l.x=x0+sp*(i+.5));
+  (function p(nd){if(nd.kids){nd.kids.forEach(p);nd.x=(nd.kids[0].x+nd.kids[1].x)/2}nd.y=y0+nd.depth*dy})(root)}
+function drawTree(svg,root,o){ // o:{w,expanded:Set|null,prev:Set,walk:[keys],hlLeaf}
+  svg.innerHTML='';const w=o.w,h=88,shown=new Set();
+  const isExp=nd=>nd.kids&&(!o.expanded||o.expanded.has(nd.key));
+  const edges=sv('g',{},svg),nodes=sv('g',{},svg);
+  (function vis(nd){shown.add(nd.key);
+    if(isExp(nd))nd.kids.forEach((c,v)=>{
+      const fresh=o.prev&&!o.prev.has(c.key);
+      const p=sv('path',{d:`M${nd.x},${nd.y+h/2} C${nd.x},${(nd.y+c.y)/2} ${c.x},${(nd.y+c.y)/2} ${c.x},${c.y-h/2}`,
+        fill:'none',stroke:'#c3c2b7','stroke-width':3,'data-k':c.key,class:fresh?'draw':''},edges);
+      const mx=(nd.x+c.x)/2,my=(nd.y+c.y)/2;
+      const lg=sv('g',{class:fresh?'pop':''},edges);
+      sv('rect',{x:mx-26,y:my-17,width:52,height:32,rx:8,fill:'#fff',stroke:'#e1e0d9'},lg);
+      const t=sv('text',{x:mx,y:my+7,'text-anchor':'middle','font-size':19,'font-weight':700,fill:'#52514e'},lg);t.textContent=F[nd.f].a[v];
+      vis(c)});
+  })(root);
+  const map={};
+  (function dn(nd){if(!shown.has(nd.key))return;
+    const fresh=o.prev&&!o.prev.has(nd.key);
+    const g=sv('g',{class:fresh?'pop':'','data-k':nd.key},nodes);map[nd.key]=g;
+    const exp=isExp(nd),leaf=!nd.kids,v=verdictOf(nd);
+    const fill=exp?'#fff':leaf?(v?'#fde9df':'#e4eefb'):'#f6f5f1',stroke=exp?'#c3c2b7':leaf?(v?'#eb6834':'#2a78d6'):'#c3c2b7';
+    sv('rect',{x:nd.x-w/2,y:nd.y-h/2,width:w,height:h,rx:14,fill,stroke,'stroke-width':2.5,'stroke-dasharray':(!exp&&!leaf)?'7 6':''},g);
+    const t1=sv('text',{x:nd.x,y:nd.y-12,'text-anchor':'middle','font-size':exp?21:23,'font-weight':800,fill:exp?'#0b0b0b':leaf?(v?'#eb6834':'#2a78d6'):'#898781'},g);
+    t1.textContent=exp?F[nd.f].q:leaf?(v?'拒绝':'批准'):'再问一个？';
+    const t2=sv('text',{x:nd.x,y:nd.y+15,'text-anchor':'middle','font-size':17,fill:'#52514e'},g);
+    t2.textContent=`${nd.n} 人 · 违约 ${nd.k}`;
+    const bw=w-36,bx=nd.x-bw/2;
+    sv('rect',{x:bx,y:nd.y+25,width:bw,height:9,rx:4.5,fill:'#2a78d6'},g);
+    if(nd.k)sv('rect',{x:bx,y:nd.y+25,width:bw*nd.k/nd.n,height:9,rx:4.5,fill:'#eb6834'},g);
+    if(o.hlLeaf===nd.key){sv('rect',{x:nd.x-w/2-8,y:nd.y-h/2-8,width:w+16,height:h+16,rx:20,fill:'none',stroke:'#a44908',class:'pulse'},g);}
+    if(nd.kids&&exp)nd.kids.forEach(dn)})(root);
+  return {shown,map}}
+function walkToken(svg,path,done,w=168){const ox=-(w/2+30),oy=0;
+  const g=sv('g',{},svg);sv('circle',{r:24,fill:'#6250d6',stroke:'#fff','stroke-width':4},g);
+  const t=sv('text',{y:8,'text-anchor':'middle','font-size':22,'font-weight':800,fill:'#fff'},g);t.textContent=avatar();
+  const pts=path.map(nd=>[nd.x-0,nd.y]);let seg=0,t0=null;const dur=650;
+  const off=[0,-0];g.setAttribute('transform',`translate(${pts[0][0]+ox},${pts[0][1]+oy})`);
+  const token={stop:false};
+  function step(ts){if(token.stop)return;if(t0===null)t0=ts;let u=(ts-t0)/dur;
+    if(seg>=pts.length-1){done&&done();return}
+    if(u>=1){const e=svg.querySelector(`path[data-k="${path[seg+1].key}"]`);if(e){e.setAttribute('stroke','#6250d6');e.setAttribute('stroke-width',6)}seg++;t0=ts;u=0;
+      if(seg>=pts.length-1){const [x,y]=pts[seg];g.setAttribute('transform',`translate(${x+ox},${y+oy})`);done&&done();return}}
+    const [x1,y1]=pts[seg],[x2,y2]=pts[seg+1];const e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
+    g.setAttribute('transform',`translate(${x1+(x2-x1)*e+ox},${y1+(y2-y1)*e+oy})`);requestAnimationFrame(step)}
+  setTimeout(()=>requestAnimationFrame(step),350);return token}
+
+/* ========== 场景 ========== */
+const scenes=[];
+
+/* S-1 封面 */
+scenes.push({part:'封面',cls:'both',title:'',steps:1,
+build(m){
+  const W=1600,H=800,P='#6250d6',G='#087549',O='#eb6834',B='#2a78d6';
+  m.innerHTML=`<div class="abs" style="left:0;top:-84px;width:${W}px;height:${H}px;background:var(--page)"><svg id="cv" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"></svg></div>`;
+  const svg=$('#cv'),T=(x,y,t,o={})=>{const e=sv('text',Object.assign({x,y},o),svg);e.textContent=t;return e};
+  const g0=sv('linearGradient',{id:'cvg',x1:0,x2:1,y1:0,y2:0},sv('defs',{},svg));
+  sv('stop',{offset:'0.45','stop-color':P},g0);sv('stop',{offset:'0.55','stop-color':G},g0);
+  sv('rect',{x:0,y:0,width:W,height:12,fill:'url(#cvg)'},svg);
+  T(110,150,'大数据金融 · 分类算法',{'font-size':26,fill:'#898781','letter-spacing':3,'font-weight':600});
+  T(110,255,'朴素贝叶斯与',{'font-size':88,'font-weight':800,fill:P});
+  T(110,355,'决策树算法解析',{'font-size':88,'font-weight':800,fill:G});
+  T(110,430,'同一批借款人，两种问法',{'font-size':36,fill:'#52514e','font-weight':600});
+  sv('rect',{x:110,y:462,width:90,height:5,rx:2.5,fill:'#0b0b0b'},svg);
+  [[P,'朴素贝叶斯','数人头、证据连乘、重复计分与零概率'],[G,'决策树','选最能分开的问题、逐层分裂、剪枝'],['#0b0b0b','对照与小结','同一个人两种回答，阈值由业务定']].forEach(([c,a,b],i)=>{
+    const y=525+i*50;sv('circle',{cx:122,cy:y-8,r:8,fill:c},svg);
+    T(146,y,a,{'font-size':26,'font-weight':800,fill:c});T(300,y,b,{'font-size':24,fill:'#52514e'})});
+  T(110,690,`14 位借款人 · 违约 ${ND} · 正常 ${NN}（教学构造数据）`,{'font-size':21,fill:'#898781'});
+  ROWS.forEach((r,i)=>{const c=r.y?O:B,x=124+i*46,gg=sv('g',{transform:`translate(${x},742)`},svg);
+    sv('circle',{cx:0,cy:-15,r:9,fill:c},gg);sv('path',{d:'M-13,13 C-13,-3 13,-3 13,13 Z',fill:c},gg)});
+  const card=(y,h,c,tag,sub)=>{sv('rect',{x:880,y,width:640,height:h,rx:22,fill:'#fff',stroke:'rgba(11,11,11,.12)','stroke-width':1.5},svg);
+    sv('rect',{x:910,y:y+26,width:tag.length*24+28,height:38,rx:19,fill:c},svg);
+    T(924,y+53,tag,{'font-size':22,'font-weight':800,fill:'#fff'});
+    T(924+tag.length*24+30,y+54,sub,{'font-size':24,'font-weight':700,fill:'#0b0b0b'})};
+  card(70,300,P,'朴素贝叶斯','线索逐条连乘，违约概率一路改写');
+  const st=nbSteps(PRESET['小周']),lb=['先验',...st.slice(1).map(z=>F[z.i].t[PRESET['小周'][z.i]])];
+  const px=i=>970+i*125,py=p=>325-p*150;
+  sv('line',{x1:930,x2:1490,y1:py(.5),y2:py(.5),stroke:'#c3c2b7','stroke-width':2,'stroke-dasharray':'8 6'},svg);
+  T(1490,py(.5)-8,'50% 线',{'font-size':16,fill:'#898781','text-anchor':'end'});
+  sv('polyline',{points:st.map((z,i)=>px(i)+','+py(z.p)).join(' '),fill:'none',stroke:P,'stroke-width':4,'stroke-linejoin':'round'},svg);
+  st.forEach((z,i)=>{const c=z.p>.5?O:B;sv('circle',{cx:px(i),cy:py(z.p),r:9,fill:c,stroke:'#fff','stroke-width':3},svg);
+    T(px(i),py(z.p)-18,pct(z.p,0),{'font-size':20,'font-weight':800,fill:c,'text-anchor':'middle'});
+    T(px(i),352,lb[i],{'font-size':17,fill:'#52514e','text-anchor':'middle'})});
+  card(400,370,G,'决策树','先问最能分开的问题，一层层往下');
+  const tr=buildTree(undefined,0,2);layoutTree(tr,640,20,45,125);
+  const inner=sv('svg',{x:900,y:480,width:600,height:290,viewBox:'0 0 680 345'},svg);
+  drawTree(inner,tr,{w:150})
+},
+update(){},caption(){return'按 → 或空格开始，← 返回上一步'}});
+
+/* S0 主线 */
+scenes.push({part:'主线',cls:'both',title:'同一批借款人，两种问法',steps:3,
+build(m){m.innerHTML=`<svg id="s0" class="abs" style="left:0;top:0" width="860" height="716"></svg>
+  <div id="s0tbl" class="panel fade" style="left:860px;top:26px;width:700px;height:662px;padding:16px 22px"></div>
+  <div id="s0cards" class="abs fade hide" style="left:860px;top:26px;width:700px"></div>`;
+  const svg=$('#s0');this.P=people(svg);
+  this.lab=sv('g',{class:'fade'},svg);
+  this.lab.innerHTML=`<text x="200" y="170" text-anchor="middle" font-size="30" font-weight="800" fill="#eb6834">违约 6 人</text>
+   <text x="605" y="170" text-anchor="middle" font-size="30" font-weight="800" fill="#2a78d6">正常 8 人</text>
+   <text x="430" y="585" text-anchor="middle" font-size="46" font-weight="800">先验 = 6 ÷ 14 = <tspan fill="#6250d6">42.9%</tspan></text>
+   <text x="430" y="630" text-anchor="middle" font-size="21" fill="#52514e">不看任何线索，随便抽一个人违约的概率</text>`;
+  const rows=ROWS.map(r=>`<tr><td>${r.id}</td>${r.x.map((v,i)=>`<td>${F[i].a[v]}</td>`).join('')}<td class="res" data-y="${r.y}">？</td></tr>`).join('');
+  $('#s0tbl').innerHTML=`<table class="tbl"><tr><th>编号</th><th>历史逾期</th><th>负债收入比</th><th>工作满 3 年</th><th>有房</th><th>结果</th></tr>${rows}</table>`;
+  $('#s0cards').innerHTML=Object.entries(PRESET).map(([nm,x])=>`<div class="panel" style="position:relative;margin-bottom:22px;height:320px">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px"><span style="width:58px;height:58px;border-radius:50%;background:var(--focus);color:#fff;font-size:28px;font-weight:800;display:flex;align-items:center;justify-content:center">${nm[1]}</span>
+    <span style="font-size:34px;font-weight:800">${nm}</span><span style="margin-left:auto;font-size:54px;font-weight:800;color:var(--muted)">批？拒？</span></div>
+    ${x.map((v,i)=>`<div style="font-size:24px;margin:10px 0;display:flex;justify-content:space-between;border-bottom:1px solid var(--grid);padding-bottom:6px"><span style="color:var(--secondary)">${F[i].name}</span><b class="${v?'D':''}">${F[i].a[v]}</b></div>`).join('')}</div>`).join('')},
+update(k){
+  const D=ROWS.filter(r=>r.y),N=ROWS.filter(r=>!r.y);
+  if(k===0)grid(ROWS,140,250,7,96,170).forEach(([x,y],j)=>place(this.P[j],x,y,1.6));
+  else{const gd=grid(D,110,270,3,90,150),gn=grid(N,470,270,4,90,150);
+    D.forEach((r,j)=>place(this.P[r.id-1],...gd[j],1.6,{color:COL(1)}));N.forEach((r,j)=>place(this.P[r.id-1],...gn[j],1.6,{color:COL(0)}))}
+  this.lab.classList.toggle('hide',k<1);
+  document.querySelectorAll('#s0tbl .res').forEach(td=>{const y=+td.dataset.y;td.innerHTML=k>=1?`<span class="tag ${y?'D':'N'}">${y?'违约':'正常'}</span>`:'？'});
+  $('#s0tbl').classList.toggle('hide',k>=2);$('#s0cards').classList.toggle('hide',k<2)},
+caption(k){return['银行有 14 位历史借款人的档案：每人 4 条信息，外加一个结果——<b>违约</b>还是<b>正常</b>。',
+  '先只看结果：14 人里 6 人违约。随便抽一个人，违约概率是 6 ÷ 14 ≈ <b>42.9%</b>。这叫<b>先验</b>，是两个算法共同的起点。',
+  '今天来了两位新申请人。批不批？<b>朴素贝叶斯</b>算一个概率，<b>决策树</b>走一条规则。右上角可以切换申请人，也可以拨开关自己组一个。'][k]}});
+/* S1 数人头 */
+scenes.push({part:'朴素贝叶斯',cls:'',title:'第一步：数人头',steps:5,
+build(m){m.innerHTML=`<div id="s1tabs" class="abs" style="left:30px;top:18px;display:flex;gap:10px"></div>
+  <svg id="s1" class="abs" style="left:0;top:76px" width="920" height="640"></svg>
+  <div class="panel" style="left:930px;top:18px;width:640px;height:676px">
+    <div style="font-size:20px;font-weight:700;margin-bottom:10px">似然表：<span id="s1who"></span>的每条线索，在两组里各占多少</div>
+    <table class="tbl" id="s1tbl"></table>
+    <div id="s1sm" class="fade hide" style="margin-top:22px;font-size:22px;line-height:1.7;background:var(--focus-soft);border-radius:14px;padding:14px 18px"></div>
+  </div>`;
+  const svg=$('#s1');
+  svg.innerHTML=`<rect x="30" y="20" width="340" height="360" rx="20" fill="#fdf3ee" stroke="#eb6834" stroke-opacity=".4" stroke-width="2"/>
+   <rect x="400" y="20" width="490" height="360" rx="20" fill="#eef4fc" stroke="#2a78d6" stroke-opacity=".4" stroke-width="2"/>
+   <text x="200" y="60" text-anchor="middle" font-size="25" font-weight="800" fill="#eb6834">违约组 6 人</text>
+   <text x="645" y="60" text-anchor="middle" font-size="25" font-weight="800" fill="#2a78d6">正常组 8 人</text>
+   <text id="s1cd" x="200" y="460" text-anchor="middle" font-size="68" font-weight="800" fill="#eb6834"></text>
+   <text id="s1cn" x="645" y="460" text-anchor="middle" font-size="68" font-weight="800" fill="#2a78d6"></text>
+   <text id="s1ld" x="200" y="505" text-anchor="middle" font-size="22" fill="#52514e"></text>
+   <text id="s1ln" x="645" y="505" text-anchor="middle" font-size="22" fill="#52514e"></text>
+   <text id="s1note" x="460" y="575" text-anchor="middle" font-size="26" font-weight="700"></text>`;
+  this.P=people(svg);
+  $('#s1tabs').innerHTML=F.map((f,i)=>`<button class="btn" data-i="${i}">${f.name}</button>`).join('')+`<button class="btn" data-i="4">平滑</button>`;
+  $('#s1tabs').onclick=e=>{const b=e.target.closest('button');if(b)go(cur,+b.dataset.i)}},
+update(k){
+  const x=S.app,i=Math.min(k,3),v=x[i];
+  document.querySelectorAll('#s1tabs button').forEach(b=>b.classList.toggle('on',+b.dataset.i===k));
+  $('#s1who').textContent=S.name;
+  const D=ROWS.filter(r=>r.y),N=ROWS.filter(r=>!r.y);
+  const gd=grid(D,110,150,3,90,140),gn=grid(N,480,150,4,110,140);
+  D.forEach((r,j)=>{const m=r.x[i]===v;place(this.P[r.id-1],...gd[j],1.55,{color:COL(1),dim:!m,hl:m})});
+  N.forEach((r,j)=>{const m=r.x[i]===v;place(this.P[r.id-1],...gn[j],1.55,{color:COL(0),dim:!m,hl:m})});
+  const cd=cnt(1,i,v),cn=cnt(0,i,v);
+  $('#s1cd').textContent=`${cd} / ${ND}`;$('#s1cn').textContent=`${cn} / ${NN}`;
+  $('#s1ld').textContent=`违约组里「${F[i].t[v]}」的人`;$('#s1ln').textContent=`正常组里「${F[i].t[v]}」的人`;
+  const r=(cd/ND)/(cn/NN||1e-9);
+  const note=$('#s1note');note.textContent=r>1.5?'→ 违约组更常见，指向违约':r<1/1.5?'→ 正常组更常见，指向正常':'→ 两组差不多，没多大用';
+  note.setAttribute('fill',r>1.5?'#eb6834':r<1/1.5?'#2a78d6':'#898781');
+  const sm=k>=4;
+  $('#s1tbl').innerHTML=`<tr><th>${S.name}的线索</th><th>违约组</th><th>正常组</th>${sm?'<th>平滑后（违约 / 正常）</th>':''}</tr>`+
+    F.map((f,j)=>{if(j>k)return`<tr><td style="color:var(--axis)">${f.name}</td><td></td><td></td>${sm?'<td></td>':''}</tr>`;
+      const a=cnt(1,j,x[j]),b=cnt(0,j,x[j]);
+      return`<tr class="${j===k?'cur':''}"><td>${f.t[x[j]]}</td><td class="num D">${a}/${ND}</td><td class="num N">${b}/${NN}</td>${sm?`<td class="num new"><span class="D">${f3(lik(1,j,x[j]))}</span> / <span class="N">${f3(lik(0,j,x[j]))}</span></td>`:''}</tr>`}).join('');
+  const a0=cnt(1,0,x[0]);
+  $('#s1sm').innerHTML=`<b>拉普拉斯平滑</b>：每格人数 <b>+1</b>，分母 <b>+2</b><br><span class="num">(${a0} + 1) ÷ (${ND} + 2) = ${f3(lik(1,0,x[0]))}</span><br><span style="font-size:19px;color:var(--secondary)">为什么？某格要是 0 人，连乘时会把整个得分乘成 0（第 5 幕演示）。</span>`;
+  $('#s1sm').classList.toggle('hide',!sm)},
+caption(k){if(k>=4)return'数人头有个隐患：某一格要是 0，后面一乘全成 0。所以每格<b>加 1</b>、分母<b>加 2</b>。之后的连乘都用平滑后的数。';
+  const i=k,v=S.app[i],cd=cnt(1,i,v),cn=cnt(0,i,v);
+  return`看${S.name}的第 ${i+1} 条线索「${F[i].t[v]}」：违约组 ${ND} 人里有 <b>${cd}</b> 人，正常组 ${NN} 人里有 <b>${cn}</b> 人。比的是<b>两组的比例差</b>，不是人数多少。`}});
+
+/* S2 逐条连乘 */
+scenes.push({part:'朴素贝叶斯',cls:'',title:'第二步：证据逐条连乘',steps:5,
+build(m){m.innerHTML=`<div id="s2cards"></div>
+  <div class="panel" style="left:30px;top:172px;width:760px;height:524px">
+    <div class="eq" id="s2eq"></div>
+    <div style="margin:18px 0 8px;font-size:18px;color:var(--secondary)">把两个得分归一化（各自 ÷ 两者之和）：</div>
+    <div class="stack"><div class="sd" id="s2sd"></div><div class="sn" id="s2sn"></div></div>
+    <div style="display:flex;align-items:center;gap:20px;margin-top:22px"><span style="font-size:22px">按 50% 线判：</span><span class="verdict N" id="s2v">批准</span></div>
+  </div>
+  <div class="panel" style="left:810px;top:172px;width:760px;height:524px;padding:12px">
+    <button class="btn abs" id="s2shuf" style="right:16px;top:12px;z-index:2">⟳ 换个顺序</button>
+    <svg id="s2c" width="734" height="498"></svg>
+  </div>`;
+  $('#s2shuf').onclick=()=>{let o;do{o=[0,1,2,3].sort(()=>Math.random()-.5)}while(o.join()===S.order.join());S.order=o;this.prevK=-1;this.update(step)};
+  this.prevK=-1},
+update(k){
+  const st=nbSteps(S.app,S.order),cur=st[k];
+  const L=[{h:'先验',sub:`违约 ${ND}/14 = ${f3(ND/14)}<br>正常 ${NN}/14 = ${f3(NN/14)}`}].concat(S.order.map((i,j)=>{const s=st[j+1];
+    return{h:F[i].t[S.app[i]],sub:`违约组 <b class="D">${f3(s.ld)}</b> · 正常组 <b class="N">${f3(s.ln)}</b><br>${ratioTag(s.ld,s.ln)}`}}));
+  $('#s2cards').innerHTML=L.map((c,j)=>`<div class="ccard ${j>k?'off':''} ${j===k?'cur':''}" style="left:${30+j*309}px"><h4>${j?`<span style="color:var(--muted);font-size:16px">线索 ${j}</span> `:''}${c.h}</h4><div class="lk">${c.sub}</div></div>`).join('');
+  const terms=(cls)=>{const a=[`<span class="t">${f3(cls?ND/14:NN/14)}</span>`];for(let j=1;j<=k;j++){const s=st[j];a.push(`<span class="t ${j===k&&k!==this.prevK?'new':''}">${f3(cls?s.ld:s.ln)}</span>`)}return a.join(' × ')};
+  $('#s2eq').innerHTML=`<div><span class="D" style="font-weight:700">违约得分</span> = ${terms(1)}</div><div style="text-align:right;margin-top:-8px">= <b class="D">${f4(cur.d)}</b></div>
+    <div><span class="N" style="font-weight:700">正常得分</span> = ${terms(0)}</div><div style="text-align:right;margin-top:-8px">= <b class="N">${f4(cur.n)}</b></div>`;
+  $('#s2sd').style.width=pct(cur.p);$('#s2sn').style.width=pct(1-cur.p);
+  $('#s2sd').innerHTML=cur.p>.08?'<span>违约 '+pct(cur.p)+'</span>':'';$('#s2sn').innerHTML=cur.p<.92?'<span>正常 '+pct(1-cur.p)+'</span>':'';
+  verdictHTML($('#s2v'),cur.p>.5?1:0);
+  // 曲线
+  const svg=$('#s2c');svg.innerHTML='';const X0=130,X1=690,Y0=60,Y1=420,xs=j=>X0+(X1-X0)*j/4,ys=p=>Y1-(Y1-Y0)*p;
+  sv('text',{x:20,y:34,'font-size':20,'font-weight':700},svg).textContent=`${S.name}的违约后验`;
+  [0,.25,.5,.75,1].forEach(p=>{sv('line',{x1:X0,x2:X1,y1:ys(p),y2:ys(p),stroke:p===.5?'#898781':'#e1e0d9','stroke-width':p===.5?2.5:1,'stroke-dasharray':p===.5?'8 6':''},svg);
+    sv('text',{x:X0-42,y:ys(p)+6,'text-anchor':'end','font-size':16,fill:'#898781'},svg).textContent=(p*100)+'%'});
+  sv('text',{x:X1,y:ys(.5)-10,'text-anchor':'end','font-size':16,fill:'#52514e'},svg).textContent='50% 判断线';
+  L.forEach((c,j)=>{const t=sv('text',{x:xs(j),y:Y1+36,'text-anchor':'middle','font-size':17,fill:j<=k?'#0b0b0b':'#c3c2b7','font-weight':j===k?800:500},svg);t.textContent=c.h});
+  for(let j=1;j<=k;j++){const fresh=j===k&&k>this.prevK;
+    sv('line',{x1:xs(j-1),y1:ys(st[j-1].p),x2:xs(j),y2:ys(st[j].p),stroke:'#6250d6','stroke-width':5,'stroke-linecap':'round',class:fresh?'draw':''},svg)}
+  for(let j=0;j<=k;j++){const g=sv('g',{class:j===k&&k>this.prevK?'pop':''},svg);
+    sv('circle',{cx:xs(j),cy:ys(st[j].p),r:j===k?11:8,fill:st[j].p>.5?'#eb6834':'#2a78d6',stroke:'#fff','stroke-width':3},g);
+    sv('text',{x:xs(j),y:ys(st[j].p)-20,'text-anchor':'middle','font-size':j===k?24:18,'font-weight':800,fill:'#0b0b0b'},g).textContent=pct(st[j].p)}
+  if(k===4){const f=sv('text',{x:(X0+X1)/2,y:Y1+74,'text-anchor':'middle','font-size':18,fill:'#6250d6','font-weight':700},svg);f.textContent=`顺序 ${S.order.map(i=>F[i].name).join(' → ')}：终点都是 ${pct(st[4].p)}`}
+  this.prevK=k},
+caption(k){const st=nbSteps(S.app,S.order);
+  if(k===0)return`不看任何线索，${S.name}的违约概率就是先验 <b>42.9%</b>。下面一条一条加证据。`;
+  const s=st[k],i=s.i,r=s.ld/s.ln;
+  let t=`加入「${F[i].t[S.app[i]]}」：违约组 ${f3(s.ld)}，正常组 ${f3(s.ln)}，${r>=1?'违约这边':'正常这边'}大 ${(r>=1?r:1/r).toFixed(1)} 倍。后验 ${pct(st[k-1].p)} → <b>${pct(s.p)}</b>。`;
+  if(k===4)t+=` 点「换个顺序」：路径变了，<b>终点不变</b>。`;return t}});
+
+/* S3 重复计算 */
+scenes.push({part:'朴素贝叶斯',cls:'',title:'「朴素」在哪：同一条证据记了两遍',steps:4,
+build(m){m.innerHTML=`<div class="panel" style="left:30px;top:22px;width:800px;height:672px">
+    <div style="font-size:21px;font-weight:700;margin-bottom:16px">模型连乘的线索卡片</div>
+    <div id="s3cards"></div>
+    <div style="position:absolute;left:26px;bottom:24px;display:flex;gap:12px"><button class="btn" id="s3m">− 少录一次</button><button class="btn" id="s3p">＋ 「逾期」再录一次</button></div>
+    <div style="position:absolute;right:26px;bottom:30px;font-size:18px;color:var(--secondary);width:330px;text-align:right">假设：两个系统各导入一次同一条逾期记录</div>
+  </div>
+  <div class="panel" style="left:850px;top:22px;width:720px;height:672px">
+    <div style="font-size:21px;color:var(--secondary)"><span id="s3who"></span>的违约后验</div>
+    <div id="s3p0" class="big num" style="font-size:120px;line-height:1.1;margin:6px 0 30px">--</div>
+    <div class="gauge"><div class="half"></div><div class="mk" id="s3mk"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:16px;color:var(--muted);margin-top:22px"><span>0%</span><span>50%</span><span>100%</span></div>
+    <div style="display:flex;align-items:center;gap:20px;margin:28px 0"><span style="font-size:22px">结论：</span><span class="verdict N" id="s3v">批准</span></div>
+    <div class="hist" id="s3h"></div>
+  </div>`;
+  $('#s3m').onclick=()=>go(cur,Math.max(0,step-1));$('#s3p').onclick=()=>go(cur,Math.min(3,step+1))},
+calc(d){const s=nbSteps(S.app);const e=[];const ld=lik(1,0,S.app[0]),ln=lik(0,0,S.app[0]);for(let j=0;j<d;j++)e.push({ld,ln});return nbSteps(S.app,[0,1,2,3],1,e).at(-1).p},
+update(k){$('#s3who').textContent=S.name;
+  const x=S.app,cards=F.map((f,i)=>({h:f.t[x[i]],ld:lik(1,i,x[i]),ln:lik(0,i,x[i]),dup:false}));
+  for(let j=0;j<k;j++)cards.splice(1+j,0,{...cards[0],dup:true});
+  $('#s3cards').innerHTML=cards.map((c,j)=>`<div class="mini ${c.dup?'dup pop':''}">${c.dup?'<span class="tag D badge">重复</span>':''}<div style="font-size:21px;font-weight:800">${c.h}</div>
+     <div style="font-size:16px;margin-top:8px;color:var(--secondary)">违约 <b class="D num">${f3(c.ld)}</b><br>正常 <b class="N num">${f3(c.ln)}</b></div></div>`).join('');
+  const p=this.calc(k);$('#s3p0').textContent=pct(p);$('#s3p0').style.color=p>.5?'var(--default)':'var(--normal)';
+  $('#s3mk').style.left=pct(p);verdictHTML($('#s3v'),p>.5?1:0);
+  $('#s3h').innerHTML=[0,1,2,3].map(d=>`<span class="${d===k?'cur':''}">「逾期」记 ${d+1} 次：${pct(this.calc(d))}</span>`).join('')},
+caption(k){const p0=this.calc(0),p=this.calc(k);
+  if(k===0)return`朴素贝叶斯假设：<b>在同一类人里，各条线索互不相干</b>，所以能一条条连乘。如果同一件事被记了两遍呢？`;
+  const flip=(p>.5)!==(p0>.5);
+  return`「逾期」被记了 ${k+1} 次，没有任何新信息，后验却从 ${pct(p0)} 变成 <b>${pct(p)}</b>${flip?'，<b>结论翻了</b>':''}。朴素贝叶斯<b>判方向</b>常常可靠，<b>概率数值</b>别太当真。`}});
+
+/* S4 零概率与平滑 */
+scenes.push({part:'朴素贝叶斯',cls:'',title:'零概率：一票否决与平滑',steps:3,
+X:[1,1,0,0],
+build(m){m.innerHTML=`<div class="panel" style="left:30px;top:22px;width:1540px;height:150px;display:flex;align-items:center;gap:30px">
+    <span style="width:70px;height:70px;border-radius:50%;background:var(--focus);color:#fff;font-size:32px;font-weight:800;display:flex;align-items:center;justify-content:center">吴</span>
+    <div style="font-size:24px;line-height:1.6">本幕固定用<b>小吴</b>演示：有逾期、负债高、未满 3 年、无房<br><span style="color:var(--secondary);font-size:20px">四条线索都指向违约</span></div>
+    <div id="s4clue" class="fade hide" style="margin-left:auto;border:2px dashed var(--warning);background:var(--warn-soft);border-radius:16px;padding:14px 22px;font-size:22px;line-height:1.6">
+      <b>假想线索</b>：持有本行理财产品（小吴持有）<br>违约组 <b class="D">0 / 6</b> 人持有 · 正常组 <b class="N">3 / 8</b> 人持有</div>
+  </div>
+  <div class="panel" id="s4r0" style="left:30px;top:190px;width:1540px;height:240px"></div>
+  <div class="panel fade" id="s4r1" style="left:30px;top:450px;width:1540px;height:246px"></div>`},
+row(a,withClue,title){const ex=withClue?[{ld:(0+a)/(ND+2*a),ln:(3+a)/(NN+2*a)}]:[];
+  const st=nbSteps(this.X,[0,1,2,3],a,ex),e=st.at(-1),b=st[4];
+  const clueT=withClue?` × <span class="t new" style="background:${a?'':'#fde9df'}">${a?`(0+1)/(6+2) = ${f3(ex[0].ld)}`:'0/6 = 0'}</span>`:'';
+  const clueN=withClue?` × <span class="t">${a?`(3+1)/(8+2) = ${f3(ex[0].ln)}`:'3/8 = 0.375'}</span>`:'';
+  return`<div style="display:flex;align-items:center;gap:16px;margin-bottom:6px"><span class="tag ${a?'N':'W'}" style="font-size:18px">${title}</span></div>
+   <div style="display:flex;gap:40px;align-items:center">
+   <div class="eq" style="flex:1;font-size:21px;line-height:1.75">
+     <div><b class="D">违约得分</b> = ${f4(b.d)}${clueT} = <b class="D">${f4(e.d)}</b></div>
+     <div><b class="N">正常得分</b> = ${f4(b.n)}${clueN} = <b class="N">${f4(e.n)}</b></div>
+     <div class="stack" style="margin-top:10px;width:860px"><div class="sd" style="width:${pct(e.p)}">${e.p>.08?'<span>违约 '+pct(e.p)+'</span>':''}</div><div class="sn" style="width:${pct(1-e.p)}">${e.p<.92?'<span>正常 '+pct(1-e.p)+'</span>':''}</div></div>
+   </div>
+   <div style="text-align:center;width:300px"><div class="big num" style="font-size:64px;color:${e.p>.5?'var(--default)':'var(--normal)'}">${pct(e.p)}</div><span class="verdict ${e.p>.5?'D':'N'}" style="font-size:26px;padding:6px 20px">${e.p>.5?'拒绝':'批准'}</span></div></div>`},
+update(k){$('#s4clue').classList.toggle('hide',k<1);
+  $('#s4r0').innerHTML=this.row(0,k>=1,'不平滑：直接数人头');
+  $('#s4r1').innerHTML=this.row(1,true,'平滑：每格 +1，分母 +2');$('#s4r1').classList.toggle('hide',k<2)},
+caption(k){return[`先<b>不平滑</b>，直接用数人头的比例：小吴四条线索全指向违约，违约概率 <b>97.5%</b>。`,
+  `加一条假想线索「持有本行理财」：违约组 0 人持有。0 一乘，违约得分直接归零——<b>一条线索一票否决</b>，小吴变成 0%，判批准！`,
+  `打开平滑：0/6 变成 1/8 = 0.125。这条线索仍把概率往下拉（93.2% → <b>81.1%</b>），但<b>不再一票否决</b>。`][k]}});
+
+/* S5 决策树：选根 */
+const S5ORDER=[3,0,2,1];
+scenes.push({part:'决策树',cls:'dt',title:'第一步：先问哪个问题？',steps:5,
+build(m){m.innerHTML=`<div id="s5tabs" class="abs" style="left:30px;top:16px;display:flex;gap:10px"></div>
+  <svg id="s5" class="abs" style="left:0;top:74px" width="980" height="642"></svg>
+  <div class="panel" style="left:990px;top:16px;width:580px;height:680px">
+    <div style="font-size:21px;font-weight:700">加权基尼：越小越「干净」</div>
+    <div style="font-size:17px;color:var(--secondary);margin:6px 0 14px">基尼 = 从组里随手抽两人、结果不同的概率</div>
+    <div id="s5bars"></div>
+    <div id="s5pick" class="fade hide" style="margin-top:22px;padding:16px 18px;border-radius:14px;background:#e3f3eb;font-size:22px;line-height:1.6"></div>
+  </div>`;
+  const svg=$('#s5');
+  svg.innerHTML=`<rect id="s5L" x="30" y="16" width="440" height="380" rx="20" fill="#f6f5f1" stroke="#c3c2b7" stroke-width="2"/>
+    <rect id="s5R" x="500" y="16" width="440" height="380" rx="20" fill="#f6f5f1" stroke="#c3c2b7" stroke-width="2"/>
+    <text id="s5lt" x="250" y="54" text-anchor="middle" font-size="25" font-weight="800"></text>
+    <text id="s5rt" x="720" y="54" text-anchor="middle" font-size="25" font-weight="800"></text>
+    <text id="s5lg" x="250" y="440" text-anchor="middle" font-size="20" class="num"></text>
+    <text id="s5rg" x="720" y="440" text-anchor="middle" font-size="20" class="num"></text>
+    <text id="s5w" x="485" y="520" text-anchor="middle" font-size="25" font-weight="700" class="num"></text>
+    <text x="485" y="565" text-anchor="middle" font-size="19" fill="#898781">不切的时候：1 − (6/14)² − (8/14)² = 0.490</text>`;
+  this.P=people(svg);
+  $('#s5tabs').innerHTML=S5ORDER.map((f,j)=>`<button class="btn" data-j="${j}">${F[f].q}</button>`).join('')+`<button class="btn" data-j="4">让算法选</button>`;
+  $('#s5tabs').onclick=e=>{const b=e.target.closest('button');if(b)go(cur,+b.dataset.j)}},
+split(f){const all=ROWS.map((_,i)=>i),L=all.filter(i=>ROWS[i].x[f]===0),R=all.filter(i=>ROWS[i].x[f]===1);
+  return{L,R,w:(L.length*gini(L)+R.length*gini(R))/14}},
+update(k){document.querySelectorAll('#s5tabs button').forEach(b=>b.classList.toggle('on',+b.dataset.j===k));
+  const f=k<4?S5ORDER[k]:1,{L,R,w}=this.split(f);
+  const sortY=a=>a.slice().sort((p,q)=>ROWS[q].y-ROWS[p].y);
+  const gl=grid(sortY(L),100,140,4,100,105),gr=grid(sortY(R),570,140,4,100,105);
+  sortY(L).forEach((i,j)=>place(this.P[i],...gl[j],1.4,{color:COL(ROWS[i].y)}));sortY(R).forEach((i,j)=>place(this.P[i],...gr[j],1.4,{color:COL(ROWS[i].y)}));
+  const kk=a=>a.filter(i=>ROWS[i].y).length,gf=a=>{const n=a.length,d=kk(a);return`1 − (${d}/${n})² − (${n-d}/${n})² = ${f3(gini(a))}`};
+  $('#s5lt').textContent=`${F[f].t[0]} · ${L.length} 人 · 违约 ${kk(L)}`;$('#s5rt').textContent=`${F[f].t[1]} · ${R.length} 人 · 违约 ${kk(R)}`;
+  $('#s5lg').textContent='基尼：'+gf(L);$('#s5rg').textContent='基尼：'+gf(R);
+  $('#s5w').textContent=`加权：${L.length}/14 × ${f3(gini(L))} + ${R.length}/14 × ${f3(gini(R))} = ${f3(w)}`;
+  const tried=k>=4?S5ORDER:S5ORDER.slice(0,k+1);
+  $('#s5bars').innerHTML=S5ORDER.map(ff=>{const t=tried.includes(ff),ww=this.split(ff).w;
+    return`<div class="bar-row ${k>=4&&ff===1?'best':''}" style="opacity:${t?1:.25}"><span class="nm">${F[ff].q}</span><div class="tr"><div class="fl" style="width:${t?ww/0.49*100:0}%"></div></div><span class="vl">${t?f3(ww):''}</span></div>`}).join('')+
+    `<div style="font-size:15px;color:var(--muted);text-align:right;margin-top:-4px">条满格 = 0.490（不切）</div>`;
+  $('#s5pick').innerHTML=`✓ 选<b>负债收入比高？</b>做根节点<br><span style="font-size:18px;color:var(--secondary)">贪心：每一步只挑眼前最干净的问题，不回头。</span>`;
+  $('#s5pick').classList.toggle('hide',k<4)},
+caption(k){if(k>=4)return'算法把四个问题都试一遍，挑加权基尼最小的：<b>负债收入比高？</b>做根节点。';
+  const f=S5ORDER[k],{w}=this.split(f);
+  const note={3:'两边红蓝比例差不多，<b>切了等于没切</b>。',0:'有逾期那边几乎全红，比「有房」干净多了。',2:'未满 3 年那边偏红，但还是混。',1:'一边几乎全红，一边几乎全蓝——<b>最干净</b>。'}[f];
+  return`试问「${F[f].q}」：加权基尼 <b>${f3(w)}</b>。${note}`}});
+
+/* S6 长树 */
+scenes.push({part:'决策树',cls:'dt',title:'第二步：一层一层长出来',steps:6,
+build(m){m.innerHTML=`<svg id="s6" class="abs" style="left:0;top:0" width="1600" height="716"></svg>`;
+  this.T=buildTree();layoutTree(this.T,1520,40,70,175);this.I=bfsInternal(this.T);this.prev=new Set()},
+update(k){const ex=new Set(this.I.slice(0,k).map(n=>n.key));
+  const r=drawTree($('#s6'),this.T,{w:220,expanded:ex,prev:this.prev});this.prev=r.shown;
+  if(k===5){const t=sv('text',{x:1560,y:690,'text-anchor':'end','font-size':20,fill:'#087549','font-weight':700},$('#s6'));t.textContent='每个叶子都纯了：14 人全部分对'}},
+caption(k){if(k===0)return'14 人都在根节点，红条是违约的比例。按「下一步」，每次分裂一个节点。';
+  const nd=this.I[k-1],[a,b]=nd.kids,where=nd.parent?`「${pathText(nd)}」这 ${nd.n} 人`:`全部 ${nd.n} 人`;
+  let t=`${where}：再试一遍所有问题，选「${F[nd.f].q}」→ ${F[nd.f].a[0]} ${a.n} 人（违约 ${a.k}），${F[nd.f].a[1]} ${b.n} 人（违约 ${b.k}）。`;
+  if(k===5)t+=' 树长满了。';return t}});
+
+/* S7 走树与剪枝 */
+scenes.push({part:'决策树',cls:'dt',title:'第三步：走一遍树，再剪枝',steps:4,
+build(m){m.innerHTML=`<svg id="s7" class="abs" style="left:0;top:0" width="1130" height="716"></svg>
+  <div class="panel" style="left:1140px;top:22px;width:430px;height:672px">
+    <div style="font-size:19px;color:var(--secondary);margin-bottom:10px">树最多问几个问题</div>
+    <div id="s7d" style="display:flex;gap:10px;margin-bottom:26px"></div>
+    <div style="font-size:19px;color:var(--secondary)"><span id="s7who"></span>到达的叶子</div>
+    <div id="s7leaf" style="margin-top:10px"></div>
+  </div>`;
+  $('#s7d').innerHTML=[[1,'1 个'],[2,'2 个'],[99,'不限']].map(([d,t])=>`<button class="btn" data-d="${d}">${t}</button>`).join('');
+  $('#s7d').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.depth=+b.dataset.d;this.render(true);$('#caption').innerHTML=this.caption(step)}},
+update(k,app){if(!app)S.depth=[99,99,2,1][k];this.render(app||k!==1||this.lastK!==0);this.lastK=k},
+render(walk){if(this.tok)this.tok.stop=true;
+  document.querySelectorAll('#s7d button').forEach(b=>b.classList.toggle('on',+b.dataset.d===S.depth));
+  const T=buildTree(undefined,0,S.depth);layoutTree(T,1090,20,70,175);
+  const {leaf,path}=leafOf(T,S.app),svg=$('#s7');
+  const show=()=>{drawTree(svg,T,{w:168,expanded:null,hlLeaf:leaf.key});
+    path.slice(1).forEach(nd=>{const e=svg.querySelector(`path[data-k="${nd.key}"]`);if(e){e.setAttribute('stroke','#6250d6');e.setAttribute('stroke-width',6)}});
+    const g=sv('g',{transform:`translate(${leaf.x-114},${leaf.y})`},svg);sv('circle',{r:24,fill:'#6250d6',stroke:'#fff','stroke-width':4},g);
+    sv('text',{y:8,'text-anchor':'middle','font-size':22,'font-weight':800,fill:'#fff'},g).textContent=avatar()};
+  $('#s7who').textContent=S.name;
+  const v=verdictOf(leaf),few=leaf.n<=2;
+  $('#s7leaf').innerHTML=`<div style="font-size:20px;line-height:1.6;color:var(--secondary)">${pathText(leaf)||'（根节点）'}</div>
+   <div style="display:flex;align-items:baseline;gap:12px;margin:14px 0"><span class="big" style="font-size:72px">${leaf.n}</span><span style="font-size:26px">人</span><span style="font-size:24px;margin-left:12px">违约 <b class="D">${leaf.k}</b></span></div>
+   <span class="verdict ${v?'D':'N'}">${v?'拒绝':'批准'}</span>
+   ${few?`<div style="margin-top:22px;padding:14px 16px;border-radius:14px;background:var(--warn-soft);color:var(--warning);font-size:21px;line-height:1.5"><b>⚠ 只有 ${leaf.n} 人支撑</b><br>用一两个人的经历定规则，靠不住</div>`:''}
+   ${leaf.k*2===leaf.n?`<div style="margin-top:12px;font-size:18px;color:var(--secondary)">各占一半，平票按多数规则判批准</div>`:''}
+   <div style="margin-top:18px;font-size:19px;color:var(--secondary)">叶子里的违约比例：<b class="num">${pct(leaf.k/leaf.n)}</b></div>`;
+  if(walk){drawTree(svg,T,{w:168,expanded:null,prev:new Set()});this.tok=walkToken(svg,path,show)}else show()},
+caption(k){const T=buildTree(undefined,0,S.depth),{leaf}=leafOf(T,S.app),v=verdictOf(leaf)?'拒绝':'批准';
+  if(k===0)return`${S.name}从根节点出发：${pathText(leaf)}，到达叶子 → <b>${v}</b>。`;
+  if(k===1)return leaf.n<=2?`看叶子里有几个人：<b>只有 ${leaf.n} 人</b>。树在训练集上全对，可规则是为一两个人定制的——这就是<b>过拟合</b>。`:`看叶子里有几个人：${leaf.n} 人。这条规则有足够的人支撑。`;
+  return`剪枝：最多问 ${S.depth===99?'不限':S.depth} 个问题。${S.name}落到 ${leaf.n} 人的叶子（违约 ${leaf.k}），判<b>${v}</b>。规则变少，每条规则背后的人变多。`}});
+
+/* S8 对照与阈值 */
+scenes.push({part:'对照',cls:'both',title:'同一个人，两种回答；阈值由业务定',steps:2,
+build(m){const card=(id,t)=>`<div class="panel" style="left:${id==='nb'?30:810}px;top:22px;width:760px;height:410px">
+    <div style="display:flex;align-items:center;gap:12px"><span class="tag" style="background:${id==='nb'?'var(--focus)':'var(--success)'};color:#fff;font-size:18px">${t}</span><span id="${id}sub" style="font-size:18px;color:var(--secondary)"></span></div>
+    <div id="${id}p" class="big num" style="font-size:96px;margin:14px 0 8px"></div>
+    <div style="position:relative;height:40px;border-radius:10px;background:#f1f0ec;margin:8px 0 40px">
+      <div id="${id}f" style="height:100%;border-radius:10px;transition:width .8s;background:var(--default)"></div>
+      <div id="${id}t" style="position:absolute;top:-10px;bottom:-10px;border-left:4px solid var(--ink);transition:left .5s"></div>
+      <div id="${id}tl" style="position:absolute;top:46px;font-size:16px;transform:translateX(-50%);white-space:nowrap;transition:left .5s;font-weight:700"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px"><span class="verdict N" id="${id}v">批准</span><span id="${id}x" style="font-size:19px;color:var(--secondary)"></span></div>
+  </div>`;
+  m.innerHTML=card('nb','朴素贝叶斯')+card('dt','决策树')+`
+  <div id="s8warn" class="abs fade hide" style="left:640px;top:345px;width:320px;padding:12px;border-radius:14px;background:var(--ink);color:#fff;text-align:center;font-size:24px;font-weight:800;z-index:3">结论相反！</div>
+  <div class="panel" style="left:30px;top:452px;width:1540px;height:244px">
+    <div style="font-size:23px;margin-bottom:8px">放走 1 个坏客户的损失 = <b class="num" id="s8c" style="font-size:32px"></b> × 误拒 1 个好客户的损失</div>
+    <input type="range" min="1" max="10" step="0.5" class="slider" id="s8s">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+      <div class="eq" style="font-size:26px">阈值 = 1 ÷ (1 + <span id="s8c2"></span>) = <b id="s8th" style="color:var(--focus)"></b></div>
+      <div style="display:flex;gap:10px;align-items:center"><span style="font-size:18px;color:var(--secondary)">决策树深度</span><span id="s8d"></span></div>
+    </div>
+    <div style="font-size:18px;color:var(--secondary);margin-top:8px">违约概率高于阈值就拒绝。期望损失相等：c × P(违约) = 1 × P(正常)</div>
+  </div>`;
+  $('#s8s').oninput=e=>{S.cost=+e.target.value;this.render()};
+  $('#s8d').innerHTML=[[1,'1'],[2,'2'],[99,'不限']].map(([d,t])=>`<button class="btn" data-d="${d}" style="padding:6px 14px">${t}</button>`).join('');
+  $('#s8d').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.depth=+b.dataset.d;this.render()}},
+update(k,app){if(!app)S.cost=[1,5][k];this.render()},
+vals(){const p=nbSteps(S.app).at(-1).p,T=buildTree(undefined,0,S.depth),{leaf}=leafOf(T,S.app),t=1/(1+S.cost);
+  return{p,leaf,q:leaf.k/leaf.n,t,vn:p>t?1:0,vd:leaf.k/leaf.n>t?1:0}},
+render(){const {p,leaf,q,t,vn,vd}=this.vals();
+  $('#s8s').value=S.cost;$('#s8c').textContent=S.cost;$('#s8c2').textContent=S.cost;$('#s8th').textContent=pct(t);
+  document.querySelectorAll('#s8d button').forEach(b=>b.classList.toggle('on',+b.dataset.d===S.depth));
+  [['nb',p,vn,`${S.name} · 四条线索连乘后的违约后验`,'概率来自全部 14 人的比例'],
+   ['dt',q,vd,`${S.name} · 叶子里的违约比例`,`叶子：${leaf.n} 人，违约 ${leaf.k} 人`]].forEach(([id,v,d,sub,x])=>{
+    $('#'+id+'sub').textContent=sub;$('#'+id+'p').textContent=pct(v);$('#'+id+'p').style.color=v>t?'var(--default)':'var(--normal)';
+    $('#'+id+'f').style.width=pct(Math.max(v,.004));$('#'+id+'t').style.left=pct(t);$('#'+id+'tl').style.left=pct(t);$('#'+id+'tl').textContent='阈值 '+pct(t);
+    verdictHTML($('#'+id+'v'),d);$('#'+id+'x').textContent=x});
+  $('#s8warn').classList.toggle('hide',vn===vd);
+  $('#caption').innerHTML=this.caption()},
+caption(){const {p,q,t,vn,vd,leaf}=this.vals(),c=S.cost;
+  const head=c===1?'两种错误代价相同（1 : 1），阈值就是 50%。':`放走坏客户亏 ${c} 份、误拒好客户亏 1 份：阈值降到 <b>${pct(t)}</b>。`;
+  return head+` 朴素贝叶斯 ${pct(p)} → ${vn?'拒绝':'批准'}；决策树 ${pct(q)} → ${vd?'拒绝':'批准'}。`+(vn!==vd?` <b>结论相反</b>：一个看全部 14 人，一个只看叶子里的 ${leaf.n} 人。`:' 结论一致。')}});
+
+/* S9 小结 */
+scenes.push({part:'小结',cls:'both',title:'两种问法，各有长短',steps:1,
+build(m){const nb=nbSteps(PRESET['小周']).at(-1).p;
+  m.innerHTML=`<div class="panel" style="left:30px;top:22px;width:1540px;height:672px;padding:28px 40px">
+  <table class="tbl" style="font-size:24px">
+   <tr><th style="width:22%"></th><th style="font-size:22px;color:var(--focus)">朴素贝叶斯</th><th style="font-size:22px;color:var(--success)">决策树</th></tr>
+   <tr><td><b>怎么问</b></td><td>每条线索在两组里各占多少，连乘</td><td>先问最能分干净的问题，一层层往下</td></tr>
+   <tr><td><b>给出什么</b></td><td>一个概率，适合排序、设阈值</td><td>一条规则，附带叶子人数</td></tr>
+   <tr><td><b>怎么解释</b></td><td>「这几条证据把违约概率推到 X」</td><td>「负债高且未满 3 年，同类 4 人全违约」</td></tr>
+   <tr><td><b>线索组合</b></td><td>不管组合，假设各条独立</td><td><b>擅长</b>：「A 并且 B」才危险</td></tr>
+   <tr><td><b>主要毛病</b></td><td>重复计分，概率偏极端；零概率要平滑</td><td>长太深就过拟合，叶子只剩一两个人</td></tr>
+   <tr><td><b>小周</b></td><td>${pct(nb)}</td><td>长满的树：1 人叶子，0%</td></tr>
+  </table>
+  <div style="margin-top:34px;font-size:34px;font-weight:800;text-align:center">朴素贝叶斯靠<span style="color:var(--focus)">概率累加</span>，决策树靠<span style="color:var(--success)">规则分流</span>；<br>模型给概率或规则，<span style="color:var(--default)">业务画线</span>。</div></div>`},
+update(){},caption(){return'课堂检查：小周的「逾期」被重复记一次会怎样？决策树说小周批准，依据是几个人？按 5 : 1 的代价，阈值是多少？'}});
+
+/* ========== 导航与申请人 ========== */
+let cur=0,step=0,built=-1;
+function renderApplicant(){
+  const a=$('#applicant');
+  a.innerHTML=`<span class="lab">申请人</span>`+['小周','小吴'].map(n=>`<button class="chip ${S.name===n?'on':''}" data-n="${n}">${n}</button>`).join('')+
+   `<span class="chip ${S.name==='自定义'?'on':''}" style="cursor:default">自定义</span><span class="sep"></span>`+
+   F.map((f,i)=>`<button class="tog ${S.app[i]?'v1':''}" data-i="${i}">${f.t[S.app[i]]}</button>`).join('')}
+$('#applicant').onclick=e=>{const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.n){S.name=b.dataset.n;S.app=PRESET[S.name].slice()}
+  else if(b.dataset.i){const i=+b.dataset.i;S.app[i]=1-S.app[i];S.name=Object.keys(PRESET).find(n=>PRESET[n].join()===S.app.join())||'自定义'}
+  renderApplicant();refresh(true)};
+function refresh(appChanged){const sc=scenes[cur];
+  if(built!==cur){$('#main').innerHTML='';sc.build($('#main'));built=cur}
+  sc.update(step,appChanged);
+  $('#part').textContent=sc.part;$('#part').className=sc.cls;$('#sceneTitle').textContent=sc.title;
+  $('#caption').innerHTML=sc.caption(step);
+  $('#pos').innerHTML=`第 ${cur+1} / ${scenes.length} 幕<br>${sc.steps>1?`步骤 ${step+1} / ${sc.steps}`:'&nbsp;'}`;
+  $('#dots').innerHTML=scenes.map((_,i)=>`<i class="${i<cur?'done':i===cur?'cur':''}" data-i="${i}"></i>`).join('');
+  history.replaceState(null,'',`#s=${cur}&k=${step}`)}
+function go(s,k){cur=Math.max(0,Math.min(scenes.length-1,s));step=Math.max(0,Math.min(scenes[cur].steps-1,k));refresh()}
+function next(){if(step<scenes[cur].steps-1)go(cur,step+1);else if(cur<scenes.length-1)go(cur+1,0)}
+function prev(){if(step>0)go(cur,step-1);else if(cur>0)go(cur-1,scenes[cur-1].steps-1)}
+$('#next').onclick=next;$('#prev').onclick=prev;
+$('#dots').onclick=e=>{const i=e.target.dataset.i;if(i!==undefined)go(+i,0)};
+addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;
+  if(['ArrowRight',' ','PageDown','Enter'].includes(e.key)){e.preventDefault();next()}
+  else if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();prev()}
+  else if(e.key==='Home')go(0,0)});
+function fit(){const s=Math.min(innerWidth/1600,innerHeight/900);$('#stage').style.transform=`translate(-50%,-50%) scale(${s})`}
+addEventListener('resize',fit);fit();
+(function init(){const h=new URLSearchParams(location.hash.slice(1));
+  if(h.get('static'))document.body.classList.add('noanim');
+  if(h.get('a')&&PRESET[h.get('a')]){S.name=h.get('a');S.app=PRESET[S.name].slice()}
+  renderApplicant();go(+(h.get('s')||0),+(h.get('k')||0))})();
+</script>
+</body>
+</html>
