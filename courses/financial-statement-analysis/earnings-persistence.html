@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23002FA7'/%3E%3Ctext x='32' y='46' font-size='32' text-anchor='middle' fill='white' font-family='Georgia,serif'%3E¥%3C/text%3E%3C/svg%3E">
+<title>专题三 · 利润能持续吗？——盈余持续性与三张报表的勾稽 — 财报分析学生学习包</title>
+<meta name="description" content="硕士课程《财报分析》专题三：从利润表算出盈余，用一笔赊销看清三张表如何记录同一件事，把盈余持续性写成可检验的面板回归，6 项课堂任务卡。">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
+<style>
+:root{
+  --paper:#fafaf8;
+  --ink:#0a0a0a;
+  --grey-1:#f0f0ee;
+  --grey-2:#d4d4d2;
+  --grey-3:#737373;
+  --accent:#002FA7;
+  --mono:"JetBrains Mono","Cascadia Code",Consolas,"Courier New",monospace;
+  --sans:"Inter","Helvetica Neue","Noto Sans SC","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+.container{max-width:920px;margin:0 auto;padding:0 24px}
+
+header{background:var(--ink);color:#fff;padding:56px 0 40px;border-bottom:6px solid var(--accent)}
+header .tag{font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;font-weight:600}
+header .tag::before{content:"// "}
+header h1{font-size:34px;line-height:1.25;font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+header .sub{font-size:16.5px;color:var(--grey-2);margin-bottom:22px;max-width:640px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:12.5px;color:#fff;border:1px solid var(--grey-3);padding:4px 12px;background:rgba(255,255,255,.03);font-weight:500}
+
+nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--grey-2);margin-bottom:28px}
+nav .links{display:flex;gap:0;flex-wrap:wrap;padding:6px 0}
+nav a{font-size:14px;color:var(--grey-3);text-decoration:none;padding:8px 14px;border-left:1px solid var(--grey-2);transition:color .15s;font-weight:500}
+nav a:first-child{border-left:none}
+nav a:hover{color:var(--accent)}
+nav a.back{color:var(--accent);font-weight:500;margin-right:8px}
+
+section{margin-bottom:44px;scroll-margin-top:56px}
+h2{font-size:23px;font-weight:700;color:var(--ink);margin:36px 0 16px;padding:0 0 10px 14px;border-left:6px solid var(--accent);display:flex;align-items:baseline;gap:12px;letter-spacing:-.01em;flex-wrap:wrap}
+h2 .no{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.12em;font-weight:600}
+h3{font-size:17.5px;font-weight:700;margin:24px 0 10px;color:var(--ink);scroll-margin-top:56px}
+h4{font-size:15.5px;font-weight:700;margin:18px 0 8px;color:var(--ink);scroll-margin-top:56px}
+p{margin:8px 0}
+ul,ol{margin:8px 0 8px 24px}
+li{margin:5px 0}
+code{font-family:var(--mono);font-size:.86em;background:var(--grey-1);padding:1px 6px;color:var(--ink);font-weight:500}
+strong{font-weight:700}
+a{color:var(--accent)}
+a:hover{color:#0047d0}
+
+.panel{background:var(--grey-1);border:1px solid var(--grey-2);padding:20px 22px;margin:14px 0}
+.takeaway{border-left:4px solid var(--accent);background:var(--grey-1);padding:12px 18px;font-weight:600;color:var(--ink);margin:14px 0}
+.warnbox{border-left:4px solid var(--ink);background:var(--grey-1);padding:12px 18px;margin:14px 0;font-size:14.5px}
+.note{font-size:14px;color:var(--grey-3);margin:6px 0}
+
+.submission-bar{background:var(--accent);color:#fff}
+.submission-bar .container{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px}
+.submission-bar strong{display:block;font-size:16px}
+.submission-bar span{font-size:13px;color:#e8edff}
+.submission-bar a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 20px;background:#fff;color:var(--accent);font-weight:700;text-decoration:none;white-space:nowrap}
+.submission-bar a:hover{background:#edf1ff}
+.submission-bar a:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.submission-bottom{margin-top:32px}
+
+.tablewrap{overflow-x:auto;margin:4px 0}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px}
+th,td{border:1px solid var(--grey-2);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--grey-1);color:var(--ink);font-weight:600;font-size:14px}
+td.num,th.num{text-align:center;font-family:var(--mono);font-size:13.5px;white-space:nowrap}
+td.r{text-align:right;font-family:var(--mono);font-size:13.5px;white-space:nowrap}
+tr.total td{font-weight:700;background:var(--grey-1)}
+
+.task{border:1px solid var(--grey-2);margin:16px 0;background:var(--paper);scroll-margin-top:56px}
+.task-head{background:var(--grey-1);padding:10px 20px;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--grey-2);font-size:15.5px}
+.task-head .meta{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--accent)}
+.task-body{padding:14px 20px 18px}
+
+.formula{background:var(--paper);border:1px solid var(--grey-2);border-left:4px solid var(--ink);padding:14px 18px;margin:10px 0;overflow-x:auto}
+.formula .katex-display{margin:6px 0}
+.flow{background:var(--grey-1);border:1px solid var(--grey-2);border-left:4px solid var(--ink);padding:14px 18px;margin:10px 0;overflow-x:auto}
+.flow pre{font-family:var(--mono);font-size:13px;line-height:1.85;color:var(--ink);white-space:pre;margin:0}
+
+.prompt{background:#fff;border:1px dashed var(--grey-3);padding:14px 18px;margin:10px 0;font-size:14.5px;color:var(--ink);line-height:1.75}
+.prompt::before{content:"提示词 · Prompt";display:block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:8px;text-transform:uppercase}
+.refdoc{font-weight:600}
+
+footer{margin-top:48px;padding:28px 0 48px;border-top:2px solid var(--accent);color:var(--grey-3);font-size:13.5px}
+footer .mono{font-size:12.5px}
+footer strong{color:var(--ink)}
+
+@media (max-width:760px){
+  header h1{font-size:26px}
+  header{padding:40px 0 28px}
+  h2{font-size:20px}
+}
+@media print{
+  nav{display:none}
+  .submission-bar{display:none}
+  body{background:#fff}
+}
+</style>
+</head>
+<body id="top">
+<aside class="submission-bar" aria-label="财报分析专题三作业提交"><div class="container"><div><strong>财报分析专题三作业提交</strong><span>课堂任务产出统一提交 · 截止日期见提交页面</span></div><a href="https://send2me.cn/fAmv-n6r/Thyfs318Zeddhg" target="_blank" rel="noopener">提交作业 ↗</a></div></aside>
+
+<header>
+  <div class="container">
+    <div class="tag">硕士课程 · 财报分析 · 专题三</div>
+    <h1>利润能持续吗？——盈余持续性与三张报表的勾稽</h1>
+    <div class="sub">学生学习包：从利润表算出盈余，用一笔赊销看清三张表怎样记录同一件事，再把「盈余能否延续」写成可检验的面板回归。六张任务卡从概念首答走到研究方案，实证部分用机械设备行业全样本。</div>
+    <div class="chips">
+      <span class="chip">6 项任务卡</span>
+      <span class="chip">7 项成果</span>
+      <span class="chip">机械设备行业</span>
+      <span class="chip">2014–2022 年</span>
+      <span class="chip">学生学习包</span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="container links">
+    <a href="index.html" class="back">← 课程主页</a>
+    <a href="#overview">学习目标</a>
+    <a href="#tasks">任务卡</a>
+    <a href="#reading">阅读材料</a>
+    <a href="#concept">概念题</a>
+    <a href="#agent-prompt">Agent 指令</a>
+    <a href="#case">案例材料</a>
+    <a href="#plan">研究方案</a>
+    <a href="#ai-rules">AI 规则</a>
+    <a href="#homework">课后清单</a>
+  </div>
+</nav>
+
+<main class="container">
+
+<div class="warnbox">
+  <p><strong>使用说明：</strong></p>
+  <ol>
+    <li>本次课以你们读材料、做任务为主。老师只在三个时点做简短提醒，不做整段讲授。每张任务卡都写明要读哪一节材料，<strong>先读，再做</strong>。</li>
+    <li>请按任务卡顺序推进。每张卡都列出了材料、步骤、交付物和完成标准，做完一项勾一项。</li>
+    <li><strong>2–4 人一组</strong>，开课时自己商量分工。</li>
+    <li>下课前，各组提交研究方案（F5）。课后的拓展模型按这份方案做。</li>
+    <li>实证用的数据、变量和模型口径，统一见<span class="refdoc">《实证口径说明》</span>（随课下发的同名文档）。</li>
+  </ol>
+</div>
+
+<!-- ============ 一、这节课你要做成什么 ============ -->
+<section id="overview">
+  <h2><span class="no">01</span> 这节课你要做成什么</h2>
+
+  <h3>1. 学习目标</h3>
+  <ol>
+    <li><strong>说清盈余从哪里来</strong>：从利润表的营业收入一步步算到净利润，并换算成本课使用的 <span class="math">\(E\)</span>。</li>
+    <li><strong>说清盈余持续性</strong>：用自己的话解释它，并区分盈余持续性、净现比和盈余增长。</li>
+    <li><strong>看懂一笔业务在三张表里的样子</strong>：以一笔赊销为例，说清它在利润表、现金流量表和资产负债表里各记什么，以及以后收回、拖欠或收不回时，三张表各怎样变化。</li>
+    <li><strong>看懂应计项目的两面</strong>：说明应计项目为什么既包含有用的会计信息，也可能意味着盈余较难持续。</li>
+    <li><strong>从案例走到假设</strong>：从一家异常公司中提炼出能在其他公司身上检验的机制，而不是停在公司故事上。</li>
+    <li><strong>把假设写成模型</strong>：把机制写成变量、预期方向和面板模型，检验未来一至三年的盈余持续性。</li>
+    <li><strong>说清证据的边界</strong>：判断一组结果能支持什么结论，不能排除哪些替代解释。</li>
+    <li><strong>驱动 Agent，但自己核查</strong>：让 Agent 取数、建变量、跑模型，同时独立核对关键口径和结果。</li>
+  </ol>
+
+  <h3 id="deliver">2. 你要交出的成果</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>编号</th><th>成果</th><th>形式</th><th>完成人</th><th>对应任务</th><th>能否用 AI</th><th>何时交</th></tr>
+    <tr><td class="num">F1</td><td>利润表计算 + 简化例子三表映射 + 概念题首答</td><td>作答表</td><td>个人</td><td>任务 0、1</td><td><strong>否</strong></td><td>任务 1 结束时先交</td></tr>
+    <tr><td class="num">F2</td><td>Agent 批评记录 + 修订答案 + 修改理由</td><td>作答表 + 会话记录</td><td>个人</td><td>任务 2</td><td>是，按规则</td><td>下课前</td></tr>
+    <tr><td class="num">F3</td><td>候选公司筛选记录</td><td>表格 + 会话记录</td><td>小组</td><td>任务 3</td><td>是</td><td>下课前</td></tr>
+    <tr><td class="num">F4</td><td>异常公司案例卡（初稿）</td><td>案例卡</td><td>小组</td><td>任务 3、4</td><td>是，需核对</td><td>下课前交初稿，课后交终稿</td></tr>
+    <tr><td class="num">F5</td><td>研究方案</td><td>方案表</td><td>小组</td><td>任务 5</td><td>可征求意见，方案由小组定</td><td>下课前</td></tr>
+    <tr><td class="num">F6</td><td>实证报告 + 代码 + 数据记录</td><td>报告 + 代码</td><td>小组</td><td>任务 5 起并行，课后完成</td><td>是</td><td>课后截止日</td></tr>
+    <tr><td class="num">F7</td><td>个人说明：本组证据能支持什么、不能回答什么</td><td>300 字以内</td><td>个人</td><td>课后</td><td>否</td><td>课后截止日</td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ============ 二、任务卡 ============ -->
+<section id="tasks">
+  <h2><span class="no">02</span> 任务卡</h2>
+
+  <div class="task" id="task-0">
+    <div class="task-head"><span>任务 0｜盈余从哪里来</span><span class="meta">个人 · 15 分钟 · 不用 AI</span></div>
+    <div class="task-body">
+      <p><strong>材料：</strong>3.0 节、3.1 节、3.2 节。3.0 节可以课前先读。</p>
+      <p>后面所有任务都在问「盈余能不能持续」。先弄清盈余是哪一个数、怎样从利润表算出来，再做后面的任务。</p>
+
+      <h4>第一部分：从利润表算出盈余（约 7 分钟）</h4>
+      <p><strong>情境：</strong>某公司本年合并利润表的部分数据如下（单位：万元）。资产负债表「资产总计」期初为 1,400 万元，期末为 1,600 万元。</p>
+      <div class="tablewrap">
+      <table>
+        <tr><th>项目</th><th>金额</th></tr>
+        <tr><td>营业收入</td><td class="r">1,000</td></tr>
+        <tr><td>营业成本</td><td class="r">700</td></tr>
+        <tr><td>税金及附加</td><td class="r">10</td></tr>
+        <tr><td>销售费用</td><td class="r">50</td></tr>
+        <tr><td>管理费用</td><td class="r">60</td></tr>
+        <tr><td>研发费用</td><td class="r">30</td></tr>
+        <tr><td>财务费用</td><td class="r">20</td></tr>
+        <tr><td>其他收益（本年计入其他收益的一笔政府补助，与日常活动相关）</td><td class="r">10</td></tr>
+        <tr><td>投资收益</td><td class="r">40</td></tr>
+        <tr><td>信用减值损失</td><td class="r">−15</td></tr>
+        <tr><td>资产减值损失</td><td class="r">−5</td></tr>
+        <tr><td>资产处置收益（出售一处旧厂房）</td><td class="r">30</td></tr>
+        <tr><td>营业外收入</td><td class="r">8</td></tr>
+        <tr><td>营业外支出</td><td class="r">3</td></tr>
+        <tr><td>所得税费用</td><td class="r">45</td></tr>
+        <tr><td>少数股东损益</td><td class="r">20</td></tr>
+      </table>
+      </div>
+
+      <p><strong>步骤：</strong></p>
+      <ol>
+        <li>先读 3.0 节。</li>
+        <li>按 3.0.1 节的计算顺序填下表。每一格都写计算过程，不只写结果。
+          <div class="tablewrap">
+          <table>
+            <tr><th>要算的数</th><th>计算过程</th><th>结果</th></tr>
+            <tr><td>毛利（分析用语）</td><td></td><td></td></tr>
+            <tr><td>营业利润</td><td></td><td></td></tr>
+            <tr><td>利润总额</td><td></td><td></td></tr>
+            <tr><td>净利润（合并利润表）</td><td></td><td></td></tr>
+            <tr><td>归属于母公司股东的净利润</td><td></td><td></td></tr>
+            <tr><td>平均总资产（分析用语）</td><td></td><td></td></tr>
+            <tr><td><span class="math">\(E\)</span>（本课使用的盈余）</td><td></td><td></td></tr>
+          </table>
+          </div>
+        </li>
+        <li>在情境表中圈出 2–3 个「明年不一定再出现」的项目，每个写一句理由。</li>
+      </ol>
+
+      <h4>第二部分：把 100 万元放进三张表（约 8 分钟）</h4>
+      <p><strong>情境：</strong>某公司提供一项服务，本期确认收入 100 万元，客户尚未付款。为突出确认时点，暂不考虑成本与税费。假设公司已取得无条件收款权，初始确认时预期信用损失为零。</p>
+      <p><strong>步骤：</strong></p>
+      <ol>
+        <li>先读 3.1 节、3.2 节。</li>
+        <li>填下表。
+          <div class="tablewrap">
+          <table>
+            <tr><th>项目</th><th>本期</th><th>下期：客户付款</th><th>下期：继续欠款，预期信用损失上升</th><th>以后：确定收不回，核销</th></tr>
+            <tr><td>利润表</td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>现金流量表（经营活动）</td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>资产负债表</td><td></td><td></td><td></td><td></td></tr>
+          </table>
+          </div>
+        </li>
+      </ol>
+
+      <p><strong>完成标准：</strong>□ 第一部分 7 个数都算出，并写了计算过程　□ 圈出了明年不一定再出现的项目，并写了理由　□ 第二部分四列都填了　□ 能说出哪一列里「本期净利润没能兑现」</p>
+    </div>
+  </div>
+
+  <div class="task" id="task-1">
+    <div class="task-head"><span>任务 1｜概念题首答</span><span class="meta">个人 · 20 分钟 · 不用 AI</span></div>
+    <div class="task-body">
+      <p><strong>材料：</strong>3.3 节、3.4 节；第四部分的 10 道题。</p>
+      <p><strong>步骤：</strong></p>
+      <ol>
+        <li>先读 3.3 节、3.4 节（约 5 分钟）。</li>
+        <li>独立作答 10 道题，每题不超过 5 行。不会的题写下你卡在哪里，不要空着。</li>
+        <li>时间到，把任务 0 与本任务的作答表作为 <strong>F1 提交</strong>。提交后不得修改首答。</li>
+      </ol>
+      <p><strong>规则：</strong>请自己查资料、自己先做，首答阶段不使用 Agent。教师巡视时提醒，不逐人检查。首答写得不对不扣分，评价看的是修订前后的变化和理由。</p>
+      <p><strong>完成标准：</strong>□ 10 题都有作答或卡点说明　□ F1 已提交</p>
+    </div>
+  </div>
+
+  <div class="task" id="task-2">
+    <div class="task-head"><span>任务 2｜Agent 批评与修订</span><span class="meta">个人 · 15 分钟 · Agent 只批评</span></div>
+    <div class="task-body">
+      <p><strong>材料：</strong>第五部分「Agent 批评启动指令」。作答表在第四部分。</p>
+      <p><strong>步骤：</strong></p>
+      <ol>
+        <li>把第五部分的启动指令和你的首答一起发给 Agent。</li>
+        <li>读 Agent 的批评。对每条批评，判断：<strong>接受、部分接受，还是不接受</strong>。</li>
+        <li>在作答表「修订答案」栏写修订版；在「修改理由」栏写清你为什么改、为什么不改。</li>
+        <li>Agent 若给出正确答案、正确表述或示例，不要照抄。在审查表中记一条「越界」。</li>
+      </ol>
+      <p><strong>完成标准：</strong>□ 每题都有处理结论　□ 至少一处「不接受」或「部分接受」写了理由　□ 会话已保存</p>
+    </div>
+  </div>
+
+  <div class="warnbox" id="remind-1">
+    <p><strong>老师提醒 ①（5 分钟）</strong></p>
+    <p>老师固定五条认识。请对照你的修订答案，看哪一条还没写进去：</p>
+    <ol>
+      <li>持续性要通过<strong>未来</strong>的结果观察。</li>
+      <li>当期三张表提供的是<strong>预测信息</strong>，不是未来结果本身。</li>
+      <li>应计项目把当期净利润和后续报表连接起来。</li>
+      <li>正常增长、会计估计和盈余管理可能产生相似的表象，需要进一步区分。</li>
+      <li>案例用来理解机制，面板数据用来检验机制能否推广。</li>
+    </ol>
+  </div>
+
+  <div class="task" id="task-3">
+    <div class="task-head"><span>任务 3｜异常公司案例挖掘</span><span class="meta">小组 · 45 分钟 · 可用 AI</span></div>
+    <div class="task-body">
+      <p><strong>材料：</strong>3.5 节；第六部分的筛选记录表（6.1）与案例卡（6.2）。</p>
+      <p><strong>选什么公司：</strong>申万「机械设备」行业的公司（名单取法见《实证口径说明》第二节）。报告期 <span class="math">\(t\)</span>（2014–2022 年，保证后三年已披露）的三表关系有明显异常，并且在 <span class="math">\(t+1\)</span> 至 <span class="math">\(t+3\)</span> 出现了盈余下滑、增长中断、资产减值或其他与盈余不持续有关的结果。</p>
+      <ul>
+        <li>老师<strong>不提供公司名单</strong>。候选公司由你们驱动 Agent 从数据中筛出来。</li>
+        <li>不局限于财务造假或重大爆雷。没有监管结论时，<strong>不得把异常写成造假</strong>。</li>
+        <li>不选第二次课已经分析过的公司（康美药业、辅仁药业、瑞幸咖啡）。</li>
+        <li>不另写正常公司案例。正常公司与异常公司的总体差异，由课后全样本实证处理。</li>
+      </ul>
+      <p><strong>步骤：</strong></p>
+      <ol>
+        <li><strong>筛选（约 15 分钟）</strong>：小组按 3.5 节的思路，让 Agent 用数据接口筛出 5–10 家候选。每条筛选条件、接口和参数都记入 F3。</li>
+        <li><strong>选定（约 5 分钟）</strong>：组内讨论，选一家异常关系最清楚的公司，固定报告期 <span class="math">\(t\)</span>。</li>
+        <li><strong>重建链条（约 15 分钟）</strong>：说明净利润与经营现金流的差异对应哪些资产负债项目，解释可能的形成原因。组内用年报原文核对至少 3 个关键数字，核对的同学不是取数的同学。</li>
+        <li><strong>看结果、找反证（约 10 分钟）</strong>：整理 <span class="math">\(t+1\)</span> 至 <span class="math">\(t+3\)</span> 的报表，判断后续结果是否符合你们的机制。组内至少找出一条不支持本组解释的证据或一种替代解释。</li>
+      </ol>
+      <p><strong>防止后见之明：</strong>案例卡中「报告期可见」和「后续才知道」必须分栏写。后续信息只能用来检验你们的判断，不能写进「当时可见」的证据栏。</p>
+      <p><strong>交付物：</strong>F3 筛选记录；F4 案例卡初稿（第六部分模板第 1–5 项）。</p>
+      <p><strong>完成标准：</strong>□ 候选公司来自数据筛选，筛选条件已记录　□ 至少 3 个数字已用年报原文核对　□ 至少一条反证或替代解释　□ 两栏没有混写</p>
+    </div>
+  </div>
+
+  <div class="task" id="task-4">
+    <div class="task-head"><span>任务 4｜案例快闪</span><span class="meta">全班 · 12 分钟</span></div>
+    <div class="task-body">
+      <p><strong>规则：</strong></p>
+      <ol>
+        <li>每组 <strong>90 秒</strong>，只讲三句话：异常在哪里、哪个会计机制、后续三年发生了什么。</li>
+        <li>听的组在下表记录：他们的机制能不能推广？最可能的替代解释是什么？</li>
+        <li>组数较多时，老师随机抽组发言，其余组把三句话写在案例卡首页提交。</li>
+      </ol>
+      <div class="tablewrap">
+      <table>
+        <tr><th>发言组</th><th>机制</th><th>能否推广到其他公司</th><th>最可能的替代解释</th></tr>
+        <tr><td></td><td></td><td></td><td></td></tr>
+      </table>
+      </div>
+      <p><strong>老师提醒 ②：</strong>老师针对快闪中暴露的共性问题，追问反证和替代解释。</p>
+    </div>
+  </div>
+
+  <div class="task" id="task-5">
+    <div class="task-head"><span>任务 5｜研究设计与研究方案</span><span class="meta">小组 · 23 分钟 · 共同基准并行</span></div>
+    <div class="task-body">
+      <p><strong>材料：</strong>3.6 节、3.7 节；第七部分研究方案模板；《实证口径说明》第三至五节。</p>
+      <p><strong>步骤：</strong></p>
+      <ol>
+        <li><strong>读口径（约 6 分钟）</strong>：全组一起读《实证口径说明》第三至五节，弄清共同基准的变量、样本和三个假设。</li>
+        <li><strong>从案例到假设（约 10 分钟）</strong>：把案例卡第 6、7 项写成<strong>一个</strong>拓展假设。只选一个主要机制，不要把案例中所有异常都塞进模型。</li>
+        <li><strong>写方案（约 7 分钟）</strong>：按第七部分模板写完研究方案，<strong>下课前提交（F5）</strong>。</li>
+        <li><strong>共同基准（并行，没有课内完成时限）</strong>：组内同学从任务 5 开始，按《实证口径说明》取数，先做茅台核对，再建样本流失表、跑 6 个回归。写方案的同学不等待取数结果。课内做不完的，课后继续。</li>
+      </ol>
+      <p><strong>完成标准：</strong>□ 拓展假设可以被数据否证　□ 写明了预期方向和可能推翻它的结果　□ F5 已提交</p>
+    </div>
+  </div>
+
+  <div class="warnbox" id="remind-3">
+    <p><strong>老师提醒 ③ 与课后分工（5 分钟）</strong></p>
+    <p>老师强调结论边界与复现要求。各组对照第九部分确认分工，把每项课后任务写上负责人。</p>
+  </div>
+</section>
+
+<!-- ============ 三、阅读材料 ============ -->
+<section id="reading">
+  <h2><span class="no">03</span> 阅读材料</h2>
+
+  <h3 id="s3-0">3.0 盈余是什么，怎样从利润表算出来</h3>
+  <p class="note"><a href="#task-0">← 返回任务 0</a></p>
+
+  <h4 id="s3-0-0">3.0.0 盈余的界定</h4>
+  <p>「盈余」不是《企业会计准则》的用语。准则的对应概念是会计要素「利润」。学术研究把它叫作 earnings，本课沿用「盈余」。界定分四步：</p>
+  <ol>
+    <li><strong>准则怎样定义利润。</strong>《企业会计准则——基本准则》第十条把利润列为六个会计要素之一。第三十七条规定：「<strong>利润是指企业在一定会计期间的经营成果。利润包括收入减去费用后的净额、直接计入当期利润的利得和损失等</strong>。」</li>
+    <li><strong>利润由哪几部分构成。</strong>
+      <ul>
+        <li><strong>收入减去费用后的净额</strong>：收入是日常活动形成的经济利益总流入（第三十条），费用是日常活动发生的经济利益总流出（第三十三条）。</li>
+        <li><strong>直接计入当期利润的利得和损失</strong>：非日常活动形成，应当计入当期损益（第三十八条）。例如营业外收入、营业外支出。</li>
+      </ul>
+    </li>
+    <li><strong>哪些不属于利润。</strong>直接计入所有者权益的利得和损失不计入当期损益（第二十七条），在利润表中列为「其他综合收益」，位于净利润之后。所有者投入资本和向所有者分配利润也不是利润。</li>
+    <li><strong>利润按什么基础确定。</strong>企业以权责发生制为基础确认、计量和报告（第九条）。收入和费用按归属期间计入，不按现金收付计入。利润项目列入利润表（第四十条）。</li>
+  </ol>
+  <div class="takeaway">本课的界定：盈余是企业一个会计期间按权责发生制确认的经营成果，取合并利润表「净利润」项目的金额，即营业利润加营业外收支、减所得税费用之后的数。它包含少数股东损益，不包含其他综合收益。本课问「盈余能不能持续」，就是问这一数字在未来几年还能延续多少。</div>
+
+  <h4 id="s3-0-1">3.0.1 利润表的计算顺序</h4>
+  <p>利润表从营业收入出发，逐行加减，依次得到营业利润、利润总额和净利润：</p>
+  <div class="flow"><pre>  营业收入
+− 营业成本                ← 营业收入 − 营业成本 = 毛利（分析用语）
+− 税金及附加
+− 销售费用、管理费用、研发费用、财务费用（教材合称期间费用）
++ 其他收益
++ 投资收益
++ 公允价值变动收益
++ 信用减值损失、资产减值损失（损失用负数列示，加上负数就是扣减）
++ 资产处置收益
+= 营业利润
++ 营业外收入
+− 营业外支出
+= 利润总额
+− 所得税费用
+= 净利润
+    按所有权归属分类：归属于母公司股东的净利润（简称“归母净利润”）
+                      少数股东损益</pre></div>
+  <p>投资收益、公允价值变动收益和资产处置收益为损失时，同样用负数列示。</p>
+  <p><strong>哪些是报表项目，哪些是分析用语。</strong>上面各行的项目名称都是利润表的列报项目，以财会〔2019〕6 号、财会〔2019〕16 号的报表格式为准。箭头后的「毛利」、括号里的「期间费用」和 3.0.4 节的「平均总资产」是分析用语，报表上没有这几行。算毛利，用利润表的「营业收入」减「营业成本」；算平均总资产，用资产负债表的「资产总计」。</p>
+  <p><strong>三个容易记错范围的项目</strong>（依据财会〔2019〕6 号的项目说明）：</p>
+  <ul>
+    <li><strong>其他收益</strong>：计入其他收益的政府补助，以及其他与日常活动相关的项目。与日常活动无关的政府补助，记入营业外收入。收到补助不等于确认收益：与资产相关的补助先记为递延收益，再分期确认。</li>
+    <li><strong>资产处置收益</strong>：出售持有待售的非流动资产或处置组，以及处置固定资产、在建工程、生产性生物资产和无形资产形成的利得或损失。处置金融工具、长期股权投资和投资性房地产的损益不在这一行。</li>
+    <li><strong>营业外收入、营业外支出</strong>：与日常活动无关的利得和损失。例如，固定资产报废、毁损的损失记入营业外支出，不记入资产处置收益。</li>
+  </ul>
+  <p>读年报时注意三点：</p>
+  <ol>
+    <li><strong>行前编号因报表而不同。</strong>合并利润表（财会〔2019〕16 号格式）先列「营业总收入」「营业总成本」，净利润排在「五、」。母公司利润表（财会〔2019〕6 号格式）从「营业收入」开始，净利润排在「四、」。找行次时认项目名称，不认编号。</li>
+    <li><strong>减值损失的位置随年份变化。</strong>较早年份的报表把资产减值损失列在「减」的项目里，用正数列示。财会〔2019〕6 号格式起，减值损失列在「加」的项目里，用负数列示。两种写法对净利润的影响相同。信用减值损失只在企业执行新金融工具准则后出现，见《实证口径说明》第九节。</li>
+    <li><strong>年报另列扣非净利润。</strong>年报「主要会计数据和财务指标」一节列示「归属于上市公司股东的扣除非经常性损益的净利润」。它扣除了偶发项目，可以和净利润对照着看。</li>
+  </ol>
+
+  <h4 id="s3-0-2">3.0.2 每一行都按权责发生制确认，不等于现金</h4>
+  <div class="tablewrap">
+  <table>
+    <tr><th>项目</th><th>什么时候计入利润表</th><th>本期有没有对应的现金</th></tr>
+    <tr><td>营业收入</td><td>客户取得商品或服务的控制权时</td><td>不一定。赊销时先确认收入，形成应收账款</td></tr>
+    <tr><td>营业成本</td><td>与对应的收入同期确认</td><td>不一定。存货可能在以前期间买入，也可能是赊购</td></tr>
+    <tr><td>期间费用</td><td>费用发生的期间</td><td>不一定。例如已计提、尚未支付的工资和利息</td></tr>
+    <tr><td>折旧与摊销（含在营业成本和期间费用中）</td><td>在资产使用年限内分期确认</td><td>没有。现金在购置资产时已经付出</td></tr>
+    <tr><td>信用减值损失、资产减值损失</td><td>估计资产价值下降时</td><td>没有。它是会计估计</td></tr>
+    <tr><td>投资收益</td><td>例如按持股比例分享被投资单位的净利润时（权益法）</td><td>不一定。分享的净利润不等于收到的分红</td></tr>
+    <tr><td>公允价值变动收益</td><td>持有的金融资产价格变动时</td><td>没有。资产尚未出售</td></tr>
+  </table>
+  </div>
+  <p>因此，净利润是按权责发生制一行行算出来的，不是本期现金的增加额。净利润与经营现金流之差就是应计项目，3.2 节、3.3 节接着讲。</p>
+
+  <h4 id="s3-0-3">3.0.3 哪些行更可能延续</h4>
+  <ul>
+    <li>毛利和期间费用来自主营业务，每年都会发生，通常更能延续。</li>
+    <li>资产处置收益、营业外收入和营业外支出多来自偶发事项，下一年不一定再出现。</li>
+    <li>其他收益、投资收益和公允价值变动收益要看来源。同一类补助或投资每年都有，就可能延续；一次性的，就难以延续。</li>
+    <li>减值损失来自会计估计，金额每年变化，还可能在后续期间被修正。</li>
+  </ul>
+  <p>这只是常见情况。判断某家公司的某个项目，要查附注中的明细。</p>
+
+  <h4 id="s3-0-4">3.0.4 本课用哪个净利润，怎样换算成 \(E\)</h4>
+  <p>本课用<strong>合并净利润</strong>（含少数股东损益），不用归母净利润。原因：经营现金流和总资产都是合并口径，分子分母要对齐。</p>
+  <p>公司规模差别很大，净利润的金额不能直接比较。所以本课用平均总资产缩放净利润：</p>
+  <div class="formula">
+    \[
+    E_t=\frac{\text{净利润}_t}{(\text{期初总资产}_t+\text{期末总资产}_t)/2}
+    \]
+  </div>
+  <ul>
+    <li>总资产取资产负债表的「资产总计」。期初总资产取上年年报的期末数。本年年报「上年年末」栏的数字可能因追溯调整与之不同，本课以上年年报为准，见《实证口径说明》第三节。</li>
+    <li>\(E\) 相当于资产收益率。</li>
+    <li>例：净利润 60 万元，期初总资产 900 万元，期末总资产 1,100 万元。平均总资产为 1,000 万元，\(E=6\%\)。</li>
+  </ul>
+  <p>盈余持续性问的就是：今年的 \(E\)，到明年、后年、大后年还能延续多少。今年 \(E\) 中偶发项目越多，能延续的部分通常越少。</p>
+
+  <h3 id="s3-1">3.1 盈余持续性是什么</h3>
+  <p class="note"><a href="#task-0">← 返回任务 0</a></p>
+  <p><strong>盈余持续性</strong>是当前盈余所代表的经营结果在未来期间延续的程度。</p>
+  <ul>
+    <li>持续性不等于盈余永远不变，也不等于盈余一定增长。</li>
+    <li><strong>净现比</strong>（经营现金流除以净利润）描述当前盈余有多少现金支持；<strong>持续性</strong>描述当前盈余在未来能延续多少。两者相关，但不是一回事。</li>
+    <li><strong>盈余增长</strong>描述盈余的变化方向。连续增长的盈余也可能难以持续，例如增长来自越积越多的应收账款。</li>
+  </ul>
+
+  <h3 id="s3-2">3.2 三张表怎样记录同一件事</h3>
+  <p class="note"><a href="#task-0">← 返回任务 0</a></p>
+  <div class="takeaway">收付与确认存在时间差 → 形成应计项目 → 在资产负债表中积累 → 后续兑现、反转或减值 → 影响未来盈余。</div>
+  <ul>
+    <li><strong>利润表</strong>记录本期确认的经营成果。</li>
+    <li><strong>现金流量表</strong>记录本期实际收付的现金。</li>
+    <li><strong>资产负债表</strong>保留尚未完成的确认、收付和估值结果。</li>
+  </ul>
+  <p>任务 0 的 100 万元说明：净利润、现金和资产负债变化，是同一事项的三个侧面。三表勾稽关系本身是会计关系，不自动产生预测力。要检验的是：三表共同揭示的盈余构成，是否包含关于未来盈余的信息。</p>
+
+  <h3 id="s3-3">3.3 应计项目：信息还是风险</h3>
+  <p class="note"><a href="#task-1">← 返回任务 1</a></p>
+  <p>把本期盈余拆成两部分：</p>
+  <div class="formula">
+    \[
+    \text{盈余}=\text{经营现金流}+\text{应计项目}
+    \]
+  </div>
+  <ul>
+    <li><strong>应计项目有信息</strong>。权责发生制把收入和费用放在「应该属于」的期间，比单看现金收付更能反映本期经营成果。</li>
+    <li><strong>应计项目也有风险</strong>。它依赖估计：应收账款能不能收回、存货会不会跌价、费用该不该资本化。估计越多，后续被修正、反转（应计项目在后续期间转为相反方向）或减值的可能越大。</li>
+    <li>因此一种常见的推测是：<strong>应计构成的持续性低于现金构成</strong>。这是本课共同基准要检验的假设 H2，不是结论。</li>
+  </ul>
+  <p>共同基准的 \(ACC\) 按 \(E-CF\) 计算。它除营运资本变动外，还含折旧摊销、资产减值、利息费用（筹资活动支付，不在经营现金流内）、投资收益和公允价值变动。解释 \(ACC\) 时，不得直接把它等同于「应计项目的可靠性」。</p>
+
+  <h3 id="s3-4">3.4 两个必须保留的反面判断</h3>
+  <p class="note"><a href="#task-1">← 返回任务 1</a></p>
+  <ol>
+    <li><strong>应计项目不等于盈余操纵。</strong>正常经营和增长也会形成应计项目。例如快速扩张的公司，应收账款和存货随收入一起增长。</li>
+    <li><strong>经营现金流高于净利润，不必然代表高质量；低于净利润，也不必然代表风险。</strong>例如大额预收款可以让现金流暂时很高；正常的赊销扩张会让现金流暂时偏低。</li>
+  </ol>
+  <p>做任何判断，都要给出机制证据，不能只凭一个比率下结论。</p>
+
+  <h3 id="s3-5">3.5 从案例到可检验的假设</h3>
+  <p class="note"><a href="#task-3">← 返回任务 3</a></p>
+  <p><strong>筛选候选公司的思路</strong>（不是公式，按你们的机制选一条或组合）：</p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>思路</th><th>报告期 \(t\) 的信号</th><th>\(t+1\) 至 \(t+3\) 要看的结果</th><th>基准 \(ACC\) 是否反映</th></tr>
+    <tr><td>高应计</td><td>\(ACC\) 在同年机械设备行业中处于很高的位置</td><td>资产收益率下降</td><td>是：就是 \(ACC\) 本身</td></tr>
+    <tr><td>应收先行</td><td>应收账款或合同资产增速远高于收入增速</td><td>信用减值、坏账、收入增速下降</td><td>是：应收增加使 \(ACC\) 上升</td></tr>
+    <tr><td>存货积压</td><td>存货增速远高于营业成本增速</td><td>存货跌价准备、毛利率下降</td><td>是：存货增加使 \(ACC\) 上升</td></tr>
+    <tr><td>资本化扩张</td><td>开发支出、在建工程或无形资产快速增加</td><td>资产减值、折旧摊销上升</td><td>否：资本化支出列投资活动，\(ACC\) 不上升，须自己构造变量</td></tr>
+    <tr><td>净利润与经营现金流背离</td><td>净利润连续增长，经营现金流持续为负或下降</td><td>盈余中断、减值</td><td>是：\(ACC\) 持续为正</td></tr>
+  </table>
+  </div>
+  <p><strong>筛选与重建时的口径提醒</strong>：</p>
+  <ol>
+    <li>基准 \(ACC\) 按 \(E-CF\) 计算。费用资本化使现金流出转入投资活动，经营现金流不下降，\(ACC\) 不显示这类异常。选「资本化扩张」须自己构造变量。</li>
+    <li>「异常」须有数据阈值，并写入 F3。高应计思路统一用：\(ACC\) 位于同年机械设备行业内前 10%。其他思路由小组写明阈值。</li>
+    <li>「信用减值损失」「合同资产」「合同负债」在不同年份的报表中不一定存在，见《实证口径说明》第九节。</li>
+    <li>重建链条时，先查年报附注：现金流量表补充资料（净利润调节为经营活动现金流量）、应收账款账龄与坏账准备、存货跌价准备的计提与转回（转回的范围见《实证口径说明》第九节）、重要会计政策变更。</li>
+  </ol>
+  <p><strong>从公司故事到一般机制</strong>：</p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>层次</th><th>例子</th></tr>
+    <tr><td>公司故事</td><td>「这家公司 2018 年大量赊销，后来应收坏账，盈余下滑。」</td></tr>
+    <tr><td>一般机制</td><td>「由应收账款增长带来的应计构成，持续性低于现金构成。」</td></tr>
+    <tr><td>可检验假设</td><td>「在机械设备行业中，应收账款变化占平均总资产比例越高的公司，\(ACC_t\) 对 \(E_{t+h}\) 的系数越低。」</td></tr>
+  </table>
+  </div>
+  <p>一个好的假设要能被数据<strong>否证</strong>：写清自变量、因变量、预期方向，以及什么结果会推翻它。</p>
+
+  <h3 id="s3-6">3.6 怎样把持续性变成回归</h3>
+  <p class="note"><a href="#task-5">← 返回任务 5</a></p>
+  <p>持续性看不见，但可以用「今天的盈余能在多大程度上预测未来的盈余」来度量：</p>
+  <div class="formula">
+    \[
+    E_{i,t+h}=\alpha_h+\beta_h E_{i,t}+\text{固定效应}+\varepsilon_{i,t+h}
+    \]
+  </div>
+  <ul>
+    <li>\(E\) 是用平均总资产缩放的净利润，相当于资产收益率。</li>
+    <li>\(\beta_h\) 越接近 1，说明盈余越能延续；越接近 0，说明盈余很快回到平均水平。</li>
+    <li>把 \(E_t\) 拆成现金构成 \(CF_t\)（经营现金流除以平均总资产）与应计构成 \(ACC_t\)（应计项目除以平均总资产），分别估计系数 \(\beta^C\)、\(\beta^A\)，就能检验哪一部分更能延续。</li>
+    <li>\(h=1,2,3\) 分别估计，看持续性随期限怎样变化。</li>
+    <li>\(\beta_h\) 是全样本的平均关系，不是单家公司的属性。案例公司的结果不能用 \(\beta_h\) 解释。</li>
+  </ul>
+  <p>完整口径见《实证口径说明》。你们的拓展假设，通常是在共同基准上增加一个变量或一个交互项。例如检验「应收账款变化大的公司，应计构成的持续性更低」，可以加入 \(ACC_{i,t}\times \Delta AR_{i,t}\) 的交互项。其中 \(\Delta AR_{i,t}\) 为应收账款变化占平均总资产的比例，预期交互项系数为负。</p>
+
+  <h3 id="s3-7">3.7 怎样读回归结果</h3>
+  <p class="note"><a href="#task-5">← 返回任务 5</a></p>
+  <ol>
+    <li><strong>先看大小和方向，再看显著性。</strong>例如 \(\beta_1=0.5\) 的含义是：本期资产收益率高 1 个百分点，下一年平均高 0.5 个百分点。</li>
+    <li><strong>比较两个系数，要检验它们的差。</strong>\(\beta^C=0.6\)、\(\beta^A=0.4\) 看起来不同，但要用 Wald 检验 \(\beta^C=\beta^A\)，才能说「差异显著」。</li>
+    <li><strong>「差异变化」要先定义。</strong>共同基准的 H3 固定用差值 \(\beta^C-\beta^A\)。差值变小时，比值 \(\beta^A/\beta^C\) 可能同时也变小，两者的结论可以不同。拓展若用比值，先说清度量。</li>
+    <li><strong>设定不同，问题就不同。</strong>加公司固定效应后，系数度量的是「偏离本公司常态的盈余」能延续多久，和只含年份固定效应的基准回答的问题不同。</li>
+    <li><strong>显著不等于因果。</strong>应计持续性低，可能来自会计估计误差，也可能来自经营本身的周期，还可能来自盈余管理。说清你的证据能排除哪一种，不能排除哪一种。</li>
+    <li><strong>负结果也是结果。</strong>拓展假设没有得到支持，如实报告并解释，同样可以得高分。</li>
+  </ol>
+</section>
+
+<!-- ============ 四、概念题 ============ -->
+<section id="concept">
+  <h2 id="part-4"><span class="no">04</span> 概念题（任务 1）</h2>
+  <p class="note"><a href="#task-1">← 返回任务 1</a>　<a href="#agent-prompt">→ 去任务 2 的 Agent 指令</a></p>
+  <ol>
+    <li><strong>概念界定</strong>：不用「高质量」「比较稳定」等循环表述，解释什么是盈余持续性。</li>
+    <li><strong>指标辨认</strong>：净利润、经营现金流和净现比中，哪一个可以直接等同于盈余持续性？为什么？</li>
+    <li><strong>同一件事的三表映射</strong>：任务 0 中的 100 万元，本期分别怎样进入三张报表？</li>
+    <li><strong>时间差</strong>：为什么本期净利润与经营现金流的差异，会在资产负债表中留下记录？</li>
+    <li><strong>后续路径</strong>：应收账款以后被收回、继续挂账和发生减值，分别怎样影响后续报表？</li>
+    <li><strong>反例构造</strong>：构造一个「净现比偏低，但盈余仍可能持续」的正常经营例子。</li>
+    <li><strong>风险构造</strong>：构造一个「当前盈余较高，但未来盈余可能难以持续」的三表例子。</li>
+    <li><strong>增长辨析</strong>：一家公司净利润连续三年增长，能否据此认定其盈余持续性强？还需要什么证据？</li>
+    <li><strong>实证转化</strong>：盈余持续性不能直接观察，怎样用未来的报表把它转化为可检验的结果？</li>
+    <li><strong>假设表达</strong>：写出一个可以被数据否证的假设，说明自变量、因变量、预测方向和可能证伪它的结果。</li>
+  </ol>
+  <h4>作答表（F1、F2）</h4>
+  <div class="tablewrap">
+  <table>
+    <tr><th>题号</th><th>首答（任务 1，不用 AI）</th><th>Agent 批评要点</th><th>处理（接受 / 部分接受 / 不接受）</th><th>修订答案</th><th>修改理由</th></tr>
+    <tr><td class="num">1</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td class="num">2</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td class="num">…</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td class="num">10</td><td></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ============ 五、Agent 批评启动指令 ============ -->
+<section id="agent-prompt">
+  <h2 id="part-5"><span class="no">05</span> Agent 批评启动指令（任务 2）</h2>
+  <p class="note"><a href="#task-2">← 返回任务 2</a>　<a href="#part-4">← 回到第四部分作答表</a></p>
+  <p>把下面这段话和你的首答一起发给 Agent：</p>
+  <div class="prompt">
+    你是《财务报表分析》课程的批评者，不是答题者。下面是我对 10 道盈余持续性概念题的独立首答。请逐题完成三件事：<br>
+    1. 指出我答案中的错误、循环定义、单一指标下结论、混淆持续性与净现比或盈余增长等问题；没有问题就写「未发现问题」。<br>
+    2. 对每个问题提一个追问，帮助我自己想清楚。<br>
+    3. 提示我遗漏了哪方面的条件，用提问的方式，不要直接写出遗漏的内容或反例。<br><br>
+    规则：可以告诉我哪里不对，可以给出评论和追问；不要给出正确答案，不要给出正确表述或示例，不要替我重写答案；会计处理以中国企业会计准则为准；不确定的内容标明「待核实」。全部批评结束后，问我是否需要对某一题继续追问。
+  </div>
+</section>
+
+<!-- ============ 六、案例挖掘材料 ============ -->
+<section id="case">
+  <h2 id="part-6"><span class="no">06</span> 案例挖掘材料（任务 3、4）</h2>
+  <p class="note"><a href="#task-3">← 返回任务 3</a></p>
+
+  <h3 id="part-6-1">6.1 候选公司筛选记录（F3）</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>序号</th><th>筛选条件（用自然语言写，再写 Agent 实际执行的条件）</th><th>接口与参数</th><th>取数日期</th><th>候选公司</th><th>入选或放弃的理由</th></tr>
+    <tr><td class="num">1</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td class="num">2</td><td></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+  </div>
+
+  <h3 id="part-6-2">6.2 异常公司案例卡（F4）</h3>
+  <div class="panel">
+    <p><strong>公司</strong>：＿＿＿＿（代码＿＿＿＿）　<strong>报告期 \(t\)</strong>：＿＿＿＿年　<strong>小组</strong>：＿＿＿＿</p>
+  </div>
+  <div class="tablewrap">
+  <table>
+    <tr><th>栏目</th><th>报告期可见</th><th>后续才知道（\(t+1\) 至 \(t+3\)）</th></tr>
+    <tr><td>证据</td><td>当期三表数据、报表附注、当时公开的经营信息</td><td>后续盈余变化、资产减值、监管结论及其他结果</td></tr>
+    <tr><td></td><td></td><td></td></tr>
+  </table>
+  </div>
+  <p>依次回答：</p>
+  <ol>
+    <li>这家公司异常在哪里？</li>
+    <li>异常怎样同时表现在三张报表中？（至少一张三表对应表）</li>
+    <li>哪一项会计机制可能使当前盈余难以持续？</li>
+    <li>后续三年实际发生了什么？</li>
+    <li>哪些证据不支持本组解释？有没有替代解释？</li>
+    <li>哪个机制可以推广到其他公司？</li>
+    <li>对应的可检验假设是什么？</li>
+  </ol>
+  <h4>关键数字核对表</h4>
+  <div class="tablewrap">
+  <table>
+    <tr><th>数字</th><th>Agent 或接口给出的值</th><th>年报原文的值</th><th>年报页码</th><th>是否一致</th><th>核对人</th></tr>
+    <tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+  </div>
+  <p class="note">附：接口名称、查询参数、取数日期、Agent 会话记录。</p>
+</section>
+
+<!-- ============ 七、研究方案模板 ============ -->
+<section id="plan">
+  <h2 id="part-7"><span class="no">07</span> 研究方案模板（F5，下课前提交）</h2>
+  <p class="note"><a href="#task-5">← 返回任务 5</a></p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>项目</th><th>内容</th></tr>
+    <tr><td>小组与成员</td><td></td></tr>
+    <tr><td>来源案例与机制</td><td>一句话：哪家公司的什么机制</td></tr>
+    <tr><td>拓展假设</td><td>可以被否证的一句话</td></tr>
+    <tr><td>因变量</td><td>默认 \(E_{t+h}\)，\(h=1,2,3\)；若改用其他结果变量，写明定义</td></tr>
+    <tr><td>核心自变量或交互项</td><td>名称、定义。口述即可，不用填 Tushare 字段名；字段由 Agent 查找，对照表见《实证口径说明》第十节</td></tr>
+    <tr><td>预期方向</td><td>正 / 负，以及理由</td></tr>
+    <tr><td>推翻假设的结果</td><td>出现什么结果就说明假设不成立</td></tr>
+    <tr><td>模型</td><td>写出方程，说明在共同基准上加了什么</td></tr>
+    <tr><td>H3 的度量</td><td>共同基准固定为差值与堆叠检验。拓展若用其他度量，写明定义和检验方法</td></tr>
+    <tr><td>稳健性检查</td><td>至少一项，写明回答什么问题</td></tr>
+    <tr><td>主要替代解释</td><td>至少一条，以及能否在本研究中排除</td></tr>
+    <tr><td>分工</td><td>每项课后任务的负责人</td></tr>
+  </table>
+  </div>
+</section>
+
+<!-- ============ 八、AI 协作规则与审查表 ============ -->
+<section id="ai-rules">
+  <h2 id="part-8"><span class="no">08</span> AI 协作规则与审查表</h2>
+  <p><strong>三条基本规则</strong>（与前几次课相同）：先独立判断、后用 AI；AI 给出的每个数字都要核对原始出处；每次采纳 AI 意见修改判断，都要写明理由。</p>
+  <p><strong>本次课新增两条：</strong></p>
+  <ol>
+    <li><strong>概念题分两段</strong>：任务 1 首答阶段自己查、自己先做，不使用 Agent；任务 2 才把首答交给 Agent，并且 Agent 只批评、不代答。</li>
+    <li><strong>数据一律由 Agent 通过接口获取</strong>，不手工把报表数字抄进表格。但关键数字要由组内同学用年报原文核对。</li>
+  </ol>
+  <h3>AI 审查表（任务 2、3 和课后都使用）</h3>
+  <div class="tablewrap">
+  <table>
+    <tr><th>AI 的主张</th><th>出处（接口、表格或页码）</th><th>核验结果</th><th>问题类型</th><th>我们的处理与理由</th></tr>
+    <tr><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+  </div>
+  <p class="note">问题类型：数据错误、口径错误、推理跳跃、关键遗漏、<strong>后见之明</strong>、<strong>越界代答</strong>、正确且有增益。</p>
+</section>
+
+<!-- ============ 九、课后任务与提交清单 ============ -->
+<section id="homework">
+  <h2 id="part-9"><span class="no">09</span> 课后任务与提交清单</h2>
+  <p class="note"><a href="#remind-3">← 返回老师提醒 ③</a></p>
+
+  <h3>小组（F4 终稿、F6）</h3>
+  <ol>
+    <li>继续完成课内未做完的取数：<strong>先做茅台核对</strong>，再建样本流失表。课内已完成的部分不重复。</li>
+    <li>完成共同基准：6 个回归，H1、H2、H3 检验。课内已完成的部分，核对结果即可。</li>
+    <li>完成研究方案中的拓展检验。</li>
+    <li>完成至少一项有明确目的的稳健性检查。</li>
+    <li>写实证报告，包含：样本与描述统计、共同基准结果、拓展结果、稳健性、结论边界。</li>
+    <li>提交完整代码、数据查询记录（接口、参数、取数日期）、Agent 会话记录和成员分工说明。</li>
+    <li>完成案例卡终稿。</li>
+  </ol>
+
+  <h3>个人（F2 终稿、F7）</h3>
+  <ol>
+    <li>概念题首答、Agent 批评记录、修订答案及修改理由。</li>
+    <li>一段个人说明（300 字以内，不用 AI）：本组证据最能支持什么，仍不能回答什么。</li>
+  </ol>
+</section>
+
+</main>
+
+<div class="submission-bottom"><aside class="submission-bar" aria-label="财报分析专题三作业提交"><div class="container"><div><strong>财报分析专题三作业提交</strong><span>课堂任务产出统一提交 · 截止日期见提交页面</span></div><a href="https://send2me.cn/fAmv-n6r/Thyfs318Zeddhg" target="_blank" rel="noopener">提交作业 ↗</a></div></aside></div>
+
+<footer>
+  <div class="container">
+    <p><strong>《财报分析》专题三：利润能持续吗？——盈余持续性与三张报表的勾稽</strong> · 实证样本取自申万机械设备行业 A 股公司（2014–2022 年） · 共同基准与拓展检验按《实证口径说明》执行。</p>
+    <p class="mono">本材料仅供课堂教学使用 · 会计处理以中国企业会计准则为准 · 2026 年秋季学期</p>
+  </div>
+</footer>
+
+</body>
+</html>
