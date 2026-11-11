@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23002FA7'/%3E%3Ctext x='32' y='46' font-size='32' text-anchor='middle' fill='white' font-family='Georgia,serif'%3E¥%3C/text%3E%3C/svg%3E">
+<title>实证口径说明 · 专题三配套 — 财报分析学生学习包</title>
+<meta name="description" content="硕士课程《财报分析》专题三配套文件：共同基准的数据、变量、样本与模型口径，含 Tushare 字段对照、茅台数据核对与准则换版提示。">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}]});"></script>
+<style>
+:root{
+  --paper:#fafaf8;
+  --ink:#0a0a0a;
+  --grey-1:#f0f0ee;
+  --grey-2:#d4d4d2;
+  --grey-3:#737373;
+  --accent:#002FA7;
+  --mono:"JetBrains Mono","Cascadia Code",Consolas,"Courier New",monospace;
+  --sans:"Inter","Helvetica Neue","Noto Sans SC","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+.container{max-width:920px;margin:0 auto;padding:0 24px}
+
+header{background:var(--ink);color:#fff;padding:56px 0 40px;border-bottom:6px solid var(--accent)}
+header .tag{font-family:var(--mono);font-size:13px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;font-weight:600}
+header .tag::before{content:"// "}
+header h1{font-size:34px;line-height:1.25;font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+header .sub{font-size:16.5px;color:var(--grey-2);margin-bottom:22px;max-width:640px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:12.5px;color:#fff;border:1px solid var(--grey-3);padding:4px 12px;background:rgba(255,255,255,.03);font-weight:500}
+
+nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--grey-2);margin-bottom:28px}
+nav .links{display:flex;gap:0;flex-wrap:wrap;padding:6px 0}
+nav a{font-size:14px;color:var(--grey-3);text-decoration:none;padding:8px 14px;border-left:1px solid var(--grey-2);transition:color .15s;font-weight:500}
+nav a:first-child{border-left:none}
+nav a:hover{color:var(--accent)}
+nav a.back{color:var(--accent);font-weight:500;margin-right:8px}
+
+section{margin-bottom:44px;scroll-margin-top:56px}
+h2{font-size:23px;font-weight:700;color:var(--ink);margin:36px 0 16px;padding:0 0 10px 14px;border-left:6px solid var(--accent);display:flex;align-items:baseline;gap:12px;letter-spacing:-.01em;flex-wrap:wrap}
+h2 .no{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.12em;font-weight:600}
+h3{font-size:17.5px;font-weight:700;margin:24px 0 10px;color:var(--ink);scroll-margin-top:56px}
+h4{font-size:15.5px;font-weight:700;margin:18px 0 8px;color:var(--ink);scroll-margin-top:56px}
+p{margin:8px 0}
+ul,ol{margin:8px 0 8px 24px}
+li{margin:5px 0}
+code{font-family:var(--mono);font-size:.86em;background:var(--grey-1);padding:1px 6px;color:var(--ink);font-weight:500}
+strong{font-weight:700}
+a{color:var(--accent)}
+a:hover{color:#0047d0}
+
+.panel{background:var(--grey-1);border:1px solid var(--grey-2);padding:20px 22px;margin:14px 0}
+.takeaway{border-left:4px solid var(--accent);background:var(--grey-1);padding:12px 18px;font-weight:600;color:var(--ink);margin:14px 0}
+.warnbox{border-left:4px solid var(--ink);background:var(--grey-1);padding:12px 18px;margin:14px 0;font-size:14.5px}
+.note{font-size:14px;color:var(--grey-3);margin:6px 0}
+
+.submission-bar{background:var(--accent);color:#fff}
+.submission-bar .container{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px}
+.submission-bar strong{display:block;font-size:16px}
+.submission-bar span{font-size:13px;color:#e8edff}
+.submission-bar a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 20px;background:#fff;color:var(--accent);font-weight:700;text-decoration:none;white-space:nowrap}
+.submission-bar a:hover{background:#edf1ff}
+.submission-bar a:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.submission-bottom{margin-top:32px}
+
+.tablewrap{overflow-x:auto;margin:4px 0}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px}
+th,td{border:1px solid var(--grey-2);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--grey-1);color:var(--ink);font-weight:600;font-size:14px}
+td.num,th.num{text-align:center;font-family:var(--mono);font-size:13.5px;white-space:nowrap}
+td.r{text-align:right;font-family:var(--mono);font-size:13.5px;white-space:nowrap}
+tr.total td{font-weight:700;background:var(--grey-1)}
+
+.task{border:1px solid var(--grey-2);margin:16px 0;background:var(--paper);scroll-margin-top:56px}
+.task-head{background:var(--grey-1);padding:10px 20px;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--grey-2);font-size:15.5px}
+.task-head .meta{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--accent)}
+.task-body{padding:14px 20px 18px}
+
+.formula{background:var(--paper);border:1px solid var(--grey-2);border-left:4px solid var(--ink);padding:14px 18px;margin:10px 0;overflow-x:auto}
+.formula .katex-display{margin:6px 0}
+.flow{background:var(--grey-1);border:1px solid var(--grey-2);border-left:4px solid var(--ink);padding:14px 18px;margin:10px 0;overflow-x:auto}
+.flow pre{font-family:var(--mono);font-size:13px;line-height:1.85;color:var(--ink);white-space:pre;margin:0}
+
+.prompt{background:#fff;border:1px dashed var(--grey-3);padding:14px 18px;margin:10px 0;font-size:14.5px;color:var(--ink);line-height:1.75}
+.prompt::before{content:"提示词 · Prompt";display:block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:8px;text-transform:uppercase}
+.refdoc{font-weight:600}
+
+footer{margin-top:48px;padding:28px 0 48px;border-top:2px solid var(--accent);color:var(--grey-3);font-size:13.5px}
+footer .mono{font-size:12.5px}
+footer strong{color:var(--ink)}
+
+@media (max-width:760px){
+  header h1{font-size:26px}
+  header{padding:40px 0 28px}
+  h2{font-size:20px}
+}
+@media print{
+  nav{display:none}
+  .submission-bar{display:none}
+  body{background:#fff}
+}
+</style>
+<style>
+/* 导航在本页会折成两行，锚点跳转留出足够上边距 */
+html{scroll-padding-top:96px}
+section{scroll-margin-top:8px}
+</style>
+</head>
+<body id="top">
+
+<header>
+  <div class="container">
+    <div class="tag">硕士课程 · 财报分析 · 专题三 · 口径文件</div>
+    <h1>实证口径说明</h1>
+    <div class="sub">共同基准的数据、变量、样本与模型口径。各组按本文件驱动 Agent 取数、建变量、估计模型；口径不同，结果就不能比。</div>
+    <div class="chips">
+      <span class="chip">共同基准</span>
+      <span class="chip">10 节口径</span>
+      <span class="chip">Tushare 字段</span>
+      <span class="chip">茅台核对</span>
+      <span class="chip">随课下发</span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="container links">
+    <a href="./earnings-persistence.html" class="back">← 专题三</a>
+    <a href="#s1">数据来源</a>
+    <a href="#s2">报表与记录</a>
+    <a href="#s3">变量定义</a>
+    <a href="#s4">样本与处理</a>
+    <a href="#s5">基准模型</a>
+    <a href="#s6">数据核对</a>
+    <a href="#s7">稳健性</a>
+    <a href="#s8">报告事项</a>
+    <a href="#s9">准则换版</a>
+    <a href="#s10">字段对照</a>
+  </div>
+</nav>
+
+<main class="container">
+
+<div class="warnbox">
+<p><strong>使用说明</strong>：</p>
+<ol>
+<li>本文件规定共同基准的<strong>数据、变量、样本和模型口径</strong>。各组按本文件驱动 Agent 取数、建变量、估计模型。任务 5 起在课内并行进行，做不完的课后继续。</li>
+<li>把本文件整份发给你的 Agent，要求它<strong>逐条遵守</strong>。Agent 提出改口径时，先问自己：这是共同基准的改动，还是本组拓展？共同基准不改，拓展写进研究方案。</li>
+<li>共同基准用于各组结果互相比较。口径不同，结果就不能比，所以本文件里「必须」的条目不得自行调整。</li>
+<li>本文件不提供数据集和代码。数据与代码由各组自己生成，并作为成果提交。</li>
+</ol>
+</div>
+<section id="s1">
+<h2><span class="no">第一节</span> 数据来源与权限</h2>
+<ol>
+<li><strong>参考接口</strong>：Tushare Pro 的利润表 <code>income</code>、现金流量表 <code>cashflow</code>、资产负债表 <code>balancesheet</code> 与股票列表 <code>stock_basic</code>。字段名以 Tushare 为准。</li>
+<li><strong>取数范围与权限</strong>：本课样本限定为申万「机械设备」行业的公司（约 630 家当前成员），按第二节的成员名单逐只查询 <code>income</code>、<code>cashflow</code>、<code>balancesheet</code> 即可，不需要批量接口。有 <code>income_vip</code> 等批量接口权限时，可以按报告期取全市场，再按名单筛选。</li>
+<li><strong>其他数据源</strong>：允许使用其他接口，但必须：
+<ul>
+<li>写出每个变量对应的原字段名；</li>
+<li>通过第六节的「数据核对」；</li>
+<li>在报告中说明与 Tushare 口径的差异。</li>
+</ul>
+</li>
+<li><strong>单页上限</strong>：Tushare 单次返回有条数上限，批量查询必须用 <code>offset</code>/<code>limit</code> 分页，直到某页返回条数小于上限。<strong>没有分页的数据会悄悄少一截</strong>，这是最常见的取数错误。</li>
+<li><strong>令牌（token）由教师提供，不得写进代码文件或报告</strong>，用环境变量传入。</li>
+</ol>
+</section>
+<section id="s2">
+<h2><span class="no">第二节</span> 报表与记录选择（必须）</h2>
+<div class="tablewrap">
+<table>
+<tr><th>项目</th><th>规则</th><th>Tushare 参数或字段</th></tr>
+<tr><td>报表类型</td><td>合并报表</td><td><code>report_type = 1</code></td></tr>
+<tr><td>报告期</td><td>年报</td><td><code>end_date = YYYY1231</code>（<code>period = YYYY1231</code>）</td></tr>
+<tr><td>取数年份</td><td>2013–2025 年年报</td><td>2013 年只用于 2014 年的期初总资产</td></tr>
+<tr><td>同一报告期多条记录</td><td>取<strong>首次披露版</strong>：同一公司同一 <code>end_date</code> 中 <code>f_ann_date</code> 最早的一条；日期相同时取 <code>update_flag = 0</code></td><td><code>f_ann_date</code>、<code>update_flag</code></td></tr>
+<tr><td>公司类型</td><td>只保留一般工商业</td><td><code>comp_type = 1</code></td></tr>
+<tr><td>行业范围</td><td>申万 2021 一级行业「机械设备」（<code>801890.SI</code>）：取当前成员</td><td><code>index_member_all</code>（<code>l1_code=801890.SI</code>，<code>is_new=Y</code>）</td></tr>
+<tr><td>上市前数据</td><td>剔除：报告期 <span class="math">\(t\)</span> 年报的 <code>f_ann_date</code> 早于 <code>list_date</code> 的记录</td><td><code>stock_basic.list_date</code></td></tr>
+<tr><td>退市公司</td><td><strong>删除</strong>。<code>stock_basic.list_status = D</code> 的公司整家删除</td><td><code>list_status</code></td></tr>
+<tr><td>二级行业</td><td>取成员记录中的 <code>l2_name</code>，仅用于稳健性</td><td><code>l2_name</code></td></tr>
+</table>
+</div>
+<p><strong>为什么用首次披露版</strong>：本课关心「报告期当时能看到的盈余」能否延续。后来的更正版本带有事后信息。更正版本只作稳健性检查。</p>
+<p><strong>注意比较数据的调整</strong>：公司在下一年年报里可能调整上年数字（会计政策变更、差错更正）。本口径的期初总资产取<strong>上一年年报首次披露的期末数</strong>，不取下一年年报里「调整后」的上年数。</p>
+</section>
+<section id="s3">
+<h2><span class="no">第三节</span> 变量定义（必须）</h2>
+<div class="tablewrap">
+<table>
+<tr><th>变量</th><th>定义</th><th>Tushare 字段</th></tr>
+<tr><td><span class="math">\(NI_{i,t}\)</span></td><td>合并净利润（含少数股东损益）</td><td><code>income.n_income</code></td></tr>
+<tr><td><span class="math">\(CFO_{i,t}\)</span></td><td>经营活动产生的现金流量净额</td><td><code>cashflow.n_cashflow_act</code></td></tr>
+<tr><td><span class="math">\(TA_{i,t}\)</span></td><td>期末资产总计</td><td><code>balancesheet.total_assets</code></td></tr>
+<tr><td><span class="math">\(AvgTA_{i,t}\)</span></td><td><span class="math">\((TA_{i,t}+TA_{i,t-1})/2\)</span>；<span class="math">\(TA_{i,t-1}\)</span> 取 <span class="math">\(t-1\)</span> 年年报</td><td>—</td></tr>
+<tr><td><span class="math">\(E_{i,t}\)</span></td><td><span class="math">\(NI_{i,t}/AvgTA_{i,t}\)</span></td><td>—</td></tr>
+<tr><td><span class="math">\(CF_{i,t}\)</span></td><td><span class="math">\(CFO_{i,t}/AvgTA_{i,t}\)</span></td><td>—</td></tr>
+<tr><td><span class="math">\(ACC_{i,t}\)</span></td><td><span class="math">\(E_{i,t}-CF_{i,t}\)</span></td><td>—</td></tr>
+<tr><td><span class="math">\(E_{i,t+h}\)</span></td><td><span class="math">\(t+h\)</span> 年报按同一口径计算的 <span class="math">\(E\)</span>，<span class="math">\(h=1,2,3\)</span></td><td>—</td></tr>
+</table>
+</div>
+<ul>
+<li>净利润用<strong>合并净利润</strong>，不用归母净利润。原因：经营现金流和总资产都是合并口径，分子分母要对齐。</li>
+<li><span class="math">\(AvgTA \le 0\)</span> 或任一组成项缺失时，该公司年度不进入样本，不做填补。</li>
+<li><span class="math">\(E_{i,t+h}\)</span> 缺失（多为停止披露）时，该公司年度只退出对应期限的样本。<strong>不得用 0 或上一年数据填补。</strong></li>
+<li><span class="math">\(ACC\)</span> 按 <span class="math">\(E-CF\)</span> 计算。它除营运资本变动外，还含折旧摊销、资产减值、利息费用、投资收益和公允价值变动。解释 <span class="math">\(ACC\)</span> 时，不得直接等同于「应计项目的可靠性」。</li>
+</ul>
+</section>
+<section id="s4">
+<h2><span class="no">第四节</span> 样本区间与处理规则（必须）</h2>
+<ol>
+<li><strong>报告期 <span class="math">\(t\)</span></strong>：2014 年起。2013 年年报只用于期初总资产。</li>
+<li><strong>各期限的截止年份</strong>：样本窗口到 2025 年年报为止。
+<ul>
+<li><span class="math">\(h=1\)</span>：<span class="math">\(t\)</span> 为 2014–2024 年；</li>
+<li><span class="math">\(h=2\)</span>：<span class="math">\(t\)</span> 为 2014–2023 年；</li>
+<li><span class="math">\(h=3\)</span>：<span class="math">\(t\)</span> 为 2014–2022 年。</li>
+</ul>
+</li>
+<li><strong>缩尾</strong>：在每个报告期 <span class="math">\(t\)</span> 内，对 <span class="math">\(E\)</span>、<span class="math">\(CF\)</span>、<span class="math">\(ACC\)</span>、<span class="math">\(E_{t+1}\)</span>、<span class="math">\(E_{t+2}\)</span>、<span class="math">\(E_{t+3}\)</span> 分别按 1% 与 99% 分位缩尾。不删除极端值。缩尾后 <span class="math">\(ACC\)</span> 不再严格等于 <span class="math">\(E-CF\)</span>，这是预期结果，不是数据错误。</li>
+<li><strong>不预先剔除</strong>被特别处理（ST）或业绩恶化的公司。已退市公司（<code>list_status = D</code>）整家删除。</li>
+<li><strong>样本流失表</strong>：按上面的顺序逐步筛选，每一步记录剩余的公司年度数和公司数；每个期限另记未来盈余缺失的观测数。</li>
+<li><strong>局限</strong>：申万分类会调整。公司按成员名单一次性归入机械设备，不按年份处理中途改行。样本只有一个行业、9 个左右的报告期，结论只适用于机械设备，只作小样本演示。</li>
+</ol>
+</section>
+<section id="s5">
+<h2><span class="no">第五节</span> 共同基准模型（必须）</h2>
+<p><strong>模型一：总体持续性</strong></p>
+<div class="formula">
+\[
+E_{i,t+h}=\alpha_h+\beta_h E_{i,t}+\text{年份固定效应}+\varepsilon_{i,t+h}
+\]
+</div>
+<p><strong>模型二：现金与应计分解</strong></p>
+<div class="formula">
+\[
+E_{i,t+h}=\alpha_h+\beta^C_h CF_{i,t}+\beta^A_h ACC_{i,t}+\text{年份固定效应}+\varepsilon_{i,t+h}
+\]
+</div>
+<ul>
+<li><span class="math">\(h=1,2,3\)</span> 各估计一次，共 6 个回归。</li>
+<li>年份指报告期 <span class="math">\(t\)</span>。样本只有一个行业，基准不加行业固定效应。</li>
+<li>标准误按<strong>公司聚类</strong>。</li>
+<li>共同基准<strong>不加</strong>控制变量。控制变量属于本组拓展，写进研究方案。</li>
+</ul>
+<p><strong>必须报告的检验</strong></p>
+<div class="tablewrap">
+<table>
+<tr><th>假设</th><th>检验</th><th>报告内容</th></tr>
+<tr><td>H1：当前盈余包含未来一至三年盈余的信息</td><td>模型一中 <span class="math">\(\beta_h=0\)</span> 的 <span class="math">\(t\)</span> 检验</td><td>系数、标准误、<span class="math">\(p\)</span> 值、样本量、<span class="math">\(R^2\)</span></td></tr>
+<tr><td>H2：应计构成的持续性低于现金构成</td><td>模型二中 <span class="math">\(\beta^C_h=\beta^A_h\)</span> 的 Wald 检验（双侧）</td><td>差值、<span class="math">\(p\)</span> 值；支持 H2 须 <span class="math">\(\beta^C_h&gt;\beta^A_h\)</span> 且差异显著；<strong>不能只比较两个系数谁大</strong></td></tr>
+<tr><td>H3：两者的差异随期限变化</td><td>「差异」固定为差值 <span class="math">\(\beta^C-\beta^A\)</span>，用下面的堆叠检验</td><td>检验方法、结果</td></tr>
+</table>
+</div>
+<p>H3 的检验方法：把 <span class="math">\(h=1\)</span> 与 <span class="math">\(h=3\)</span> 的样本堆叠，让系数和固定效应按期限分开，检验 <span class="math">\((\beta^C-\beta^A)_{h=3}\)</span> 与 <span class="math">\((\beta^C-\beta^A)_{h=1}\)</span> 的差异。比值 <span class="math">\(\beta^A/\beta^C\)</span> 可以作为补充，不替代差值。</p>
+</section>
+<section id="s6">
+<h2><span class="no">第六节</span> 数据核对（必须，取数后第一步）</h2>
+<p>用贵州茅台（<code>600519.SH</code>）2023 年年报核对你的数据。茅台不在样本行业内，这一步只核对取数口径是否正确。以下数字来自公司 2023 年年度报告原文，单位为元：</p>
+<div class="tablewrap">
+<table>
+<tr><th>项目</th><th>年报位置</th><th>金额</th></tr>
+<tr><td>净利润（合并，含少数股东损益）</td><td>合并利润表「五、净利润」</td><td class="r">77,521,476,277.80</td></tr>
+<tr><td>经营活动产生的现金流量净额</td><td>合并现金流量表</td><td class="r">66,593,247,721.09</td></tr>
+<tr><td>资产总计（2023 年末）</td><td>合并资产负债表</td><td class="r">272,699,660,092.25</td></tr>
+<tr><td>资产总计（2022 年末，<strong>2022 年年报首次披露数</strong>）</td><td>2022 年年报合并资产负债表</td><td class="r">254,364,804,995.25</td></tr>
+</table>
+</div>
+<ul>
+<li>2023 年年报把 2022 年末资产总计调整为 254,500,826,096.02 元。按第二节规则，本课使用首次披露数 254,364,804,995.25 元。</li>
+<li>四个数字都要和你取到的数据一致到元。不一致时，先查报表类型、记录版本和单位，查清后才能做后续工作。</li>
+<li>报告中写明：你核对了哪几个数字、来源是哪一页、结果是否一致。</li>
+</ul>
+<p>另外，任选一家本组案例公司，用其年报原文再核对一次 <span class="math">\(NI\)</span>、<span class="math">\(CFO\)</span>、<span class="math">\(TA\)</span>。</p>
+</section>
+<section id="s7">
+<h2><span class="no">第七节</span> 稳健性检查</h2>
+<p>共同基准之外，每组至少做一项<strong>有明确目的</strong>的稳健性检查，并说明它回答什么问题。可选：</p>
+<div class="tablewrap">
+<table>
+<tr><th>检查</th><th>回答的问题</th></tr>
+<tr><td>在基准上加公司固定效应</td><td>结果是否只反映公司之间长期盈余水平的差异</td></tr>
+<tr><td>在基准上加二级行业固定效应</td><td>结果是否由机械设备内部的细分行业差异驱动</td></tr>
+<tr><td>三个期限使用同一批公司年度（共同样本）</td><td>系数随期限变化，是否只是样本构成变化造成的</td></tr>
+<tr><td>用最新更正版记录替代首次披露版</td><td>单独发布的更正公告是否影响结论。不含下一年年报对上年数的调整</td></tr>
+<tr><td>剔除准则换版年份（2018–2021 年）</td><td>结果是否由 CAS 22、CAS 14、CAS 21 的施行造成的口径断点驱动</td></tr>
+<tr><td>公司与年份双向聚类（年份聚类数只有 8–10 个，仅供参考）</td><td>同一年份公司之间的相关性是否使标准误被低估</td></tr>
+<tr><td>剔除某一二级行业或某一时期</td><td>结果是否由个别细分行业或年份驱动</td></tr>
+</table>
+</div>
+</section>
+<section id="s8">
+<h2><span class="no">第八节</span> 报告必须写明的事项</h2>
+<ol>
+<li>数据源、接口名、查询参数、<strong>取数日期</strong>。</li>
+<li>第六节数据核对的结果。</li>
+<li>样本流失表（第四节第 5 条）。</li>
+<li><span class="math">\(E\)</span>、<span class="math">\(CF\)</span>、<span class="math">\(ACC\)</span>、<span class="math">\(E_{t+h}\)</span> 的描述统计。</li>
+<li>6 个基准回归的结果，以及 H1、H2、H3 的检验结果。</li>
+<li>系数的<strong>经济含义</strong>，例如：「本期资产收益率高 1 个百分点，下一年平均高多少个百分点。」</li>
+<li>结论能支持什么，不能排除哪些替代解释。</li>
+<li>可复现的完整代码。另一组拿到代码，用自己的令牌运行，应能得到同样的数字。</li>
+</ol>
+</section>
+<section id="s9">
+<h2><span class="no">第九节</span> 准则换版提示</h2>
+<p>样本跨越多次会计准则修订。取数和解释前，必须按报告期适用的准则版本判断字段。把本节一并发给 Agent。</p>
+<div class="tablewrap">
+<table>
+<tr><th>准则</th><th>其他境内上市企业施行年份</th><th>境内外同时上市企业施行年份</th><th>对报表的影响</th></tr>
+<tr><td>CAS 22（2017 修订，财会〔2017〕7 号）</td><td class="r">2019</td><td class="r">2018</td><td>以预期信用损失计提减值。执行该准则的企业，利润表列示「信用减值损失」（财会〔2018〕15 号、财会〔2019〕6 号格式）。未执行的企业，应收款项减值计入「资产减值损失」</td></tr>
+<tr><td>CAS 14（2017 修订，财会〔2017〕22 号）</td><td class="r">2020</td><td class="r">2018</td><td>出现合同资产、合同负债。无条件收款权列应收款项（第四十一条）</td></tr>
+<tr><td>CAS 21（2018 修订，财会〔2018〕35 号）</td><td class="r">2021</td><td class="r">2019</td><td>承租人确认使用权资产和租赁负债。偿还租赁负债本金和利息列筹资活动现金流出（第五十三条）</td></tr>
+</table>
+</div>
+<p>执行企业会计准则的非上市企业，三项准则均自 2021 年起施行。</p>
+<ol>
+<li><strong>口径断点</strong>：CAS 21 施行后，承租人的经营现金流上升，总资产上升。<span class="math">\(E\)</span>、<span class="math">\(CF\)</span>、<span class="math">\(ACC\)</span> 在各企业的施行年份出现断点。年份固定效应吸收共同冲击，不吸收企业间施行年份的差异。可以把「剔除 2018–2021 年」作为稳健性检查。</li>
+<li><strong>字段存在性</strong>：2020 年前的年报（境内外同时上市企业为 2018 年前）没有合同资产、合同负债。跨年度比较合同资产增速时，必须说明。</li>
+<li><strong>减值转回</strong>：存货跌价准备可以转回（CAS 1 第十九条）。信用损失准备的转回额计入当期损益（CAS 22 第四十八条）。长期资产减值损失一经确认，不得转回（CAS 8 第十七条）。</li>
+<li><strong>字段对应</strong>：字段由 Agent 查找，常用字段见第十节。F5 不要求填字段名；F6 报告中写明每个变量对应的原字段名。</li>
+</ol>
+</section>
+<section id="s10">
+<h2><span class="no">第十节</span> 三表常用字段对照表</h2>
+<p>字段由 Agent 查找。下表列出本课常用字段，供核对 Agent 的取数结果。字段名以 Tushare 为准。表中字段已用三一重工（<code>600031.SH</code>）2018 年和 2023 年年报抽查，能取到数据。</p>
+<div class="tablewrap">
+<table>
+<tr><th>接口</th><th>字段</th><th>含义</th><th>说明</th></tr>
+<tr><td><code>income</code></td><td><code>revenue</code></td><td>营业收入</td><td></td></tr>
+<tr><td><code>income</code></td><td><code>total_revenue</code></td><td>营业总收入</td><td></td></tr>
+<tr><td><code>income</code></td><td><code>oper_cost</code></td><td>营业成本</td><td></td></tr>
+<tr><td><code>income</code></td><td><code>credit_impa_loss</code></td><td>信用减值损失</td><td>损失为负数。执行 CAS 22 后才有，见第九节</td></tr>
+<tr><td><code>income</code></td><td><code>assets_impair_loss</code></td><td>资产减值损失</td><td>损失为负数</td></tr>
+<tr><td><code>income</code></td><td><code>fin_exp</code></td><td>财务费用</td><td></td></tr>
+<tr><td><code>income</code></td><td><code>invest_income</code></td><td>投资收益</td><td></td></tr>
+<tr><td><code>income</code></td><td><code>fv_value_chg_gain</code></td><td>公允价值变动收益</td><td></td></tr>
+<tr><td><code>income</code></td><td><code>rd_exp</code></td><td>研发费用</td><td>2018 年起利润表单列（财会〔2018〕15 号）</td></tr>
+<tr><td><code>income</code></td><td><code>n_income</code></td><td>净利润（合并，含少数股东损益）</td><td>共同基准用</td></tr>
+<tr><td><code>balancesheet</code></td><td><code>accounts_receiv</code></td><td>应收账款</td><td>资产负债表列示值</td></tr>
+<tr><td><code>balancesheet</code></td><td><code>notes_receiv</code></td><td>应收票据</td><td></td></tr>
+<tr><td><code>balancesheet</code></td><td><code>oth_receiv</code></td><td>其他应收款</td><td></td></tr>
+<tr><td><code>balancesheet</code></td><td><code>prepayment</code></td><td>预付款项</td><td></td></tr>
+<tr><td><code>balancesheet</code></td><td><code>inventories</code></td><td>存货</td><td></td></tr>
+<tr><td><code>balancesheet</code></td><td><code>contract_assets</code></td><td>合同资产</td><td>CAS 14 施行前为空（三一重工 2018 年为空）</td></tr>
+<tr><td><code>balancesheet</code></td><td><code>contract_liab</code></td><td>合同负债</td><td>CAS 14 施行前为空（三一重工 2018 年为空）</td></tr>
+<tr><td><code>balancesheet</code></td><td><code>adv_receipts</code></td><td>预收款项</td><td>CAS 14 施行后为空（三一重工 2023 年为空）</td></tr>
+<tr><td><code>balancesheet</code></td><td><code>cip</code></td><td>在建工程</td><td></td></tr>
+<tr><td><code>balancesheet</code></td><td><code>r_and_d</code></td><td>开发支出</td><td></td></tr>
+<tr><td><code>balancesheet</code></td><td><code>fix_assets</code></td><td>固定资产</td><td></td></tr>
+<tr><td><code>balancesheet</code></td><td><code>intan_assets</code></td><td>无形资产</td><td></td></tr>
+<tr><td><code>balancesheet</code></td><td><code>goodwill</code></td><td>商誉</td><td></td></tr>
+<tr><td><code>balancesheet</code></td><td><code>accounts_pay</code></td><td>应付账款</td><td></td></tr>
+<tr><td><code>balancesheet</code></td><td><code>lease_liab</code></td><td>租赁负债</td><td>CAS 21 施行前为空（三一重工 2018 年为空）</td></tr>
+<tr><td><code>balancesheet</code></td><td><code>total_assets</code></td><td>资产总计</td><td>共同基准用</td></tr>
+<tr><td><code>cashflow</code></td><td><code>n_cashflow_act</code></td><td>经营活动产生的现金流量净额</td><td>共同基准用</td></tr>
+<tr><td><code>cashflow</code></td><td><code>c_fr_sale_sg</code></td><td>销售商品、提供劳务收到的现金</td><td></td></tr>
+<tr><td><code>cashflow</code></td><td><code>c_paid_goods_s</code></td><td>购买商品、接受劳务支付的现金</td><td></td></tr>
+<tr><td><code>cashflow</code></td><td><code>depr_fa_coga_dpba</code></td><td>固定资产折旧、油气资产折耗、生产性生物资产折旧</td><td>补充资料</td></tr>
+<tr><td><code>cashflow</code></td><td><code>amort_intang_assets</code></td><td>无形资产摊销</td><td>补充资料</td></tr>
+<tr><td><code>cashflow</code></td><td><code>lt_amort_deferred_exp</code></td><td>长期待摊费用摊销</td><td>补充资料</td></tr>
+<tr><td><code>cashflow</code></td><td><code>prov_depr_assets</code></td><td>资产减值准备</td><td>补充资料</td></tr>
+<tr><td><code>cashflow</code></td><td><code>credit_impa_loss</code></td><td>信用减值损失</td><td>补充资料，计提为正数。与利润表同名字段的符号相反</td></tr>
+<tr><td><code>cashflow</code></td><td><code>decr_inventories</code></td><td>存货的减少</td><td>补充资料，存货增加时为负数</td></tr>
+<tr><td><code>cashflow</code></td><td><code>c_pay_acq_const_fiolta</code></td><td>购建固定资产、无形资产和其他长期资产支付的现金</td><td>投资活动</td></tr>
+<tr><td><code>cashflow</code></td><td><code>c_pay_dist_dpcp_int_exp</code></td><td>分配股利、利润或偿付利息支付的现金</td><td>筹资活动</td></tr>
+</table>
+</div>
+<p>字段取不到或为空时，先按第九节判断是否因准则换版所致，不得用 0 填补。</p>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p><strong>《财报分析》专题三 · 实证口径说明</strong> · 共同基准按本文件执行 · 样本为申万机械设备行业 A 股公司（2014–2022 年）</p>
+    <p class="mono">2026 年秋季学期 · 本文件随课下发，线上版与下发版内容一致</p>
+  </div>
+</footer>
+
+</body>
+</html>
