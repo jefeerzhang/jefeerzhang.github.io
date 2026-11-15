@@ -18,6 +18,11 @@
     .breadcrumb .current { color: var(--ink); }
     .course-meta-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 26px 0 0; }
     .course-meta-chip { padding: 6px 14px; font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.02em; border-radius: 999px; background: var(--surface-soft); color: var(--accent); }
+    .hero-submit { margin: 22px 0 0; }
+    .hero-submit a { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; background: var(--accent); color: var(--accent-ink); font-family: var(--display); font-size: 17px; font-weight: 700; letter-spacing: 0.01em; text-decoration: none; border-radius: 999px; transition: background 200ms ease, transform 180ms ease; }
+    .hero-submit a:hover { background: var(--accent-hover); transform: translateY(-1px); }
+    .hero-submit a::after { content: "↗"; font-size: 14px; font-weight: 700; transition: transform 180ms ease; }
+    .hero-submit a:hover::after { transform: translate(2px, -2px); }
 
     .page-content { padding: 44px 0 80px; }
     .section-block { margin-bottom: 46px; }
@@ -89,6 +94,9 @@
           <span class="course-meta-chip">不绑定课堂内容</span>
           <span class="course-meta-chip">最终提交 PDF</span>
         </div>
+        <p class="hero-submit">
+          <a href="https://send2me.cn/ByPWzHUO/Q-yi9byZoCo9wQ" target="_blank" rel="noopener">提交课程作业</a>
+        </p>
       </div>
     </section>
 
@@ -111,6 +119,7 @@
               <div class="hw-actions">
                 <a class="hw-btn hw-btn-primary" href="./课程作业一_数字经济场景观察与核对.pdf" target="_blank" rel="noopener">查看 PDF →</a>
                 <a class="hw-btn hw-btn-ghost" href="./课程作业一_数字经济场景观察与核对.docx" download>下载 Word 版</a>
+                <a class="hw-btn hw-btn-ghost" href="https://send2me.cn/ByPWzHUO/Q-yi9byZoCo9wQ" target="_blank" rel="noopener">提交入口 ↗</a>
               </div>
             </article>
 
@@ -125,6 +134,7 @@
               <div class="hw-actions">
                 <a class="hw-btn hw-btn-primary" href="./课程作业二_AI协作实现路径.pdf" target="_blank" rel="noopener">查看 PDF →</a>
                 <a class="hw-btn hw-btn-ghost" href="./课程作业二_AI协作实现路径.docx" download>下载 Word 版</a>
+                <a class="hw-btn hw-btn-ghost" href="https://send2me.cn/ByPWzHUO/Q-yi9byZoCo9wQ" target="_blank" rel="noopener">提交入口 ↗</a>
               </div>
             </article>
           </div>
