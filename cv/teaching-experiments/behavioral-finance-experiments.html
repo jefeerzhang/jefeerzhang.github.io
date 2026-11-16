@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>《投资学原理》行为投资学与智能体实验教学创新 — 张剑</title>
+<title>《投资学原理》行为投资课堂实验教学 — 张剑</title>
 <style>
   :root {
     --bg: #f6f3ec;
@@ -285,6 +285,19 @@
   .pt-item h3 { font-size: 21px; color: var(--accent-2); margin-bottom: 3px; }
   .pt-item p { font-size: 18px; color: var(--muted); }
 
+  .rules { display: flex; flex-direction: column; gap: 12px; }
+  .rule-row {
+    display: grid; grid-template-columns: 200px 1fr 40px 1.15fr; align-items: center; gap: 14px;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 16px;
+    padding: 14px 20px; box-shadow: var(--shadow-sm); text-align: left;
+  }
+  .rule-row.head { background: transparent; border: 0; box-shadow: none; padding: 0 20px; font-size: 16px; font-weight: 700; color: var(--muted); }
+  .rule-exp { font-size: 22px; font-weight: 800; color: var(--ink); }
+  .rule-exp .num { display: block; font-size: 14px; font-weight: 800; color: var(--accent); letter-spacing: .06em; }
+  .rule-bias { font-size: 19px; color: var(--muted); line-height: 1.42; }
+  .rule-arrow { font-size: 26px; color: var(--accent); font-weight: 800; text-align: center; }
+  .rule-do { font-size: 20px; font-weight: 700; color: var(--accent-2); background: #e8f6f1; border-radius: 12px; padding: 10px 14px; line-height: 1.42; }
+
   @media (min-width: 1520px) and (min-height: 840px) {
     .slide { inset: 12px 24px 70px; padding: 8px 14px; }
     h1 { font-size: clamp(56px, 3.3vw, 66px); }
@@ -325,10 +338,14 @@
     .metric .lab { font-size: 17px; }
     .metric .val { font-size: 30px; }
     .slider-box { font-size: 20px; padding: 11px 16px; }
+    .rule-row { padding: 18px 24px; }
+    .rule-exp { font-size: 25px; }
+    .rule-bias { font-size: 21px; }
+    .rule-do { font-size: 22px; }
   }
   @media (max-width: 1100px) {
     .slide { inset: 12px 14px 80px; }
-    .cover-grid, .sim, .entry, .roadmap, .compare2, .grid-2col, .formula-row, .agent-highlights, .course-chain { grid-template-columns: 1fr; }
+    .cover-grid, .sim, .entry, .roadmap, .compare2, .grid-2col, .formula-row, .agent-highlights, .course-chain, .rule-row { grid-template-columns: 1fr; }
     h1 { font-size: 36px; }
     h2 { font-size: 26px; }
   }
@@ -352,31 +369,31 @@
 </div>
 
 <template id="tpl">
-  <!-- 1. 双栏封面：突出真实双智能体架构 + 张剑 -->
+  <!-- 1. 双栏封面：课堂实验 → 市场仿真 → 投资纪律 + 张剑 -->
   <section class="slide" data-id="title">
     <div class="cover-grid">
       <div class="cover-left">
         <div>
           <span class="cover-badge">第二届“鱼凫杯·教师教学竞赛” · 教师教学创新大赛</span>
-          <h1>《投资学原理》<br>智能体赋能的行为投资实验教学</h1>
-          <p class="cover-title-sub">从「偏差体验 × ABM 市场仿真」到「BPT 组合管理 × 受约束 Agent 实证」</p>
+          <h1>《投资学原理》<br>行为投资课堂实验教学</h1>
+          <p class="cover-title-sub">从「课堂偏差实验」到「市场仿真」与「投资纪律」</p>
         </div>
 
         <div class="agent-highlights">
           <div class="ah-card">
-            <div class="ah-num">Layer 01 · 课中基准</div>
-            <h4>规范性理性参照</h4>
-            <p>以期望效用与贝叶斯基准实时量出人类偏差幅度</p>
+            <div class="ah-num">Step 01 · 课堂体验</div>
+            <h4>四个偏差实验</h4>
+            <p>心理账户、选美、前景理论、过度自信，现场测出全班偏差</p>
           </div>
           <div class="ah-card">
-            <div class="ah-num">Layer 02 · 课中仿真</div>
-            <h4>ABM 多主体沙盘</h4>
-            <p>异质交易主体演化，打通微观偏差到宏观泡沫</p>
+            <div class="ah-num">Step 02 · 市场推演</div>
+            <h4>多主体市场仿真</h4>
+            <p>把实测偏差放进市场，观察泡沫如何形成与破裂</p>
           </div>
           <div class="ah-card">
-            <div class="ah-num">Layer 03 · 课后双端</div>
-            <h4>受约束 LLM 智能体</h4>
-            <p>学生端 481 股回测 + 教师端 session 核查与随机抽问</p>
+            <div class="ah-num">Step 03 · 投资落地</div>
+            <h4>个人投资纪律</h4>
+            <p>把偏差转为止损、仓位、换手三条可执行规则</p>
           </div>
         </div>
 
@@ -386,37 +403,35 @@
       </div>
 
       <div class="cover-right">
-        <div class="cover-right-head">BEHAVIORAL INVESTMENT × AGENT LOOP</div>
-        <svg viewBox="0 0 360 320" role="img" aria-label="行为投资与智能体教学闭环">
+        <div class="cover-right-head">BEHAVIORAL INVESTMENT LOOP</div>
+        <svg viewBox="0 0 360 320" role="img" aria-label="课堂实验、市场仿真与投资纪律闭环">
           <defs>
             <marker id="arrCov" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
               <path d="M 0 1 L 10 5 L 0 9 z" fill="#a7f3d0"/>
             </marker>
           </defs>
           <circle cx="180" cy="160" r="118" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="2" stroke-dasharray="6 6"/>
-          <rect x="82" y="18" width="196" height="58" rx="14" fill="rgba(255,255,255,0.14)" stroke="#a7f3d0" stroke-width="1.5"/>
-          <text x="180" y="44" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">1. 偏差体验与诊断</text>
-          <text x="180" y="64" text-anchor="middle" font-size="11.5" fill="#d1fae5">心理账户 / 选美 / 前景 / 校准</text>
+          <rect x="82" y="24" width="196" height="58" rx="14" fill="rgba(255,255,255,0.14)" stroke="#a7f3d0" stroke-width="1.5"/>
+          <text x="180" y="50" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">1. 偏差体验与诊断</text>
+          <text x="180" y="70" text-anchor="middle" font-size="11.5" fill="#d1fae5">心理账户 / 选美 / 前景 / 校准</text>
 
-          <rect x="194" y="132" width="160" height="62" rx="14" fill="rgba(44,110,158,0.65)" stroke="#93c5fd" stroke-width="1.5"/>
-          <text x="274" y="159" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">2. ABM 市场仿真</text>
-          <text x="274" y="180" text-anchor="middle" font-size="11.5" fill="#dbeafe">高阶信念与处置效应演化</text>
+          <rect x="196" y="206" width="158" height="62" rx="14" fill="rgba(44,110,158,0.65)" stroke="#93c5fd" stroke-width="1.5"/>
+          <text x="275" y="233" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">2. 多主体市场仿真</text>
+          <text x="275" y="254" text-anchor="middle" font-size="11.5" fill="#dbeafe">高阶信念与处置效应演化</text>
 
-          <rect x="82" y="244" width="196" height="58" rx="14" fill="rgba(194,87,26,0.65)" stroke="#fdba74" stroke-width="1.5"/>
-          <text x="180" y="270" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">3. BPT 组合与纪律</text>
-          <text x="180" y="290" text-anchor="middle" font-size="11.5" fill="#ffedd5">三层目标账户 Pr(WT&lt;A)≤ε</text>
+          <rect x="6" y="206" width="158" height="62" rx="14" fill="rgba(194,87,26,0.65)" stroke="#fdba74" stroke-width="1.5"/>
+          <text x="85" y="233" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">3. 投资纪律</text>
+          <text x="85" y="254" text-anchor="middle" font-size="11.5" fill="#ffedd5">止损 · 仓位 · 换手</text>
 
-          <rect x="4" y="132" width="168" height="62" rx="14" fill="rgba(15,110,86,0.75)" stroke="#6ee7b7" stroke-width="1.5"/>
-          <text x="88" y="159" text-anchor="middle" font-size="14.5" font-weight="700" fill="#fff">4. 双端 Agent 实证</text>
-          <text x="88" y="180" text-anchor="middle" font-size="11.5" fill="#d1fae5">A股回测 + session 审计</text>
+          <text x="180" y="150" text-anchor="middle" font-size="14" font-weight="700" fill="#a7f3d0">实验 → 市场 → 纪律</text>
+          <text x="180" y="172" text-anchor="middle" font-size="11.5" fill="#d1fae5">一条主线贯穿一节课</text>
 
-          <path d="M 272 55 Q 305 85 288 126" fill="none" stroke="#a7f3d0" stroke-width="2" marker-end="url(#arrCov)"/>
-          <path d="M 280 198 Q 290 240 272 258" fill="none" stroke="#a7f3d0" stroke-width="2" marker-end="url(#arrCov)"/>
-          <path d="M 88 260 Q 65 235 76 198" fill="none" stroke="#a7f3d0" stroke-width="2" marker-end="url(#arrCov)"/>
-          <path d="M 78 128 Q 72 80 90 58" fill="none" stroke="#a7f3d0" stroke-width="2" marker-end="url(#arrCov)"/>
+          <path d="M 262 86 Q 300 140 284 200" fill="none" stroke="#a7f3d0" stroke-width="2" marker-end="url(#arrCov)"/>
+          <path d="M 272 274 Q 180 318 96 276" fill="none" stroke="#a7f3d0" stroke-width="2" marker-end="url(#arrCov)"/>
+          <path d="M 76 200 Q 62 130 96 88" fill="none" stroke="#a7f3d0" stroke-width="2" marker-end="url(#arrCov)"/>
         </svg>
         <div class="cover-right-foot">
-          <strong>课程全局衔接：</strong>承接前三章 MPT、CAPM、APT 理性定价框架，以行为投资学与人机实证完成全课高阶跃升。
+          <strong>课程全局衔接：</strong>承接前三章 MPT、CAPM、APT 理性定价框架，用课堂实验检验理性人假设在真实市场中的偏离。
         </div>
       </div>
     </div>
@@ -424,16 +439,16 @@
 
   <!-- 2. 整门课程坐标与三大痛点 -->
   <section class="slide" data-id="pain-points">
-    <div class="slide-head"><span class="pill">01 / 课程坐标与痛点</span><span class="slide-sub-tag">整门《投资学原理》重构定位</span></div>
+    <div class="slide-head"><span class="pill">01 / 课程坐标与痛点</span></div>
     <h2>从理性定价到行为投资：课程全局坐标与三大痛点</h2>
     <div class="course-chain">
       <div class="cc-node"><strong>模块一：MPT 组合理论</strong>均值—方差有效前沿</div>
       <div class="cc-node"><strong>模块二：CAPM 单因子</strong>市场风险 β 与证券市场线</div>
       <div class="cc-node"><strong>模块三：APT 多因子</strong>套利定价与风格暴露</div>
-      <div class="cc-node active"><strong>模块四：行为投资与实证 ★</strong>偏差诊断 → BPT 配置 → Agent 回测</div>
+      <div class="cc-node active"><strong>模块四：行为投资 ★</strong>偏差实验 → 市场仿真 → 投资纪律</div>
     </div>
     <div class="svg-card">
-      <svg viewBox="0 0 1000 265" role="img" aria-label="三大教学痛点与数智破局对照图">
+      <svg viewBox="0 0 1000 265" role="img" aria-label="三大教学痛点与破局对照图">
         <defs>
           <marker id="arrPain" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
             <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f6e56"/>
@@ -444,24 +459,24 @@
         <text x="231" y="68" text-anchor="middle" font-size="15" fill="#52525b">知行分离，停留于个体心理现象，缺投资学落脚点</text>
         <line x1="454" y1="48" x2="506" y2="48" stroke="#0f6e56" stroke-width="3" marker-end="url(#arrPain)"/>
         <rect x="514" y="12" width="470" height="72" rx="12" fill="#e8f6f1" stroke="#0f6e56" stroke-width="1.5"/>
-        <text x="749" y="42" text-anchor="middle" font-size="19" font-weight="700" fill="#0f6e56">破局：课堂微实验体验 + BPT 三层账户配置</text>
-        <text x="749" y="68" text-anchor="middle" font-size="15" fill="#18181b">将心理偏差转化为目标底线约束 Pr(WT &lt; A) ≤ ε</text>
+        <text x="749" y="42" text-anchor="middle" font-size="19" font-weight="700" fill="#0f6e56">破局：课堂实验体验 + 投资纪律落地</text>
+        <text x="749" y="68" text-anchor="middle" font-size="15" fill="#18181b">把实测偏差转为止损、仓位、换手规则</text>
 
         <rect x="16" y="96" width="430" height="72" rx="12" fill="#fdecec" stroke="#b42318" stroke-width="1.5"/>
         <text x="231" y="126" text-anchor="middle" font-size="19" font-weight="700" fill="#b42318">痛点 2：微观个体偏差与宏观定价脱节</text>
-        <text x="231" y="152" text-anchor="middle" font-size="15" fill="#52525b">静态投票缺规范基准，难呈现市场出清与泡沫演化</text>
+        <text x="231" y="152" text-anchor="middle" font-size="15" fill="#52525b">静态讲授看不到个体偏差如何推动泡沫与踩踏</text>
         <line x1="454" y1="132" x2="506" y2="132" stroke="#0f6e56" stroke-width="3" marker-end="url(#arrPain)"/>
         <rect x="514" y="96" width="470" height="72" rx="12" fill="#eef5fb" stroke="#1d5d8f" stroke-width="1.5"/>
-        <text x="749" y="126" text-anchor="middle" font-size="19" font-weight="700" fill="#1d5d8f">破局：规范理性基准对照 + ABM 多主体仿真</text>
-        <text x="749" y="152" text-anchor="middle" font-size="15" fill="#18181b">同屏对标 EU/贝叶斯解，动态推演异质主体价格路径</text>
+        <text x="749" y="126" text-anchor="middle" font-size="19" font-weight="700" fill="#1d5d8f">破局：多主体市场仿真</text>
+        <text x="749" y="152" text-anchor="middle" font-size="15" fill="#18181b">把全班偏差参数放进市场，推演价格路径</text>
 
         <rect x="16" y="180" width="430" height="72" rx="12" fill="#fdecec" stroke="#b42318" stroke-width="1.5"/>
-        <text x="231" y="210" text-anchor="middle" font-size="19" font-weight="700" fill="#b42318">痛点 3：编程门槛高，且学生易盲从 AI</text>
-        <text x="231" y="236" text-anchor="middle" font-size="15" fill="#52525b">首轮实践 50% 学生依赖 AI，混淆毛收益与净收益</text>
+        <text x="231" y="210" text-anchor="middle" font-size="19" font-weight="700" fill="#b42318">痛点 3：学生自认理性，偏差体验不真切</text>
+        <text x="231" y="236" text-anchor="middle" font-size="15" fill="#52525b">概念都会背，却认为自己不会犯同样的错</text>
         <line x1="454" y1="216" x2="506" y2="216" stroke="#0f6e56" stroke-width="3" marker-end="url(#arrPain)"/>
         <rect x="514" y="180" width="470" height="72" rx="12" fill="#fff8f2" stroke="#c2571a" stroke-width="1.5"/>
-        <text x="749" y="210" text-anchor="middle" font-size="19" font-weight="700" fill="#c2571a">破局：双端受约束智能体 + 原始 session 核查</text>
-        <text x="749" y="236" text-anchor="middle" font-size="15" fill="#18181b">四步受控回测 481 股，教师 Agent 复算并随机抽问</text>
+        <text x="749" y="210" text-anchor="middle" font-size="19" font-weight="700" fill="#c2571a">破局：匿名现场实验 + 规范基准对照</text>
+        <text x="749" y="236" text-anchor="middle" font-size="15" fill="#18181b">用全班自己的决策数据说话，偏差当场可见</text>
       </svg>
     </div>
   </section>
@@ -509,45 +524,44 @@
     </div>
   </section>
 
-  <!-- 4. 人机三方协同架构（严格区分 ABM 与双端 LLM Agent） -->
+  <!-- 4. 实验设计路线与师生互动机制 -->
   <section class="slide" data-id="roadmap">
-    <div class="slide-head"><span class="pill blue">03 / 数智架构</span><span class="slide-sub-tag">ABM 仿真 × 双端受约束 LLM 智能体</span></div>
-    <h2>实验设计与「学生—双类智能体—教师」协同机制</h2>
+    <div class="slide-head"><span class="pill blue">03 / 实验设计</span><span class="slide-sub-tag">四个实验 × 一条主线</span></div>
+    <h2>实验设计路线与师生互动机制</h2>
     <div class="roadmap">
-      <div class="road"><div class="num">实验一</div><h3>选美博弈</h3><p>高阶信念与羊群泡沫</p></div>
+      <div class="road"><div class="num">实验一</div><h3>选美博弈</h3><p>高阶信念与投机泡沫</p></div>
       <div class="road"><div class="num">实验二</div><h3>前景理论</h3><p>损失厌恶与风险反转</p></div>
       <div class="road"><div class="num">实验三</div><h3>校准与换手</h3><p>A 股过度自信实证</p></div>
-      <div class="road"><div class="num">实验四</div><h3>ABM 沙盘</h3><p>异质主体演化与踩踏</p></div>
+      <div class="road"><div class="num">实验四</div><h3>市场仿真</h3><p>异质主体演化与踩踏</p></div>
     </div>
     <div class="svg-card" style="margin-top:14px;">
-      <svg viewBox="0 0 1020 195" role="img" aria-label="教师、学生与双类智能体协同架构">
+      <svg viewBox="0 0 1020 195" role="img" aria-label="学生、课堂实验系统与教师互动机制">
         <defs>
           <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
             <path d="M 0 1 L 10 5 L 0 9 z" fill="#1d5d8f"/>
           </marker>
         </defs>
         <rect x="16" y="20" width="290" height="155" rx="16" fill="#fff8f2" stroke="#c2571a" stroke-width="2"/>
-        <text x="161" y="54" text-anchor="middle" font-size="21" font-weight="700" fill="#c2571a">学生（决策与审查者）</text>
-        <text x="161" y="88" text-anchor="middle" font-size="15" fill="#18181b">• 课中：暴露直觉偏差、注入参数</text>
-        <text x="161" y="116" text-anchor="middle" font-size="15" fill="#18181b">• 课后：按四步法主导研究设计</text>
-        <text x="161" y="144" text-anchor="middle" font-size="15" font-weight="700" fill="#c2571a">• 核心：人工核验并纠正 AI 偏差</text>
+        <text x="161" y="54" text-anchor="middle" font-size="21" font-weight="700" fill="#c2571a">学生（决策者）</text>
+        <text x="161" y="88" text-anchor="middle" font-size="15" fill="#18181b">• 匿名作答，暴露直觉偏差</text>
+        <text x="161" y="116" text-anchor="middle" font-size="15" fill="#18181b">• 对照基准，完成自我归因</text>
+        <text x="161" y="144" text-anchor="middle" font-size="15" font-weight="700" fill="#c2571a">• 核心：写出个人投资纪律</text>
 
         <line x1="312" y1="98" x2="364" y2="98" stroke="#1d5d8f" stroke-width="3" marker-end="url(#arr)" marker-start="url(#arr)"/>
 
         <rect x="370" y="14" width="280" height="167" rx="18" fill="#eef5fb" stroke="#1d5d8f" stroke-width="2.5"/>
-        <text x="510" y="48" text-anchor="middle" font-size="21" font-weight="700" fill="#1d5d8f">分阶段智能体矩阵</text>
-        <text x="510" y="80" text-anchor="middle" font-size="15" fill="#18181b">1. 课中：ABM 多主体市场仿真</text>
-        <text x="510" y="108" text-anchor="middle" font-size="15" fill="#18181b">2. 学生端：受约束研究 Agent</text>
-        <text x="510" y="134" text-anchor="middle" font-size="14" fill="#52525b">（tushare MCP 取数，禁代做判断）</text>
-        <text x="510" y="160" text-anchor="middle" font-size="15" fill="#18181b">3. 教师端：评价核验 Agent</text>
+        <text x="510" y="48" text-anchor="middle" font-size="21" font-weight="700" fill="#1d5d8f">课堂实验系统</text>
+        <text x="510" y="84" text-anchor="middle" font-size="15" fill="#18181b">1. 实时汇总全班匿名决策</text>
+        <text x="510" y="116" text-anchor="middle" font-size="15" fill="#18181b">2. 同屏对照规范理性基准</text>
+        <text x="510" y="148" text-anchor="middle" font-size="15" fill="#18181b">3. 偏差参数注入市场仿真</text>
 
         <line x1="656" y1="98" x2="708" y2="98" stroke="#1d5d8f" stroke-width="3" marker-end="url(#arr)" marker-start="url(#arr)"/>
 
         <rect x="714" y="20" width="290" height="155" rx="16" fill="#e8f6f1" stroke="#0f6e56" stroke-width="2"/>
-        <text x="859" y="54" text-anchor="middle" font-size="21" font-weight="700" fill="#0f6e56">教师（调度与终审者）</text>
-        <text x="859" y="88" text-anchor="middle" font-size="15" fill="#18181b">• 课中：锁盘对比、冲击调参</text>
-        <text x="859" y="116" text-anchor="middle" font-size="15" fill="#18181b">• 课后：复核原始 session 证据链</text>
-        <text x="859" y="144" text-anchor="middle" font-size="15" font-weight="700" fill="#0f6e56">• 防伪：发起个性化随机抽问</text>
+        <text x="859" y="54" text-anchor="middle" font-size="21" font-weight="700" fill="#0f6e56">教师（设计与引导者）</text>
+        <text x="859" y="88" text-anchor="middle" font-size="15" fill="#18181b">• 设计对照情境与规则</text>
+        <text x="859" y="116" text-anchor="middle" font-size="15" fill="#18181b">• 仿真调参，施加市场冲击</text>
+        <text x="859" y="144" text-anchor="middle" font-size="15" font-weight="700" fill="#0f6e56">• 核心：引导从偏差到纪律</text>
       </svg>
     </div>
   </section>
@@ -663,7 +677,7 @@
       <div class="svg-card" style="flex-direction:column;justify-content:space-between;padding:18px 22px;">
         <div style="width:100%;text-align:left;font-size:19px;font-weight:700;color:var(--ink);">课堂实测统计：同一群体在参考点两侧呈现显著偏好反转</div>
         <svg viewBox="0 0 460 220" style="width:100%;height:auto;">
-          <text x="0" y="26" font-size="17" font-weight="700" fill="#0f6e56">第 1 轮（收益域）：选择确定性方案比例（过早止盈倾向）</text>
+          <text x="0" y="26" font-size="17" font-weight="700" fill="#0f6e56">第 1 轮（收益域）：选确定方案比例（过早止盈）</text>
           <rect x="0" y="38" width="380" height="30" rx="15" fill="#e4dfd5"/>
           <rect id="barGainSafe" x="0" y="38" width="0" height="30" rx="15" fill="#0f6e56"/>
           <text id="txtGainSafe" x="390" y="60" font-size="18" font-weight="800" fill="#0f6e56">0%</text>
@@ -671,7 +685,7 @@
 
           <line x1="0" y1="112" x2="450" y2="112" stroke="#e4dfd5" stroke-width="1.5" stroke-dasharray="5 5"/>
 
-          <text x="0" y="142" font-size="17" font-weight="700" fill="#b42318">第 2 轮（亏损域）：选择风险博弈方案比例（亏损惜售倾向）</text>
+          <text x="0" y="142" font-size="17" font-weight="700" fill="#b42318">第 2 轮（亏损域）：选风险方案比例（浮亏惜售）</text>
           <rect x="0" y="154" width="380" height="30" rx="15" fill="#e4dfd5"/>
           <rect id="barLossGamble" x="0" y="154" width="0" height="30" rx="15" fill="#b42318"/>
           <text id="txtLossGamble" x="390" y="176" font-size="18" font-weight="800" fill="#b42318">0%</text>
@@ -716,8 +730,8 @@
           <p>引导「第 1 轮选 A 且第 2 轮选 B」的学生对照价值函数曲线自我归因，理解处置效应对组合净值的长期拖累。</p>
         </div>
         <div class="pt-item" style="border-left:4px solid #0f6e56;">
-          <h3>Step 3 · 制度规则产出（衔接课后 Agent）</h3>
-          <p>学生当堂制定<strong>事前量化风控参数</strong>（如试验层仓位上限 ≤20%、最大回撤止损阈值），写入课后实证方案由智能体严格执行。</p>
+          <h3>Step 3 · 制度规则产出</h3>
+          <p>学生当堂制定<strong>事前量化风控参数</strong>（如单只股票仓位上限 ≤20%、最大回撤止损阈值），写入个人投资纪律。</p>
         </div>
       </div>
     </div>
@@ -907,99 +921,42 @@
     </div>
   </section>
 
-  <!-- 13. 投资学落脚点：BPT 行为组合金字塔 + 课后四步实证 -->
+  <!-- 13. 课堂收口：四个实验 → 四条投资纪律 -->
   <section class="slide" data-id="close">
-    <div class="slide-head"><span class="pill">12 / 行为组合管理与实证</span><span class="slide-sub-tag">Shefrin &amp; Statman (2000) BPT × 481 股回测</span></div>
-    <h2>从偏差诊断到组合构建：BPT 三层账户与课后 Agent 实证</h2>
-    <div class="svg-card">
-      <svg viewBox="0 0 960 320" role="img" aria-label="BPT行为组合金字塔与课后四步受约束实证流程">
-        <defs>
-          <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-            <path d="M 0 1 L 10 5 L 0 9 z" fill="#1d5d8f"/>
-          </marker>
-        </defs>
-        <!-- Left: BPT Pyramid (Wide-top trapezoids, zero text overflow) -->
-        <rect x="16" y="14" width="420" height="292" rx="18" fill="#faf8f4" stroke="#e4dfd5" stroke-width="2"/>
-        <text x="226" y="46" text-anchor="middle" font-size="21" font-weight="700" fill="#0a4d3c">行为组合理论（BPT）制度化配置</text>
-        <!-- Top layer -->
-        <polygon points="130,64 322,64 344,126 108,126" fill="#fdecec" stroke="#b42318" stroke-width="1.8"/>
-        <text x="226" y="92" text-anchor="middle" font-size="16" font-weight="700" fill="#b42318">试验层：资金上限 + 硬止损</text>
-        <text x="226" y="114" text-anchor="middle" font-size="14" fill="#52525b">可检验假说，设明确退出条件</text>
-        <!-- Mid layer -->
-        <polygon points="102,134 350,134 376,202 76,202" fill="#eef5fb" stroke="#1d5d8f" stroke-width="1.8"/>
-        <text x="226" y="164" text-anchor="middle" font-size="16" font-weight="700" fill="#1d5d8f">增长层：分散暴露与定期再平衡</text>
-        <text x="226" y="188" text-anchor="middle" font-size="14" fill="#52525b">匹配长期风险承受度与期限</text>
-        <!-- Base layer -->
-        <polygon points="70,210 382,210 408,282 44,282" fill="#e8f6f1" stroke="#0f6e56" stroke-width="1.8"/>
-        <text x="226" y="242" text-anchor="middle" font-size="17" font-weight="700" fill="#0f6e56">底线层（安全第一）：刚性支出保障</text>
-        <text x="226" y="268" text-anchor="middle" font-size="15" font-weight="700" fill="#0a4d3c">目标底线约束：Pr(W_T &lt; A) ≤ ε</text>
-
-        <!-- Right: 4-step Agent Empirical Workflow -->
-        <rect x="460" y="14" width="484" height="292" rx="18" fill="#eef5fb" stroke="#1d5d8f" stroke-width="2"/>
-        <text x="702" y="46" text-anchor="middle" font-size="21" font-weight="700" fill="#1d5d8f">课后实证：481 只 A 股动量反转四步协同</text>
-
-        <rect x="484" y="68" width="200" height="86" rx="12" fill="#fff" stroke="#bfd7ea"/>
-        <text x="584" y="98" text-anchor="middle" font-size="17" font-weight="700" fill="#18181b">1. 方案确认（人工）</text>
-        <text x="584" y="124" text-anchor="middle" font-size="14" fill="#52525b">定义形成期/跳过期/成本</text>
-        <text x="584" y="144" text-anchor="middle" font-size="13" fill="#c2571a">Agent 追问澄清边界</text>
-
-        <line x1="688" y1="111" x2="714" y2="111" stroke="#1d5d8f" stroke-width="2.5" marker-end="url(#arr2)"/>
-
-        <rect x="720" y="68" width="200" height="86" rx="12" fill="#fff" stroke="#bfd7ea"/>
-        <text x="820" y="98" text-anchor="middle" font-size="17" font-weight="700" fill="#1d5d8f">2. 方案推进（人机）</text>
-        <text x="820" y="124" text-anchor="middle" font-size="14" fill="#52525b">tushare MCP 取数编码</text>
-        <text x="820" y="144" text-anchor="middle" font-size="13" fill="#1d5d8f">对比 8bp/20bp 扣费净值</text>
-
-        <rect x="484" y="186" width="200" height="96" rx="12" fill="#fff8f2" stroke="#c2571a" stroke-width="1.5"/>
-        <text x="584" y="216" text-anchor="middle" font-size="17" font-weight="700" fill="#c2571a">3. 结果复核（纠偏）</text>
-        <text x="584" y="242" text-anchor="middle" font-size="14" fill="#18181b">核验复权、缺月与 NW(3)</text>
-        <text x="584" y="264" text-anchor="middle" font-size="13" fill="#b42318">识破「毛收益显著」假象</text>
-
-        <line x1="688" y1="234" x2="714" y2="234" stroke="#1d5d8f" stroke-width="2.5" marker-end="url(#arr2)"/>
-
-        <rect x="720" y="186" width="204" height="96" rx="12" fill="#e8f6f1" stroke="#0f6e56" stroke-width="1.5"/>
-        <text x="822" y="216" text-anchor="middle" font-size="16" font-weight="700" fill="#0f6e56">4. 报告与原始记录</text>
-        <text x="822" y="242" text-anchor="middle" font-size="13.5" fill="#18181b">打包完整 session 提交</text>
-        <text x="822" y="264" text-anchor="middle" font-size="12.5" fill="#0f6e56">严禁将相关性夸大为因果</text>
-      </svg>
+    <div class="slide-head"><span class="pill">12 / 课堂收口</span><span class="slide-sub-tag">从偏差诊断到投资纪律</span></div>
+    <h2>从课堂实验到投资纪律</h2>
+    <div class="rules">
+      <div class="rule-row head"><span>实验</span><span>暴露的偏差</span><span></span><span>对应的投资纪律</span></div>
+      <div class="rule-row" style="border-left:5px solid var(--blue);">
+        <div class="rule-exp"><span class="num">实验一</span>选美博弈</div>
+        <div class="rule-bias">追逐「别人怎么想」，价格脱离基本面</div>
+        <div class="rule-arrow">→</div>
+        <div class="rule-do">以基本面估值为锚，不博「下一棒接盘」</div>
+      </div>
+      <div class="rule-row" style="border-left:5px solid var(--bad);">
+        <div class="rule-exp"><span class="num">实验二</span>前景理论</div>
+        <div class="rule-bias">浮盈过早止盈，浮亏惜售不止损</div>
+        <div class="rule-arrow">→</div>
+        <div class="rule-do">买入前写好止损线，触发即执行</div>
+      </div>
+      <div class="rule-row" style="border-left:5px solid var(--orange);">
+        <div class="rule-exp"><span class="num">实验三</span>过度自信</div>
+        <div class="rule-bias">区间估得太窄，交易过于频繁</div>
+        <div class="rule-arrow">→</div>
+        <div class="rule-do">控制换手，算收益先扣交易成本</div>
+      </div>
+      <div class="rule-row" style="border-left:5px solid var(--accent);">
+        <div class="rule-exp"><span class="num">实验四</span>市场仿真</div>
+        <div class="rule-bias">套利力量有限，偏差可推动泡沫与踩踏</div>
+        <div class="rule-arrow">→</div>
+        <div class="rule-do">分散配置，单只股票仓位设上限</div>
+      </div>
+    </div>
+    <div class="agent-box" style="margin-top:14px;">
+      <span class="tag-ai">课后延伸</span>用 A 股真实数据检验动量与反转，比较扣除交易成本前后的收益差异。
     </div>
   </section>
 
-  <!-- 14. 真实教学实践成效、评价改革与反思 -->
-  <section class="slide" data-id="eval">
-    <div class="slide-head"><span class="pill blue">13 / 循证评价与真实成效</span><span class="slide-sub-tag">首轮实践迭代 × 双线思政</span></div>
-    <h2>循证评价体系、首轮真实实践反馈与持续改进</h2>
-    <div class="svg-card">
-      <svg viewBox="0 0 1020 300" role="img" aria-label="双端评价体系与首轮实践真实迭代证据">
-        <rect x="16" y="16" width="480" height="268" rx="18" fill="#eef5fb" stroke="#1d5d8f" stroke-width="2"/>
-        <text x="256" y="52" text-anchor="middle" font-size="21" font-weight="700" fill="#1d5d8f">循证评价改革（防 AI 代写闭环）</text>
-        <rect x="36" y="72" width="440" height="60" rx="10" fill="#fff" stroke="#bfd7ea"/>
-        <text x="256" y="98" text-anchor="middle" font-size="17" font-weight="700" fill="#18181b">完整原始 session 实质审查（16 个观察点）</text>
-        <text x="256" y="121" text-anchor="middle" font-size="13.5" fill="#52525b">教师 Agent 自动复算关键量，定位独立假设与纠偏证据</text>
-
-        <rect x="36" y="144" width="440" height="56" rx="10" fill="#fff" stroke="#bfd7ea"/>
-        <text x="256" y="169" text-anchor="middle" font-size="17" font-weight="700" fill="#18181b">提交后个性化「随机抽问」核验</text>
-        <text x="256" y="191" text-anchor="middle" font-size="13.5" fill="#52525b">从本人报告随机抽查图表/参数边界，检验真实掌握度</text>
-
-        <rect x="36" y="212" width="440" height="54" rx="10" fill="#e8f6f1" stroke="#0f6e56"/>
-        <text x="256" y="235" text-anchor="middle" font-size="15.5" font-weight="700" fill="#0f6e56">双线思政：敬畏市场风险 + 审慎驾驭 AI</text>
-        <text x="256" y="256" text-anchor="middle" font-size="13.5" fill="#52525b">不按口号计分，以披露局限、拒绝数据窥探行为判档</text>
-
-        <rect x="520" y="16" width="484" height="268" rx="18" fill="#fff8f2" stroke="#c2571a" stroke-width="2"/>
-        <text x="762" y="52" text-anchor="middle" font-size="21" font-weight="700" fill="#c2571a">真实教学实测与首轮实践迭代</text>
-
-        <rect x="540" y="72" width="444" height="86" rx="10" fill="#fff" stroke="#e4dfd5"/>
-        <text x="762" y="98" text-anchor="middle" font-size="17" font-weight="700" fill="#18181b">课堂实测复算底座（24 条序列 / 1,032 期记录）</text>
-        <text x="762" y="122" text-anchor="middle" font-size="14" fill="#52525b">验证扣除 8bp/20bp 交易成本与剔除科技股后，</text>
-        <text x="762" y="144" text-anchor="middle" font-size="14" font-weight="700" fill="#0f6e56">43 期动量净超额 NW(3) 区间包含 0，破除超额幻觉</text>
-
-        <rect x="540" y="172" width="444" height="94" rx="10" fill="#fdecec" stroke="#b42318"/>
-        <text x="762" y="198" text-anchor="middle" font-size="17" font-weight="700" fill="#b42318">首轮学生实践诊断 → 持续改进措施</text>
-        <text x="762" y="222" text-anchor="middle" font-size="14" fill="#18181b">首轮反馈：约 50% 学生易被 AI 主导，30% 能有效驾驭</text>
-        <text x="762" y="246" text-anchor="middle" font-size="14" font-weight="700" fill="#0a4d3c">改进：前置知识梳理 + 交互示范 + 优化任务开放度</text>
-      </svg>
-    </div>
-  </section>
 </template>
 
 <script>
