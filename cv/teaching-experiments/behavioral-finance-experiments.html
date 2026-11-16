@@ -285,6 +285,31 @@
   .pt-item h3 { font-size: 21px; color: var(--accent-2); margin-bottom: 3px; }
   .pt-item p { font-size: 18px; color: var(--muted); }
 
+  .hook-stage { background: var(--paper); border: 1px solid var(--line); border-radius: 22px; padding: 26px 32px; box-shadow: var(--shadow); text-align: center; margin-bottom: 12px; }
+  .hook-step { font-size: 17px; font-weight: 700; color: var(--muted); letter-spacing: .08em; }
+  .hook-loss { font-size: 46px; font-weight: 800; margin: 8px 0 10px; color: var(--bad); }
+  .hook-loss.cash { color: var(--blue); }
+  .hook-text { font-size: 23px; line-height: 1.55; color: var(--ink); max-width: 1100px; margin: 0 auto; }
+  .hook-duel { display: grid; grid-template-columns: 1fr 180px 1fr; gap: 18px; align-items: stretch; }
+  .duel-card { border: 2px solid var(--line); border-radius: 22px; padding: 20px 26px; box-shadow: var(--shadow); text-align: center; }
+  .duel-card.ticket { border-color: #f1b7b2; background: #fff7f6; }
+  .duel-card.cash { border-color: #bfd7ea; background: #f4f9fd; }
+  .duel-tag { font-size: 20px; font-weight: 800; }
+  .duel-card.ticket .duel-tag, .duel-card.ticket .duel-pct { color: var(--bad); }
+  .duel-card.cash .duel-tag, .duel-card.cash .duel-pct { color: var(--blue); }
+  .duel-pct { font-size: 84px; font-weight: 900; line-height: 1.05; margin-top: 6px; font-variant-numeric: tabular-nums; }
+  .duel-lab { font-size: 19px; color: var(--muted); margin-bottom: 10px; }
+  .duel-bar { height: 16px; background: #ece7dc; border-radius: 99px; overflow: hidden; }
+  .duel-bar i { display: block; height: 100%; width: 0; border-radius: 99px; transition: width 1.2s cubic-bezier(.2, .8, .2, 1); }
+  .ticket .duel-bar i { background: var(--bad); }
+  .cash .duel-bar i { background: var(--blue); }
+  .duel-ref { margin-top: 10px; font-size: 17px; color: var(--muted); }
+  .duel-mid { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 19px; color: var(--muted); line-height: 1.4; }
+  .duel-mid .eq { font-size: 72px; font-weight: 900; color: var(--ink); line-height: 1; }
+  .duel-mid strong { font-size: 30px; color: var(--ink); }
+  .hook-bridge { margin-top: 14px; background: var(--blue-soft); border: 1.5px solid #bfd7ea; border-radius: 16px; padding: 14px 20px; font-size: 21px; line-height: 1.7; text-align: left; }
+  .hook-src { margin-top: 8px; font-size: 14px; color: var(--muted); text-align: right; }
+
   .rules { display: flex; flex-direction: column; gap: 12px; }
   .rule-row {
     display: grid; grid-template-columns: 200px 1fr 40px 1.15fr; align-items: center; gap: 14px;
@@ -339,13 +364,19 @@
     .metric .val { font-size: 30px; }
     .slider-box { font-size: 20px; padding: 11px 16px; }
     .rule-row { padding: 18px 24px; }
+    .hook-loss { font-size: 54px; }
+    .hook-text { font-size: 26px; }
+    .duel-pct { font-size: 100px; }
+    .duel-tag { font-size: 23px; }
+    .duel-lab, .duel-mid { font-size: 21px; }
+    .hook-bridge { font-size: 23px; }
     .rule-exp { font-size: 25px; }
     .rule-bias { font-size: 21px; }
     .rule-do { font-size: 22px; }
   }
   @media (max-width: 1100px) {
     .slide { inset: 12px 14px 80px; }
-    .cover-grid, .sim, .entry, .roadmap, .compare2, .grid-2col, .formula-row, .agent-highlights, .course-chain, .rule-row { grid-template-columns: 1fr; }
+    .cover-grid, .sim, .entry, .roadmap, .compare2, .grid-2col, .formula-row, .agent-highlights, .course-chain, .rule-row, .hook-duel { grid-template-columns: 1fr; }
     h1 { font-size: 36px; }
     h2 { font-size: 26px; }
   }
@@ -481,15 +512,19 @@
     </div>
   </section>
 
-  <!-- 3. 导入：心理账户 -->
+  <!-- 3. 导入：心理账户（丢票还是丢钱） -->
   <section class="slide" data-id="hook">
-    <div class="slide-head"><span class="pill">02 / 课堂导入</span><span class="slide-sub-tag">心理账户 × 沉没成本</span></div>
-    <h2>心理账户：同样 4000 元，为何换仓决策相反？</h2>
+    <div class="slide-head"><span class="pill">02 / 课堂导入</span><span class="slide-sub-tag">心理账户 × 日常决策</span></div>
+    <h2>同样少了 500 元，你还会买这张票吗？</h2>
     <div id="hookPlay">
-      <div class="scenario" id="hookScene"></div>
+      <div class="hook-stage">
+        <div class="hook-step" id="hookStep"></div>
+        <div class="hook-loss" id="hookLoss"></div>
+        <div class="hook-text" id="hookScene"></div>
+      </div>
       <div class="votes">
-        <button type="button" class="vote" id="voteYes"><span>果断换股 B</span><span class="cnt" id="yesCnt">0</span></button>
-        <button type="button" class="vote" id="voteNo"><span>继续持有 A</span><span class="cnt" id="noCnt">0</span></button>
+        <button type="button" class="vote" id="voteYes"><span>会，再花 500 元买票</span><span class="cnt" id="yesCnt">0</span></button>
+        <button type="button" class="vote" id="voteNo"><span>不买了，直接回家</span><span class="cnt" id="noCnt">0</span></button>
       </div>
       <div class="actions">
         <button class="secondary" type="button" id="hookReset">清零</button>
@@ -497,30 +532,28 @@
       </div>
     </div>
     <div id="hookResult" hidden>
-      <div class="compare2">
-        <div class="scenario" id="hookSumA"></div>
-        <div class="scenario" id="hookSumB"></div>
+      <div class="hook-duel">
+        <div class="duel-card ticket">
+          <div class="duel-tag">情景一 · 丢了 500 元门票</div>
+          <div class="duel-pct" id="pctTicket">0%</div>
+          <div class="duel-lab">愿意再买一张</div>
+          <div class="duel-bar"><i id="barTicket"></i></div>
+          <div class="duel-ref">本班 <span id="nTicket">—</span> ｜ 经典实验 46%</div>
+        </div>
+        <div class="duel-mid"><div class="eq">=</div><div>钱包里都少了<br><strong>500 元</strong></div></div>
+        <div class="duel-card cash">
+          <div class="duel-tag">情景二 · 丢了 500 元现金</div>
+          <div class="duel-pct" id="pctCash">0%</div>
+          <div class="duel-lab">仍然愿意买票</div>
+          <div class="duel-bar"><i id="barCash"></i></div>
+          <div class="duel-ref">本班 <span id="nCash">—</span> ｜ 经典实验 88%</div>
+        </div>
       </div>
-      <div class="svg-card" style="margin-top:8px;">
-        <svg viewBox="0 0 940 170" role="img" aria-label="心理账户与规范性理性基准总财富对比">
-          <rect x="16" y="16" width="424" height="138" rx="16" fill="#fff8f2" stroke="#c2571a" stroke-width="2"/>
-          <text x="228" y="46" text-anchor="middle" font-size="20" font-weight="700" fill="#c2571a">直觉投资者：分账户记账（心理账户）</text>
-          <rect x="34" y="64" width="184" height="70" rx="10" fill="#fdecec" stroke="#b42318"/>
-          <text x="126" y="94" text-anchor="middle" font-size="17" font-weight="700" fill="#b42318">浮亏账户</text>
-          <text x="126" y="120" text-anchor="middle" font-size="14.5" fill="#52525b">厌恶实现亏损 → 惜售</text>
-          <rect x="238" y="64" width="184" height="70" rx="10" fill="#e8f6f1" stroke="#0f6e56"/>
-          <text x="330" y="94" text-anchor="middle" font-size="17" font-weight="700" fill="#0f6e56">新获盈利账户</text>
-          <text x="330" y="120" text-anchor="middle" font-size="14.5" fill="#52525b">风险容忍上升 → 追高</text>
-
-          <text x="470" y="94" text-anchor="middle" font-size="25" font-weight="700" fill="#52525b">vs</text>
-
-          <rect x="500" y="16" width="424" height="138" rx="16" fill="#eef5fb" stroke="#1d5d8f" stroke-width="2"/>
-          <text x="712" y="46" text-anchor="middle" font-size="20" font-weight="700" fill="#1d5d8f">规范性理性基准（MPT 总财富视角）</text>
-          <rect x="522" y="64" width="380" height="70" rx="10" fill="#fff" stroke="#1d5d8f"/>
-          <text x="712" y="94" text-anchor="middle" font-size="17" font-weight="700" fill="#18181b">忽略历史沉没成本，只看边际期望与协方差</text>
-          <text x="712" y="120" text-anchor="middle" font-size="15" fill="#1d5d8f">两情景最优解一致：换入高夏普标的 B</text>
-        </svg>
+      <div class="hook-bridge">
+        <span class="tag-ai">为什么</span>钱没有标签，大脑却给钱贴了标签：丢票记在「演唱会账户」，再买一张就像花 1000 元看一场演出；丢钱记在「零钱账户」，票价仍是 500 元。<br>
+        <span class="tag-ai" style="background:var(--orange);">股市里</span>每只股票也被单独记一本账：亏损的股票「要在它身上赚回来」，于是浮亏不肯卖。
       </div>
+      <div class="hook-src">经典实验数据：Tversky &amp; Kahneman（1981，Science），丢票组 N = 200，丢钱组 N = 183。</div>
     </div>
   </section>
 
@@ -982,6 +1015,7 @@
     document.getElementById("pageNum").textContent = (i + 1) + " / " + slides.length;
     document.getElementById("btnPrev").disabled = i === 0;
     document.getElementById("btnNext").textContent = i === slides.length - 1 ? "回到封面" : "下一页";
+    if (slides[i].dataset.id === "hook") renderHook();
     if (slides[i].dataset.id === "guess-insight") updateInsight();
     if (slides[i].dataset.id === "market-sim") renderChart();
     if (location.hash !== "#" + slides[i].dataset.id) {
@@ -1020,26 +1054,44 @@
 
   // ----- 1. 导入：心理账户 -----
   const hookScenes = [
-    { title: "情景 A（账面浮亏账户）", text: "股票 A 浮亏 4000 元，预期后续涨跌概率各半；此时发现夏普比率更优的股票 B。选择调仓换入股票 B，还是继续持有股票 A 等待回本？" },
-    { title: "情景 B（新获盈利账户）", text: "刚在另一笔投资中获利 4000 元现金。面对同样的股票 A 和更优的股票 B，选择配置股票 B，还是动用该笔盈利买入股票 A 承担高波动？" }
+    { step: "情景一 / 共两个", loss: "丢了 500 元门票", cls: "", text: "你提前花 500 元买了一张演唱会门票。到了检票口，发现票丢了，票不记名、无法补办。售票处还有票，<strong>你会再花 500 元买一张吗？</strong>" },
+    { step: "情景二 / 共两个", loss: "丢了 500 元现金", cls: "cash", text: "你打算到现场花 500 元买演唱会门票。到了售票口，发现钱包里丢了 500 元现金。售票处还有票，<strong>你还会花 500 元买票吗？</strong>" }
   ];
   const hookVotes = [{ yes: 0, no: 0 }, { yes: 0, no: 0 }];
   let hookI = 0;
+  function animateHookPct(elId, barId, target) {
+    const el = document.getElementById(elId), bar = document.getElementById(barId);
+    bar.style.width = "0%";
+    const t0 = performance.now();
+    const tick = (t) => {
+      const k = Math.min(1, (t - t0) / 1200), eased = 1 - Math.pow(1 - k, 3);
+      el.textContent = Math.round(target * eased) + "%";
+      if (k < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(() => { bar.style.width = target + "%"; requestAnimationFrame(tick); });
+  }
   function renderHook() {
     const play = document.getElementById("hookPlay");
     const result = document.getElementById("hookResult");
     if (hookI >= 2) {
       play.hidden = true; result.hidden = false;
-      document.getElementById("hookSumA").innerHTML = "<strong>情景 A（持仓浮亏 4000 元，遇更优标的 B）</strong><br>调仓换股 B：" + hookVotes[0].yes + " 人 ｜ 惜售持有 A：<strong>" + hookVotes[0].no + " 人</strong>";
-      document.getElementById("hookSumB").innerHTML = "<strong>情景 B（新获盈利 4000 元，面对同组标的）</strong><br>理性配置 B：<strong>" + hookVotes[1].yes + " 人</strong> ｜ 追高买入 A：" + hookVotes[1].no + " 人";
+      [["Ticket", 0], ["Cash", 1]].forEach(([key, idx]) => {
+        const v = hookVotes[idx], tot = v.yes + v.no;
+        document.getElementById("n" + key).textContent = tot ? v.yes + " / " + tot + " 人" : "—";
+        if (tot) animateHookPct("pct" + key, "bar" + key, Math.round(v.yes / tot * 100));
+        else { document.getElementById("pct" + key).textContent = "—"; document.getElementById("bar" + key).style.width = "0%"; }
+      });
       return;
     }
     play.hidden = false; result.hidden = true;
-    const s = hookScenes[hookI];
-    document.getElementById("hookScene").innerHTML = "<strong>" + s.title + "</strong><br>" + s.text;
+    const sc = hookScenes[hookI];
+    document.getElementById("hookStep").textContent = sc.step;
+    const loss = document.getElementById("hookLoss");
+    loss.textContent = sc.loss; loss.className = "hook-loss " + sc.cls;
+    document.getElementById("hookScene").innerHTML = sc.text;
     document.getElementById("yesCnt").textContent = hookVotes[hookI].yes;
     document.getElementById("noCnt").textContent = hookVotes[hookI].no;
-    document.getElementById("hookNext").textContent = hookI === 0 ? "下一情景" : "对比规范性理性基准";
+    document.getElementById("hookNext").textContent = hookI === 0 ? "下一情景" : "揭晓两组结果";
   }
   document.getElementById("voteYes").onclick = () => { hookVotes[hookI].yes++; renderHook(); };
   document.getElementById("voteNo").onclick = () => { hookVotes[hookI].no++; renderHook(); };
@@ -1314,8 +1366,8 @@
   let demoLoaded = false;
   document.getElementById("btnDemo").onclick = () => {
     if (!demoLoaded) {
-      hookVotes[0] = { yes: 12, no: 33 };
-      hookVotes[1] = { yes: 30, no: 15 };
+      hookVotes[0] = { yes: 20, no: 25 };
+      hookVotes[1] = { yes: 39, no: 6 };
       hookI = 2; renderHook();
       nums.splice(0, nums.length, 50, 45, 33, 33, 35, 25, 22, 22, 20, 40, 38, 30, 28, 18, 15, 50, 33, 25, 22, 32, 34, 42, 19, 27, 36, 48, 29, 21, 24, 31);
       revealed = true; renderNums(); updateInsight();
