@@ -186,6 +186,14 @@ sections:
         meta: 8 节 · 入门 → 实战
         shell: knowledge-shell
         status: live
+      - id: yanxue-jiaoliu
+        path: /knowledge/yanxue-jiaoliu.html
+        title: 行为经济学互动讲义
+        summary: 猜数字、翻卡片、最后通牒、分流四个实验的投影讲义,现场可以投票、记分和调参数。
+        tag: 研学交流
+        meta: 4 个实验 · 15 页 · 课堂 → 互动
+        shell: none
+        status: live
 
   - id: tools
     path: /tools/

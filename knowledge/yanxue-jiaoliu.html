@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>研学交流</title>
+<style>
+  :root {
+    --bg: #f4efe6;
+    --ink: #1c1917;
+    --muted: #57534e;
+    --paper: #fffcf7;
+    --line: #e7e0d4;
+    --accent: #0f6e56;
+    --accent-2: #0b4f3d;
+    --blue: #2c6e9e;
+    --orange: #c65d1f;
+    --good: #0f6e56;
+    --bad: #b42318;
+    --shadow: 0 10px 30px rgba(28, 25, 23, .08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+    overflow: hidden;
+  }
+  #app { height: 100%; display: flex; flex-direction: column; }
+  .slides { flex: 1; position: relative; }
+  .slide {
+    position: absolute; inset: 0;
+    display: none;
+    padding: 36px 56px 104px;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+  .slide.on { display: flex; }
+  h1 { font-size: 96px; font-weight: 700; letter-spacing: .02em; line-height: 1.2; }
+  h2 { font-size: 68px; font-weight: 700; line-height: 1.25; margin-bottom: 22px; }
+  .lead { font-size: 48px; line-height: 1.5; color: var(--muted); }
+  .body { font-size: 45px; line-height: 1.5; }
+  .center { align-items: center; justify-content: center; text-align: center; gap: 24px; }
+  .kicker { font-size: 34px; letter-spacing: .18em; color: var(--accent); font-weight: 600; }
+  .sub { font-size: 38px; color: var(--muted); }
+
+  .rule-box {
+    margin-top: 14px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: 30px 38px;
+    box-shadow: var(--shadow);
+    font-size: 48px;
+    line-height: 1.55;
+  }
+  .rule-box strong { color: var(--accent-2); }
+
+  .row { display: flex; gap: 30px; align-items: stretch; flex: 1; min-height: 0; }
+  .col { flex: 1; min-width: 0; }
+
+  button, .btn {
+    font: inherit;
+    cursor: pointer;
+    border: 0;
+    background: var(--accent);
+    color: white;
+    border-radius: 18px;
+    padding: 14px 28px;
+    font-size: 38px;
+    font-weight: 600;
+  }
+  button.secondary, .btn.secondary {
+    background: #fff;
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+  button:disabled { opacity: .45; cursor: default; }
+  button:focus-visible, .card:focus-visible, input:focus-visible, textarea:focus-visible, input[type=range]:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .bar {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    height: 88px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 28px;
+    background: rgba(244, 239, 230, .92);
+    border-top: 1px solid var(--line);
+    backdrop-filter: blur(8px);
+    z-index: 20;
+  }
+  .dots { display: flex; gap: 10px; align-items: center; }
+  .dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: #d6d3d1; border: 0; padding: 0;
+  }
+  .dot.on { background: var(--accent); transform: scale(1.2); }
+  .bar .nav { display: flex; gap: 12px; align-items: center; }
+  .page-num { font-size: 31px; color: var(--muted); min-width: 100px; text-align: center; }
+
+  /* guess */
+  .entry {
+    display: grid;
+    grid-template-columns: 1.2fr .8fr;
+    gap: 30px;
+    flex: 1; min-height: 0;
+  }
+  .panel {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: 26px 30px;
+    box-shadow: var(--shadow);
+    display: flex; flex-direction: column; gap: 16px; min-height: 0;
+    text-align: left;
+  }
+  .input-row { display: flex; gap: 14px; align-items: stretch; }
+  .input-row input { flex: 1 1 auto; min-width: 0; }
+  .input-row button { flex: 0 0 auto; white-space: nowrap; }
+  input[type=text], textarea {
+    font: inherit; font-size: 42px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 12px 16px;
+    background: #fff;
+    color: var(--ink);
+    width: 100%;
+    text-align: left;
+  }
+  textarea { min-height: 100px; resize: none; }
+  .chips {
+    flex: 1; overflow: auto; display: flex; flex-wrap: wrap; gap: 12px; align-content: flex-start;
+  }
+  .chip {
+    background: #efe8db; border-radius: 999px; padding: 10px 18px;
+    font-size: 38px; display: inline-flex; gap: 10px; align-items: center;
+  }
+  .chip button {
+    background: transparent; color: var(--muted); padding: 0; font-size: 34px; line-height: 1;
+  }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .stat {
+    background: #f8f3ea; border-radius: 18px; padding: 20px 24px;
+  }
+  .stat .lab { font-size: 31px; color: var(--muted); }
+  .stat .val { font-size: 62px; font-weight: 700; margin-top: 6px; }
+  .stat.wide { grid-column: 1 / -1; }
+  .winners { font-size: 45px; font-weight: 700; color: var(--accent-2); }
+  .hidden-until.reveal-on { display: none; }
+  body.is-revealed .hidden-until.reveal-on { display: block; }
+  .hint { font-size: 31px; color: var(--muted); }
+
+  .stair {
+    display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+    margin: 30px 0 10px;
+  }
+  .stair span {
+    background: var(--paper); border: 1px solid var(--line);
+    border-radius: 16px; padding: 14px 22px; font-size: 45px; font-weight: 700;
+  }
+  .stair span.fade { color: var(--muted); font-weight: 600; }
+
+  /* cards */
+  .cards {
+    display: flex; gap: 28px; justify-content: center; margin: 20px 0 18px;
+    flex-wrap: wrap;
+  }
+  .card-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 230px; }
+  .card {
+    width: 230px; height: 250px;
+    border: 3px solid #d6d3d1;
+    background: #fff;
+    color: var(--ink);
+    border-radius: 26px;
+    box-shadow: var(--shadow);
+    font-size: 90px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 12px;
+    transition: border-color .15s, transform .15s, background .15s;
+  }
+  .card.small-text { font-size: 56px; line-height: 1.25; }
+  .card.picked { border-color: var(--accent); background: #e8f6f1; transform: translateY(-6px); }
+  .card.correct { border-color: var(--good); background: #e8f6f1; }
+  .card.wrong { border-color: var(--bad); background: #fdecec; }
+  .card.idle { opacity: .72; }
+  .tag { font-size: 34px; color: var(--muted); min-height: 40px; font-weight: 600; }
+  .tag.good { color: var(--good); }
+  .tag.bad { color: var(--bad); }
+  .explain {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 20px 28px;
+    font-size: 42px;
+    line-height: 1.5;
+    min-height: 120px;
+    box-shadow: var(--shadow);
+  }
+  .actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+
+  .compare {
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 28px;
+    align-items: center; margin-top: 10px;
+  }
+  .pair {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 22px;
+    padding: 28px; box-shadow: var(--shadow); text-align: center;
+  }
+  .pair h3 { font-size: 42px; margin-bottom: 14px; }
+  .pair .map { font-size: 45px; line-height: 1.6; }
+  .eq { font-size: 82px; font-weight: 700; color: var(--accent-2); }
+
+  /* schelling */
+  .sim { display: grid; grid-template-columns: 1fr 600px; gap: 28px; flex: 1; min-height: 0; }
+  #board-wrap {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; min-height: 0;
+  }
+  #board { width: 100%; height: 100%; max-height: 100%; }
+  .controls { display: flex; flex-direction: column; gap: 10px; text-align: left; }
+  .metric {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 18px;
+    padding: 12px 18px;
+  }
+  .metric .lab { font-size: 31px; color: var(--muted); }
+  .metric .val { font-size: 56px; font-weight: 700; }
+  input[type=range] { width: 100%; height: 36px; }
+  .legend { display: flex; flex-direction: column; gap: 6px; font-size: 31px; color: var(--muted); }
+  .legend .row2 { display: flex; align-items: center; gap: 10px; }
+  .swatch { width: 20px; height: 20px; border-radius: 50%; display: inline-block; }
+  .swatch.a { background: var(--blue); }
+  .swatch.b { background: var(--orange); }
+  .ctrl-btns { display: flex; flex-wrap: wrap; gap: 12px; }
+  .ctrl-btns button { font-size: 34px; padding: 10px 18px; }
+
+  .takeaways { list-style: none; display: flex; flex-direction: column; gap: 18px; margin-top: 20px; max-width: 1720px; margin-left: auto; margin-right: auto; }
+  .takeaways li {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 20px;
+    padding: 20px 28px; font-size: 45px; line-height: 1.45;
+    box-shadow: var(--shadow);
+  }
+  .takeaways li b { color: var(--accent-2); margin-right: 8px; }
+
+  .scenes {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    margin-top: 10px;
+  }
+  .scene {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 26px;
+    box-shadow: var(--shadow);
+  }
+  .scene h3 { font-size: 42px; margin-bottom: 12px; }
+  .scene p { font-size: 38px; line-height: 1.45; color: var(--muted); }
+
+  .roadmap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 8px;
+  }
+  .road {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 22px 26px;
+    box-shadow: var(--shadow);
+  }
+  .road .num { color: var(--accent); font-weight: 700; font-size: 34px; }
+  .road h3 { font-size: 45px; margin: 4px 0 8px; }
+  .road p { font-size: 38px; color: var(--muted); line-height: 1.45; }
+
+  .scenario {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: 26px 32px;
+    box-shadow: var(--shadow);
+    font-size: 45px;
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+  .votes { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin: 10px 0 16px; }
+  .vote {
+    min-width: 300px;
+    background: #fff;
+    color: var(--ink);
+    border: 3px solid var(--line);
+    border-radius: 22px;
+    padding: 18px 26px;
+    font-size: 42px;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .vote .cnt { font-size: 68px; font-weight: 700; line-height: 1.1; }
+  .compare2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 10px; }
+  .offer-pad { display: flex; flex-wrap: wrap; gap: 12px; }
+  .offer-pad button { min-width: 70px; background: #fff; color: var(--ink); border: 1px solid var(--line); padding: 12px 0; }
+  .offer-pad button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .ulog { flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 10px; }
+  .ulog .item { font-size: 38px; background: #f8f3ea; border-radius: 14px; padding: 10px 16px; display: flex; justify-content: space-between; gap: 16px; }
+
+  @media (max-width: 1100px) {
+    .slide { padding: 28px 24px 100px; }
+    h1 { font-size: 70px; }
+    h2 { font-size: 54px; }
+    .sim, .entry, .compare { grid-template-columns: 1fr; }
+    .card, .card-wrap { width: 190px; }
+    .card { height: 210px; font-size: 64px; }
+    .scenes, .roadmap, .compare2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="slides" id="slides"></div>
+  <div class="bar">
+    <button class="secondary" id="btnPrev" type="button">上一页</button>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div class="dots" id="dots"></div>
+      <div class="page-num" id="pageNum"></div>
+    </div>
+    <div class="nav">
+      <button class="secondary" id="btnFull" type="button">全屏</button>
+      <button id="btnNext" type="button">下一页</button>
+    </div>
+  </div>
+</div>
+
+<template id="tpl">
+  <section class="slide center" data-id="title">
+    <div class="kicker">四川农业大学 · 经济实验中心</div>
+    <h1>今天我们做四个实验</h1>
+    <p class="lead">猜一个数字 · 翻几张卡片 · 分 10 个代币 · 看一场搬家</p>
+    <p class="sub">大约 40 分钟。先从一个小问题开始，再一起做实验。</p>
+  </section>
+
+  <section class="slide" data-id="hook">
+    <h2>先问一个问题</h2>
+    <div id="hookPlay">
+      <div class="scenario" id="hookScene"></div>
+      <div class="votes">
+        <button type="button" class="vote" id="voteYes"><span>会再买</span><span class="cnt" id="yesCnt">0</span></button>
+        <button type="button" class="vote" id="voteNo"><span>不再买</span><span class="cnt" id="noCnt">0</span></button>
+      </div>
+      <div class="actions">
+        <button class="secondary" type="button" id="hookReset">人数清零</button>
+        <button type="button" id="hookNext">下一问</button>
+      </div>
+    </div>
+    <div id="hookResult" hidden>
+      <div class="compare2">
+        <div class="scenario" id="hookSumA"></div>
+        <div class="scenario" id="hookSumB"></div>
+      </div>
+      <p class="body" style="margin-top:22px;">两次都是少了 40 元，然后还要决定要不要看电影。钱一样多，很多人的感受却不一样。</p>
+    </div>
+    <p class="hint" id="hookHint" style="margin-top:14px;font-size:34px;">请先听完情景，再举手。我在屏幕上记下人数。</p>
+  </section>
+
+  <section class="slide" data-id="what-is">
+    <h2>行为经济学在看什么</h2>
+    <p class="body">不是说人笨，而是人做决定时，会受比较、说法、别人的影响，并不像一台只会算账的机器。</p>
+    <div class="scenes">
+      <div class="scene">
+        <h3>倒计时</h3>
+        <p>「再过 10 分钟优惠就没了。」怕错过，往往比「能省多少」更催人行动。</p>
+      </div>
+      <div class="scene">
+        <h3>已经付出</h3>
+        <p>「都排了这么久，不吃有点亏。」已经花掉的时间，仍会把你往前推。</p>
+      </div>
+      <div class="scene">
+        <h3>别人都在</h3>
+        <p>旁边的人都举手、都在排队，你也更容易跟着走。</p>
+      </div>
+    </div>
+    <p class="body" style="margin-top:24px;">刚才丢票的问题，就是其中一种。今天你们不是来听长篇定义的，是来当实验里的主角。</p>
+  </section>
+
+  <section class="slide" data-id="roadmap">
+    <h2>今天我们做四件事</h2>
+    <div class="roadmap">
+      <div class="road"><div class="num">实验一</div><h3>猜一个数字</h3><p>你不但在想题目，也在猜别人怎么想。</p></div>
+      <div class="road"><div class="num">实验二</div><h3>翻几张卡片</h3><p>怎样检查一条规则：是去证明它对，还是试着证明它错。</p></div>
+      <div class="road"><div class="num">实验三</div><h3>分 10 个代币</h3><p>面对公平和不公平，你会怎么选。</p></div>
+      <div class="road"><div class="num">实验四</div><h3>看一场搬家</h3><p>每个人只是小小的偏好，加在一起会变成什么。</p></div>
+    </div>
+  </section>
+
+  <section class="slide" data-id="guess-rule">
+    <h2>第一个实验：猜一个数字</h2>
+    <div class="rule-box">
+      请在便签上写一个 <strong>0 到 100</strong> 的整数。<br>
+      我算出全班这些数的平均数，再乘以 <strong>三分之二</strong>，得到一个目标数。<br>
+      <strong>谁写的数最接近这个目标，谁就获胜。</strong>
+    </div>
+    <p class="hint" style="margin-top:20px;font-size:38px;">写的时候请不要商量，写完把字朝下。</p>
+  </section>
+
+  <section class="slide" data-id="guess-enter">
+    <h2>把全班的数字收进来</h2>
+    <div class="entry">
+      <div class="panel">
+        <div class="input-row">
+          <input type="text" id="numIn" inputmode="numeric" placeholder="输入一个数，按回车" autocomplete="off">
+          <button type="button" id="btnAdd">加入</button>
+        </div>
+        <textarea id="numPaste" placeholder="也可以一次粘贴很多个数，用空格、逗号或换行分开"></textarea>
+        <div style="display:flex;gap:8px;">
+          <button class="secondary" type="button" id="btnPaste">把上面这一批加进去</button>
+          <button class="secondary" type="button" id="btnClear">清空</button>
+        </div>
+        <div class="chips" id="chips"></div>
+        <div class="hint" id="countHint">还没有录入。</div>
+      </div>
+      <div class="panel">
+        <div class="stats">
+          <div class="stat"><div class="lab">人数</div><div class="val" id="stN">—</div></div>
+          <div class="stat hidden-until reveal-on"><div class="lab">平均数</div><div class="val" id="stAvg">—</div></div>
+          <div class="stat wide hidden-until reveal-on"><div class="lab">目标：平均数 × 2/3</div><div class="val" id="stTarget">—</div></div>
+          <div class="stat wide hidden-until reveal-on"><div class="lab">最接近的数</div><div class="val winners" id="stWin">—</div></div>
+        </div>
+        <button type="button" id="btnReveal" disabled>揭晓结果</button>
+        <p class="hint">揭晓前可以先问问大家：目标大概会落在哪儿？</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide center" data-id="guess-insight">
+    <h2>你不但在想题目，也在猜别人怎么想</h2>
+    <p class="body" id="insightLine">如果大家都写 50，目标大约就是 33。如果大家都想到 33，目标就变成大约 22。一直这么想下去，会走到 0。</p>
+    <div class="stair">
+      <span>50</span><span>33</span><span>22</span><span>15</span><span class="fade">…</span><span>0</span>
+    </div>
+    <p class="lead" id="insightReal">真实的人通常不会一路走到 0，也不会完全随便写。</p>
+  </section>
+
+  <section class="slide" data-id="cards-abstract">
+    <h2>第二个实验：翻哪几张卡片？</h2>
+    <p class="body">每张卡片一面是字母，一面是数字。规则是：<strong>如果一面是元音，另一面就必须是偶数。</strong></p>
+    <div class="cards" id="absCards"></div>
+    <div class="explain" id="absExplain">要检查规则是否成立，必须翻哪几张？先独立想，再举手。点选大家要翻的卡片，然后揭晓。</div>
+    <div class="actions">
+      <button type="button" id="absReveal">揭晓</button>
+      <button class="secondary" type="button" id="absNext" hidden>下一步</button>
+      <button class="secondary" type="button" id="absReset">重来</button>
+    </div>
+  </section>
+
+  <section class="slide" data-id="cards-life">
+    <h2>同一套逻辑，换一个生活里的规则</h2>
+    <p class="body">规则是：<strong>如果骑电动车，就必须戴头盔。</strong>要检查有没有人违规，必须翻哪几张？</p>
+    <div class="cards" id="lifeCards"></div>
+    <div class="explain" id="lifeExplain">再给大约 20 秒，先不要商量。点选出大家的选择后揭晓。</div>
+    <div class="actions">
+      <button type="button" id="lifeReveal">揭晓</button>
+      <button class="secondary" type="button" id="lifeNext" hidden>下一步</button>
+      <button class="secondary" type="button" id="lifeReset">重来</button>
+    </div>
+  </section>
+
+  <section class="slide" data-id="cards-insight">
+    <h2>这两道题其实是同一道题</h2>
+    <div class="compare">
+      <div class="pair">
+        <h3>字母数字版</h3>
+        <div class="map">A ↔ 骑电动车<br>B ↔ 走路<br>2 ↔ 戴了头盔<br>7 ↔ 没戴头盔</div>
+      </div>
+      <div class="eq">＝</div>
+      <div class="pair">
+        <h3>必须翻的两张</h3>
+        <div class="map">A 和 7<br>骑电动车 和 没戴头盔</div>
+      </div>
+    </div>
+    <p class="body" style="margin-top:32px;">我们习惯去找能证明规则对的证据，很少去找能证明它错的证据。换一个熟悉的故事，脑子就清醒了。</p>
+  </section>
+
+  <section class="slide" data-id="ultimatum-rule">
+    <h2>第三个实验：分 10 个代币</h2>
+    <div class="rule-box">
+      两人一组。一人当提议者，一人当回应者。<br>
+      提议者决定怎么把 <strong>10 个代币</strong> 分给对方；回应者选择 <strong>接受</strong> 或 <strong>拒绝</strong>。<br>
+      接受，就按这个方案分；拒绝，<strong>两个人都是 0</strong>。
+    </div>
+    <p class="body" style="margin-top:22px;">先不要商量。提议者把分给对方的数量写在便签上交给对方，回应者只写「接受」或「拒绝」。</p>
+  </section>
+
+  <section class="slide" data-id="ultimatum-play">
+    <h2>把分组结果收上来</h2>
+    <div class="entry">
+      <div class="panel">
+        <p class="body" style="font-size:38px;">先点「分给对方几个」，再点接受或拒绝。</p>
+        <div class="offer-pad" id="offerPad"></div>
+        <div class="actions" style="margin-top:8px;">
+          <button type="button" id="uAccept">接受</button>
+          <button class="secondary" type="button" id="uReject">拒绝</button>
+          <button class="secondary" type="button" id="uUndo">撤销上一条</button>
+        </div>
+        <p class="hint" id="uHint">还没有录入。</p>
+      </div>
+      <div class="panel">
+        <div class="stats">
+          <div class="stat"><div class="lab">组数</div><div class="val" id="uN">—</div></div>
+          <div class="stat"><div class="lab">拒绝次数</div><div class="val" id="uRej">—</div></div>
+          <div class="stat wide"><div class="lab">平均分给对方</div><div class="val" id="uAvg">—</div></div>
+        </div>
+        <div class="ulog" id="uLog"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-id="ultimatum-insight">
+    <h2>人并不只想自己多拿</h2>
+    <p class="body" id="uInsight">如果只按「多一点是一点」来算，对方给 1 个代币也该接受，因为 1 比 0 多。可是太不公平的方案，常常有人宁愿自己也拿不到，也要拒绝。</p>
+    <p class="lead" style="margin-top:24px;">我们在乎公平，有时也愿意付出代价，去拒绝不公平。</p>
+  </section>
+
+  <section class="slide" data-id="schelling">
+    <h2>第四个实验：小小偏好，怎样变成大分流</h2>
+    <div class="sim">
+      <div id="board-wrap"><svg id="board" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"></svg></div>
+      <div class="controls">
+        <p class="body" style="font-size:34px;line-height:1.45;">两种颜色的人住在棋盘上。每个人只要求：邻居里和自己相似的比例不要太低。不满意就搬到空位去。</p>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:34px;margin-bottom:8px;">
+            <span>相似性要求</span><strong id="thrVal">30%</strong>
+          </div>
+          <input type="range" id="thr" min="0" max="80" step="5" value="30">
+        </div>
+        <div class="metric"><div class="lab">还不满意的人</div><div class="val" id="mUnhappy">—</div></div>
+        <div class="metric"><div class="lab">平均邻居相似程度</div><div class="val" id="mSeg">—</div></div>
+        <div class="ctrl-btns">
+          <button type="button" id="btnPlay">自动播放</button>
+          <button class="secondary" type="button" id="btnStep">走一步</button>
+          <button class="secondary" type="button" id="btnShuffle">重新打乱</button>
+        </div>
+        <div class="legend">
+          <div class="row2"><span class="swatch a"></span>一种颜色</div>
+          <div class="row2"><span class="swatch b"></span>另一种颜色</div>
+          <div>浅色小点是空位，可以搬家</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-id="close">
+    <h2>今天带走四句话</h2>
+    <ol class="takeaways">
+      <li><b>1.</b>做决定时，你不但在想题目，也在猜别人怎么想。</li>
+      <li><b>2.</b>我们习惯找证据证明自己是对的；更好的办法是试着推翻它。</li>
+      <li><b>3.</b>人并不只想自己多拿，也会在乎公平，有时愿意付出代价去拒绝不公平。</li>
+      <li><b>4.</b>每个人只是小小的偏好，加在一起也可能变成很大的分流。</li>
+    </ol>
+    <p class="lead" style="margin-top:32px;">经济学也可以做实验、看人怎么选。有问题，现在就可以问。</p>
+  </section>
+</template>
+
+<script>
+(function () {
+  const slidesRoot = document.getElementById("slides");
+  const tpl = document.getElementById("tpl");
+  [...tpl.content.children].forEach((el) => slidesRoot.appendChild(el));
+  const slides = [...slidesRoot.querySelectorAll(".slide")];
+  let i = 0;
+
+  const dots = document.getElementById("dots");
+  slides.forEach((_, idx) => {
+    const b = document.createElement("button");
+    b.className = "dot";
+    b.type = "button";
+    b.addEventListener("click", () => show(idx));
+    dots.appendChild(b);
+  });
+
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle("on", k === i));
+    [...dots.children].forEach((d, k) => d.classList.toggle("on", k === i));
+    document.getElementById("pageNum").textContent = (i + 1) + " / " + slides.length;
+    document.getElementById("btnPrev").disabled = i === 0;
+    document.getElementById("btnNext").textContent = i === slides.length - 1 ? "回到封面" : "下一页";
+    if (slides[i].dataset.id === "guess-insight") updateInsight();
+    if (slides[i].dataset.id === "ultimatum-insight") updateUInsight();
+    if (slides[i].dataset.id === "schelling") { resizeBoard(); renderBoard(false); }
+    if (location.hash !== "#" + slides[i].dataset.id) {
+      history.replaceState(null, "", "#" + slides[i].dataset.id);
+    }
+  }
+
+  document.getElementById("btnPrev").onclick = () => show(i - 1);
+  document.getElementById("btnNext").onclick = () => show(i === slides.length - 1 ? 0 : i + 1);
+  document.getElementById("btnFull").onclick = toggleFull;
+
+  function toggleFull() {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+    else document.exitFullscreen().catch(() => {});
+  }
+  document.addEventListener("fullscreenchange", () => {
+    document.getElementById("btnFull").textContent = document.fullscreenElement ? "退出全屏" : "全屏";
+    resizeBoard();
+  });
+
+  function typing() {
+    const el = document.activeElement;
+    return el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA");
+  }
+  document.addEventListener("keydown", (e) => {
+    if (typing()) return;
+    if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") {
+      if (e.key === " " && slides[i].dataset.id === "schelling") { e.preventDefault(); togglePlay(); return; }
+      e.preventDefault();
+      if (i < slides.length - 1) show(i + 1);
+    } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+      e.preventDefault();
+      show(i - 1);
+    } else if (e.key === "Home") show(0);
+    else if (e.key === "End") show(slides.length - 1);
+    else if (e.key === "f" || e.key === "F") toggleFull();
+  });
+
+  // ----- guess -----
+  const nums = [];
+  const numIn = document.getElementById("numIn");
+  const chips = document.getElementById("chips");
+  let revealed = false;
+
+  function parseNums(text) {
+    return (text || "").split(/[,，、\s]+/).map((s) => s.trim()).filter(Boolean).map((s) => Number(s)).filter((n) => Number.isInteger(n) && n >= 0 && n <= 100);
+  }
+  function addNums(arr) {
+    arr.forEach((n) => nums.push(n));
+    revealed = false;
+    document.body.classList.remove("is-revealed");
+    renderNums();
+  }
+  function renderNums() {
+    chips.innerHTML = "";
+    nums.forEach((n, idx) => {
+      const el = document.createElement("span");
+      el.className = "chip";
+      el.innerHTML = n + ' <button type="button" aria-label="删除">×</button>';
+      el.querySelector("button").onclick = () => { nums.splice(idx, 1); revealed = false; document.body.classList.remove("is-revealed"); renderNums(); };
+      chips.appendChild(el);
+    });
+    document.getElementById("countHint").textContent = nums.length ? ("已录入 " + nums.length + " 个数。点芯片上的 × 可删去录错的。") : "还没有录入。";
+    document.getElementById("stN").textContent = nums.length ? String(nums.length) : "—";
+    document.getElementById("btnReveal").disabled = nums.length === 0;
+    if (revealed) showReveal();
+    else {
+      document.getElementById("stAvg").textContent = "—";
+      document.getElementById("stTarget").textContent = "—";
+      document.getElementById("stWin").textContent = "—";
+    }
+  }
+  function fmt(n) { return Number.isInteger(n) ? String(n) : n.toFixed(1); }
+  function showReveal() {
+    const n = nums.length;
+    const avg = nums.reduce((a, b) => a + b, 0) / n;
+    const target = avg * 2 / 3;
+    let best = Infinity;
+    nums.forEach((x) => { best = Math.min(best, Math.abs(x - target)); });
+    const winners = [...new Set(nums.filter((x) => Math.abs(x - target) - best < 1e-9))].sort((a, b) => a - b);
+    document.getElementById("stAvg").textContent = fmt(avg);
+    document.getElementById("stTarget").textContent = fmt(target);
+    document.getElementById("stWin").textContent = winners.join("、") + "（相差 " + fmt(best) + "）";
+    document.body.classList.add("is-revealed");
+  }
+  document.getElementById("btnAdd").onclick = () => {
+    const arr = parseNums(numIn.value);
+    if (!arr.length) return;
+    addNums(arr); numIn.value = ""; numIn.focus();
+  };
+  numIn.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); document.getElementById("btnAdd").click(); }
+  });
+  document.getElementById("btnPaste").onclick = () => {
+    const arr = parseNums(document.getElementById("numPaste").value);
+    if (!arr.length) return;
+    addNums(arr);
+    document.getElementById("numPaste").value = "";
+  };
+  document.getElementById("btnClear").onclick = () => {
+    nums.splice(0, nums.length);
+    revealed = false;
+    document.body.classList.remove("is-revealed");
+    renderNums();
+  };
+  document.getElementById("btnReveal").onclick = () => {
+    if (!nums.length) return;
+    revealed = true;
+    showReveal();
+  };
+  function updateInsight() {
+    const line = document.getElementById("insightReal");
+    if (revealed && nums.length) {
+      const avg = nums.reduce((a, b) => a + b, 0) / nums.length;
+      const target = avg * 2 / 3;
+      line.textContent = "刚才全班 " + nums.length + " 个人，平均数是 " + fmt(avg) + "，目标是 " + fmt(target) + "。大家既没有都走到 0，也不是随便写。";
+    } else {
+      line.textContent = "真实的人通常不会一路走到 0，也不会完全随便写。";
+    }
+  }
+
+  // ----- Wason cards -----
+  function mountCards(cfg) {
+    const root = document.getElementById(cfg.root);
+    const explain = document.getElementById(cfg.explain);
+    const btnR = document.getElementById(cfg.reveal);
+    const btnN = document.getElementById(cfg.next);
+    const btnReset = document.getElementById(cfg.reset);
+    let picked = new Set();
+    let phase = "pick"; // pick | revealed | walk
+    let step = 0;
+
+    function render() {
+      root.innerHTML = "";
+      cfg.items.forEach((it) => {
+        const wrap = document.createElement("div");
+        wrap.className = "card-wrap";
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "card" + (it.face.length >= 2 && /[^A-Za-z0-9]/.test(it.face) ? " small-text" : "");
+        b.textContent = it.face;
+        if (phase === "pick" && picked.has(it.id)) b.classList.add("picked");
+        if (phase !== "pick") {
+          if (it.must) b.classList.add("correct");
+          else if (picked.has(it.id)) b.classList.add("wrong");
+          else b.classList.add("idle");
+        }
+        b.onclick = () => {
+          if (phase !== "pick") return;
+          if (picked.has(it.id)) picked.delete(it.id); else picked.add(it.id);
+          render();
+        };
+        const tag = document.createElement("div");
+        tag.className = "tag";
+        if (phase !== "pick") {
+          if (it.must) { tag.textContent = "必须翻"; tag.classList.add("good"); }
+          else { tag.textContent = "不用翻"; if (picked.has(it.id)) tag.classList.add("bad"); }
+        } else if (picked.has(it.id)) tag.textContent = "要翻";
+        wrap.appendChild(b); wrap.appendChild(tag);
+        root.appendChild(wrap);
+      });
+    }
+
+    function reset() {
+      picked = new Set();
+      phase = "pick";
+      step = 0;
+      explain.textContent = cfg.prompt;
+      btnR.hidden = false;
+      btnN.hidden = true;
+      btnN.textContent = "下一步";
+      render();
+    }
+
+    btnR.onclick = () => {
+      phase = "revealed";
+      step = 0;
+      explain.textContent = cfg.revealText;
+      btnR.hidden = true;
+      btnN.hidden = false;
+      render();
+    };
+    btnN.onclick = () => {
+      step += 1;
+      if (step <= cfg.steps.length) {
+        explain.textContent = cfg.steps[step - 1];
+        if (step === cfg.steps.length) btnN.textContent = "说完了";
+      }
+    };
+    btnReset.onclick = reset;
+    reset();
+  }
+
+  mountCards({
+    root: "absCards", explain: "absExplain", reveal: "absReveal", next: "absNext", reset: "absReset",
+    prompt: "要检查规则是否成立，必须翻哪几张？先独立想，再举手。点选大家要翻的卡片，然后揭晓。",
+    revealText: "正确答案只翻 A 和 7。点「下一步」，我们一张一张看为什么。",
+    items: [
+      { id: "A", face: "A", must: true },
+      { id: "B", face: "B", must: false },
+      { id: "2", face: "2", must: false },
+      { id: "7", face: "7", must: true }
+    ],
+    steps: [
+      "必须翻 A：假如它的背面是奇数，规则就破了。",
+      "必须翻 7：假如它的背面是元音，规则也破了。",
+      "不用翻 B：它不是元音，规则根本不管它。",
+      "不用翻 2：背面无论是什么字母，都推不翻这条规则。翻它只能再确认一次，不能用来证伪。"
+    ]
+  });
+
+  mountCards({
+    root: "lifeCards", explain: "lifeExplain", reveal: "lifeReveal", next: "lifeNext", reset: "lifeReset",
+    prompt: "再给大约 20 秒，先不要商量。点选出大家的选择后揭晓。",
+    revealText: "要翻的是「骑电动车」和「没戴头盔」。点「下一步」，对照刚才那一题。",
+    items: [
+      { id: "ride", face: "骑电动车", must: true },
+      { id: "walk", face: "走路", must: false },
+      { id: "helm", face: "戴了头盔", must: false },
+      { id: "no", face: "没戴头盔", must: true }
+    ],
+    steps: [
+      "必须翻「骑电动车」：假如背面是没戴头盔，就违规了。它对应上一题的 A。",
+      "必须翻「没戴头盔」：假如背面是骑电动车，也违规了。它对应上一题的 7。",
+      "不用翻「走路」：规则不管走路的人。它对应上一题的 B。",
+      "不用翻「戴了头盔」：无论是谁戴的，都推不翻这条规则。它对应上一题的 2。"
+    ]
+  });
+
+  // ----- opening hook -----
+  const hookScenes = [
+    { title: "情景一", text: "你提前买好一张 40 元的电影票。到了门口，发现票丢了。售票处还在卖同样的票。你会再买一张吗？" },
+    { title: "情景二", text: "你打算到了门口再买票。到了才发现，准备买票的 40 元丢了。钱包里还有别的钱，电影票仍是 40 元。你还会买吗？" }
+  ];
+  const hookVotes = [{yes:0,no:0},{yes:0,no:0}];
+  let hookI = 0;
+  function renderHook() {
+    const play = document.getElementById("hookPlay");
+    const result = document.getElementById("hookResult");
+    if (hookI >= 2) {
+      play.hidden = true;
+      result.hidden = false;
+      document.getElementById("hookSumA").innerHTML = "<strong>情景一：票丢了</strong><br>会再买 " + hookVotes[0].yes + " 人，不再买 " + hookVotes[0].no + " 人。";
+      document.getElementById("hookSumB").innerHTML = "<strong>情景二：钱丢了</strong><br>会再买 " + hookVotes[1].yes + " 人，不再买 " + hookVotes[1].no + " 人。";
+      document.getElementById("hookHint").textContent = "两次少的钱一样多，决定却可能不一样。";
+      return;
+    }
+    play.hidden = false;
+    result.hidden = true;
+    const s = hookScenes[hookI];
+    document.getElementById("hookScene").innerHTML = "<strong>" + s.title + "</strong><br>" + s.text;
+    document.getElementById("yesCnt").textContent = hookVotes[hookI].yes;
+    document.getElementById("noCnt").textContent = hookVotes[hookI].no;
+    document.getElementById("hookNext").textContent = hookI === 0 ? "下一问" : "看这两问有什么不一样";
+    document.getElementById("hookHint").textContent = "请先听完情景，再举手。点按钮记下人数，点错了可以先清零。";
+  }
+  document.getElementById("voteYes").onclick = () => { hookVotes[hookI].yes++; renderHook(); };
+  document.getElementById("voteNo").onclick = () => { hookVotes[hookI].no++; renderHook(); };
+  document.getElementById("hookReset").onclick = () => { hookVotes[hookI] = {yes:0,no:0}; renderHook(); };
+  document.getElementById("hookNext").onclick = () => { hookI += 1; renderHook(); };
+  renderHook();
+
+  // ----- ultimatum -----
+  const uRows = [];
+  let uPick = null;
+  const offerPad = document.getElementById("offerPad");
+  for (let n = 0; n <= 10; n++) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = String(n);
+    b.onclick = () => { uPick = n; [...offerPad.children].forEach((x, i) => x.classList.toggle("on", i === n)); };
+    offerPad.appendChild(b);
+  }
+  function renderU() {
+    const log = document.getElementById("uLog");
+    log.innerHTML = "";
+    uRows.forEach((r) => {
+      const el = document.createElement("div");
+      el.className = "item";
+      el.innerHTML = "<span>分给对方 " + r.offer + "，自己留 " + (10 - r.offer) + "</span><span>" + (r.accept ? "接受" : "拒绝，两人都是 0") + "</span>";
+      log.appendChild(el);
+    });
+    const n = uRows.length;
+    document.getElementById("uN").textContent = n ? String(n) : "—";
+    if (!n) {
+      document.getElementById("uRej").textContent = "—";
+      document.getElementById("uAvg").textContent = "—";
+      document.getElementById("uHint").textContent = "还没有录入。先点分给对方的数量。";
+      return;
+    }
+    const rej = uRows.filter((r) => !r.accept).length;
+    const avg = uRows.reduce((a, r) => a + r.offer, 0) / n;
+    document.getElementById("uRej").textContent = String(rej);
+    document.getElementById("uAvg").textContent = (Number.isInteger(avg) ? String(avg) : avg.toFixed(1));
+    document.getElementById("uHint").textContent = "已录入 " + n + " 组。点错了可撤销上一条。";
+  }
+  function addU(accept) {
+    if (uPick === null) { document.getElementById("uHint").textContent = "请先点「分给对方几个」。"; return; }
+    uRows.push({ offer: uPick, accept: accept });
+    uPick = null;
+    [...offerPad.children].forEach((x) => x.classList.remove("on"));
+    renderU();
+  }
+  document.getElementById("uAccept").onclick = () => addU(true);
+  document.getElementById("uReject").onclick = () => addU(false);
+  document.getElementById("uUndo").onclick = () => { uRows.pop(); renderU(); };
+  function updateUInsight() {
+    const el = document.getElementById("uInsight");
+    const n = uRows.length;
+    if (!n) {
+      el.textContent = "如果只按「多一点是一点」来算，对方给 1 个代币也该接受，因为 1 比 0 多。可是太不公平的方案，常常有人宁愿自己也拿不到，也要拒绝。";
+      return;
+    }
+    const rej = uRows.filter((r) => !r.accept);
+    const avg = uRows.reduce((a, r) => a + r.offer, 0) / n;
+    let extra = "刚才全班 " + n + " 组，平均分给对方 " + (Number.isInteger(avg) ? avg : avg.toFixed(1)) + " 个代币";
+    if (rej.length) extra += "，有 " + rej.length + " 组被拒绝，被拒绝的方案里分给对方的是 " + rej.map((r) => r.offer).join("、");
+    else extra += "，这次没有人拒绝";
+    el.textContent = extra + "。如果只按「多一点是一点」来算，给 1 个也该接受；可是太不公平时，有人宁愿自己也拿不到，也要拒绝。";
+  }
+  renderU();
+
+  // ----- Schelling -----
+  const N = 18, EMPTY = 0.12;
+  const BLUE = "#2c6e9e", ORANGE = "#c65d1f";
+  let grid = [];
+  let playing = false;
+  let timer = null;
+  const svg = document.getElementById("board");
+  const thr = document.getElementById("thr");
+
+  function emptyList() {
+    const e = [];
+    for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) if (grid[r][c] === 0) e.push([r, c]);
+    return e;
+  }
+  function neighbors(r, c) {
+    const out = [];
+    for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++) {
+      if (!dr && !dc) continue;
+      const rr = r + dr, cc = c + dc;
+      if (rr >= 0 && rr < N && cc >= 0 && cc < N) out.push([rr, cc]);
+    }
+    return out;
+  }
+  function threshold() { return Number(thr.value) / 100; }
+  function happyAt(r, c, t) {
+    const typ = grid[r][c];
+    if (!typ) return true;
+    let same = 0, tot = 0;
+    neighbors(r, c).forEach(([rr, cc]) => {
+      if (grid[rr][cc]) { tot++; if (grid[rr][cc] === typ) same++; }
+    });
+    if (!tot) return true;
+    return same / tot + 1e-9 >= t;
+  }
+  function stats() {
+    const t = threshold();
+    let unhappy = 0, occupied = 0, segSum = 0, segN = 0;
+    for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+      if (!grid[r][c]) continue;
+      occupied++;
+      if (!happyAt(r, c, t)) unhappy++;
+      let same = 0, tot = 0;
+      neighbors(r, c).forEach(([rr, cc]) => {
+        if (grid[rr][cc]) { tot++; if (grid[rr][cc] === grid[r][c]) same++; }
+      });
+      if (tot) { segSum += same / tot; segN++; }
+    }
+    return { unhappy, occupied, seg: segN ? segSum / segN : 0 };
+  }
+  function shuffle() {
+    const cells = [];
+    for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) cells.push([r, c]);
+    for (let k = cells.length - 1; k > 0; k--) {
+      const j = Math.floor(Math.random() * (k + 1));
+      [cells[k], cells[j]] = [cells[j], cells[k]];
+    }
+    const emptyN = Math.round(N * N * EMPTY);
+    const rest = N * N - emptyN;
+    const n1 = Math.floor(rest / 2);
+    grid = Array.from({ length: N }, () => Array(N).fill(0));
+    cells.forEach((pos, idx) => {
+      if (idx < emptyN) return;
+      grid[pos[0]][pos[1]] = idx < emptyN + n1 ? 1 : 2;
+    });
+    renderBoard(false);
+  }
+  function stepOnce() {
+    const t = threshold();
+    const unhappy = [];
+    for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+      if (grid[r][c] && !happyAt(r, c, t)) unhappy.push([r, c]);
+    }
+    for (let k = unhappy.length - 1; k > 0; k--) {
+      const j = Math.floor(Math.random() * (k + 1));
+      [unhappy[k], unhappy[j]] = [unhappy[j], unhappy[k]];
+    }
+    const empties = emptyList();
+    let moved = 0;
+    unhappy.forEach(([r, c]) => {
+      if (!empties.length) return;
+      const j = Math.floor(Math.random() * empties.length);
+      const [er, ec] = empties[j];
+      grid[er][ec] = grid[r][c];
+      grid[r][c] = 0;
+      empties[j] = [r, c];
+      moved++;
+    });
+    renderBoard(true);
+    return moved;
+  }
+  function renderBoard() {
+    const pad = 2, size = 100 - pad * 2, cell = size / N, rad = cell * 0.36;
+    let html = "";
+    for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+      const x = pad + (c + 0.5) * cell;
+      const y = pad + (r + 0.5) * cell;
+      if (!grid[r][c]) {
+        html += `<circle cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="${(rad * 0.22).toFixed(2)}" fill="#e8e2d6" />`;
+      } else {
+        html += `<circle cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="${rad.toFixed(2)}" fill="${grid[r][c] === 1 ? BLUE : ORANGE}" />`;
+      }
+    }
+    svg.innerHTML = html;
+    const s = stats();
+    document.getElementById("mUnhappy").textContent = s.occupied ? s.unhappy + " / " + s.occupied : "—";
+    document.getElementById("mSeg").textContent = s.occupied ? Math.round(s.seg * 100) + "%" : "—";
+    if (playing && s.unhappy === 0) togglePlay(false);
+  }
+  function resizeBoard() { /* svg scales via viewBox */ }
+  function togglePlay(force) {
+    if (typeof force === "boolean") playing = force;
+    else playing = !playing;
+    document.getElementById("btnPlay").textContent = playing ? "暂停" : "自动播放";
+    if (timer) { clearInterval(timer); timer = null; }
+    if (playing) timer = setInterval(() => { if (!stepOnce()) togglePlay(false); }, 280);
+  }
+  thr.addEventListener("input", () => {
+    document.getElementById("thrVal").textContent = thr.value + "%";
+    renderBoard();
+  });
+  document.getElementById("btnPlay").onclick = () => togglePlay();
+  document.getElementById("btnStep").onclick = () => { togglePlay(false); stepOnce(); };
+  document.getElementById("btnShuffle").onclick = () => { togglePlay(false); shuffle(); };
+
+  shuffle();
+  const startHash = location.hash.replace(/^#/, "");
+  const start = slides.findIndex((s) => s.dataset.id === startHash);
+  show(start >= 0 ? start : 0);
+})();
+</script>
+</body>
+</html>
