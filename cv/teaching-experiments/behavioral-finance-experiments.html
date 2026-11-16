@@ -270,7 +270,7 @@
   #chart-wrap { background: var(--paper); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; padding: 14px; min-height: 0; }
   #marketChart { width: 100%; height: 100%; min-height: 310px; }
   .controls { display: flex; flex-direction: column; gap: 9px; text-align: left; }
-  .metric-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .metric-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
   .metric { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 9px 14px; }
   .metric .lab { font-size: 15px; color: var(--muted); }
   .metric .val { font-size: 26px; font-weight: 800; }
@@ -868,6 +868,7 @@
         <div class="metric-row">
           <div class="metric"><div class="lab">市场出清价</div><div class="val" id="mPrice">100.0</div></div>
           <div class="metric"><div class="lab">偏离基本面</div><div class="val" id="mDev">0.0%</div></div>
+          <div class="metric"><div class="lab">近 10 步平均波动</div><div class="val" id="mVol">—</div></div>
         </div>
         <div class="slider-box">
           <div class="slider-head"><span>实验一：高阶信念主体权重（选美预期）</span><strong id="vTrend">35%</strong></div>
@@ -877,9 +878,14 @@
           <div class="slider-head"><span>实验二：处置效应主体权重（参考点锚定）</span><strong id="vLoss">35%</strong></div>
           <input type="range" id="sLoss" min="0" max="80" step="5" value="35">
         </div>
+        <div class="slider-box" style="background:#e8f6f1;border-color:#b7e0d2;">
+          <div class="slider-head"><span>基本面套利主体权重（= 100% − 前两类）</span><strong id="vArb">30%</strong></div>
+          <div style="height:10px;margin:6px 0 4px;background:#d4e9e1;border-radius:99px;overflow:hidden;"><div id="arbBar" style="height:100%;width:30%;background:var(--accent);transition:width .2s;"></div></div>
+        </div>
         <div class="slider-box">
-          <div class="slider-head"><span>实验三：过度自信信号放大强度</span><strong id="vNoise">4.0</strong></div>
-          <input type="range" id="sNoise" min="1" max="10" step="1" value="4">
+          <div class="slider-head"><span>实验三：过度自信倍数 k（= 90% ÷ 实测命中率）</span><strong id="vNoise">2.0×</strong></div>
+          <input type="range" id="sNoise" min="1" max="4" step="0.1" value="2">
+          <div class="hint" id="kHint" style="font-size:15px;margin-top:2px;">k = 1 为校准良好；k 越大，区间越窄、交易扰动越大</div>
         </div>
         <div class="ctrl-btns">
           <button type="button" id="simPlay">自动演化</button>
@@ -1128,7 +1134,7 @@
     const winners = [...new Set(nums.filter((x) => Math.abs(x - target) - best < 1e-9))].sort((a, b) => a - b);
     document.getElementById("stAvg").textContent = fmt(avg);
     document.getElementById("stTarget").textContent = fmt(target);
-    document.getElementById("stWin").textContent = winners.join("、") + "（距纳什均衡 0 偏离 " + fmt(target) + "）";
+    document.getElementById("stWin").textContent = winners.join("、") + "（距目标 " + fmt(best) + "，纳什均衡为 0）";
     document.body.classList.add("is-revealed");
   }
   document.getElementById("btnAdd").onclick = () => {
@@ -1196,6 +1202,7 @@
     let tot = 0, hits = 0;
     ocCounts.forEach((c, k) => { document.getElementById("ocK" + k).textContent = c; tot += c; hits += c * k; });
     const rate = tot ? (hits / (tot * 4)) * 100 : 0;
+    if (document.getElementById("kHint") && typeof updateKHint === "function") updateKHint();
     document.getElementById("ocBar").setAttribute("width", (5.6 * rate).toFixed(1));
     document.getElementById("ocPct").textContent = tot ? rate.toFixed(1) + "%" : "0%";
   }
@@ -1207,14 +1214,26 @@
   // ----- 5. 实验四：严格对应前三项实验的 ABM 市场出清模型 -----
   const sTrend = document.getElementById("sTrend"); // 实验一：高阶信念（选美预期）主体权重
   const sLoss = document.getElementById("sLoss");   // 实验二：前景理论（处置效应）主体权重
-  const sNoise = document.getElementById("sNoise"); // 实验三：过度自信私有信号放大强度
+  const sNoise = document.getElementById("sNoise"); // 实验三：过度自信倍数 k = 90% ÷ 实测命中率
   let prices = [100], refPrice = 100, beliefAnchor = 112, simTimer = null, simPlaying = false;
+  // 固定随机种子：同一参数下每次演示路径一致
+  const SIM_SEED = 20261116;
+  function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  let simRng = mulberry32(SIM_SEED);
+  const resetRng = () => { simRng = mulberry32(SIM_SEED); };
+  // 权重归一：高阶信念 + 处置效应 ≤ 90%，余量为基本面套利主体
+  const BEHAVIOR_CAP = 90;
+  function balanceWeights(moved, other) {
+    const over = Number(sTrend.value) + Number(sLoss.value) - BEHAVIOR_CAP;
+    if (over > 0) other.value = Math.max(0, Number(other.value) - over);
+    if (Number(moved.value) + Number(other.value) > BEHAVIOR_CAP) moved.value = BEHAVIOR_CAP - Number(other.value);
+  }
 
   function stepMarket(shock = 0) {
     const bW = Number(sTrend.value) / 100; // 高阶信念权重
     const dW = Number(sLoss.value) / 100;  // 处置效应权重
-    const rW = Math.max(0.08, 1 - Math.min(0.92, bW * 0.7 + dW * 0.5)); // 基本面套利权重
-    const oc = Number(sNoise.value);       // 过度自信放大系数
+    const rW = 1 - bW - dW;                 // 基本面套利权重（三类主体权重合计 100%）
+    const oc = Number(sNoise.value);       // 过度自信倍数 k（k = 1 为校准良好）
     const p = prices[prices.length - 1];
 
     // 1. 实验一机制：群体高阶信念共识锚（Level-k 猜测他人预期，脱离 V=100 自我强化，遇冲击时共识坍塌）
@@ -1230,7 +1249,7 @@
     else dispDemand = -dW * 4.2; // 击穿承受底线引发被动连锁平仓
 
     // 3. 实验三机制：过度自信高估私有信号精度，放大短期交易扰动
-    const ocShock = (Math.random() - 0.5) * oc * 1.9;
+    const ocShock = (simRng() - 0.5) * oc * 3.8; // 每步随机扰动 ±1.9k
 
     // 4. 有效市场基准力量：基本面套利者围绕 V=100 反向修正
     const arbDemand = rW * 0.34 * (100 - p);
@@ -1243,7 +1262,11 @@
   function renderChart() {
     document.getElementById("vTrend").textContent = sTrend.value + "%";
     document.getElementById("vLoss").textContent = sLoss.value + "%";
-    document.getElementById("vNoise").textContent = sNoise.value + ".0";
+    document.getElementById("vNoise").textContent = Number(sNoise.value).toFixed(1) + "×";
+    updateKHint();
+    const arbPct = 100 - Number(sTrend.value) - Number(sLoss.value);
+    document.getElementById("vArb").textContent = arbPct + "%";
+    document.getElementById("arbBar").style.width = arbPct + "%";
     const svg = document.getElementById("marketChart");
     const W = 800, H = 420, padL = 55, padR = 20, padT = 20, padB = 30, minY = 30, maxY = 210;
     const mapX = (idx) => padL + (idx / Math.max(1, prices.length - 1)) * (W - padL - padR);
@@ -1262,6 +1285,9 @@
     document.getElementById("mPrice").textContent = last.toFixed(1);
     const dev = ((last - 100) / 100) * 100;
     document.getElementById("mDev").textContent = (dev >= 0 ? "+" : "") + dev.toFixed(1) + "%";
+    const recent = prices.slice(-11);
+    const vol = recent.length > 1 ? recent.slice(1).reduce((a, x, i) => a + Math.abs(x - recent[i]), 0) / (recent.length - 1) : null;
+    document.getElementById("mVol").textContent = vol === null ? "—" : vol.toFixed(1);
     document.getElementById("simRound").textContent = "第 " + (prices.length - 1) + " 轮";
   }
 
@@ -1271,7 +1297,17 @@
     if (simTimer) { clearInterval(simTimer); simTimer = null; }
     if (simPlaying) simTimer = setInterval(() => stepMarket(0), 320);
   }
-  sTrend.oninput = renderChart; sLoss.oninput = renderChart; sNoise.oninput = renderChart;
+  sTrend.oninput = () => { balanceWeights(sTrend, sLoss); renderChart(); };
+  sLoss.oninput = () => { balanceWeights(sLoss, sTrend); renderChart(); };
+  sNoise.oninput = renderChart;
+  function updateKHint() {
+    let tot = 0, hits = 0;
+    ocCounts.forEach((c, k) => { tot += c; hits += c * k; });
+    const rate = tot ? hits / (tot * 4) * 100 : 0;
+    document.getElementById("kHint").textContent = rate > 0
+      ? "k = 1 为校准良好；本班实测：90% ÷ " + rate.toFixed(1) + "% ≈ " + (90 / rate).toFixed(2)
+      : "k = 1 为校准良好；k 越大，区间越窄、交易扰动越大";
+  }
   document.getElementById("simPlay").onclick = () => toggleSimPlay();
   document.getElementById("simStep").onclick = () => { toggleSimPlay(false); stepMarket(0); };
   const simGuide = document.getElementById("simGuide");
@@ -1295,25 +1331,25 @@
       "选美高阶信念预期骤降，价格击穿处置效应主体的<strong>亏损承受底线</strong>，惜售盘集中转为被动平仓，引发剧烈下跌。");
   };
   document.getElementById("simReset").onclick = () => {
-    toggleSimPlay(false); prices = [100]; refPrice = 100; beliefAnchor = 112; renderChart();
+    toggleSimPlay(false); resetRng(); prices = [100]; refPrice = 100; beliefAnchor = 112; renderChart();
     resetGuide();
   };
   document.getElementById("simPresetEMH").onclick = () => {
     toggleSimPlay(false);
-    sTrend.value = 10; sLoss.value = 10; sNoise.value = 2;
-    prices = [100]; refPrice = 100; beliefAnchor = 104;
+    sTrend.value = 10; sLoss.value = 10; sNoise.value = 1;
+    resetRng(); prices = [100]; refPrice = 100; beliefAnchor = 104;
     for (let k = 0; k < 20; k++) stepMarket(0);
     setGuide("var(--accent-2)", "#e8f6f1", "场景 A", "基本面套利主导（有效市场基准）",
-      "三类行为偏差降至低位，套利资金迅速抵消随机扰动，市场出清价格始终紧贴内在价值 <strong>V=100</strong> 平稳收敛。");
+      "三类行为偏差降至低位（过度自信 k = 1，校准良好），套利资金迅速抵消随机扰动，市场出清价格始终紧贴内在价值 <strong>V=100</strong> 平稳收敛。");
     toggleSimPlay(true);
   };
   document.getElementById("simPresetBeh").onclick = () => {
     toggleSimPlay(false);
-    sTrend.value = 65; sLoss.value = 50; sNoise.value = 6;
-    prices = [100]; refPrice = 100; beliefAnchor = 128;
+    sTrend.value = 55; sLoss.value = 35; sNoise.value = 2;
+    resetRng(); prices = [100]; refPrice = 100; beliefAnchor = 128;
     for (let k = 0; k < 12; k++) stepMarket(0);
     setGuide("var(--orange)", "#fff8f2", "场景 B", "三类行为偏差共同作用（内生泡沫）",
-      "高阶信念（65%）推高共识预期，叠加处置效应与过度自信，受限套利失效，价格显著脱离 <strong>V=100</strong> 演化出泡沫。");
+      "高阶信念（55%）推高共识预期，叠加处置效应（35%）与过度自信（k = 2，本班实测），套利仅余 10%，价格显著脱离 <strong>V=100</strong> 演化出泡沫。");
     toggleSimPlay(true);
   };
 
@@ -1332,7 +1368,7 @@
       Object.keys(ocAnswers).forEach((k) => { document.getElementById("ocAns" + k).textContent = ocAnswers[k]; });
       [5, 14, 16, 7, 3].forEach((c, idx) => { ocCounts[idx] = c; });
       renderOC();
-      sTrend.value = 55; sLoss.value = 40; sNoise.value = 5;
+      sTrend.value = 55; sLoss.value = 35; sNoise.value = 2; resetRng();
       refPrice = 115; beliefAnchor = 126;
       prices = [100, 102.4, 105.8, 111.2, 118.5, 127.0, 134.6, 141.2, 136.5, 128.0, 116.4, 103.2, 92.5, 84.0, 79.5];
       renderChart();
@@ -1344,7 +1380,7 @@
       ptVotes[0] = { a: 0, b: 0 }; ptVotes[1] = { a: 0, b: 0 }; renderPT();
       Object.keys(ocAnswers).forEach((k) => { document.getElementById("ocAns" + k).textContent = "待揭晓"; });
       for (let k = 0; k < 5; k++) ocCounts[k] = 0; renderOC();
-      toggleSimPlay(false); sTrend.value = 35; sLoss.value = 35; sNoise.value = 4; prices = [100]; refPrice = 100; beliefAnchor = 112; renderChart();
+      toggleSimPlay(false); resetRng(); sTrend.value = 35; sLoss.value = 35; sNoise.value = 2; prices = [100]; refPrice = 100; beliefAnchor = 112; renderChart();
       demoLoaded = false;
       document.getElementById("btnDemo").textContent = "评委演示";
     }
