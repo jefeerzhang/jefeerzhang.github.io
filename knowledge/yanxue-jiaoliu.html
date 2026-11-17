@@ -280,6 +280,66 @@
   }
   .road .num { color: var(--accent); font-weight: 700; font-size: 34px; }
   .road h3 { font-size: 45px; margin: 4px 0 8px; }
+  /* 第 6 页开场钩子：左对齐版式 */
+  .hook-slide {
+    text-align: left;
+    justify-content: flex-start;
+    padding: 26px 64px 92px;
+    overflow-y: auto;
+  }
+  .hook-slide h2 { font-size: 52px; margin-bottom: 14px; }
+  .hook-bridge {
+    display: flex;
+    align-items: stretch;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .hook-bridge-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 12px 20px;
+    box-shadow: var(--shadow);
+  }
+  .hook-bridge-item.hot { background: #fdecec; border-color: #f0c3bf; }
+  .hook-bridge-tag { font-size: 20px; font-weight: 700; color: var(--muted); }
+  .hook-bridge-item.hot .hook-bridge-tag { color: var(--bad); }
+  .hook-bridge-text { font-size: 28px; font-weight: 700; color: var(--ink); }
+  .hook-bridge-item.hot .hook-bridge-text { color: var(--bad); }
+  .hook-bridge-arrow { align-self: center; font-size: 34px; color: var(--muted); }
+  .hook-note { flex: 1 0 100%; font-size: 26px; color: var(--muted); line-height: 1.4; }
+  .hook-note strong { color: var(--accent-2); }
+  .hook-play { display: flex; flex-direction: column; gap: 12px; }
+  .hook-slide .hook-scene {
+    font-size: 38px;
+    line-height: 1.5;
+    padding: 18px 26px;
+    margin-bottom: 0;
+    text-align: left;
+  }
+  .hook-scene .scene-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 23px;
+    font-weight: 700;
+    padding: 4px 15px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .hook-slide .hook-votes { justify-content: flex-start; margin: 0; gap: 18px; }
+  .hook-slide .hook-votes .vote { min-width: 240px; font-size: 34px; padding: 12px 20px; }
+  .hook-slide .hook-votes .vote .cnt { font-size: 52px; }
+  .hook-slide .hook-actions { justify-content: flex-start; margin-top: 0; }
+  .hook-slide .hook-hint { font-size: 28px; margin-top: 10px; }
+  .hook-slide [hidden] { display: none !important; }
+  .hook-slide .hook-sum { font-size: 32px; text-align: left; line-height: 1.45; }
+  .hook-slide .hook-result-note { font-size: 32px; line-height: 1.5; margin-top: 18px; }
+
   .road p { font-size: 38px; color: var(--muted); line-height: 1.45; }
 
   .scenario {
@@ -370,15 +430,15 @@
     background: var(--paper);
     border: 1px solid var(--line);
     border-radius: 22px;
-    padding: 22px 26px;
+    padding: 20px 24px;
     box-shadow: var(--shadow);
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 10px;
     min-height: 0;
   }
   .econ-q {
-    font-size: 27px;
+    font-size: 25px;
     line-height: 1.48;
     color: var(--ink);
   }
@@ -386,7 +446,7 @@
   .econ-votes {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
   }
   .econ-vbtn {
     position: relative;
@@ -401,8 +461,8 @@
     color: var(--ink);
     border: 2px solid var(--line);
     border-radius: 16px;
-    padding: 13px 18px;
-    font-size: 25px;
+    padding: 11px 16px;
+    font-size: 23px;
     font-weight: 600;
     transition: border-color .15s, transform .12s;
   }
@@ -421,9 +481,9 @@
   .econ-vbtn .vnum {
     position: relative; z-index: 1;
     display: flex; align-items: baseline; gap: 8px; white-space: nowrap;
-    font-size: 30px; font-weight: 800; color: var(--accent-2);
+    font-size: 28px; font-weight: 800; color: var(--accent-2);
   }
-  .econ-vbtn .vpct { font-size: 20px; color: var(--muted); font-weight: 600; }
+  .econ-vbtn .vpct { font-size: 19px; color: var(--muted); font-weight: 600; }
   .econ-actions {
     display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
   }
@@ -441,6 +501,85 @@
     color: var(--ink);
   }
   .econ-takeaway strong { color: var(--accent-2); }
+  /* 第 1 问金句：放大加醒目 */
+  .econ-lead {
+    background: #fdf4e3;
+    border-left: 8px solid var(--accent);
+    padding: 10px 20px 12px;
+    border-radius: 16px;
+  }
+  .econ-lead-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 6px;
+  }
+  .econ-lead-tag {
+    flex: none;
+    background: var(--accent);
+    color: #fff;
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: .06em;
+    padding: 5px 16px;
+    border-radius: 999px;
+  }
+  .econ-lead-title {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--accent-2);
+    letter-spacing: .04em;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+  .econ-lead-slogan {
+    font-size: 29px;
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1.3;
+    margin: 0 0 8px;
+    padding: 0 4px;
+    background: linear-gradient(transparent 58%, #fde68a 58%);
+    display: inline-block;
+  }
+  .econ-lead-text {
+    font-size: 23px;
+    line-height: 1.45;
+    color: var(--ink);
+    margin: 0;
+  }
+  .econ-lead-text strong { color: var(--accent-2); }
+  /* 第 4 问结论与过渡：蓝色系 */
+  .econ-lead-blue {
+    background: #eef5fb;
+    border-left-color: var(--blue);
+    padding: 10px 20px 12px;
+  }
+  .econ-lead-blue .econ-lead-tag { background: var(--blue); }
+  .econ-lead-blue .econ-lead-title { color: #1d4e79; font-size: 38px; }
+  .econ-lead-blue .econ-lead-slogan {
+    font-size: 28px;
+    background: linear-gradient(transparent 58%, #bfdbfe 58%);
+    margin-bottom: 8px;
+  }
+  .econ-lead-blue .econ-lead-text { font-size: 24px; }
+  .econ-lead-blue .econ-lead-text strong { color: #1d4e79; }
+  .econ-lead-blue .next-label { color: var(--blue); font-weight: 700; }
+  /* 第 2 问真实实验结果：突出「现实」 */
+  .econ-lead-real {
+    background: #fdf1e7;
+    border-left-color: var(--orange);
+    padding: 11px 20px 13px;
+  }
+  .econ-lead-real .econ-lead-tag { background: var(--orange); font-size: 19px; padding: 4px 14px; }
+  .econ-lead-real .econ-lead-title { color: #9a4312; font-size: 32px; }
+  .econ-lead-real .econ-lead-slogan {
+    font-size: 26px;
+    background: linear-gradient(transparent 58%, #fed7aa 58%);
+    margin-bottom: 6px;
+  }
+  .econ-lead-real .econ-lead-text { font-size: 21px; line-height: 1.5; }
+  .econ-lead-real .econ-lead-text strong { color: #9a4312; }
   .econ-svg-box {
     background: #fff;
     border: 1px solid var(--line);
@@ -755,8 +894,13 @@
           <button class="secondary" type="button" id="scaReset">投票清零</button>
           <button class="secondary" type="button" id="scaDemo">演示天平：换一个选择</button>
         </div>
-        <div class="econ-takeaway" id="scaNote">
-          <strong>经济学第一课：</strong>天下没有免费的午餐。无论选哪一项，真正付出的代价不只是 50 元，而是<strong>放弃的选项里你最喜欢的那个</strong>——这叫<strong>机会成本</strong>。
+        <div class="econ-takeaway econ-lead" id="scaNote">
+          <div class="econ-lead-head">
+            <span class="econ-lead-tag">第 1 课</span>
+            <span class="econ-lead-title">经济学第一课</span>
+          </div>
+          <p class="econ-lead-slogan">天下没有免费的午餐。</p>
+          <p class="econ-lead-text">无论选哪一项，真正付出的代价不只是 50 元，而是<strong>放弃的选项里你最喜欢的那个</strong>——这叫<strong>机会成本</strong>。</p>
         </div>
       </div>
 
@@ -862,9 +1006,7 @@
           <button class="secondary" type="button" id="incReset">清零</button>
           <button type="button" id="incReveal">揭晓真实实验结果</button>
         </div>
-        <div class="econ-takeaway" id="incNote">
-          先让学生凭直觉投票，再点<strong>「揭晓真实实验结果」</strong>，看右侧两幅动图发生了什么。
-        </div>
+        <div class="econ-takeaway econ-lead econ-lead-real" id="incNote" style="display:none;"></div>
       </div>
 
       <div class="econ-svg-box">
@@ -1052,9 +1194,13 @@
           <button type="button" id="colPlay">推演全场连锁反应</button>
           <button class="secondary" type="button" id="colSit">全部坐下</button>
         </div>
-        <div class="econ-takeaway" id="colNote">
-          <strong>个体聪明 ≠ 集体更好：</strong>个人选择合在一起，结果可能完全出乎意料。<br>
-          <span style="color:var(--blue);font-weight:700;">接下来：</span>如果人连自己算账也经常「不理性」呢？这正是<strong>行为经济学</strong>的研究对象——下面用<strong>四个现场实验</strong>亲自测一测！
+        <div class="econ-takeaway econ-lead econ-lead-blue" id="colNote">
+          <div class="econ-lead-head">
+            <span class="econ-lead-tag">集体层面</span>
+            <span class="econ-lead-title">个体聪明 ≠ 集体更好</span>
+          </div>
+          <p class="econ-lead-slogan">个人选择合在一起，结果可能完全出乎意料。</p>
+          <p class="econ-lead-text"><span class="next-label">接下来：</span>如果人连自己算账也经常「不理性」呢？这正是<strong>行为经济学</strong>的研究对象——下面用<strong>四个现场实验</strong>亲自测一测！</p>
         </div>
       </div>
 
@@ -1097,28 +1243,39 @@
     </div>
   </section>
 
-  <section class="slide" data-id="hook">
+  <section class="slide hook-slide" data-id="hook">
     <h2>人做决定时，真的「理性」吗？</h2>
-    <p class="body" style="font-size:36px;color:var(--muted);line-height:1.45;margin-bottom:14px;">前面四问说的都是教科书上「会算账的理性人」：权衡取舍、对激励反应、被价格协调。可心理学家和经济学家发现，<strong style="color:var(--bad);">真实的人做决定时常常不是这么算的</strong>——这就是「行为经济学」要研究的。先拿一个日常问题测测你自己：</p>
-    <div id="hookPlay">
-      <div class="scenario" id="hookScene"></div>
-      <div class="votes">
+    <div class="hook-bridge">
+      <div class="hook-bridge-item">
+        <span class="hook-bridge-tag">教科书里的「理性人」</span>
+        <span class="hook-bridge-text">权衡取舍 · 对激励反应 · 被价格协调</span>
+      </div>
+      <span class="hook-bridge-arrow">→</span>
+      <div class="hook-bridge-item hot">
+        <span class="hook-bridge-tag">真实的人</span>
+        <span class="hook-bridge-text">常常不是这么算的</span>
+      </div>
+      <p class="hook-note">这正是「<strong>行为经济学</strong>」要研究的。先拿一个日常问题测测你自己：</p>
+    </div>
+    <div id="hookPlay" class="hook-play">
+      <div class="scenario hook-scene" id="hookScene"></div>
+      <div class="votes hook-votes">
         <button type="button" class="vote" id="voteYes"><span>会再买</span><span class="cnt" id="yesCnt">0</span></button>
         <button type="button" class="vote" id="voteNo"><span>不再买</span><span class="cnt" id="noCnt">0</span></button>
       </div>
-      <div class="actions">
+      <div class="actions hook-actions">
         <button class="secondary" type="button" id="hookReset">人数清零</button>
         <button type="button" id="hookNext">下一问</button>
       </div>
     </div>
     <div id="hookResult" hidden>
       <div class="compare2">
-        <div class="scenario" id="hookSumA"></div>
-        <div class="scenario" id="hookSumB"></div>
+        <div class="scenario hook-sum" id="hookSumA"></div>
+        <div class="scenario hook-sum" id="hookSumB"></div>
       </div>
-      <p class="body" style="margin-top:22px;">两次都是少了 40 元，然后还要决定要不要看电影。钱一样多，很多人的感受却不一样。</p>
+      <p class="body hook-result-note">两次都是少了 40 元，然后还要决定要不要看电影。钱一样多，很多人的感受却不一样。</p>
     </div>
-    <p class="hint" id="hookHint" style="margin-top:14px;font-size:34px;">请先听完情景，再举手。我在屏幕上记下人数。</p>
+    <p class="hint hook-hint" id="hookHint" style="margin-top:14px;font-size:34px;">请先听完情景，再举手。我在屏幕上记下人数。</p>
   </section>
 
   <section class="slide" data-id="what-is">
@@ -1707,7 +1864,7 @@
     play.hidden = false;
     result.hidden = true;
     const s = hookScenes[hookI];
-    document.getElementById("hookScene").innerHTML = "<strong>" + s.title + "</strong><br>" + s.text;
+    document.getElementById("hookScene").innerHTML = "<span class=\"scene-tag\">" + s.title + "</span><br>" + s.text;
     document.getElementById("yesCnt").textContent = hookVotes[hookI].yes;
     document.getElementById("noCnt").textContent = hookVotes[hookI].no;
     document.getElementById("hookNext").textContent = hookI === 0 ? "下一问" : "看这两问有什么不一样";
@@ -1996,9 +2153,16 @@
     document.getElementById("incLine").style.strokeDashoffset = on ? "0" : "620";
     document.getElementById("incLineTip").style.display = on ? "none" : "block";
     document.getElementById("incBadge").textContent = on ? "真实结果：罚款反而让迟到翻倍" : "先投票，再揭晓";
-    document.getElementById("incNote").innerHTML = on
-      ? "<strong>真实实验结果：</strong>开始罚款后迟到<strong>直接翻倍</strong>；第 17 周取消罚款，迟到也没降回去！因为 10 元把「道德内疚」换成了「花钱买服务」。"
-      : "先让学生凭直觉投票，再点<strong>「揭晓真实实验结果」</strong>，看右侧两幅动图发生了什么。";
+    const incNote = document.getElementById("incNote");
+    incNote.style.display = on ? "block" : "none";
+    incNote.innerHTML = on
+      ? '<div class="econ-lead-head">'
+        + '<span class="econ-lead-tag">真实实验</span>'
+        + '<span class="econ-lead-title">罚款让迟到直接翻倍</span>'
+        + '</div>'
+        + '<p class="econ-lead-slogan">现实里，一条规则改一下，人的行为就跟着变。</p>'
+        + '<p class="econ-lead-text">10 所幼儿园、20 周的真实记录：第 5 周开始罚款，迟到人数<strong>直接翻倍</strong>；第 17 周取消罚款，迟到也<strong>没降回去</strong>——10 元把「道德内疚」换成了<strong>「花钱买服务」</strong>。</p>'
+      : "";
   }
   document.getElementById("incReveal").onclick = () => setIncRevealed(true);
   document.getElementById("incReset").onclick = () => { incVote.reset(); setIncRevealed(false); };

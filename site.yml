@@ -188,10 +188,10 @@ sections:
         status: live
       - id: yanxue-jiaoliu
         path: /knowledge/yanxue-jiaoliu.html
-        title: 行为经济学互动讲义
-        summary: 猜数字、翻卡片、最后通牒、分流四个实验的投影讲义,现场可以投票、记分和调参数。
+        title: 经济学是做什么的 · 行为经济学互动讲义
+        summary: 稀缺、激励、价格协调、个体与集体四问动画导论,再接猜数字、翻卡片、分代币、棋盘搬家四个现场实验,全程投票互动。
         tag: 研学交流
-        meta: 4 个实验 · 15 页 · 课堂 → 互动
+        meta: 4 问导论 + 4 个实验 · 19 页 · 课堂互动
         shell: none
         status: live
 
