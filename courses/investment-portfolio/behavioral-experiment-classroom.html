@@ -1,0 +1,2123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>《投资学原理》行为投资课堂实验教学 — 张剑</title>
+<style>
+  :root {
+    --bg: #f6f3ec;
+    --bg-grad: radial-gradient(circle at 12% 14%, rgba(15, 110, 86, 0.08), transparent 42%),
+               radial-gradient(circle at 88% 82%, rgba(29, 93, 143, 0.09), transparent 45%);
+    --ink: #18181b;
+    --muted: #52525b;
+    --paper: #ffffff;
+    --paper-soft: #faf8f4;
+    --line: #d7cfbe;
+    --line-soft: #e8e2d6;
+    --accent: #0f6e56;
+    --accent-2: #0a4d3c;
+    --blue: #1d5d8f;
+    --blue-soft: #eef5fb;
+    --orange: #c2571a;
+    --bad: #b42318;
+    --neutral: #8b8375;
+    --shadow: 0 2px 4px rgba(24, 24, 27, 0.05), 0 10px 24px rgba(24, 24, 27, 0.07);
+    --shadow-sm: 0 1px 2px rgba(24, 24, 27, 0.05), 0 4px 12px rgba(24, 24, 27, 0.06);
+    --canvas-w: 1600px;
+    --canvas-h: 900px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    background-image: var(--bg-grad);
+    color: var(--ink);
+    font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+    overflow: hidden;
+  }
+  #app { height: 100%; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+  .stage {
+    position: relative;
+    width: var(--canvas-w);
+    height: var(--canvas-h);
+    flex: 0 0 auto;
+    transform-origin: center center;
+    overflow: hidden;
+  }
+  .slides { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+  body.demo-mode::before {
+    content: "评委演示 · 预设样本，非课堂实测";
+    position: absolute; top: 8px; left: 50%; transform: translateX(-50%); z-index: 100;
+    padding: 3px 14px; border: 1px solid #f2c89c; border-radius: 999px;
+    background: #fff8f2; color: #9a4615; font-size: 16px; font-weight: 700;
+    pointer-events: none;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    padding: 20px 44px 26px;
+  }
+  .slide.on { display: flex; animation: fadeIn .2s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes liveBlink {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.38); opacity: .55; }
+  }
+  @keyframes popDot {
+    0% { opacity: 0; transform: scale(0.25) translateY(-8px); }
+    70% { opacity: 1; transform: scale(1.1) translateY(0); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @keyframes growBarY {
+    from { transform: scaleY(0); }
+    to { transform: scaleY(1); }
+  }
+  @keyframes drawCurve {
+    from { stroke-dashoffset: 460; }
+    to { stroke-dashoffset: 0; }
+  }
+  .flow-line { stroke-dasharray: 8 6; }
+  .flow-line-rev { stroke-dasharray: 8 6; }
+  .hub-glow { }
+  .slide.on .draw-curve {
+    stroke-dasharray: 460;
+    animation: drawCurve 1s cubic-bezier(.22, .8, .26, 1) both;
+  }
+  .slide.on .grow-bar {
+    transform-box: fill-box;
+    transform-origin: center bottom;
+    animation: growBarY .7s cubic-bezier(.2, .85, .25, 1) both;
+  }
+  .pop-dot {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: popDot .45s cubic-bezier(.2, .85, .28, 1) both;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .part-badge i, .slide.on .draw-curve, .slide.on .grow-bar, .pop-dot { animation: none !important; }
+  }
+
+  .head-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+  .part-badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: #e8f6f1; color: var(--accent-2);
+    border: 1px solid #b7e0d2; border-radius: 999px;
+    padding: 4px 13px; font-size: 16px; font-weight: 700;
+    white-space: nowrap;
+  }
+  .part-badge.wait { background: var(--paper-soft); color: var(--muted); border-color: var(--line); }
+  .part-badge i {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+    display: inline-block; animation: liveBlink 1.8s ease-in-out infinite;
+  }
+  .part-badge.wait i { background: #a1a1aa; animation: none; }
+
+  .slide-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+    flex: 0 0 auto;
+  }
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(15, 110, 86, 0.1);
+    color: var(--accent-2);
+    font-size: 18px; font-weight: 700; letter-spacing: .04em;
+    padding: 5px 14px; border-radius: 999px;
+    white-space: nowrap;
+  }
+  .pill.blue { background: var(--blue-soft); color: var(--blue); }
+  .slide-sub-tag { font-size: 17px; color: var(--muted); font-weight: 500; }
+
+  h1 { font-size: 58px; font-weight: 800; letter-spacing: -.01em; line-height: 1.16; color: var(--ink); }
+  h2 { font-size: 42px; font-weight: 700; line-height: 1.22; margin-bottom: 14px; color: var(--ink); text-align: left; }
+  .lead { font-size: 26px; line-height: 1.45; color: var(--muted); }
+  .body { font-size: 24px; line-height: 1.45; color: var(--ink); }
+
+  /* 封面双栏 */
+  .cover-grid {
+    display: grid;
+    grid-template-columns: 1.24fr 0.76fr;
+    gap: 24px;
+    align-items: stretch;
+    height: 100%;
+  }
+  .cover-left {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--accent);
+    border-radius: 24px;
+    padding: 30px 34px;
+    box-shadow: var(--shadow);
+    display: flex; flex-direction: column; gap: 16px;
+    text-align: left;
+  }
+  .cover-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    padding: 6px 16px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  .cover-title-sub { margin-top: 12px; font-size: 22px; color: var(--muted); font-weight: 500; }
+  .agent-highlights { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0; }
+  .ah-card {
+    background: var(--blue-soft);
+    border: 1px solid #c9dff0;
+    border-left: 4px solid var(--blue);
+    border-radius: 14px;
+    padding: 12px 14px;
+  }
+  .ah-card .ah-num { font-size: 16px; font-weight: 800; color: var(--blue); letter-spacing: .05em; }
+  .ah-card h4 { font-size: 21px; font-weight: 700; color: var(--ink); margin: 3px 0; }
+  .ah-card p { font-size: 17px; color: var(--muted); line-height: 1.4; }
+
+  .author-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 14px; border-top: 1px solid var(--line);
+    margin-top: auto;
+  }
+  .author-name { font-size: 25px; font-weight: 700; color: var(--ink); }
+
+  .cover-right {
+    background: linear-gradient(160deg, #0d4b3c 0%, #143d59 100%);
+    border-radius: 24px;
+    padding: 22px 24px;
+    color: #fff;
+    box-shadow: var(--shadow);
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .cover-right-head { font-size: 18px; font-weight: 700; letter-spacing: .08em; color: #a7f3d0; }
+  .cover-right-foot {
+    background: rgba(255,255,255,0.09);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 12px;
+    padding: 11px 14px;
+    font-size: 17px; line-height: 1.45; color: #e4e4e7; text-align: left;
+  }
+
+  /* 课程全局坐标条 */
+  .course-chain {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 12px;
+    flex: 0 0 auto;
+  }
+  .cc-node {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 12px;
+    padding: 9px 13px; text-align: left; font-size: 17px; color: var(--muted);
+  }
+  .cc-node strong { display: block; font-size: 19px; color: var(--ink); margin-bottom: 2px; }
+  .cc-node.active {
+    background: #e8f6f1; border: 2px solid var(--accent); color: var(--accent-2);
+  }
+  .cc-node.active strong { color: var(--accent-2); }
+
+  .svg-card {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 18px;
+    padding: 12px 18px; box-shadow: var(--shadow);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .svg-card svg { width: 100%; height: auto; display: block; }
+
+  .agent-box {
+    margin-top: 10px; background: var(--blue-soft); border: 1.5px solid #bfd7ea;
+    border-left: 5px solid var(--blue);
+    border-radius: 14px; padding: 10px 16px; text-align: left; font-size: 21px; line-height: 1.45;
+  }
+  .tag-ai {
+    display: inline-block; background: var(--blue); color: #fff;
+    font-size: 16px; font-weight: 700; padding: 3px 10px; border-radius: 999px;
+    margin-right: 8px; vertical-align: middle;
+  }
+
+  button {
+    font: inherit; cursor: pointer; border: 0;
+    background: var(--accent); color: #fff;
+    border-radius: 11px; padding: 9px 18px;
+    font-size: 19px; font-weight: 600;
+    transition: transform .12s, box-shadow .12s;
+  }
+  button:hover:not(:disabled) { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+  button.secondary { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+  button:disabled { opacity: .4; cursor: default; }
+
+  .bar {
+    position: absolute; left: 50%; transform: translateX(-50%); bottom: 8px;
+    height: 44px; min-width: min(94vw, 900px);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 14px;
+    background: rgba(255, 255, 255, .9);
+    border: 1px solid var(--line); border-radius: 999px;
+    box-shadow: 0 6px 20px rgba(24, 24, 27, 0.1);
+    backdrop-filter: blur(10px); z-index: 30;
+    transition: opacity .45s ease, transform .45s ease;
+  }
+  .bar.idle { opacity: 0; transform: translateX(-50%) translateY(6px); pointer-events: none; }
+  .bar button { font-size: 16px; padding: 6px 14px; border-radius: 999px; }
+  .dots { display: flex; gap: 5px; align-items: center; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #ddd6c9; border: 0; padding: 0; transition: background .2s; }
+  .dot.on { background: var(--accent); transform: scale(1.2); }
+  .bar .nav { display: flex; gap: 8px; align-items: center; }
+  .page-num { font-size: 15px; color: var(--muted); min-width: 58px; text-align: center; font-weight: 600; }
+
+  .entry { display: grid; grid-template-columns: 1.12fr .88fr; gap: 16px; flex: 1; min-height: 0; }
+  .panel {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 18px;
+    padding: 14px 18px; box-shadow: var(--shadow);
+    display: flex; flex-direction: column; gap: 9px; min-height: 0; text-align: left;
+  }
+  .input-row { display: flex; gap: 10px; align-items: stretch; }
+  .input-row input { flex: 1; min-width: 0; }
+  input[type=text], textarea {
+    font: inherit; font-size: 21px; border: 1px solid var(--line); border-radius: 11px;
+    padding: 8px 14px; background: var(--paper-soft); color: var(--ink); width: 100%; text-align: left;
+  }
+  textarea { min-height: 60px; resize: none; }
+  .chips { flex: 1; overflow: auto; display: flex; flex-wrap: wrap; gap: 7px; align-content: flex-start; }
+  .chips:empty {
+    border: 1px dashed var(--line);
+    border-radius: 12px;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    flex: 0 0 auto;
+    min-height: 148px;
+  }
+  .chips:empty::after {
+    content: "已录入的报价会在这里按序号排列";
+    color: var(--neutral);
+    font-size: 17px;
+    letter-spacing: .02em;
+  }
+  .chip { background: #efe8db; border-radius: 999px; padding: 4px 12px; font-size: 19px; display: inline-flex; gap: 6px; align-items: center; }
+  .chip button { background: transparent; color: var(--muted); padding: 0; font-size: 18px; line-height: 1; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stat { background: var(--paper-soft); border: 1px solid var(--line); border-radius: 12px; padding: 9px 14px; }
+  .stat .lab { font-size: 17px; color: var(--muted); }
+  .stat .val { font-size: 32px; font-weight: 700; margin-top: 2px; }
+  .stat.wide { grid-column: 1 / -1; }
+  .winners { font-size: 22px; font-weight: 700; color: var(--accent-2); }
+  .hidden-until.reveal-on { display: none; }
+  body.is-revealed .hidden-until.reveal-on { display: block; }
+  .hint { font-size: 17px; color: var(--muted); }
+
+  .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
+  .scenario {
+    background: var(--paper); border: 1px solid var(--line); border-left: 5px solid var(--orange);
+    border-radius: 16px;
+    padding: 16px 20px; box-shadow: var(--shadow); font-size: 23px; line-height: 1.45;
+    margin-bottom: 10px; text-align: left;
+  }
+  .votes { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin: 6px 0; }
+  .vote {
+    min-width: 240px; background: var(--paper); color: var(--ink); border: 2px solid var(--line);
+    border-radius: 16px; padding: 10px 20px; font-size: 21px;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+  }
+  .vote .cnt { font-size: 40px; font-weight: 800; line-height: 1.1; color: var(--accent); }
+  .compare2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 4px; }
+  .grid-2col { display: grid; grid-template-columns: 1.12fr .88fr; gap: 16px; align-items: center; }
+
+  .roadmap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 2px; flex: 0 0 auto; }
+  .road {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
+    padding: 12px 14px; box-shadow: var(--shadow-sm); text-align: left; border-top: 4px solid var(--accent);
+  }
+  .road .num { color: var(--accent); font-weight: 800; font-size: 16px; letter-spacing: .04em; }
+  .road h3 { font-size: 24px; margin: 3px 0; }
+  .road p { font-size: 18px; color: var(--muted); line-height: 1.35; }
+
+  .formula-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 10px 0; }
+  .f-card { background: var(--paper); border: 1px solid var(--line); border-top: 4px solid var(--accent); border-radius: 14px; padding: 16px 16px; box-shadow: var(--shadow-sm); }
+  .f-card .big { font-size: 34px; font-weight: 800; color: var(--accent-2); margin-bottom: 4px; }
+  .f-card p { font-size: 19px; color: var(--muted); }
+
+  .oc-card { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 6px 16px; box-shadow: var(--shadow-sm); text-align: left; }
+  .oc-item { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--line-soft); font-size: 21px; }
+  .oc-item:last-child { border-bottom: 0; }
+  .oc-ans { font-weight: 700; color: var(--accent-2); white-space: nowrap; }
+
+  .sim { display: grid; grid-template-columns: 1.16fr .84fr; gap: 14px; flex: 1; min-height: 0; }
+  #chart-wrap { background: var(--paper); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between; padding: 10px 12px; min-height: 0; overflow: hidden; }
+  #marketChart { width: 100%; flex: 1 1 auto; min-height: 0; }
+  .controls { display: flex; flex-direction: column; gap: 6px; text-align: left; min-height: 0; }
+  [data-id="market-sim"] h2 { margin-bottom: 8px; }
+  [data-id="market-sim"] .metric { padding: 7px 12px; }
+  [data-id="market-sim"] .metric .val { font-size: 25px; }
+  [data-id="market-sim"] .slider-box { padding: 7px 12px; font-size: 17px; }
+  [data-id="market-sim"] input[type=range] { height: 14px; }
+  [data-id="market-sim"] .ctrl-btns button { font-size: 17px; padding: 7px 12px; }
+  .metric-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .metric { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; }
+  .metric .lab { font-size: 16px; color: var(--muted); }
+  .metric .val { font-size: 26px; font-weight: 800; }
+  .slider-box { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 8px 13px; font-size: 18px; }
+  .slider-head { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 3px; }
+  input[type=range] { width: 100%; height: 18px; accent-color: var(--accent); }
+  .ctrl-btns { display: flex; flex-wrap: wrap; gap: 7px; }
+  .ctrl-btns button { font-size: 17px; padding: 7px 13px; }
+
+  .pt-cards { display: flex; flex-direction: column; gap: 9px; text-align: left; }
+  .pt-item { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 11px 15px; box-shadow: var(--shadow-sm); }
+  .pt-item h3 { font-size: 21px; color: var(--accent-2); margin-bottom: 3px; }
+  .pt-item p { font-size: 18px; color: var(--muted); }
+
+  .hook-stage { background: var(--paper); border: 1px solid var(--line); border-top: 4px solid var(--bad); border-radius: 20px; padding: 16px 24px; box-shadow: var(--shadow); text-align: center; margin-bottom: 10px; }
+  .hook-step { font-size: 17px; font-weight: 700; color: var(--muted); letter-spacing: .06em; }
+  .hook-loss { font-size: 40px; font-weight: 800; margin: 4px 0 6px; color: var(--bad); }
+  .hook-loss.cash { color: var(--blue); }
+  .hook-text { font-size: 23px; line-height: 1.46; color: var(--ink); max-width: 1080px; margin: 0 auto; }
+  .hook-duel { display: grid; grid-template-columns: 1fr 210px 1fr; gap: 14px; align-items: stretch; }
+  .duel-card { border: 2px solid var(--line); border-radius: 20px; padding: 14px 18px; box-shadow: var(--shadow-sm); text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
+  .duel-card.ticket { border-color: #f1b7b2; background: #fff7f6; }
+  .duel-card.cash { border-color: #bfd7ea; background: #f4f9fd; }
+  .duel-tag { font-size: 19px; font-weight: 800; }
+  .duel-card.ticket .duel-tag, .duel-card.ticket .duel-pct { color: var(--bad); }
+  .duel-card.cash .duel-tag, .duel-card.cash .duel-pct { color: var(--blue); }
+  .duel-pct { font-size: 62px; font-weight: 900; line-height: 1.02; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .duel-lab { font-size: 17px; color: var(--muted); margin-bottom: 6px; }
+  .duel-bar { height: 11px; background: #ece7dc; border-radius: 99px; overflow: hidden; }
+  .duel-bar i { display: block; height: 100%; width: 0; border-radius: 99px; transition: width 1s cubic-bezier(.2, .8, .2, 1); }
+  .ticket .duel-bar i { background: var(--bad); }
+  .cash .duel-bar i { background: var(--blue); }
+  .seat-svg { width: 100%; max-width: 270px; height: auto; margin: 6px auto 2px; display: block; }
+  .duel-ref { margin-top: 3px; font-size: 17px; color: var(--muted); font-weight: 600; }
+  .duel-mid { background: var(--paper); border: 1.5px solid var(--line); border-radius: 18px; padding: 8px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 17px; color: var(--muted); line-height: 1.35; }
+  .hook-bridge { margin-top: 8px; background: var(--blue-soft); border: 1.5px solid #bfd7ea; border-left: 5px solid var(--blue); border-radius: 14px; padding: 10px 16px; font-size: 20px; line-height: 1.55; text-align: left; }
+  .hook-src { margin-top: 5px; font-size: 16px; color: var(--muted); text-align: right; }
+
+  .rules { display: flex; flex-direction: column; gap: 8px; }
+  .rule-row {
+    display: grid; grid-template-columns: 190px 1.05fr 92px 1.2fr; align-items: center; gap: 10px;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
+    padding: 10px 16px; box-shadow: var(--shadow-sm); text-align: left;
+  }
+  .rule-row.head { background: transparent; border: 0; box-shadow: none; padding: 0 16px; font-size: 16px; font-weight: 700; color: var(--muted); }
+  .rule-exp { font-size: 21px; font-weight: 800; color: var(--ink); }
+  .rule-exp .num { display: block; font-size: 15px; font-weight: 800; color: var(--accent); letter-spacing: .05em; }
+  .rule-bias { font-size: 18px; color: var(--muted); line-height: 1.38; }
+  .rule-ev { display: inline-block; margin-top: 3px; font-size: 16px; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: var(--paper-soft); border: 1px solid var(--line); color: var(--ink); }
+  .rule-arrow { display: flex; align-items: center; justify-content: center; }
+  .rule-do { font-size: 19px; font-weight: 700; color: var(--accent-2); background: #e8f6f1; border: 1px solid #b7e0d2; border-radius: 11px; padding: 9px 13px; line-height: 1.38; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .rule-stamp { flex-shrink: 0; font-size: 15px; font-weight: 800; color: #0f6e56; border: 1.5px solid #0f6e56; border-radius: 6px; padding: 2px 7px; letter-spacing: .03em; background: rgba(255,255,255,0.75); }
+  .chip.win { background: #d1fae5; border: 1.5px solid var(--accent); color: var(--accent-2); font-weight: 800; }
+  .chip .sid { font-size: 15px; color: var(--muted); font-weight: 600; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="slides" id="slides"></div>
+  <div class="bar">
+    <button class="secondary" id="btnPrev" type="button">上一页</button>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="dots" id="dots"></div>
+      <div class="page-num" id="pageNum"></div>
+    </div>
+    <div class="nav">
+      <button class="secondary" id="btnDemo" type="button" style="border-color:var(--blue);color:var(--blue);">评委演示</button>
+      <button class="secondary" id="btnFull" type="button">全屏</button>
+      <button id="btnNext" type="button">下一页</button>
+    </div>
+  </div>
+</div>
+
+<template id="tpl">
+  <!-- 1. 双栏封面：课堂实验 → 市场仿真 → 投资纪律 + 张剑 -->
+  <section class="slide" data-id="title">
+    <div class="cover-grid">
+      <div class="cover-left">
+        <div>
+          <span class="cover-badge">第二届“鱼凫杯·教师教学竞赛” · 教师教学创新大赛</span>
+          <h1>《投资学原理》<br>行为投资课堂实验教学</h1>
+          <p class="cover-title-sub">从「课堂偏差实验」到「市场仿真」与「投资纪律」</p>
+        </div>
+
+        <div class="agent-highlights">
+          <div class="ah-card">
+            <div class="ah-num">Step 01 · 课堂体验</div>
+            <h4>四个偏差实验</h4>
+            <p>心理账户、选美、前景理论、过度自信，现场测出全班偏差</p>
+          </div>
+          <div class="ah-card">
+            <div class="ah-num">Step 02 · 市场推演</div>
+            <h4>多主体市场仿真</h4>
+            <p>把实测偏差放进市场，观察泡沫如何形成与破裂</p>
+          </div>
+          <div class="ah-card">
+            <div class="ah-num">Step 03 · 投资落地</div>
+            <h4>个人投资纪律</h4>
+            <p>把偏差转为止损、仓位、换手三条可执行规则</p>
+          </div>
+        </div>
+
+        <div class="author-bar">
+          <div class="author-name">张剑</div>
+          <span class="part-badge"><i></i><span>全员动手决策 · 手动设置参数 · 一人一卡纪律</span></span>
+        </div>
+      </div>
+
+      <div class="cover-right">
+        <div class="cover-right-head">BEHAVIORAL INVESTMENT LOOP</div>
+        <svg viewBox="0 0 360 300" role="img" aria-label="偏差实验、市场仿真与投资纪律闭环">
+          <defs>
+            <marker id="arrCov" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="#a7f3d0"/>
+            </marker>
+          </defs>
+          <circle cx="180" cy="150" r="106" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="2" stroke-dasharray="8 6"/>
+          <circle cx="180" cy="150" r="44" fill="rgba(167,243,208,0.07)" stroke="rgba(167,243,208,0.25)" stroke-width="1.2"/>
+          <text x="180" y="144" text-anchor="middle" font-size="16" font-weight="700" fill="#a7f3d0">学生数据</text>
+          <text x="180" y="168" text-anchor="middle" font-size="14" fill="#d1fae5">贯穿全课</text>
+
+          <circle cx="180" cy="36" r="25" fill="rgba(255,255,255,0.14)" stroke="#a7f3d0" stroke-width="1.8"/>
+          <text x="180" y="44" text-anchor="middle" font-size="21" font-weight="800" fill="#fff">1</text>
+          <text x="180" y="80" text-anchor="middle" font-size="15" font-weight="700" fill="#d1fae5">偏差实验</text>
+
+          <circle cx="284" cy="222" r="25" fill="rgba(44,110,158,0.6)" stroke="#93c5fd" stroke-width="1.8"/>
+          <text x="284" y="230" text-anchor="middle" font-size="21" font-weight="800" fill="#fff">2</text>
+          <text x="284" y="282" text-anchor="middle" font-size="15" font-weight="700" fill="#dbeafe">市场仿真</text>
+
+          <circle cx="76" cy="222" r="25" fill="rgba(194,87,26,0.6)" stroke="#fdba74" stroke-width="1.8"/>
+          <text x="76" y="230" text-anchor="middle" font-size="21" font-weight="800" fill="#fff">3</text>
+          <text x="76" y="282" text-anchor="middle" font-size="15" font-weight="700" fill="#ffedd5">投资纪律</text>
+
+          <path d="M 204 52 Q 258 108 274 196" fill="none" stroke="#a7f3d0" stroke-width="2" class="flow-line" marker-end="url(#arrCov)"/>
+          <path d="M 262 246 Q 180 262 98 246" fill="none" stroke="#93c5fd" stroke-width="2" class="flow-line" marker-end="url(#arrCov)"/>
+          <path d="M 92 200 Q 106 108 158 52" fill="none" stroke="#fdba74" stroke-width="2" class="flow-line" marker-end="url(#arrCov)"/>
+        </svg>
+        <div class="cover-right-foot">
+          <strong>课程全局衔接：</strong>承接前三章 MPT、CAPM、APT 理性定价框架，用课堂实验检验理性人假设在真实市场中的偏离。
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. 整门课程坐标与三大痛点 -->
+  <section class="slide" data-id="pain-points">
+    <div class="slide-head"><span class="pill">01 / 课程坐标与痛点</span><span class="slide-sub-tag">以全班真实决策数据替代静态灌输</span></div>
+    <h2>理性定价学得会，真实决策做不出：三个痛点同源</h2>
+    <div class="course-chain">
+      <div class="cc-node"><strong>模块一：MPT 组合理论</strong>均值—方差有效前沿</div>
+      <div class="cc-node"><strong>模块二：CAPM 单因子</strong>市场风险 β 与证券市场线</div>
+      <div class="cc-node"><strong>模块三：APT 多因子</strong>套利定价与风格暴露</div>
+      <div class="cc-node active"><strong>模块四：行为投资 ★</strong>偏差实验 → 市场仿真 → 投资纪律</div>
+    </div>
+    <div class="svg-card">
+      <svg viewBox="0 0 1040 270" role="img" aria-label="三大教学痛点与破局对照图">
+        <defs>
+          <marker id="arrPain" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f6e56"/>
+          </marker>
+        </defs>
+        <!-- Row 1 -->
+        <rect x="14" y="10" width="434" height="74" rx="12" fill="#fdecec" stroke="#b42318" stroke-width="1.5"/>
+        <circle cx="46" cy="47" r="18" fill="#fbd5d5"/>
+        <path d="M 36 52 L 44 42 L 50 49 L 57 38" fill="none" stroke="#b42318" stroke-width="2.4" stroke-linecap="round"/>
+        <text x="246" y="40" text-anchor="middle" font-size="18.5" font-weight="700" fill="#b42318">痛点 1：微观个体偏差与宏观定价脱节</text>
+        <text x="246" y="66" text-anchor="middle" font-size="14.5" fill="#52525b">静态讲授看不到个体偏差如何推动泡沫与踩踏</text>
+
+        <path d="M 454 47 L 534 47" fill="none" stroke="#0f6e56" stroke-opacity="0.22" stroke-width="4"/>
+        <path d="M 454 47 L 534 47" fill="none" stroke="#0f6e56" stroke-width="2.6" class="flow-line" marker-end="url(#arrPain)"/>
+        <text x="494" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="#0f6e56">参数入市</text>
+
+        <rect x="542" y="10" width="484" height="74" rx="12" fill="#eef5fb" stroke="#1d5d8f" stroke-width="1.6"/>
+        <text x="748" y="40" text-anchor="middle" font-size="18.5" font-weight="700" fill="#1d5d8f">破局：多主体市场仿真</text>
+        <text x="748" y="66" text-anchor="middle" font-size="14.5" fill="#18181b">把全班偏差参数放进市场，推演价格路径</text>
+        <polyline points="944,62 958,56 972,36 986,26 1000,48 1012,66" fill="none" stroke="#1d5d8f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="942" y1="52" x2="1014" y2="52" stroke="#52525b" stroke-width="1.2" stroke-dasharray="3 3"/>
+
+        <!-- Row 2 -->
+        <rect x="14" y="98" width="434" height="74" rx="12" fill="#fdecec" stroke="#b42318" stroke-width="1.5"/>
+        <circle cx="46" cy="135" r="18" fill="#fbd5d5"/>
+        <text x="46" y="141" text-anchor="middle" font-size="18" font-weight="800" fill="#b42318">≠</text>
+        <text x="246" y="128" text-anchor="middle" font-size="18.5" font-weight="700" fill="#b42318">痛点 2：学生自认理性，偏差体验不真切</text>
+        <text x="246" y="154" text-anchor="middle" font-size="14.5" fill="#52525b">概念都会背，却认为自己不会犯同样的错</text>
+
+        <path d="M 454 135 L 534 135" fill="none" stroke="#0f6e56" stroke-opacity="0.22" stroke-width="4"/>
+        <path d="M 454 135 L 534 135" fill="none" stroke="#0f6e56" stroke-width="2.6" class="flow-line" marker-end="url(#arrPain)"/>
+        <text x="494" y="122" text-anchor="middle" font-size="12" font-weight="700" fill="#c2571a">同屏对标</text>
+
+        <rect x="542" y="98" width="484" height="74" rx="12" fill="#fff8f2" stroke="#c2571a" stroke-width="1.6"/>
+        <text x="748" y="128" text-anchor="middle" font-size="18.5" font-weight="700" fill="#c2571a">破局：现场实验对照 + 投资纪律落地</text>
+        <text x="748" y="154" text-anchor="middle" font-size="14.5" fill="#18181b">全班数据当场对照理性基准，偏差转为止损、仓位、换手规则</text>
+        <rect x="954" y="114" width="56" height="42" rx="7" fill="#fff" stroke="#c2571a" stroke-width="1.5"/>
+        <path d="M 966 135 L 976 144 L 998 124" fill="none" stroke="#0f6e56" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <!-- Row 3 -->
+        <rect x="14" y="186" width="434" height="74" rx="12" fill="#fdecec" stroke="#b42318" stroke-width="1.5"/>
+        <circle cx="46" cy="223" r="18" fill="#fbd5d5"/>
+        <circle cx="40" cy="223" r="3" fill="#a1a1aa"/><circle cx="46" cy="223" r="3" fill="#a1a1aa"/><circle cx="52" cy="223" r="3" fill="#a1a1aa"/>
+        <text x="246" y="216" text-anchor="middle" font-size="18.5" font-weight="700" fill="#b42318">痛点 3：抬头率低、参与度低、投入度低</text>
+        <text x="246" y="242" text-anchor="middle" font-size="14.5" fill="#52525b">讲授式课堂被动听讲，决策永远是别人的事</text>
+
+        <path d="M 454 223 L 534 223" fill="none" stroke="#0f6e56" stroke-opacity="0.22" stroke-width="4"/>
+        <path d="M 454 223 L 534 223" fill="none" stroke="#0f6e56" stroke-width="2.6" class="flow-line" marker-end="url(#arrPain)"/>
+        <text x="494" y="210" text-anchor="middle" font-size="12" font-weight="700" fill="#0f6e56">全员入局</text>
+
+        <rect x="542" y="186" width="484" height="74" rx="12" fill="#e8f6f1" stroke="#0f6e56" stroke-width="1.6"/>
+        <text x="742" y="216" text-anchor="middle" font-size="18.5" font-weight="700" fill="#0f6e56">破局：人人动手决策，当场揭晓结果</text>
+        <text x="742" y="242" text-anchor="middle" font-size="14.5" fill="#18181b">举手投票、纸条写价，参与度本身就是实验数据</text>
+        <g transform="translate(946,204)">
+          <circle cx="8" cy="8" r="4.2" fill="#0f6e56"/><circle cx="22" cy="8" r="4.2" fill="#1d5d8f"/><circle cx="36" cy="8" r="4.2" fill="#c2571a"/><circle cx="50" cy="8" r="4.2" fill="#0f6e56"/>
+          <circle cx="8" cy="22" r="4.2" fill="#c2571a"/><circle cx="22" cy="22" r="4.2" fill="#0f6e56"/><circle cx="36" cy="22" r="4.2" fill="#0f6e56"/><circle cx="50" cy="22" r="4.2" fill="#1d5d8f"/>
+          <circle cx="8" cy="34" r="4.2" fill="#0f6e56"/><circle cx="22" cy="34" r="4.2" fill="#0f6e56"/><circle cx="36" cy="34" r="4.2" fill="#1d5d8f"/><circle cx="50" cy="34" r="4.2" fill="#c2571a"/>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <!-- 3. 导入：心理账户（丢票还是丢钱） -->
+  <section class="slide" data-id="hook">
+    <div class="slide-head">
+      <span class="pill">02 / 课堂导入</span>
+      <div class="head-right">
+        <span class="part-badge wait" id="badgeHook"><i></i><span>课堂实时投票待采集</span></span>
+        <span class="slide-sub-tag">心理账户 × 日常决策</span>
+      </div>
+    </div>
+    <h2>同样少了 500 元，你还会买这张票吗？</h2>
+    <div id="hookPlay">
+      <div class="hook-stage">
+        <div class="hook-step" id="hookStep"></div>
+        <div class="hook-loss" id="hookLoss"></div>
+        <div class="hook-text" id="hookScene"></div>
+      </div>
+      <div class="votes">
+        <button type="button" class="vote" id="voteYes"><span>会，再花 500 元买票</span><span class="cnt" id="yesCnt">0</span></button>
+        <button type="button" class="vote" id="voteNo"><span>不买了，直接回家</span><span class="cnt" id="noCnt">0</span></button>
+      </div>
+      <div style="max-width:680px;margin:4px auto 0;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:8px 14px;">
+        <svg id="hookLiveSeats" viewBox="0 0 620 34" style="width:100%;height:auto;display:block;" aria-label="本轮投票人数示意点阵"></svg>
+      </div>
+      <div class="actions">
+        <button class="secondary" type="button" id="hookReset">清零</button>
+        <button type="button" id="hookNext">下一情景</button>
+      </div>
+    </div>
+    <div id="hookResult" hidden>
+      <div class="hook-duel">
+        <div class="duel-card ticket">
+          <div>
+            <div class="duel-tag">情景一 · 丢了 500 元门票</div>
+            <div class="duel-pct" id="pctTicket">0%</div>
+            <div class="duel-lab">愿意再买一张</div>
+            <div class="duel-bar"><i id="barTicket"></i></div>
+          </div>
+          <svg id="dotsTicket" class="seat-svg" viewBox="0 0 270 108" aria-label="丢票情景投票人数示意点阵"></svg>
+          <div class="duel-ref">本班 <span id="nTicket">—</span> ｜ 经典实验 46%</div>
+        </div>
+        <div class="duel-mid">
+          <svg viewBox="0 0 216 230" style="width:100%;height:auto;display:block;" aria-label="总财富等价与心理账户分流动态图">
+            <rect x="20" y="6" width="176" height="44" rx="11" fill="#faf8f4" stroke="#18181b" stroke-width="1.5"/>
+            <text x="108" y="25" text-anchor="middle" font-size="13" font-weight="700" fill="#52525b">客观总财富变化相同</text>
+            <text x="108" y="43" text-anchor="middle" font-size="16" font-weight="800" fill="#18181b">均少 500 元（=）</text>
+
+            <path d="M 88 52 C 72 82, 26 92, 20 120" fill="none" stroke="#b42318" stroke-width="2.2" class="flow-line"/>
+            <path d="M 128 52 C 144 82, 190 92, 196 120" fill="none" stroke="#1d5d8f" stroke-width="2.2" class="flow-line"/>
+
+            <rect x="4" y="122" width="100" height="62" rx="10" fill="#fff1f0" stroke="#f1b7b2" stroke-width="1.4"/>
+            <text x="54" y="142" text-anchor="middle" font-size="12.5" font-weight="800" fill="#b42318">演出心理账本</text>
+            <text x="54" y="160" text-anchor="middle" font-size="12" fill="#52525b">体感花 1000 元</text>
+            <text x="54" y="176" text-anchor="middle" font-size="11.5" font-weight="700" fill="#b42318">痛感翻倍拒买</text>
+
+            <rect x="112" y="122" width="100" height="62" rx="10" fill="#eef5fb" stroke="#bfd7ea" stroke-width="1.4"/>
+            <text x="162" y="142" text-anchor="middle" font-size="12.5" font-weight="800" fill="#1d5d8f">日常现金账本</text>
+            <text x="162" y="160" text-anchor="middle" font-size="12" fill="#52525b">票价仍 500 元</text>
+            <text x="162" y="176" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1d5d8f">照常购票入场</text>
+
+            <rect x="12" y="194" width="192" height="30" rx="8" fill="#fff8f2" stroke="#fed7aa" stroke-width="1.2"/>
+            <text x="108" y="214" text-anchor="middle" font-size="12" font-weight="700" fill="#c2571a">映射股市：单票建账 → 浮亏死扛</text>
+          </svg>
+        </div>
+        <div class="duel-card cash">
+          <div>
+            <div class="duel-tag">情景二 · 丢了 500 元现金</div>
+            <div class="duel-pct" id="pctCash">0%</div>
+            <div class="duel-lab">仍然愿意买票</div>
+            <div class="duel-bar"><i id="barCash"></i></div>
+          </div>
+          <svg id="dotsCash" class="seat-svg" viewBox="0 0 270 108" aria-label="丢钱情景投票人数示意点阵"></svg>
+          <div class="duel-ref">本班 <span id="nCash">—</span> ｜ 经典实验 88%</div>
+        </div>
+      </div>
+      <div class="hook-bridge">
+        <span class="tag-ai">为什么</span>钱没有标签，大脑却给钱贴了标签：丢票记在「演唱会账户」，再买一张就像花 1000 元看一场演出；丢钱记在「零钱账户」，票价仍是 500 元。<br>
+        <span class="tag-ai" style="background:var(--orange);">股市里</span>每只股票也被单独记一本账：亏损的股票「要在它身上赚回来」，于是浮亏不肯卖。
+      </div>
+      <div class="hook-src">经典实验数据：Tversky &amp; Kahneman（1981，Science），丢票组 N = 200，丢钱组 N = 183。</div>
+    </div>
+  </section>
+
+  <!-- 4. 实验设计路线与师生互动机制 -->
+  <section class="slide" data-id="roadmap">
+    <div class="slide-head">
+      <span class="pill blue">03 / 实验设计</span>
+      <div class="head-right">
+        <span class="part-badge"><i></i><span>全班四轮实测 · 实时数据闭环</span></span>
+        <span class="slide-sub-tag">四个实验 × 一条主线</span>
+      </div>
+    </div>
+    <h2>四个实验一条主线：用学生自己的数据走完一堂课</h2>
+    <div class="roadmap">
+      <div class="road"><div class="num">实验一 · 独立报价</div><h3>选美博弈</h3><p>高阶信念与投机泡沫</p></div>
+      <div class="road"><div class="num">实验二 · 双轮盲选</div><h3>前景理论</h3><p>损失厌恶与风险反转</p></div>
+      <div class="road"><div class="num">实验三 · 区间自测</div><h3>校准与换手</h3><p>A 股过度自信实证</p></div>
+      <div class="road"><div class="num">实验四 · 参数入市</div><h3>市场仿真</h3><p>异质主体演化与踩踏</p></div>
+    </div>
+    <div class="svg-card" style="margin-top:12px;">
+      <svg viewBox="0 0 1060 226" role="img" aria-label="学生、课堂互动演示页与教师双向实时互动机制">
+        <defs>
+          <marker id="arrBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#1d5d8f"/>
+          </marker>
+          <marker id="arrOrg2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#c2571a"/>
+          </marker>
+          <marker id="arrGrn2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f6e56"/>
+          </marker>
+        </defs>
+
+        <!-- Left: Students -->
+        <rect x="14" y="14" width="296" height="162" rx="16" fill="#fff8f2" stroke="#c2571a" stroke-width="2"/>
+        <text x="162" y="44" text-anchor="middle" font-size="20" font-weight="700" fill="#c2571a">学生（全班真实决策者）</text>
+        <g transform="translate(34,56)">
+          <circle cx="6" cy="6" r="4" fill="#c2571a"/><circle cx="18" cy="6" r="4" fill="#c2571a"/><circle cx="30" cy="6" r="4" fill="#1d5d8f"/>
+          <circle cx="6" cy="18" r="4" fill="#0f6e56"/><circle cx="18" cy="18" r="4" fill="#c2571a"/><circle cx="30" cy="18" r="4" fill="#0f6e56"/>
+        </g>
+        <text x="176" y="76" text-anchor="middle" font-size="14.5" fill="#18181b">• 举手投票、纸条报价暴露直觉</text>
+        <text x="176" y="106" text-anchor="middle" font-size="14.5" fill="#18181b">• 同屏对照基准完成自我归因</text>
+        <rect x="34" y="124" width="256" height="36" rx="9" fill="#ffedd5" stroke="#fdba74" stroke-width="1.2"/>
+        <text x="162" y="147" text-anchor="middle" font-size="14.5" font-weight="700" fill="#c2571a">产出：当堂签署个人投资纪律卡</text>
+
+        <!-- Student <-> Demo Page dynamic streams -->
+        <path d="M 314 72 C 344 58, 358 58, 386 72" fill="none" stroke="#c2571a" stroke-width="2.5" class="flow-line" marker-end="url(#arrOrg2)"/>
+        <text x="350" y="52" text-anchor="middle" font-size="12" font-weight="700" fill="#c2571a">选票与报价流</text>
+
+        <path d="M 386 118 C 358 132, 344 132, 314 118" fill="none" stroke="#1d5d8f" stroke-width="2.5" class="flow-line" marker-end="url(#arrBlue)"/>
+        <text x="350" y="146" text-anchor="middle" font-size="12" font-weight="700" fill="#1d5d8f">偏差镜像反馈</text>
+
+        <!-- Center: Interactive Demo Engine -->
+        <rect x="392" y="10" width="276" height="170" rx="18" fill="#eef5fb" stroke="#1d5d8f" stroke-width="2.5" class="hub-glow"/>
+        <text x="530" y="42" text-anchor="middle" font-size="20" font-weight="700" fill="#1d5d8f">课堂互动演示页</text>
+        <rect x="414" y="56" width="232" height="30" rx="8" fill="#fff" stroke="#bfd7ea"/>
+        <text x="530" y="76" text-anchor="middle" font-size="14" font-weight="600" fill="#18181b">1. 实时聚合全班选票与报价点阵</text>
+        <rect x="414" y="94" width="232" height="30" rx="8" fill="#fff" stroke="#bfd7ea"/>
+        <text x="530" y="114" text-anchor="middle" font-size="14" font-weight="600" fill="#18181b">2. 同屏对照纳什与贝叶斯基准</text>
+        <rect x="414" y="132" width="232" height="30" rx="8" fill="#fff" stroke="#bfd7ea"/>
+        <text x="530" y="152" text-anchor="middle" font-size="14" font-weight="700" fill="#1d5d8f">3. 参考实验结果手动设置沙盘参数</text>
+
+        <!-- Demo Page <-> Teacher dynamic streams -->
+        <path d="M 746 72 C 718 58, 702 58, 674 72" fill="none" stroke="#0f6e56" stroke-width="2.5" class="flow-line" marker-end="url(#arrGrn2)"/>
+        <text x="710" y="52" text-anchor="middle" font-size="12" font-weight="700" fill="#0f6e56">调参与冲击</text>
+
+        <path d="M 674 118 C 702 132, 718 132, 746 118" fill="none" stroke="#1d5d8f" stroke-width="2.5" class="flow-line" marker-end="url(#arrBlue)"/>
+        <text x="710" y="146" text-anchor="middle" font-size="12" font-weight="700" fill="#1d5d8f">实时学情读数</text>
+
+        <!-- Right: Teacher -->
+        <rect x="750" y="14" width="296" height="162" rx="16" fill="#e8f6f1" stroke="#0f6e56" stroke-width="2"/>
+        <text x="898" y="44" text-anchor="middle" font-size="20" font-weight="700" fill="#0f6e56">教师（设计与引导者）</text>
+        <text x="898" y="76" text-anchor="middle" font-size="14.5" fill="#18181b">• 严格控制实验顺序与对照情境</text>
+        <text x="898" y="106" text-anchor="middle" font-size="14.5" fill="#18181b">• 沙盘对照切换，注入逆转冲击</text>
+        <rect x="770" y="124" width="256" height="36" rx="9" fill="#d1fae5" stroke="#86efac" stroke-width="1.2"/>
+        <text x="898" y="147" text-anchor="middle" font-size="14.5" font-weight="700" fill="#0a4d3c">核心：引导把偏差收口为纪律</text>
+
+        <!-- Bottom closed-loop return ribbon -->
+        <path d="M 898 180 C 898 218, 162 218, 162 180" fill="none" stroke="#0f6e56" stroke-opacity="0.2" stroke-width="3.5"/>
+        <path d="M 898 180 C 898 218, 162 218, 162 180" fill="none" stroke="#0f6e56" stroke-width="2.2" class="flow-line" marker-end="url(#arrGrn2)"/>
+        <rect x="378" y="196" width="304" height="24" rx="12" fill="#e8f6f1" stroke="#b7e0d2"/>
+        <text x="530" y="213" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0a4d3c">闭环转化：市场演化结果 → 个人风控纪律落地</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- 5. 实验一规则 -->
+  <section class="slide" data-id="guess-rule">
+    <div class="slide-head">
+      <span class="pill">04 / 实验一规则</span>
+      <div class="head-right">
+        <span class="part-badge"><i></i><span>全员纸条独立报价（0–100）</span></span>
+        <span class="slide-sub-tag">凯恩斯选美博弈</span>
+      </div>
+    </div>
+    <h2>实验一 选美博弈：报价取决于你猜别人怎么猜</h2>
+    <div class="formula-row">
+      <div class="f-card"><div class="big">0 ～ 100</div><p>每人独立写一个整数报价</p></div>
+      <div class="f-card"><div class="big">均值 × 2/3</div><p>系统实时计算目标点位</p></div>
+      <div class="f-card"><div class="big">最接近胜</div><p>定价取决于「猜测他人预期」</p></div>
+    </div>
+    <div class="svg-card" style="padding:12px 20px;margin-bottom:4px;">
+      <svg viewBox="0 0 1020 104" role="img" aria-label="选美博弈全班报价汇聚与靶心锁定流程">
+        <defs>
+          <marker id="arrRule" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f6e56"/>
+          </marker>
+        </defs>
+        <rect x="12" y="16" width="236" height="72" rx="14" fill="#fff8f2" stroke="#c2571a" stroke-width="1.6"/>
+        <text x="130" y="46" text-anchor="middle" font-size="16" font-weight="700" fill="#c2571a">① 全班独立写下报价 xᵢ</text>
+        <text x="130" y="70" text-anchor="middle" font-size="13.5" fill="#52525b">每人猜测全班其他人会报多少</text>
+
+        <path d="M 254 52 L 328 52" fill="none" stroke="#0f6e56" stroke-width="2.5" class="flow-line" marker-end="url(#arrRule)"/>
+
+        <rect x="336" y="16" width="214" height="72" rx="14" fill="#eef5fb" stroke="#1d5d8f" stroke-width="1.6"/>
+        <text x="443" y="46" text-anchor="middle" font-size="16" font-weight="700" fill="#1d5d8f">② 实时聚合全班均值 x̄</text>
+        <text x="443" y="70" text-anchor="middle" font-size="13.5" fill="#52525b">反映群体共识情绪水位</text>
+
+        <path d="M 556 52 L 630 52" fill="none" stroke="#0f6e56" stroke-width="2.5" class="flow-line" marker-end="url(#arrRule)"/>
+        <text x="593" y="38" text-anchor="middle" font-size="12.5" font-weight="800" fill="#0f6e56">× 2/3</text>
+
+        <rect x="638" y="16" width="370" height="72" rx="14" fill="#e8f6f1" stroke="#0f6e56" stroke-width="1.8"/>
+        <circle cx="678" cy="52" r="18" fill="none" stroke="#0f6e56" stroke-width="2"/>
+        <circle cx="678" cy="52" r="9" fill="none" stroke="#0f6e56" stroke-width="1.6"/>
+        <circle cx="678" cy="52" r="3.5" fill="#c2571a"/>
+        <text x="842" y="46" text-anchor="middle" font-size="16" font-weight="700" fill="#0a4d3c">③ 锁定目标靶心 T = 2/3 x̄，最近者获胜</text>
+        <text x="842" y="70" text-anchor="middle" font-size="13.5" fill="#52525b">比全班快一步获胜，快太多反而踏空</text>
+      </svg>
+    </div>
+    <div class="agent-box">
+      <span class="tag-ai">博弈论基准思考</span>
+      若所有交易者均具备无限阶共同理性知识，迭代剔除劣策略后的唯一纳什均衡解是多少？
+    </div>
+  </section>
+
+  <!-- 6. 实验一录入 -->
+  <section class="slide" data-id="guess-enter">
+    <div class="slide-head">
+      <span class="pill">05 / 实验一实测</span>
+      <div class="head-right">
+        <span class="part-badge wait" id="badgeGuess"><i></i><span>待录入学生报价</span></span>
+        <span class="slide-sub-tag">实时报价 × 纳什均衡对照</span>
+      </div>
+    </div>
+    <h2>报价越高，离均衡越远：偏差测得出，讲不出来</h2>
+    <div class="entry" style="grid-template-columns: 0.92fr 1.08fr;">
+      <div class="panel">
+        <div class="input-row">
+          <input type="text" id="numIn" inputmode="numeric" placeholder="输入 0-100 整数，回车" autocomplete="off">
+          <button type="button" id="btnAdd">加入</button>
+        </div>
+        <textarea id="numPaste" style="min-height:52px;" placeholder="批量粘贴报价（空格、逗号或换行分隔）"></textarea>
+        <div style="display:flex;gap:8px;">
+          <button class="secondary" type="button" id="btnPaste">批量加入</button>
+          <button class="secondary" type="button" id="btnClear">清空</button>
+        </div>
+        <div class="chips" id="chips"></div>
+        <div class="hint" id="countHint" style="margin-top:auto;">尚未录入。</div>
+      </div>
+      <div class="panel" style="justify-content:space-between;">
+        <div class="stats" style="grid-template-columns: repeat(3, 1fr); gap: 8px;">
+          <div class="stat" style="padding:8px 12px;"><div class="lab" style="font-size:14px;">参与人数</div><div class="val" style="font-size:26px;" id="stN">—</div></div>
+          <div class="stat hidden-until reveal-on" style="padding:8px 12px;"><div class="lab" style="font-size:14px;">全班均值</div><div class="val" style="font-size:26px;color:var(--orange);" id="stAvg">—</div></div>
+          <div class="stat hidden-until reveal-on" style="padding:8px 12px;"><div class="lab" style="font-size:14px;">目标点位（×2/3）</div><div class="val" style="font-size:26px;color:var(--blue);" id="stTarget">—</div></div>
+          <div class="stat wide hidden-until reveal-on" style="padding:8px 14px;"><div class="lab" style="font-size:14px;">获胜学生报价与均衡偏离</div><div class="val winners" style="font-size:20px;" id="stWin">—</div></div>
+        </div>
+        <div style="background:var(--paper-soft);border:1px solid var(--line);border-radius:14px;padding:8px 12px;flex:1;display:flex;align-items:center;justify-content:center;min-height:195px;">
+          <svg id="guessAxisSvg" viewBox="0 0 600 210" style="width:100%;height:auto;display:block;" aria-label="0至100学生报价实时散点分布数轴"></svg>
+        </div>
+        <button type="button" id="btnReveal" disabled>揭晓全班结果与纳什均衡差距</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. 实验一理论映射 -->
+  <section class="slide" data-id="guess-insight">
+    <div class="slide-head">
+      <span class="pill">06 / 实验一解析</span>
+      <div class="head-right">
+        <span class="part-badge" id="badgeGuessIns"><i></i><span>实测落点映射推理阶梯</span></span>
+        <span class="slide-sub-tag">Level-k 推理与题材击鼓传花</span>
+      </div>
+    </div>
+    <h2>多数人只推两三层：明知高估仍出手，泡沫由此而来</h2>
+    <div class="svg-card">
+      <svg id="levelKSvg" viewBox="0 0 940 265" role="img" aria-label="选美博弈迭代收敛到纳什均衡0与本班实测分布">
+        <defs>
+          <marker id="arrStep" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#1d5d8f"/>
+          </marker>
+        </defs>
+        <!-- Highlight zone for classroom concentration -->
+        <rect x="224" y="18" width="286" height="192" rx="14" fill="rgba(194,87,26,0.07)" stroke="#fdba74" stroke-width="1.4" stroke-dasharray="6 5"/>
+        <text x="367" y="38" text-anchor="middle" font-size="14" font-weight="700" fill="#c2571a" id="lkZoneLabel">真实课堂集中带（Level-1 ～ Level-2）</text>
+
+        <line x1="56" y1="210" x2="890" y2="210" stroke="#52525b" stroke-width="2"/>
+
+        <rect x="92" y="56" width="88" height="154" rx="8" fill="#c2571a" opacity=".88" class="grow-bar" style="animation-delay:.05s;"/>
+        <text x="136" y="44" text-anchor="middle" font-size="22" font-weight="700" fill="#c2571a">50</text>
+        <text x="136" y="236" text-anchor="middle" font-size="17" fill="#52525b">Level-0 随机</text>
+
+        <rect x="246" y="107" width="88" height="103" rx="8" fill="#c2571a" opacity=".76" class="grow-bar" style="animation-delay:.16s;"/>
+        <text x="290" y="95" text-anchor="middle" font-size="22" font-weight="700" fill="#c2571a">33.3</text>
+        <text x="290" y="236" text-anchor="middle" font-size="17" fill="#52525b">Level-1</text>
+
+        <rect x="400" y="141" width="88" height="69" rx="8" fill="#c2571a" opacity=".64" class="grow-bar" style="animation-delay:.27s;"/>
+        <text x="444" y="129" text-anchor="middle" font-size="22" font-weight="700" fill="#c2571a">22.2</text>
+        <text x="444" y="236" text-anchor="middle" font-size="17" font-weight="700" fill="#c2571a">Level-2（集中区）</text>
+
+        <rect x="554" y="164" width="88" height="46" rx="8" fill="#52525b" opacity=".42" class="grow-bar" style="animation-delay:.38s;"/>
+        <text x="598" y="152" text-anchor="middle" font-size="21" font-weight="700" fill="#52525b">14.8 …</text>
+        <text x="598" y="236" text-anchor="middle" font-size="17" fill="#52525b">高阶迭代</text>
+
+        <rect x="720" y="202" width="120" height="8" rx="4" fill="#1d5d8f"/>
+        <circle cx="780" cy="194" r="10" fill="#1d5d8f"/>
+        <circle cx="780" cy="194" r="10" fill="none" stroke="#1d5d8f" stroke-width="2"></circle>
+        <text x="780" y="168" text-anchor="middle" font-size="23" font-weight="800" fill="#1d5d8f">均衡解：0</text>
+        <text x="780" y="236" text-anchor="middle" font-size="17" font-weight="700" fill="#1d5d8f">无限阶共同理性</text>
+
+        <!-- Iterative x2/3 arcs -->
+        <path d="M 182 72 Q 214 48 244 102" fill="none" stroke="#1d5d8f" stroke-width="2" class="flow-line" marker-end="url(#arrStep)"/>
+        <text x="213" y="54" text-anchor="middle" font-size="12.5" font-weight="800" fill="#1d5d8f">×2/3</text>
+        <path d="M 336 118 Q 368 96 398 136" fill="none" stroke="#1d5d8f" stroke-width="2" class="flow-line" marker-end="url(#arrStep)"/>
+        <text x="367" y="100" text-anchor="middle" font-size="12.5" font-weight="800" fill="#1d5d8f">×2/3</text>
+        <path d="M 490 150 Q 522 132 550 162" fill="none" stroke="#1d5d8f" stroke-width="2" class="flow-line" marker-end="url(#arrStep)"/>
+        <path d="M 644 174 Q 696 164 764 190" fill="none" stroke="#1d5d8f" stroke-width="2" class="flow-line" marker-end="url(#arrStep)"/>
+
+        <g id="levelKOverlay"></g>
+      </svg>
+    </div>
+    <p class="lead" id="insightReal" style="margin-top:10px;text-align:left;">真实交易者多停留在 Level-1 至 Level-2：明知资产高估，仍博弈「下一棒接盘者」而出价高于内在价值。</p>
+  </section>
+
+  <!-- 8. 实验二（上）：面向评委展示教学痛点与学生参与过程 -->
+  <section class="slide" data-id="prospect-play">
+    <div class="slide-head">
+      <span class="pill">07 / 实验二：教学实施</span>
+      <div class="head-right">
+        <span class="part-badge wait" id="badgePT"><i></i><span>双轮独立选择待采集</span></span>
+        <span class="slide-sub-tag">对称损益双轮独立决策</span>
+      </div>
+    </div>
+    <h2>同一群人：赚钱求稳，亏钱赌一把，偏好真会反转</h2>
+    <div class="grid-2col" style="align-items:stretch;">
+      <div class="panel" style="justify-content:space-between;">
+        <div>
+          <div style="font-size:17px;font-weight:700;color:var(--blue);margin-bottom:8px;">学生课堂参与：同一受试群体连续完成两轮独立选择（支持现场点击调整）</div>
+          <div style="background:var(--paper-soft);border:1px solid var(--line);border-radius:14px;padding:12px 16px;margin-bottom:10px;">
+            <div style="font-size:19px;font-weight:700;color:var(--accent-2);margin-bottom:6px;">第 1 轮决策：收益情境下的风险选择</div>
+            <div style="font-size:17px;color:var(--muted);margin-bottom:8px;">方案 A：100% 获得 <strong>+3000 元</strong> ｜ 方案 B：80% 获得 +4000 元，20% 为 0（期望 <strong>+3200</strong>）</div>
+            <div style="display:flex;gap:10px;">
+              <button type="button" class="secondary" id="ptGainA" style="flex:1;font-size:17px;">方案 A 确定收益 (<span id="ptGACnt">0</span>)</button>
+              <button type="button" class="secondary" id="ptGainB" style="flex:1;font-size:17px;">方案 B 风险收益 (<span id="ptGBCnt">0</span>)</button>
+            </div>
+          </div>
+          <div style="background:var(--paper-soft);border:1px solid var(--line);border-radius:14px;padding:12px 16px;">
+            <div style="font-size:19px;font-weight:700;color:var(--bad);margin-bottom:6px;">第 2 轮决策：亏损情境下的风险选择</div>
+            <div style="font-size:17px;color:var(--muted);margin-bottom:8px;">方案 A：100% 损失 <strong>-3000 元</strong> ｜ 方案 B：80% 损失 -4000 元，20% 为 0（期望 <strong>-3200</strong>）</div>
+            <div style="display:flex;gap:10px;">
+              <button type="button" class="secondary" id="ptLossA" style="flex:1;font-size:17px;">方案 A 确定止损 (<span id="ptLACnt">0</span>)</button>
+              <button type="button" class="secondary" id="ptLossB" style="flex:1;font-size:17px;">方案 B 风险持有 (<span id="ptLBCnt">0</span>)</button>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="hint">期望效用（EU）基准：全局风险厌恶者在亏损情境下应优先选择方案 A 控制下行方差</span>
+          <button type="button" class="secondary" id="ptReset" style="font-size:16px;padding:6px 14px;">数据清零</button>
+        </div>
+      </div>
+
+      <div class="svg-card" style="flex-direction:column;justify-content:space-between;padding:16px 20px;">
+        <div style="width:100%;text-align:left;font-size:18.5px;font-weight:700;color:var(--ink);">双轮选择对照：比较收益与亏损情境下的群体分布</div>
+        <svg id="ptFlowSvg" viewBox="0 0 500 246" style="width:100%;height:auto;" aria-label="收益和亏损情境下两轮选择的汇总对照"></svg>
+        <div class="agent-box" style="margin-top:4px;width:100%;font-size:16.5px;padding:9px 14px;">
+          <span class="tag-ai">教学设计意图</span>对照两轮汇总结果，引导学生回看自己的选择；汇总数据不记录个人转向。
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. 实验二（下）：价值函数机制与学生风控规则产出 -->
+  <section class="slide" data-id="prospect-insight">
+    <div class="slide-head">
+      <span class="pill">08 / 实验二：机制解析与教学闭环</span>
+      <div class="head-right">
+        <span class="part-badge"><i></i><span>自我归因 → 当堂签署风控参数</span></span>
+        <span class="slide-sub-tag">从行为偏差诊断转化为量化风控约束</span>
+      </div>
+    </div>
+    <h2>价值函数解释了反转，纪律卡管住了它</h2>
+    <div class="grid-2col">
+      <div class="svg-card">
+        <svg viewBox="0 0 560 345" role="img" aria-label="前景理论S型价值函数示意图与两轮选择比例">
+          <!-- Quadrant subtle shading -->
+          <rect x="280" y="20" width="246" height="148" rx="10" fill="rgba(15,110,86,0.05)"/>
+          <rect x="34" y="168" width="246" height="156" rx="10" fill="rgba(180,35,24,0.05)"/>
+
+          <line x1="30" y1="168" x2="530" y2="168" stroke="#52525b" stroke-width="2"/>
+          <line x1="280" y1="20" x2="280" y2="328" stroke="#52525b" stroke-width="2"/>
+          <text x="526" y="188" text-anchor="end" font-size="16.5" font-weight="600" fill="#52525b">收益 +x</text>
+          <text x="36" y="156" font-size="16.5" font-weight="600" fill="#52525b">亏损 -x</text>
+          <text x="268" y="36" text-anchor="end" font-size="17" fill="#52525b">心理价值 v(x)</text>
+
+          <!-- Equal magnitude comparison (+3000 vs -3000) -->
+          <line x1="395" y1="168" x2="395" y2="96" stroke="#0f6e56" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <line x1="280" y1="96" x2="395" y2="96" stroke="#0f6e56" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <text x="400" y="186" text-anchor="middle" font-size="13" font-weight="700" fill="#0f6e56">+3000</text>
+
+          <line x1="165" y1="168" x2="165" y2="294" stroke="#b42318" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <line x1="280" y1="294" x2="165" y2="294" stroke="#b42318" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <text x="165" y="158" text-anchor="middle" font-size="13" font-weight="700" fill="#b42318">-3000</text>
+          <rect x="290" y="278" width="184" height="24" rx="6" fill="#fff1f0" stroke="#f1b7b2"/>
+          <text x="382" y="295" text-anchor="middle" font-size="12.5" font-weight="700" fill="#b42318">亏损痛感约为同额收益 2.25 倍</text>
+
+          <!-- S-curve paths with draw animation -->
+          <path d="M 280 168 Q 355 92 495 68" fill="none" stroke="#0f6e56" stroke-width="5" stroke-linecap="round" class="draw-curve"/>
+          <text x="348" y="48" font-size="18" font-weight="700" fill="#0f6e56">凹函数：风险厌恶</text>
+          <text x="520" y="132" text-anchor="end" font-size="14" font-weight="700" fill="#0f6e56" id="ptSvgGainNote">浮盈过早止盈（本班 80.0%）</text>
+
+          <path d="M 280 168 Q 246 282 72 310" fill="none" stroke="#b42318" stroke-width="5" stroke-linecap="round" class="draw-curve"/>
+          <text x="38" y="204" font-size="18" font-weight="700" fill="#b42318">凸函数：风险寻求</text>
+          <text x="38" y="228" font-size="14" font-weight="700" fill="#b42318" id="ptSvgLossNote">浮亏惜售（本班 75.6%）</text>
+
+          <!-- Pulsing classroom empirical working points -->
+          <circle cx="395" cy="96" r="7" fill="#0f6e56"/>
+          <circle cx="395" cy="96" r="7" fill="none" stroke="#0f6e56" stroke-width="2"></circle>
+
+          <circle cx="165" cy="294" r="7" fill="#b42318"/>
+          <circle cx="165" cy="294" r="7" fill="none" stroke="#b42318" stroke-width="2"></circle>
+
+          <circle cx="280" cy="168" r="6" fill="#18181b"/>
+          <text x="288" y="186" font-size="14" font-weight="700" fill="#18181b">参考点(成本)</text>
+        </svg>
+      </div>
+      <div class="pt-cards">
+        <div class="pt-item" style="border-left:4px solid #b42318;">
+          <h3>Step 1 · 课前学情诊断</h3>
+          <p>学生课前风控方案多停留在「视市场情况止损」等定性表述，缺乏客观执行阈值，面临浮亏时易转向风险寻求。</p>
+        </div>
+        <div class="pt-item" style="border-left:4px solid #1d5d8f;">
+          <h3>Step 2 · 课堂实证对标</h3>
+          <p>引导「第 1 轮选 A 且第 2 轮选 B」的学生对照价值函数曲线自我归因，理解处置效应对组合净值的长期拖累。</p>
+        </div>
+        <div class="pt-item" style="border-left:4px solid #0f6e56;">
+          <h3>Step 3 · 制度规则产出（当堂写进个人风控卡）</h3>
+          <p style="margin-bottom:8px;">学生当堂制定<strong>事前量化风控参数</strong>（单只股票仓位上限、最大回撤止损阈值），写入个人投资纪律。</p>
+          <svg viewBox="0 0 480 62" style="width:100%;height:auto;display:block;" aria-label="学生课堂产出的个人风控纪律卡样张">
+            <rect x="2" y="2" width="476" height="58" rx="10" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+            <text x="16" y="24" font-size="12.5" font-weight="800" fill="#0a4d3c">《个人投资风控卡》课堂签署样张</text>
+            <text x="16" y="45" font-size="13" font-weight="700" fill="#18181b">单票仓位 ≤ 20%  ｜  事前止损线 -8%  ｜  触发即执行</text>
+            <rect x="394" y="12" width="72" height="36" rx="6" fill="#fff" stroke="#0f6e56" stroke-width="1.6" transform="rotate(-4 430 30)"/>
+            <text x="430" y="35" text-anchor="middle" font-size="12.5" font-weight="800" fill="#0f6e56" transform="rotate(-4 430 30)">当堂立约</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. 实验三：防背诵 A 股统计题（直指散户高换手痛点） -->
+  <section class="slide" data-id="overconf-play">
+    <div class="slide-head">
+      <span class="pill">09 / 实验三实测</span>
+      <div class="head-right">
+        <span class="part-badge wait" id="badgeOC"><i></i><span>90% 置信区间校准待统计</span></span>
+        <span class="slide-sub-tag">防背诵 A 股投资者结构与极端行情题</span>
+      </div>
+    </div>
+    <h2>九成把握，对了一半：过度自信推高换手</h2>
+    <div class="oc-card" style="padding:6px 18px;">
+      <div class="oc-item" style="padding:7px 0;"><span>1. 《上交所统计年鉴(2018卷)》沪市自然人持股市值占比</span><span class="oc-ans" id="ocAns1">待揭晓</span><button type="button" class="secondary oc-rev" style="padding:5px 14px;font-size:16px;" data-idx="1">揭晓</button></div>
+      <div class="oc-item" style="padding:7px 0;"><span>2. 同期沪市自然人投资者贡献的全年交易金额占比</span><span class="oc-ans" id="ocAns2">待揭晓</span><button type="button" class="secondary oc-rev" style="padding:5px 14px;font-size:16px;" data-idx="2">揭晓</button></div>
+      <div class="oc-item" style="padding:7px 0;"><span>3. 2015 年 6 月至 2016 年 1 月上证指数最大回撤幅度</span><span class="oc-ans" id="ocAns3">待揭晓</span><button type="button" class="secondary oc-rev" style="padding:5px 14px;font-size:16px;" data-idx="3">揭晓</button></div>
+      <div class="oc-item" style="padding:7px 0;"><span>4. 2024 年 10 月 8 日沪深两市单日历史最高成交总额</span><span class="oc-ans" id="ocAns4">待揭晓</span><button type="button" class="secondary oc-rev" style="padding:5px 14px;font-size:16px;" data-idx="4">揭晓</button></div>
+    </div>
+    <div class="panel" style="margin-top:8px;padding:12px 18px;flex:0 0 auto;gap:6px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <span class="body" style="font-size:18px;font-weight:700;">录入全班命中题数分布（每人作答 4 道 90% 区间题）：</span>
+        <div style="display:flex;gap:7px;flex-wrap:wrap;">
+          <button type="button" class="secondary oc-cnt-btn" style="padding:5px 12px;font-size:16px;" data-k="0">0题(<span id="ocK0">0</span>)</button>
+          <button type="button" class="secondary oc-cnt-btn" style="padding:5px 12px;font-size:16px;" data-k="1">1题(<span id="ocK1">0</span>)</button>
+          <button type="button" class="secondary oc-cnt-btn" style="padding:5px 12px;font-size:16px;" data-k="2">2题(<span id="ocK2">0</span>)</button>
+          <button type="button" class="secondary oc-cnt-btn" style="padding:5px 12px;font-size:16px;" data-k="3">3题(<span id="ocK3">0</span>)</button>
+          <button type="button" class="secondary oc-cnt-btn" style="padding:5px 12px;font-size:16px;" data-k="4">4题(<span id="ocK4">0</span>)</button>
+          <button type="button" class="secondary" id="ocClear" style="padding:5px 12px;font-size:16px;">清零</button>
+        </div>
+      </div>
+      <svg id="ocSvg" viewBox="0 0 1060 156" style="width:100%;height:auto;margin-top:2px;" aria-label="全班区间命中分布柱状图与上交所散户换手剪刀差对比">
+        <!-- Left: Hit distribution + Calibration bar -->
+        <rect x="0" y="2" width="548" height="150" rx="12" fill="#faf8f4" stroke="#e4dfd5"/>
+        <text x="16" y="24" font-size="14.5" font-weight="800" fill="#18181b">本班学生区间命中题数分布（柱高 = 人数）</text>
+        <g id="ocHistBars"></g>
+        <!-- Ideal 3.6/4 target line -->
+        <line x1="228" y1="36" x2="228" y2="86" stroke="#1d5d8f" stroke-width="1.8" stroke-dasharray="4 3"/>
+        <text x="234" y="44" font-size="11.5" font-weight="700" fill="#1d5d8f">理性期望 3.6题</text>
+
+        <text x="16" y="116" font-size="14" font-weight="700" fill="#1d5d8f">贝叶斯校准基准</text>
+        <rect x="132" y="103" width="346" height="16" rx="8" fill="#e4dfd5"/>
+        <rect x="132" y="103" width="311.4" height="16" rx="8" fill="#1d5d8f"/>
+        <text x="486" y="116" font-size="14.5" font-weight="800" fill="#1d5d8f">90.0%</text>
+
+        <text x="16" y="141" font-size="14" font-weight="700" fill="#c2571a">本班实际命中率</text>
+        <rect x="132" y="128" width="346" height="16" rx="8" fill="#e4dfd5"/>
+        <rect id="ocBar" x="132" y="128" width="0" height="16" rx="8" fill="#c2571a" style="transition:width .65s cubic-bezier(.2,.8,.2,1);"/>
+        <text id="ocPct" x="486" y="141" font-size="14.5" font-weight="800" fill="#c2571a">0%</text>
+
+        <!-- Right: SSE Retail Turnover Scissors & k export -->
+        <rect x="564" y="2" width="496" height="150" rx="12" fill="#fff8f2" stroke="#fed7aa"/>
+        <text x="580" y="24" font-size="14.5" font-weight="800" fill="#c2571a">A 股高换手实证剪刀差（题 1 vs 题 2）</text>
+
+        <text x="580" y="54" font-size="13.5" font-weight="700" fill="#52525b">自然人持股市值</text>
+        <rect x="688" y="40" width="280" height="18" rx="9" fill="#ece7dc"/>
+        <rect x="688" y="40" width="59.3" height="18" rx="9" fill="#1d5d8f"/>
+        <text x="976" y="54" font-size="14.5" font-weight="800" fill="#1d5d8f">21.17%</text>
+
+        <text x="580" y="84" font-size="13.5" font-weight="700" fill="#b42318">自然人交易金额</text>
+        <rect x="688" y="70" width="280" height="18" rx="9" fill="#ece7dc"/>
+        <rect x="688" y="70" width="229.6" height="18" rx="9" fill="#c2571a"/>
+        <text x="976" y="84" font-size="14.5" font-weight="800" fill="#b42318">82.01%</text>
+
+        <path d="M 748 58 L 916 70" fill="none" stroke="#b42318" stroke-width="1.4" stroke-dasharray="3 3"/>
+        <rect x="580" y="102" width="464" height="38" rx="9" fill="#fff" stroke="#fdba74" stroke-width="1.4"/>
+        <circle cx="598" cy="121" r="5" fill="#c2571a"></circle>
+        <text x="610" y="126" font-size="13.5" font-weight="800" fill="#18181b" id="ocExportTxt">沙盘导出：过度自信倍数 k = 90% ÷ 实测命中率 → 待测算</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- 11. 实验四（上）：仿真实验设计说明页（与前三项实验严格一一对应） -->
+  <section class="slide" data-id="market-intro">
+    <div class="slide-head">
+      <span class="pill blue">10 / 实验四：仿真设计</span>
+      <div class="head-right">
+        <span class="part-badge"><i></i><span>参考实验机制设置沙盘</span></span>
+        <span class="slide-sub-tag">个体偏差能否被基本面套利完全抵消？</span>
+      </div>
+    </div>
+    <h2>个人偏差会不会被套利抹平？把三个实验搬进同一个市场</h2>
+    <div class="svg-card">
+      <svg viewBox="0 0 1120 330" role="img" aria-label="前三项个体实验与ABM市场仿真严格一一对应动态机制图">
+        <defs>
+          <marker id="arrOrange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#c2571a"/>
+          </marker>
+          <marker id="arrRed" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#b42318"/>
+          </marker>
+          <marker id="arrGray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#52525b"/>
+          </marker>
+          <marker id="arrGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f6e56"/>
+          </marker>
+        </defs>
+
+        <!-- Left column: width 356 -->
+        <text x="192" y="26" text-anchor="middle" font-size="18" font-weight="700" fill="#18181b">1. 前三项实验一一映射（四类市场主体）</text>
+
+        <rect x="14" y="42" width="356" height="60" rx="12" fill="#fff8f2" stroke="#c2571a" stroke-width="1.5"/>
+        <text x="192" y="66" text-anchor="middle" font-size="15.5" font-weight="700" fill="#c2571a">实验一（选美博弈）→ 高阶信念主体</text>
+        <text x="192" y="89" text-anchor="middle" font-size="13.5" fill="#52525b" id="mapSub1">按群体共识情绪预期（Level-k）报价</text>
+
+        <rect x="14" y="112" width="356" height="60" rx="12" fill="#fdecec" stroke="#b42318" stroke-width="1.5"/>
+        <text x="192" y="136" text-anchor="middle" font-size="15.5" font-weight="700" fill="#b42318">实验二（前景理论）→ 处置效应主体</text>
+        <text x="192" y="159" text-anchor="middle" font-size="13.5" fill="#52525b" id="mapSub2">锚定建仓参考点：浮盈早兑现、浮亏惜售</text>
+
+        <rect x="14" y="182" width="356" height="60" rx="12" fill="#faf8f4" stroke="#52525b" stroke-width="1.5"/>
+        <text x="192" y="206" text-anchor="middle" font-size="15.5" font-weight="700" fill="#18181b">实验三（过度自信）→ 信号高估主体</text>
+        <text x="192" y="229" text-anchor="middle" font-size="13.5" fill="#52525b" id="mapSub3">置信区间过窄，高估信号并放大波动</text>
+
+        <rect x="14" y="252" width="356" height="60" rx="12" fill="#e8f6f1" stroke="#0f6e56" stroke-width="1.5"/>
+        <text x="192" y="276" text-anchor="middle" font-size="15.5" font-weight="700" fill="#0f6e56">有效市场基准力量 → 基本面套利主体</text>
+        <text x="192" y="299" text-anchor="middle" font-size="13.5" fill="#52525b">围绕内在价值 V=100 反向修正（资本受限）</text>
+
+        <!-- 4 Dynamic Curved Input Streams into Market Clearing Hub -->
+        <path d="M 372 72 C 414 72, 414 132, 452 132" fill="none" stroke="#c2571a" stroke-opacity="0.22" stroke-width="3"/>
+        <path d="M 372 72 C 414 72, 414 132, 452 132" fill="none" stroke="#c2571a" stroke-width="2.4" class="flow-line" marker-end="url(#arrOrange)"/>
+
+        <path d="M 372 142 C 412 142, 412 162, 452 162" fill="none" stroke="#b42318" stroke-opacity="0.22" stroke-width="3"/>
+        <path d="M 372 142 C 412 142, 412 162, 452 162" fill="none" stroke="#b42318" stroke-width="2.4" class="flow-line" marker-end="url(#arrRed)"/>
+
+        <path d="M 372 212 C 412 212, 412 192, 452 192" fill="none" stroke="#52525b" stroke-opacity="0.22" stroke-width="3"/>
+        <path d="M 372 212 C 412 212, 412 192, 452 192" fill="none" stroke="#52525b" stroke-width="2.4" class="flow-line" marker-end="url(#arrGray)"/>
+
+        <path d="M 372 282 C 414 282, 414 222, 452 222" fill="none" stroke="#0f6e56" stroke-opacity="0.22" stroke-width="3"/>
+        <path d="M 372 282 C 414 282, 414 222, 452 222" fill="none" stroke="#0f6e56" stroke-width="2.4" class="flow-line" marker-end="url(#arrGreen)"/>
+
+        <!-- Center column: Market Clearing Engine with subtle pulse -->
+        <rect x="458" y="94" width="204" height="164" rx="18" fill="#eef5fb" stroke="#1d5d8f" stroke-width="2.4" class="hub-glow"/>
+        <text x="560" y="132" text-anchor="middle" font-size="19" font-weight="700" fill="#1d5d8f">2. 市场出清汇总</text>
+        <text x="560" y="164" text-anchor="middle" font-size="15" fill="#18181b">按主体权重加总当期</text>
+        <text x="560" y="188" text-anchor="middle" font-size="15" fill="#18181b">报价偏离与净申报量</text>
+        <text x="560" y="224" text-anchor="middle" font-size="16" font-weight="700" fill="#0a4d3c">形成出清价格 P(t)</text>
+
+        <!-- 2 Dynamic Curved Output Streams to Contrast Scenarios -->
+        <path d="M 664 152 C 706 152, 706 105, 744 105" fill="none" stroke="#0f6e56" stroke-opacity="0.22" stroke-width="3.2"/>
+        <path d="M 664 152 C 706 152, 706 105, 744 105" fill="none" stroke="#0f6e56" stroke-width="2.6" class="flow-line" marker-end="url(#arrGreen)"/>
+
+        <path d="M 664 202 C 706 202, 706 244, 744 244" fill="none" stroke="#c2571a" stroke-opacity="0.22" stroke-width="3.2"/>
+        <path d="M 664 202 C 706 202, 706 244, 744 244" fill="none" stroke="#c2571a" stroke-width="2.6" class="flow-line" marker-end="url(#arrOrange)"/>
+
+        <!-- Right column: width 356 -->
+        <text x="928" y="26" text-anchor="middle" font-size="18" font-weight="700" fill="#18181b">3. 课堂对照检验任务（下一页动态演示）</text>
+
+        <rect x="750" y="48" width="356" height="114" rx="14" fill="#e8f6f1" stroke="#0f6e56" stroke-width="2"/>
+        <text x="928" y="80" text-anchor="middle" font-size="18" font-weight="700" fill="#0f6e56">对照场景 A：基本面套利主导</text>
+        <text x="928" y="110" text-anchor="middle" font-size="15" fill="#18181b">降低三类行为权重，检验有效市场基准</text>
+        <text x="928" y="138" text-anchor="middle" font-size="15" font-weight="700" fill="#0a4d3c">偏差被套利抵消，价格围绕 V=100 收敛</text>
+
+        <rect x="750" y="184" width="356" height="120" rx="14" fill="#fff8f2" stroke="#c2571a" stroke-width="2"/>
+        <text x="928" y="216" text-anchor="middle" font-size="18" font-weight="700" fill="#c2571a">对照场景 B：三类行为偏差共同作用</text>
+        <text x="928" y="246" text-anchor="middle" font-size="15" fill="#18181b">代入高阶信念、处置效应与过度自信参数</text>
+        <text x="928" y="274" text-anchor="middle" font-size="15" font-weight="700" fill="#b42318">价格脱离基本面，遇冲击引发非线性下跌</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- 12. 实验四（下）：ABM 多主体市场动态仿真沙盘 -->
+  <section class="slide" data-id="market-sim">
+    <div class="slide-head">
+      <span class="pill blue">11 / 实验四：动态仿真</span>
+      <div class="head-right">
+        <span class="part-badge" id="badgeSim"><i></i><span>手动参数驱动价格出清</span></span>
+        <span class="slide-sub-tag">高阶信念 · 处置效应 · 过度自信</span>
+      </div>
+    </div>
+    <h2>套利够强，价格贴着 100；套利不足，泡沫自己长出来</h2>
+    <div class="sim">
+      <div id="chart-wrap">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;font-size:17px;color:var(--muted);flex-wrap:wrap;gap:6px;">
+          <span>虚线：内在价值 V=100 ｜ <span style="color:#c2571a;font-weight:700;">橙点线：共识预期锚</span> ｜ <span style="color:#8b8375;font-weight:700;">灰虚线：建仓参考点</span> ｜ <span style="color:#0f6e56;font-weight:700;">实线：出清价 P(t)</span></span>
+          <span id="simRound" style="font-weight:700;color:var(--ink);">第 0 轮</span>
+        </div>
+        <svg id="marketChart" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid meet"></svg>
+        <svg id="forceChart" viewBox="0 0 800 72" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;flex:0 0 auto;margin-top:4px;border-top:1px dashed var(--line);padding-top:4px;" aria-label="当期三类主体买卖净力量实时拉锯图"></svg>
+      </div>
+      <div class="controls">
+        <div style="display:flex;gap:8px;">
+          <button type="button" class="secondary" id="simPresetEMH" style="flex:1;font-size:16px;padding:8px 10px;border-color:var(--accent);color:var(--accent-2);">场景 A：套利主导</button>
+          <button type="button" class="secondary" id="simPresetBeh" style="flex:1;font-size:16px;padding:8px 10px;border-color:var(--orange);color:var(--orange);">场景 B：偏差主导</button>
+        </div>
+        <div class="metric-row">
+          <div class="metric"><div class="lab">市场出清价</div><div class="val" id="mPrice">100.0</div></div>
+          <div class="metric"><div class="lab">偏离基本面</div><div class="val" id="mDev">0.0%</div></div>
+          <div class="metric"><div class="lab">近 10 步平均波动</div><div class="val" id="mVol">—</div></div>
+        </div>
+        <div class="slider-box">
+          <div class="slider-head"><span>实验一：高阶信念主体权重（选美预期）</span><strong id="vTrend">35%</strong></div>
+          <input type="range" id="sTrend" min="0" max="80" step="5" value="35">
+        </div>
+        <div class="slider-box">
+          <div class="slider-head"><span>实验二：处置效应主体权重（参考点锚定）</span><strong id="vLoss">35%</strong></div>
+          <input type="range" id="sLoss" min="0" max="80" step="5" value="35">
+        </div>
+        <div class="slider-box" style="background:#e8f6f1;border-color:#b7e0d2;">
+          <div class="slider-head"><span>基本面套利主体权重（= 100% − 前两类）</span><strong id="vArb">30%</strong></div>
+          <div style="height:10px;margin:6px 0 4px;background:#d4e9e1;border-radius:99px;overflow:hidden;"><div id="arbBar" style="height:100%;width:30%;background:var(--accent);transition:width .2s;"></div></div>
+        </div>
+        <div class="slider-box">
+          <div class="slider-head"><span>实验三：过度自信倍数 k（= 90% ÷ 实测命中率）</span><strong id="vNoise">2.0×</strong></div>
+          <input type="range" id="sNoise" min="1" max="4" step="0.1" value="2">
+          <div class="hint" id="kHint" style="font-size:15px;margin-top:2px;">k = 1 为校准良好；k 越大，区间越窄、交易扰动越大</div>
+        </div>
+        <div class="ctrl-btns">
+          <button type="button" id="simPlay">自动演化</button>
+          <button class="secondary" type="button" id="simStep">单步推进</button>
+          <button class="secondary" type="button" id="simShock">共识情绪逆转冲击</button>
+          <button type="button" class="secondary" id="simReset">重置</button>
+        </div>
+        <div class="agent-box" id="simGuide" style="margin-top:8px;flex:1;display:flex;flex-direction:column;justify-content:center;gap:6px;padding:14px 18px;border-left:6px solid var(--blue);background:#eef5fb;box-shadow:var(--shadow-sm);">
+          <div style="font-size:19.5px;font-weight:800;color:var(--blue);display:flex;align-items:center;gap:10px;">
+            <span class="tag-ai" style="font-size:15px;padding:3px 10px;margin:0;">演示指引</span>
+            <span>核心检验：个体偏差能否撼动市场定价？</span>
+          </div>
+          <div style="font-size:18px;line-height:1.5;color:var(--ink);">
+            • 点击<strong>「场景 A」</strong>：验证套利主导下价格紧贴 <strong>V=100</strong> 收敛<br>
+            • 点击<strong>「场景 B」</strong>：验证高阶信念泡沫与破位连锁下跌
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13. 课堂收口：四个实验 → 四条投资纪律 -->
+  <section class="slide" data-id="close">
+    <div class="slide-head">
+      <span class="pill">12 / 课堂收口</span>
+      <div class="head-right">
+        <span class="part-badge"><i></i><span>一人一卡 · 当堂带走投资纪律</span></span>
+        <span class="slide-sub-tag">从偏差诊断到投资纪律</span>
+      </div>
+    </div>
+    <h2>四个实验对应四条纪律，当堂写进自己的风控卡</h2>
+    <div class="rules">
+      <div class="rule-row head"><span>实验环节</span><span>暴露的偏差与本班实测证据</span><span style="text-align:center;">纪律转化</span><span>学生当堂写进《个人投资纪律卡》</span></div>
+      <div class="rule-row" style="border-left:5px solid var(--blue);">
+        <div class="rule-exp"><span class="num">实验一</span>选美博弈</div>
+        <div class="rule-bias">追逐「别人怎么想」，价格脱离基本面<br><span class="rule-ev" id="closeEv1">对照纳什均衡解 0</span></div>
+        <div class="rule-arrow">
+          <svg viewBox="0 0 96 28" style="width:92px;height:26px;"><path d="M 6 14 L 84 14" fill="none" stroke="#1d5d8f" stroke-width="2.4" class="flow-line"/><polygon points="82,8 94,14 82,20" fill="#1d5d8f"/></svg>
+        </div>
+        <div class="rule-do"><span>以基本面估值为锚，不博「下一棒接盘」</span><span class="rule-stamp">估值锚定</span></div>
+      </div>
+      <div class="rule-row" style="border-left:5px solid var(--bad);">
+        <div class="rule-exp"><span class="num">实验二</span>前景理论</div>
+        <div class="rule-bias">浮盈过早止盈，浮亏惜售不止损<br><span class="rule-ev" id="closeEv2">对照期望值一致性基准</span></div>
+        <div class="rule-arrow">
+          <svg viewBox="0 0 96 28" style="width:92px;height:26px;"><path d="M 6 14 L 84 14" fill="none" stroke="#b42318" stroke-width="2.4" class="flow-line"/><polygon points="82,8 94,14 82,20" fill="#b42318"/></svg>
+        </div>
+        <div class="rule-do"><span>买入前写好止损线，触发即执行</span><span class="rule-stamp">事前止损</span></div>
+      </div>
+      <div class="rule-row" style="border-left:5px solid var(--orange);">
+        <div class="rule-exp"><span class="num">实验三</span>过度自信</div>
+        <div class="rule-bias">区间估得太窄，交易过于频繁<br><span class="rule-ev" id="closeEv3">对照 90% 贝叶斯校准基准</span></div>
+        <div class="rule-arrow">
+          <svg viewBox="0 0 96 28" style="width:92px;height:26px;"><path d="M 6 14 L 84 14" fill="none" stroke="#c2571a" stroke-width="2.4" class="flow-line"/><polygon points="82,8 94,14 82,20" fill="#c2571a"/></svg>
+        </div>
+        <div class="rule-do"><span>控制换手，算收益先扣交易成本</span><span class="rule-stamp">换手约束</span></div>
+      </div>
+      <div class="rule-row" style="border-left:5px solid var(--accent);">
+        <div class="rule-exp"><span class="num">实验四</span>市场仿真</div>
+        <div class="rule-bias">套利力量有限，偏差可推动泡沫与踩踏<br><span class="rule-ev" id="closeEv4">对照有效市场价格 V=100</span></div>
+        <div class="rule-arrow">
+          <svg viewBox="0 0 96 28" style="width:92px;height:26px;"><path d="M 6 14 L 84 14" fill="none" stroke="#0f6e56" stroke-width="2.4" class="flow-line"/><polygon points="82,8 94,14 82,20" fill="#0f6e56"/></svg>
+        </div>
+        <div class="rule-do"><span>分散配置，单只股票仓位设上限</span><span class="rule-stamp">仓位上限</span></div>
+      </div>
+    </div>
+    <div class="svg-card" style="margin-top:10px;padding:10px 18px;background:#faf8f4;">
+      <svg viewBox="0 0 1100 50" style="width:100%;height:auto;" aria-label="学生课堂参与产出闭环条">
+        <rect x="6" y="7" width="318" height="36" rx="10" fill="#fff8f2" stroke="#fdba74"/>
+        <text x="165" y="30" text-anchor="middle" font-size="14.5" font-weight="700" fill="#c2571a">① 人人现场作答：产出本人偏差证据</text>
+        <path d="M 332 25 L 386 25" fill="none" stroke="#0f6e56" stroke-width="2.2" class="flow-line"/>
+        <polygon points="384,20 395,25 384,30" fill="#0f6e56"/>
+        <rect x="402" y="7" width="318" height="36" rx="10" fill="#eef5fb" stroke="#bfd7ea"/>
+        <text x="561" y="30" text-anchor="middle" font-size="14.5" font-weight="700" fill="#1d5d8f">② 手动设置参数：观察市场演化</text>
+        <path d="M 728 25 L 782 25" fill="none" stroke="#0f6e56" stroke-width="2.2" class="flow-line"/>
+        <polygon points="780,20 791,25 780,30" fill="#0f6e56"/>
+        <rect x="798" y="7" width="296" height="36" rx="10" fill="#e8f6f1" stroke="#86efac"/>
+        <text x="946" y="30" text-anchor="middle" font-size="14.5" font-weight="700" fill="#0a4d3c">③ 当堂立约：写下止损 · 仓位 · 换手规则</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- 14. 致谢 -->
+  <section class="slide" data-id="thanks" style="align-items:center;text-align:center;">
+    <svg viewBox="0 0 220 64" style="width:210px;height:auto;margin-bottom:18px;" aria-hidden="true">
+      <path d="M 28 32 C 58 10, 92 10, 110 32 C 128 54, 162 54, 192 32" fill="none" stroke="#0f6e56" stroke-width="2.4" class="flow-line"/>
+      <circle cx="28" cy="32" r="8" fill="#c2571a"/>
+      <circle cx="110" cy="32" r="8" fill="#1d5d8f"/>
+      <circle cx="192" cy="32" r="8" fill="#0f6e56"/>
+    </svg>
+    <div style="font-size:16px;letter-spacing:.4em;color:var(--accent);font-weight:700;margin-bottom:24px;">THANK&nbsp;YOU&nbsp;FOR&nbsp;LISTENING</div>
+    <div style="font-size:80px;font-weight:800;color:var(--ink);letter-spacing:.06em;line-height:1.1;">谢谢聆听</div>
+    <div style="margin-top:28px;font-size:36px;font-weight:700;color:var(--blue);letter-spacing:.18em;">恳请批评指正</div>
+    <div style="margin-top:44px;width:88px;height:5px;background:var(--accent);border-radius:3px;"></div>
+    <div style="margin-top:36px;font-size:20px;color:var(--muted);line-height:2.1;">《投资学原理》行为投资课堂实验教学<br>四个偏差实验 · 多主体市场仿真 · 投资纪律</div>
+  </section>
+
+</template>
+
+<script>
+(function () {
+  const slidesRoot = document.getElementById("slides");
+  const tpl = document.getElementById("tpl");
+  const stage = document.createElement("div");
+  stage.className = "stage";
+  slidesRoot.appendChild(stage);
+  [...tpl.content.children].forEach((el) => stage.appendChild(el));
+  const slides = [...stage.querySelectorAll(".slide")];
+  let i = 0;
+
+  function fitStage() {
+    const k = Math.min(window.innerWidth / 1600, window.innerHeight / 900);
+    stage.style.transform = "scale(" + k + ")";
+  }
+  window.addEventListener("resize", fitStage);
+  fitStage();
+
+  const topBar = document.querySelector(".bar");
+  let barTimer = null;
+  function wakeBar() {
+    if (!topBar) return;
+    topBar.classList.remove("idle");
+    clearTimeout(barTimer);
+    barTimer = setTimeout(() => topBar.classList.add("idle"), 3000);
+  }
+  document.addEventListener("mousemove", wakeBar, { passive: true });
+  document.addEventListener("pointerdown", wakeBar, { passive: true });
+  document.addEventListener("keydown", wakeBar);
+  wakeBar();
+
+  const dots = document.getElementById("dots");
+  slides.forEach((_, idx) => {
+    const b = document.createElement("button");
+    b.className = "dot"; b.type = "button";
+    b.addEventListener("click", () => show(idx));
+    dots.appendChild(b);
+  });
+
+  function setBadge(id, active, text) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.toggle("wait", !active);
+    const sp = el.querySelector("span");
+    if (sp) sp.textContent = text;
+  }
+
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle("on", k === i));
+    [...dots.children].forEach((d, k) => d.classList.toggle("on", k === i));
+    document.getElementById("pageNum").textContent = (i + 1) + " / " + slides.length;
+    document.getElementById("btnPrev").disabled = i === 0;
+    document.getElementById("btnNext").textContent = i === slides.length - 1 ? "回到封面" : "下一页";
+    const curId = slides[i].dataset.id;
+    if (curId === "hook") renderHook();
+    if (curId === "guess-enter") renderGuessAxis();
+    if (curId === "guess-insight") updateInsight();
+    if (curId === "prospect-play" || curId === "prospect-insight") renderPT();
+    if (curId === "overconf-play") renderOC();
+    if (curId === "market-intro" || curId === "close") syncCrossSlideBadges();
+    if (curId === "market-sim") renderChart();
+    if (location.hash !== "#" + curId) {
+      history.replaceState(null, "", "#" + curId);
+    }
+  }
+
+  document.getElementById("btnPrev").onclick = () => show(i - 1);
+  document.getElementById("btnNext").onclick = () => show(i === slides.length - 1 ? 0 : i + 1);
+  document.getElementById("btnFull").onclick = toggleFull;
+  function toggleFull() {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+    else document.exitFullscreen().catch(() => {});
+  }
+  document.addEventListener("fullscreenchange", () => {
+    document.getElementById("btnFull").textContent = document.fullscreenElement ? "退出全屏" : "全屏";
+  });
+
+  function typing() {
+    const el = document.activeElement;
+    return el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA");
+  }
+  document.addEventListener("keydown", (e) => {
+    if (typing()) return;
+    if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") {
+      if (e.key === " " && slides[i].dataset.id === "market-sim") { e.preventDefault(); toggleSimPlay(); return; }
+      e.preventDefault();
+      if (i < slides.length - 1) show(i + 1);
+    } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+      e.preventDefault();
+      show(i - 1);
+    } else if (e.key === "Home") show(0);
+    else if (e.key === "End") show(slides.length - 1);
+    else if (e.key === "f" || e.key === "F") toggleFull();
+  });
+
+  // ----- 1. 导入：心理账户 -----
+  const hookScenes = [
+    { step: "情景一 / 共两个", loss: "丢了 500 元门票", cls: "", text: "你提前花 500 元买了一张演唱会门票。到了检票口，发现票丢了，票不记名、无法补办。售票处还有票，<strong>你会再花 500 元买一张吗？</strong>" },
+    { step: "情景二 / 共两个", loss: "丢了 500 元现金", cls: "cash", text: "你打算到现场花 500 元买演唱会门票。到了售票口，发现钱包里丢了 500 元现金。售票处还有票，<strong>你还会花 500 元买票吗？</strong>" }
+  ];
+  const hookVotes = [{ yes: 0, no: 0 }, { yes: 0, no: 0 }];
+  let hookI = 0;
+
+  function renderSeatGrid(svgId, yes, tot, activeColor) {
+    const svg = document.getElementById(svgId);
+    if (!svg) return;
+    const count = tot > 0 ? Math.min(tot, 54) : 45;
+    const lit = tot > 0 ? Math.round((yes / tot) * count) : 0;
+    const cols = 9;
+    const rows = Math.ceil(count / cols);
+    const startX = 27, startY = 26, dx = 27, dy = rows > 5 ? 15 : 18;
+    let out = `<rect x="55" y="3" width="160" height="13" rx="6" fill="#ece7dc"/>`;
+    out += `<text x="135" y="13" text-anchor="middle" font-size="9.5" font-weight="700" fill="#52525b">人数示意 · 最多 54 点</text>`;
+    for (let k = 0; k < count; k++) {
+      const r = Math.floor(k / cols), c = k % cols;
+      const cx = startX + c * dx, cy = startY + r * dy;
+      if (k < lit) {
+        out += `<circle cx="${cx}" cy="${cy}" r="6.2" fill="${activeColor}" class="pop-dot" style="animation-delay:${(k * 15)}ms;"/>`;
+      } else {
+        out += `<circle cx="${cx}" cy="${cy}" r="5.6" fill="#e9e4da" stroke="#cfc8ba" stroke-width="1"/>`;
+      }
+    }
+    svg.innerHTML = out;
+  }
+
+  function renderHookLiveStrip() {
+    const svg = document.getElementById("hookLiveSeats");
+    if (!svg) return;
+    const v = hookVotes[hookI] || { yes: 0, no: 0 };
+    const tot = v.yes + v.no;
+    const cap = Math.max(45, Math.min(tot, 60));
+    let out = `<text x="6" y="21" font-size="12.5" font-weight="700" fill="#52525b">实时投票人数：</text>`;
+    for (let k = 0; k < cap; k++) {
+      const cx = 104 + k * ((508) / Math.max(1, cap - 1));
+      const fill = k < v.yes ? "#0f6e56" : (k < tot ? "#b42318" : "#e4dfd5");
+      out += `<circle cx="${cx.toFixed(1)}" cy="17" r="4.2" fill="${fill}"/>`;
+    }
+    svg.innerHTML = out;
+  }
+
+  function animateHookPct(elId, barId, target) {
+    const el = document.getElementById(elId), bar = document.getElementById(barId);
+    bar.style.width = "0%";
+    const t0 = performance.now();
+    const tick = (t) => {
+      const k = Math.min(1, (t - t0) / 1100), eased = 1 - Math.pow(1 - k, 3);
+      el.textContent = Math.round(target * eased) + "%";
+      if (k < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(() => { bar.style.width = target + "%"; requestAnimationFrame(tick); });
+  }
+  function renderHook() {
+    const play = document.getElementById("hookPlay");
+    const result = document.getElementById("hookResult");
+    const maxN = Math.max(hookVotes[0].yes + hookVotes[0].no, hookVotes[1].yes + hookVotes[1].no);
+    setBadge("badgeHook", maxN > 0, maxN > 0 ? `单轮最多录入 ${maxN} 人` : "课堂实时投票待采集");
+    if (hookI >= 2) {
+      play.hidden = true; result.hidden = false;
+      [["Ticket", 0, "#b42318"], ["Cash", 1, "#1d5d8f"]].forEach(([key, idx, col]) => {
+        const v = hookVotes[idx], tot = v.yes + v.no;
+        document.getElementById("n" + key).textContent = tot ? v.yes + " / " + tot + " 人" : "—";
+        renderSeatGrid("dots" + key, v.yes, tot, col);
+        if (tot) animateHookPct("pct" + key, "bar" + key, Math.round(v.yes / tot * 100));
+        else { document.getElementById("pct" + key).textContent = "—"; document.getElementById("bar" + key).style.width = "0%"; }
+      });
+      return;
+    }
+    play.hidden = false; result.hidden = true;
+    const sc = hookScenes[hookI];
+    document.getElementById("hookStep").textContent = sc.step;
+    const loss = document.getElementById("hookLoss");
+    loss.textContent = sc.loss; loss.className = "hook-loss " + sc.cls;
+    document.getElementById("hookScene").innerHTML = sc.text;
+    document.getElementById("yesCnt").textContent = hookVotes[hookI].yes;
+    document.getElementById("noCnt").textContent = hookVotes[hookI].no;
+    document.getElementById("hookNext").textContent = hookI === 0 ? "下一情景" : "揭晓两组结果";
+    renderHookLiveStrip();
+  }
+  document.getElementById("voteYes").onclick = () => { hookVotes[hookI].yes++; renderHook(); };
+  document.getElementById("voteNo").onclick = () => { hookVotes[hookI].no++; renderHook(); };
+  document.getElementById("hookReset").onclick = () => { hookVotes[hookI] = { yes: 0, no: 0 }; renderHook(); };
+  document.getElementById("hookNext").onclick = () => { hookI += 1; renderHook(); };
+  renderHook();
+
+  // ----- 2. 实验一：选美博弈 -----
+  const nums = [];
+  const numIn = document.getElementById("numIn");
+  const chips = document.getElementById("chips");
+  let revealed = false;
+
+  function parseNums(text) {
+    return (text || "").split(/[,，、\s]+/).map((s) => s.trim()).filter(Boolean).map((s) => Number(s)).filter((n) => Number.isInteger(n) && n >= 0 && n <= 100);
+  }
+  function addNums(arr) {
+    arr.forEach((n) => nums.push(n));
+    revealed = false;
+    document.body.classList.remove("is-revealed");
+    renderNums();
+  }
+  function fmt(n) { return Number.isInteger(n) ? String(n) : n.toFixed(1); }
+
+  function getGuessStats() {
+    if (!nums.length) return null;
+    const avg = nums.reduce((a, b) => a + b, 0) / nums.length;
+    const target = avg * 2 / 3;
+    let best = Infinity;
+    nums.forEach((x) => { best = Math.min(best, Math.abs(x - target)); });
+    const winners = [...new Set(nums.filter((x) => Math.abs(x - target) - best < 1e-9))].sort((a, b) => a - b);
+    return { n: nums.length, avg, target, best, winners };
+  }
+
+  function renderGuessAxis() {
+    const svg = document.getElementById("guessAxisSvg");
+    if (!svg) return;
+    const x0 = 38, x1 = 568, yAxis = 158;
+    const mx = (v) => x0 + (v / 100) * (x1 - x0);
+    let h = `
+      <defs>
+        <marker id="arrGuess" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M 0 1 L 10 5 L 0 9 z" fill="#1d5d8f"/>
+        </marker>
+      </defs>
+      <rect x="${mx(18)}" y="22" width="${mx(36) - mx(18)}" height="${yAxis - 22}" rx="8" fill="rgba(194,87,26,0.07)"/>
+      <line x1="${x0}" y1="${yAxis}" x2="${x1}" y2="${yAxis}" stroke="#52525b" stroke-width="2"/>
+    `;
+    [0, 20, 33.3, 50, 80, 100].forEach((tk) => {
+      const tx = mx(tk);
+      const lab = tk === 33.3 ? "33.3(L1)" : (tk === 50 ? "50(L0)" : String(tk));
+      h += `<line x1="${tx}" y1="${yAxis}" x2="${tx}" y2="${yAxis + 6}" stroke="#52525b" stroke-width="1.5"/>`;
+      h += `<text x="${tx}" y="${yAxis + 21}" text-anchor="middle" font-size="11.5" fill="#52525b">${lab}</text>`;
+    });
+    // Nash equilibrium pin at 0
+    h += `<line x1="${x0}" y1="30" x2="${x0}" y2="${yAxis}" stroke="#1d5d8f" stroke-width="2" stroke-dasharray="4 3"/>`;
+    h += `<circle cx="${x0}" cy="${yAxis}" r="5.5" fill="#1d5d8f"/>`;
+    h += `<text x="${x0 + 4}" y="22" font-size="12" font-weight="800" fill="#1d5d8f">纳什均衡 0</text>`;
+
+    if (!nums.length) {
+      h += `<text x="303" y="98" text-anchor="middle" font-size="14.5" fill="#52525b">录入学生 0–100 整数报价后，实时生成个体落点与收敛靶心</text>`;
+      svg.innerHTML = h;
+      return;
+    }
+    if (!revealed) {
+      h += `<text x="303" y="68" text-anchor="middle" font-size="15" font-weight="700" fill="#0f6e56">已密封收集 ${nums.length} 份学生独立报价，点击下方按钮同屏揭晓</text>`;
+      const showN = Math.min(nums.length, 36);
+      for (let k = 0; k < showN; k++) {
+        const cx = 76 + k * (454 / Math.max(1, showN - 1));
+        h += `<circle cx="${cx.toFixed(1)}" cy="106" r="6" fill="#0f6e56" opacity="0.78" class="pop-dot" style="animation-delay:${k * 12}ms;"/>`;
+      }
+      svg.innerHTML = h;
+      return;
+    }
+
+    const st = getGuessStats();
+    const stacks = {};
+    nums.forEach((v, idx) => {
+      const bucket = Math.round(v / 2) * 2;
+      stacks[bucket] = (stacks[bucket] || 0) + 1;
+      const rank = stacks[bucket] - 1;
+      const cx = mx(v);
+      const cy = Math.max(34, yAxis - 10 - rank * 12.5);
+      const isWin = Math.abs(v - st.target) - st.best < 1e-9;
+      if (isWin) {
+        h += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="7" fill="none" stroke="#0f6e56" stroke-width="2"></circle>`;
+        h += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="6.2" fill="#0f6e56" stroke="#fff" stroke-width="1.5" class="pop-dot" style="animation-delay:${idx * 16}ms;"/>`;
+      } else {
+        h += `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5.2" fill="#c2571a" opacity="0.86" stroke="#fff" stroke-width="1" class="pop-dot" style="animation-delay:${idx * 16}ms;"/>`;
+      }
+    });
+
+    const xAvg = mx(st.avg), xTar = mx(st.target);
+    h += `<line x1="${xAvg.toFixed(1)}" y1="34" x2="${xAvg.toFixed(1)}" y2="${yAxis}" stroke="#c2571a" stroke-width="2" stroke-dasharray="5 4"/>`;
+    h += `<rect x="${(xAvg - 44).toFixed(1)}" y="12" width="88" height="20" rx="6" fill="#fff8f2" stroke="#c2571a"/>`;
+    h += `<text x="${xAvg.toFixed(1)}" y="26" text-anchor="middle" font-size="11.5" font-weight="800" fill="#c2571a">均值 ${fmt(st.avg)}</text>`;
+
+    h += `<line x1="${xTar.toFixed(1)}" y1="34" x2="${xTar.toFixed(1)}" y2="${yAxis}" stroke="#0f6e56" stroke-width="2.6"/>`;
+    h += `<rect x="${(xTar - 48).toFixed(1)}" y="34" width="96" height="21" rx="6" fill="#e8f6f1" stroke="#0f6e56"/>`;
+    h += `<text x="${xTar.toFixed(1)}" y="49" text-anchor="middle" font-size="11.5" font-weight="800" fill="#0a4d3c">靶心 ${fmt(st.target)}</text>`;
+
+    if (Math.abs(xAvg - xTar) > 12) {
+      const midX = (xAvg + xTar) / 2;
+      const arc = `M ${xAvg.toFixed(1)} 68 Q ${midX.toFixed(1)} 42 ${(xTar + 4).toFixed(1)} 64`;
+      h += `<path d="${arc}" fill="none" stroke="#1d5d8f" stroke-width="2" class="flow-line" marker-end="url(#arrGuess)"/>`;
+    }
+
+    // Deviation bracket from Nash 0 to Target
+    h += `<line x1="${x0}" y1="194" x2="${xTar.toFixed(1)}" y2="194" stroke="#1d5d8f" stroke-width="2"/>`;
+    h += `<line x1="${x0}" y1="189" x2="${x0}" y2="199" stroke="#1d5d8f" stroke-width="2"/>`;
+    h += `<line x1="${xTar.toFixed(1)}" y1="189" x2="${xTar.toFixed(1)}" y2="199" stroke="#1d5d8f" stroke-width="2"/>`;
+    h += `<text x="${((x0 + xTar) / 2).toFixed(1)}" y="207" text-anchor="middle" font-size="11.5" font-weight="800" fill="#1d5d8f">偏离均衡 +${fmt(st.target)}</text>`;
+    h += `<text x="${Math.min(556, xTar + 115).toFixed(1)}" y="198" font-size="12" font-weight="800" fill="#0f6e56">★ 获胜学生报价：${st.winners.join(" / ")}</text>`;
+
+    svg.innerHTML = h;
+  }
+
+  function renderNums() {
+    chips.innerHTML = "";
+    const st = revealed ? getGuessStats() : null;
+    nums.forEach((n, idx) => {
+      const el = document.createElement("span");
+      const isWin = st && Math.abs(n - st.target) - st.best < 1e-9;
+      el.className = "chip" + (isWin ? " win" : "");
+      const sid = "S" + String(idx + 1).padStart(2, "0");
+      el.innerHTML = `<span class="sid">${sid}</span> ${n}${isWin ? " ★" : ""} <button type="button" aria-label="删除">×</button>`;
+      el.querySelector("button").onclick = () => { nums.splice(idx, 1); revealed = false; document.body.classList.remove("is-revealed"); renderNums(); };
+      chips.appendChild(el);
+    });
+    document.getElementById("countHint").textContent = nums.length ? ("已录入 " + nums.length + " 份脱敏学生报价（S01–S" + String(nums.length).padStart(2, "0") + "）") : "尚未录入。";
+    document.getElementById("stN").textContent = nums.length ? String(nums.length) : "—";
+    document.getElementById("btnReveal").disabled = nums.length === 0;
+    setBadge("badgeGuess", nums.length > 0, nums.length > 0 ? (revealed ? `实测 ${nums.length} 份报价已揭晓` : `已录入 ${nums.length} 份密封报价`) : "待录入学生报价");
+    if (revealed) showReveal();
+    else {
+      document.getElementById("stAvg").textContent = "—";
+      document.getElementById("stTarget").textContent = "—";
+      document.getElementById("stWin").textContent = "—";
+      renderGuessAxis();
+    }
+    syncCrossSlideBadges();
+  }
+  function showReveal() {
+    const st = getGuessStats();
+    if (!st) return;
+    document.getElementById("stAvg").textContent = fmt(st.avg);
+    document.getElementById("stTarget").textContent = fmt(st.target);
+    document.getElementById("stWin").textContent = st.winners.join("、") + "（距靶心 " + fmt(st.best) + "，纳什均衡为 0）";
+    document.body.classList.add("is-revealed");
+    renderGuessAxis();
+    syncCrossSlideBadges();
+  }
+  document.getElementById("btnAdd").onclick = () => {
+    const arr = parseNums(numIn.value);
+    if (!arr.length) return;
+    addNums(arr); numIn.value = ""; numIn.focus();
+  };
+  numIn.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); document.getElementById("btnAdd").click(); }
+  });
+  document.getElementById("btnPaste").onclick = () => {
+    const arr = parseNums(document.getElementById("numPaste").value);
+    if (!arr.length) return;
+    addNums(arr);
+    document.getElementById("numPaste").value = "";
+  };
+  document.getElementById("btnClear").onclick = () => {
+    nums.splice(0, nums.length); revealed = false;
+    document.body.classList.remove("is-revealed"); renderNums(); updateInsight();
+  };
+  document.getElementById("btnReveal").onclick = () => {
+    if (!nums.length) return;
+    revealed = true; renderNums(); updateInsight();
+  };
+  function updateInsight() {
+    const line = document.getElementById("insightReal");
+    const ov = document.getElementById("levelKOverlay");
+    const zl = document.getElementById("lkZoneLabel");
+    if (revealed && nums.length) {
+      const st = getGuessStats();
+      const c0 = nums.filter((v) => v > 41).length;
+      const c1 = nums.filter((v) => v > 27 && v <= 41).length;
+      const c2 = nums.filter((v) => v >= 18 && v <= 27).length;
+      const c3 = nums.filter((v) => v < 18).length;
+      const pct12 = Math.round(((c1 + c2) / st.n) * 100);
+      line.textContent = `本班 ${st.n} 人实测均值 ${fmt(st.avg)}，目标点位 ${fmt(st.target)}；其中 ${c1 + c2} 人（${pct12}%）落在 Level-1 至 Level-2 区间，显著偏离纳什均衡解 0。`;
+      if (zl) zl.textContent = `本班实测集中带：${c1 + c2}/${st.n} 人（${pct12}%）落在此区间`;
+      if (ov) {
+        const cols = [
+          { x: 136, y: 196, cnt: c0, col: "#fff" },
+          { x: 290, y: 196, cnt: c1, col: "#fff" },
+          { x: 444, y: 196, cnt: c2, col: "#fff" },
+          { x: 598, y: 196, cnt: c3, col: "#fff" }
+        ];
+        ov.innerHTML = cols.map((b) => b.cnt ? `<rect x="${b.x - 32}" y="${b.y - 20}" width="64" height="20" rx="10" fill="rgba(24,24,27,0.72)"/><text x="${b.x}" y="${b.y - 6}" text-anchor="middle" font-size="12" font-weight="700" fill="${b.col}">本班 ${b.cnt}人</text>` : "").join("");
+      }
+      setBadge("badgeGuessIns", true, `本班 ${st.n} 人分布已叠印（靶心 ${fmt(st.target)}）`);
+    } else {
+      line.textContent = "真实交易者多停留在 Level-1 至 Level-2：明知资产高估，仍博弈「下一棒接盘者」而出价高于内在价值。";
+      if (zl) zl.textContent = "真实课堂集中带（Level-1 ～ Level-2）";
+      if (ov) ov.innerHTML = "";
+      setBadge("badgeGuessIns", false, "实测落点映射推理阶梯");
+    }
+  }
+
+  // ----- 3. 实验二：前景理论双轮同屏看板 -----
+  const ptVotes = [{ a: 0, b: 0 }, { a: 0, b: 0 }];
+  function renderPT() {
+    document.getElementById("ptGACnt").textContent = ptVotes[0].a;
+    document.getElementById("ptGBCnt").textContent = ptVotes[0].b;
+    document.getElementById("ptLACnt").textContent = ptVotes[1].a;
+    document.getElementById("ptLBCnt").textContent = ptVotes[1].b;
+    const totG = ptVotes[0].a + ptVotes[0].b;
+    const totL = ptVotes[1].a + ptVotes[1].b;
+    const pctSafe = totG ? (ptVotes[0].a / totG) * 100 : 0;
+    const pctGainRisk = totG ? 100 - pctSafe : 0;
+    const pctLossStop = totL ? (ptVotes[1].a / totL) * 100 : 0;
+    const pctGamble = totL ? (ptVotes[1].b / totL) * 100 : 0;
+    setBadge("badgePT", totG + totL > 0, totG + totL > 0 ? `两轮录入：收益 ${totG} 人 · 亏损 ${totL} 人` : "双轮独立选择待采集");
+
+    const gainNote = document.getElementById("ptSvgGainNote");
+    const lossNote = document.getElementById("ptSvgLossNote");
+    if (gainNote) gainNote.textContent = totG ? `收益选确定（${pctSafe.toFixed(1)}%）` : "收益选确定：待录入";
+    if (lossNote) lossNote.textContent = totL ? `亏损选风险（${pctGamble.toFixed(1)}%）` : "亏损选风险：待录入";
+
+    const svg = document.getElementById("ptFlowSvg");
+    if (svg) {
+      const hasBoth = totG > 0 && totL > 0;
+      let h = `
+        <text x="82" y="16" text-anchor="middle" font-size="12.5" font-weight="800" fill="#0f6e56">第 1 轮 · 收益情境</text>
+        <text x="250" y="16" text-anchor="middle" font-size="12" font-weight="700" fill="#52525b">汇总对照</text>
+        <text x="418" y="16" text-anchor="middle" font-size="12.5" font-weight="800" fill="#b42318">第 2 轮 · 亏损情境</text>
+
+        <line x1="250" y1="24" x2="250" y2="196" stroke="#a1a1aa" stroke-width="1.6" stroke-dasharray="4 4"/>
+        <text x="250" y="96" text-anchor="middle" font-size="25" font-weight="800" fill="#1d5d8f">对照</text>
+        <text x="250" y="118" text-anchor="middle" font-size="11" fill="#52525b">各轮独立汇总</text>
+      `;
+      // Left nodes
+      h += `
+        <rect x="8" y="24" width="148" height="78" rx="12" fill="#e8f6f1" stroke="#0f6e56" stroke-width="1.8"/>
+        <text x="82" y="45" text-anchor="middle" font-size="13" font-weight="700" fill="#0a4d3c">选 A 确定落袋</text>
+        <text x="82" y="75" text-anchor="middle" font-size="25" font-weight="900" fill="#0f6e56">${totG ? pctSafe.toFixed(1) + "%" : "0%"}</text>
+        <text x="82" y="94" text-anchor="middle" font-size="12" fill="#52525b">${ptVotes[0].a} 人 · 风险厌恶</text>
+
+        <rect x="8" y="114" width="148" height="76" rx="12" fill="#faf8f4" stroke="#d4cfc4" stroke-width="1.4"/>
+        <text x="82" y="135" text-anchor="middle" font-size="12.5" font-weight="700" fill="#52525b">选 B 博取高期望</text>
+        <text x="82" y="163" text-anchor="middle" font-size="21" font-weight="800" fill="#52525b">${totG ? pctGainRisk.toFixed(1) + "%" : "0%"}</text>
+        <text x="82" y="181" text-anchor="middle" font-size="11.5" fill="#71717a">${ptVotes[0].b} 人</text>
+
+        <!-- Right nodes -->
+        <rect x="344" y="24" width="148" height="76" rx="12" fill="#faf8f4" stroke="#d4cfc4" stroke-width="1.4"/>
+        <text x="418" y="45" text-anchor="middle" font-size="12.5" font-weight="700" fill="#52525b">选 A 确定止损</text>
+        <text x="418" y="73" text-anchor="middle" font-size="21" font-weight="800" fill="#1d5d8f">${totL ? pctLossStop.toFixed(1) + "%" : "0%"}</text>
+        <text x="418" y="91" text-anchor="middle" font-size="11.5" fill="#71717a">${ptVotes[1].a} 人</text>
+
+        <rect x="344" y="112" width="148" height="78" rx="12" fill="#fdecec" stroke="#b42318" stroke-width="1.8"/>
+        <text x="418" y="133" text-anchor="middle" font-size="13" font-weight="700" fill="#b42318">选 B 风险持有</text>
+        <text x="418" y="163" text-anchor="middle" font-size="25" font-weight="900" fill="#b42318">${totL ? pctGamble.toFixed(1) + "%" : "0%"}</text>
+        <text x="418" y="182" text-anchor="middle" font-size="12" fill="#52525b">${ptVotes[1].b} 人 · 选择风险</text>
+
+        <rect x="34" y="204" width="432" height="34" rx="10" fill="${hasBoth ? "#fff8f2" : "#faf8f4"}" stroke="${hasBoth ? "#fdba74" : "#e4dfd5"}"/>
+        <text x="250" y="226" text-anchor="middle" font-size="13" font-weight="800" fill="${hasBoth ? "#c2571a" : "#52525b"}">${
+          hasBoth
+            ? "仅汇总各轮人数，无法识别个人两轮选择的对应关系"
+            : "录入两轮选择后，对照各情境的汇总分布"
+        }</text>
+      `;
+      svg.innerHTML = h;
+    }
+    syncCrossSlideBadges();
+  }
+  document.getElementById("ptGainA").onclick = () => { ptVotes[0].a++; renderPT(); };
+  document.getElementById("ptGainB").onclick = () => { ptVotes[0].b++; renderPT(); };
+  document.getElementById("ptLossA").onclick = () => { ptVotes[1].a++; renderPT(); };
+  document.getElementById("ptLossB").onclick = () => { ptVotes[1].b++; renderPT(); };
+  document.getElementById("ptReset").onclick = () => { ptVotes[0] = { a: 0, b: 0 }; ptVotes[1] = { a: 0, b: 0 }; renderPT(); };
+
+  // ----- 4. 实验三：防背诵 A 股统计题 -----
+  const ocAnswers = { 1: "21.17%", 2: "82.01%", 3: "约 49.05%", 4: "3.45 万亿元" };
+  document.querySelectorAll(".oc-rev").forEach((btn) => {
+    btn.onclick = () => { document.getElementById("ocAns" + btn.dataset.idx).textContent = ocAnswers[btn.dataset.idx]; };
+  });
+  const ocCounts = [0, 0, 0, 0, 0];
+  function renderOC() {
+    let tot = 0, hits = 0;
+    ocCounts.forEach((c, k) => { document.getElementById("ocK" + k).textContent = c; tot += c; hits += c * k; });
+    const rate = tot ? (hits / (tot * 4)) * 100 : 0;
+    setBadge("badgeOC", tot > 0, tot > 0 ? `本班实测 ${tot} 人（${tot * 4} 次区间校准）` : "90% 置信区间校准待统计");
+    if (document.getElementById("kHint") && typeof updateKHint === "function") updateKHint();
+    document.getElementById("ocBar").setAttribute("width", (3.46 * rate).toFixed(1));
+    document.getElementById("ocPct").textContent = tot ? rate.toFixed(1) + "%" : "0%";
+
+    const hist = document.getElementById("ocHistBars");
+    if (hist) {
+      const maxC = Math.max(1, ...ocCounts);
+      let bars = `<line x1="20" y1="84" x2="292" y2="84" stroke="#a1a1aa" stroke-width="1.4"/>`;
+      ocCounts.forEach((c, idx) => {
+        const bx = 30 + idx * 52;
+        const bh = tot ? Math.max(c ? 5 : 2, (c / maxC) * 38) : 2;
+        const by = 84 - bh;
+        const fill = idx <= 2 ? "#c2571a" : "#1d5d8f";
+        bars += `<rect x="${bx}" y="${by.toFixed(1)}" width="32" height="${bh.toFixed(1)}" rx="5" fill="${fill}" opacity="${tot ? 0.88 : 0.25}" class="grow-bar" style="animation-delay:${idx * 55}ms;"/>`;
+        bars += `<text x="${bx + 16}" y="${(by - 4).toFixed(1)}" text-anchor="middle" font-size="11.5" font-weight="800" fill="${fill}">${c}人</text>`;
+        bars += `<text x="${bx + 16}" y="97" text-anchor="middle" font-size="11" fill="#52525b">${idx}题</text>`;
+      });
+      const lowCnt = ocCounts[0] + ocCounts[1] + ocCounts[2];
+      const lowPct = tot ? Math.round((lowCnt / tot) * 100) : 0;
+      bars += `<rect x="330" y="34" width="202" height="54" rx="9" fill="#fff" stroke="#e4dfd5"/>`;
+      bars += `<text x="431" y="55" text-anchor="middle" font-size="12.5" font-weight="700" fill="#18181b">${tot ? `共 ${tot} 人 · ${tot * 4} 次判断` : "待录入命中分布"}</text>`;
+      bars += `<text x="431" y="76" text-anchor="middle" font-size="12.5" font-weight="800" fill="#c2571a">${tot ? `${lowCnt} 人（${lowPct}%）命中 ≤2 题` : "区间过窄将显著漏靶"}</text>`;
+      hist.innerHTML = bars;
+    }
+    const expTxt = document.getElementById("ocExportTxt");
+    if (expTxt) {
+      expTxt.textContent = rate > 0
+        ? `参考换算：k = 90% ÷ ${rate.toFixed(1)}% ≈ ${(90 / rate).toFixed(2)}（沙盘需手动设置）`
+        : "参考换算：k = 90% ÷ 命中率 → 待测算";
+    }
+    syncCrossSlideBadges();
+  }
+  document.querySelectorAll(".oc-cnt-btn").forEach((btn) => {
+    btn.onclick = () => { ocCounts[Number(btn.dataset.k)]++; renderOC(); };
+  });
+  document.getElementById("ocClear").onclick = () => { for (let k = 0; k < 5; k++) ocCounts[k] = 0; renderOC(); };
+
+  // ----- 5. 实验四：严格对应前三项实验的 ABM 市场出清模型 -----
+  const sTrend = document.getElementById("sTrend"); // 实验一：高阶信念（选美预期）主体权重
+  const sLoss = document.getElementById("sLoss");   // 实验二：前景理论（处置效应）主体权重
+  const sNoise = document.getElementById("sNoise"); // 实验三：过度自信倍数 k = 90% ÷ 实测命中率
+  let prices = [100], refPrice = 100, beliefAnchor = 112, simTimer = null, simPlaying = false;
+  let refSeries = [100], anchorSeries = [112];
+  let lastForces = { beauty: 0, disp: 0, arb: 0, oc: 0 };
+  // 固定随机种子：同一参数下每次演示路径一致
+  const SIM_SEED = 20261116;
+  function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  let simRng = mulberry32(SIM_SEED);
+  const resetRng = () => { simRng = mulberry32(SIM_SEED); };
+  // 权重归一：高阶信念 + 处置效应 ≤ 90%，余量为基本面套利主体
+  const BEHAVIOR_CAP = 90;
+  function balanceWeights(moved, other) {
+    const over = Number(sTrend.value) + Number(sLoss.value) - BEHAVIOR_CAP;
+    if (over > 0) other.value = Math.max(0, Number(other.value) - over);
+    if (Number(moved.value) + Number(other.value) > BEHAVIOR_CAP) moved.value = BEHAVIOR_CAP - Number(other.value);
+  }
+
+  function syncCrossSlideBadges() {
+    const st = revealed ? getGuessStats() : null;
+    const totG = ptVotes[0].a + ptVotes[0].b, totL = ptVotes[1].a + ptVotes[1].b;
+    const pctSafe = totG ? (ptVotes[0].a / totG) * 100 : 0;
+    const pctGamble = totL ? (ptVotes[1].b / totL) * 100 : 0;
+    let ocTot = 0, ocHits = 0;
+    ocCounts.forEach((c, k) => { ocTot += c; ocHits += c * k; });
+    const ocRate = ocTot ? (ocHits / (ocTot * 4)) * 100 : 0;
+    const arbPct = 100 - Number(sTrend.value) - Number(sLoss.value);
+
+    const m1 = document.getElementById("mapSub1");
+    const m2 = document.getElementById("mapSub2");
+    const m3 = document.getElementById("mapSub3");
+    if (m1) m1.textContent = st ? `本班靶心 ${fmt(st.target)}（高于均衡 0）→ 追逐共识预期` : "按群体共识情绪预期（Level-k）报价";
+    if (m2) m2.textContent = totL ? `本班亏损域 ${pctGamble.toFixed(1)}% 冒险持有 → 惜售与破位平仓` : "锚定建仓参考点：浮盈早兑现、浮亏惜售";
+    if (m3) m3.textContent = ocRate > 0 ? `本班命中率 ${ocRate.toFixed(1)}%（k ≈ ${(90 / ocRate).toFixed(1)}×）→ 放大扰动` : "置信区间过窄，高估信号并放大波动";
+
+    const e1 = document.getElementById("closeEv1");
+    const e2 = document.getElementById("closeEv2");
+    const e3 = document.getElementById("closeEv3");
+    const e4 = document.getElementById("closeEv4");
+    if (e1) e1.textContent = st ? `本班实测：${st.n} 人均值 ${fmt(st.avg)}，目标 ${fmt(st.target)} vs 均衡 0` : "对照纳什均衡解 0";
+    if (e2) e2.textContent = (totG && totL) ? `收益选确定 ${pctSafe.toFixed(1)}% ｜ 亏损选风险 ${pctGamble.toFixed(1)}%` : "对照期望值一致性基准";
+    if (e3) e3.textContent = ocRate > 0 ? `本班实测：区间命中率 ${ocRate.toFixed(1)}%（k ≈ ${(90 / ocRate).toFixed(1)}×）` : "对照 90% 贝叶斯校准基准";
+    if (e4) e4.textContent = prices.length > 1 ? `沙盘实测：套利权重 ${arbPct}%，当前出清价 ${prices[prices.length - 1].toFixed(1)}` : "对照有效市场价格 V=100";
+  }
+
+  function stepMarket(shock = 0) {
+    const bW = Number(sTrend.value) / 100; // 高阶信念权重
+    const dW = Number(sLoss.value) / 100;  // 处置效应权重
+    const rW = 1 - bW - dW;                 // 基本面套利权重（三类主体权重合计 100%）
+    const oc = Number(sNoise.value);       // 过度自信倍数 k（k = 1 为校准良好）
+    const p = prices[prices.length - 1];
+
+    // 1. 实验一机制：群体高阶信念共识锚（Level-k 猜测他人预期，脱离 V=100 自我强化，遇冲击时共识坍塌）
+    if (shock < 0) beliefAnchor = 78;
+    else beliefAnchor = Math.max(72, Math.min(165, 100 + 0.92 * (beliefAnchor - 100) + 0.18 * (p - 100)));
+    const beautyDemand = bW * 0.32 * (beliefAnchor - p);
+
+    // 2. 实验二机制：前景理论参考点（p > refPrice 浮盈兑现产生抛压；p < refPrice 浅跌惜售阻尼，跌破深水区被动清盘）
+    refPrice = 0.85 * refPrice + 0.15 * p;
+    let dispDemand = 0;
+    if (p > refPrice) dispDemand = -dW * 0.22 * (p - refPrice); // 收益域凹函数：过早止盈抛压
+    else if (p > refPrice - 14) dispDemand = dW * 0.25 * (refPrice - p); // 亏损域凸函数：惜售护盘/补仓
+    else dispDemand = -dW * 4.2; // 击穿承受底线引发被动连锁平仓
+
+    // 3. 实验三机制：过度自信高估私有信号精度，放大短期交易扰动
+    const ocShock = (simRng() - 0.5) * oc * 3.8; // 每步随机扰动 ±1.9k
+
+    // 4. 有效市场基准力量：基本面套利者围绕 V=100 反向修正
+    const arbDemand = rW * 0.34 * (100 - p);
+
+    lastForces = { beauty: beautyDemand, disp: dispDemand, arb: arbDemand, oc: ocShock };
+    prices.push(Math.max(35, Math.min(200, p + arbDemand + beautyDemand + dispDemand + ocShock + shock)));
+    refSeries.push(refPrice);
+    anchorSeries.push(beliefAnchor);
+    if (prices.length > 60) { prices.shift(); refSeries.shift(); anchorSeries.shift(); }
+    renderChart();
+  }
+
+  function renderChart() {
+    document.getElementById("vTrend").textContent = sTrend.value + "%";
+    document.getElementById("vLoss").textContent = sLoss.value + "%";
+    document.getElementById("vNoise").textContent = Number(sNoise.value).toFixed(1) + "×";
+    updateKHint();
+    const arbPct = 100 - Number(sTrend.value) - Number(sLoss.value);
+    document.getElementById("vArb").textContent = arbPct + "%";
+    document.getElementById("arbBar").style.width = arbPct + "%";
+    const svg = document.getElementById("marketChart");
+    const W = 800, H = 300, padL = 52, padR = 24, padT = 16, padB = 22, minY = 30, maxY = 210;
+    const mapX = (idx) => padL + (idx / Math.max(1, prices.length - 1)) * (W - padL - padR);
+    const mapY = (val) => padT + (1 - (val - minY) / (maxY - minY)) * (H - padT - padB);
+    const baseY = mapY(100);
+
+    let html = `
+      <defs>
+        <clipPath id="clipAbove"><rect x="${padL}" y="0" width="${W - padL - padR}" height="${baseY.toFixed(1)}"/></clipPath>
+        <clipPath id="clipBelow"><rect x="${padL}" y="${baseY.toFixed(1)}" width="${W - padL - padR}" height="${(H - baseY).toFixed(1)}"/></clipPath>
+      </defs>
+    `;
+    [60, 100, 140, 180].forEach((gv) => {
+      const gy = mapY(gv);
+      const isBase = gv === 100;
+      html += `<line x1="${padL}" y1="${gy.toFixed(1)}" x2="${W - padR}" y2="${gy.toFixed(1)}" stroke="${isBase ? "#52525b" : "#ebe6dc"}" stroke-width="${isBase ? 2 : 1}" ${isBase ? 'stroke-dasharray="8 6"' : ""}/>`;
+      html += `<text x="${padL - 8}" y="${(gy + 5).toFixed(1)}" text-anchor="end" font-size="${isBase ? 15 : 12.5}" font-weight="${isBase ? 700 : 500}" fill="#52525b">${gv}</text>`;
+    });
+
+    if (prices.length > 1) {
+      const pts = prices.map((v, idx) => `${mapX(idx).toFixed(1)},${mapY(v).toFixed(1)}`).join(" ");
+      const lastX = mapX(prices.length - 1).toFixed(1);
+      const polyArea = `${padL},${baseY.toFixed(1)} ${pts} ${lastX},${baseY.toFixed(1)}`;
+      html += `<polygon points="${polyArea}" fill="rgba(194,87,26,0.16)" clip-path="url(#clipAbove)"/>`;
+      html += `<polygon points="${polyArea}" fill="rgba(180,35,24,0.15)" clip-path="url(#clipBelow)"/>`;
+
+      if (anchorSeries.length === prices.length) {
+        const aPts = anchorSeries.map((v, idx) => `${mapX(idx).toFixed(1)},${mapY(v).toFixed(1)}`).join(" ");
+        html += `<polyline fill="none" stroke="#c2571a" stroke-width="1.8" stroke-dasharray="3 4" opacity="0.72" points="${aPts}" />`;
+      }
+      if (refSeries.length === prices.length) {
+        const rPts = refSeries.map((v, idx) => `${mapX(idx).toFixed(1)},${mapY(v).toFixed(1)}`).join(" ");
+        html += `<polyline fill="none" stroke="#8b8375" stroke-width="1.8" stroke-dasharray="6 4" opacity="0.72" points="${rPts}" />`;
+      }
+      // Distress threshold line for latest refPrice - 14
+      const stopY = mapY(Math.max(minY, refPrice - 14));
+      html += `<line x1="${padL}" y1="${stopY.toFixed(1)}" x2="${W - padR}" y2="${stopY.toFixed(1)}" stroke="#b42318" stroke-width="1.2" stroke-dasharray="3 5" opacity="0.55"/>`;
+      html += `<text x="${padL + 8}" y="${(stopY + 13).toFixed(1)}" font-size="11.5" font-weight="600" fill="#b42318" opacity="0.85">处置破位平仓线 (${(refPrice - 14).toFixed(0)})</text>`;
+
+      html += `<polyline fill="none" stroke="#0f6e56" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" points="${pts}" />`;
+    }
+
+    const last = prices[prices.length - 1];
+    const lx = prices.length === 1 ? padL : mapX(prices.length - 1);
+    const ly = mapY(last);
+    const dotCol = last >= 100 ? "#c2571a" : "#b42318";
+    html += `<circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="7" fill="none" stroke="${dotCol}" stroke-width="2"><animate attributeName="r" values="7;17" dur="1.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.85;0" dur="1.5s" repeatCount="indefinite"/></circle>`;
+    html += `<circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="6.5" fill="${dotCol}" stroke="#fff" stroke-width="1.5"/>`;
+    const tagX = lx > W - 118 ? lx - 84 : lx + 10;
+    const tagY = Math.max(22, Math.min(H - 28, ly - 12));
+    html += `<rect x="${tagX.toFixed(1)}" y="${(tagY - 14).toFixed(1)}" width="74" height="22" rx="6" fill="#fff" stroke="${dotCol}" stroke-width="1.4"/>`;
+    html += `<text x="${(tagX + 37).toFixed(1)}" y="${(tagY + 1).toFixed(1)}" text-anchor="middle" font-size="12.5" font-weight="800" fill="${dotCol}">P=${last.toFixed(1)}</text>`;
+    svg.innerHTML = html;
+
+    // Render live 3-agent tug-of-war force meter
+    const fSvg = document.getElementById("forceChart");
+    if (fSvg) {
+      const items = [
+        { name: "选美高阶信念力", v: lastForces.beauty, posCol: "#c2571a", negCol: "#b42318" },
+        { name: "前景处置效应力", v: lastForces.disp, posCol: "#8b8375", negCol: "#b42318" },
+        { name: "基本面套利纠偏", v: lastForces.arb, posCol: "#0f6e56", negCol: "#0f6e56" }
+      ];
+      let fh = `<text x="6" y="15" font-size="12" font-weight="800" fill="#52525b">当期主体净申报推动力（左负抛压 ← 0 → 右正买盘）：</text>`;
+      items.forEach((it, idx) => {
+        const boxX = 6 + idx * 264, mid = boxX + 130;
+        const mag = Math.min(82, Math.abs(it.v) * 14);
+        const bx = it.v >= 0 ? mid : mid - mag;
+        const col = it.v >= 0 ? it.posCol : it.negCol;
+        fh += `<rect x="${boxX}" y="24" width="256" height="44" rx="9" fill="#faf8f4" stroke="#e4dfd5"/>`;
+        fh += `<text x="${boxX + 10}" y="41" font-size="11.5" font-weight="700" fill="#18181b">${it.name}</text>`;
+        fh += `<text x="${boxX + 246}" y="41" text-anchor="end" font-size="11.5" font-weight="800" fill="${col}">${(it.v >= 0 ? "+" : "") + it.v.toFixed(2)}</text>`;
+        fh += `<line x1="${boxX + 42}" y1="56" x2="${boxX + 218}" y2="56" stroke="#ded8cc" stroke-width="6" stroke-linecap="round"/>`;
+        fh += `<rect x="${bx.toFixed(1)}" y="52" width="${Math.max(2, mag).toFixed(1)}" height="8" rx="4" fill="${col}"/>`;
+        fh += `<line x1="${mid}" y1="48" x2="${mid}" y2="64" stroke="#52525b" stroke-width="1.6"/>`;
+      });
+      fSvg.innerHTML = fh;
+    }
+
+    document.getElementById("mPrice").textContent = last.toFixed(1);
+    const dev = ((last - 100) / 100) * 100;
+    document.getElementById("mDev").textContent = (dev >= 0 ? "+" : "") + dev.toFixed(1) + "%";
+    const recent = prices.slice(-11);
+    const vol = recent.length > 1 ? recent.slice(1).reduce((a, x, i) => a + Math.abs(x - recent[i]), 0) / (recent.length - 1) : null;
+    document.getElementById("mVol").textContent = vol === null ? "—" : vol.toFixed(1);
+    document.getElementById("simRound").textContent = "第 " + (prices.length - 1) + " 轮";
+    syncCrossSlideBadges();
+  }
+
+  function toggleSimPlay(force) {
+    simPlaying = typeof force === "boolean" ? force : !simPlaying;
+    document.getElementById("simPlay").textContent = simPlaying ? "暂停" : "自动演化";
+    if (simTimer) { clearInterval(simTimer); simTimer = null; }
+    if (simPlaying) simTimer = setInterval(() => stepMarket(0), 320);
+  }
+  sTrend.oninput = () => { balanceWeights(sTrend, sLoss); renderChart(); };
+  sLoss.oninput = () => { balanceWeights(sLoss, sTrend); renderChart(); };
+  sNoise.oninput = renderChart;
+  function updateKHint() {
+    let tot = 0, hits = 0;
+    ocCounts.forEach((c, k) => { tot += c; hits += c * k; });
+    const rate = tot ? hits / (tot * 4) * 100 : 0;
+    document.getElementById("kHint").textContent = rate > 0
+      ? "k = 1 为校准良好；本班实测：90% ÷ " + rate.toFixed(1) + "% ≈ " + (90 / rate).toFixed(2)
+      : "k = 1 为校准良好；k 越大，区间越窄、交易扰动越大";
+  }
+  document.getElementById("simPlay").onclick = () => toggleSimPlay();
+  document.getElementById("simStep").onclick = () => { toggleSimPlay(false); stepMarket(0); };
+  const simGuide = document.getElementById("simGuide");
+  function setGuide(color, bg, badge, title, desc) {
+    simGuide.style.borderLeftColor = color;
+    simGuide.style.background = bg;
+    simGuide.innerHTML =
+      '<div style="font-size:21px;font-weight:800;color:' + color + ';display:flex;align-items:center;gap:10px;">' +
+        '<span class="tag-ai" style="background:' + color + ';font-size:16px;padding:4px 12px;margin:0;">' + badge + '</span>' +
+        '<span>' + title + '</span>' +
+      '</div>' +
+      '<div style="font-size:19.5px;line-height:1.55;color:var(--ink);">' + desc + '</div>';
+  }
+  function resetGuide() {
+    setGuide("var(--blue)", "#eef5fb", "演示指引", "核心检验：个体偏差能否撼动市场定价？",
+      "• 点击<strong>「场景 A」</strong>：验证套利主导下价格紧贴 <strong>V=100</strong> 收敛<br>• 点击<strong>「场景 B」</strong>：验证高阶信念泡沫与破位连锁下跌");
+  }
+  document.getElementById("simShock").onclick = () => {
+    stepMarket(-14);
+    setGuide("var(--bad)", "#fdecec", "冲击响应", "共识情绪坍塌与被动连锁下跌",
+      "高阶信念预期下调；继续观察价格与<strong>亏损承受底线</strong>的关系。若跌破底线，模型中的处置效应主体将转为被动平仓。");
+  };
+  document.getElementById("simReset").onclick = () => {
+    toggleSimPlay(false); resetRng();
+    prices = [100]; refPrice = 100; beliefAnchor = 112;
+    refSeries = [100]; anchorSeries = [112]; lastForces = { beauty: 0, disp: 0, arb: 0, oc: 0 };
+    renderChart();
+    resetGuide();
+  };
+  document.getElementById("simPresetEMH").onclick = () => {
+    toggleSimPlay(false);
+    sTrend.value = 10; sLoss.value = 10; sNoise.value = 1;
+    resetRng(); prices = [100]; refPrice = 100; beliefAnchor = 104;
+    refSeries = [100]; anchorSeries = [104];
+    for (let k = 0; k < 20; k++) stepMarket(0);
+    setGuide("var(--accent-2)", "#e8f6f1", "场景 A", "基本面套利主导（有效市场基准）",
+      "三类行为偏差降至低位（过度自信 k = 1，校准良好），套利资金迅速抵消随机扰动，市场出清价格始终紧贴内在价值 <strong>V=100</strong> 平稳收敛。");
+    toggleSimPlay(true);
+  };
+  document.getElementById("simPresetBeh").onclick = () => {
+    toggleSimPlay(false);
+    sTrend.value = 55; sLoss.value = 35; sNoise.value = 2;
+    resetRng(); prices = [100]; refPrice = 100; beliefAnchor = 128;
+    refSeries = [100]; anchorSeries = [128];
+    for (let k = 0; k < 12; k++) stepMarket(0);
+    setGuide("var(--orange)", "#fff8f2", "场景 B", "三类行为偏差共同作用（内生泡沫）",
+      "预设高阶信念（55%）、处置效应（35%）与过度自信（k = 2），套利仅余 10%，观察价格如何偏离 <strong>V=100</strong>。");
+    toggleSimPlay(true);
+  };
+
+  // ----- 评委演示一键填充样本（均值 30.9，目标 20.6，获胜 21） -----
+  let demoLoaded = false;
+  document.getElementById("btnDemo").onclick = () => {
+    if (!demoLoaded) {
+      document.body.classList.add("demo-mode");
+      hookVotes[0] = { yes: 20, no: 25 };
+      hookVotes[1] = { yes: 39, no: 6 };
+      hookI = 2; renderHook();
+      nums.splice(0, nums.length, 50, 45, 33, 33, 35, 25, 22, 22, 20, 40, 38, 30, 28, 18, 15, 50, 33, 25, 22, 32, 34, 42, 19, 27, 36, 48, 29, 21, 24, 31);
+      revealed = true; renderNums(); updateInsight();
+      ptVotes[0] = { a: 36, b: 9 };
+      ptVotes[1] = { a: 11, b: 34 };
+      renderPT();
+      Object.keys(ocAnswers).forEach((k) => { document.getElementById("ocAns" + k).textContent = ocAnswers[k]; });
+      [5, 14, 16, 7, 3].forEach((c, idx) => { ocCounts[idx] = c; });
+      renderOC();
+      sTrend.value = 55; sLoss.value = 35; sNoise.value = 2; resetRng();
+      prices = [100, 102.4, 105.8, 111.2, 118.5, 127.0, 134.6, 141.2, 136.5, 128.0, 116.4, 103.2, 92.5, 84.0, 79.5];
+      refSeries = [100]; anchorSeries = [124];
+      let rTmp = 100, aTmp = 124;
+      for (let idx = 1; idx < prices.length; idx++) {
+        rTmp = 0.85 * rTmp + 0.15 * prices[idx];
+        aTmp = idx < 8 ? Math.min(148, 100 + 0.92 * (aTmp - 100) + 0.18 * (prices[idx] - 100)) : 78;
+        refSeries.push(rTmp);
+        anchorSeries.push(aTmp);
+      }
+      refPrice = rTmp; beliefAnchor = aTmp;
+      lastForces = { beauty: 0.55 * 0.32 * (aTmp - 79.5), disp: -0.35 * 4.2, arb: 0.10 * 0.34 * (100 - 79.5), oc: -0.8 };
+      renderChart();
+      demoLoaded = true;
+      document.getElementById("btnDemo").textContent = "清空演示样本";
+    } else {
+      document.body.classList.remove("demo-mode");
+      hookVotes[0] = { yes: 0, no: 0 }; hookVotes[1] = { yes: 0, no: 0 }; hookI = 0; renderHook();
+      nums.splice(0, nums.length); revealed = false; document.body.classList.remove("is-revealed"); renderNums(); updateInsight();
+      ptVotes[0] = { a: 0, b: 0 }; ptVotes[1] = { a: 0, b: 0 }; renderPT();
+      Object.keys(ocAnswers).forEach((k) => { document.getElementById("ocAns" + k).textContent = "待揭晓"; });
+      for (let k = 0; k < 5; k++) ocCounts[k] = 0; renderOC();
+      toggleSimPlay(false); resetRng(); sTrend.value = 35; sLoss.value = 35; sNoise.value = 2;
+      prices = [100]; refPrice = 100; beliefAnchor = 112;
+      refSeries = [100]; anchorSeries = [112]; lastForces = { beauty: 0, disp: 0, arb: 0, oc: 0 };
+      renderChart();
+      demoLoaded = false;
+      document.getElementById("btnDemo").textContent = "评委演示";
+    }
+  };
+
+  renderNums();
+  renderPT();
+  renderOC();
+  renderChart();
+
+  const startHash = location.hash.replace(/^#/, "");
+  const start = slides.findIndex((s) => s.dataset.id === startHash);
+  show(start >= 0 ? start : 0);
+})();
+</script>
+</body>
+</html>
