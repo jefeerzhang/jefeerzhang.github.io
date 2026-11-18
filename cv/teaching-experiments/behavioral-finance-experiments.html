@@ -413,6 +413,28 @@
   .rule-stamp { flex-shrink: 0; font-size: 15px; font-weight: 800; color: #0f6e56; border: 1.5px solid #0f6e56; border-radius: 6px; padding: 2px 7px; letter-spacing: .03em; background: rgba(255,255,255,0.75); }
   .chip.win { background: #d1fae5; border: 1.5px solid var(--accent); color: var(--accent-2); font-weight: 800; }
   .chip .sid { font-size: 15px; color: var(--muted); font-weight: 600; }
+  .innovation-table {
+    width: 100%; table-layout: fixed; border-spacing: 0;
+    background: var(--paper); border: 1px solid var(--line);
+    border-radius: 18px; overflow: hidden; box-shadow: var(--shadow-sm);
+  }
+  .innovation-table th, .innovation-table td {
+    padding: 19px 22px; text-align: left; vertical-align: middle;
+  }
+  .innovation-table thead th {
+    background: var(--accent-2); color: #fff; font-size: 21px;
+  }
+  .innovation-table tbody tr + tr > * { border-top: 1px solid var(--line-soft); }
+  .innovation-table tbody th { font-size: 24px; line-height: 1.4; }
+  .innovation-table td { color: var(--muted); font-size: 21px; line-height: 1.5; }
+  .innovation-table td:last-child { background: #edf6f2; }
+  .innovation-table td strong { display: block; color: var(--ink); font-size: 24px; margin-bottom: 4px; }
+  .innovation-evidence {
+    margin-top: 16px; padding: 14px 20px; background: var(--blue-soft);
+    border-left: 4px solid var(--blue); border-radius: 10px;
+    color: var(--ink); font-size: 20px; line-height: 1.5;
+  }
+  .innovation-evidence strong { color: var(--blue); margin-right: 12px; }
 </style>
 </head>
 <body>
@@ -1303,7 +1325,43 @@
     </div>
   </section>
 
-  <!-- 14. 致谢 -->
+  <!-- 14. 教学创新 -->
+  <section class="slide" data-id="teaching-innovation" aria-labelledby="innovation-title">
+    <div class="slide-head">
+      <span class="pill">13 / 教学创新</span>
+    </div>
+    <h2 id="innovation-title">从解释市场偏离，到制定投资规则</h2>
+    <table class="innovation-table" aria-labelledby="innovation-title">
+      <colgroup>
+        <col style="width:24%;">
+        <col style="width:46%;">
+        <col style="width:30%;">
+      </colgroup>
+      <thead>
+        <tr><th scope="col">教学难点</th><th scope="col">改革举措</th><th scope="col">可核查的学习产出</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">定价理论与投资决策脱节</th>
+          <td><strong>内容重构 · 贯通定价、偏差与风控</strong>以理性定价建立基准，用行为偏差和有限套利解释价格偏离，再回到组合风控。</td>
+          <td>解释价格偏离和套利约束的课堂回答。</td>
+        </tr>
+        <tr>
+          <th scope="row">会复述偏差，难解释价格变化</th>
+          <td><strong>教法创新 · 用课堂决策开展探究</strong>学生独立报价、选择和估计区间。课堂结果对照理论基准，再为设置沙盘情景提供参考。</td>
+          <td>报价、投票与区间命中记录，以及学生对两组沙盘价格路径的比较。</td>
+        </tr>
+        <tr>
+          <th scope="row">懂风控，难写出执行条件</th>
+          <td><strong>评价设计 · 用纪律卡检查能力迁移</strong>学生为止损、仓位或换手写出触发条件、执行动作和适用边界。</td>
+          <td>课堂纪律卡。课后报告说明研究假设、交易成本和样本局限。</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="innovation-evidence"><strong>成效检验方案</strong>用脱敏作品比较同一学生的课前方案与课堂纪律卡，检查规则是否写出了明确的触发条件和执行动作。</p>
+  </section>
+
+  <!-- 15. 致谢 -->
   <section class="slide" data-id="thanks" style="align-items:center;text-align:center;">
     <svg viewBox="0 0 220 64" style="width:210px;height:auto;margin-bottom:18px;" aria-hidden="true">
       <path d="M 28 32 C 58 10, 92 10, 110 32 C 128 54, 162 54, 192 32" fill="none" stroke="#0f6e56" stroke-width="2.4" class="flow-line"/>
