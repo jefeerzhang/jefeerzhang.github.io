@@ -45,8 +45,9 @@ th, td { padding: .5rem .65rem; border: 1px solid var(--line); text-align: left;
 thead th, tbody th { background: var(--soft); }
 .data-table { min-width: 740px; }
 .data-table tbody td { text-align: right; }
-.comparison-table { min-width: 560px; }
+.comparison-table { min-width: 670px; }
 .comparison-table td { white-space: nowrap; }
+.comparison-table tbody td:nth-child(odd) { text-align: right; }
 .work-table { min-width: 600px; }
 form { margin-top: 1.6rem; }
 label, legend { font-weight: 650; }
@@ -111,7 +112,7 @@ footer { padding-bottom: 2rem; color: var(--muted); font-size: .9rem; }
     <ol>
       <li>按经营、投资、筹资的顺序，写出 A–H 八家企业 2024 年的净额符号组合和对应的阶段画像。每家选一项金额，用一句话描述其现金来源或用途。</li>
       <li>选两家符号相同的企业，用表内项目和金额说明它们的现金流构成有何不同。</li>
-      <li>从有三年数据的企业中选一家，对照三类活动的符号和购建长期资产付现，说明三年间有哪些变化。</li>
+      <li>从 A–H 中任选一家，对照 2022–2024 年三类活动的符号和购建长期资产付现，说明三年间有哪些变化。</li>
     </ol>
     <p>各组先交初判，老师再统一揭晓公司身份。</p>
 
@@ -136,21 +137,34 @@ footer { padding-bottom: 2rem; color: var(--muted); font-size: .9rem; }
     </div>
     <p class="note">投资支付减收回＝投资支付的现金−收回投资收到的现金。借款收到减偿债支付＝取得借款收到的现金−偿还债务支付的现金。</p>
 
-    <div class="table-scroll" tabindex="0" aria-label="六家匿名企业三年比较数据">
+    <div class="table-scroll" tabindex="0" aria-label="八家匿名企业三年比较数据">
       <table class="comparison-table">
-        <caption>六家企业的三年对照 · 金额为亿元</caption>
-        <thead><tr><th scope="col">画像</th><th scope="col">2022 年组合</th><th scope="col">2023 年组合</th><th scope="col">购建长期资产付现（2022 → 2023 → 2024）</th></tr></thead>
+        <caption>八家企业 2022–2024 年现金流对照 · 金额为亿元</caption>
+        <colgroup span="1"></colgroup>
+        <colgroup span="2"></colgroup>
+        <colgroup span="2"></colgroup>
+        <colgroup span="2"></colgroup>
+        <thead>
+          <tr><th scope="col" rowspan="2">画像</th><th scope="colgroup" colspan="2">2022 年</th><th scope="colgroup" colspan="2">2023 年</th><th scope="colgroup" colspan="2">2024 年</th></tr>
+          <tr>
+            <th scope="col">符号组合</th><th scope="col">资本开支</th>
+            <th scope="col">符号组合</th><th scope="col">资本开支</th>
+            <th scope="col">符号组合</th><th scope="col">资本开支</th>
+          </tr>
+        </thead>
         <tbody>
-          <tr><th scope="row">B</th><td>＋ − ＋</td><td>＋ − ＋</td><td>422.06 → 538.65 → 545.59</td></tr>
-          <tr><th scope="row">C</th><td>＋ − −</td><td>＋ − ＋</td><td>974.57 → 1,220.94 → 973.60</td></tr>
-          <tr><th scope="row">D</th><td>＋ − −</td><td>＋ − ＋</td><td>326.57 → 430.98 → 358.30</td></tr>
-          <tr><th scope="row">E</th><td>− ＋ −</td><td>＋ ＋ −</td><td>5.64 → 3.47 → 4.74</td></tr>
-          <tr><th scope="row">F</th><td>＋ − ＋</td><td>＋ − −</td><td>60.36 → 54.26 → 33.00</td></tr>
-          <tr><th scope="row">G</th><td>＋ − ＋</td><td>＋ − −</td><td>56.65 → 45.25 → 29.38</td></tr>
+          <tr><th scope="row">A</th><td>＋ − −</td><td>53.07</td><td>＋ − −</td><td>26.20</td><td>＋ − −</td><td>46.79</td></tr>
+          <tr><th scope="row">B</th><td>＋ − ＋</td><td>422.06</td><td>＋ − ＋</td><td>538.65</td><td>＋ − ＋</td><td>545.59</td></tr>
+          <tr><th scope="row">C</th><td>＋ − −</td><td>974.57</td><td>＋ − ＋</td><td>1,220.94</td><td>＋ − −</td><td>973.60</td></tr>
+          <tr><th scope="row">D</th><td>＋ − −</td><td>326.57</td><td>＋ − ＋</td><td>430.98</td><td>＋ − ＋</td><td>358.30</td></tr>
+          <tr><th scope="row">E</th><td>− ＋ −</td><td>5.64</td><td>＋ ＋ −</td><td>3.47</td><td>＋ ＋ −</td><td>4.74</td></tr>
+          <tr><th scope="row">F</th><td>＋ − ＋</td><td>60.36</td><td>＋ − −</td><td>54.26</td><td>＋ − −</td><td>33.00</td></tr>
+          <tr><th scope="row">G</th><td>＋ − ＋</td><td>56.65</td><td>＋ − −</td><td>45.25</td><td>＋ − −</td><td>29.38</td></tr>
+          <tr><th scope="row">H</th><td>＋ ＋ −</td><td>19.92</td><td>＋ ＋ −</td><td>14.84</td><td>＋ − −</td><td>19.69</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="note">符号顺序为经营、投资、筹资。2024 年组合从上表读取。数据来自 Tushare 现金流量表，按上市公司合并年报口径整理。</p>
+    <p class="note">符号顺序为经营、投资、筹资。资本开支指购建固定资产、无形资产和其他长期资产支付的现金。数据来自 Tushare 现金流量表，按上市公司合并年报口径整理。</p>
 
     <form id="initial-form" data-file="任务一_匿名画像">
       <h3>初判记录</h3>
