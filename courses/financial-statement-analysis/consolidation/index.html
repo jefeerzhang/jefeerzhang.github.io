@@ -68,10 +68,6 @@
       font-family: var(--serif); font-size: 13px; line-height: 1.6; color: var(--text); }
     .video-meta b { margin-right: 8px; font-family: var(--mono); font-size: 9.5px; font-weight: 700;
       letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
-    .video-links { display: flex; flex-wrap: wrap; gap: 14px; margin-left: auto; }
-    .video-links a { color: var(--con-accent); font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
-      text-decoration: none; border-bottom: 1px solid currentColor; }
-    .video-links a:hover { opacity: 0.75; }
 
     @media (max-width: 760px) {
       .page-hero { padding: 40px 0 30px; }
@@ -81,7 +77,6 @@
       .ticket-foot { gap: 8px 16px; }
       .ticket-open { margin-left: 0; flex: 1 0 100%; padding-top: 4px; }
       .video-card { padding: 12px; }
-      .video-links { margin-left: 0; width: 100%; }
       .block { padding-top: 34px; }
     }
   </style>
@@ -152,16 +147,12 @@
             <div class="video-frame">
               <video controls preload="metadata" poster="./media/consolidation-core-poster.jpg" aria-label="合并报表核心逻辑讲解视频">
                 <source src="./media/consolidation-core.mp4" type="video/mp4">
-                您的浏览器不支持 HTML5 视频播放，请下载 MP4 文件观看。
+                您的浏览器不支持 HTML5 视频播放。
               </video>
             </div>
             <div class="video-meta">
               <span><b>Length</b>4 分 15 秒</span>
               <span><b>Audio</b>MiniMax TTS · 中文字幕</span>
-              <div class="video-links">
-                <a href="./media/consolidation-core.mp4" download>下载 MP4</a>
-                <a href="./media/consolidation-core.srt" download>下载字幕</a>
-              </div>
             </div>
           </div>
         </div>
