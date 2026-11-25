@@ -64,6 +64,13 @@ button:hover { background: #103f34; }
 .secondary:hover { color: white; }
 :focus-visible { outline: 3px solid #a65025; outline-offset: 2px; }
 .actions { margin-top: .9rem; }
+.upload-link { display: inline-block; margin-left: .7rem; padding: .42rem .9rem; border: 2px solid var(--warm); border-radius: .45rem; color: var(--warm); background: #fff7ef; font-weight: 750; text-decoration: none; vertical-align: middle; }
+.upload-link:hover { background: #f8e5d3; }
+.submit-bar { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1.1rem; margin: 1.1rem 0 .2rem; padding: .9rem 1rem; border: 1px solid var(--warm); border-left: 4px solid var(--warm); border-radius: .5rem; background: #fff7ef; }
+.submit-bar p { margin: 0; flex: 1 1 22rem; font-size: .93rem; color: var(--warm); }
+.submit-bar b { font-weight: 750; }
+.submit-bar a { padding: .5rem 1.1rem; border-radius: .45rem; background: var(--warm); color: #fff7ef; font-weight: 750; text-decoration: none; white-space: nowrap; }
+.submit-bar a:hover { background: #632f18; }
 .status[data-error] { color: #8d2a19; }
 .prompt { margin: .65rem 0; padding: .75rem .85rem; background: var(--soft); border-radius: .45rem; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; }
 footer { margin-bottom: 2rem; }
@@ -99,6 +106,11 @@ footer { margin-bottom: 2rem; }
     <p class="note" id="draft-status" role="status">内容自动暂存在当前浏览器。请妥善保存下载的 TXT 文件，按课堂要求提交。</p>
     <noscript><p>请在启用 JavaScript 的浏览器中打开本页面，否则无法自动暂存或导出作业记录。</p></noscript>
   </form>
+
+  <div class="submit-bar" role="region" aria-label="作业提交入口">
+    <p><b>提交入口：</b>每完成一个阶段，先点下方按钮下载 TXT 记录，再到同一入口上传；上传时文件名保持默认，含组号与阶段名称。</p>
+    <a href="https://send2me.cn/fAmv-n6r/Thyfs318Zeddhg" target="_blank" rel="noopener noreferrer">打开提交入口 ↗</a>
+  </div>
 
   <section id="sandbox" aria-labelledby="sandbox-title">
     <p class="kicker">阶段一 · 先独立思考，再小组汇总 · 禁用 AI</p>
@@ -219,6 +231,7 @@ footer { margin-bottom: 2rem; }
       </div>
       <div class="actions">
         <button type="submit">下载盲测封存记录</button>
+        <a class="upload-link" href="https://send2me.cn/fAmv-n6r/Thyfs318Zeddhg" target="_blank" rel="noopener noreferrer">上传盲测封存记录 ↗</a>
         <span class="status" role="status"></span>
       </div>
       <p class="note">全班交齐盲测记录后，老师揭晓公司身份。请按要求上传并留好本地备份。</p>
@@ -323,6 +336,7 @@ footer { margin-bottom: 2rem; }
       </details>
       <div class="actions">
         <button type="submit">下载小组完整记录</button>
+        <a class="upload-link" href="https://send2me.cn/fAmv-n6r/Thyfs318Zeddhg" target="_blank" rel="noopener noreferrer">上传小组完整记录 ↗</a>
         <span class="status" role="status"></span>
       </div>
       <p class="note">导出文件自动合并“手算合并底稿”与“年报核证记录”。完成组间质询并按要求提交后，再开始个人作业。</p>
@@ -351,6 +365,7 @@ footer { margin-bottom: 2rem; }
       </div>
       <div class="actions">
         <button type="submit">下载个人作业文件</button>
+        <a class="upload-link" href="https://send2me.cn/fAmv-n6r/Thyfs318Zeddhg" target="_blank" rel="noopener noreferrer">上传个人作业文件 ↗</a>
         <span class="status" role="status"></span>
       </div>
       <details>
