@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>读懂集团财报｜财务报表分析第六次课</title>
+<style>
+:root {
+  color-scheme: light;
+  --paper: #f5f4ec;
+  --panel: #fffef9;
+  --ink: #1b302a;
+  --muted: #4d635b;
+  --line: #c8d6cd;
+  --green: #185947;
+  --soft: #e9f1e9;
+  --warm: #824324;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 1rem/1.68 system-ui, -apple-system, sans-serif; }
+.wrap { width: min(70rem, 100% - 2rem); margin-inline: auto; }
+.hero { background: #173b32; color: #fbfbec; padding: 2rem 0; }
+.hero p { margin: 0; color: #deeadf; }
+.course-back { display: inline-flex; align-items: center; gap: 14px; margin: 0 0 1rem; }
+.course-back a { display: inline-flex; align-items: center; padding: 6px 14px; border: 1px solid #96b9aa; border-radius: 8px; color: #f6f8ec; text-decoration: none; font-size: .9rem; font-weight: 650; line-height: 1.5; }
+.course-back a:hover { background: #f6f8ec; color: #183d35; }
+.course-back a:focus-visible { outline: 3px solid #d4eb9f; outline-offset: 3px; }
+h1 { margin: .25rem 0 .6rem; font-size: clamp(1.85rem, 5vw, 3.2rem); line-height: 1.16; }
+h2 { margin: 0; font-size: clamp(1.4rem, 3vw, 2rem); line-height: 1.25; }
+h3 { margin: 1.15rem 0 .5rem; line-height: 1.4; }
+p, ol, ul { margin: .65rem 0; }
+li { margin-bottom: .3rem; }
+a { color: var(--green); text-underline-offset: .2em; }
+nav, .actions { display: flex; flex-wrap: wrap; gap: .65rem 1.25rem; align-items: center; }
+nav { padding: 1rem 0; font-weight: 650; }
+section, .meta { background: var(--panel); padding: clamp(1rem, 3vw, 1.8rem); border: 1px solid var(--line); border-radius: .9rem; margin: 0 0 1.35rem; }
+.meta { padding-block: .9rem; }
+.kicker, .note, .status { color: var(--muted); font-size: .9rem; }
+.kicker { margin: 0 0 .35rem; font-weight: 750; }
+.callout { background: var(--soft); border-left: 3px solid var(--green); padding: .6rem .9rem; margin: .85rem 0; }
+details { border-block-start: 1px solid var(--line); margin: .9rem 0; padding: .65rem 0 0; }
+summary { color: var(--green); font-weight: 700; cursor: pointer; }
+.table-scroll { overflow-x: auto; margin: .85rem 0; }
+table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+caption { text-align: left; font-weight: 700; margin-bottom: .45rem; }
+th, td { border: 1px solid var(--line); padding: .45rem .55rem; vertical-align: middle; text-align: left; }
+th { background: var(--soft); }
+.data-table { min-width: 39rem; }
+.data-table td { text-align: right; white-space: nowrap; }
+.work-table { min-width: 37rem; }
+.work-table td { width: 18%; }
+.fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; margin: .7rem 0; }
+.field { display: grid; gap: .25rem; font-weight: 650; align-content: start; margin: .65rem 0; }
+.fields .field { margin: 0; }
+fieldset { min-width: 0; margin: .95rem 0; padding: .75rem .9rem .9rem; border: 1px solid var(--line); border-radius: .6rem; }
+legend { color: var(--green); font-weight: 750; padding-inline: .35rem; }
+input, textarea, select, button { font: inherit; }
+input, textarea, select { width: 100%; min-width: 0; padding: .4rem .55rem; color: var(--ink); background: #fff; border: 1px solid #879e94; border-radius: .4rem; }
+textarea { resize: vertical; }
+input::placeholder, textarea::placeholder { color: #55675f; }
+button { background: var(--green); color: white; border: 1px solid var(--green); border-radius: .45rem; padding: .45rem .85rem; font-weight: 700; cursor: pointer; }
+button:hover { background: #103f34; }
+.secondary { color: var(--green); background: var(--soft); font-size: .9rem; }
+.secondary:hover { color: white; }
+:focus-visible { outline: 3px solid #a65025; outline-offset: 2px; }
+.actions { margin-top: .9rem; }
+.status[data-error] { color: #8d2a19; }
+.prompt { margin: .65rem 0; padding: .75rem .85rem; background: var(--soft); border-radius: .45rem; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; }
+footer { margin-bottom: 2rem; }
+@media (max-width: 42rem) {
+  .wrap { width: calc(100% - 1.3rem); }
+  .fields { grid-template-columns: 1fr; }
+  th, td { padding: .35rem .4rem; }
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <nav class="course-back" aria-label="返回"><a href="./">← 返回专题</a><a href="../">课程首页</a></nav>
+    <p>财务报表分析 · 第六次课 · 180 分钟</p>
+    <h1>母公司报表与合并报表</h1>
+    <p>先手算一张合并工作底稿，再去真实年报里核对：钱在哪里、债谁来背、利润归谁。</p>
+  </div>
+</header>
+<main class="wrap">
+  <nav aria-label="任务目录">
+    <a href="#sandbox">一、手算合并</a>
+    <a href="#blind">二、匿名初判</a>
+    <a href="#annual">三、年报核证</a>
+    <a href="#decision">四、课堂个人作业</a>
+  </nav>
+
+  <form id="group" class="meta" aria-label="小组信息">
+    <div class="fields">
+      <label class="field">组号<input name="组号" autocomplete="off" maxlength="30" required placeholder="例如：第 3 组"></label>
+      <label class="field">成员姓名<input name="成员姓名" placeholder="2–4 人，用顿号分隔（如：张三、李四）" autocomplete="off" maxlength="100" required></label>
+    </div>
+    <p class="note" id="draft-status" role="status">内容自动暂存在当前浏览器。请妥善保存下载的 TXT 文件，按课堂要求提交。</p>
+    <noscript><p>请在启用 JavaScript 的浏览器中打开本页面，否则无法自动暂存或导出作业记录。</p></noscript>
+  </form>
+
+  <section id="sandbox" aria-labelledby="sandbox-title">
+    <p class="kicker">阶段一 · 先独立思考，再小组汇总 · 禁用 AI</p>
+    <h2 id="sandbox-title">手算合并底稿</h2>
+    <form id="workpaper">
+      <fieldset>
+        <legend>独立思考：合并范围</legend>
+        <p>M 公司持有 A 公司 50% 股权，协议约定 A 的相关活动须经 M 与另一股东一致同意才能决策；M 另持有 S 公司 60% 股权，能单独主导 S 的相关活动，享有可变回报并能运用权力影响回报金额。</p>
+        <label class="field">每人占一行，写明 A、S 是否纳入合并范围及理由
+          <textarea name="个人控制判断" rows="3" required placeholder="姓名｜A 是否并入及理由｜S 是否并入及理由"></textarea>
+        </label>
+      </fieldset>
+
+      <h3>小组协作：合并工作底稿</h3>
+      <p><strong>背景：</strong>期初 M、S 两家公司账面均只有货币资金 1,000 万元、实收资本 1,000 万元，无其他资产或负债。合并前双方不受同一方或相同多方最终控制（非同一控制下企业合并），S 原有团队和业务流程完整，构成一项业务；购买日 S 可辨认净资产公允价值等于账面价值。不考虑税费、法定盈余公积及商誉减值。</p>
+      <ol>
+        <li>年初第一天，M 向 S 原股东支付现金 700 万元，取得 S 60% 股权并形成控制。</li>
+        <li>年内，M 向 S 提供无息借款 200 万元，年末尚未归还。</li>
+        <li>购买日后，S 对外经营实现净利润 100 万元，经营活动现金净流入 100 万元，当年未分配股利。除上述事项外，M 无其他经营业务。</li>
+      </ol>
+      <label class="field">每人写一条抵销或调整思路，全组核对一致
+        <textarea name="个人抵销与调整" rows="3" required placeholder="姓名｜抵销或调整项目及金额｜处理思路"></textarea>
+      </label>
+      <div class="table-scroll" tabindex="0" aria-label="合并工作底稿，可横向滚动">
+        <table class="work-table">
+          <caption>合并工作底稿（单位：万元）</caption>
+          <thead><tr><th scope="col">报表项目</th><th scope="col">母公司 M</th><th scope="col">子公司 S</th><th scope="col">调整/抵销净额</th><th scope="col">合并数</th></tr></thead>
+          <tbody id="workpaper-rows"></tbody>
+        </table>
+      </div>
+      <p class="note">填纯数字，零填 0；“调整/抵销净额”列用正负号表示增减。填完核对 M、S、合并数三列的“资产总计”是否各自等于“负债和所有者权益总计”（部分行无须填写调整列，该列不做纵向加总）。</p>
+      <div class="fields">
+        <label class="field">商誉与少数股东计算式
+          <textarea name="商誉与利润归属算式" rows="2" required placeholder="列出购买日商誉、年末少数股东权益及本期少数股东损益算式"></textarea>
+        </label>
+        <label class="field">两类报表使用者的视角差异
+          <textarea name="沙盘两类使用者" rows="2" required placeholder="合并有现金和盈利时，M 账面实际有多少现金？按本题条件 M 是否有未分配利润可供分配？小股东应关注哪个利润数？"></textarea>
+        </label>
+      </div>
+      <fieldset>
+        <legend>延伸测算：内部购销未实现损益</legend>
+        <p>假设当年 M 将一批成本 80 万元的商品以 100 万元卖给 S，年末 S 尚未对外售出（忽略所得税与跌价准备）。相比母子公司个别报表直接相加，合并报表中的营业收入、营业成本、存货、净利润分别调减多少？这笔调减由谁承担（归母净利润还是少数股东损益）？</p>
+        <label class="field">写出各项目调减金额及理由（独立测算，不计入上方底稿）
+          <textarea name="未实现利润抵销" rows="2" required placeholder="营业收入调减__，营业成本调减__，存货调减__，净利润调减__；由__承担，理由："></textarea>
+        </label>
+      </fieldset>
+      <fieldset id="dividend-timing">
+        <legend>延伸测算：同一笔分红，两个时点（约 7 分钟）</legend>
+        <p>接主沙盘。次年 3 月，S 股东会宣告发放现金股利 100 万元，按持股比例分配（S 有足额可供分配利润），次月一次付清。期间无其他交易，忽略税费。</p>
+        <p>先个人写 2 分钟，再小组核对填四格（单位：万元）。以上方主沙盘年末余额为起点，写出宣告日和支付日当天引起的变动。</p>
+        <div class="fields">
+          <label class="field">宣告日 · M 公司个别报表
+            <textarea name="分红宣告日（母公司个别报表）" rows="2" required placeholder="应收股利、投资收益和货币资金怎么变？"></textarea>
+          </label>
+          <label class="field">宣告日 · 集团合并报表
+            <textarea name="分红宣告日（集团合并报表）" rows="2" required placeholder="抵销了什么？货币资金、应付股利、少数股东权益和合并净利润怎么变？"></textarea>
+          </label>
+          <label class="field">支付日 · M 公司个别报表
+            <textarea name="分红支付日（母公司个别报表）" rows="2" required placeholder="收到多少现金？应收股利和投资收益怎么变？"></textarea>
+          </label>
+          <label class="field">支付日 · 集团合并报表
+            <textarea name="分红支付日（集团合并报表）" rows="2" required placeholder="应付股利和货币资金怎么变？现金流怎么列报？是否再调减少数股东权益？"></textarea>
+          </label>
+        </div>
+      </fieldset>
+      <details>
+        <summary>提示：合并编制顺序</summary>
+        <p>先判控制；确认控制后全额并入 S 的资产、负债、收入和费用；再抵销内部长期股权投资与子公司所有者权益、内部债权债务及内部交易；最后单列少数股东权益和少数股东损益。商誉 = 合并成本 − 购买日可辨认净资产公允价值份额；计算期末少数股东权益时，需包含 S 在购买日后新增净资产的对应份额。</p>
+      </details>
+      <p class="note">本部分底稿将随阶段三的《小组记录》一并导出。公布答案后请自行对照修正。</p>
+    </form>
+  </section>
+
+  <section id="blind" aria-labelledby="blind-title">
+    <p class="kicker">阶段二 · 先个人后小组 · 禁用 AI · 揭晓前提交</p>
+    <h2 id="blind-title">匿名公司财报结构初判</h2>
+    <p>从下表五家公司（G1–G5）中任选两家对比。每人先写第一印象，再全组收敛：每家给出 <strong>2 项关键指标</strong>、<strong>1 个业务或架构判断</strong>、<strong>1 个待年报核实的问题</strong>。揭晓前不要用外部工具猜公司名称。</p>
+    <div class="table-scroll" tabindex="0" aria-label="五家公司匿名对照卡，可横向滚动">
+      <table class="data-table">
+        <caption>五家上市公司母合并报表结构对比（2025 年报数据）</caption>
+        <thead><tr><th scope="col">测算指标及取数口径</th><th scope="col">G1</th><th scope="col">G2</th><th scope="col">G3</th><th scope="col">G4</th><th scope="col">G5</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">母公司营业收入 ÷ 合并营业收入</th><td>0%</td><td>约 0.01%</td><td>58.2%</td><td>约 0.01%</td><td>0.21%</td></tr>
+          <tr><th scope="row">母公司货币资金 ÷ 合并货币资金</th><td>0.05%</td><td>1.3%</td><td>165.8%</td><td>1.7%</td><td>27.2%</td></tr>
+          <tr><th scope="row">母公司有息负债 ÷ 合并有息负债（课堂简化口径）</th><td>约 0%</td><td>58.7%</td><td>均以租赁负债为主</td><td>98.3%</td><td>35.0%</td></tr>
+          <tr><th scope="row">母公司其他应收款 ÷ 母公司资产总计</th><td>19.3%</td><td>83.6%</td><td>约 0%</td><td>38.8%</td><td>10.7%</td></tr>
+          <tr><th scope="row">母公司其他应付款 ÷ 母公司资产总计</th><td>0.3%</td><td>21.7%</td><td>1.1%</td><td>7.9%</td><td>58.5%</td></tr>
+          <tr><th scope="row">少数股东权益 ÷ 合并股东权益合计</th><td>10.0%</td><td>50.4%</td><td>3.7%</td><td>1.8%</td><td>5.6%</td></tr>
+          <tr><th scope="row">期末商誉 ÷ 归属于母公司所有者权益合计</th><td>9.6%</td><td>4.9%</td><td>0%</td><td>12.8%（上年末 62.6%）</td><td>15.3%</td></tr>
+          <tr><th scope="row">合并其他权益工具投资 ÷ 合并资产总计</th><td>3.8%</td><td>0.1%</td><td>0%</td><td>58.2%</td><td>约 0%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <details>
+      <summary>读数思路与口径说明</summary>
+      <p><strong>读数顺序：</strong>先看母公司营业收入占比（是否实质经营），再看货币资金与有息负债集中度，最后结合其他应收/应付款（常见内部资金往来科目）、商誉和少数股东权益拼出集团结构。单一比率只是线索——例如“母公司货币资金 ÷ 合并货币资金”大于 100% 时，往往意味着存在集团财务公司（内部存款抵销或转列“拆出资金”等科目），需去附注确认。</p>
+      <p><strong>口径说明：</strong>表内“有息负债”为课堂简化口径，即“短期借款 + 一年内到期的非流动负债 + 长期借款 + 应付债券 + 租赁负债”。实务中“一年内到期的非流动负债”可能混有非计息项，而应付票据、永续债或部分长期应付款未纳入其中，具体分析需回附注拆解。</p>
+    </details>
+    <form id="initial">
+      <div class="fields">
+        <label class="field">对比公司一
+          <select name="第一家公司代号" id="blind-a" required><option value="">请选择代号</option><option>G1</option><option>G2</option><option>G3</option><option>G4</option><option>G5</option></select>
+        </label>
+        <label class="field">对比公司二
+          <select name="第二家公司代号" id="blind-b" required><option value="">请选择代号</option><option>G1</option><option>G2</option><option>G3</option><option>G4</option><option>G5</option></select>
+        </label>
+      </div>
+      <label class="field">成员独立初判（每人占一行）
+        <textarea name="个人初判" rows="3" required placeholder="姓名｜公司一判断及理由｜公司二判断及理由"></textarea>
+      </label>
+      <div class="fields">
+        <label class="field">公司一：小组核心依据、判断与待查问题
+          <textarea name="第一家小组判断" rows="3" required placeholder="两项关键指标及数值｜架构与资金判断｜待核附注问题"></textarea>
+        </label>
+        <label class="field">公司二：小组核心依据、判断与待查问题
+          <textarea name="第二家小组判断" rows="3" required placeholder="两项关键指标及数值｜架构与资金判断｜待核附注问题"></textarea>
+        </label>
+      </div>
+      <div class="actions">
+        <button type="submit">下载盲测封存记录</button>
+        <span class="status" role="status"></span>
+      </div>
+      <p class="note">全班交齐盲测记录后，老师揭晓公司身份。请按要求上传并留好本地备份。</p>
+    </form>
+  </section>
+
+  <section id="annual" aria-labelledby="annual-title">
+    <p class="kicker">阶段三 · 揭晓后小组实战 · 先手工取数初判，后可用 Agent 辅助核验</p>
+    <h2 id="annual-title">核对真实年报，验证集团画像</h2>
+    <p class="callout">拿到《揭晓后年报索引》后，选定本组重点分析的一家公司，下载指定版本的 2025 年报 PDF。无论几人组，下方必做项均须填全，每位成员至少署名承担一项取数、测算或原文核对。</p>
+    <form id="verification">
+      <div class="fields">
+        <label class="field">本组核证公司（代号＋股票简称）
+          <input name="核证公司" autocomplete="off" required placeholder="例如：G2 某某股份">
+        </label>
+        <label class="field">盲测复盘：初判准确吗？
+          <textarea name="揭晓复盘" rows="2" required placeholder="盲测判断｜揭晓后保留还是修正｜哪项事实改变了判断"></textarea>
+        </label>
+      </div>
+      <fieldset id="before-agent">
+        <legend>第一步：手工取数与独立测算</legend>
+        <ul>
+          <li><strong>溯源完整：</strong>统一用 2025 年（末）报表原始数据，写明<strong>报表名称、原数、原表单位、PDF 物理页码、结果及经手人</strong>。</li>
+          <li><strong>零值与缺项：</strong>报表列 0 或横线填 0；项目缺失先查附注是否合并列报，确实没有则写“缺项”并注明已查位置。</li>
+          <li><strong>交叉复核与特殊值：</strong>取数人与复核人不能是同一人。分母为 0 填“不适用”；分子或分母为负时，直接说明各自正负号与盈亏含义，避免硬算失真比率。</li>
+        </ul>
+        <label class="field">1. 经营视角：母公司营业收入 ÷ 合并营业收入
+          <textarea name="经营指标" rows="2" required placeholder="母公司原数、单位、页码｜合并原数、单位、页码｜算式与百分比｜取数人、复核人"></textarea>
+        </label>
+        <label class="field">2. 偿债视角：母公司货币资金 ÷（母公司短期借款＋母公司一年内到期的非流动负债）
+          <textarea name="钱债指标" rows="2" required placeholder="三项原数、单位、页码｜算式与倍数/百分比｜取数人、复核人"></textarea>
+        </label>
+        <label class="field">3. 盈利视角：母公司净利润 ÷ 归属于母公司股东的净利润
+          <textarea name="利润指标" rows="2" required placeholder="母公司原数、单位、页码｜合并原数、单位、页码｜算式与百分比｜取数人、复核人"></textarea>
+        </label>
+        <label class="field">4. 专项深挖（任选其一）：少数股东权益/损益、商誉变动或合并范围变化
+          <textarea name="补充专题取数" rows="2" required placeholder="如：少数股东权益期末余额及分配情况；商誉原值、减值与变动原因；新设/处置子公司及出表时点。注明页码及经手人。"></textarea>
+        </label>
+        <div class="fields">
+          <label class="field">小组进阶判断
+            <textarea name="小组初判" rows="2" required placeholder="结合上述数据，对母公司或子公司的风险、盈利质量有什么具体判断？"></textarea>
+          </label>
+          <label class="field">拟查阅的两处附注或披露
+            <textarea name="两处待核披露" rows="2" required placeholder="写明附注编号或检索关键词，以及它们如何验证上述判断"></textarea>
+          </label>
+        </div>
+        <details>
+          <summary>指标解读与避坑提示</summary>
+          <p><strong>营业收入对比：</strong>母公司营收可能包含对子公司的内部销售（合并层面已抵销），因此该比值可能高于 100%，不能直接当作母公司外部业务占比，主要用于区分“纯持股平台”与“实体经营型母公司”。</p>
+          <p><strong>资金与短债指标：</strong>资产负债表“货币资金”含受限资金，与现金流量表“现金及现金等价物”口径不同；且本公式分母仅含两项短债科目，未覆盖应付票据、短期应付债券等。另须注意：受限资金附注通常按合并口径披露，不能直接当作母公司的受限金额；合并账面上的现金，母公司也未必能直接调动还债。</p>
+          <p><strong>母公司净利润 vs 归母净利润：</strong>母公司对子公司长投采用<strong>成本法</strong>核算，只有子公司正式宣告分派现金股利时，母公司才确认投资收益（实际收现可能更晚）。此外，少数股东权益是资产负债表<strong>存量</strong>，少数股东损益是利润表<strong>流量</strong>，不要混用。</p>
+          <p><strong>商誉变动核查：</strong>期末商誉减少时，需在附注区分是计提减值、处置子公司出表还是外币折算差额，并核对账面原值、减值准备与账面净值的勾稽。</p>
+        </details>
+      </fieldset>
+
+      <details id="agent">
+        <summary>第二步：AI Agent 使用规则与提示词</summary>
+        <ul>
+          <li><strong>使用前提：</strong>阶段一、二、四禁用 AI。本阶段必须先手工填完上方原始数据、算式、初判与待核清单，才能用 Agent 辅助（也可直接用 PDF 搜索加组内互查，评分一致）。</li>
+          <li><strong>允许范围：</strong>只用于三件事——<strong>定位附注并原文摘录</strong>、<strong>复核已有算式</strong>、<strong>对现有判断提反驳视角</strong>。不得让 Agent 代取必做指标原数、首次代算或直接写结论。</li>
+          <li><strong>核验要求：</strong>所有检索限定在指定年报内。AI 返回的年度、母/合并口径、单位和页码必须逐条回翻 PDF 核对；定位不到具体页码的内容不能作数。</li>
+          <li><strong>记录留痕：</strong>在下方如实写明提问要点、回查页码及最终处理意见（采纳、修正或未能证实，并写理由）。</li>
+        </ul>
+        <p id="agent-prerequisite" class="note">提示：填完上方的公司名称、四项手工取数与算式、小组进阶判断及待核披露清单后，此处将自动解锁提示词。</p>
+        <div id="agent-prompts" hidden>
+        <h3>场景一：定位与原文摘录</h3>
+        <p id="prompt-locate" class="prompt">请严格限定在我上传的这份 2025 年年度报告中，检索以下待核事项：[在此粘贴本组待核清单]。针对每一项，请返回：(1) 所属口径（母公司报表/合并报表）；(2) 报表名称或附注编号；(3) 从 PDF 封面算起的物理页码；(4) 原文逐字短引或原表对应行数据。注意区分“本期/期末”与“上期/期初”，并注明单位。若报告中未披露，请直接回复“未找到”，不要自行推测。</p>
+        <button class="secondary" type="button" data-copy="prompt-locate">复制定位提示词</button>
+        <h3>场景二：复核已有算式</h3>
+        <p id="prompt-check" class="prompt">请帮我复核以下已计算完成的财务指标：[在此粘贴公式、原始数据、单位、报表口径及计算结果]。请重点核查四点：四则运算是否准确、会计期间是否匹配、金额单位是否统一、各原始数据所属口径（母公司 vs 合并）是否与公式一致。只需客观指出计算或口径偏差，无需替我写分析结论。</p>
+        <button class="secondary" type="button" data-copy="prompt-check">复制复核提示词</button>
+        <h3>场景三：寻找替代解释</h3>
+        <p id="prompt-challenge" class="prompt">这是我们小组目前的初步判断及原文依据：[在此粘贴小组初判与原文证据]。请你扮演严谨的审计师或买方分析师，提出一个能推翻或修正上述判断的替代解释，并指出需要查阅年报哪一处披露来证实或证伪。请严格区分“报表事实”与“分析假设”；信息不足时，直接列出缺失的证据。</p>
+        <button class="secondary" type="button" data-copy="prompt-challenge">复制反驳提示词</button>
+        <span id="copy-status" class="status" role="status"></span>
+        </div>
+      </details>
+
+      <fieldset>
+        <legend>第三步：核对原文，形成结论</legend>
+        <p>摘录两处可精确回溯的原文短证据（至少一处来自<strong>财务报表附注、审计报告或股东权益变动表</strong>）。若年报披露不足以定论，如实写明已查范围和缺口。</p>
+        <div class="fields">
+          <label class="field">原文证据一
+            <textarea name="原文证据一" rows="3" required placeholder="年度｜母/合并口径｜报表或附注编号｜PDF 物理页码｜原表行或逐字短引｜核对人"></textarea>
+          </label>
+          <label class="field">原文证据二
+            <textarea name="原文证据二" rows="3" required placeholder="年度｜母/合并口径｜报表或附注编号｜PDF 物理页码｜原表行或逐字短引｜核对人"></textarea>
+          </label>
+        </div>
+        <label class="field">Agent 核验或同伴交叉质询记录
+          <textarea name="核对与质询记录" rows="3" required placeholder="提问或质询要点｜回翻 PDF 第几页核实｜结果（采纳/修正/未能证实）及理由"></textarea>
+        </label>
+        <label class="field">小组最终判断
+          <textarea name="最终判断" rows="3" required placeholder="维持、修正还是披露不足无法定论？结合核心指标与两处原文说明；同时指出仅看另一套报表会带来什么误判，以及还有哪些关键信息无法确认"></textarea>
+        </label>
+      </fieldset>
+      <details>
+        <summary>选做拓展：集团资金与风险传导路径</summary>
+        <label class="field">拓展分析记录
+          <textarea name="选做拓展" rows="2" placeholder="涉及主体｜资金归集、担保或风险如何在母子公司间传导｜年报页码｜尚存的披露盲区"></textarea>
+        </label>
+      </details>
+      <div class="actions">
+        <button type="submit">下载小组完整记录</button>
+        <span class="status" role="status"></span>
+      </div>
+      <p class="note">导出文件自动合并“手算合并底稿”与“年报核证记录”。完成组间质询并按要求提交后，再开始个人作业。</p>
+    </form>
+  </section>
+
+  <section id="decision" aria-labelledby="decision-title">
+    <p class="kicker">阶段四 · 课堂个人作业 · 30 分钟 · 独立完成</p>
+    <h2 id="decision-title">基于同一报表差异，向两类主体提建议</h2>
+    <p>选本组年报案例中<strong>同一处母公司与合并报表的显著差异</strong>，分别站在“母公司债权人”和“上市公司中小股东”立场写决策建议。每条建议含三要素：<strong>行动建议</strong>、<strong>数据依据</strong>、<strong>还需核查的事项</strong>。两类主体态度可以一致，但财务逻辑须各自成立。两段合计不超过 600 字。</p>
+    <form id="individual">
+      <div class="fields">
+        <label class="field">姓名或学号<input name="个人标识" autocomplete="off" maxlength="40" required></label>
+        <label class="field">所分析的上市公司简称<input name="个人作业公司" autocomplete="off" required></label>
+      </div>
+      <label class="field">分析锚点（同一处母合并报表差异）
+        <textarea name="共同证据" rows="2" required placeholder="写明产生差异的报表项目、母公司与合并口径金额、年度及 PDF 页码"></textarea>
+      </label>
+      <div class="fields">
+        <label class="field">致母公司债权人的风控/授信建议
+          <textarea name="母公司债权人建议" rows="4" maxlength="600" required placeholder="行动建议（如收紧授信、要求子公司担保等）｜数据依据｜还需核查什么"></textarea>
+        </label>
+        <label class="field">致上市公司中小股东的投资/治理建议
+          <textarea name="小股东建议" rows="4" maxlength="600" required placeholder="行动建议（如关注分红能力、质询资金占用等）｜数据依据｜还需核查什么"></textarea>
+        </label>
+      </div>
+      <div class="actions">
+        <button type="submit">下载个人作业文件</button>
+        <span class="status" role="status"></span>
+      </div>
+      <details>
+        <summary>分红潜力分析的口径区分</summary>
+        <p>判断分红潜力，不要只看合并利润表。实务中先看<strong>未分配利润</strong>（深交所规则按合并与母公司报表孰低，上交所规则以母公司报表为依据，并结合公司章程与弥补亏损、提取公积金情况），再核对母公司账面可用现金（或子公司能否向母公司分红上调现金）。注意区分三个概念：<strong>母公司净利润</strong>（当期流量）、<strong>合并归母净利润</strong>（当期流量）与<strong>期末未分配利润</strong>（累计存量）。</p>
+      </details>
+      <p class="note">课堂最后 30 分钟独立完成，下载个人作业文件，下课前按老师指定方式单独提交。</p>
+    </form>
+  </section>
+  <footer>
+    <details>
+      <summary>参考会计准则与监管规则索引</summary>
+      <p>企业会计准则参见财政部颁布的
+        <a href="https://www.mof.gov.cn/gkml/caizhengwengao/wg2014/wg201405/201412/t20141217_1168564.htm">《企业会计准则第 33 号——合并财务报表》</a>、
+        <a href="https://www.mof.gov.cn/gp/xxgkml/hjs/201402/t20140220_2512608.htm">《第 40 号——合营安排》</a>、
+        <a href="https://www.mof.gov.cn/gkml/caizhengwengao/wg2014/wg201406/201501/t20150116_1180710.htm">《第 2 号——长期股权投资》</a>、
+        <a href="https://kjs.mof.gov.cn/zt/kjzzss/kuaijizhunzeshishi/200806/t20080618_46228.htm">《第 20 号——企业合并》</a>及
+        <a href="https://www.mof.gov.cn/zcsjtsgb/gfxwj/201912/t20191210_3583714.htm">准则解释第 13 号</a>、
+        <a href="https://kjs.mof.gov.cn/zt/kjzzss/kuaijizhunzeshishi/200806/t20080618_46240.htm">《第 8 号——资产减值》</a>、
+        <a href="https://kjs.mof.gov.cn/zt/kjzzss/kuaijizhunzeshishi/200806/t20080618_46250.htm">《第 31 号——现金流量表》</a>及
+        <a href="https://www.mof.gov.cn/gp/xxgkml/hjs/201403/t20140327_2512621.htm">《第 41 号——在其他主体中权益的披露》</a>。</p>
+      <p>利润分配与监管规则参见
+        <a href="https://www.samr.gov.cn/xyjgs/flfg/art/2024/art_d4e84936a8a744f8928ac7aec7594345.html">《中华人民共和国公司法》第二百一十条</a>，
+        以及 2026 年修订的<a href="https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/mainipo/c/c_20260424_10816589.shtml">《上海证券交易所股票上市规则》</a>和
+        <a href="https://docs.static.szse.cn/www/lawrules/rule/stock/W020260424747613955674.pdf">《深圳证券交易所股票上市规则》</a>第 5.3.2 条。</p>
+    </details>
+  </footer>
+</main>
+<script>
+const workpaperRows = [
+  ['货币资金', [0, 1, 3]],
+  ['其他应收款', [0, 1, 2, 3]],
+  ['长期股权投资', [0, 1, 2, 3]],
+  ['商誉', [2, 3]],
+  ['资产总计', [0, 1, 3]],
+  ['其他应付款', [0, 1, 2, 3]],
+  ['实收资本', [0, 1, 2, 3]],
+  ['未分配利润', [0, 1, 2, 3]],
+  ['归属于母公司所有者权益合计', [3]],
+  ['少数股东权益', [2, 3]],
+  ['负债和所有者权益总计', [0, 1, 3]],
+  ['净利润', [0, 1, 3]],
+  ['归属于母公司股东的净利润', [3]],
+  ['少数股东损益', [3]],
+];
+const columns = ['母公司 M', '子公司 S', '调整/抵销净额', '合并数'];
+const workpaperBody = document.getElementById('workpaper-rows');
+for (const [item, activeColumns] of workpaperRows) {
+  const row = workpaperBody.insertRow();
+  const heading = document.createElement('th');
+  heading.scope = 'row';
+  heading.textContent = item;
+  row.append(heading);
+  columns.forEach((column, index) => {
+    const cell = row.insertCell();
+    if (!activeColumns.includes(index)) {
+      cell.textContent = '—';
+      return;
+    }
+    const input = document.createElement('input');
+    input.name = item + '｜' + column;
+    input.setAttribute('aria-label', input.name);
+    input.type = 'number';
+    input.step = 'any';
+    input.required = true;
+    cell.append(input);
+  });
+}
+
+const forms = Object.fromEntries(Array.from(document.forms, form => [form.id, form]));
+const draftKey = 'class2026-lesson6-student-v1';
+const draftStatus = document.getElementById('draft-status');
+
+function readForm(form) {
+  return Object.fromEntries(new FormData(form));
+}
+
+try {
+  const draft = JSON.parse(localStorage.getItem(draftKey) || '{}');
+  for (const [id, form] of Object.entries(forms)) {
+    for (const [name, value] of Object.entries(draft[id] || {})) {
+      const field = form.elements.namedItem(name);
+      if (field && typeof value === 'string') field.value = value;
+    }
+  }
+} catch {
+  draftStatus.textContent = '当前浏览器无法读取本地草稿，请及时下载保存已填写的记录。';
+}
+
+document.addEventListener('input', event => {
+  if (!event.target.form) return;
+  try {
+    const draft = Object.fromEntries(Object.entries(forms).map(([id, form]) => [id, readForm(form)]));
+    localStorage.setItem(draftKey, JSON.stringify(draft));
+    draftStatus.textContent = '草稿已自动保存在当前浏览器中，提交时请点击下方按钮下载对应文件。';
+  } catch {
+    draftStatus.textContent = '当前浏览器无法写入本地草稿，请保持页面开启并及时下载记录。';
+  }
+});
+
+const blindA = document.getElementById('blind-a');
+const blindB = document.getElementById('blind-b');
+
+function validateBlind() {
+  blindB.setCustomValidity(blindA.value && blindA.value === blindB.value ? '请选择两家不同的公司代号。' : '');
+}
+
+blindA.addEventListener('change', validateBlind);
+blindB.addEventListener('change', validateBlind);
+validateBlind();
+
+const credit = forms.individual.elements.namedItem('母公司债权人建议');
+const equity = forms.individual.elements.namedItem('小股东建议');
+
+function validateDecision() {
+  const count = Array.from(credit.value.trim() + equity.value.trim()).length;
+  equity.setCustomValidity(count > 600 ? '两段建议合计已超过 600 字，请适当精简。' : '');
+}
+
+credit.addEventListener('input', validateDecision);
+equity.addEventListener('input', validateDecision);
+validateDecision();
+
+function entries(form) {
+  return Object.entries(readForm(form))
+    .filter(([, value]) => value.trim())
+    .map(([name, value]) => name + '\n' + value.trim())
+    .join('\n\n');
+}
+
+function workpaperText() {
+  const values = readForm(forms.workpaper);
+  const rows = workpaperRows.map(([item, activeColumns]) =>
+    [item, ...columns.map((column, index) => activeColumns.includes(index) ? values[item + '｜' + column] : '—')].join('\t'));
+  const notes = Object.entries(values)
+    .filter(([name]) => !name.includes('｜'))
+    .map(([name, value]) => name + '\n' + value.trim());
+  return ['报表项目\t' + columns.join('\t'), ...rows].join('\n') + '\n\n' + notes.join('\n\n');
+}
+
+function downloadText(title, label, sections) {
+  const now = new Date();
+  const slug = label.replace(/[\\/:*?"<>|\s]/g, '_').slice(0, 35);
+  const body = ['财务报表分析第六次课｜' + title, '导出时间：' + now.toLocaleString(), ...sections].join('\n\n');
+  const url = URL.createObjectURL(new Blob(['\uFEFF' + body], { type: 'text/plain;charset=utf-8' }));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = '第六次课_' + slug + '_' + title + '.txt';
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function showStatus(form, message, error = false) {
+  const status = form.querySelector('.actions [role=status]');
+  status.textContent = message;
+  status.toggleAttribute('data-error', error);
+}
+
+forms.group.addEventListener('submit', event => event.preventDefault());
+forms.workpaper.addEventListener('submit', event => event.preventDefault());
+
+forms.initial.addEventListener('submit', event => {
+  event.preventDefault();
+  if (!forms.group.reportValidity()) {
+    showStatus(forms.initial, '请先在页面顶部填写组号与成员姓名。', true);
+    return;
+  }
+  downloadText('盲测封存', readForm(forms.group)['组号'], [entries(forms.group), entries(forms.initial)]);
+  showStatus(forms.initial, '盲测封存记录已开始下载，请妥善保留并按课堂要求提交。');
+});
+
+forms.verification.addEventListener('submit', event => {
+  event.preventDefault();
+  if (!forms.group.reportValidity() || !forms.workpaper.reportValidity()) {
+    showStatus(forms.verification, '请先补全顶部小组信息及第一部分的手算合并底稿。', true);
+    return;
+  }
+  downloadText('小组记录', readForm(forms.group)['组号'], [
+    entries(forms.group), '【手算合并底稿】\n' + workpaperText(), '【年报核证记录】\n' + entries(forms.verification),
+  ]);
+  showStatus(forms.verification, '小组完整记录已开始下载（内含手算底稿与年报核证）。');
+});
+
+forms.individual.addEventListener('submit', event => {
+  event.preventDefault();
+  downloadText('个人作业', readForm(forms.individual)['个人标识'], [entries(forms.individual)]);
+  showStatus(forms.individual, '个人作业文件已开始下载，请在下课前按老师指定方式单独提交。');
+});
+
+const agentInputs = [
+  forms.verification.elements.namedItem('核证公司'),
+  ...document.querySelectorAll('#before-agent [required]'),
+];
+
+function updateAgentPrompts() {
+  const ready = agentInputs.every(field => field.value.trim());
+  document.getElementById('agent-prompts').hidden = !ready;
+  document.getElementById('agent-prerequisite').hidden = ready;
+}
+
+forms.verification.addEventListener('input', updateAgentPrompts);
+updateAgentPrompts();
+
+document.querySelectorAll('[data-copy]').forEach(button => {
+  button.addEventListener('click', async () => {
+    const prompt = document.getElementById(button.dataset.copy);
+    const status = document.getElementById('copy-status');
+    try {
+      await navigator.clipboard.writeText(prompt.textContent);
+      status.textContent = '标准提示词已复制到剪贴板。';
+    } catch {
+      const range = document.createRange();
+      range.selectNodeContents(prompt);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      status.textContent = '已为您全选提示词，请按 Ctrl+C / Cmd+C 复制。';
+    }
+  });
+});
+</script>
+</body>
+</html>
