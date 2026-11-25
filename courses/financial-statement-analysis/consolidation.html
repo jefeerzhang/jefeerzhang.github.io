@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>拆开集团的「黑箱」——母公司财务报表与合并财务报表</title>
+<style>
+  :root{
+    --paper:#F6F4ED; --deep:#0F3A2C; --deep2:#14463A; --ink:#1B2A23; --green:#1B6B4A;
+    --lime:#C6DE4E; --mint:#E7F0E8; --mint-line:#C4DAC8; --muted:#6B7A71;
+    --red:#B33A2B; --soft-red:#F7E4DF; --red-line:#E0B4A9;
+    --orange:#A9660A; --soft-or:#F8EDD8; --or-line:#E2C795;
+    --line:#E3DFD2; --card:#FFFFFF;
+    --pad:56px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{background:radial-gradient(120% 120% at 50% 0%, #123A2C 0%, #0A241C 100%);
+       font-family:"PingFang SC","Microsoft YaHei","Source Han Sans SC","Noto Sans CJK SC","Hiragino Sans GB",sans-serif;
+       overflow:hidden; -webkit-font-smoothing:antialiased;}
+  #viewport{position:fixed; left:0; right:0; top:0; bottom:54px; display:flex; align-items:center; justify-content:center;}
+  #stage{width:1280px; height:720px; position:relative; transform-origin:center center;
+         background:var(--paper); border-radius:8px; overflow:hidden;
+         box-shadow:0 30px 90px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.06);}
+
+  /* ===== 统一三段式栅格：页眉 / 正文 / 页脚 ===== */
+  .slide{position:absolute; inset:0; display:none;
+         grid-template-rows:auto minmax(0,1fr) auto; color:var(--ink);}
+  .slide.active{display:grid;}
+  .head{padding:30px var(--pad) 0;}
+  .body{padding:16px var(--pad) 0; min-height:0; display:flex; flex-direction:column; gap:15px;
+        justify-content:center;}
+  .body.mid{justify-content:center;}
+  .body>*{flex-shrink:0; margin-bottom:0 !important;}
+  .body>table.data{flex:1 0 auto;}
+  .body>.flow{min-height:96px;}
+  .foot{padding:14px var(--pad) 18px; display:flex; flex-direction:column; gap:9px;}
+
+  /* 页眉 */
+  .eyebrow{display:flex; align-items:center; gap:9px; margin-bottom:9px;}
+  .sec-no{font-size:12.5px; font-weight:800; letter-spacing:.08em; color:var(--deep);
+          background:var(--lime); padding:2px 8px; border-radius:5px; line-height:1.5;}
+  .anim-flag{font-size:11px; font-weight:800; color:var(--green); background:#fff;
+             border:1px solid var(--mint-line); padding:1px 7px; border-radius:5px; letter-spacing:.06em;}
+  .sec-name{font-size:13.5px; font-weight:700; color:var(--green); letter-spacing:.05em;}
+  h1.t{font-size:31px; font-weight:800; line-height:1.28; color:var(--ink); letter-spacing:-.01em;}
+  .slide.chapter .head{display:flex; align-items:center; gap:20px;
+       background:linear-gradient(100deg,#0F3A2C 0%,#17513C 100%); padding:20px var(--pad);}
+  .chap-no{font-size:44px; font-weight:800; color:var(--lime); line-height:1; letter-spacing:-.02em;
+           padding-right:20px; border-right:2px solid rgba(198,222,78,.35);}
+  .chap-name{font-size:13px; font-weight:700; color:#9EC4AC; letter-spacing:.1em; margin-bottom:5px;}
+  .slide.chapter h1.t{color:#fff; font-size:28px;}
+  .slide.chapter .body{padding-top:20px;}
+
+  /* 页脚 */
+  .key{display:flex; align-items:flex-start; gap:11px; background:#EDF3DE;
+       border:1px solid #D6E2B8; border-left:4px solid var(--lime); border-radius:9px;
+       padding:10px 15px; font-size:15px; font-weight:600; line-height:1.55; color:#22381F;}
+  .key::before{content:"要点"; flex:none; background:var(--deep); color:var(--lime);
+       font-size:12px; font-weight:800; letter-spacing:.08em; padding:3px 8px; border-radius:5px; margin-top:1px;}
+  .key.closing{background:var(--lime); border-color:var(--lime); color:var(--deep); font-weight:700;}
+  .key.closing::before{content:"结论"; background:var(--deep); color:var(--lime);}
+  .meta{display:flex; justify-content:space-between; align-items:center;
+        font-size:11.5px; color:#93A096; letter-spacing:.03em;}
+  .meta .pn{font-variant-numeric:tabular-nums; font-weight:700;}
+  .slide.dark .meta{color:#7FA08C;}
+
+  /* ===== 卡片 ===== */
+  .cards{display:grid; gap:15px;}
+  .c2{grid-template-columns:1fr 1fr;} .c3{grid-template-columns:1fr 1fr 1fr;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px;
+        display:flex; flex-direction:column; justify-content:center;}
+  .card.mint{background:var(--mint); border-color:var(--mint-line);}
+  .card.soft-red{background:var(--soft-red); border-color:var(--red-line);}
+  .card.soft-or{background:var(--soft-or); border-color:var(--or-line);}
+  .card h3{font-size:18.5px; font-weight:800; color:var(--green); margin-bottom:9px; line-height:1.4;}
+  .card.soft-red h3{color:var(--red);} .card.soft-or h3{color:var(--orange);}
+  .card p,.card li{font-size:15px; line-height:1.72; color:var(--ink);}
+  .card .cn{display:inline-block; font-size:15px; font-weight:800; color:#fff; background:var(--green);
+            width:26px; height:26px; line-height:26px; text-align:center; border-radius:7px; margin-right:9px;
+            vertical-align:2px;}
+  .card.soft-red .cn{background:var(--red);} .card.soft-or .cn{background:var(--orange);}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start;}
+  .grid2>div>.card+.card{margin-top:13px;}
+
+  /* ===== 表格 ===== */
+  table.data{width:100%; border-collapse:separate; border-spacing:0; background:#fff;
+             font-size:15px; border:1px solid var(--line); border-radius:11px; overflow:hidden;}
+  table.data th{background:var(--deep); color:#fff; font-size:14.5px; font-weight:700;
+                padding:11px 14px; text-align:left; letter-spacing:.02em;}
+  table.data td{padding:9px 14px; border-top:1px solid #EDEAE0; line-height:1.6; vertical-align:top;}
+  table.data tr:nth-child(even) td{background:#FBFAF6;}
+  table.data tr.mint td{background:var(--mint);}
+  table.data tr.or td{background:var(--soft-or);}
+  table.data tr.hi td{background:var(--mint); font-weight:800; color:var(--deep);}
+  table.data tr.warm td{background:var(--soft-or); font-weight:800;}
+  table.data td.num{text-align:right; font-variant-numeric:tabular-nums;}
+  table.data th.num{text-align:right;}
+  table.data td.ctr{text-align:center;}
+  table.data.roomy{font-size:15.5px;}
+  table.data.roomy th{padding:13px 16px; font-size:15px;}
+  table.data.roomy td{padding:13px 16px; line-height:1.68;}
+
+  /* ===== 引用 / 图示 / 列表 ===== */
+  .quote{position:relative; background:#fff; border:1px solid var(--line); border-left:4px solid var(--green);
+         border-radius:0 11px 11px 0; padding:15px 20px; font-size:16px; line-height:1.78; color:var(--ink);}
+  .quote .src{display:block; margin-top:7px; font-size:13px; color:var(--muted); letter-spacing:.02em;}
+  .body svg{overflow:visible;}
+  .figcap{font-size:13px; color:var(--muted); line-height:1.6; text-align:center; margin-top:8px;}
+  .shot{width:100%; height:auto; display:block; border:1px solid var(--line); border-radius:8px; background:#fff;}
+  figure.fig{background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px 14px;}
+  ul.b{list-style:none; font-size:16px; line-height:1.85;}
+  ul.b li{position:relative; padding-left:18px;}
+  ul.b li::before{content:""; position:absolute; left:2px; top:.72em; width:7px; height:7px;
+                  border-radius:2px; background:var(--lime);}
+  .muted{color:var(--muted); font-size:14px; line-height:1.7;}
+  b,strong{font-weight:800;} .g{color:var(--green); font-weight:800;}
+  .r{color:var(--red); font-weight:800;} .o{color:var(--orange); font-weight:800;}
+  .case-flag{display:inline-block; background:var(--lime); color:var(--deep); font-size:12.5px; font-weight:800;
+             padding:3px 9px; border-radius:5px; margin-left:10px; vertical-align:5px; letter-spacing:.04em;}
+
+  /* ===== 流程箭头条 ===== */
+  .flow{display:flex; gap:0;}
+  .flow .step{flex:1; background:var(--green); color:#fff; padding:13px 18px 13px 26px;
+      clip-path:polygon(0 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 0 100%, 15px 50%);
+      margin-right:-9px; font-size:14px; line-height:1.55; text-align:center; min-height:70px;
+      display:flex; flex-direction:column; justify-content:center;}
+  .flow .step:first-child{clip-path:polygon(0 0, calc(100% - 15px) 0, 100% 50%, calc(100% - 15px) 100%, 0 100%);
+      border-radius:8px 0 0 8px;}
+  .flow .step:last-child{background:var(--deep); margin-right:0;}
+  .flow .step b{font-size:15px; display:block; margin-bottom:3px; color:var(--lime);}
+
+  /* ===== 深色总结页 ===== */
+  .slide.dark{background:linear-gradient(160deg,#0F3A2C 0%,#0C3125 100%); color:#fff;}
+  .slide.dark h1.t{color:#fff;}
+  .slide.dark .sec-no{background:var(--lime); color:var(--deep);}
+  .slide.dark .sec-name{color:#9EC4AC;}
+  .slide.dark ul.b li{color:#DCE9DD;}
+
+  /* ===== 封面 ===== */
+  .cover{display:none; background:linear-gradient(135deg,#0E3728 0%,#12452F 55%,#0B2C21 100%); color:#fff;}
+  .cover.active{display:block;}
+  .cover-wrap{position:absolute; inset:0; display:grid; grid-template-columns:1fr 360px;
+              align-items:center; gap:30px; padding:0 64px 0 70px;}
+  .cover .kicker{color:var(--lime); font-size:15px; font-weight:700; letter-spacing:.08em;}
+  .cover-rule{width:64px; height:4px; background:var(--lime); border-radius:2px; margin:18px 0 22px;}
+  .cover-title{font-size:52px; font-weight:800; line-height:1.2; letter-spacing:-.01em;}
+  .cover-title2{font-size:27px; font-weight:700; color:#CFE3D2; line-height:1.4; margin-top:10px;}
+  .cover-lead{font-size:16px; line-height:1.85; color:#9FBCA8; margin-top:24px;}
+  .cover-std{display:flex; align-items:flex-start; gap:10px; margin-top:30px;
+             font-size:12.5px; color:#8CAE98; line-height:1.7;}
+  .std-tag{flex:none; background:rgba(198,222,78,.16); color:var(--lime); font-weight:800;
+           padding:2px 8px; border-radius:5px; letter-spacing:.06em;}
+  .cover-art svg{width:100%; height:auto; display:block;}
+  .cover-foot{position:absolute; left:70px; right:64px; bottom:26px; display:flex;
+              justify-content:space-between; font-size:11.5px; color:#7A9A86; letter-spacing:.04em;}
+  .cover-pn{font-weight:700; font-variant-numeric:tabular-nums;}
+
+  /* ===== 控件 ===== */
+  #prog{position:fixed; left:0; top:0; height:3px; background:var(--lime); width:0%; z-index:60;
+        transition:width .25s ease; box-shadow:0 0 12px rgba(198,222,78,.5);}
+  #nav{position:fixed; left:50%; transform:translateX(-50%); bottom:11px; z-index:70;
+       display:flex; gap:6px; align-items:center; background:rgba(255,255,255,.06);
+       border:1px solid rgba(255,255,255,.12); padding:5px 8px; border-radius:11px;
+       opacity:.75; transition:opacity .2s;}
+  #nav:hover{opacity:1;}
+  #nav button{background:transparent; color:#DCEBDD; border:none; height:28px; min-width:28px;
+              border-radius:6px; font-size:16px; cursor:pointer; font-family:inherit; line-height:1;}
+  #nav button:hover{background:rgba(198,222,78,.22); color:#fff;}
+  #nav #tocBtn{font-size:12.5px; padding:0 9px; font-weight:700; letter-spacing:.04em;}
+  #nav a{display:inline-flex; align-items:center; height:28px; padding:0 9px; border-radius:6px;
+         color:#DCEBDD; text-decoration:none; font-size:12.5px; font-weight:700; letter-spacing:.04em;}
+  #nav a:hover{background:rgba(198,222,78,.22); color:#fff;}
+  #cnt{color:#CFE3CF; font-size:12.5px; font-variant-numeric:tabular-nums; padding:0 6px; min-width:56px;
+       text-align:center; font-weight:700;}
+  #toc{position:fixed; right:0; top:0; bottom:0; width:390px; z-index:80; background:#0D3327;
+       border-left:1px solid rgba(255,255,255,.1); box-shadow:-20px 0 60px rgba(0,0,0,.45);
+       transform:translateX(100%); transition:transform .26s ease; display:flex; flex-direction:column;}
+  #toc.open{transform:none;}
+  #toc h4{color:#fff; font-size:14px; padding:18px 20px 12px; letter-spacing:.06em;
+          border-bottom:1px solid rgba(255,255,255,.08); display:flex; justify-content:space-between;}
+  #toc h4 span{color:#8FB6A0; font-weight:400; font-size:12px;}
+  #tocList{overflow-y:auto; padding:8px 12px 20px; flex:1;}
+  #tocList .ti{display:flex; gap:10px; align-items:baseline; padding:7px 10px; border-radius:7px;
+               cursor:pointer; color:#C6DCCC; font-size:13px; line-height:1.5;}
+  #tocList .ti:hover{background:rgba(255,255,255,.07); color:#fff;}
+  #tocList .ti.on{background:rgba(198,222,78,.18); color:#fff;}
+  #tocList .ti i{font-style:normal; color:#7FA08C; font-size:11.5px; font-weight:700; min-width:22px;
+                 font-variant-numeric:tabular-nums;}
+  #tocList .ti.chap{color:var(--lime); font-weight:700; margin-top:6px;}
+  #hint{position:fixed; left:18px; bottom:18px; z-index:70; color:#7FA08C; font-size:11.5px;
+        opacity:.65; letter-spacing:.04em;}
+  #hint:hover{opacity:1;}
+
+  @media print{
+    body{overflow:visible; background:#fff;}
+    #viewport{bottom:0;}
+    #nav,#prog,#toc,#hint{display:none !important;}
+    #viewport{position:static; display:block;}
+    #stage{width:1280px; height:auto; transform:none !important; box-shadow:none; border-radius:0;}
+    .slide,.cover{position:relative; display:grid !important; height:720px; page-break-after:always;}
+    .cover{display:block !important;}
+    .body{transform:none !important; width:auto !important;}
+  }
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<div id="hint">← → 翻页 · O 目录 · F 全屏 · R 重播 · P 暂停</div>
+<div id="nav">
+  <button onclick="go(-1)" title="上一页">‹</button>
+  <span id="cnt">1 / 28</span>
+  <button onclick="go(1)" title="下一页">›</button>
+  <span id="animGrp" style="display:none;gap:6px;align-items:center">
+    <button onclick="replayAnim()" title="重播本页动画（R）">↻</button>
+    <button id="animBtn" onclick="toggleAnim()" title="暂停/播放动画（P）">⏸</button>
+  </span>
+  <button id="tocBtn" onclick="toggleToc()" title="目录（O）">目录</button>
+  <a href="./" title="返回财报分析课程首页">课程</a>
+</div>
+<div id="toc"><h4>课件目录<span>点击跳转 · Esc 关闭</span></h4><div id="tocList"></div></div>
+<div id="viewport"><div id="stage">
+
+<section class="slide cover" data-title="拆开集团的「黑箱」">
+  <div class="cover-wrap">
+    <div class="cover-main">
+      <div class="kicker">《财务报表分析》专题五 · 硕士课程第六次课</div>
+      <div class="cover-rule"></div>
+      <h1 class="cover-title">拆开集团的「黑箱」</h1>
+      <div class="cover-title2">母公司财务报表与合并财务报表</div>
+      <div class="cover-lead">同一家公司、同一天，两套报表——<br>一套划法律边界，一套看经济整体。</div>
+      <div class="cover-std"><span class="std-tag">准则依据</span><span>CAS 33 · CAS 20 · CAS 2 · CAS 8 · 财会〔2019〕16 号 · 财会函〔2000〕7 号</span></div>
+    </div>
+    <div class="cover-art" aria-hidden="true">
+      <svg viewBox="0 0 340 330">
+        <rect x="14" y="26" width="196" height="252" rx="14" fill="#124634" stroke="#2F7C5C" stroke-width="1.6"/>
+        <text x="34" y="58" font-size="13" fill="#8FB6A0" font-weight="700">母公司报表</text>
+        <line x1="34" y1="72" x2="190" y2="72" stroke="#2F7C5C" stroke-width="1.2"/>
+        <rect x="34" y="88" width="120" height="7" rx="3.5" fill="#2A6B52"/>
+        <rect x="34" y="106" width="150" height="7" rx="3.5" fill="#2A6B52"/>
+        <rect x="34" y="124" width="96" height="7" rx="3.5" fill="#2A6B52"/>
+        <rect x="34" y="150" width="156" height="26" rx="6" fill="#B26A00" opacity=".55"/>
+        <text x="44" y="168" font-size="12" fill="#F6E8CF" font-weight="700">长期股权投资 700</text>
+        <rect x="34" y="192" width="132" height="7" rx="3.5" fill="#2A6B52"/>
+        <rect x="34" y="210" width="108" height="7" rx="3.5" fill="#2A6B52"/>
+        <rect x="122" y="72" width="204" height="252" rx="14" fill="#1B5C43" stroke="#C6DE4E" stroke-width="1.8"/>
+        <text x="142" y="104" font-size="13" fill="#C6DE4E" font-weight="700">合并报表</text>
+        <line x1="142" y1="118" x2="306" y2="118" stroke="#3E8A68" stroke-width="1.2"/>
+        <rect x="142" y="134" width="140" height="7" rx="3.5" fill="#3E8A68"/>
+        <rect x="142" y="152" width="164" height="7" rx="3.5" fill="#3E8A68"/>
+        <rect x="142" y="170" width="118" height="7" rx="3.5" fill="#3E8A68"/>
+        <rect x="142" y="188" width="150" height="7" rx="3.5" fill="#3E8A68"/>
+        <rect x="142" y="214" width="164" height="26" rx="6" fill="#C6DE4E" opacity=".9"/>
+        <text x="152" y="232" font-size="12" fill="#0F3A2C" font-weight="800">商誉 · 少数股东权益</text>
+        <rect x="142" y="256" width="128" height="7" rx="3.5" fill="#3E8A68"/>
+        <rect x="142" y="274" width="150" height="7" rx="3.5" fill="#3E8A68"/>
+        <rect x="142" y="292" width="104" height="7" rx="3.5" fill="#3E8A68"/>
+      </svg>
+    </div>
+  </div>
+  <div class="cover-foot"><span>研究生课程 · 财务报表分析</span><span class="cover-pn">01 / 28</span></div>
+</section>
+
+<section class="slide" data-title="课程导入：读懂集团财报要回答的四个问题">
+  <header class="head">
+    <div class="eyebrow"><span class="sec-no">00</span><span class="sec-name">课程导入</span></div>
+    <h1 class="t">课程导入：读懂集团财报要回答的四个问题</h1>
+  </header>
+  <div class="body">
+<div class="card" style="padding:12px 16px; margin-bottom:18px;">
+    <img class="shot" src="figures/consolidation-audit-opinion.png" alt="贵州茅台2025年报审计意见段">
+    <p class="figcap" style="margin-top:8px;">贵州茅台 2025 年年度报告第 53 页·审计意见段：一句话中「合并及母公司」出现四次——两套报表从审计意见开始就是并行的。</p>
+  </div>
+  <div class="cards" style="grid-template-columns:1fr 1fr 1fr 1fr;">
+    <div class="card"><h3 style="font-size:18px;"><span class="cn">01</span>两套报表<br>为何并存</h3>
+      <p style="font-size:14px; line-height:1.6;">法人与企业集团；<br>合并范围看「控制」；<br>成本法与逐项并入。</p></div>
+    <div class="card"><h3 style="font-size:18px;"><span class="cn">02</span>合并方法<br>抵销与勾稽</h3>
+      <p style="font-size:14px; line-height:1.6;">沙盘三步勾稽；<br>三类内部抵销；<br>「消失、冒出、错位」。</p></div>
+    <div class="card"><h3 style="font-size:18px;"><span class="cn">03</span>使用者视角<br>看哪张表</h3>
+      <p style="font-size:14px; line-height:1.6;">母公司债权人：别被合并现金迷惑；<br>股东：分红上限以母公司报表为准；<br>子公司债权人、分析者：两表对照。</p></div>
+    <div class="card"><h3 style="font-size:18px;"><span class="cn">04</span>分析方法<br>信号与实例</h3>
+      <p style="font-size:14px; line-height:1.6;">四类被掩盖的风险；<br>集团架构画像；<br>八家上市公司实例。</p></div>
+  </div>
+  </div>
+  <footer class="foot">
+    <div class="key">合并报表反映集团规模，母公司报表反映法人可动用资源——本课围绕这一分一合展开。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">02 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide" data-title="课程结构：上篇看「报表怎么编」，下篇看「报表怎么用」">
+  <header class="head">
+    <div class="eyebrow"><span class="sec-no">00</span><span class="sec-name">课程导入</span></div>
+    <h1 class="t">课程结构：上篇看「报表怎么编」，下篇看「报表怎么用」</h1>
+  </header>
+  <div class="body mid">
+<table class="data roomy">
+    <tr><th style="width:34%">部分</th><th>内容</th><th style="width:12%">页码</th></tr>
+    <tr class="mint"><td colspan="3"><b>上篇 · 报表怎么编</b>——合并报表从哪来、装了什么</td></tr>
+    <tr><td><b>01</b>　为什么要编合并报表</td><td>两套报表并存；母公司报表把子公司折叠成一行「长期股权投资」</td><td>P04–P05</td></tr>
+    <tr><td><b>02</b>　合并范围：谁能进表</td><td>唯一标准是「控制」；案例①：上汽持股 50% 的合营企业为何不并表</td><td>P06–P07</td></tr>
+    <tr><td><b>03</b>　如何编制合并报表</td><td>不并表按成本法核算 → 100% 加总·抵销·切分 → 三个特有项目 → 差异一览</td><td>P08–P12</td></tr>
+    <tr><td><b>04</b>　沙盘演算</td><td>手算一次完整合并，看哪些数字消失、冒出、错位</td><td>P13–P16</td></tr>
+    <tr class="mint"><td colspan="3"><b>下篇 · 报表怎么用</b>——不同人看哪张表、风险藏在哪、实例印证</td></tr>
+    <tr><td><b>05</b>　报表使用者的选择</td><td>母公司债权人、股东、子公司债权人各看哪张表</td><td>P17–P19</td></tr>
+    <tr><td><b>06</b>　风险信号与分析方法</td><td>四类风险、五类架构画像、三步读卡法</td><td>P20–P23</td></tr>
+    <tr><td><b>07</b>　年报实例印证</td><td>五家上市公司对照揭晓；案例②上汽 vs 比亚迪、案例③京东方</td><td>P24–P27</td></tr>
+  </table>
+  </div>
+  <footer class="foot">
+    <div class="key">收束页回到开篇的四个核心问题（P28）：看的是谁的报表？资金在谁手中？债在谁那里？利润归谁？</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">03 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide chapter" data-title="上市公司存在「两套」财务报表">
+  <header class="head">
+    <div class="chap-no">01</div>
+    <div class="chap-meta"><div class="chap-name">为什么编合并报表</div>
+    <h1 class="t">上市公司存在「两套」财务报表</h1></div>
+  </header>
+  <div class="body">
+<div class="card" style="padding:12px 16px; margin-bottom:18px;">
+    <img class="shot" src="figures/consolidation-bs-header.png" alt="合并与母公司资产负债表表头对比">
+    <p class="figcap" style="margin-top:8px;">贵州茅台 2025 年年度报告：财务报表部分先列「合并资产负债表」（第 56 页），紧跟着一张「母公司资产负债表」（第 59 页）——同一家公司、同一天，两套报表。</p>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>母公司财务报表（法人表）</h3>
+      <p>主体：<b>母公司这一独立法人</b><br>真实存在：签订合同、举债融资、发行债券、纳税、向股东分红、破产清算均以它为法律主体。</p></div>
+    <div class="card mint"><h3>合并财务报表（集团表）</h3>
+      <p>主体：<b>母公司及其控制的全部子公司（企业集团）</b><br>核心规则：<b>集团不是法人</b>。合并报表主体不能举债、不能偿债，也不能直接分红。</p></div>
+  </div>
+  </div>
+  <footer class="foot">
+    <div class="key">两套报表各有分工：母公司报表划法律边界——谁能举债、偿债、分红；合并报表看经济整体——集团共控制多少资源、对外欠多少债。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">04 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide" data-title="为什么要编制合并报表（一）：母公司报表「折叠」了什么">
+  <header class="head">
+    <div class="eyebrow"><span class="sec-no">01</span><span class="sec-name">为什么要编合并报表</span></div>
+    <h1 class="t">为什么要编制合并报表（一）：母公司报表「折叠」了什么</h1>
+  </header>
+  <div class="body mid">
+<div class="grid2">
+    <div>
+      <svg viewBox="0 0 540 318" style="width:100%;height:auto;display:block;">
+        <text x="270" y="22" text-anchor="middle" font-size="15" font-weight="800" fill="#1C2B24">母公司资产负债表（局部）</text>
+        <!-- 母公司报表行 -->
+        <rect x="40" y="40" width="460" height="52" rx="8" fill="#fff" stroke="#D8D3C4"/>
+        <text x="60" y="72" font-size="15" fill="#1C2B24">货币资金、存货、其他应收款 …</text>
+        <rect x="40" y="100" width="460" height="60" rx="8" fill="#F6E8CF" stroke="#DEB98A" stroke-width="2"/>
+        <text x="60" y="126" font-size="16.5" font-weight="800" fill="#B26A00">长期股权投资（对子公司） 700</text>
+        <text x="60" y="148" font-size="13" fill="#68766D">成本法：只记投入成本，不反映子公司经营</text>
+        <rect x="40" y="168" width="460" height="52" rx="8" fill="#fff" stroke="#D8D3C4"/>
+        <text x="60" y="200" font-size="15" fill="#1C2B24">固定资产、递延所得税资产 …</text>
+        <!-- 展开箭头（右侧绕行） -->
+        <path d="M500 130 L524 130 L524 248" stroke="#B26A00" stroke-width="2.5" fill="none" stroke-dasharray="6 4" marker-end="url(#ah4)"/>
+        <text x="400" y="236" font-size="13.5" fill="#B26A00" font-weight="800">合并时被展开为 ↓</text>
+        <!-- 展开结果 -->
+        <rect x="40" y="248" width="460" height="58" rx="8" fill="none" stroke="#1E6B4C" stroke-width="1.6" stroke-dasharray="0"/>
+        <rect x="52" y="258" width="140" height="38" rx="6" fill="#DCE9DD"/>
+        <text x="122" y="282" text-anchor="middle" font-size="13.5" fill="#1C2B24">子公司资产明细</text>
+        <rect x="200" y="258" width="140" height="38" rx="6" fill="#DCE9DD"/>
+        <text x="270" y="282" text-anchor="middle" font-size="13.5" fill="#1C2B24">子公司负债明细</text>
+        <rect x="348" y="258" width="140" height="38" rx="6" fill="#DCE9DD"/>
+        <text x="418" y="282" text-anchor="middle" font-size="13.5" fill="#1C2B24">子公司收入与利润</text>
+        <defs><marker id="ah4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#B26A00"/></marker></defs>
+      
+        <!-- 动画：折叠的一行 → 展开为三块明细 -->
+        <rect x="40" y="100" width="460" height="60" rx="8" fill="none" stroke="#B26A00" stroke-width="3" opacity="0">
+          <animate attributeName="opacity" values="0;.95;.95;0;0" keyTimes="0;.05;.17;.26;1" dur="11s" repeatCount="indefinite"/>
+        </rect>
+        <g opacity="0">
+          <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.15;.18;.44;.475;1" dur="11s" repeatCount="indefinite"/>
+          <animateTransform attributeName="transform" type="translate" values="0 0;0 0;54 0;54 124;-348 124;-348 124" keyTimes="0;.17;.25;.34;.47;1" dur="11s" repeatCount="indefinite"/>
+          <circle cx="470" cy="130" r="13" fill="#B26A00"/>
+          <text x="470" y="134" text-anchor="middle" font-size="10.5" font-weight="800" fill="#fff">资产</text>
+        </g>
+        <g opacity="0">
+          <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.21;.24;.50;.535;1" dur="11s" repeatCount="indefinite"/>
+          <animateTransform attributeName="transform" type="translate" values="0 0;0 0;54 0;54 124;-200 124;-200 124" keyTimes="0;.23;.31;.40;.53;1" dur="11s" repeatCount="indefinite"/>
+          <circle cx="470" cy="130" r="13" fill="#B26A00"/>
+          <text x="470" y="134" text-anchor="middle" font-size="10.5" font-weight="800" fill="#fff">负债</text>
+        </g>
+        <g opacity="0">
+          <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.27;.30;.56;.595;1" dur="11s" repeatCount="indefinite"/>
+          <animateTransform attributeName="transform" type="translate" values="0 0;0 0;54 0;54 124;-52 124;-52 124" keyTimes="0;.29;.37;.46;.59;1" dur="11s" repeatCount="indefinite"/>
+          <circle cx="470" cy="130" r="13" fill="#B26A00"/>
+          <text x="470" y="134" text-anchor="middle" font-size="10.5" font-weight="800" fill="#fff">利润</text>
+        </g>
+        <rect x="52" y="258" width="140" height="38" rx="6" fill="none" stroke="#1E6B4C" stroke-width="2.5" opacity="0">
+          <animate attributeName="opacity" values="0;0;1;.45;0" keyTimes="0;.45;.51;.90;1" dur="11s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="200" y="258" width="140" height="38" rx="6" fill="none" stroke="#1E6B4C" stroke-width="2.5" opacity="0">
+          <animate attributeName="opacity" values="0;0;1;.45;0" keyTimes="0;.51;.57;.90;1" dur="11s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="348" y="258" width="140" height="38" rx="6" fill="none" stroke="#1E6B4C" stroke-width="2.5" opacity="0">
+          <animate attributeName="opacity" values="0;0;1;.45;0" keyTimes="0;.57;.63;.90;1" dur="11s" repeatCount="indefinite"/>
+        </rect>
+      </svg>
+      <p class="figcap">子公司的全部资产、负债与利润，在母公司报表上被折叠成一行「长期股权投资」</p>
+    </div>
+    <div>
+      <div class="card soft-or" style="margin-bottom:14px;"><h3>只看母公司报表，三样东西看不见</h3>
+        <p>① <b>子公司的负债</b>：债务在子公司账上，集团真实杠杆被低估；<br>
+           ② <b>子公司的亏损</b>：成本法下未宣告分红即无收益确认，亏损年份母公司利润表依然光鲜；<br>
+           ③ <b>内部交易的规模</b>：向子公司销货、放款在母公司报表上都是「对外」业务。</p></div>
+      <div class="card mint"><h3>合并报表回答的问题</h3>
+        <p>把母公司与子公司当作<b>一个经济整体</b>：集团一共控制多少资源、对外欠多少债、对外做了多少生意——这正是投资者与债权人真正关心的问题。</p></div>
+    </div>
+  </div>
+  </div>
+  <footer class="foot">
+    <div class="key">母公司报表回答「法人账上有多少」，回答不了「集团实际控制多少」——缺口必须由合并报表补上。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">05 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide chapter" data-title="合并范围的确定：唯一标准是「控制」（CAS 33）">
+  <header class="head">
+    <div class="chap-no">02</div>
+    <div class="chap-meta"><div class="chap-name">合并范围与控制</div>
+    <h1 class="t">合并范围的确定：唯一标准是「控制」（CAS 33）</h1></div>
+  </header>
+  <div class="body">
+<div class="quote">「合并财务报表的合并范围应当以<b>控制</b>为基础予以确定。控制，是指投资方拥有对被投资方的<b>权力</b>，<br>
+    通过参与被投资方的相关活动而享有<b>可变回报</b>，并且有能力运用对被投资方的权力<b>影响其回报金额</b>。」
+    <span class="src">《企业会计准则第 33 号——合并财务报表》第七条</span>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>持股 &lt; 50%，也可能合并</h3>
+      <p>例：A 仅持 B 38% 股权，但与另 20% 股东签订<b>一致行动协议</b>，或掌握董事会多数席位。<br>
+         A 主导 B 的经营与财务决策，满足控制三要素 → <b>必须合并</b>。</p></div>
+    <div class="card soft-or"><h3>持股 100%，也可能不合并（两例外）</h3>
+      <p>① <b>投资性主体</b>（CAS 33 第 21 条）：仅合并为其投资活动提供服务的子公司，其余投资按公允价值计量且变动计入损益；<br>
+         ② <b>丧失控制权</b>（CAS 33 第 50 条）：如被法院或管理人接管 → <b>停止合并</b>，剩余股权按公允价值重估并冲减商誉。</p></div>
+  </div>
+  </div>
+  <footer class="foot">
+    <div class="key">控制看实质、不看持股比例：能主导经营决策（权力）＋收益随业绩变动（可变回报）＋能以权力影响回报，即为控制——不足 50% 可能并表，过半也可能因丧失控制权而出表。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">06 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide" data-title="案例 ① 上汽集团：持股 50% 的合营企业为何不并表年报实例">
+  <header class="head">
+    <div class="eyebrow"><span class="sec-no">02</span><span class="sec-name">合并范围与控制</span></div>
+    <h1 class="t">案例 ① 上汽集团：持股 50% 的合营企业为何不并表<span class="case-flag">年报实例</span></h1>
+  </header>
+  <div class="body mid">
+<div class="grid2">
+    <div>
+      <svg viewBox="0 0 560 365" style="width:100%;height:auto;display:block;">
+        <!-- 合并范围 -->
+        <rect x="30" y="16" width="220" height="80" rx="10" fill="#0F3A2C"/>
+        <text x="140" y="48" text-anchor="middle" font-size="16" fill="#fff" font-weight="800">上汽集团（母公司）</text>
+        <text x="140" y="72" text-anchor="middle" font-size="13" fill="#C6DE4E">600104</text>
+        <ellipse cx="180" cy="210" rx="160" ry="105" fill="none" stroke="#1E6B4C" stroke-width="2.5" stroke-dasharray="8 6"/>
+        <text x="180" y="122" text-anchor="middle" font-size="13.5" fill="#1E6B4C" font-weight="700">合并范围（控制）</text>
+        <rect x="70" y="140" width="100" height="56" rx="8" fill="#DCE9DD" stroke="#1E6B4C"/>
+        <text x="120" y="164" text-anchor="middle" font-size="12.5" fill="#1C2B24">控股子公司</text>
+        <text x="120" y="184" text-anchor="middle" font-size="12.5" fill="#1C2B24">100% 并表</text>
+        <rect x="196" y="140" width="100" height="56" rx="8" fill="#DCE9DD" stroke="#1E6B4C"/>
+        <text x="246" y="164" text-anchor="middle" font-size="12.5" fill="#1C2B24">智己/乘用车</text>
+        <text x="246" y="184" text-anchor="middle" font-size="12.5" fill="#1C2B24">并表</text>
+        <!-- 合营企业 -->
+        <rect x="400" y="140" width="130" height="60" rx="8" fill="#F6E8CF" stroke="#B26A00"/>
+        <text x="465" y="164" text-anchor="middle" font-size="13" fill="#B26A00" font-weight="800">上汽大众 50%</text>
+        <text x="465" y="186" text-anchor="middle" font-size="12" fill="#1C2B24">合营 · 不并表</text>
+        <rect x="400" y="220" width="130" height="60" rx="8" fill="#F6E8CF" stroke="#B26A00"/>
+        <text x="465" y="244" text-anchor="middle" font-size="13" fill="#B26A00" font-weight="800">上汽通用 50%</text>
+        <text x="465" y="266" text-anchor="middle" font-size="12" fill="#1C2B24">合营 · 不并表</text>
+        <path d="M250 60 C330 60 340 170 396 170" fill="none" stroke="#B26A00" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ah2)"/>
+        <path d="M250 70 C350 70 350 250 396 250" fill="none" stroke="#B26A00" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ah2)"/>
+        <text x="330" y="58" font-size="12.5" fill="#B26A00">共同控制</text>
+        <text x="330" y="76" font-size="12.5" fill="#B26A00">→ 权益法核算</text>
+        <!-- 结果 -->
+        <rect x="30" y="296" width="500" height="60" rx="8" fill="#F3DEDA" stroke="#B33A2B"/>
+        <text x="280" y="322" text-anchor="middle" font-size="13.5" fill="#1C2B24">合营企业的收入与资产<tspan font-weight="800">不进</tspan>合并报表</text>
+        <text x="280" y="344" text-anchor="middle" font-size="12.5" fill="#B33A2B">仅通过「长期股权投资 + 投资收益」按份额反映</text>
+        <defs><marker id="ah2" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#B26A00"/></marker></defs>
+      </svg>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px;"><h3>2024 年报发生了什么</h3>
+        <p>营业总收入 <b>6,275.90 亿元</b>（同比 −15.73%）；归母净利润仅 <b>16.66 亿元</b>（同比 −88.19%）。<br>
+        合营企业上汽通用计提资产减值 <b>232.12 亿元</b>，上汽按权益法确认投资损失约 <b>78.74 亿元</b>；对上汽通用整车相关公司的长期股权投资 <span class="num">由 74.69 亿元减记至零</span>。</p></div>
+      <div class="card mint"><h3>读懂两条规则</h3>
+        <p>① 50:50 共同控制 ≠ 控制 → <b>不并表</b>，合营企业的收入与资产不进合并报表，只按份额确认投资收益（权益法，CAS 2）；<br>
+        ② 合营企业发生超额亏损时，投资方的长期股权投资<b>以减记至零为限</b>，不再确认额外亏损。</p></div>
+    </div>
+  </div>
+  </div>
+  <footer class="foot">
+    <div class="key">并表看「控制」、不看规模：上汽大众、上汽通用体量再大，因 50% 持股不并表，其收入不计入合并营业收入。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">07 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide chapter" data-title="母公司个别报表不合并子公司：对子公司投资按成本法核算（CAS 2）">
+  <header class="head">
+    <div class="chap-no">03</div>
+    <div class="chap-meta"><div class="chap-name">如何编制合并报表</div>
+    <h1 class="t">母公司个别报表不合并子公司：对子公司投资按成本法核算（CAS 2）</h1></div>
+  </header>
+  <div class="body">
+<div class="grid2" style="margin-bottom:10px;font-size:14.6px;line-height:1.62;">
+    <div class="card" style="padding:14px 18px;"><h3>母公司个别报表：成本法（CAS 2）</h3>
+      <p><b class="g">核算要点</b>　「长期股权投资」按初始成本计量，子公司不宣告分红就不确认收益<br>
+         <b class="g">举例</b>　以 700 万购入子公司股权，该科目持续按 700 万列示，不随子公司盈亏变动<br>
+         <b class="g">确认利润</b>　子公司当年盈利 100 万但未分红 → 母公司利润表确认 <b>0</b>；仅当子公司<b>宣告分红</b>时，才按分红份额确认「投资收益」</p></div>
+    <div class="card mint" style="padding:14px 18px;"><h3>合并财务报表：逐项并入</h3>
+      <p><b class="g">核算要点</b>　子公司当年收入、成本、费用全额并入，与是否分红无关<br>
+         <b class="g">账面处理</b>　抵销母公司 700 万长期股权投资，代之以子公司全部资产与负债<br>
+         <b class="g">确认利润</b>　子公司盈利 100 万即使未分红，仍并入合并净利润，其中 60 万计入「归属于母公司股东的净利润」</p></div>
+  </div>
+  <div class="grid2" style="margin-bottom:10px;font-size:14.6px;line-height:1.62;">
+    <div class="card" style="border-left:4px solid #B99A3C;padding:14px 18px;"><h3>准则为何这样规定</h3>
+      <p>分红以母公司报表的可供分配利润为依据。若子公司利润未实际分配即确认，<b>现金仍滞留子公司</b>，母公司却可能据此分红——利润分了、现金没回，侵蚀偿付能力。成本法以「宣告分红」为确认时点，把母公司利润锁在有现金支撑的部分。</p></div>
+    <div class="card" style="border-left:4px solid #8A3324;padding:14px 18px;"><h3>与上一页是否矛盾：合营企业用权益法，子公司反而用成本法？</h3>
+      <p>不矛盾。<b>子公司已全额并表</b>，利润在合并报表中完整体现，个别报表不必重复确认；<b>合营企业不并表</b>，权益法是投资方报表反映其经营成果的<b>唯一途径</b>（上汽案例）。准则按「是否并表」分配方法：并表者从简（成本法），不并表者从详（权益法）。</p></div>
+  </div>
+  </div>
+  <footer class="foot">
+    <div class="key">成本法只约束母公司个别报表：子公司盈利未分红时母公司利润表不予反映；合并报表不受此限，子公司损益全额并入。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">08 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide" data-title="动画演示：同一子公司，并表与不并表两条数字路径">
+  <header class="head">
+    <div class="eyebrow"><span class="sec-no">03</span><span class="sec-name">如何编制合并报表</span></div>
+    <h1 class="t">动画演示：同一子公司，并表与不并表两条数字路径</h1>
+  </header>
+  <div class="body mid">
+<svg viewBox="0 0 1180 470" style="width:100%;height:auto;display:block;display:block;margin-bottom:8px;">
+    <!-- 左：子公司 -->
+    <rect x="16" y="90" width="230" height="290" rx="14" fill="#0F3A2C"/>
+    <text x="131" y="128" text-anchor="middle" font-size="19" font-weight="800" fill="#fff">子公司 S</text>
+    <text x="131" y="152" text-anchor="middle" font-size="12.5" fill="#9FB3A8">母公司持股 60% · 投资成本 700</text>
+    <text x="40" y="192" font-size="16" fill="#fff">资产　1,300</text>
+    <text x="40" y="232" font-size="16" fill="#fff">负债　　200</text>
+    <text x="40" y="272" font-size="16" fill="#C6DE4E" font-weight="700">当年净利润 +100</text>
+    <text x="131" y="356" text-anchor="middle" font-size="12.5" fill="#9FB3A8">（数字与后文沙盘一致）</text>
+    <!-- 路径箭头 -->
+    <path d="M246 140 L552 118" stroke="#B99A3C" stroke-width="2.5" stroke-dasharray="7 5" fill="none" marker-end="url(#ah9)"/>
+    <text x="395" y="105" text-anchor="middle" font-size="13" fill="#8a6d1f">报表上只留一行「长投 700」</text>
+    <path d="M246 300 L552 330" stroke="#1E6B4C" stroke-width="2.5" stroke-dasharray="7 5" fill="none" marker-end="url(#ag9)"/>
+    <text x="395" y="352" text-anchor="middle" font-size="13" fill="#1E6B4C">逐项并入</text>
+    <!-- 上路面板：个别报表 -->
+    <rect x="560" y="30" width="604" height="190" rx="12" fill="#FFFFFF" stroke="#D8D2BE"/>
+    <text x="584" y="66" font-size="17" font-weight="800" fill="#8a6d1f">母公司个别报表（不并表）· 成本法</text>
+    <text x="584" y="102" font-size="15" fill="#1C2B24">长期股权投资 <tspan font-weight="800">700</tspan>　—— 按初始成本列示，不随子公司盈亏变动</text>
+    <text x="584" y="148" font-size="15" fill="#1C2B24">投资收益 <tspan font-weight="800" fill="#B33A2B">0</tspan>　—— 子公司未宣告分红时不确认</text>
+    <!-- 分红墙 -->
+    <line x1="520" y1="42" x2="520" y2="206" stroke="#B33A2B" stroke-width="4" stroke-dasharray="10 6">
+      <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.60;0.63;0.93;0.96" dur="12s" repeatCount="indefinite"/>
+    </line>
+    <line x1="520" y1="42" x2="520" y2="206" stroke="#1E6B4C" stroke-width="4" stroke-dasharray="10 6" opacity="0">
+      <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.60;0.63;0.93;0.96" dur="12s" repeatCount="indefinite"/>
+    </line>
+    <text x="520" y="30" text-anchor="middle" font-size="12.5" fill="#B33A2B" font-weight="700">墙：未宣告分红不确认</text>
+    <!-- 下路面板：合并报表 -->
+    <rect x="560" y="240" width="604" height="210" rx="12" fill="#EAF3EC" stroke="#BFD6C6"/>
+    <text x="584" y="276" font-size="17" font-weight="800" fill="#1E6B4C">合并报表 · 逐项并入（与是否分红无关）</text>
+    <text x="770" y="316" font-size="15" fill="#1C2B24">资产 +1,300　<tspan fill="#68766D" font-size="13">全额并入，不乘持股比例</tspan></text>
+    <text x="770" y="356" font-size="15" fill="#1C2B24">负债 +200</text>
+    <text x="770" y="396" font-size="15" fill="#1C2B24">净利润 +100 → 归母 <tspan font-weight="800">60</tspan> ＋ 少数股东损益 <tspan font-weight="800">40</tspan></text>
+    <!-- 下路飞入的三个筹码 -->
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.04;0.93;0.97;1" dur="12s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 0;340 142;340 142;0 0" keyTimes="0;0.04;0.17;0.95;1" dur="12s" repeatCount="indefinite"/>
+      <rect x="250" y="150" width="150" height="32" rx="8" fill="#1E6B4C"/>
+      <text x="325" y="171" text-anchor="middle" font-size="14" fill="#fff" font-weight="700">资产 1,300</text>
+    </g>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.08;0.10;0.93;0.97;1" dur="12s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 0;340 142;340 142;0 0" keyTimes="0;0.09;0.22;0.95;1" dur="12s" repeatCount="indefinite"/>
+      <rect x="250" y="190" width="150" height="32" rx="8" fill="#1E6B4C"/>
+      <text x="325" y="211" text-anchor="middle" font-size="14" fill="#fff" font-weight="700">负债 200</text>
+    </g>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.13;0.15;0.93;0.97;1" dur="12s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 0;340 142;340 142;0 0" keyTimes="0;0.14;0.27;0.95;1" dur="12s" repeatCount="indefinite"/>
+      <rect x="250" y="230" width="150" height="32" rx="8" fill="#C6DE4E"/>
+      <text x="325" y="251" text-anchor="middle" font-size="14" fill="#1C2B24" font-weight="700">净利润 +100</text>
+    </g>
+    <!-- 利润币：撞墙 -->
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.33;0.35;0.56;0.59;1" dur="12s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 0;238 0;238 0;214 0;214 0" keyTimes="0;0.35;0.50;0.53;0.58;1" dur="12s" repeatCount="indefinite"/>
+      <circle cx="262" cy="140" r="17" fill="#C6DE4E" stroke="#8aa02e"/>
+      <text x="262" y="145" text-anchor="middle" font-size="12" font-weight="800" fill="#1C2B24">+100</text>
+    </g>
+    <text x="520" y="140" font-size="26" font-weight="900" fill="#B33A2B" opacity="0">✗
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.49;0.52;0.62;0.66;1" dur="12s" repeatCount="indefinite"/>
+    </text>
+    <!-- 宣告分红横幅 -->
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.63;0.66;0.90;0.94;1" dur="12s" repeatCount="indefinite"/>
+      <rect x="395" y="52" width="112" height="30" rx="15" fill="#B99A3C"/>
+      <text x="451" y="72" text-anchor="middle" font-size="13.5" font-weight="800" fill="#fff">子公司宣告分红</text>
+    </g>
+    <!-- 分红币：穿墙入账 -->
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.65;0.67;0.92;0.96;1" dur="12s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 0;452 0;452 0;0 0" keyTimes="0;0.67;0.84;0.94;1" dur="12s" repeatCount="indefinite"/>
+      <circle cx="262" cy="140" r="14" fill="#B99A3C"/>
+      <text x="262" y="144" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">分红</text>
+    </g>
+    <text x="770" y="148" font-size="15" font-weight="800" fill="#1E6B4C" opacity="0">→ 此时才按份额确认投资收益
+      <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.82;0.86;0.92;0.96;1" dur="12s" repeatCount="indefinite"/>
+    </text>
+    <defs>
+      <marker id="ah9" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#B99A3C"/></marker>
+      <marker id="ag9" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#1E6B4C"/></marker>
+    </defs>
+  </svg>
+  </div>
+  <footer class="foot">
+    <div class="key">未宣告分红时，子公司利润进不了母公司个别报表；但无论是否分红，合并报表都将其损益全额并入。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">09 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide" data-title="合并报表的底层逻辑：100% 加总 → 抵销 → 切分">
+  <header class="head">
+    <div class="eyebrow"><span class="sec-no">03</span><span class="sec-name">如何编制合并报表</span></div>
+    <h1 class="t">合并报表的底层逻辑：100% 加总 → 抵销 → 切分</h1>
+  </header>
+  <div class="body">
+<svg viewBox="0 0 1186 268" style="width:100%;height:auto;display:block;margin-bottom:16px;">
+    <!-- 误区 -->
+    <g>
+      <rect x="8" y="26" width="238" height="156" rx="12" fill="#F3DEDA" stroke="#B33A2B" stroke-width="1.5"/>
+      <text x="127" y="60" text-anchor="middle" font-size="18" font-weight="800" fill="#B33A2B">常见误区</text>
+      <text x="127" y="94" text-anchor="middle" font-size="15" fill="#1C2B24">持股 60%，就只把子公司</text>
+      <text x="127" y="118" text-anchor="middle" font-size="15" fill="#1C2B24">60% 的资产收入并入？</text>
+      <circle cx="221" cy="45" r="14" fill="#B33A2B"/>
+      <path d="M215 39 L227 51 M227 39 L215 51" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+      <text x="127" y="212" text-anchor="middle" font-size="14" fill="#68766D">CAS 33 实体理论：控制下不得</text>
+      <text x="127" y="233" text-anchor="middle" font-size="14" fill="#68766D">按持股比例切分资产负债</text>
+    </g>
+    <path d="M252 105 L288 105" stroke="#B33A2B" stroke-width="3" marker-end="url(#ah)"/>
+    <!-- 三步 -->
+    <g font-weight="700" fill="#fff">
+      <rect x="296" y="26" width="212" height="156" rx="12" fill="#1E6B4C"/>
+      <text x="402" y="60" text-anchor="middle" font-size="17.5">第一步 · 100% 加总</text>
+      <text x="402" y="96" text-anchor="middle" font-size="14" font-weight="400">子公司资产、负债、</text>
+      <text x="402" y="118" text-anchor="middle" font-size="14" font-weight="400">收入、费用全额相加</text>
+      <text x="402" y="152" text-anchor="middle" font-size="13" font-weight="400" fill="#C6DE4E">不乘持股比例</text>
+      <rect x="536" y="26" width="212" height="156" rx="12" fill="#1E6B4C"/>
+      <text x="642" y="60" text-anchor="middle" font-size="17.5">第二步 · 内部抵销</text>
+      <text x="642" y="96" text-anchor="middle" font-size="14" font-weight="400">内部投资、内部往来、</text>
+      <text x="642" y="118" text-anchor="middle" font-size="14" font-weight="400">内部交易利润全部抵销</text>
+      <text x="642" y="152" text-anchor="middle" font-size="13" font-weight="400" fill="#C6DE4E">集团内部不算数</text>
+      <rect x="776" y="26" width="212" height="156" rx="12" fill="#0F3A2C"/>
+      <text x="882" y="60" text-anchor="middle" font-size="17.5">第三步 · 底部切分</text>
+      <text x="882" y="96" text-anchor="middle" font-size="14" font-weight="400">不属于母公司的份额</text>
+      <text x="882" y="118" text-anchor="middle" font-size="14" font-weight="400">在报表最底部单列</text>
+      <text x="882" y="152" text-anchor="middle" font-size="13" font-weight="400" fill="#C6DE4E">少数股东权益 · 少数股东损益</text>
+      <path d="M510 105 L532 105" stroke="#1E6B4C" stroke-width="3" marker-end="url(#ah)"/>
+      <path d="M750 105 L772 105" stroke="#1E6B4C" stroke-width="3" marker-end="url(#ah)"/>
+    </g>
+    <!-- 归属饼图 -->
+    <g>
+      <circle cx="1082" cy="104" r="70" fill="#1E6B4C"/>
+      <g><animateTransform attributeName="transform" type="translate" values="0 0;0 0;11 -4;11 -4;0 0" keyTimes="0;.68;.76;.92;1" dur="13s" repeatCount="indefinite"/><path d="M1082 104 L1082 34 A70 70 0 0 1 1123.15 160.63 Z" fill="#C6DE4E"/></g>
+      <text x="1082" y="200" text-anchor="middle" font-size="14" fill="#68766D">净利润 100 的归属（持股 60%）</text>
+      <rect x="1022" y="218" width="14" height="14" fill="#1E6B4C"/><text x="1042" y="230" font-size="14" fill="#1C2B24">归母 60</text>
+      <rect x="1110" y="218" width="14" height="14" fill="#C6DE4E"/><text x="1130" y="230" font-size="14" fill="#1C2B24">少数 40</text>
+    </g>
+    <defs><marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#1E6B4C"/></marker></defs>
+  
+        <!-- 动画：三步依次高亮 -->
+        <rect x="296" y="26" width="212" height="156" rx="12" fill="none" stroke="#C6DE4E" stroke-width="3.5" opacity="0">
+          <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.04;.92;.97;1" dur="13s" repeatCount="indefinite"/>
+          <animate attributeName="x" values="296;296;536;536;776;776" keyTimes="0;.30;.35;.63;.68;1" dur="13s" repeatCount="indefinite"/>
+        </rect>
+      </svg>
+  <table class="data" style="font-size:15.5px;">
+    <tr><th style="width:22%">数字示例（持股 60%）</th><th style="width:38%">加总阶段</th><th>第三步切分结果</th></tr>
+    <tr><td>子公司净资产<br><span class="muted" style="font-size:13px;">实收资本 1,000 + 未分配利润 100</span></td><td>1,100 万元<b>全额并入</b>合并资产负债表</td><td>少数股东权益 = 1,100 × 40% = <b>440</b></td></tr>
+    <tr class="mint"><td>子公司当年净利润</td><td>100 万元<b>全额并入</b>合并利润表</td><td>归母 <b>60</b> ＋ 少数股东损益 <b>40</b></td></tr>
+  </table>
+  </div>
+  <footer class="foot">
+    <div class="key">以持股 60% 为例：子公司 100% 的资产负债与收入费用全额并入（不按 60% 折算），内部交易抵销后，再在报表底部单列不属于母公司的 40%——即少数股东权益与少数股东损益。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">10 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide" data-title="合并财务报表特有的三个项目">
+  <header class="head">
+    <div class="eyebrow"><span class="sec-no">03</span><span class="sec-name">如何编制合并报表</span></div>
+    <h1 class="t">合并财务报表特有的三个项目</h1>
+  </header>
+  <div class="body mid">
+<div class="cards c3">
+    <div class="card"><h3><span class="cn">01</span>商誉</h3>
+      <p><b>含义</b>：购买成本超过被购买方可辨认净资产公允价值份额的差额。<br>
+         <b>可辨认净资产公允价值</b> = 按公允价值重新计量的净资产。<br>
+         ① 仅<b>非同一控制</b>合并确认；同一控制（内部重组）按账面价值结转、调整资本公积，<b>不产生新商誉</b>（CAS 20）；<br>
+         ② 仅确认母公司份额；每年进行减值测试，<b>减值一经确认不得转回</b>（CAS 8）。</p></div>
+    <div class="card"><h3><span class="cn">02</span>少数股东权益</h3>
+      <p>子公司净资产中<b>不属于母公司</b>的份额。<br>
+         由于合并时将子公司资产负债 100% 并入，须在所有者权益项下单列「不属于母公司的部分」。<br>
+         与「归属于母公司所有者权益合计」并列列示。</p></div>
+    <div class="card"><h3><span class="cn">03</span>少数股东损益</h3>
+      <p>子公司当年净利润中<b>不属于母公司</b>的份额。<br>
+         列示于合并利润表「净利润」项下，与「归属于母公司股东的净利润」并列。<br>
+         母公司个别报表中不存在上述三项。</p></div>
+  </div>
+  </div>
+  <footer class="foot">
+    <div class="key">对子公司投资形成的商誉，与少数股东权益、少数股东损益一样仅出现于合并报表，母公司报表中不存在。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">11 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide" data-title="两套报表核心差异一览">
+  <header class="head">
+    <div class="eyebrow"><span class="sec-no">03</span><span class="sec-name">如何编制合并报表</span></div>
+    <h1 class="t">两套报表核心差异一览</h1>
+  </header>
+  <div class="body mid">
+<table class="data roomy">
+    <tr><th style="width:16%">对比维度</th><th style="width:44%">母公司财务报表（个别报表）</th><th>合并财务报表</th></tr>
+    <tr><td>会计主体</td><td>母公司这一独立法人</td><td>母公司和其全部子公司构成的企业集团</td></tr>
+    <tr><td>法律地位</td><td>真实法人，承担债务、签订合同、纳税及分红主体</td><td>经济整体，非法定纳税、分红或清偿主体</td></tr>
+    <tr><td>编制方法</td><td>按母公司自身账簿编制；对子公司长期股权投资按<b>成本法</b>核算（CAS 2）</td><td>以母子公司个别报表为基础，<b>100% 加总再抵销</b>内部往来与交易</td></tr>
+    <tr><td>特有项目</td><td>对子公司的长期股权投资、内部应收应付款、子公司分红确认的投资收益</td><td><b>商誉</b>、<b>少数股东权益</b>、<b>少数股东损益</b>（上述内部项目被抵销）</td></tr>
+    <tr><td>年报名称</td><td>「母公司资产负债表」（部分称「公司资产负债表」）</td><td>「合并资产负债表」「合并利润表」等</td></tr>
+  </table>
+  </div>
+  <footer class="foot">
+    <div class="key">阅读年报先确认表头：是「公司/母公司资产负债表」，还是「合并资产负债表」。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">12 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide chapter" data-title="沙盘复盘：M 与 S 的个别财务报表">
+  <header class="head">
+    <div class="chap-no">04</div>
+    <div class="chap-meta"><div class="chap-name">沙盘演算</div>
+    <h1 class="t">沙盘复盘：M 与 S 的个别财务报表</h1></div>
+  </header>
+  <div class="body">
+<div class="cards c3" style="margin-bottom:18px;">
+    <div class="card"><h3>期初</h3><p>M 现金 1,000、实收资本 1,000；S 由外部设立，现金 1,000、实收资本 1,000。</p></div>
+    <div class="card"><h3>业务 1 &amp; 2</h3><p>M 以 <b>700</b> 自 S 原股东处受让 60% 股权（款项未进入 S）；另向 S 出借 <b>200</b>。M 现金余 100。</p></div>
+    <div class="card"><h3>业务 3</h3><p>S 对外经营盈利 <b>100</b>（全额收现，未分红），S 现金增至 <b>1,300</b>。M 无经营，利润为 <b>0</b>。</p></div>
+  </div>
+  <table class="data">
+    <tr><th style="width:36%">年末项目（单位：万元）</th><th style="width:19%">母公司 M</th><th style="width:19%">子公司 S</th><th>合并前简单相加</th></tr>
+    <tr><td>货币资金</td><td class="num">100</td><td class="num">1,300</td><td class="ctr">1,400</td></tr>
+    <tr><td>其他应收款（对 S 借款）</td><td class="num">200</td><td class="num">—</td><td class="ctr">200（重复）</td></tr>
+    <tr><td>长期股权投资（持 S 60%）</td><td class="num">700</td><td class="num">—</td><td class="ctr">700（重复）</td></tr>
+    <tr class="warm"><td>资产总计</td><td class="num">1,000</td><td class="num">1,300</td><td class="ctr">2,300（虚增）</td></tr>
+    <tr><td>其他应付 / 实收资本 / 未分配利润</td><td class="ctr">0 / 1,000 / 0</td><td class="ctr">200 / 1,000 / 100</td><td class="ctr">权益被重复计量</td></tr>
+  </table>
+  </div>
+  <footer class="foot">
+    <div class="key">M 支付给 S 原股东的 700 万未进入 S 账户；简单相加 2,300 将对同一资产重复计算。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">13 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide" data-title="三步勾稽：1,000 + 1,300 如何调整为 1,500？">
+  <header class="head">
+    <div class="eyebrow"><span class="sec-no">04</span><span class="sec-name">沙盘演算</span></div>
+    <h1 class="t">三步勾稽：1,000 + 1,300 如何调整为 1,500？</h1>
+  </header>
+  <div class="body mid">
+<div class="grid2">
+    <table class="data" style="font-size:14.2px;">
+      <tr><th>项目（万元）</th><th>M</th><th>S</th><th>抵销分录</th><th>合并</th></tr>
+      <tr><td>货币资金</td><td class="num">100</td><td class="num">1,300</td><td class="ctr">—</td><td class="num">1,400</td></tr>
+      <tr><td>其他应收款</td><td class="num">200</td><td class="num">—</td><td class="ctr">−200（内部借款）</td><td class="num">0</td></tr>
+      <tr><td>长期股权投资</td><td class="num">700</td><td class="num">—</td><td class="ctr">−700（内部投资）</td><td class="num">0</td></tr>
+      <tr><td>商誉</td><td class="num">—</td><td class="num">—</td><td class="ctr">+100（收购溢价）</td><td class="num">100</td></tr>
+      <tr class="hi"><td>资产总计</td><td class="num">1,000</td><td class="num">1,300</td><td class="ctr">−900 + 100</td><td class="num">1,500</td></tr>
+      <tr><td>其他应付款</td><td class="num">—</td><td class="num">200</td><td class="ctr">−200（内部借款）</td><td class="num">0</td></tr>
+      <tr><td>实收资本</td><td class="num">1,000</td><td class="num">1,000</td><td class="ctr">−1,000（抵销 S 股本）</td><td class="num">1,000</td></tr>
+      <tr><td>未分配利润</td><td class="num">0</td><td class="num">100</td><td class="ctr">−100 + 60</td><td class="num">60</td></tr>
+      <tr><td>归属于母公司所有者权益合计</td><td class="num">1,000</td><td class="num">—</td><td class="ctr">1,000 + 60</td><td class="num">1,060</td></tr>
+      <tr><td>少数股东权益</td><td class="num">—</td><td class="num">—</td><td class="ctr">+440（外部股东 40%）</td><td class="num">440</td></tr>
+      <tr class="hi"><td>负债和所有者权益总计</td><td class="num">1,000</td><td class="num">1,300</td><td class="ctr">—</td><td class="num">1,500</td></tr>
+    </table>
+    <div>
+      <svg viewBox="0 0 520 300" style="width:100%;height:auto;display:block;">
+        <!-- 瀑布图：资产 2,300 → 1,500（分步生长） -->
+        <line x1="30" y1="270" x2="500" y2="270" stroke="#68766D" stroke-width="1.5"/>
+        <!-- 常驻浅色轮廓：动画未播放/暂停时图形依然完整 -->
+        <g opacity=".2">
+          <rect x="40" y="43" width="70" height="227" fill="#1E6B4C"/>
+          <rect x="140" y="43" width="70" height="20" fill="#B33A2B"/>
+          <rect x="240" y="63" width="70" height="69" fill="#B33A2B"/>
+          <rect x="340" y="122" width="70" height="10" fill="#1E6B4C"/>
+          <rect x="430" y="122" width="70" height="148" fill="#0F3A2C"/>
+        </g>
+        <!-- 加总 2300 -->
+        <rect x="40" y="270" width="70" height="0" fill="#1E6B4C">
+          <animate attributeName="y" values="270;270;43;43;270" keyTimes="0;.02;.14;.94;1" dur="13s" repeatCount="indefinite"/>
+          <animate attributeName="height" values="0;0;227;227;0" keyTimes="0;.02;.14;.94;1" dur="13s" repeatCount="indefinite"/>
+        </rect>
+        <text x="75" y="34" text-anchor="middle" font-size="13.5" font-weight="800" fill="#1C2B24">2,300</text>
+        <text x="75" y="290" text-anchor="middle" font-size="12.5" fill="#1C2B24">简单加总</text>
+        <!-- −200 -->
+        <rect x="140" y="43" width="70" height="0" fill="#B33A2B">
+          <animate attributeName="height" values="0;0;20;20;0" keyTimes="0;.18;.26;.94;1" dur="13s" repeatCount="indefinite"/>
+        </rect>
+        <text x="175" y="34" text-anchor="middle" font-size="13.5" font-weight="800" fill="#B33A2B">−200</text>
+        <text x="175" y="290" text-anchor="middle" font-size="12.5" fill="#1C2B24">内部借款</text>
+        <line x1="110" y1="63" x2="140" y2="63" stroke="#68766D" stroke-width="1" stroke-dasharray="3 3"/>
+        <!-- −700 -->
+        <rect x="240" y="63" width="70" height="0" fill="#B33A2B">
+          <animate attributeName="height" values="0;0;69;69;0" keyTimes="0;.32;.44;.94;1" dur="13s" repeatCount="indefinite"/>
+        </rect>
+        <text x="275" y="55" text-anchor="middle" font-size="13.5" font-weight="800" fill="#B33A2B">−700</text>
+        <text x="275" y="290" text-anchor="middle" font-size="12.5" fill="#1C2B24">内部投资</text>
+        <line x1="210" y1="132" x2="240" y2="132" stroke="#68766D" stroke-width="1" stroke-dasharray="3 3"/>
+        <!-- +100 -->
+        <rect x="340" y="122" width="70" height="0" fill="#1E6B4C">
+          <animate attributeName="height" values="0;0;10;10;0" keyTimes="0;.50;.56;.94;1" dur="13s" repeatCount="indefinite"/>
+        </rect>
+        <text x="375" y="112" text-anchor="middle" font-size="13.5" font-weight="800" fill="#1E6B4C">+100</text>
+        <text x="375" y="290" text-anchor="middle" font-size="12.5" fill="#1C2B24">商誉（溢价）</text>
+        <line x1="310" y1="132" x2="340" y2="132" stroke="#68766D" stroke-width="1" stroke-dasharray="3 3"/>
+        <!-- 合计 1500 -->
+        <rect x="430" y="270" width="70" height="0" fill="#0F3A2C">
+          <animate attributeName="y" values="270;270;122;122;270" keyTimes="0;.62;.76;.94;1" dur="13s" repeatCount="indefinite"/>
+          <animate attributeName="height" values="0;0;148;148;0" keyTimes="0;.62;.76;.94;1" dur="13s" repeatCount="indefinite"/>
+        </rect>
+        <text x="465" y="112" text-anchor="middle" font-size="13.5" font-weight="800" fill="#1C2B24">1,500</text>
+        <text x="465" y="290" text-anchor="middle" font-size="12.5" fill="#1C2B24">合并资产</text>
+        <!-- 当前步骤指示 -->
+        <rect x="40" y="296" width="70" height="3" rx="1.5" fill="#C6DE4E" opacity="0">
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.03;.94;1" dur="13s" repeatCount="indefinite"/>
+          <animate attributeName="x" values="40;40;140;140;240;240;340;340;430;430" keyTimes="0;.16;.18;.30;.32;.48;.50;.60;.62;1" dur="13s" repeatCount="indefinite"/>
+        </rect>
+      </svg>
+      <div class="card mint"><h3>两个算式</h3>
+        <p>商誉（部分商誉法）= 700 − 1,000 × 60% = <b>100</b><br>
+        少数股东权益 = (1,000 + 100) × 40% = <b>440</b>　｜　归母净利 = <b>60</b></p></div>
+    </div>
+  </div>
+  </div>
+  <footer class="foot">
+    <div class="key">合并资产 = 1,000 + 1,300 − 700 − 200 + 100 = 1,500；S 的实收资本必须全额抵销。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">14 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide" data-title="易被遗漏的第三类抵销：内部购销与未实现利润">
+  <header class="head">
+    <div class="eyebrow"><span class="sec-no">04</span><span class="sec-name">沙盘演算</span></div>
+    <h1 class="t">易被遗漏的第三类抵销：内部购销与未实现利润</h1>
+  </header>
+  <div class="body">
+<svg viewBox="0 0 1160 150" style="width:100%;height:auto;display:block;margin-bottom:14px;">
+    <defs><marker id="ah3" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#1E6B4C"/></marker></defs>
+    <rect x="10" y="30" width="210" height="90" rx="10" fill="#0F3A2C"/>
+    <text x="115" y="66" text-anchor="middle" font-size="15" fill="#fff" font-weight="700">母公司</text>
+    <text x="115" y="92" text-anchor="middle" font-size="13" fill="#C6DE4E">成本 80 万的货</text>
+    <path d="M225 75 L320 75" stroke="#1E6B4C" stroke-width="3" marker-end="url(#ah3)"/>
+    <text x="272" y="62" text-anchor="middle" font-size="13.5" fill="#1C2B24" font-weight="700">售予 100 万</text>
+    <rect x="325" y="30" width="210" height="90" rx="10" fill="#1E6B4C"/>
+    <text x="430" y="66" text-anchor="middle" font-size="15" fill="#fff" font-weight="700">子公司</text>
+    <text x="430" y="92" text-anchor="middle" font-size="13" fill="#EAF3EA">年末尚未对外售出</text>
+    <path d="M540 75 L635 75" stroke="#1E6B4C" stroke-width="3" marker-end="url(#ah3)"/>
+    <text x="588" y="62" text-anchor="middle" font-size="13.5" fill="#1C2B24">货仍在集团内</text>
+    <rect x="640" y="30" width="230" height="90" rx="10" fill="#F6E8CF" stroke="#B26A00"/>
+    <text x="755" y="62" text-anchor="middle" font-size="14" fill="#B26A00" font-weight="800">集团整体视角</text>
+    <text x="755" y="86" text-anchor="middle" font-size="13" fill="#1C2B24">收入 100、利润 20 未实现</text>
+    <text x="755" y="106" text-anchor="middle" font-size="13" fill="#1C2B24">存货虚增 20</text>
+    <rect x="895" y="30" width="255" height="90" rx="10" fill="#F3DEDA" stroke="#B33A2B"/>
+    <text x="1022" y="62" text-anchor="middle" font-size="14" fill="#B33A2B" font-weight="800">合并抵销分录</text>
+    <text x="1022" y="86" text-anchor="middle" font-size="13" fill="#1C2B24">营业收入 −100　营业成本 −80</text>
+    <text x="1022" y="106" text-anchor="middle" font-size="13" fill="#1C2B24">存货 −20</text>
+  
+        <!-- 动画：集团边界 → 货物停在内部 → 未实现利润被抵销 -->
+        <rect x="5" y="20" width="535" height="110" rx="14" fill="none" stroke="#1E6B4C" stroke-width="2" stroke-dasharray="7 5" opacity="0">
+          <animate attributeName="opacity" values="0;0;.9;.9;0" keyTimes="0;.26;.34;.92;1" dur="12s" repeatCount="indefinite"/>
+        </rect>
+        <text x="272" y="14" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1E6B4C" opacity="0">企业集团边界
+          <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.28;.36;.92;1" dur="12s" repeatCount="indefinite"/>
+        </text>
+        <g opacity="0">
+          <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.05;.08;.30;.36;1" dur="12s" repeatCount="indefinite"/>
+          <animateTransform attributeName="transform" type="translate" values="0 0;0 0;86 0;86 0" keyTimes="0;.08;.26;1" dur="12s" repeatCount="indefinite"/>
+          <circle cx="234" cy="75" r="11" fill="#C6DE4E" stroke="#8aa02e"/>
+          <text x="234" y="79" text-anchor="middle" font-size="10.5" font-weight="800" fill="#1C2B24">货</text>
+        </g>
+        <rect x="325" y="30" width="210" height="90" rx="10" fill="none" stroke="#C6DE4E" stroke-width="3" opacity="0">
+          <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.28;.34;.44;.50;1" dur="12s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="640" y="30" width="230" height="90" rx="10" fill="none" stroke="#B26A00" stroke-width="3" opacity="0">
+          <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.46;.52;.62;.68;1" dur="12s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="895" y="30" width="255" height="90" rx="10" fill="none" stroke="#B33A2B" stroke-width="3.5" opacity="0">
+          <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.66;.72;.93;1" dur="12s" repeatCount="indefinite"/>
+        </rect>
+      </svg>
+  <div class="grid2" style="margin-bottom:12px;">
+    <div class="card"><h3>顺流交易（母公司 → 子公司）</h3>
+      <p>未实现利润 20 万全部归属母公司，<b>全额</b>自「归属于母公司股东的净利润」中抵销。<br>
+         若货款尚未结清，母公司「应收账款」与子公司「应付账款」同步全额抵销。</p></div>
+    <div class="card mint"><h3>逆流交易（子公司 → 母公司）</h3>
+      <p>未实现利润 20 万源自子公司，其中含少数股东的份额。<br>
+         按母公司持股比例，在<b>归母净利润</b>与<b>少数股东损益</b>之间按比例分摊抵销。</p></div>
+  </div>
+  <p class="muted"><b>规则来源</b>：CAS 33 第三十六条。旨在防止集团通过内部交易虚增营业收入与利润。</p>
+  </div>
+  <footer class="foot">
+    <div class="key">货物未离开企业集团前，内部交易产生的收入、利润及存货虚增均须抵销。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">15 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide" data-title="沙盘的核心结论：消失、冒出与错位">
+  <header class="head">
+    <div class="eyebrow"><span class="sec-no">04</span><span class="sec-name">沙盘演算</span></div>
+    <h1 class="t">沙盘的核心结论：消失、冒出与错位</h1>
+  </header>
+  <div class="body">
+<div class="cards c3" style="margin-bottom:18px;">
+    <div class="card"><h3><span class="cn">01</span>消失（内部抵销）</h3>
+      <p>▪ 母公司长期股权投资 <b>700</b><br>▪ 内部借款应收/应付 <b>200</b><br>▪ 子公司实收资本 <b>1,000</b><br>▪ 内部购销收入与未实现利润</p></div>
+    <div class="card"><h3><span class="cn">02</span>冒出（合并特有）</h3>
+      <p>▪ 商誉 <b>100</b>（收购溢价）<br>▪ 少数股东权益 <b>440</b><br>▪ 少数股东损益 <b>40</b><br>（母公司个别报表中均不存在）</p></div>
+    <div class="card soft-red"><h3><span class="cn">03</span>错位（核心差异）</h3>
+      <p>▪ 合并货币资金 <b>1,400</b><br>　vs 母公司货币资金 <b>100</b><br>▪ 合并归母净利润 <b>60</b><br>　vs 母公司未分配利润 <b>0</b></p></div>
+  </div>
+  <p style="font-size:17px; font-weight:800; color:var(--deep);">思考：合并货币资金 <span class="g">1,400 万</span>、归母净利润 <span class="g">60 万</span>，母公司 M 能否向股东分配 <span class="num">50 万</span>股利？</p>
+  </div>
+  <footer class="foot">
+    <div class="key">消失、冒出、错位：合并报表在抵销内部往来的同时，模糊了资金与利润的归属主体。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">16 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide chapter" data-title="各类报表使用者应查阅的报表">
+  <header class="head">
+    <div class="chap-no">05</div>
+    <div class="chap-meta"><div class="chap-name">报表使用者的选择</div>
+    <h1 class="t">各类报表使用者应查阅的报表</h1></div>
+  </header>
+  <div class="body mid">
+<table class="data roomy">
+    <tr><th style="width:22%">使用者</th><th style="width:20%">主要依据</th><th style="width:22%">须同时查阅</th><th>误用报表的后果</th></tr>
+    <tr class="or"><td>母公司债权人<br>（债券持有人/银行）</td><td>母公司财务报表</td><td>合并报表、担保与受限资金</td><td>误判集团资金充裕即为安全，忽视「结构性次级」</td></tr>
+    <tr class="mint"><td>上市公司股东</td><td>合并报表（评价盈利）</td><td>母公司报表、权益变动表</td><td>分红以母公司报表与「孰低」原则为准，盈利不等于可分配</td></tr>
+    <tr><td>子公司债权人 / 供应商</td><td>该子公司个别报表</td><td>母公司是否提供书面担保</td><td>误信「背靠集团」即有保障；无担保时母公司仅承担有限责任</td></tr>
+    <tr><td>分析者 / 监管者</td><td>两套报表对照分析</td><td>附注及现金流量表</td><td>无法区分经营型与控股平台，无法判断资金沉淀位置</td></tr>
+  </table>
+  </div>
+  <footer class="foot">
+    <div class="key">合并报表反映集团规模；母公司报表反映上市法人实际可支配的资源。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">17 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide" data-title="重点① 母公司债权人：「结构性次级」">
+  <header class="head">
+    <div class="eyebrow"><span class="sec-no">05</span><span class="sec-name">报表使用者的选择</span></div>
+    <h1 class="t">重点① 母公司债权人：「结构性次级」</h1>
+  </header>
+  <div class="body mid">
+<div class="grid2">
+    <div>
+      <svg viewBox="0 0 540 300" style="width:100%;height:auto;display:block;">
+        <rect x="30" y="10" width="300" height="60" rx="10" fill="#0F3A2C"/>
+        <text x="180" y="34" text-anchor="middle" font-size="15" fill="#fff" font-weight="800">子公司 S：持有现金 1,300 万</text>
+        <text x="180" y="56" text-anchor="middle" font-size="12.5" fill="#C6DE4E">其中 40% 股权属于外部股东</text>
+        <path d="M180 72 L180 96" stroke="#1E6B4C" stroke-width="2.5" marker-end="url(#ah4)"/>
+        <rect x="30" y="100" width="300" height="52" rx="10" fill="#1E6B4C"/>
+        <text x="180" y="122" text-anchor="middle" font-size="13.5" fill="#fff" font-weight="700">第一顺位</text>
+        <text x="180" y="142" text-anchor="middle" font-size="12.5" fill="#EAF3EA">偿付 S 自身债权人（其他应付款 200 万）</text>
+        <path d="M180 154 L180 178" stroke="#1E6B4C" stroke-width="2.5" marker-end="url(#ah4)"/>
+        <rect x="30" y="182" width="300" height="52" rx="10" fill="#1E6B4C"/>
+        <text x="180" y="204" text-anchor="middle" font-size="13.5" fill="#fff" font-weight="700">第二顺位</text>
+        <text x="180" y="224" text-anchor="middle" font-size="12.5" fill="#EAF3EA">剩余按 60% 分配予母公司 M（40% 归少数股东）</text>
+        <path d="M180 236 L180 260" stroke="#B33A2B" stroke-width="2.5" marker-end="url(#ah5)"/>
+        <rect x="30" y="264" width="300" height="34" rx="10" fill="#F3DEDA" stroke="#B33A2B"/>
+        <text x="180" y="286" text-anchor="middle" font-size="13" fill="#B33A2B" font-weight="800">第三顺位：最后才轮到 M 的债权人</text>
+        <text x="395" y="130" font-size="12.5" fill="#68766D">S 是独立法人</text>
+        <text x="395" y="148" font-size="12.5" fill="#68766D">M 不能随意划款</text>
+        <defs>
+          <marker id="ah4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#1E6B4C"/></marker>
+          <marker id="ah5" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#B33A2B"/></marker>
+        </defs>
+      
+        <!-- 动画：同一笔现金按顺位下沉，层层削减 -->
+        <g opacity="0">
+          <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.06;.10;.88;.94;1" dur="12s" repeatCount="indefinite"/>
+          <animateTransform attributeName="transform" type="translate" values="0 0;0 0;0 82;0 82;0 164;0 164" keyTimes="0;.10;.30;.44;.64;1" dur="12s" repeatCount="indefinite"/>
+          <circle cx="180" cy="84" r="15" fill="#C6DE4E" stroke="#8aa02e" stroke-width="1.5">
+            <animate attributeName="r" values="15;15;11;11;7;7" keyTimes="0;.30;.44;.64;.78;1" dur="12s" repeatCount="indefinite"/>
+          </circle>
+        </g>
+        <rect x="30" y="100" width="300" height="52" rx="10" fill="none" stroke="#C6DE4E" stroke-width="3" opacity="0">
+          <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.12;.18;.32;.38;1" dur="12s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="30" y="182" width="300" height="52" rx="10" fill="none" stroke="#C6DE4E" stroke-width="3" opacity="0">
+          <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.44;.50;.62;.68;1" dur="12s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="30" y="264" width="300" height="34" rx="10" fill="none" stroke="#B33A2B" stroke-width="3.5" opacity="0">
+          <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.70;.76;.93;1" dur="12s" repeatCount="indefinite"/>
+        </rect>
+      </svg>
+      <p class="figcap">假设 M 次日有 300 万债券到期：合并货币资金 1,400 万，但 M 账上仅 100 万。</p>
+    </div>
+    <div>
+      <div class="card soft-red" style="margin-bottom:14px;"><h3>为何不能直接划款？</h3>
+        <p>S 是独立法人，且有 <b>40% 外部股东</b>。<br>
+        M 动用 S 资金仅有两条合法路径：① 由 S 股东会决议分红（其中 40% 归少数股东）；② 由 S 归还内部借款 200 万。</p></div>
+      <div class="card"><h3>母公司债权人核查清单</h3>
+        <p>① <b>母公司货币资金</b>与短期有息负债对比；<br>
+           ② <b>母公司对子公司担保</b>余额；<br>
+           ③ 货币资金附注中的<b>受限资金</b>（冻结、保证金）。</p></div>
+    </div>
+  </div>
+  </div>
+  <footer class="foot">
+    <div class="key">结构性次级：同一笔子公司资产，先清偿子公司债权人，再清偿母公司债权人。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">18 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide" data-title="重点② 上市公司股东：分红依据与「漏损」">
+  <header class="head">
+    <div class="eyebrow"><span class="sec-no">05</span><span class="sec-name">报表使用者的选择</span></div>
+    <h1 class="t">重点② 上市公司股东：分红依据与「漏损」</h1>
+  </header>
+  <div class="body">
+<div class="quote">「编制合并会计报表的公司，其利润分配<b>以母公司的可供分配的利润为依据</b>。<br>
+    合并会计报表中可供分配利润不能作为母公司实际分配利润的依据。」（并按合并与母公司<b>孰低</b>确定上限）
+    <span class="src">财政部财会函〔2000〕7 号及沪深交易所利润分配规范</span>
+  </div>
+  <div class="grid2">
+    <svg viewBox="0 0 540 190" style="width:100%;height:auto;display:block;">
+      <rect x="10" y="60" width="190" height="70" rx="10" fill="#1E6B4C"/>
+      <text x="105" y="90" text-anchor="middle" font-size="14.5" fill="#fff" font-weight="800">子公司 S 净利润</text>
+      <text x="105" y="114" text-anchor="middle" font-size="17" fill="#C6DE4E" font-weight="800">100 万</text>
+      <path d="M205 70 L290 34" stroke="#1E6B4C" stroke-width="3" marker-end="url(#ah6)"/>
+      <path d="M205 120 L290 156" stroke="#B26A00" stroke-width="3" marker-end="url(#ah7)"/>
+      <rect x="295" y="8" width="235" height="52" rx="10" fill="#DCE9DD" stroke="#1E6B4C"/>
+      <text x="412" y="30" text-anchor="middle" font-size="13" fill="#1C2B24">流向母公司 M（60%）</text>
+      <text x="412" y="50" text-anchor="middle" font-size="15" fill="#1E6B4C" font-weight="800">60 万 → 计入 M 利润表</text>
+      <rect x="295" y="130" width="235" height="52" rx="10" fill="#F6E8CF" stroke="#B26A00"/>
+      <text x="412" y="152" text-anchor="middle" font-size="13" fill="#1C2B24">流向少数股东（40%）——「漏损」</text>
+      <text x="412" y="172" text-anchor="middle" font-size="15" fill="#B26A00" font-weight="800">40 万</text>
+      <defs>
+        <marker id="ah6" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#1E6B4C"/></marker>
+        <marker id="ah7" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#B26A00"/></marker>
+      </defs>
+    
+        <!-- 动画：净利润 100 万 → 60 归母 / 40 漏损 -->
+        <rect x="10" y="60" width="190" height="70" rx="10" fill="none" stroke="#C6DE4E" stroke-width="3" opacity="0">
+          <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.04;.16;.22;1" dur="9s" repeatCount="indefinite"/>
+        </rect>
+        <g opacity="0">
+          <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.17;.20;.50;.56;1" dur="9s" repeatCount="indefinite"/>
+          <animateTransform attributeName="transform" type="translate" values="0 0;0 0;85 -36;85 -36" keyTimes="0;.20;.46;1" dur="9s" repeatCount="indefinite"/>
+          <circle cx="205" cy="70" r="12" fill="#1E6B4C"/>
+          <text x="205" y="74" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">60</text>
+        </g>
+        <g opacity="0">
+          <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.17;.20;.50;.56;1" dur="9s" repeatCount="indefinite"/>
+          <animateTransform attributeName="transform" type="translate" values="0 0;0 0;85 36;85 36" keyTimes="0;.20;.46;1" dur="9s" repeatCount="indefinite"/>
+          <circle cx="205" cy="120" r="12" fill="#B26A00"/>
+          <text x="205" y="124" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">40</text>
+        </g>
+        <rect x="295" y="8" width="235" height="52" rx="10" fill="none" stroke="#1E6B4C" stroke-width="3" opacity="0">
+          <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.48;.54;.64;.70;1" dur="9s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="295" y="130" width="235" height="52" rx="10" fill="none" stroke="#B26A00" stroke-width="3" opacity="0">
+          <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.64;.70;.93;1" dur="9s" repeatCount="indefinite"/>
+        </rect>
+      </svg>
+    <div>
+      <div class="card" style="margin-bottom:12px;"><h3>沙盘分红「漏损」演示</h3>
+        <p>① 合并未分配利润 60、母公司 0 → 孰低为 <b>0</b>，当期不得分红；<br>
+           ② 即使 S 将盈利 <b>100 万</b>全额分配，<b>40 万归属少数股东</b>，M 仅收到 <b>60 万</b>（实务中尚须先行提取法定盈余公积）。</p></div>
+      <div class="card mint"><h3>须对照「利润表」结构</h3>
+        <p>对比<b>母公司营业收入</b>与<b>母公司投资收益</b>：若营业收入为 0、利润全部来自投资收益，母公司实为「持股平台」，分红持续性完全取决于子公司的分配意愿与能力。</p></div>
+    </div>
+  </div>
+  </div>
+  <footer class="foot">
+    <div class="key">合并利润高 ≠ 股东可分红：分红上限以母公司可供分配利润为准（与合并报表孰低），子公司分红时少数股东先分走自己的份额。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">19 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide chapter" data-title="既然存在分析盲区，企业为何仍搭建复杂集团架构？">
+  <header class="head">
+    <div class="chap-no">06</div>
+    <div class="chap-meta"><div class="chap-name">风险信号与分析方法</div>
+    <h1 class="t">既然存在分析盲区，企业为何仍搭建复杂集团架构？</h1></div>
+  </header>
+  <div class="body mid">
+<div class="cards c3">
+    <div class="card"><h3><span class="cn">01</span>风险隔离</h3><p>单个高风险项目亏损或破产，不致直接拖垮上市公司母体。</p></div>
+    <div class="card"><h3><span class="cn">02</span>项目合作</h3><p>地产开发、基建常与地方国资或合作方合资设立项目公司，自然形成非全资子公司。</p></div>
+    <div class="card"><h3><span class="cn">03</span>引入战投</h3><p>在子公司层面引入外部战略投资者，既可融资又不稀释上市公司股权。</p></div>
+    <div class="card"><h3><span class="cn">04</span>并购扩张</h3><p>直接收购存量公司，较自建渠道或研发团队更为快捷。</p></div>
+    <div class="card"><h3><span class="cn">05</span>牌照隔离</h3><p>集团财务公司、小贷、保理或特定资质业务，须设立独立持牌法人子公司。</p></div>
+    <div class="card mint"><h3>结论</h3><p>架构本身中性；分析难度来自<b>合并报表把内部结构压缩为一张报表</b>。</p></div>
+  </div>
+  </div>
+  <footer class="foot">
+    <div class="key">搭建集团架构大多具有正当商业理由；风险源于合并报表将内部结构压缩为一张报表。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">20 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide" data-title="不对照母子报表容易遗漏的四类风险">
+  <header class="head">
+    <div class="eyebrow"><span class="sec-no">06</span><span class="sec-name">风险信号与分析方法</span></div>
+    <h1 class="t">不对照母子报表容易遗漏的四类风险</h1>
+  </header>
+  <div class="body mid">
+<div class="cards c2">
+    <div class="card soft-red"><h3><span class="cn" style="color:var(--red)">01</span>母子错配（举债在母公司、用资在子公司）</h3>
+      <p>母公司货币资金少、有息负债高，同时列示巨额对子公司「其他应收款」。<br>
+         若子公司项目亏损、无力偿还内部借款，母公司须计提<b>信用减值</b>，自身亦面临偿债压力。</p></div>
+    <div class="card soft-red"><h3><span class="cn" style="color:var(--red)">02</span>少数股东异常（明股实债 / 利益不对称）</h3>
+      <p>少数股东权益占比与损益占比长期背离，或集团亏损年度仍大额减资分红。<br>
+         背后常存在优先分配或固定退出安排，线索见于<b>合并股东权益变动表</b>。</p></div>
+    <div class="card soft-or"><h3><span class="cn" style="color:var(--orange)">03</span>商誉减值风险（预支的未来超额盈利）</h3>
+      <p>日常不摊销；年末减值测试须<b>先还原少数股东商誉</b>构成完整资产组，再仅确认归属于母公司的减值份额。<br>
+         减值直接冲减归母净利润，且<b>一经确认不得转回</b>（CAS 8）。</p></div>
+    <div class="card soft-or"><h3><span class="cn" style="color:var(--orange)">04</span>控制权边界（并表/出表引起剧变）</h3>
+      <p>丧失控制权出表会同时引发资产规模骤变、剩余股权公允价值重估损益和商誉冲减。<br>
+         须关注合并范围变动附注与审计意见类型。</p></div>
+  </div>
+  </div>
+  <footer class="foot">
+    <div class="key">分析合并报表不能仅看资产负债表期末余额：权益变动表、母公司往来科目与审计报告同样关键。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">21 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide" data-title="五类常见集团架构画像">
+  <header class="head">
+    <div class="eyebrow"><span class="sec-no">06</span><span class="sec-name">风险信号与分析方法</span></div>
+    <h1 class="t">五类常见集团架构画像</h1>
+  </header>
+  <div class="body mid">
+<table class="data roomy">
+    <tr><th style="width:27%">架构类型</th><th>母子对照的典型财务特征</th></tr>
+    <tr><td>母公司经营型</td><td>母公司营业收入占合并比例高；母公司自身拥有生产经营资产；母公司利润与归母净利润接近</td></tr>
+    <tr><td>纯控股平台</td><td>母公司营业收入接近 0；资产以对子公司长期股权投资和应收款为主；利润主要来自子公司分红</td></tr>
+    <tr><td>控股平台 + 集团资金池</td><td>在纯控股基础上，母公司账面存在巨额「其他应付款」或「其他应收款」，用于集中归集或调拨资金</td></tr>
+    <tr><td>母公司融资型</td><td>有息负债主要集中于母公司，母公司通过「其他应收款」将融资款项拨付子公司使用</td></tr>
+    <tr><td>并购扩张型</td><td>合并报表商誉占归母所有者权益比例高；母公司长期股权投资规模大</td></tr>
+  </table>
+  </div>
+  <footer class="foot">
+    <div class="key">实务中公司多为「复合型」（如控股平台 + 资金池 + 并购扩张），应优先识别主导特征。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">22 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide" data-title="母子对照比率的三步分析法">
+  <header class="head">
+    <div class="eyebrow"><span class="sec-no">06</span><span class="sec-name">风险信号与分析方法</span></div>
+    <h1 class="t">母子对照比率的三步分析法</h1>
+  </header>
+  <div class="body">
+<div class="flow" style="margin-bottom:20px;">
+    <div class="step"><b>第一步：判定经营模式</b>看「母公司营业收入占比」</div>
+    <div class="step"><b>第二步：判定资金与债务归属</b>看货币资金、有息负债、其他应收/应付</div>
+    <div class="step"><b>第三步：识别合并特有风险</b>看少数股东、商誉、其他权益工具</div>
+  </div>
+  <div class="card">
+  <ul class="b" style="font-size:16.5px; line-height:2.05;">
+    <li><b>第一步</b>：营收占比接近 0 → 控股平台；占比高 → 母公司自身经营主业。</li>
+    <li><b>第二步</b>：母公司货币资金极少、有息负债高、其他应收款极大 → 母公司融资并拨付资金；母公司其他应付款极大 → 存在资金归集迹象。</li>
+    <li><b>第三步</b>：关注少数股东权益占比（是否接近 50%）、商誉重大变动、合并口径「其他权益工具投资」激增。</li>
+    <li><b>结论须落到具体比率上</b>：每条判断均指向一个具体数字，不作主观推断。</li>
+  </ul>
+  </div>
+  </div>
+  <footer class="foot">
+    <div class="key">先判定经营模式，再判定资金与债务归属，最后识别合并特有风险：三步完成，架构即可辨明。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">23 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide chapter" data-title="五家上市公司母子报表对照（2025 年报）">
+  <header class="head">
+    <div class="chap-no">07</div>
+    <div class="chap-meta"><div class="chap-name">年报实例印证</div>
+    <h1 class="t">五家上市公司母子报表对照（2025 年报）</h1></div>
+  </header>
+  <div class="body mid">
+<table class="data roomy">
+    <tr><th style="width:14%">公司</th><th style="width:28%">架构画像</th><th>最具区分力的母子差异信号（2025 年报）</th></tr>
+    <tr><td>顺丰控股</td><td>纯控股平台</td><td>母公司营业收入为 0、几乎无有息负债、年末货币资金仅 0.10 亿元；分红 45.04 亿元 &gt; 母公司净利润 24.86 亿元</td></tr>
+    <tr><td>万科 A</td><td>母公司融资型 + 高少数股东</td><td>母公司承担 58.7% 有息负债，83.6% 资产为其他应收款；少数股东权益占比 50.4%</td></tr>
+    <tr class="mint"><td>贵州茅台</td><td>母公司经营型（财务公司）</td><td>母公司营业收入占 58.2%；母公司货币资金为合并口径的 165.8%（财务公司存款抵销）</td></tr>
+    <tr class="or"><td>闻泰科技</td><td>控制权受限 · 部分出表</td><td>安世境外子公司不再纳入合并，其他权益工具投资占总资产 57.51%；商誉由 214.98 亿元降至 31.95 亿元；审计为无法表示意见</td></tr>
+    <tr><td>美的集团</td><td>控股平台 + 资金池 + 并购</td><td>母公司营业收入占 0.21%；其他应付款占母公司资产 58.5%（抵销）；商誉 342.57 亿元（主因库卡收购）</td></tr>
+  </table>
+  </div>
+  <footer class="foot">
+    <div class="key">五家公司结构迥异：同一套方法，读出完全不同的集团架构——比率如实反映结构差异。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">24 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide" data-title="三处最易误读的真实会计信号">
+  <header class="head">
+    <div class="eyebrow"><span class="sec-no">07</span><span class="sec-name">年报实例印证</span></div>
+    <h1 class="t">三处最易误读的真实会计信号</h1>
+  </header>
+  <div class="body mid">
+<div class="cards c3">
+    <div class="card mint"><h3>贵州茅台：货币资金为何倒挂？</h3>
+      <p>① 生产在母公司、销售在子公司 → 母公司应收账款 118.95 亿元合并抵销至 <b>0.03 亿元</b>；<br>
+         ② 母公司存放于<b>集团财务公司</b>的存款，合并时与「吸收存款」抵销（具体以母公司附注为准）。</p></div>
+    <div class="card soft-red"><h3>闻泰科技：商誉减少 ≠ 减值</h3>
+      <p>商誉自 214.98 亿元降至 31.95 亿元（减少 182.02 亿元），系丧失对安世境外控制权而<b>出表冲减商誉</b>（CAS 33 第 50 条）。<br>
+         <b>不得误判为 CAS 8 商誉减值</b>。应付债券 86.10 亿元全部由母公司承担。</p></div>
+    <div class="card soft-or"><h3>美的集团：巨额其他应付款的性质</h3>
+      <p>母公司「其他应付款」高达 <b>1,729.31 亿元</b>（占母公司资产 58.5%），合并后仅余 48.23 亿元。<br>
+         合并时予以抵销，表明主要为集团<b>内部资金归集与往来</b>，并非对外负债（具体性质以母公司附注为准）。</p></div>
+  </div>
+  </div>
+  <footer class="foot">
+    <div class="key">合并报表会使内部资金、内部债务、内部销售同时「消失」；判读前须先确认该项目合并后是否仍然存在。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">25 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide" data-title="案例 ② 上汽 vs 比亚迪：并表边界决定「营收体量」年报实例">
+  <header class="head">
+    <div class="eyebrow"><span class="sec-no">07</span><span class="sec-name">年报实例印证</span></div>
+    <h1 class="t">案例 ② 上汽 vs 比亚迪：并表边界决定「营收体量」<span class="case-flag">年报实例</span></h1>
+  </header>
+  <div class="body mid">
+<div class="grid2">
+    <div>
+      <svg viewBox="0 0 560 310" style="width:100%;height:auto;display:block;">
+        <text x="140" y="24" text-anchor="middle" font-size="14.5" font-weight="800" fill="#1C2B24">2024 集团整车销量（万辆）</text>
+        <text x="420" y="24" text-anchor="middle" font-size="14.5" font-weight="800" fill="#1C2B24">2024 合并口径营业收入（亿元）</text>
+        <!-- 销量 -->
+        <rect x="60" y="68" width="70" height="212" fill="#1E6B4C"/>
+        <text x="95" y="86" text-anchor="middle" font-size="13.5" font-weight="800" fill="#fff">≈401</text>
+        <text x="95" y="298" text-anchor="middle" font-size="13" fill="#1C2B24">上汽集团</text>
+        <rect x="150" y="42" width="70" height="238" fill="#0F3A2C"/>
+        <text x="185" y="60" text-anchor="middle" font-size="13.5" font-weight="800" fill="#fff">≈427</text>
+        <text x="185" y="298" text-anchor="middle" font-size="13" fill="#1C2B24">比亚迪</text>
+        <!-- 营收 -->
+        <rect x="330" y="92" width="70" height="188" fill="#1E6B4C"/>
+        <text x="365" y="110" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">6,275.90</text>
+        <text x="365" y="298" text-anchor="middle" font-size="13" fill="#1C2B24">上汽集团</text>
+        <rect x="430" y="48" width="70" height="232" fill="#0F3A2C"/>
+        <text x="465" y="66" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">7,771.02</text>
+        <text x="465" y="298" text-anchor="middle" font-size="13" fill="#1C2B24">比亚迪</text>
+        <line x1="40" y1="280" x2="520" y2="280" stroke="#68766D" stroke-width="1.2"/>
+      </svg>
+      <p class="figcap">销量相近，合并营收却相差约 1,500 亿元——边界不同，不可直接比较</p>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px;"><h3>差异从哪里来？</h3>
+        <p><b>上汽</b>：核心整车业务放在 50:50 合营企业（上汽大众、上汽通用）→ <b>不并表</b>，其收入不进合并营业收入；<br>
+           <b>比亚迪</b>：整车、电池、电子以控股子公司为主 → <b>全额并表</b>，收入全部计入合并营业收入。</p></div>
+      <div class="card mint"><h3>分析含义</h3>
+        <p>① 用「合并营业收入」比较两家集团规模前，必须先确认<b>合营/联营是否并表</b>；<br>
+           ② 上汽 2024 归母净利润 <b>16.66 亿元</b>，比亚迪 <b>402.54 亿元</b>——利润差距同时反映经营差距与核算边界，不能仅凭报表断定效率高低。<br>
+           <span class="muted" style="font-size:13px;">数据：两公司 2024 年年度报告；销量为集团整车销量口径（含合营企业），约数。</span></p></div>
+    </div>
+  </div>
+  </div>
+  <footer class="foot">
+    <div class="key">并表范围是「可比性」的前提：看营收规模之前，先看合并范围里装进了谁。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">26 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide" data-title="案例 ③ 京东方：少数股东损益为负的「反向漏损」年报实例">
+  <header class="head">
+    <div class="eyebrow"><span class="sec-no">07</span><span class="sec-name">年报实例印证</span></div>
+    <h1 class="t">案例 ③ 京东方：少数股东损益为负的「反向漏损」<span class="case-flag">年报实例</span></h1>
+  </header>
+  <div class="body mid">
+<div class="grid2">
+    <div>
+      <svg viewBox="0 0 540 300" style="width:100%;height:auto;display:block;">
+        <text x="270" y="20" text-anchor="middle" font-size="14.5" font-weight="800" fill="#1C2B24">京东方 2024 年利润归属（亿元）</text>
+        <!-- 归母柱 -->
+        <rect x="60" y="60" width="110" height="200" fill="#1E6B4C"/>
+        <text x="115" y="52" text-anchor="middle" font-size="14" font-weight="800" fill="#1E6B4C">+53.23</text>
+        <text x="115" y="278" text-anchor="middle" font-size="12.5" fill="#1C2B24">归母净利润</text>
+        <!-- 少数柱（负） -->
+        <rect x="215" y="260" width="110" height="0" fill="none"/>
+        <rect x="215" y="215" width="110" height="45" fill="#B33A2B"/>
+        <text x="270" y="205" text-anchor="middle" font-size="14" font-weight="800" fill="#B33A2B">−11.78</text>
+        <text x="270" y="278" text-anchor="middle" font-size="12.5" fill="#1C2B24">少数股东损益</text>
+        <!-- 集团合计 -->
+        <rect x="370" y="104" width="110" height="156" fill="#0F3A2C"/>
+        <text x="425" y="96" text-anchor="middle" font-size="14" font-weight="800" fill="#1C2B24">+41.45</text>
+        <text x="425" y="278" text-anchor="middle" font-size="12.5" fill="#1C2B24">集团净利润合计</text>
+        <line x1="40" y1="260" x2="520" y2="260" stroke="#68766D" stroke-width="1.2"/>
+        <path d="M170 160 L210 237" stroke="#68766D" stroke-width="1.4" stroke-dasharray="4 4" marker-end="url(#ah8)"/>
+        <defs><marker id="ah8" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#68766D"/></marker></defs>
+      </svg>
+      <p class="figcap">归母净利润 +53.23 亿 ＞ 集团净利润 +41.45 亿：亏损由少数股东分担</p>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px;"><h3>三年连续的负少数股东损益</h3>
+        <table class="data" style="font-size:14px; box-shadow:none; border:1px solid var(--line);">
+          <tr><th>年度</th><th class="num">归母净利润</th><th class="num">少数股东损益</th></tr>
+          <tr><td>2022</td><td class="num">75.41</td><td class="num" style="color:var(--red); font-weight:700;">−92.82</td></tr>
+          <tr><td>2023</td><td class="num">25.47</td><td class="num" style="color:var(--red); font-weight:700;">−21.78</td></tr>
+          <tr><td>2024</td><td class="num">53.23</td><td class="num" style="color:var(--red); font-weight:700;">−11.78</td></tr>
+        </table>
+      </div>
+      <div class="card mint"><h3>为什么会这样？</h3>
+        <p>显示面板重资产子公司常有<b>地方国资、产业基金</b>入股；亏损子公司的亏损按份额由少数股东承担，于是「归母 &gt; 集团合计」。<br>
+        读法：① 少数股东损益可以为负，符号没有「应为正」的约束；② 归母净利润上升未必等于集团整体盈利改善，须对照<b>少数股东损益</b>与权益变动表。<br>
+        <span class="muted" style="font-size:13px;">数据：京东方 2024 年年度报告（000725），单位：亿元；亏损的子公司归属归因以附注为准。</span></p></div>
+    </div>
+  </div>
+  </div>
+  <footer class="foot">
+    <div class="key">「归母净利润」不是集团利润的同义词：少数股东可以分担亏损，也可以分走现金——两个方向都可能。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">27 / 28</span></div>
+  </footer>
+</section>
+
+<section class="slide chapter dark" data-title="分析集团财报的四个核心问题">
+  <header class="head">
+    <div class="chap-no">08</div>
+    <div class="chap-meta"><div class="chap-name">总结</div>
+    <h1 class="t">分析集团财报的四个核心问题</h1></div>
+  </header>
+  <div class="body">
+<div class="cards c2" style="margin-bottom:18px;">
+    <div class="card" style="background:#14463A; border-color:#2A6B52; color:#fff;"><h3 style="color:var(--lime);"><span class="cn" style="color:var(--lime)">01</span>看的是谁的报表？</h3>
+      <p style="color:#DCE9DD;">是母公司这一独立法人，还是会计意义上的企业集团？不同主体对应不同的法律效力。</p></div>
+    <div class="card" style="background:#14463A; border-color:#2A6B52; color:#fff;"><h3 style="color:var(--lime);"><span class="cn" style="color:var(--lime)">02</span>资金在谁手中？</h3>
+      <p style="color:#DCE9DD;">货币资金留存于母公司、沉淀于子公司，还是存放于财务公司/资金池并被抵销？受限资金规模多大？</p></div>
+    <div class="card" style="background:#14463A; border-color:#2A6B52; color:#fff;"><h3 style="color:var(--lime);"><span class="cn" style="color:var(--lime)">03</span>债务由谁承担？</h3>
+      <p style="color:#DCE9DD;">有息负债由谁承担？母公司债权人是否处于结构性次级地位？母公司对子公司的担保余额多少？</p></div>
+    <div class="card" style="background:#14463A; border-color:#2A6B52; color:#fff;"><h3 style="color:var(--lime);"><span class="cn" style="color:var(--lime)">04</span>利润归属于谁？</h3>
+      <p style="color:#DCE9DD;">母公司利润来自自身经营还是子公司分红？分红是否受「孰低」原则限制？少数股东是否分走现金？</p></div>
+  </div>
+  <ul class="b" style="color:#DCE9DD; font-size:15.5px;">
+    <li><b style="color:var(--lime);">准则规范用语</b>：母公司财务报表、合并财务报表、归属于母公司股东的净利润、少数股东权益、少数股东损益——写作与报告中使用全称。</li>
+    <li><b style="color:var(--lime);">分析时的对照</b>：同一处母子差异，母公司债券持有人与小股东会得出什么不同的结论？</li>
+  </ul>
+  </div>
+  <footer class="foot">
+    <div class="key closing">合并报表反映集团规模，母公司报表反映法人可支配资源；两套报表对照，方能看清集团全貌。</div>
+    <div class="meta"><span>《财务报表分析》专题五 · 母公司报表与合并报表</span><span class="pn">28 / 28</span></div>
+  </footer>
+</section>
+
+</div></div>
+<script>
+const slides = Array.from(document.querySelectorAll('.slide'));
+const total = slides.length;
+let cur = 0;
+
+function fitBody(slide){
+  const body = slide.querySelector('.body');
+  if(!body) return;
+  body.style.transform=''; body.style.width='';
+  const avail = body.clientHeight;
+  if(avail <= 0) return;
+  let k = 1;
+  for(let pass=0; pass<4; pass++){
+    const need = body.scrollHeight;          // 布局高度（不受 transform 影响）
+    if(need * k <= avail + 1) break;         // 判据用「缩放后的实际高度」
+    k = Math.max(0.68, avail / need);
+    body.style.transformOrigin = 'top left';
+    body.style.width = (100/k) + '%';
+    body.style.transform = 'scale(' + k + ')';
+  }
+}
+let animPaused = false;
+function eachSVG(fn){ slides.forEach((s,k)=>s.querySelectorAll('svg').forEach(v=>fn(v,k))); }
+function syncAnim(){
+  eachSVG((v,k)=>{
+    if(!v.pauseAnimations) return;
+    try{ (k===cur && !animPaused) ? v.unpauseAnimations() : v.pauseAnimations(); }catch(e){}
+  });
+  const b=document.getElementById('animBtn'); if(b) b.textContent = animPaused ? '▶' : '⏸';
+}
+function replayAnim(){
+  slides[cur].querySelectorAll('svg').forEach(v=>{ if(v.setCurrentTime){ try{v.setCurrentTime(0);}catch(e){} } });
+  animPaused=false; syncAnim();
+}
+function toggleAnim(){ animPaused=!animPaused; syncAnim(); }
+function show(i){
+  cur = Math.max(0, Math.min(total-1, i));
+  slides.forEach((s,k)=>s.classList.toggle('active', k===cur));
+  slides[cur].querySelectorAll('svg').forEach(v=>{ if(v.setCurrentTime){ try{v.setCurrentTime(0);}catch(e){} } });
+  document.getElementById('animGrp').style.display =
+    slides[cur].querySelector('svg animate') ? 'flex' : 'none';
+  syncAnim();
+  document.getElementById('cnt').textContent = (cur+1)+' / '+total;
+  document.getElementById('prog').style.width = ((cur+1)/total*100)+'%';
+  history.replaceState(null,'','#'+(cur+1));
+  fitBody(slides[cur]);
+  document.querySelectorAll('#tocList .ti').forEach((el,k)=>el.classList.toggle('on', k===cur));
+}
+function go(d){ show(cur+d); }
+function fit(){
+  const s = Math.min(innerWidth/1280, (innerHeight-54)/720)*0.985;
+  document.getElementById('stage').style.transform = 'scale('+s+')';
+  fitBody(slides[cur]);
+}
+addEventListener('resize', fit);
+addEventListener('keydown', e=>{
+  if(['ArrowRight','ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault(); go(1);}
+  else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault(); go(-1);}
+  else if(e.key==='Home'){show(0);}
+  else if(e.key==='End'){show(total-1);}
+  else if(e.key==='o'||e.key==='O'){toggleToc();}
+  else if(e.key==='f'||e.key==='F'){toggleFull();}
+  else if(e.key==='r'||e.key==='R'){replayAnim();}
+  else if(e.key==='p'||e.key==='P'){toggleAnim();}
+  else if(e.key==='Escape'){document.getElementById('toc').classList.remove('open');}
+});
+function toggleFull(){
+  if(document.fullscreenElement) document.exitFullscreen();
+  else document.documentElement.requestFullscreen().catch(()=>{});
+}
+function toggleToc(){ document.getElementById('toc').classList.toggle('open'); }
+document.getElementById('stage').addEventListener('click', e=>{
+  if(e.target.closest('button') || e.target.closest('a')) return;
+  if(document.getElementById('toc').classList.contains('open')) return;
+  go(e.clientX/innerWidth > 0.5 ? 1 : -1);
+});
+const list = document.getElementById('tocList');
+slides.forEach((s,k)=>{
+  const d = document.createElement('div');
+  d.className = 'ti' + (s.classList.contains('chapter') ? ' chap' : '');
+  d.innerHTML = '<i>'+String(k+1).padStart(2,'0')+'</i><span>'+s.dataset.title+'</span>';
+  d.onclick = ()=>{ show(k); toggleToc(); };
+  list.appendChild(d);
+});
+slides.forEach(s=>{
+  if(s.querySelector('svg animate')){
+    const eb=s.querySelector('.eyebrow');
+    if(eb){ const f=document.createElement('span'); f.className='anim-flag'; f.textContent='▶ 动画'; eb.appendChild(f); }
+  }
+});
+fit(); show((parseInt(location.hash.slice(1))||1)-1);
+document.fonts && document.fonts.ready.then(()=>fitBody(slides[cur]));
+</script>
+</body>
+</html>
