@@ -13,6 +13,71 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23245642'/%3E%3Ctext x='8' y='12' text-anchor='middle' font-family='serif' font-size='10' fill='%23FAF7F2'%3E研%3C/text%3E%3C/svg%3E">
   <script src="assets/theme.js"></script>
   <link rel="stylesheet" href="assets/site.css?v=22">
+
+<style>
+/* 首页皮肤 · 卷首编号：与 CV / 合并报表页同一套朱红学术语言 */
+/* site.css 末尾有一组高特异性降噪规则，以下选择器需同等或更高特异性 */
+:root{--home-red:#a83a26;--home-rule:#b6a988}
+:root[data-theme="dark"]{--home-red:#e0785c;--home-rule:#39424a}
+.home-hero .eyebrow{display:block}
+.home-hero .name{display:block;width:fit-content}
+.entry-section .section-heading .label{display:inline}
+article.entry-card .num{display:block}
+
+.home-hero{position:relative;padding:56px 0 40px;border-bottom:1px solid var(--home-rule)}
+.home-hero::after{content:"JZ";position:absolute;right:0;top:40px;font-family:var(--mono);font-size:150px;
+ font-weight:700;line-height:.8;letter-spacing:-.06em;color:transparent;-webkit-text-stroke:1px var(--home-rule);
+ pointer-events:none;user-select:none}
+.home-hero .eyebrow{color:var(--home-red);letter-spacing:.2em;font-size:11px}
+.home-hero .name{font-size:clamp(68px,9vw,110px);line-height:1.06;letter-spacing:.04em;margin:20px 0 0;
+ padding-bottom:8px;border-bottom:2px solid var(--home-red)}
+.home-hero .subtitle{font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--muted);margin-top:18px}
+.home-hero .lead{max-width:36em;font-size:16px;line-height:1.9}
+.home-hero .lead+.lead{color:var(--muted)}
+
+.contact-section{margin-top:40px}
+.contact-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+ color:var(--home-red);border-bottom:1px solid var(--home-rule);padding-bottom:10px}
+.contact-grid{grid-template-columns:repeat(4,1fr);gap:0 16px}
+.contact-card{background:transparent;border:0;border-bottom:1px dashed var(--home-rule);border-radius:0}
+.contact-link{padding:14px 0;gap:10px;grid-template-columns:32px minmax(0,1fr) auto}
+.contact-icon{width:32px;height:32px;flex:0 0 32px;background:transparent;border-radius:0;color:var(--home-red)}
+.contact-icon svg{width:20px;height:20px}
+.contact-label{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--home-red)}
+.contact-value{font-size:12px;line-height:1.5}
+.contact-hint{font-size:10px;line-height:1.4;color:var(--muted)}
+.contact-hint .dot{display:none}
+.contact-arrow{color:var(--home-red);font-size:13px}
+.contact-copy-pill{padding:5px 9px;font-size:10px}
+
+.entry-section{padding-top:44px;padding-bottom:40px}
+.entry-section .section-heading{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+ border-bottom:0;margin-bottom:0;padding-bottom:0}
+.entry-section .section-heading h2{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.2em;color:var(--home-red)}
+.entry-section .section-heading .label{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--muted)}
+.entry-grid{grid-template-columns:repeat(4,1fr);gap:0 24px;margin:18px 0 0}
+article.entry-card{background:transparent;border:0;border-top:2px solid var(--home-red);border-radius:0;
+ box-shadow:none;padding:0;transform:none}
+article.entry-card>a{min-height:0;padding:18px 0 0;display:block}
+article.entry-card .num{font-family:var(--mono);font-size:11px;color:var(--home-red);letter-spacing:.1em}
+article.entry-card h3{font-family:var(--display);font-size:22px;font-weight:600;margin:10px 0 0;line-height:1.3}
+article.entry-card .meta{font-family:var(--mono);font-size:10px;font-weight:400;letter-spacing:.08em;color:var(--muted);
+ margin-top:10px;padding-top:10px;border-top:1px dashed var(--home-rule)}
+article.entry-card:hover{transform:none;box-shadow:none;border-color:transparent}
+article.entry-card:hover h3{color:var(--home-red)}
+
+/* site.css 的暗色卡片背景选择器特异性更高，需同特异性覆盖 */
+:root[data-theme="dark"] .contact-card,
+:root[data-theme="dark"] article.entry-card{background:transparent;border-color:transparent}
+:root[data-theme="dark"] article.entry-card{border-top-color:var(--home-red)}
+
+@media(max-width:760px){
+ .home-hero::after{display:none}
+ .contact-grid{grid-template-columns:1fr}
+ .contact-card .contact-value{font-size:13px}
+ .entry-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
 </head>
 <body>
   <a class="skip-link" href="#main-content">跳至主内容</a>
