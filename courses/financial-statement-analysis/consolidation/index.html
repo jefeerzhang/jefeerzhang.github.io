@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>母公司报表与合并报表 · 财报分析</title>
-  <meta name="description" content="财报分析第六次课专题：按控制判定合并范围，用 100% 加总、内部抵销与底部切分拆解合并逻辑，辨析结构性次级与分红漏损。含课堂讲授课件与学生材料。">
+  <meta name="description" content="财报分析第六次课专题：按控制判定合并范围，用 100% 加总、内部抵销与底部切分拆解合并逻辑，辨析结构性次级与分红漏损。含核心讲解视频、课堂讲授课件与学生材料。">
   <script src="../../../assets/theme.js"></script>
   <link rel="stylesheet" href="../../../assets/site.css?v=22">
   <style>
@@ -61,6 +61,18 @@
       color: var(--con-accent); }
     .ticket-open { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; color: var(--con-accent); }
 
+    .video-card { border: 1px solid var(--con-rule); background: var(--con-ticket); padding: 18px; }
+    .video-frame { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: #0b2e25; }
+    .video-frame video { display: block; width: 100%; height: 100%; object-fit: contain; background: #0b2e25; }
+    .video-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 24px; padding: 16px 4px 2px;
+      font-family: var(--serif); font-size: 13px; line-height: 1.6; color: var(--text); }
+    .video-meta b { margin-right: 8px; font-family: var(--mono); font-size: 9.5px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    .video-links { display: flex; flex-wrap: wrap; gap: 14px; margin-left: auto; }
+    .video-links a { color: var(--con-accent); font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+      text-decoration: none; border-bottom: 1px solid currentColor; }
+    .video-links a:hover { opacity: 0.75; }
+
     @media (max-width: 760px) {
       .page-hero { padding: 40px 0 30px; }
       .page-stamp { display: none; }
@@ -68,6 +80,8 @@
       .ticket { padding: 20px 18px 16px 20px; }
       .ticket-foot { gap: 8px 16px; }
       .ticket-open { margin-left: 0; flex: 1 0 100%; padding-top: 4px; }
+      .video-card { padding: 12px; }
+      .video-links { margin-left: 0; width: 100%; }
       .block { padding-top: 34px; }
     }
   </style>
@@ -132,7 +146,28 @@
         </div>
 
         <div class="block">
-          <h2 class="block-title">02 学生材料</h2>
+          <h2 class="block-title">02 核心讲解视频</h2>
+          <p class="block-note">四分多钟讲清两套报表、控制边界、100% 加总、内部抵销、商誉与少数股东，并用简化沙盘完成一次合并勾稽。</p>
+          <div class="video-card">
+            <div class="video-frame">
+              <video controls preload="metadata" poster="./media/consolidation-core-poster.jpg" aria-label="合并报表核心逻辑讲解视频">
+                <source src="./media/consolidation-core.mp4" type="video/mp4">
+                您的浏览器不支持 HTML5 视频播放，请下载 MP4 文件观看。
+              </video>
+            </div>
+            <div class="video-meta">
+              <span><b>Length</b>4 分 15 秒</span>
+              <span><b>Audio</b>MiniMax TTS · 中文字幕</span>
+              <div class="video-links">
+                <a href="./media/consolidation-core.mp4" download>下载 MP4</a>
+                <a href="./media/consolidation-core.srt" download>下载字幕</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="block">
+          <h2 class="block-title">03 学生材料</h2>
           <p class="block-note">课堂任务书与随堂附件，按课堂进度发布；《揭晓后年报索引》在盲测记录封存后由教师单独发放。</p>
           <a class="ticket" href="./assignment.html">
             <div>
