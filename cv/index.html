@@ -13,6 +13,65 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%23245642'/%3E%3Ctext x='32' y='41' text-anchor='middle' font-family='serif' font-size='27' font-weight='700' fill='white'%3EJZ%3C/text%3E%3C/svg%3E">
   <script src="../assets/theme.js"></script>
   <link rel="stylesheet" href="../assets/site.css?v=22">
+  <style>
+    /* 本页局部皮肤：学术 CV（朱红编号 + 年份栏论文列表），不改 site.css */
+    :root { --cv-red: #a83a26; --cv-rule: #cfc7b6; }
+    :root[data-theme="dark"] { --cv-red: #e0785c; --cv-rule: #39424a; }
+
+    .cv-hero { grid-template-columns: 1fr auto; padding: 44px 0 34px; border-bottom: 1px solid var(--cv-rule); }
+    .cv-identity .eyebrow { margin-bottom: 10px; font-size: 11px; letter-spacing: 0.2em; color: var(--cv-red); }
+    .cv-identity h1 { font-size: clamp(52px, 6vw, 74px); font-weight: 600; line-height: 1.05; letter-spacing: 0.03em; }
+    .cv-role { margin-top: 14px; font-size: 15px; letter-spacing: 0.04em; }
+    .cv-affiliation { margin-top: 2px; font-size: 13.5px; color: var(--muted); }
+    .cv-scholar { align-items: flex-end; gap: 10px; }
+    .cv-scholar .orcid-link { padding: 6px 12px; border: 1px solid var(--cv-rule); border-radius: 0;
+      font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.08em; }
+    .cv-scholar span { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.1em; color: var(--muted); }
+
+    .cv-layout { grid-template-columns: 170px 1fr; gap: 0 56px; padding-top: 8px; }
+    .section-nav { padding-top: 38px; }
+    .section-nav > strong { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--cv-red); }
+    .section-nav > div { margin-top: 14px; padding-left: 0; border-left: 0; gap: 2px; }
+    .section-nav a { padding: 6px 0 6px 14px; margin-left: 0; border-left: 1px solid var(--cv-rule);
+      border-bottom: 0; font-size: 13.5px; letter-spacing: 0.02em; }
+    .section-nav a:hover { border-left: 2px solid var(--cv-red); color: var(--cv-red); }
+
+    .cv-content { counter-reset: sec; }
+    .content-section { padding: 38px 0; border-top: 1px solid var(--cv-rule); }
+    .content-section:first-of-type { padding-top: 38px; border-top: 0; }
+    .content-section h2 { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; padding: 0; border: 0;
+      font-family: var(--mono); font-size: 13px; font-weight: 700; letter-spacing: 0.2em; color: var(--cv-red); }
+    .content-section h2::before { counter-increment: sec; content: counter(sec, decimal-leading-zero); }
+    .content-section h2::after { content: ""; flex: 1; height: 1px; background: var(--cv-rule); }
+    .content-section .lead, .content-section > p { font-size: 16px; line-height: 1.95; }
+
+    .metric-band { grid-template-columns: repeat(5, 1fr); gap: 0; margin-top: 28px; padding: 0;
+      border-top: 1px solid var(--cv-rule); border-bottom: 1px solid var(--cv-rule); }
+    .metric { padding: 18px 16px; border-left: 1px dashed var(--cv-rule); }
+    .metric:first-child { padding-left: 0; border-left: 0; }
+    .metric-value { font-size: 38px; font-weight: 600; letter-spacing: 0; color: var(--ink); }
+    .metric-label { margin-top: 6px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; }
+
+    .publication-order-note { margin: -8px 0 14px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; }
+    .publication-group > h3 { margin: 26px 0 6px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em;
+      color: var(--cv-red); }
+    .publication { display: grid; grid-template-columns: 72px 1fr; align-items: start; gap: 0 20px;
+      padding: 15px 0; border-top: 1px dashed var(--cv-rule); }
+    .publication:first-child { border-top: 1px solid var(--cv-rule); }
+    .pub-year { padding-top: 4px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--cv-red); }
+    .pub-body { margin: 0; font-size: 14.5px; line-height: 1.8; }
+
+    @media (max-width: 760px) {
+      .cv-hero { grid-template-columns: 1fr; padding: 30px 0 24px; gap: 18px; }
+      .cv-layout { grid-template-columns: 1fr; gap: 0; }
+      .section-nav { position: static; padding: 24px 0 0; }
+      .section-nav > div { flex-direction: row; flex-wrap: wrap; gap: 0 16px; }
+      .section-nav a { padding: 4px 0; border-left: 0; }
+      .metric-band { grid-template-columns: repeat(2, 1fr); }
+      .publication { grid-template-columns: 52px 1fr; gap: 0 12px; }
+    }
+  </style>
 </head>
 <body class="cv-page">
   <a class="skip-link" href="#main-content">跳至主要内容</a>
